@@ -1,0 +1,5 @@
+{
+	"dbURL": "mongodb://",
+	"port": 7777,
+	"sessionSecret": "xxxxx"
+}

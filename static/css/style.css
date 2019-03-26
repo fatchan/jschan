@@ -1,0 +1,32 @@
+body {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	margin: 0;
+}
+
+.container {
+	clear: both;
+	margin: 0 auto;
+}
+
+.navbar {
+
+}
+.nav-item {
+	float: left;
+	margin: 10px;
+}
+
+.section {}
+.card {}
+.card-title {}
+.card-content {}
+
+.footer {
+	padding: 10px;
+	text-align: center;
+	flex-shrink: 0;
+	margin-top: auto;
+}

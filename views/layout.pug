@@ -1,0 +1,14 @@
+doctype html
+html
+	head
+		include includes/head.pug
+		block head
+	body
+		nav
+			.container
+				include includes/navbar.pug
+		main
+			.container
+				block content
+		include includes/footer.pug
+
