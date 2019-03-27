@@ -61,7 +61,20 @@ router.get('/:board/thread/:thread([a-f\\d]{24})', Boards.exists, async (req, re
 });
 
 router.get('/', async (req, res, next) => {
-	res.redirect('/b');
+
+	//get a list of boards
+    let boards;
+    try {
+        boards = await Boards.find();
+    } catch (err) {
+        return next(err);
+    }
+
+    //render the page
+    res.render('home', {
+        boards: boards
+    });
+
 })
 
 module.exports = router;
