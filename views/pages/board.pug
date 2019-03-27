@@ -2,9 +2,10 @@ extends ../layout.pug
 include ../mixins/post.pug
 
 block head
-	title /#{board}/
+	title /#{board._id}/ - Recent Posts
 
 block content
+	span #{board.description}
 	hr
 	for thread in threads
 		h1 OP:

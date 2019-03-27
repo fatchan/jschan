@@ -3,7 +3,8 @@
 const express  = require('express')
 	, router = express.Router()
 	, utils = require('../utils.js')
-	, Posts = require(__dirname+'/../models/posts.js');
+	, Posts = require(__dirname+'/../models/posts.js')
+	, Boards = require(__dirname+'/../models/boards.js');
 
 /*
 roughly:
@@ -18,7 +19,7 @@ roughly:
 */
 
 // board page/recents
-router.get('/:board/:page?', Posts.checkBoard, async (req, res, next) => {
+router.get('/:board/:page?', Boards.exists, async (req, res, next) => {
 
     //get the recently bumped thread & preview posts
     let threads;
@@ -31,14 +32,13 @@ router.get('/:board/:page?', Posts.checkBoard, async (req, res, next) => {
     //render the page
     res.render('board', {
         csrf: req.csrfToken(),
-        board: req.params.board,
         threads: threads || []
     });
 
 });
 
 // thread view page
-router.get('/:board/thread/:thread([a-f\\d]{24})', Posts.checkBoard, async (req, res, next) => {
+router.get('/:board/thread/:thread([a-f\\d]{24})', Boards.exists, async (req, res, next) => {
 
     //get the recently bumped thread & preview posts
     let thread;
@@ -55,11 +55,14 @@ router.get('/:board/thread/:thread([a-f\\d]{24})', Posts.checkBoard, async (req,
     //render the page
     res.render('thread', {
         csrf: req.csrfToken(),
-        board: req.params.board,
         thread: thread
     });
 
 });
+
+router.get('/', async (req, res, next) => {
+	res.redirect('/b');
+})
 
 module.exports = router;
 

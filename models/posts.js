@@ -1,9 +1,11 @@
 'use strict';
 
 const Mongo = require(__dirname+'/../helpers/db.js')
-	, db = Mongo.client.db('chan-boards');
+	, db = Mongo.client.db('posts');
 
 module.exports = {
+
+	db,
 
 	//TODO: IMPLEMENT PAGINATION
 	getRecent: async (board, page) => {
@@ -98,16 +100,6 @@ module.exports = {
 
 	deleteAll: async (board) => {
 		return db.collection(board).deleteMany({});
-	},
-
-	checkBoard: async (req, res, next) => {
-
-		const boards = await db.listCollections({ 'name': req.params.board }, { 'nameOnly': true }).toArray();
-		if (!boards || boards.length == 0) {
-			return res.status(404).render('404')
-		}
-		next();
-
 	},
 
 }
