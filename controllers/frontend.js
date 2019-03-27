@@ -38,7 +38,7 @@ router.get('/:board/:page?', Posts.checkBoard, async (req, res, next) => {
 });
 
 // thread view page
-router.get('/:board/thread/:thread', Posts.checkBoard, async (req, res, next) => {
+router.get('/:board/thread/:thread([a-f\\d]{24})', Posts.checkBoard, async (req, res, next) => {
 
     //get the recently bumped thread & preview posts
     let thread;
@@ -48,15 +48,18 @@ router.get('/:board/thread/:thread', Posts.checkBoard, async (req, res, next) =>
         return next(err);
     }
 
+	if (!thread) {
+		return res.status(404).render('404');
+	}
+
     //render the page
     res.render('thread', {
         csrf: req.csrfToken(),
         board: req.params.board,
-        threads: [thread] || []
+        thread: thread
     });
 
 });
-
 
 module.exports = router;
 

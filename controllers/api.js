@@ -47,7 +47,7 @@ router.get('/api/board/:board/recent/:page', Posts.checkBoard, async (req, res, 
 });
 
 // get a thread
-router.get('/api/board/:board/thread/:thread', Posts.checkBoard, async (req, res, next) => {
+router.get('/api/board/:board/thread/:thread([a-f\d]{24})', Posts.checkBoard, async (req, res, next) => {
 
 	//get the recently bumped thread & preview posts
 	let thread;

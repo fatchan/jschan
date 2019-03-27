@@ -1,20 +1,13 @@
 extends ../layout.pug
+include ../mixins/post.pug
 
 block head
-	title /#{board}/
+	title /#{board}/ - title placeholder
 
 block content
-	for thread in threads
 		h1 OP:
-		div #{thread._id}
-		div #{thread.author}
-		div #{thread.date}
-		div #{thread.content}
+		+post(board, thread)
 		h1 Replies:
 		for post in thread.replies
-			div #{post._id}
-			div #{post.author}
-			div #{post.date}
-			div #{post.content}
-			br
+			+post(board, post)
 		hr

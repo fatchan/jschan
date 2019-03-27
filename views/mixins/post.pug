@@ -1,0 +1,9 @@
+mixin post(board, post)
+	.post-container
+		if post.thread == null
+			a(href=`/${board}/thread/${post._id}`) #{post._id}
+		else 
+			a(href=`/${board}/thread/${post.thread}#${post._id}`) #{post._id}
+		span , #{post.author}
+		span , #{post.date}
+		p #{post.content}
