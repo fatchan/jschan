@@ -56,35 +56,24 @@ const express  = require('express')
 	app.use('/img', express.static(__dirname + '/static/img'));
 
 	// routes
-	const posts = require(__dirname+'/controllers/posts.js');
-	//	const modRoutes = require(__dirname+'/controllers/mod.js')()
-	app.use('/', posts)
-	//	app.use('/', mod)
+	app.use('/api', require(__dirname+'/controllers/api.js'))
+	app.use('/', require(__dirname+'/controllers/frontend.js'))
 
-	//generic error page
-	app.get('/error', (req, res) => {
-		res.status(500).render('error', {
-			user: req.session.user
-		})
-	})
-
-	//wildcard after all other routes -- how we handle 404s
+	// after other routes 404
 	app.get('*', (req, res) => {
-	res.status(404).render('404', {
-			user: req.session.user
-		})
+		res.status(404).render('404')
 	})
 
-	//catch any unhandled errors
+	// catch any unhandled errors
 	app.use((err, req, res, next) => {
 		if (err.code === 'EBADCSRFTOKEN') {
 			return res.status(403).send('Invalid CSRF token')
 		}
 		console.error(err.stack)
-		return res.redirect('/error')
+		return res.status(500).render('error')
 	})
 
-	//listen
+	// listen
 	app.listen(configs.port, () => {
         console.log(`Listening on port ${configs.port}`);
     });

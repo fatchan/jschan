@@ -2,11 +2,7 @@
 
 const express  = require('express')
 	, router = express.Router()
-	, { check, validationResult } = require('express-validator/check')
 	, utils = require('../utils.js')
-	, util = require('util')
-	, fs = require('fs')
-	, mkdir = util.promisify(fs.mkdir)
 	, Posts = require(__dirname+'/../models/posts.js');
 
 /*
@@ -22,23 +18,17 @@ roughly:
 */
 
 // make new post
-router.post('/api/board/:board', async (req, res, next) => {
+router.post('/api/board/:board', Posts.checkBoard, async (req, res, next) => {
 
 });
 
 // delete a post
-router.delete('/api/board/:board/post/:id', async (req, res, next) => {
+router.delete('/api/board/:board/post/:id', Posts.checkBoard, async (req, res, next) => {
 
 });
 
 // get recent threads and preview posts
-router.get('/api/board/:board/recent/:page', async (req, res, next) => {
-
-	//make sure the board exists
-	const boards = await Posts.checkBoard(req.params.board)
-	if (boards.length <= 0) {
-		return next();
-	}
+router.get('/api/board/:board/recent/:page', Posts.checkBoard, async (req, res, next) => {
 
 	//get the recently bumped thread & preview posts
 	let threads;
@@ -57,13 +47,7 @@ router.get('/api/board/:board/recent/:page', async (req, res, next) => {
 });
 
 // get a thread
-router.get('/api/board/:board/thread/:thread', async (req, res, next) => {
-
-	//make sure the board exists
-	const boards = await Posts.checkBoard(req.params.board)
-	if (boards.length <= 0) {
-		return next();
-	}
+router.get('/api/board/:board/thread/:thread', Posts.checkBoard, async (req, res, next) => {
 
 	//get the recently bumped thread & preview posts
 	let thread;
@@ -82,13 +66,7 @@ router.get('/api/board/:board/thread/:thread', async (req, res, next) => {
 });
 
 // get array of threads (catalog)
-router.get('/api/board/:board/catalog', async (req, res, next) => {
-
-	//make sure the board exists
-	const boards = await Posts.checkBoard(req.params.board)
-	if (boards.length <= 0) {
-		return next();
-	}
+router.get('/api/board/:board/catalog', Posts.checkBoard, async (req, res, next) => {
 
 	//get the recently bumped thread & preview posts
 	let data;
@@ -103,32 +81,6 @@ router.get('/api/board/:board/catalog', async (req, res, next) => {
 	}
 
 	return res.json(data)
-
-});
-
-// board page web frontend
-router.get('/:board/:page?', async (req, res, next) => {
-
-	//make sure the board exists
-	const boards = await Posts.checkBoard(req.params.board)
-	if (boards.length <= 0) {
-		return next();
-	}
-
-	//get the recently bumped thread & preview posts
-	let threads;
-	try {
-		threads = await Posts.getRecent(req.params.board, req.params.page);
-	} catch (err) {
-		return next(err);
-	}
-
-	//render the page
-	res.render('board', {
-		csrf: req.csrfToken(),
-		board: req.params.board,
-		threads: threads || []
-	});
 
 });
 
