@@ -5,9 +5,9 @@ block head
 	title /#{board._id}/ - #{thread.title}
 
 block content
-		h1 OP:
-		+post(board, thread)
-		h1 Replies:
-		for post in thread.replies
-			+post(board, post)
-		hr
+	a(href='/'+board._id) Back to /#{board._id}/
+	hr(size=1)
+	+post(board, thread)
+	for post in thread.replies
+		+post(board, post)
+	hr(size=1)

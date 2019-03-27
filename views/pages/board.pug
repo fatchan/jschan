@@ -5,12 +5,10 @@ block head
 	title /#{board._id}/ - Recent Posts
 
 block content
-	span #{board.description}
-	hr
+	span #{board.name} - #{board.description}
+	hr(size=1)
 	for thread in threads
-		h1 OP:
 		+post(board, thread)
-		h1 Replies:
 		for post in thread.replies
 			+post(board, post)
-		hr
+		hr(size=1)

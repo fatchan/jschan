@@ -1,0 +1,17 @@
+extends ../layout.pug
+
+block head
+	title Board list
+
+block content
+	table
+		tr
+			th Board
+			th Name
+			th Description
+		each board in boards
+			tr
+				td: a(href='/'+board._id) /#{board._id}/
+				td= board.name
+				td= board.description
+

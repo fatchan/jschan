@@ -11,6 +11,10 @@ module.exports = {
 		return db.collection('boards').findOne({ '_id': name });
 	},
 
+	find: async (name) => {
+		return db.collection('boards').find({}).toArray();
+	},
+
 	insertOne: async (data) => {
 		return db.collection('boards').insertOne(data);
 	},
