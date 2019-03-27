@@ -1,0 +1,16 @@
+p make a post:
+form.form-post(action='/api/board/'+board._id, enctype='multipart/form-data', method='POST')
+
+	input(type='hidden' name='_csrf' value=csrf)
+
+	input(type='hidden' name='thread' value=thread != null ? thread._id : null)
+
+	input#title(type='text', name='subject', placeholder='subject')
+
+	input#name(type='text', name='author', placeholder='name')
+
+	textarea#content(name='content', rows='8', cols='50', placeholder='message')
+
+	input#file(type='file', name='files' multiple)
+
+	input(type='submit', value='submit')

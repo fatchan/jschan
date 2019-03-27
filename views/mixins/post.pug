@@ -1,10 +1,11 @@
 mixin post(board, post)
 	div(class='post-container '+(post.thread ? '' : 'op'))
-		if post.thread == null
-			a(href=`/${board._id}/thread/${post._id}`) #{post._id}
-		else 
-			a(href=`/${board._id}/thread/${post.thread}#${post._id}`) #{post._id}
+		span #{post.subject}
 		span , #{post.author}
 		span , #{post.date.toLocaleString()}
-		p #{post.title}
+		span , Post 
+		if post.thread == null
+			a(href=`/${board._id}/thread/${post._id}`) ##{post._id}
+		else 
+			a(href=`/${board._id}/thread/${post.thread}#${post._id}`) ##{post._id}
 		p #{post.content}

@@ -1,6 +1,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/../helpers/db.js')
+	, Boards = require(__dirname+'/boards.js')
 	, db = Mongo.client.db('posts');
 
 module.exports = {
@@ -36,10 +37,10 @@ module.exports = {
 		// get thread post and potential replies concurrently
 		const data = await Promise.all([
 			db.collection(board).findOne({
-				'_id': Mongo.ObjectId(id)
+				'_id': id
 			}),
 			db.collection(board).find({
-				'thread': Mongo.ObjectId(id)
+				'thread': id
 			}).sort({
 				'_id': 1
 			}).toArray()
@@ -68,7 +69,7 @@ module.exports = {
 
 		// get a post
 		return db.collection(board).findOne({
-			'_id': Mongo.ObjectId(id)
+			'_id': id
 		});
 
 	},
@@ -80,10 +81,17 @@ module.exports = {
 			await db.collection(board).updateOne({
 				'_id': data.thread
 			}, {
-				$set: {
+				'$set': {
 					'bumped': Date.now()
 				}
 			})
+		}
+
+		data._id = await Boards.getNextId(board);
+
+		//this is an OP, so set the bump date so its pushed to the top
+		if (data.thread == null) {
+			data.bumped =  Date.now()
 		}
 
 		return db.collection(board).insertOne(data);

@@ -42,4 +42,45 @@ module.exports = {
 
 	},
 
+	getNextId: async (board) => {
+
+		const increment = await db.collection('counters').findOneAndUpdate(
+			{
+				'_id': board
+			},
+			{
+				'$inc': {
+					'sequence_value': 1
+				}
+			},
+			{
+				'upsert': true
+			}
+		);
+
+		// faster than toString()
+		return increment.value.sequence_value + '';
+
+	},
+
+	deleteIncrement: async (board) => {
+
+		await db.collection('counters').findOneAndUpdate(
+			{
+				'_id': board
+			},
+			{
+				'$set': {
+					'sequence_value': 1
+				}
+			},
+			{
+				'upsert': true
+			}
+		);
+
+		return;
+
+	},
+
 }

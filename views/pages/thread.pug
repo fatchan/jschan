@@ -7,7 +7,8 @@ block head
 block content
 	a(href='/'+board._id) Back to /#{board._id}/
 	hr(size=1)
+	include ../includes/postform.pug
+	hr(size=1)
 	+post(board, thread)
 	for post in thread.replies
 		+post(board, post)
-	hr(size=1)

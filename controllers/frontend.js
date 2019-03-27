@@ -19,7 +19,7 @@ roughly:
 */
 
 // board page/recents
-router.get('/:board/:page?', Boards.exists, async (req, res, next) => {
+router.get('/:board/:page(\\d+)?', Boards.exists, async (req, res, next) => {
 
     //get the recently bumped thread & preview posts
     let threads;
@@ -38,12 +38,12 @@ router.get('/:board/:page?', Boards.exists, async (req, res, next) => {
 });
 
 // thread view page
-router.get('/:board/thread/:thread([a-f\\d]{24})', Boards.exists, async (req, res, next) => {
+router.get('/:board/thread/:id(\\d+)', Boards.exists, async (req, res, next) => {
 
     //get the recently bumped thread & preview posts
     let thread;
     try {
-        thread = await Posts.getThread(req.params.board, req.params.thread);
+        thread = await Posts.getThread(req.params.board, req.params.id);
     } catch (err) {
         return next(err);
     }
