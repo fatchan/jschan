@@ -1,10 +1,9 @@
 {
-  "name": "elec3609",
-  "version": "1.0.0",
+  "name": "jschan",
+  "version": "0.0.1",
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "bcrypt": "^3.0.5",
     "body-parser": "^1.18.3",
     "connect-mongo": "^2.0.3",
     "cookie-parser": "^1.4.3",
