@@ -36,11 +36,11 @@ router.get('/api/board/:board/recent/:page', Boards.exists, async (req, res, nex
 	try {
 		threads = await Posts.getRecent(req.params.board, req.params.page || 1);
 	} catch (err) {
-		return next(err);
+		return res.status(500).json({ 'message': 'Error fetching from DB' });
 	}
 
 	if (!threads || threads.lenth === 0) {
-		return next();
+		return res.status(404).json({ 'message': 'Not found' });
 	}
 
 	return res.json(threads)
@@ -55,11 +55,11 @@ router.get('/api/board/:board/thread/:thread([a-f\d]{24})', Boards.exists, async
 	try {
 		thread = await Posts.getThread(req.params.board, req.params.thread);
 	} catch (err) {
-		return next(err);
+		return res.status(500).json({ 'message': 'Error fetching from DB' });
 	}
 
 	if (!thread) {
-		return next();
+		return res.status(404).json({ 'message': 'Not found' });
 	}
 
 	return res.json(thread)
@@ -74,24 +74,39 @@ router.get('/api/board/:board/catalog', Boards.exists, async (req, res, next) =>
 	try {
 		data = await Posts.getCatalog(req.params.board);
 	} catch (err) {
-		return next(err);
+		return res.status(500).json({ 'message': 'Error fetching from DB' });
 	}
 
 	if (!data) {
-		return next();
+		return res.status(404).json({ 'message': 'Not found' });
 	}
 
 	return res.json(data)
 
 });
 
-/*
+//get list of boards
+router.get('/api/boards', Boards.exists, async (req, res, next) => {
+
+    //get a list of boards
+    let boards;
+    try {
+        boards = await Boards.find();
+    } catch (err) {
+		return res.status(500).json({ 'message': 'Error fetching from DB' })
+    }
+
+    //render the page
+    res.json(boards)
+
+});
+
+
 (async () => {
 	await Boards.deleteAll();
 	await Boards.insertOne({
 		_id: 'b',
 		name: 'random',
-		title: 'random posts',
 		description: 'post anything here',
 	})
 	await Posts.deleteAll('b');
@@ -115,7 +130,7 @@ router.get('/api/board/:board/catalog', Boards.exists, async (req, res, next) =>
 		}
 	}
 })();
-*/
+
 
 module.exports = router;
 
