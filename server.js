@@ -28,8 +28,13 @@ const express  = require('express')
 		createParentPath: true,
 		safeFileNames: true,
 		preserveExtension: true,
-		limits: { fileSize: 1 * 1024 * 1024 },
-		abortOnLimit: true
+		limits: {
+			fileSize: 1 * 1024 * 1024,
+			files: 1
+		},
+		abortOnLimit: true,
+		useTempFile: true,
+		tempFileDir: path.join(__dirname+'/tmp/')
 	}));
 
 	// session store

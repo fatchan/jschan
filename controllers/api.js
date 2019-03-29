@@ -10,9 +10,7 @@ const express  = require('express')
 // make new post
 router.post('/board/:board', Boards.exists, async (req, res, next) => {
 
-
-
-	//ghetto setting to 0 so expres validator doesnt skip null value. needs looking into.
+	// check if this is responding to an existing thread
 	if (req.body.thread) {
 		let thread;
 		try {
@@ -25,22 +23,28 @@ router.post('/board/:board', Boards.exists, async (req, res, next) => {
 		}
 	}
 
-	try {
-		await files.uploadAndThumb(req, res);
-	} catch (err) {
-		console.error(err);
-		return res.status(500).json({ 'message': 'Error uploading file' });
+	let filename = '';
+	//we got a file
+	if (req.files != null && Object.keys(req.files).length > 0) {
+		try {
+			// save and thumb it
+			filename = await files.uploadAndThumb(req, res);
+		} catch (err) {
+			console.error(err);
+			return res.status(500).json({ 'message': 'Error uploading file' });
+		}
 	}
 
-	//add the post
-	const post = await Posts.insertOne(req.params.board, {
-		'author': req.body.author || 'Anonymous',
-		'subject': req.body.subject || '',
-		'date': new Date(),
-		'content': req.body.content,
-		'thread': req.body.thread || null,
-		'file': req.file ? req.file.filename : ''
-	})
+	const data = {
+        'author': req.body.author || 'Anonymous',
+        'subject': req.body.subject || '',
+        'date': new Date(),
+        'content': req.body.content,
+        'thread': req.body.thread || null,
+        'file': filename
+    };
+
+	const post = await Posts.insertOne(req.params.board, data)
 
 	const redirect = '/' + req.params.board + '/thread/' + (req.body.thread || post.insertedId);
 
@@ -56,8 +60,7 @@ router.delete('/board/:board/post/:id(\\d+)', Boards.exists, async (req, res, ne
 // get recent threads and preview posts
 router.get('/board/:board/recent/:page(\\d+)?', Boards.exists, async (req, res, next) => {
 
-	//get the recently bumped thread & preview posts
-	let threads;
+	//get the recently bumped thread & preview po	let threads;
 	try {
 		threads = await Posts.getRecent(req.params.board, req.params.page || 1);
 	} catch (err) {
