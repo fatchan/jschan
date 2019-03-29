@@ -3,50 +3,34 @@
 const express  = require('express')
 	, router = express.Router()
 	, utils = require('../utils.js')
-	, { check, validationResult } = require('express-validator/check')
 	, Posts = require(__dirname+'/../models/posts.js')
-	, Boards = require(__dirname+'/../models/boards.js');
-
-/*
-roughly:
-	- GET /board/:board/catalog -> all threads (catalog)
-	- GET /board/:board/recent/:page? -> recent posts per page (board homepage)
-	- GET /board/:board/thread/:thread -> get all posts in a thread
-
-	- POST /board/:board -> make a new thread
-	- POST /board/:board/thread/:thread -> make a new post in a thread
-
-	- DELETE /board/:board/post/:id -> delete a post
-*/
+	, Boards = require(__dirname+'/../models/boards.js')
+	, files = require(__dirname+'/../helpers/file.js')
 
 // make new post
-router.post('/board/:board', Boards.exists, [
-	check('author').optional(),
-	check('subject').optional(),
-	check('thread').optional(),
-	check('content').not().isEmpty().withMessage('missing message content'),
-], async (req, res, next) => {
+router.post('/board/:board', Boards.exists, async (req, res, next) => {
 
-	//return array of errors about bad post
-	const errors = validationResult(req)
-	if (!errors.isEmpty()) {
-		return res.json({errors:errors.array()})
-	}
+
 
 	//ghetto setting to 0 so expres validator doesnt skip null value. needs looking into.
 	if (req.body.thread) {
 		let thread;
-	    try {
-	        thread = await Posts.getThread(req.params.board, req.body.thread);
-	    } catch (err) {
-	        return res.status(500).json({ 'message': 'Error fetching from DB' });
-	    }
+		try {
+			thread = await Posts.getThread(req.params.board, req.body.thread);
+		} catch (err) {
+			return res.status(500).json({ 'message': 'Error fetching from DB' });
+		}
 		if (!thread) {
 			return res.status(400).json({ 'message': 'thread does not exist' })
 		}
 	}
 
-	//TODO: handle file uploads instead of just doing nothing
+	try {
+		await files.uploadAndThumb(req, res);
+	} catch (err) {
+		console.error(err);
+		return res.status(500).json({ 'message': 'Error uploading file' });
+	}
 
 	//add the post
 	const post = await Posts.insertOne(req.params.board, {
@@ -54,12 +38,13 @@ router.post('/board/:board', Boards.exists, [
 		'subject': req.body.subject || '',
 		'date': new Date(),
 		'content': req.body.content,
-		'thread': req.body.thread || null
+		'thread': req.body.thread || null,
+		'file': req.file ? req.file.filename : ''
 	})
 
 	const redirect = '/' + req.params.board + '/thread/' + (req.body.thread || post.insertedId);
 
-	return res.redirect(redirect)
+	return res.redirect(redirect);
 
 });
 

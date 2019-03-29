@@ -14,6 +14,7 @@ input, textarea {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
 	border-radius: 3px;
+	max-width:100%;
 }
 
 input textares {
@@ -43,6 +44,10 @@ input textares {
 .post-container.op {
 	background: none;
 	margin-left: 0;
+}
+
+.post-image {
+	display: block;
 }
 
 .navbar {

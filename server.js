@@ -12,9 +12,9 @@ const express  = require('express')
 	, csrf = require('csurf')
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
-	, upload = require('express-fileupload')
 	, configs = require(__dirname+'/configs/main.json')
-	, Mongo = require(__dirname+'/helpers/db.js');
+	, Mongo = require(__dirname+'/helpers/db.js')
+	, upload = require('express-fileupload');
 
 (async () => {
 
@@ -28,7 +28,7 @@ const express  = require('express')
 		createParentPath: true,
 		safeFileNames: true,
 		preserveExtension: true,
-		limits: { fileSize: 50 * 1024 * 1024 },
+		limits: { fileSize: 1 * 1024 * 1024 },
 		abortOnLimit: true
 	}));
 
@@ -56,10 +56,11 @@ const express  = require('express')
 	app.use('/img', express.static(__dirname + '/static/img'));
 
 	// routes
+
+
 	app.use('/api', require(__dirname+'/controllers/api.js'))
 	app.use('/', require(__dirname+'/controllers/frontend.js'))
 
-	// after other routes 404
 	app.get('*', (req, res) => {
 		res.status(404).render('404')
 	})

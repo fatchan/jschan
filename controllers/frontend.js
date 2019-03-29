@@ -31,7 +31,7 @@ router.get('/:board/:page(\\d+)?', Boards.exists, async (req, res, next) => {
 
     //render the page
     res.render('board', {
-        csrf: req.csrfToken(),
+		csrf: req.csrfToken(),
         threads: threads || []
     });
 
@@ -54,7 +54,7 @@ router.get('/:board/thread/:id(\\d+)', Boards.exists, async (req, res, next) => 
 
     //render the page
     res.render('thread', {
-        csrf: req.csrfToken(),
+		csrf: req.csrfToken(),
         thread: thread
     });
 

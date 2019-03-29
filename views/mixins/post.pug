@@ -8,4 +8,7 @@ mixin post(board, post)
 			a(href=`/${board._id}/thread/${post._id}`) ##{post._id}
 		else 
 			a(href=`/${board._id}/thread/${post.thread}#${post._id}`) ##{post._id}
-		p #{post.content}
+		if post.file
+			a(href='/img/'+post.file)
+				img.post-image(src='/img/thumb-'+post.file)
+		p(style='white-space: pre-wrap;') #{post.content}
