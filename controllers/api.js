@@ -5,7 +5,12 @@ const express  = require('express')
 	, utils = require('../utils.js')
 	, Posts = require(__dirname+'/../models/posts.js')
 	, Boards = require(__dirname+'/../models/boards.js')
-	, files = require(__dirname+'/../helpers/file.js')
+	, uuidv4 = require('uuid/v4')
+	, path = require('path')
+	, fileUpload = require(__dirname+'/../helpers/file-upload.js')
+	, fileThumbnail = require(__dirname+'/../helpers/file-thumbnail.js')
+	, fileIdentify = require(__dirname+'/../helpers/file-identify.js')
+	, fileCheckMimeType = require(__dirname+'/../helpers/file-check-mime-types.js')
 
 // make new post
 router.post('/board/:board', Boards.exists, async (req, res, next) => {
@@ -23,15 +28,46 @@ router.post('/board/:board', Boards.exists, async (req, res, next) => {
 		}
 	}
 
-	let filename = '';
-	//we got a file
-	if (req.files != null && Object.keys(req.files).length > 0) {
-		try {
-			// save and thumb it
-			filename = await files.uploadAndThumb(req, res);
-		} catch (err) {
-			console.error(err);
-			return res.status(500).json({ 'message': 'Error uploading file' });
+	let files = [];
+	// check for file
+	if (req.files != null) {
+		// get names and amounc
+		const fileKeys = Object.keys(req.files);
+		const numFiles = fileKeys.length
+		// if we got a file
+		if (numFiles > 0) {
+			// check all mime types befoer we try saving anything
+			for (let i = 0; i < numFiles; i++) {
+				if (!fileCheckMimeType(req.files[fileKeys[i]].mimetype)) {
+					return res.status(400).json({ 'message': 'Invalid file type' });
+				}
+			}
+			// then upload, thumb, get metadata, etc.
+			for (let i = 0; i < numFiles; i++) {
+				const file = req.files[fileKeys[i]];
+				const filename = uuidv4() + path.extname(file.name);
+				// try to save, thumbnail and get metadata
+				try {
+					await fileUpload(req, res, filename);
+					const fileData = await fileIdentify(filename);
+					await fileThumbnail(filename);
+					files.push({
+						filename: filename,
+						originalFilename: file.name,
+						mimetype: file.mimetype,
+						size: file.size,
+						dimensions: fileData.size,
+						geometry: fileData.Geometry,
+						size: fileData.Filesize
+					})
+				} catch (err) {
+					console.error(err);
+
+					//TODO: DELETE FAILED FILES
+
+					return res.status(500).json({ 'message': 'Error uploading file' });
+				}
+			}
 		}
 	}
 
@@ -41,7 +77,7 @@ router.post('/board/:board', Boards.exists, async (req, res, next) => {
         'date': new Date(),
         'content': req.body.content,
         'thread': req.body.thread || null,
-        'file': filename
+        'files': files
     };
 
 	const post = await Posts.insertOne(req.params.board, data)
@@ -128,6 +164,19 @@ router.get('/boards', Boards.exists, async (req, res, next) => {
 	res.json(boards)
 
 });
+
+/*
+(async () => {
+	await Boards.deleteIncrement('b');
+	await Boards.deleteAll();
+	await Boards.insertOne({
+		_id: 'b',
+		name: 'random',
+		description: 'post anything here',
+	})
+	await Posts.deleteAll('b');
+})();
+*/
 
 /*
 (async () => {
