@@ -1,17 +1,24 @@
 mixin post(board, post)
 	div(class='post-container '+(post.thread ? '' : 'op'))
 		.post-info
-			span #{post.subject}
-			span #{post.author}
+			span.post-subject #{post.subject}
+			span.post-author #{post.author}
 			span #{post.date.toLocaleString()}
-			span Post 
+			span No.
 			if post.thread == null
 				a(href=`/${board._id}/thread/${post._id}`) ##{post._id}
-			else 
+			else
 				a(href=`/${board._id}/thread/${post.thread}#${post._id}`) ##{post._id}
-		if post.file
-			.post-image
-				a(href='/img/'+post.file)
-					img(src='/img/thumb-'+post.file)
+		if post.files.length > 0
+			.post-files
+				each file in post.files
+					.post-file-info
+						span: a(href='/img/thumb-'+file.filename download=file.originalFilename) #{file.originalFilename}
+						span ( Size: #{file.size}
+						span Dimensions: #{file.geometry} )
+					.post-file
+						a(href='/img/'+file.filename)
+							object(data='/img/thumb-'+file.filename type=file.mimetype)
 		.post-content
 			p(style='white-space: pre-wrap;') #{post.content}
+
