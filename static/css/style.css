@@ -9,6 +9,10 @@ body {
 	margin: 0;
 }
 
+span {
+	margin-right: 5px;
+}
+
 input, textarea {
     display: block;
 	font-family: arial, helvetica, sans-serif;
@@ -39,11 +43,27 @@ input textares {
 	margin-left: 15px;
 	padding: 5px;
 	background: #D6DAF0;
+	display: inline-block;
+	border-color: #B7C5D9;
+	border-width: 0 1px 1px 0;
+	border-style: none solid solid none;
 }
 
 .post-container.op {
 	background: none;
 	margin-left: 0;
+	display: block;
+	border: none;
+}
+
+.post-subject {
+	color: #0F0C5D;
+	font-weight: bold;
+}
+
+.post-author {
+	color: #117743;
+	font-weight: bold;
 }
 
 .post-info {
