@@ -51,15 +51,26 @@ router.post('/board/:board', Boards.exists, async (req, res, next) => {
 					await fileUpload(req, res, filename);
 					const fileData = await fileIdentify(filename);
 					await fileThumbnail(filename);
-					files.push({
-						filename: filename,
-						originalFilename: file.name,
-						mimetype: file.mimetype,
-						size: file.size,
-						dimensions: fileData.size,
-						geometry: fileData.Geometry,
-						size: fileData.Filesize
-					})
+					const processedFile = {
+                        filename: filename,
+                        originalFilename: file.name,
+                        mimetype: file.mimetype,
+                        filesize: file.size, // size in bytes
+                        size: fileData.Filesize, // 123 Ki size formatted string
+                        dimensions: fileData.size, // object with width and height pixels
+                        geometry: fileData.Geometry, // 123 x 123 string
+					}
+					//handle gifs with multiple geometry and size
+					if (Array.isArray(processedFile.size)) {
+						processedFile.size = processedFile.size[0];
+					}
+					if (Array.isArray(processedFile.dimensions)) {
+						processedFile.geometry = processedFile.dimensions[0];
+					}
+					if (Array.isArray(processedFile.geometry)) {
+						processedFile.geometry = processedFile.geometry[0];
+					}
+					files.push(processedFile);
 				} catch (err) {
 					console.error(err);
 
