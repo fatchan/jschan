@@ -5,13 +5,13 @@ form.form-post(action='/api/board/'+board._id, enctype='multipart/form-data', me
 
 	input(type='hidden' name='thread' value=thread != null ? thread._id : null)
 
-	input#title(type='text', name='subject', placeholder='subject')
+	input#title(type='text', name='subject', placeholder='subject' autocomplete='off')
 
-	input#name(type='text', name='name', placeholder='name')
+	input#name(type='text', name='name', placeholder='name' autocomplete='off')
 
-	input#name(type='password', name='password', placeholder='password (for deletion)')
+	input#password(type='password', name='password', placeholder='password (for deletion)' autocomplete='off')
 
-	textarea#messagey(name='message', rows='8', cols='50', placeholder='message')
+	textarea#messagey(name='message', rows='8', cols='50', placeholder='message' autocomplete='off')
 
 	input#file(type='file', name='file')
 

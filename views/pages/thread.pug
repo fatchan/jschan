@@ -14,7 +14,8 @@ block content
 		+post(board, thread)
 		for post in thread.replies
 			+post(board, post)
-		input#password(type='password', name='password', placeholder='password (for deletion)')
+		hr(size=1)
+		input#password(type='password', name='password', placeholder='password (for deletion)' autocomplete='off')
 		input(type='submit', value='delete')
 
 
