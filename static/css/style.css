@@ -21,6 +21,11 @@ input, textarea {
 	max-width:100%;
 }
 
+.post-check {
+	vertical-align: sub;
+	display: inline-block;
+}
+
 input textares {
 	padding: 8px;
 }

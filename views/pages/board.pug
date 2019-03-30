@@ -9,8 +9,12 @@ block content
 	hr(size=1)
 	include ../includes/postform.pug
 	hr(size=1)
-	for thread in threads
-		+post(board, thread)
-		for post in thread.replies
-			+post(board, post)
-		hr(size=1)
+	form(action='/api/board/'+board._id+'/delete' method='POST' enctype='application/x-www-form-urlencoded')
+		input(type='hidden' name='_csrf' value=csrf)
+		for thread in threads
+			+post(board, thread)
+			for post in thread.replies
+				+post(board, post)
+			hr(size=1)
+		input#password(type='password', name='password', placeholder='password (for deletion)')
+		input(type='submit', value='delete')

@@ -37,7 +37,7 @@ module.exports = {
 		if (!board) {
 			return res.status(404).render('404')
 		}
-		res.locals.board = board;
+		res.locals.board = board; // can acces this in views or next route handlers
 		next();
 
 	},

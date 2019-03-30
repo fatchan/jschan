@@ -7,9 +7,11 @@ form.form-post(action='/api/board/'+board._id, enctype='multipart/form-data', me
 
 	input#title(type='text', name='subject', placeholder='subject')
 
-	input#name(type='text', name='author', placeholder='name')
+	input#name(type='text', name='name', placeholder='name')
 
-	textarea#content(name='content', rows='8', cols='50', placeholder='message')
+	input#name(type='password', name='password', placeholder='password (for deletion)')
+
+	textarea#messagey(name='message', rows='8', cols='50', placeholder='message')
 
 	input#file(type='file', name='file')
 

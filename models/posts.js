@@ -74,6 +74,17 @@ module.exports = {
 
 	},
 
+	//takes array "ids" of post ids
+	getPosts: async(board, ids) => {
+
+		return db.collection(board).find({
+			'_id': {
+				'$in': ids
+			}
+		}).toArray();
+
+	},
+
 	insertOne: async (board, data) => {
 
 		// bump thread if name not sage
@@ -89,9 +100,9 @@ module.exports = {
 
 		data._id = await Boards.getNextId(board);
 
-		//this is an OP, so set the bump date so its pushed to the top
+		//this is a thread, so set the bump date so its pushed to the top
 		if (data.thread == null) {
-			data.bumped =  Date.now()
+			data.bumped = Date.now()
 		}
 
 		return db.collection(board).insertOne(data);
