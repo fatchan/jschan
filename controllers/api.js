@@ -7,6 +7,10 @@ const express  = require('express')
 	, Boards = require(__dirname+'/../models/boards.js')
 	, uuidv4 = require('uuid/v4')
 	, path = require('path')
+	, uploadDirectory = require(__dirname+'/../helpers/uploadDirectory.js')
+	, util = require('util')
+	, fs = require('fs')
+	, unlink = util.promisify(fs.unlink)
 	, fileUpload = require(__dirname+'/../helpers/file-upload.js')
 	, fileThumbnail = require(__dirname+'/../helpers/file-thumbnail.js')
 	, fileIdentify = require(__dirname+'/../helpers/file-identify.js')
@@ -79,13 +83,13 @@ router.post('/board/:board', Boards.exists, async (req, res, next) => {
 				const fileData = await fileIdentify(filename);
 				await fileThumbnail(filename);
 				const processedFile = {
-                    filename: filename,
-                    originalFilename: file.name,
-                    mimetype: file.mimetype,
-                    size: file.size, // size in bytes
-                    geometry: fileData.size, // object with width and height pixels
-                    sizeString: fileData.Filesize, // 123 Ki string
-                    geometryString: fileData.Geometry, // 123 x 123 string
+					filename: filename,
+					originalFilename: file.name,
+					mimetype: file.mimetype,
+					size: file.size, // size in bytes
+					geometry: fileData.size, // object with width and height pixels
+					sizeString: fileData.Filesize, // 123 Ki string
+					geometryString: fileData.Geometry, // 123 x 123 string
 				}
 				//handle gifs with multiple geometry and size
 				if (Array.isArray(processedFile.geometry)) {
@@ -109,14 +113,14 @@ router.post('/board/:board', Boards.exists, async (req, res, next) => {
 	}
 
 	const data = {
-        'name': req.body.name || 'Anonymous',
-        'subject': req.body.subject || '',
-        'date': new Date(),
-        'message': req.body.message || '',
-        'thread': req.body.thread || null,
+		'name': req.body.name || 'Anonymous',
+		'subject': req.body.subject || '',
+		'date': new Date(),
+		'message': req.body.message || '',
+		'thread': req.body.thread || null,
 		'password': req.body.password || '',
-        'files': files
-    };
+		'files': files
+	};
 
 	const post = await Posts.insertOne(req.params.board, data)
 
@@ -139,6 +143,7 @@ router.post('/board/:board/delete', Boards.exists, async (req, res, next) => {
 		return res.status(400).json({ 'message': 'Must check 1-10 boxes for posts to delete' })
 	}
 
+	//get all posts that were checked
 	let posts;
 	try {
 		posts = await Posts.getPosts(req.params.board, req.body.checked);
@@ -146,27 +151,54 @@ router.post('/board/:board/delete', Boards.exists, async (req, res, next) => {
 		return res.status(500).json({ 'message': 'Error fetching from DB' });
 	}
 
-	let deleted = 0;
+	//filter it to ones that match the password
+	posts = posts.filter(post => post.password == req.body.password);
 
-	await Promise.all(posts.map(async post =>{
+	if (posts.length > 0) {
 
-		if (post.password != req.body.password) {
-			return; // res.status(403).json({ 'message': 'Incorrect password' });
-		}
+		const threadIds = posts.filter(x => x.thread == null).map(x => x._id);
 
+		//get posts from all threads
+		let threadPosts = []
+		await Promise.all(threadIds.map(async id => {
+			const currentThreadPosts = await Posts.getThreadPosts(req.params.board, id);
+			threadPosts = threadPosts.concat(currentThreadPosts);
+			return;
+		}))
+
+		//combine them all into one array
+		const allPosts = posts.concat(threadPosts)
+
+		//delete posts from DB
+		let deletedPosts = 0;
 		try {
-			await Posts.deleteOne(req.params.board, {
-				'_id': post._id
-			});
+			const result = await Posts.deleteMany(req.params.board, allPosts.map(x => x._id));
+			deletedPosts = result.deletedCount;
 		} catch (err) {
-			return; // res.status(500).json({ 'message': 'Error deleting from DB' });
+			return res.status(500).json({ 'message': 'Error deleting posts from DB' });
 		}
 
-		deleted++; //successfully deleted one
+		//get filenames from all the posts
+		let fileNames = [];
+		allPosts.forEach(post => {
+			fileNames = fileNames.concat(post.files.map(x => x.filename))
+		})
 
-	}));
+		//delete all the files using the filenames
+		await Promise.all(fileNames.map(async filename => {
+			//dont question it.
+			return Promise.all([
+				unlink(uploadDirectory + filename),
+				unlink(uploadDirectory + 'thumb-' + filename)
+			])
+		}));
 
-	return res.json({ 'message': `deleted: ${deleted} posts` })
+		//hooray!
+		return res.json({ 'message': `deleted ${threadIds.length} threads and ${deletedPosts} posts` })
+
+	}
+
+	return res.status(403).json({ 'message': 'Password did not match any selected posts' })
 
 });
 

@@ -39,11 +39,7 @@ module.exports = {
 			db.collection(board).findOne({
 				'_id': id
 			}),
-			db.collection(board).find({
-				'thread': id
-			}).sort({
-				'_id': 1
-			}).toArray()
+			module.exports.getThreadPosts(board, id)
 		])
 
 		// attach the replies to the thread post
@@ -53,6 +49,17 @@ module.exports = {
 		}
 
 		return thread;
+
+	},
+
+	getThreadPosts: async(board, id) => {
+
+		// all posts within a thread
+		return db.collection(board).find({
+			'thread': id
+		}).sort({
+			'_id': 1
+		}).toArray();
 
 	},
 
@@ -113,8 +120,14 @@ module.exports = {
 		return db.collection(board).deleteOne(options);
 	},
 
-	deleteMany: async (board, options) => {
-		return db.collection(board).deleteMany(options);
+	deleteMany: async (board, ids) => {
+
+		return db.collection(board).deleteMany({
+			'_id': {
+				'$in': ids
+			}
+		});
+
 	},
 
 	deleteAll: async (board) => {
