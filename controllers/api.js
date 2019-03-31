@@ -76,7 +76,6 @@ router.post('/board/:board', Boards.exists, async (req, res, next) => {
 	// if we got a file
 	if (numFiles > 0) {
 		// check all mime types befoer we try saving anything
-		console.log(req.files)
 		for (let i = 0; i < numFiles; i++) {
 			if (!fileCheckMimeType(req.files.file[i].mimetype)) {
 				return res.status(400).json({ 'message': 'Invalid file type' });
