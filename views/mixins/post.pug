@@ -1,27 +1,28 @@
 mixin post(board, post)
-	.post-wrapper
-		div(class='post-container '+(post.thread ? '' : 'op'))
-			.post-info
-				input.post-check(type='checkbox', name='checked[]' value=post._id)
+	article(class='post-container '+(post.thread ? '' : 'op'))
+		header.post-info
+			input.post-check(type='checkbox', name='checked[]' value=post._id)
+			if post.subject
 				span.post-subject #{post.subject}
-				span.post-name #{post.name}
-				span #{post.date.toLocaleString()}
-				span No.
-				if post.thread == null
-					a(href=`/${board._id}/thread/${post._id}`) ##{post._id}
-				else
-					a(href=`/${board._id}/thread/${post.thread}#${post._id}`) ##{post._id}
-			if post.files.length > 0
-				.post-files
-					each file in post.files
-						.post-file
-							.post-file-info
-								span: a(href='/img/thumb-'+file.filename download=file.originalFilename) #{file.originalFilename}
-								span ( Size: #{file.sizeString}
-								span Dimensions: #{file.geometryString} )
-							.post-file
-								a(href='/img/'+file.filename)
-									object(data='/img/thumb-'+file.filename type=file.mimetype)
+			span.post-name #{post.name}
+			time #{post.date.toLocaleString()}
+			span No.
+			if post.thread == null
+				a(href=`/${board._id}/thread/${post._id}`) ##{post._id}
+			else
+				a(href=`/${board._id}/thread/${post.thread}#${post._id}`) ##{post._id}
+		if post.files.length > 0
+			.post-files
+				each file in post.files
+					.post-file
+						.post-file-info
+							span: a(href='/img/thumb-'+file.filename download=file.originalFilename) #{file.originalFilename}
+							br
+							span (#{file.sizeString} #{file.geometryString})
+						.post-file-src
+							a(href='/img/'+file.filename)
+								object(data='/img/thumb-'+file.filename type=file.mimetype)
+		if post.message
 			.post-message
 				p(style='white-space: pre-wrap;') #{post.message}
 

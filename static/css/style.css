@@ -13,22 +13,45 @@ span {
 	margin-right: 5px;
 }
 
+section {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
 input, textarea {
-    display: block;
+	display: flex;
+	display: flex;
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
 	border-radius: 3px;
 	max-width:100%;
 }
 
+.form-post-wrapper {
+	align-items: center;
+}
+
+.form-post {
+	display: flex;
+	flex-direction: column;
+	max-width: 100%;
+}
+
 .post-check {
-	vertical-align: sub;
+	position: relative;
+	top: 3px;
 	display: inline-block;
 }
 
 .post-file {
-	vertical-align: top;
-	display: inline-block;
+	display: inline-flex;
+	flex-direction: column;
+	margin: 5px;
+}
+
+.post-file-info {
+	margin: 2px;
 }
 
 input textares {
@@ -36,24 +59,29 @@ input textares {
 }
 
 .container {
-	margin: 5px;
-	margin-top: 57px;
+	padding: 35px 10px;
 }
 
 .board-title {
-	color: #AF0A0F;
-	font-size: 20pt;
-	font-weight: bold;
-	font-family: tahoma;
+	color: #af0a0f;
+	font: bolder 28px Tahoma;
 	letter-spacing: -2px;
+	text-align: center;
+	margin-bottom: 0;
+}
+
+.board-description {
+	text-align:center;
+	margin-top: 0;
 }
 
 .post-container {
-	margin-top: 5px;
-	margin-left: 15px;
-	padding: 5px;
+	margin-top: 2px;
+	padding: 3px;
 	background: #D6DAF0;
-	display: inline-block;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 	border-color: #B7C5D9;
 	border-width: 0 1px 1px 0;
 	border-style: none solid solid none;
@@ -89,10 +117,8 @@ input textares {
 }
 
 .navbar {
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid gray;
 	margin: 0;
-	line-height: 50px;
-	height: 50px;
 	position: fixed;
 	width: 100%;
 	background: #eef2ff;
@@ -112,8 +138,7 @@ input textares {
 }
 
 .footer {
-	line-height: 50px;
-	border-top: 1px solid black;
+	border-top: 1px solid gray;
 	text-align: center;
 	flex-shrink: 0;
 	margin-top: auto;
