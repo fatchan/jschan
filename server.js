@@ -29,8 +29,8 @@ const express  = require('express')
 		safeFileNames: true,
 		preserveExtension: true,
 		limits: {
-			fileSize: 1 * 1024 * 1024,
-			files: 1
+			fileSize: 10 * 1024 * 1024,
+			files: 3
 		},
 		abortOnLimit: true,
 		useTempFile: true,

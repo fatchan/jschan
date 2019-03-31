@@ -13,6 +13,6 @@ form.form-post(action='/api/board/'+board._id, enctype='multipart/form-data', me
 
 	textarea#messagey(name='message', rows='8', cols='50', placeholder='message' autocomplete='off')
 
-	input#file(type='file', name='file')
+	input#file(type='file', name='file' multiple)
 
 	input(type='submit', value='submit')

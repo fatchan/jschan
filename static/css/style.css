@@ -26,6 +26,11 @@ input, textarea {
 	display: inline-block;
 }
 
+.post-file {
+	vertical-align: top;
+	display: inline-block;
+}
+
 input textares {
 	padding: 8px;
 }

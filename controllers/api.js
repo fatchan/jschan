@@ -33,8 +33,15 @@ const express  = require('express')
 router.post('/board/:board', Boards.exists, async (req, res, next) => {
 
 	//needs a refactor into a body validator of some sort
-	const fileKeys = Object.keys(req.files);
-	const numFiles = fileKeys.length
+	let numFiles = 0;
+	if (req.files && req.files.file) {
+		if (Array.isArray(req.files.file)) {
+			numFiles = req.files.file.length;
+		} else {
+			numFiles = 1;
+			req.files.file = [req.files.file];
+		}
+	}
 	if (!req.body.message && numFiles === 0) {
 		return res.status(400).json({ 'message': 'Must provide a message or file' });
 	}
@@ -57,6 +64,7 @@ router.post('/board/:board', Boards.exists, async (req, res, next) => {
 		try {
 			thread = await Posts.getThread(req.params.board, req.body.thread);
 		} catch (err) {
+			console.error(err);
 			return res.status(500).json({ 'message': 'Error fetching from DB' });
 		}
 		if (!thread) {
@@ -68,18 +76,19 @@ router.post('/board/:board', Boards.exists, async (req, res, next) => {
 	// if we got a file
 	if (numFiles > 0) {
 		// check all mime types befoer we try saving anything
+		console.log(req.files)
 		for (let i = 0; i < numFiles; i++) {
-			if (!fileCheckMimeType(req.files[fileKeys[i]].mimetype)) {
+			if (!fileCheckMimeType(req.files.file[i].mimetype)) {
 				return res.status(400).json({ 'message': 'Invalid file type' });
 			}
 		}
 		// then upload, thumb, get metadata, etc.
 		for (let i = 0; i < numFiles; i++) {
-			const file = req.files[fileKeys[i]];
+			const file = req.files.file[i];
 			const filename = uuidv4() + path.extname(file.name);
 			// try to save, thumbnail and get metadata
 			try {
-				await fileUpload(req, res, filename);
+				await fileUpload(req, res, file, filename);
 				const fileData = await fileIdentify(filename);
 				await fileThumbnail(filename);
 				const processedFile = {
@@ -148,6 +157,7 @@ router.post('/board/:board/delete', Boards.exists, async (req, res, next) => {
 	try {
 		posts = await Posts.getPosts(req.params.board, req.body.checked);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ 'message': 'Error fetching from DB' });
 	}
 
@@ -175,6 +185,7 @@ router.post('/board/:board/delete', Boards.exists, async (req, res, next) => {
 			const result = await Posts.deleteMany(req.params.board, allPosts.map(x => x._id));
 			deletedPosts = result.deletedCount;
 		} catch (err) {
+			console.error(err);
 			return res.status(500).json({ 'message': 'Error deleting posts from DB' });
 		}
 
@@ -210,6 +221,7 @@ router.get('/board/:board/recent/:page(\\d+)?', Boards.exists, async (req, res, 
 	try {
 		threads = await Posts.getRecent(req.params.board, req.params.page || 1);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ 'message': 'Error fetching from DB' });
 	}
 
@@ -229,6 +241,7 @@ router.get('/board/:board/thread/:id(\\d+)', Boards.exists, async (req, res, nex
 	try {
 		thread = await Posts.getThread(req.params.board, req.params.id);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ 'message': 'Error fetching from DB' });
 	}
 
@@ -248,6 +261,7 @@ router.get('/board/:board/catalog', Boards.exists, async (req, res, next) => {
 	try {
 		data = await Posts.getCatalog(req.params.board);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ 'message': 'Error fetching from DB' });
 	}
 
@@ -267,6 +281,7 @@ router.get('/boards', Boards.exists, async (req, res, next) => {
 	try {
 		boards = await Boards.find();
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ 'message': 'Error fetching from DB' })
 	}
 
