@@ -2,7 +2,12 @@ extends ../layout.pug
 include ../mixins/post.pug
 
 block head
-	title /#{board._id}/ - #{thread.title}
+	title /#{board._id}/ - #{thread.subject}
+	meta(property='og:site_name', value='fatchan')
+	meta(property='og:title', content=thread.subject)
+	meta(property='og:url', content='https://fatpeople.lol')
+	meta(property='og:description', content=thread.message.substring(0,200))
+	meta(property='og:image', content=thread.files.length > 0 ? '/img/'+thread.files[0].filename : '')
 
 block content
 	a(href='/'+board._id) Back to /#{board._id}/
