@@ -2,6 +2,9 @@
 
 const uuidv4 = require('uuid/v4')
     , path = require('path')
+	, util = require('util')
+	, crypto = require('crypto')
+	, randomBytes = util.promisify(crypto.randomBytes)
     , uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
     , Posts = require(__dirname+'/../../db-models/posts.js')
     , fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
@@ -12,17 +15,19 @@ const uuidv4 = require('uuid/v4')
 module.exports = async (req, res, numFiles) => {
 
 	// check if this is responding to an existing thread
+	let salt;
 	if (req.body.thread) {
 		let thread;
 		try {
-			thread = await Posts.getThread(req.params.board, req.body.thread);
+			thread = await Posts.getPost(req.params.board, req.body.thread);
 		} catch (err) {
 			console.error(err);
 			return res.status(500).json({ 'message': 'Error fetching from DB' });
 		}
-		if (!thread) {
+		if (!thread || thread.thread != null) {
 			return res.status(400).json({ 'message': 'thread does not exist' })
 		}
+		salt = thread.salt;
 	}
 
 	let files = [];
@@ -71,6 +76,10 @@ module.exports = async (req, res, numFiles) => {
 		}
 	}
 
+	if (!salt) {
+		salt = (await randomBytes(128)).toString('hex');
+	}
+
 	const data = {
 		'name': req.body.name || 'Anonymous',
 		'subject': req.body.subject || '',
@@ -78,8 +87,13 @@ module.exports = async (req, res, numFiles) => {
 		'message': req.body.message || '',
 		'thread': req.body.thread || null,
 		'password': req.body.password || '',
-		'files': files
+		'files': files,
+		'salt': !req.body.thread ? salt : '',
 	};
+
+	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+
+	data.userId = crypto.createHash('sha256').update(salt + ip + req.params.board).digest('hex').substring(0, 6);
 
 	const post = await Posts.insertOne(req.params.board, data)
 

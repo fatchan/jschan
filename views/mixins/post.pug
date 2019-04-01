@@ -1,4 +1,4 @@
-mixin post(board, post)
+mixin post(board, post, truncate)
 	article(class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
 			input.post-check(type='checkbox', name='checked[]' value=post._id)
@@ -6,6 +6,7 @@ mixin post(board, post)
 				span.post-subject #{post.subject}
 			span.post-name #{post.name}
 			span #{post.date.toLocaleString()}
+			span.user-id(style=`background: #${post.userId}`) #{post.userId}
 			if post.thread == null
 				span: a(href=`/${board._id}/thread/${post._id}`) ##{post._id}
 			else
@@ -22,5 +23,22 @@ mixin post(board, post)
 							a(target='_blank' href='/img/'+file.filename)
 								object(data='/img/thumb-'+file.filename type=file.mimetype)
 		if post.message
-			blockquote.post-message(style='white-space: pre-wrap;') #{post.message}
+			if truncate
+				-
+					const splitPost = post.message.split('\n');
+					const messageLines = splitPost.length;
+					const postLength = post.message.length;
+					let truncatedMessage = post.mesage;
+					let truncated = false;
+					if (messageLines > 16 || post.message.length > 1000) {
+						truncatedMessage = splitPost.slice(0, 16).join('\n').substring(0, 1000);
+						truncated = true;
+					}
+				if truncated
+					blockquote.post-message(style='white-space: pre-wrap;') #{truncatedMessage}
+					p Message too long. #[a(href=`/${board._id}/thread/${post.thread == null ? post._id : post.thread}#${post._id}`) Click here] to view the full text.
+				else
+					blockquote.post-message(style='white-space: pre-wrap;') #{post.message}
+			else 
+				blockquote.post-message(style='white-space: pre-wrap;') #{post.message}
 

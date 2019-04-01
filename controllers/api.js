@@ -13,14 +13,21 @@ const express  = require('express')
 
 /*
 (async () => {
+	await Boards.deleteIncrement('pol');
 	await Boards.deleteIncrement('b');
+	await Posts.deleteAll('pol');
+	await Posts.deleteAll('b');
 	await Boards.deleteAll();
 	await Boards.insertOne({
+		_id: 'pol',
+		name: 'Politically Incorrect',
+		description: 'Political posts go here.',
+	})
+	await Boards.insertOne({
 		_id: 'b',
-		name: 'random',
+		name: 'Random',
 		description: 'post anything here',
 	})
-	await Posts.deleteAll('b');
 })();
 */
 

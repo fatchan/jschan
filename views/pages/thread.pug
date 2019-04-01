@@ -21,8 +21,9 @@ block content
 			for post in thread.replies
 				+post(board, post)
 		hr(size=1)
-		input#password(type='password', name='password', placeholder='password (for deletion)' autocomplete='off')
-		input(type='submit', value='delete')
+		section.delete-wrapper
+			input#password(type='password', name='password', placeholder='password (for deletion)' autocomplete='off')
+			input(type='submit', value='delete')
 
 
 

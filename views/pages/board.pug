@@ -16,9 +16,10 @@ block content
 			hr(size=1)
 		for thread in threads
 			section.thread(id=thread._id)
-				+post(board, thread)
+				+post(board, thread, true)
 				for post in thread.replies
-					+post(board, post)
+					+post(board, post, true)
 			hr(size=1)
-		input#password(type='password', name='password', placeholder='password (for deletion)' autocomplete='off')
-		input(type='submit', value='delete')
+		section.delete-wrapper
+			input#password(type='password', name='password', placeholder='password (for deletion)' autocomplete='off')
+			input(type='submit', value='delete')

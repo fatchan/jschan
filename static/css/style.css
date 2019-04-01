@@ -9,6 +9,10 @@ body {
 	margin: 0;
 }
 
+blockquote {
+	word-break: break-all;
+}
+
 span {
 	margin-right: 5px;
 }
@@ -24,11 +28,19 @@ input, textarea {
 	font-size: 10pt;
 	border-radius: 3px;
 	max-width:100%;
+	border: none;
+	margin: 2px;
+	padding: 5px;
 }
 
-.form-post-wrapper {
+.form-wrapper {
 	align-items: center;
 	margin: 10px 0;
+}
+
+.delete-wrapper {
+	align-items: center;
+	flex-direction: row;
 }
 
 .form-post {
@@ -129,7 +141,7 @@ input textarea {
 }
 
 .navbar {
-	border-bottom: 1px solid gray;
+	border-bottom: 1px solid lightgray;
 	margin: 0;
 	position: fixed;
 	width: 100%;
@@ -151,14 +163,14 @@ input textarea {
 }
 
 .footer {
-	border-top: 1px solid gray;
+	border-top: 1px solid lightgray;
 	text-align: center;
 	flex-shrink: 0;
 	margin-top: auto;
 }
 
 table, th, td {
-	border-bottom: 1px solid gray;
+	border-bottom: 1px solid lightgray;
 	border-collapse: collapse;
 }
 
@@ -173,6 +185,10 @@ th {
 
 th, td {
 	padding: 5px;
+}
+
+hr {
+	color: lightgray;
 }
 
 @media only screen and (max-width: 800px) {
