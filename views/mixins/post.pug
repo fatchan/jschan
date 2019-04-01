@@ -5,24 +5,22 @@ mixin post(board, post)
 			if post.subject
 				span.post-subject #{post.subject}
 			span.post-name #{post.name}
-			time #{post.date.toLocaleString()}
-			span No.
+			span #{post.date.toLocaleString()}
 			if post.thread == null
-				a(href=`/${board._id}/thread/${post._id}`) ##{post._id}
+				span: a(href=`/${board._id}/thread/${post._id}`) ##{post._id}
 			else
-				a(href=`/${board._id}/thread/${post.thread}#${post._id}`) ##{post._id}
+				span: a(href=`/${board._id}/thread/${post.thread}#${post._id}`) ##{post._id}
 		if post.files.length > 0
 			.post-files
 				each file in post.files
 					.post-file
 						.post-file-info
-							span: a(href='/img/thumb-'+file.filename download=file.originalFilename) #{file.originalFilename}
+							span: a(href='/img/thumb-'+file.filename download=file.originalFilename) Download
 							br
 							span (#{file.sizeString} #{file.geometryString})
 						.post-file-src
-							a(href='/img/'+file.filename)
+							a(target='_blank' href='/img/'+file.filename)
 								object(data='/img/thumb-'+file.filename type=file.mimetype)
 		if post.message
-			.post-message
-				p(style='white-space: pre-wrap;') #{post.message}
+			blockquote.post-message(style='white-space: pre-wrap;') #{post.message}
 

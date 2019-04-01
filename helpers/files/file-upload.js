@@ -1,7 +1,7 @@
 'use strict';
 
-const configs = require(__dirname+'/../configs/main.json')
-	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
+const configs = require(__dirname+'/../../configs/main.json')
+	, uploadDirectory = require(__dirname+'/../uploadDirectory.js');
 
 module.exports = (req, res, file, filename) => {
 

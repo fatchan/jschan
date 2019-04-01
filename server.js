@@ -61,8 +61,6 @@ const express  = require('express')
 	app.use('/img', express.static(__dirname + '/static/img'));
 
 	// routes
-
-
 	app.use('/api', require(__dirname+'/controllers/api.js'))
 	app.use('/', require(__dirname+'/controllers/frontend.js'))
 
