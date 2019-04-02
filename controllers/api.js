@@ -12,7 +12,6 @@ const express  = require('express')
 	, getCatalog = require(__dirname+'/../models/api/get-catalog.js')
 	, getBoards = require(__dirname+'/../models/api/get-boards.js');
 
-/*
 (async () => {
 	await Boards.deleteIncrement('pol');
 	await Boards.deleteIncrement('b');
@@ -31,7 +30,7 @@ const express  = require('express')
 		description: 'post anything here',
 	})
 })();
-*/
+
 
 // make new post
 router.post('/board/:board', Boards.exists, (req, res, next) => {

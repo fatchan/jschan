@@ -8,6 +8,15 @@ const uuidv4 = require('uuid/v4')
     , uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
     , Posts = require(__dirname+'/../../db-models/posts.js')
 	, getTripCode = require(__dirname+'/../../helpers/tripcode.js')
+	, simpleMarkdown = require(__dirname+'/../../helpers/markdown.js')
+	, sanitize = require('sanitize-html')
+	, sanitizeOptions = {
+		allowedTags: [ 'span', 'a' ],
+		allowedAttributes: {
+			'a': [ 'href', 'class' ],
+			'span': [ 'class' ]
+		}
+	}
     , fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
     , fileThumbnail = require(__dirname+'/../../helpers/files/file-thumbnail.js')
     , fileIdentify = require(__dirname+'/../../helpers/files/file-identify.js')
@@ -103,14 +112,21 @@ module.exports = async (req, res, numFiles) => {
 		name = `${name}##${tripcode}`;
 	}
 
+	//simple markdown and sanitize
+	let message = req.body.message;
+	if (message && message.length > 0) {
+		message = sanitize(simpleMarkdown(req.params.board, req.body.thread, message), sanitizeOptions);
+	}
+
 	//add post to DB
 	const data = {
 		'name': name || 'Anonymous',
 		'subject': req.body.subject || '',
 		'date': new Date(),
-		'message': req.body.message || '',
+		'message': message || '',
 		'thread': req.body.thread || null,
 		'password': req.body.password || '',
+		'userId': userId,
 		'files': files,
 		'salt': salt,
 	};

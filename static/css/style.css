@@ -9,6 +9,14 @@ body {
 	margin: 0;
 }
 
+.redtext {
+	color: maroon;
+}
+
+.greentext {
+	color: green;
+}
+
 blockquote {
 	word-break: break-all;
 	white-space: pre-wrap;

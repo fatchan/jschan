@@ -27,18 +27,17 @@ mixin post(board, post, truncate)
 				-
 					const splitPost = post.message.split('\n');
 					const messageLines = splitPost.length;
-					const postLength = post.message.length;
 					let truncatedMessage = post.mesage;
 					let truncated = false;
-					if (messageLines > 16 || post.message.length > 1000) {
-						truncatedMessage = splitPost.slice(0, 16).join('\n').substring(0, 1000);
+					if (messageLines > 10 || post.message.length > 1000) {
+						truncatedMessage = splitPost.slice(0, 16).join('\n');
 						truncated = true;
 					}
 				if truncated
-					blockquote.post-message #{truncatedMessage}
+					blockquote.post-message !{truncatedMessage}
 					p Message too long. #[a(href=`/${board._id}/thread/${post.thread == null ? post._id : post.thread}#${post._id}`) Click here] to view the full text.
 				else
-					blockquote.post-message #{post.message}
+					blockquote.post-message !{post.message}
 			else 
-				blockquote.post-message #{post.message}
+				blockquote.post-message !{post.message}
 
