@@ -11,6 +11,7 @@ body {
 
 blockquote {
 	word-break: break-all;
+	white-space: pre-wrap;
 }
 
 span {
@@ -90,7 +91,7 @@ input textarea {
 
 .board-title {
 	color: #af0a0f;
-	font: bolder 28px Tahoma;
+	font: bolder;
 	letter-spacing: -2px;
 	text-align: center;
 	margin: 0;
@@ -149,7 +150,6 @@ input textarea {
 }
 
 .nav-item {
-	font: bolder 20pt Tahoma;
 	line-height: 50px;
 	text-decoration: none;
 	float: left;

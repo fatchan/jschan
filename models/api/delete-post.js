@@ -62,15 +62,17 @@ module.exports = async (req, res) => {
 
 		//hooray!
 		return res.render('message', {
-			'message': `deleted ${threadIds.length} threads and ${deletedPosts} posts`,
+			'title': 'Success',
+			'message': `Deleted ${threadIds.length} threads and ${deletedPosts} posts`,
 			'redirect': `/${req.params.board}`
 		});
 
 	}
 
-	return res.render('message', {
-			'message': 'Password did not match any selected posts',
-			'redirect': `/${req.params.board}`
+	return res.status(403).render('message', {
+		'title': 'Forbidden',
+		'message': 'Password did not match any selected posts',
+		'redirect': `/${req.params.board}`
 	});
 
 }

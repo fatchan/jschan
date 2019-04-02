@@ -35,10 +35,10 @@ mixin post(board, post, truncate)
 						truncated = true;
 					}
 				if truncated
-					blockquote.post-message(style='white-space: pre-wrap;') #{truncatedMessage}
+					blockquote.post-message #{truncatedMessage}
 					p Message too long. #[a(href=`/${board._id}/thread/${post.thread == null ? post._id : post.thread}#${post._id}`) Click here] to view the full text.
 				else
-					blockquote.post-message(style='white-space: pre-wrap;') #{post.message}
+					blockquote.post-message #{post.message}
 			else 
-				blockquote.post-message(style='white-space: pre-wrap;') #{post.message}
+				blockquote.post-message #{post.message}
 
