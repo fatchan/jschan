@@ -16,7 +16,7 @@ module.exports = {
 			'thread': null
 		}).sort({
 			'bumped': -1
-		}).limit(10).toArray();
+		}).skip(10*(page-1)).limit(10).toArray();
 
 		// add posts to all threads in parallel
 		await Promise.all(threads.map(async thread => {
@@ -32,6 +32,10 @@ module.exports = {
 
 		return threads;
 
+	},
+
+	getPages: async (board) => {
+		return db.collection(board).estimatedDocumentCount();
 	},
 
 	getThread: async (board, id) => {

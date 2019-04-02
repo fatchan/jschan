@@ -1,5 +1,5 @@
 mixin post(board, post, truncate)
-	article(class='post-container '+(post.thread ? '' : 'op'))
+	article(id=post._id class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
 			input.post-check(type='checkbox', name='checked[]' value=post._id)
 			if post.subject

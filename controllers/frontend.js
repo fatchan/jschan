@@ -8,7 +8,25 @@ const express  = require('express')
 	, thread = require(__dirname+'/../models/frontend/thread.js');
 
 // board page/recents
-router.get('/:board/:page(\\d+)?', Boards.exists, board);
+router.get('/:board/:page(\\d+)?', Boards.exists, (req, res, next) => {
+
+    const errors = [];
+
+    if (req.params.page && req.params.page <= 0) {
+        errors.push('Invalid page.');
+    }
+
+    if (errors.length > 0) {
+        return res.status(400).render('message', {
+            'title': 'Bad request',
+            'errors': errors,
+            'redirect': `/${req.params.board}`
+        });
+    }
+
+	board(req, res);
+
+});
 
 // thread view page
 router.get('/:board/thread/:id(\\d+)', Boards.exists, thread);

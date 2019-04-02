@@ -20,6 +20,11 @@ block content
 				for post in thread.replies
 					+post(board, post, true)
 			hr(size=1)
+		if pages > 0
+			span.pages Page 
+				- for(let i = 0; i < pages; i++)
+					span: a(href=`/${board._id}/${i+1}`) #{i+1}
+			hr(size=1)
 		section.delete-wrapper
 			input#password(type='password', name='password', placeholder='password (for deletion)' autocomplete='off')
 			input(type='submit', value='delete')
