@@ -8,7 +8,7 @@ module.exports = (filename) => {
 		gm(uploadDirectory + filename)
 			.resize(128, 128)
 			.noProfile()
-			.write(uploadDirectory + 'thumb-' + filename, function (err) {
+			.write(`${uploadDirectory}thumb-${filename.split('.')[0]}.png`, function (err) {
 				if (err) {
 					return reject(err);
 				}

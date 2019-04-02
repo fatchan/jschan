@@ -18,9 +18,12 @@ const uuidv4 = require('uuid/v4')
 		}
 	}
     , fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
-    , fileThumbnail = require(__dirname+'/../../helpers/files/file-thumbnail.js')
-    , fileIdentify = require(__dirname+'/../../helpers/files/file-identify.js')
-    , fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js');
+    , fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
+    , imageThumbnail = require(__dirname+'/../../helpers/files/image-thumbnail.js')
+    , imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
+    , videoThumbnail = require(__dirname+'/../../helpers/files/video-thumbnail.js')
+    , videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
+    , formatSize = require(__dirname+'/../../helpers/files/format-size.js')
 
 module.exports = async (req, res, numFiles) => {
 
@@ -62,21 +65,47 @@ module.exports = async (req, res, numFiles) => {
 		// then upload, thumb, get metadata, etc.
 		for (let i = 0; i < numFiles; i++) {
 			const file = req.files.file[i];
-			const filename = uuidv4() + path.extname(file.name);
+			const uuid = uuidv4();
+			const filename = uuid + path.extname(file.name);
+
 			// try to save, thumbnail and get metadata
 			try {
+
+				//upload file
 				await fileUpload(req, res, file, filename);
-				const fileData = await fileIdentify(filename);
-				await fileThumbnail(filename);
-				const processedFile = {
-					filename: filename,
-					originalFilename: file.name,
-					mimetype: file.mimetype,
-					size: file.size, // size in bytes
-					geometry: fileData.size, // object with width and height pixels
-					sizeString: fileData.Filesize, // 123 Ki string
-					geometryString: fileData.Geometry, // 123 x 123 string
+
+				//get metadata
+				let processedFile = {
+						filename: filename,
+						originalFilename: file.name,
+						mimetype: file.mimetype,
+						size: file.size,
+				};
+
+				//handle video vs image ffmpeg vs graphicsmagick
+				const mainType = file.mimetype.split('/')[0];
+				switch (mainType) {
+					case 'image':
+						const imageData = await imageIdentify(filename);
+						processedFile.geometry = imageData.size // object with width and height pixels
+						processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
+						processedFile.geometryString = imageData.Geometry // 123 x 123 string
+						await imageThumbnail(filename);
+						break;
+					case 'video':
+						//video metadata
+						const videoData = await videoIdentify(filename);
+						processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
+						processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
+						processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string
+						await videoThumbnail(filename);
+						break;
+					default:
+						return res.status(500).render('error'); //how did we get here?
 				}
+
+				//make thumbnail
+
 				//handle gifs with multiple geometry and size
 				if (Array.isArray(processedFile.geometry)) {
 					processedFile.geometry = processedFile.geometry[0];
@@ -87,7 +116,9 @@ module.exports = async (req, res, numFiles) => {
 				if (Array.isArray(processedFile.geometryString)) {
 					processedFile.geometryString = processedFile.geometryString[0];
 				}
+
 				files.push(processedFile);
+
 			} catch (err) {
 				console.error(err);
 				//TODO: DELETE FAILED FILES

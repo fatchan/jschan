@@ -11,7 +11,6 @@ const express  = require('express')
 	, getThread = require(__dirname+'/../models/api/get-thread.js')
 	, getCatalog = require(__dirname+'/../models/api/get-catalog.js')
 	, getBoards = require(__dirname+'/../models/api/get-boards.js');
-
 /*
 (async () => {
 	await Boards.deleteIncrement('pol');
@@ -30,6 +29,8 @@ const express  = require('express')
 		name: 'Random',
 		description: 'post anything here',
 	})
+	await Posts.db.collection('b').createIndex({"thread": 1});
+	await Posts.db.collection('pol').createIndex({"thread": 1});
 })();
 */
 

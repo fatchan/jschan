@@ -27,7 +27,7 @@ const express  = require('express')
 	app.use(upload({
 		createParentPath: true,
 		safeFileNames: true,
-		preserveExtension: true,
+		preserveExtension: 4,
 		limits: {
 			fileSize: 10 * 1024 * 1024,
 			files: 3

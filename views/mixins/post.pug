@@ -16,12 +16,12 @@ mixin post(board, post, truncate)
 				each file in post.files
 					.post-file
 						.post-file-info
-							span: a(href='/img/thumb-'+file.filename download=file.originalFilename) Download
+							span: a(href='/img/thumb-'+file.filename download=file.originalFilename) #{file.originalFilename}
 							br
 							span (#{file.sizeString} #{file.geometryString})
 						.post-file-src
 							a(target='_blank' href='/img/'+file.filename)
-								object(data='/img/thumb-'+file.filename type=file.mimetype)
+								object(data=`/img/thumb-${file.filename.split('.')[0]}.png` width='128' height='128')
 		if post.message
 			if truncate
 				-
