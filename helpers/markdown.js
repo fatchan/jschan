@@ -14,7 +14,7 @@ module.exports = (board, thread, text) => {
 		const quote = lines[j].match(quoteRegex);
 		if (quote) {
 			const quotenum = quote[0].substring(2);
-			lines[j] = lines[j].replace(quote[0], `<a class='quote' href='/${board}/thread/${thread}/${quote}#${quote}'>&gt;&gt;${quotenum}</a>`);
+			lines[j] = lines[j].replace(quote[0], `<a class='quote' href='/${board}/thread/${thread}#${quotenum}'>&gt;&gt;${quotenum}</a>`);
 			continue;
 		}
 		//replace greentexts
