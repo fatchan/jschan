@@ -22,6 +22,8 @@ module.exports = {
 		await Promise.all(threads.map(async thread => {
 			const replies = await db.collection(board).find({
 				'thread': thread._id
+			}, {
+				'projection': { 'salt': 0 }
 			}).sort({
 				'_id': -1
 			}).limit(3).toArray();
@@ -38,6 +40,8 @@ module.exports = {
 		const data = await Promise.all([
 			db.collection(board).findOne({
 				'_id': id
+			}, {
+				'projection': { 'salt': 0 } //projection to hide salts
 			}),
 			module.exports.getThreadPosts(board, id)
 		])
@@ -57,6 +61,8 @@ module.exports = {
 		// all posts within a thread
 		return db.collection(board).find({
 			'thread': id
+		}, {
+			'projection': { 'salt': 0 } //projection to hide salts
 		}).sort({
 			'_id': 1
 		}).toArray();
@@ -68,6 +74,8 @@ module.exports = {
 		// get all threads for catalog
 		return db.collection(board).find({
 			'thread': null
+		}, {
+			'projection': { 'salt': 0 } //projection to hide salts
 		}).toArray();
 
 	},
@@ -77,6 +85,8 @@ module.exports = {
 		// get a post
 		return db.collection(board).findOne({
 			'_id': id
+		}, {
+			'projection': { 'salt': 0 } //projection to hide salts
 		});
 
 	},
@@ -88,6 +98,8 @@ module.exports = {
 			'_id': {
 				'$in': ids
 			}
+		}, {
+			'projection': { 'salt': 0 } //projection to hide salts
 		}).toArray();
 
 	},
