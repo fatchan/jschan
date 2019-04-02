@@ -11,28 +11,6 @@ const express  = require('express')
 	, getThread = require(__dirname+'/../models/api/get-thread.js')
 	, getCatalog = require(__dirname+'/../models/api/get-catalog.js')
 	, getBoards = require(__dirname+'/../models/api/get-boards.js');
-/*
-(async () => {
-	await Boards.deleteIncrement('pol');
-	await Boards.deleteIncrement('b');
-	await Posts.deleteAll('pol');
-	await Posts.deleteAll('b');
-	await Boards.deleteAll();
-	await Trips.deleteAll();
-	await Boards.insertOne({
-		_id: 'pol',
-		name: 'Politically Incorrect',
-		description: 'Political posts go here.',
-	})
-	await Boards.insertOne({
-		_id: 'b',
-		name: 'Random',
-		description: 'post anything here',
-	})
-	await Posts.db.collection('b').createIndex({"thread": 1});
-	await Posts.db.collection('pol').createIndex({"thread": 1});
-})();
-*/
 
 // make new post
 router.post('/board/:board', Boards.exists, (req, res, next) => {
