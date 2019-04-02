@@ -80,13 +80,13 @@ module.exports = {
 
 	},
 
-	getPost: async (board, id) => {
+	getPost: async (board, id, salt) => {
 
 		// get a post
 		return db.collection(board).findOne({
 			'_id': id
 		}, {
-			'projection': { 'salt': 0 } //projection to hide salts
+			'projection': { 'salt': salt || false } //projection to hide salts
 		});
 
 	},

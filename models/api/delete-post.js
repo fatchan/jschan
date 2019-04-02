@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
 		posts = await Posts.getPosts(req.params.board, req.body.checked);
 	} catch (err) {
 		console.error(err);
-		return res.status(500).json({ 'message': 'Error fetching from DB' });
+		return res.status(500).render('error');
 	}
 
 	//filter it to ones that match the password
@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
 			deletedPosts = result.deletedCount;
 		} catch (err) {
 			console.error(err);
-			return res.status(500).json({ 'message': 'Error deleting posts from DB' });
+			return res.status(500).render('error');
 		}
 
 		//get filenames from all the posts
@@ -61,9 +61,16 @@ module.exports = async (req, res) => {
 		}));
 
 		//hooray!
-		return res.json({ 'message': `deleted ${threadIds.length} threads and ${deletedPosts} posts` })
+		return res.render('message', {
+			'message': `deleted ${threadIds.length} threads and ${deletedPosts} posts`,
+			'redirect': `/${req.params.board}`
+		});
 
 	}
 
-	return res.status(403).json({ 'message': 'Password did not match any selected posts' })
+	return res.render('message', {
+			'message': 'Password did not match any selected posts',
+			'redirect': `/${req.params.board}`
+	});
+
 }

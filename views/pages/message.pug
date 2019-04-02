@@ -1,0 +1,9 @@
+extends ../layout.pug
+
+block head
+	meta(http-equiv="refresh" content=`5;url=${redirect}`)
+
+block content
+	h1 Success
+	p #{message}
+	p You will be redirected shortly. If you are not redirected automatically, you can #[a(href=redirect) click here].

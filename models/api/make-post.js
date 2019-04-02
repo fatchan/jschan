@@ -19,13 +19,16 @@ module.exports = async (req, res, numFiles) => {
 	if (req.body.thread) {
 		let thread;
 		try {
-			thread = await Posts.getPost(req.params.board, req.body.thread);
+			thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		} catch (err) {
 			console.error(err);
-			return res.status(500).json({ 'message': 'Error fetching from DB' });
+			return res.status(500).render('error');
 		}
 		if (!thread || thread.thread != null) {
-			return res.status(400).json({ 'message': 'thread does not exist' })
+			return res.status(400).render('message', {
+				'message': 'Thread does not exist.',
+				'redirect': `/${req.params.board}`
+			})
 		}
 		salt = thread.salt;
 	}
@@ -36,7 +39,10 @@ module.exports = async (req, res, numFiles) => {
 		// check all mime types befoer we try saving anything
 		for (let i = 0; i < numFiles; i++) {
 			if (!fileCheckMimeType(req.files.file[i].mimetype)) {
-				return res.status(400).json({ 'message': 'Invalid file type' });
+				return res.status(400).render('message', {
+					'message': 'Invalid file type',
+					'redirect': `/${req.params.board}`
+				});
 			}
 		}
 		// then upload, thumb, get metadata, etc.
@@ -71,7 +77,7 @@ module.exports = async (req, res, numFiles) => {
 			} catch (err) {
 				console.error(err);
 				//TODO: DELETE FAILED FILES
-				return res.status(500).json({ 'message': 'Error uploading file' });
+				return res.status(500).render('error');
 			}
 		}
 	}
