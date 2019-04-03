@@ -58,6 +58,12 @@ input, textarea {
 	max-width: 100%;
 }
 
+.user-id {
+	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+	color: white;
+	padding: 0px 2px;
+}
+
 .post-check {
 	position: relative;
 	top: 3px;
@@ -68,7 +74,7 @@ input, textarea {
 
 .post-files {
 	float: left;
-    margin: 3px 20px 0 0;
+	margin: 3px 20px 0 0;
 }
 
 .post-file {
@@ -121,6 +127,11 @@ input textarea {
 	border-width: 0 1px 1px 0;
 	border-style: none solid solid none;
 	max-width: 100%;
+}
+
+.post-container:target {
+	outline: 1px dashed blue;
+	outline-offset: -1px;
 }
 
 .post-container.op {
