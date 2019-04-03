@@ -62,7 +62,8 @@ const express  = require('express')
 
 	// routes
 	app.use('/api', require(__dirname+'/controllers/api.js'))
-	app.use('/', require(__dirname+'/controllers/frontend.js'))
+	app.use('/', require(__dirname+'/controllers/accounts.js'))
+	app.use('/', require(__dirname+'/controllers/pages.js'))
 
 	app.get('*', (req, res) => {
 		res.status(404).render('404')

@@ -3,9 +3,20 @@
 const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db-models/boards.js')
-    , home = require(__dirname+'/../models/frontend/home.js')
-	, board = require(__dirname+'/../models/frontend/board.js')
-	, thread = require(__dirname+'/../models/frontend/thread.js');
+    , home = require(__dirname+'/../models/pages/home.js')
+    , register = require(__dirname+'/../models/pages/register.js')
+    , login = require(__dirname+'/../models/pages/login.js')
+	, board = require(__dirname+'/../models/pages/board.js')
+	, thread = require(__dirname+'/../models/pages/thread.js');
+
+//login page
+router.get('/login', login);
+
+//register
+router.get('/register', register);
+
+//homepage with list of boards
+router.get('/', home);
 
 // board page/recents
 router.get('/:board/:page(\\d+)?', Boards.exists, (req, res, next) => {
@@ -30,9 +41,6 @@ router.get('/:board/:page(\\d+)?', Boards.exists, (req, res, next) => {
 
 // thread view page
 router.get('/:board/thread/:id(\\d+)', Boards.exists, thread);
-
-//homepage with list of boards
-router.get('/', home);
 
 module.exports = router;
 
