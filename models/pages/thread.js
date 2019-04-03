@@ -3,6 +3,7 @@
 const Posts = require(__dirname+'/../../db-models/posts.js');
 
 module.exports = async (req, res) => {
+
     //get the recently bumped thread & preview posts
     let thread;
     try {

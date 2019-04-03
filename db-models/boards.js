@@ -58,8 +58,7 @@ module.exports = {
 			}
 		);
 
-		// faster than toString()
-		return increment.value.sequence_value + '';
+		return increment.value.sequence_value;
 
 	},
 

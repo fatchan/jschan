@@ -10,10 +10,11 @@ const express  = require('express')
 	, getRecent = require(__dirname+'/../models/api/get-recent.js')
 	, getThread = require(__dirname+'/../models/api/get-thread.js')
 	, getCatalog = require(__dirname+'/../models/api/get-catalog.js')
-	, getBoards = require(__dirname+'/../models/api/get-boards.js');
+	, getBoards = require(__dirname+'/../models/api/get-boards.js')
+	, numberConverter = require(__dirname+'/../helpers/number-converter.js');
 
 // make new post
-router.post('/board/:board', Boards.exists, (req, res, next) => {
+router.post('/board/:board', Boards.exists, numberConverter, (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -59,7 +60,7 @@ router.post('/board/:board', Boards.exists, (req, res, next) => {
 });
 
 // delete a post. using POST isntead of DELETE because of html forms supprot
-router.post('/board/:board/delete', Boards.exists, (req, res, next) => {
+router.post('/board/:board/delete', Boards.exists, numberConverter, (req, res, next) => {
 
 	const errors = [];
 

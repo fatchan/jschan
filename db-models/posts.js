@@ -104,13 +104,18 @@ module.exports = {
 	getPost: async (board, id, admin) => {
 
 		// get a post
+		if (admin) {
+			return db.collection(board).findOne({
+				'_id': id
+			});
+		}
+
 		return db.collection(board).findOne({
 			'_id': id
 		}, {
 			'projection': {
-				'salt': admin || false,
-				'password': admin || false
-				//only reveal passwords when admin is true (e.g. getting to check salt)
+				'salt': 0,
+				'password': 0
 			}
 		});
 
@@ -119,15 +124,22 @@ module.exports = {
 	//takes array "ids" of post ids
 	getPosts: async(board, ids, admin) => {
 
+		if (admin) {
+			return db.collection(board).find({
+				'_id': {
+					'$in': ids
+				}
+			}).toArray();
+		}
+
 		return db.collection(board).find({
 			'_id': {
 				'$in': ids
 			}
 		}, {
 			'projection': {
-				'salt': admin || false,
-				'password': admin || false
-				//only reveal passwords when admin is true (e.g. when fetching for deletion)
+				'salt': 0,
+				'password': 0
 			}
 		}).toArray();
 
@@ -136,7 +148,7 @@ module.exports = {
 	insertOne: async (board, data) => {
 
 		// bump thread if name not sage
-		if (data.thread !== null && data.author !== 'sage') {
+		if (data.thread !== null && data.name !== 'sage') {
 			await db.collection(board).updateOne({
 				'_id': data.thread
 			}, {

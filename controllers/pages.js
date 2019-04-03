@@ -7,7 +7,8 @@ const express  = require('express')
     , register = require(__dirname+'/../models/pages/register.js')
     , login = require(__dirname+'/../models/pages/login.js')
 	, board = require(__dirname+'/../models/pages/board.js')
-	, thread = require(__dirname+'/../models/pages/thread.js');
+	, thread = require(__dirname+'/../models/pages/thread.js')
+	, numberConverter = require(__dirname+'/../helpers/number-converter.js');
 
 //login page
 router.get('/login', login);
@@ -19,7 +20,7 @@ router.get('/register', register);
 router.get('/', home);
 
 // board page/recents
-router.get('/:board/:page(\\d+)?', Boards.exists, (req, res, next) => {
+router.get('/:board/:page(\\d+)?', Boards.exists, numberConverter, (req, res, next) => {
 
     const errors = [];
 
@@ -40,7 +41,7 @@ router.get('/:board/:page(\\d+)?', Boards.exists, (req, res, next) => {
 });
 
 // thread view page
-router.get('/:board/thread/:id(\\d+)', Boards.exists, thread);
+router.get('/:board/thread/:id(\\d+)', Boards.exists, numberConverter, thread);
 
 module.exports = router;
 

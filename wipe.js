@@ -37,13 +37,15 @@ const Mongo = require(__dirname+'/helpers/db.js')
 	})
 	console.log('creating indexes')
 	await Posts.db.collection('b').createIndex({"thread": 1});
+	await Posts.db.collection('b').createIndex({"bumped": 1});
 	await Posts.db.collection('pol').createIndex({"thread": 1});
+	await Posts.db.collection('pol').createIndex({"bumped": 1});
 	await readdir('static/img/').then(async files => {
 		await Promise.all(files.map(async file => {
 			unlink(path.join('static/img/', file));
 		}))
 	});
-	console.log('creating admin account: admin:changeme');
-	await Accounts.insertOne('admin', 'changeme', 3);
+//	console.log('creating admin account: admin:changeme');
+//	await Accounts.insertOne('admin', 'changeme', 3);
 	console.log('done');
 })();

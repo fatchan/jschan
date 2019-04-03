@@ -165,6 +165,7 @@ module.exports = async (req, res, numFiles) => {
 		'files': files,
 		'salt': salt,
 	};
+
 	const post = await Posts.insertOne(req.params.board, data)
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || post.insertedId}`;
 
