@@ -178,6 +178,7 @@ input textarea {
 	background: #D6DAF0;
 	padding-left: 10px;
 	padding-right: 10px;
+	border-right: 1px solid lightgray;
 }
 
 .nav-item:hover {
@@ -217,6 +218,14 @@ hr {
 
 	input {
 		height: 30px;
+	}
+
+	.form-post {
+		width: 100%;
+	}
+
+	.form-login {
+		width: 100%;
 	}
 
 	.post-check {
