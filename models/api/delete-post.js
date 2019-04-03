@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
 	//get all posts that were checked
 	let posts;
 	try {
-		posts = await Posts.getPosts(req.params.board, req.body.checked);
+		posts = await Posts.getPosts(req.params.board, req.body.checked, true); //admin arument true, fetches passwords and salts
 	} catch (err) {
 		console.error(err);
 		return res.status(500).render('error');
