@@ -16,7 +16,7 @@ mixin post(board, post, truncate)
 				each file in post.files
 					.post-file
 						.post-file-info
-							span: a(href='/img/thumb-'+file.filename download=file.originalFilename) #{file.originalFilename}
+							span: a(href='/img/'+file.filename download=file.originalFilename) #{file.originalFilename}
 							br
 							span (#{file.sizeString} #{file.geometryString})
 						.post-file-src
