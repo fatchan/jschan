@@ -136,11 +136,15 @@ module.exports = async (req, res, numFiles) => {
 
 	//tripcodes
 	let name = req.body.name;
-	const password = name.substring(name.indexOf('##') + 2);
-	if (password && password.length > 0) {
-		name = name.substring(0, name.indexOf('##'));
-		const tripcode = await getTripCode(password);
-		name = `${name}##${tripcode}`;
+	//if it contains 2 hashtags
+	const tripCodeIndex = name.indexOf('##');
+	if (tripCodeIndex !== -1 ) {
+		const passwordOnly = name.substring(tripCodeIndex+2);
+		if (passwordOnly.length > 0) {
+			const nameOnly = name.substring(0, tripCodeIndex);
+			const tripcode = await getTripCode(passwordOnly);
+			name = `${nameOnly}##${tripcode}`;
+		}
 	}
 
 	//simple markdown and sanitize
