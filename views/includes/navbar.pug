@@ -1,3 +1,5 @@
 nav.navbar
 	a.nav-item(href='/') Home
 	a.nav-item(href='/login') Login
+	if board
+		a.nav-item(href=`/${board._id}/manage`) Manage Board

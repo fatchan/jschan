@@ -9,6 +9,13 @@ body {
 	margin: 0;
 }
 
+.reports {
+	background: #fca!important;
+	border-color: #c97!important;
+	border-width: 1px 0;
+	border-style: solid none;
+}
+
 .redtext {
 	color: maroon;
 }
@@ -49,7 +56,7 @@ input, textarea {
 
 .delete-wrapper {
 	align-items: center;
-	flex-direction: row;
+	/*flex-direction: row;*/
 }
 
 .form-post {
@@ -129,7 +136,7 @@ input textarea {
 	max-width: 100%;
 }
 
-.post-container:target {
+.post-container:target, .op:target {
 	outline: 1px dashed blue;
 	outline-offset: -1px;
 }
@@ -214,6 +221,8 @@ th, td {
 
 hr {
 	color: lightgray;
+	/*border-top: 1px solid black;
+	background: lightgray;*/
 }
 
 @media only screen and (max-width: 800px) {

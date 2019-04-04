@@ -9,13 +9,13 @@ block content
 	h4.board-description #{board.description}
 	include ../includes/postform.pug
 	hr(size=1)
-	form(action='/forms/board/'+board._id+'/delete' method='POST' enctype='application/x-www-form-urlencoded')
+	form(action='/forms/board/'+board._id+'/posts' method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if threads.length === 0
 			p No posts.
 			hr(size=1)
 		for thread in threads
-			section.thread(id=thread._id)
+			section.thread
 				+post(board, thread, true)
 				for post in thread.replies
 					+post(board, post, true)
@@ -25,6 +25,4 @@ block content
 				- for(let i = 0; i < pages; i++)
 					span: a(href=`/${board._id}/${i+1}`) #{i+1}
 			hr(size=1)
-		section.delete-wrapper
-			input#password(type='password', name='password', placeholder='password (for deletion)' autocomplete='off')
-			input(type='submit', value='delete')
+		include ../includes/deletefooter.pug

@@ -1,7 +1,22 @@
 extends ../layout.pug
+include ../mixins/post.pug
 
 block head
 	title Login
 
 block content
-	p dummy manage page	
+	h1.board-title /#{board._id}/ - #{board.name}
+	h4.board-description Management Panel
+	hr(size=1)
+	form(action='/forms/board/'+board._id+'/posts' method='POST' enctype='application/x-www-form-urlencoded')
+		input(type='hidden' name='_csrf' value=csrf)
+		if posts.length === 0
+			p No posts.
+			hr(size=1)
+		for post in posts
+			section.thread
+				+post(board, post)
+			hr(size=1)
+		section.delete-wrapper
+			input(type='submit', value='delete')
+

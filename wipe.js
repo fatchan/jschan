@@ -44,6 +44,24 @@ const Mongo = require(__dirname+'/helpers/db.js')
 	await Posts.db.collection('b').createIndex({"bumped": 1});
 	await Posts.db.collection('pol').createIndex({"thread": 1});
 	await Posts.db.collection('pol').createIndex({"bumped": 1});
+	await Posts.db.collection('pol').createIndex({
+		'reports.0': 1
+	}, {
+		partialFilterExpression: {
+			'reports.0': {
+				'$exists': true
+			}
+		}
+	});
+	await Posts.db.collection('b').createIndex({
+		'reports.0': 1
+	}, {
+		partialFilterExpression: {
+			'reports.0': {
+				'$exists': true
+			}
+		}
+	});
 	await readdir('static/img/').then(async files => {
 		await Promise.all(files.map(async file => {
 			unlink(path.join('static/img/', file));

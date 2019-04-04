@@ -7,10 +7,7 @@ mixin post(board, post, truncate)
 			span.post-name #{post.name}
 			span #{post.date.toLocaleString()}
 			span.user-id(style=`background: #${post.userId}`) #{post.userId}
-			if post.thread == null
-				span: a(href=`/${board._id}/thread/${post._id}`) ##{post._id}
-			else
-				span: a(href=`/${board._id}/thread/${post.thread}#${post._id}`) ##{post._id}
+			span: a(href=`/${board._id}/thread/${post.thread ? post.thread : post._id}#${post._id}`) ##{post._id}
 		if post.files.length > 0
 			.post-files
 				each file in post.files
@@ -40,4 +37,6 @@ mixin post(board, post, truncate)
 					blockquote.post-message !{post.message}
 			else 
 				blockquote.post-message !{post.message}
-
+	if post.reports
+		each report in post.reports
+			span.reports.post-container #{report}

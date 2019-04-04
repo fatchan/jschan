@@ -17,7 +17,8 @@ module.exports = {
 		},{
 			'projection': {
 				'salt': 0,
-				'password': 0
+				'password': 0,
+				'reports': 0
 			}
 		}).sort({
 			'bumped': -1
@@ -31,6 +32,7 @@ module.exports = {
 				'projection': {
 					'salt': 0,
 					'password': 0,
+					'reports': 0
 				}
 			}).sort({
 				'_id': -1
@@ -42,7 +44,7 @@ module.exports = {
 
 	},
 
-	getPages: async (board) => {
+	getPages: (board) => {
 		return db.collection(board).estimatedDocumentCount();
 	},
 
@@ -55,7 +57,8 @@ module.exports = {
 			}, {
 				'projection': {
 					'salt': 0,
-					'password': 0
+					'password': 0,
+					'reports': 0
 				}
 			}),
 			module.exports.getThreadPosts(board, id)
@@ -71,7 +74,7 @@ module.exports = {
 
 	},
 
-	getThreadPosts: async(board, id) => {
+	getThreadPosts: (board, id) => {
 
 		// all posts within a thread
 		return db.collection(board).find({
@@ -79,7 +82,8 @@ module.exports = {
 		}, {
 			'projection': {
 				'salt': 0 ,
-				'password': 0
+				'password': 0,
+				'reports': 0
 			}
 		}).sort({
 			'_id': 1
@@ -87,7 +91,7 @@ module.exports = {
 
 	},
 
-	getCatalog: async (board) => {
+	getCatalog: (board) => {
 
 		// get all threads for catalog
 		return db.collection(board).find({
@@ -95,13 +99,14 @@ module.exports = {
 		}, {
 			'projection': {
 				'salt': 0,
-				'password': 0
+				'password': 0,
+				'reports': 0
 			}
 		}).toArray();
 
 	},
 
-	getPost: async (board, id, admin) => {
+	getPost: (board, id, admin) => {
 
 		// get a post
 		if (admin) {
@@ -115,14 +120,15 @@ module.exports = {
 		}, {
 			'projection': {
 				'salt': 0,
-				'password': 0
+				'password': 0,
+				'reports': 0
 			}
 		});
 
 	},
 
 	//takes array "ids" of post ids
-	getPosts: async(board, ids, admin) => {
+	getPosts: (board, ids, admin) => {
 
 		if (admin) {
 			return db.collection(board).find({
@@ -139,7 +145,8 @@ module.exports = {
 		}, {
 			'projection': {
 				'salt': 0,
-				'password': 0
+				'password': 0,
+				'reports': 0
 			}
 		}).toArray();
 
@@ -169,11 +176,36 @@ module.exports = {
 
 	},
 
-	deleteOne: async (board, options) => {
+	reportMany: (board, ids, report) =>  {
+		return db.collection(board).updateMany({
+			'_id': {
+				'$in': ids
+			}
+		}, {
+			'$push': {
+				'reports': report
+			}
+		});
+	},
+
+	getReports: (board) => {
+		return db.collection(board).find({
+			'reports.0': {
+				'$exists': true
+			}
+		}, {
+			'projection': {
+				'salt': 0,
+				'password': 0,
+			}
+		}).toArray();
+	},
+
+	deleteOne: (board, options) => {
 		return db.collection(board).deleteOne(options);
 	},
 
-	deleteMany: async (board, ids) => {
+	deleteMany: (board, ids) => {
 
 		return db.collection(board).deleteMany({
 			'_id': {
@@ -183,7 +215,7 @@ module.exports = {
 
 	},
 
-	deleteAll: async (board) => {
+	deleteAll:  (board) => {
 		return db.collection(board).deleteMany({});
 	},
 

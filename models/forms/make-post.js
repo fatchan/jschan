@@ -164,6 +164,7 @@ module.exports = async (req, res, numFiles) => {
 		'userId': userId,
 		'files': files,
 		'salt': salt,
+		'reports': []
 	};
 
 	const post = await Posts.insertOne(req.params.board, data)

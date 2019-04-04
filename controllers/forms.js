@@ -7,6 +7,7 @@ const express  = require('express')
 	, Trips = require(__dirname+'/../db-models/trips.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
 	, deletePost = require(__dirname+'/../models/forms/delete-post.js')
+	, reportPost = require(__dirname+'/../models/forms/report-post.js')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
     , registerAccount = require(__dirname+'/../models/forms/register.js')
 	, numberConverter = require(__dirname+'/../helpers/number-converter.js');
@@ -132,16 +133,22 @@ router.post('/board/:board', Boards.exists, numberConverter, (req, res, next) =>
 
 });
 
-// delete post(s)
-router.post('/board/:board/delete', Boards.exists, numberConverter, (req, res, next) => {
+//report, delete, sticky, etc
+router.post('/board/:board/posts', Boards.exists, numberConverter, (req, res, next) => {
 
 	const errors = [];
 
 	if (req.body.password && req.body.password.length > 50) {
-		errors.push('Password must be 50 characters or less')
+		errors.push('Password must be 50 characters or less');
+	}
+	if (req.body.report && req.body.report.length > 50) {
+		errors.push('Report must be 50 characters or less');
+	}
+	if (req.body.password && req.body.report) {
+		errors.push('Can only report or delete, not both');
 	}
 	if (!req.body.checked || req.body.checked.length === 0 || req.body.checked.length > 10) { //10 for now just for _some_ limit
-		errors.push('Must check 1-10 boxes for posts to delete')
+		errors.push('Must select 1-10 posts')
 	}
 
 	if (errors.length > 0) {
@@ -152,7 +159,15 @@ router.post('/board/:board/delete', Boards.exists, numberConverter, (req, res, n
 		})
 	}
 
-	deletePost(req, res);
+	//we checked to make sure there are not both, so...
+	if (req.body.report) {
+		//if theres a report reason, handle reports
+		reportPost(req, res);
+	} else {
+		//otherwise, must be delete request which
+		//for authed users DOES NOT requoie passwrd
+		deletePost(req, res);
+	}
 
 });
 
