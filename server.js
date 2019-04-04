@@ -61,8 +61,7 @@ const express  = require('express')
 	app.use('/img', express.static(__dirname + '/static/img'));
 
 	// routes
-	app.use('/api', require(__dirname+'/controllers/api.js'))
-	app.use('/', require(__dirname+'/controllers/accounts.js'))
+	app.use('/forms', require(__dirname+'/controllers/forms.js'))
 	app.use('/', require(__dirname+'/controllers/pages.js'))
 
 	app.get('*', (req, res) => {

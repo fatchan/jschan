@@ -5,7 +5,7 @@ block head
 
 block content
 	section.form-wrapper
-		form.form-post(action='/register' method='POST')
+		form.form-post(action='/forms/register' method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			input#username(type='text', name='username', placeholder='username' maxlength='50')
 			input#password(type='password', name='password', placeholder='password' maxlength='100')

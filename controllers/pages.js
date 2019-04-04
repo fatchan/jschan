@@ -12,17 +12,37 @@ const express  = require('express')
 	, checkAuth = require(__dirname+'/../helpers/check-auth.js')
 	, numberConverter = require(__dirname+'/../helpers/number-converter.js');
 
+//homepage with board list
+router.get('/', home);
+
 //login page
 router.get('/login', login);
 
-//register
+//registration page
 router.get('/register', register);
 
-//logged in user manage page
-router.get('/:board/manage', Boards.exists, checkAuth, Boards.canManage, manage);
+//logout
+router.get('/logout', (req, res, next) => {
 
-//homepage with list of boards
-router.get('/', home);
+    if (req.session.authenticated === true) {
+        req.session.destroy();
+        return res.render('message', {
+            'title': 'Success',
+            'message': 'You have been logged out successfully',
+            'redirect': '/'
+        });
+    }
+
+    return res.status(400).render('message', {
+        'title': 'Bad request',
+        'message': 'You are not logged in',
+        'redirect': '/login'
+    })
+
+});
+
+//board manage page
+router.get('/:board/manage', Boards.exists, checkAuth, Boards.canManage, manage);
 
 // board page/recents
 router.get('/:board/:page(\\d+)?', Boards.exists, numberConverter, (req, res, next) => {
