@@ -139,6 +139,7 @@ input textarea {
 	margin-left: 0;
 	display: block;
 	border: none;
+	width: 100%;
 }
 
 .post-subject {
@@ -190,6 +191,7 @@ input textarea {
 	text-align: center;
 	flex-shrink: 0;
 	margin-top: auto;
+	line-height: 50px;
 }
 
 table, th, td {

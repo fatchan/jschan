@@ -29,11 +29,15 @@ const Mongo = require(__dirname+'/helpers/db.js')
 		 _id: 'pol',
 		 name: 'Politically Incorrect',
 		 description: 'Political posts go here.',
+		owner: '',
+		moderators: [],
 	})
 	await Boards.insertOne({
 		 _id: 'b',
 		 name: 'Random',
 		 description: 'post anything here',
+		owner: '',
+		moderators: [],
 	})
 	console.log('creating indexes')
 	await Posts.db.collection('b').createIndex({"thread": 1});
@@ -45,7 +49,7 @@ const Mongo = require(__dirname+'/helpers/db.js')
 			unlink(path.join('static/img/', file));
 		}))
 	});
-//	console.log('creating admin account: admin:changeme');
-//	await Accounts.insertOne('admin', 'changeme', 3);
+	console.log('creating admin account: admin:changeme');
+	await Accounts.insertOne('admin', 'changeme', 3);
 	console.log('done');
 })();

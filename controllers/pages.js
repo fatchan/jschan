@@ -5,9 +5,11 @@ const express  = require('express')
 	, Boards = require(__dirname+'/../db-models/boards.js')
     , home = require(__dirname+'/../models/pages/home.js')
     , register = require(__dirname+'/../models/pages/register.js')
+    , manage = require(__dirname+'/../models/pages/manage.js')
     , login = require(__dirname+'/../models/pages/login.js')
 	, board = require(__dirname+'/../models/pages/board.js')
 	, thread = require(__dirname+'/../models/pages/thread.js')
+	, checkAuth = require(__dirname+'/../helpers/check-auth.js')
 	, numberConverter = require(__dirname+'/../helpers/number-converter.js');
 
 //login page
@@ -15,6 +17,9 @@ router.get('/login', login);
 
 //register
 router.get('/register', register);
+
+//logged in user manage page
+router.get('/:board/manage', Boards.exists, checkAuth, Boards.canManage, manage);
 
 //homepage with list of boards
 router.get('/', home);

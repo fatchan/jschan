@@ -42,6 +42,17 @@ module.exports = {
 
 	},
 
+	canManage: (req, res, next) => {
+
+		if (req.session.user.authLevel === 3
+			|| res.locals.board.owner == req.session.user.username
+			|| res.locals.board.moderators.includes(req.session.user.username)) {
+			return next();
+		}
+		return res.redirect('/login');
+
+	},
+
 	getNextId: async (board) => {
 
 		const increment = await db.collection('counters').findOneAndUpdate(

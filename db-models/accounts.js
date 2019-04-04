@@ -33,6 +33,13 @@ module.exports = {
 
 	promoteUser: (username, newlevel) => {
 		//increase users auth level
+		return db.updateOne({
+			'_id': username
+		}, {
+			'$set': {
+				'authLevel': newlevel
+			}
+		})
 	},
 
 	deleteAll: () => {

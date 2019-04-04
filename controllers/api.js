@@ -64,10 +64,7 @@ router.post('/board/:board/delete', Boards.exists, numberConverter, (req, res, n
 
 	const errors = [];
 
-	if (!req.body.password) {
-		errors.push('Must provide a password')
-	}
-	if (req.body.password.length > 50) {
+	if (req.body.password && req.body.password.length > 50) {
 		errors.push('Password must be 50 characters or less')
 	}
 	if (!req.body.checked || req.body.checked.length === 0 || req.body.checked.length > 10) { //10 for now just for _some_ limit
