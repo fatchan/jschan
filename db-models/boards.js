@@ -1,33 +1,33 @@
 'use strict';
 
 const Mongo = require(__dirname+'/../helpers/db.js')
-	, db = Mongo.client.db('boards');
+	, db = Mongo.client.db('jschan');
 
 module.exports = {
 
 	db,
 
-	findOne: async (name) => {
+	findOne: (name) => {
 		return db.collection('boards').findOne({ '_id': name });
 	},
 
-	find: async (name) => {
+	find: (name) => {
 		return db.collection('boards').find({}).toArray();
 	},
 
-	insertOne: async (data) => {
+	insertOne: (data) => {
 		return db.collection('boards').insertOne(data);
 	},
 
-	deleteOne: async (board, options) => {
+	deleteOne: (board, options) => {
 
 	},
 
-	deleteMany: async (board, options) => {
+	deleteMany: (board, options) => {
 
 	},
 
-	deleteAll: async (board) => {
+	deleteAll: (board) => {
 		return db.collection('boards').deleteMany({});
 	},
 

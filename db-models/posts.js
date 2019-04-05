@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/../helpers/db.js')
 	, Boards = require(__dirname+'/boards.js')
-	, db = Mongo.client.db('posts');
+	, db = Mongo.client.db('jschan').collection('posts');
 
 module.exports = {
 
@@ -12,8 +12,9 @@ module.exports = {
 	getRecent: async (board, page) => {
 
 		// get all thread posts (posts with null thread id)
-		const threads = await db.collection(board).find({
-			'thread': null
+		const threads = await db.find({
+			'thread': null,
+			'board': board
 		},{
 			'projection': {
 				'salt': 0,
@@ -24,10 +25,11 @@ module.exports = {
 			'bumped': -1
 		}).skip(10*(page-1)).limit(10).toArray();
 
-		// add posts to all threads in parallel
+		// add last 3 posts in reverse order to preview
 		await Promise.all(threads.map(async thread => {
-			const replies = await db.collection(board).find({
-				'thread': thread._id
+			const replies = await db.find({
+				'thread': thread.postId,
+				'board': board
 			},{
 				'projection': {
 					'salt': 0,
@@ -45,15 +47,18 @@ module.exports = {
 	},
 
 	getPages: (board) => {
-		return db.collection(board).estimatedDocumentCount();
+		return db.countDocuments({
+			'board': board
+		});
 	},
 
 	getThread: async (board, id) => {
 
 		// get thread post and potential replies concurrently
 		const data = await Promise.all([
-			db.collection(board).findOne({
-				'_id': id
+			db.findOne({
+				'postId': id,
+				'board': board
 			}, {
 				'projection': {
 					'salt': 0,
@@ -77,8 +82,9 @@ module.exports = {
 	getThreadPosts: (board, id) => {
 
 		// all posts within a thread
-		return db.collection(board).find({
-			'thread': id
+		return db.find({
+			'thread': id,
+			'board': board
 		}, {
 			'projection': {
 				'salt': 0 ,
@@ -94,8 +100,9 @@ module.exports = {
 	getCatalog: (board) => {
 
 		// get all threads for catalog
-		return db.collection(board).find({
-			'thread': null
+		return db.find({
+			'thread': null,
+			'board': board
 		}, {
 			'projection': {
 				'salt': 0,
@@ -110,13 +117,15 @@ module.exports = {
 
 		// get a post
 		if (admin) {
-			return db.collection(board).findOne({
-				'_id': id
+			return db.findOne({
+				'postId': id,
+				'board': board
 			});
 		}
 
-		return db.collection(board).findOne({
-			'_id': id
+		return db.findOne({
+			'postId': id,
+			'board': board
 		}, {
 			'projection': {
 				'salt': 0,
@@ -131,17 +140,19 @@ module.exports = {
 	getPosts: (board, ids, admin) => {
 
 		if (admin) {
-			return db.collection(board).find({
-				'_id': {
+			return db.find({
+				'postId': {
 					'$in': ids
-				}
+				},
+				'board': board
 			}).toArray();
 		}
 
-		return db.collection(board).find({
-			'_id': {
+		return db.find({
+			'postId': {
 				'$in': ids
-			}
+			},
+			'board': board
 		}, {
 			'projection': {
 				'salt': 0,
@@ -156,8 +167,9 @@ module.exports = {
 
 		// bump thread if name not sage
 		if (data.thread !== null && data.name !== 'sage') {
-			await db.collection(board).updateOne({
-				'_id': data.thread
+			await db.updateOne({
+				'postId': data.thread,
+				'board': board
 			}, {
 				'$set': {
 					'bumped': Date.now()
@@ -165,22 +177,26 @@ module.exports = {
 			})
 		}
 
-		data._id = await Boards.getNextId(board);
+		const postId = await Boards.getNextId(board);
+		data.postId = postId;
 
 		//this is a thread, so set the bump date so its pushed to the top
 		if (data.thread == null) {
 			data.bumped = Date.now()
 		}
 
-		return db.collection(board).insertOne(data);
+		await db.insertOne(data);
+
+		return postId;
 
 	},
 
 	reportMany: (board, ids, report) =>  {
-		return db.collection(board).updateMany({
-			'_id': {
+		return db.updateMany({
+			'postId': {
 				'$in': ids
-			}
+			},
+			'board': board
 		}, {
 			'$push': {
 				'reports': report
@@ -189,10 +205,11 @@ module.exports = {
 	},
 
 	getReports: (board) => {
-		return db.collection(board).find({
+		return db.find({
 			'reports.0': {
 				'$exists': true
-			}
+			},
+			'board': board
 		}, {
 			'projection': {
 				'salt': 0,
@@ -202,21 +219,24 @@ module.exports = {
 	},
 
 	deleteOne: (board, options) => {
-		return db.collection(board).deleteOne(options);
+		return db.deleteOne(options);
 	},
 
 	deleteMany: (board, ids) => {
 
-		return db.collection(board).deleteMany({
-			'_id': {
+		return db.deleteMany({
+			'postId': {
 				'$in': ids
-			}
+			},
+			'board': board
 		});
 
 	},
 
-	deleteAll:  (board) => {
-		return db.collection(board).deleteMany({});
+	deleteAll: (board) => {
+		return db.deleteMany({
+			'board': board
+		});
 	},
 
 }

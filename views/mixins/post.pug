@@ -1,13 +1,13 @@
 mixin post(board, post, truncate)
-	article(id=post._id class='post-container '+(post.thread ? '' : 'op'))
+	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
-			input.post-check(type='checkbox', name='checked[]' value=post._id)
+			input.post-check(type='checkbox', name='checked[]' value=post.postId)
 			if post.subject
 				span.post-subject #{post.subject}
 			span.post-name #{post.name}
 			span #{post.date.toLocaleString()}
 			span.user-id(style=`background: #${post.userId}`) #{post.userId}
-			span: a(href=`/${board._id}/thread/${post.thread ? post.thread : post._id}#${post._id}`) ##{post._id}
+			span: a(href=`/${board._id}/thread/${post.thread ? post.thread : post.postId}#${post.postId}`) ##{post.postId}
 		if post.files.length > 0
 			.post-files
 				each file in post.files
@@ -32,7 +32,7 @@ mixin post(board, post, truncate)
 					}
 				if truncated
 					blockquote.post-message !{truncatedMessage}
-					p Message too long. #[a(href=`/${board._id}/thread/${post.thread == null ? post._id : post.thread}#${post._id}`) Click here] to view the full text.
+					p Message too long. #[a(href=`/${board._id}/thread/${post.thread == null ? post.postId : post.thread}#${post.postId}`) Click here] to view the full text.
 				else
 					blockquote.post-message !{post.message}
 			else 

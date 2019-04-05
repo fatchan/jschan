@@ -3,7 +3,7 @@ section.form-wrapper
 	
 		input(type='hidden' name='_csrf' value=csrf)
 
-		input(type='hidden' name='thread' value=thread != null ? thread._id : null)
+		input(type='hidden' name='thread' value=thread != null ? thread.postId : null)
 	
 		input#title(type='text', name='subject', placeholder='subject' autocomplete='off' maxlength='50')
 	

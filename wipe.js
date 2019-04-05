@@ -40,20 +40,19 @@ const Mongo = require(__dirname+'/helpers/db.js')
 		moderators: [],
 	})
 	console.log('creating indexes')
-	await Posts.db.collection('b').createIndex({"thread": 1});
-	await Posts.db.collection('b').createIndex({"bumped": 1});
-	await Posts.db.collection('pol').createIndex({"thread": 1});
-	await Posts.db.collection('pol').createIndex({"bumped": 1});
-	await Posts.db.collection('pol').createIndex({
-		'reports.0': 1
-	}, {
-		partialFilterExpression: {
-			'reports.0': {
-				'$exists': true
-			}
-		}
+	await Posts.db.dropIndexes();
+	//these are fucked
+	await Posts.db.createIndex({
+		'postId': 1,
+		'board': 1,
 	});
-	await Posts.db.collection('b').createIndex({
+	await Posts.db.createIndex({
+		'board': 1,
+		'thread': 1,
+		'bumped': -1
+	});
+	await Posts.db.createIndex({
+		'board': 1,
 		'reports.0': 1
 	}, {
 		partialFilterExpression: {

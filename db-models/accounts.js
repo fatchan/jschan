@@ -2,7 +2,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/../helpers/db.js')
-	, db = Mongo.client.db('accounts').collection('accounts')
+	, db = Mongo.client.db('jschan').collection('accounts')
 	, bcrypt = require('bcrypt');
 
 module.exports = {

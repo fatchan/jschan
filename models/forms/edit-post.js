@@ -24,7 +24,7 @@ module.exports = async (req, res, numFiles) => {
 
 	// sticky, lock, sage, spoiler, etc
 	for (let i = 0; i < req.body.actions.length; i++) {
-		
+		//TODO
 	}
 
 	const post = await Posts.updateOne(req.params.board, data)

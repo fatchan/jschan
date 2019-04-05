@@ -48,7 +48,6 @@ module.exports = async (req, res, numFiles) => {
 		salt = thread.salt;
 		redirect += `/thread/${req.body.thread}`
 	}
-
 	let files = [];
 	// if we got a file
 	if (numFiles > 0) {
@@ -155,6 +154,7 @@ module.exports = async (req, res, numFiles) => {
 
 	//add post to DB
 	const data = {
+		'board': req.params.board,
 		'name': name || 'Anonymous',
 		'subject': req.body.subject || '',
 		'date': new Date(),
@@ -163,12 +163,19 @@ module.exports = async (req, res, numFiles) => {
 		'password': req.body.password || '',
 		'userId': userId,
 		'files': files,
-		'salt': salt,
+		'salt': !req.body.thread ? salt : '',
 		'reports': []
 	};
 
-	const post = await Posts.insertOne(req.params.board, data)
-	const successRedirect = `/${req.params.board}/thread/${req.body.thread || post.insertedId}`;
+	let postId;
+	try {
+		postId = await Posts.insertOne(req.params.board, data);
+	} catch (err) {
+		console.error(err);
+		return res.status(500).render('error');
+	}
+
+	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}`;
 
 	return res.redirect(successRedirect);
 }

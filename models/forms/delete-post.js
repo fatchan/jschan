@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
 
 	if (posts.length > 0) {
 
-		const threadIds = posts.filter(x => x.thread == null).map(x => x._id);
+		const threadIds = posts.filter(x => x.thread == null).map(x => x.postId);
 
 		//get posts from all threads
 		let threadPosts = []
@@ -47,7 +47,7 @@ module.exports = async (req, res) => {
 		//delete posts from DB
 		let deletedPosts = 0;
 		try {
-			const result = await Posts.deleteMany(req.params.board, allPosts.map(x => x._id));
+			const result = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId));
 			deletedPosts = result.deletedCount;
 		} catch (err) {
 			console.error(err);

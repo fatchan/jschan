@@ -2,14 +2,15 @@
 
 const Posts = require(__dirname+'/../../db-models/posts.js');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
 
     //get the recently bumped thread & preview posts
     let thread;
     try {
         thread = await Posts.getThread(req.params.board, req.params.id);
     } catch (err) {
-        return next(err);
+		console.error(err);
+        return next();
     }
 
     if (!thread) {

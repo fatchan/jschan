@@ -1,8 +1,7 @@
-
 'use strict';
 
 const Mongo = require(__dirname+'/../helpers/db.js')
-	, db = Mongo.client.db('tripcodes').collection('tripcodes');
+	, db = Mongo.client.db('jschan').collection('tripcodes');
 
 module.exports = {
 
