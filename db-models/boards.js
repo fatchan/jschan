@@ -49,7 +49,11 @@ module.exports = {
 			|| res.locals.board.moderators.includes(req.session.user.username)) {
 			return next();
 		}
-		return res.redirect('/login');
+		return res.status(403).render('message', {
+			'title': 'Forbidden',
+			'message': 'You do not have permission to manage this board',
+			'redirect': '/login'
+		});
 
 	},
 

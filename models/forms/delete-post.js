@@ -5,10 +5,11 @@ const path = require('path')
 	, fs = require('fs')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, deletePerms = require(__dirname+'/../../helpers/delete-perms.js')
+	, hasPerms = require(__dirname+'/../../helpers/has-perms.js')
     , Posts = require(__dirname+'/../../db-models/posts.js');
 
 module.exports = async (req, res) => {
+
 	//get all posts that were checked
 	let posts;
 	try {
@@ -19,7 +20,7 @@ module.exports = async (req, res) => {
 	}
 
 	//if user is not logged in OR if lgoged in but not authed, filter the posts by passwords that are not null
-	if (!deletePerms(req, res)) {
+	if (!hasPerms(req, res)) {
 		// filter posts by password only if NOT board moderator or owner
 		posts = posts.filter(post => {
 			// only include posts that have a password and that matches

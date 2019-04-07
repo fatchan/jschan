@@ -1,5 +1,12 @@
-section.delete-wrapper
-	p Report OR delete selected posts
-	input#report(type='report', name='report', placeholder='report reason' autocomplete='off')
-	input#password(type='password', name='password', placeholder='password (for deletion)' autocomplete='off')
+section.action-wrapper
+	span
+		label
+			input.post-check(type='checkbox', name='delete' value=1)
+			| Delete 
+		input#password(type='password', name='password', placeholder='deletion password' autocomplete='off')
+	span
+		label
+			input.post-check(type='checkbox', name='report' value=1)
+			| Report
+		input#report(type='text', name='reason', placeholder='report reason' autocomplete='off')
 	input(type='submit', value='submit')

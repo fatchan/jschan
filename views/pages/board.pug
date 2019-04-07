@@ -5,9 +5,10 @@ block head
 	title /#{board._id}/ - Recent Posts
 
 block content
-	h1.board-title /#{board._id}/ - #{board.name}
-	h4.board-description #{board.description}
+	include ../includes/boardheader.pug
+	hr(size=1)
 	include ../includes/postform.pug
+	.post-mode Posting mode: Thread
 	hr(size=1)
 	form(action='/forms/board/'+board._id+'/posts' method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)

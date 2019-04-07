@@ -3,6 +3,7 @@
 const Boards = require(__dirname+'/../../db-models/boards.js');
 
 module.exports = async (req, res, next) => {
+
 	//get a list of boards
 	let boards;
 	try {

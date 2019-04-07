@@ -4,7 +4,11 @@ mixin post(board, post, truncate)
 			input.post-check(type='checkbox', name='checked[]' value=post.postId)
 			if post.subject
 				span.post-subject #{post.subject}
-			span.post-name #{post.name}
+			if post.email
+				a(href=`mailto:${post.email}`)
+					span.post-name #{post.name}
+			else 
+				span.post-name #{post.name}
 			span #{post.date.toLocaleString()}
 			span.user-id(style=`background: #${post.userId}`) #{post.userId}
 			span: a(href=`/${board._id}/thread/${post.thread ? post.thread : post.postId}#${post.postId}`) ##{post.postId}
@@ -39,4 +43,6 @@ mixin post(board, post, truncate)
 				blockquote.post-message !{post.message}
 	if post.reports
 		each report in post.reports
-			span.reports.post-container #{report}
+			.reports.post-container
+				span Date: #{report.date.toLocaleString()}
+				span Reason: #{report.reason}

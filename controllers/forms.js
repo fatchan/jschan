@@ -6,8 +6,9 @@ const express  = require('express')
 	, Posts = require(__dirname+'/../db-models/posts.js')
 	, Trips = require(__dirname+'/../db-models/trips.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
-	, deletePost = require(__dirname+'/../models/forms/delete-post.js')
-	, reportPost = require(__dirname+'/../models/forms/report-post.js')
+	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
+	, reportPosts = require(__dirname+'/../models/forms/report-post.js')
+	, dismissReports = require(__dirname+'/../models/forms/dismiss-report.js')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
     , registerAccount = require(__dirname+'/../models/forms/register.js')
 	, numberConverter = require(__dirname+'/../helpers/number-converter.js');
@@ -117,6 +118,9 @@ router.post('/board/:board', Boards.exists, numberConverter, (req, res, next) =>
 	if (req.body.subject && req.body.subject.length > 50) {
 		errors.push('Subject must be 50 characters or less');
 	}
+	if (req.body.email && req.body.email.length > 50) {
+		errors.push('Email must be 50 characters or less');
+	}
 	if (req.body.password && req.body.password.length > 50) {
 		errors.push('Password must be 50 characters or less');
 	}
@@ -138,17 +142,20 @@ router.post('/board/:board/posts', Boards.exists, numberConverter, (req, res, ne
 
 	const errors = [];
 
+	if (!req.body.checked || req.body.checked.length === 0 || req.body.checked.length > 10) {
+		errors.push('Must select 1-10 posts')
+	}
 	if (req.body.password && req.body.password.length > 50) {
 		errors.push('Password must be 50 characters or less');
 	}
-	if (req.body.report && req.body.report.length > 50) {
+	if (req.body.reason && req.body.reason.length > 50) {
 		errors.push('Report must be 50 characters or less');
 	}
-	if (req.body.password && req.body.report) {
-		errors.push('Can only report or delete, not both');
+	if (!(req.body.report || req.body.delete || req.body.dismiss)) {
+		errors.push('Must select an action')
 	}
-	if (!req.body.checked || req.body.checked.length === 0 || req.body.checked.length > 10) { //10 for now just for _some_ limit
-		errors.push('Must select 1-10 posts')
+	if (req.body.report && (!req.body.reason || req.body.reason.length === 0)) {
+		errors.push('Reports must have a reason')
 	}
 
 	if (errors.length > 0) {
@@ -159,16 +166,16 @@ router.post('/board/:board/posts', Boards.exists, numberConverter, (req, res, ne
 		})
 	}
 
-	//we checked to make sure there are not both, so...
 	if (req.body.report) {
-		//if theres a report reason, handle reports
-		reportPost(req, res);
+		reportPosts(req, res);
+	} else if (req.body.delete) {
+		deletePosts(req, res);
 	} else {
-		//otherwise, must be delete request which
-		//for authed users DOES NOT requoie passwrd
-		deletePost(req, res);
+		dismissReports(req, res);
 	}
 
 });
+
+
 
 module.exports = router;

@@ -9,6 +9,21 @@ body {
 	margin: 0;
 }
 
+.spoiler {
+	background: black;
+}
+
+.spoiler:hover {
+	color: white;
+}
+
+.post-mode {
+	background-color: red;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+}
+
 .reports {
 	background: #fca!important;
 	border-color: #c97!important;
@@ -54,7 +69,7 @@ input, textarea {
 	margin: 10px 0;
 }
 
-.delete-wrapper {
+.action-wrapper {
 	align-items: center;
 	/*flex-direction: row;*/
 }
@@ -119,6 +134,11 @@ input textarea {
 	letter-spacing: -2px;
 	text-align: center;
 	margin: 0;
+}
+
+.no-decoration {
+	text-decoration: none;
+	color: white;
 }
 
 .board-description {

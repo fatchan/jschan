@@ -10,9 +10,10 @@ block head
 	meta(property='og:image', content=thread.files.length > 0 ? '/img/'+thread.files[0].filename : '')
 
 block content
-	a(href='/'+board._id) Back to /#{board._id}/
+	include ../includes/boardheader.pug
 	hr(size=1)
 	include ../includes/postform.pug
+	.post-mode Posting mode: Reply [#[a.no-decoration(href=`/${board._id}`) Go Back]]
 	hr(size=1)
 	form(action='/forms/board/'+board._id+'/posts' method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
@@ -22,7 +23,3 @@ block content
 				+post(board, post)
 		hr(size=1)
 		include ../includes/deletefooter.pug
-
-
-
-

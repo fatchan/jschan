@@ -19,6 +19,7 @@ module.exports = {
 			'projection': {
 				'salt': 0,
 				'password': 0,
+				'ip': 0,
 				'reports': 0
 			}
 		}).sort({
@@ -34,6 +35,7 @@ module.exports = {
 				'projection': {
 					'salt': 0,
 					'password': 0,
+					'ip': 0,
 					'reports': 0
 				}
 			}).sort({
@@ -48,7 +50,8 @@ module.exports = {
 
 	getPages: (board) => {
 		return db.countDocuments({
-			'board': board
+			'board': board,
+			'thread': null
 		});
 	},
 
@@ -63,6 +66,7 @@ module.exports = {
 				'projection': {
 					'salt': 0,
 					'password': 0,
+					'ip': 0,
 					'reports': 0
 				}
 			}),
@@ -89,6 +93,7 @@ module.exports = {
 			'projection': {
 				'salt': 0 ,
 				'password': 0,
+				'ip': 0,
 				'reports': 0
 			}
 		}).sort({
@@ -107,6 +112,7 @@ module.exports = {
 			'projection': {
 				'salt': 0,
 				'password': 0,
+				'ip': 0,
 				'reports': 0
 			}
 		}).toArray();
@@ -130,6 +136,7 @@ module.exports = {
 			'projection': {
 				'salt': 0,
 				'password': 0,
+				'ip': 0,
 				'reports': 0
 			}
 		});
@@ -157,6 +164,7 @@ module.exports = {
 			'projection': {
 				'salt': 0,
 				'password': 0,
+				'ip': 0,
 				'reports': 0
 			}
 		}).toArray();
@@ -166,7 +174,7 @@ module.exports = {
 	insertOne: async (board, data) => {
 
 		// bump thread if name not sage
-		if (data.thread !== null && data.name !== 'sage') {
+		if (data.thread !== null && data.email !== 'sage') {
 			await db.updateOne({
 				'postId': data.thread,
 				'board': board
@@ -204,6 +212,19 @@ module.exports = {
 		});
 	},
 
+	dismissReports: (board, ids) => {
+		return db.updateMany({
+			'postId': {
+				'$in': ids
+			},
+			'board': board
+		}, {
+			'$set': {
+				'reports': []
+			}
+		});
+	},
+
 	getReports: (board) => {
 		return db.find({
 			'reports.0': {
@@ -214,6 +235,7 @@ module.exports = {
 			'projection': {
 				'salt': 0,
 				'password': 0,
+				'ip': 0,
 			}
 		}).toArray();
 	},
