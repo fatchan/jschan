@@ -11,7 +11,7 @@ const uuidv4 = require('uuid/v4')
 	, simpleMarkdown = require(__dirname+'/../../helpers/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = {
-		allowedTags: [ 'span', 'a' ],
+		allowedTags: [ 'span', 'a', 'code', 'em', 'strong' ],
 		allowedAttributes: {
 			'a': [ 'href', 'class' ],
 			'span': [ 'class' ]
@@ -162,6 +162,8 @@ module.exports = async (req, res, numFiles) => {
 		'thread': req.body.thread || null,
 		'password': req.body.password || '',
 		'userId': userId,
+		'email': req.body.email || '',
+		'ip': ip,
 		'files': files,
 		'salt': !req.body.thread ? salt : '',
 		'reports': []
