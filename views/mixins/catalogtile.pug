@@ -1,0 +1,12 @@
+mixin catalogtile(board, post, truncate)
+	article(class='catalog-tile')
+		if post.files.length > 0
+			.post-file-src
+				a(target='_blank' href='/img/'+post.files[0].filename)
+					object.catalog-thumb(data=`/img/thumb-${post.files[0].filename.split('.')[0]}.png` width='64' height='64')
+		header.post-info
+			if post.subject
+				span.post-subject #{post.subject}
+			span: a(href=`/${board._id}/thread/${post.thread ? post.thread : post.postId}#${post.postId}`) ##{post.postId}
+		if post.message
+			blockquote.post-message !{post.message}

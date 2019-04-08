@@ -9,6 +9,30 @@ body {
 	margin: 0;
 }
 
+.catalog-tile {
+	text-align: center;
+	padding: 5px;
+	margin: 1px;
+	height: 150px;
+	width: 150px;
+	min-width: 150px;
+	overflow: hidden;
+	border: 2px solid #B7C5D9;
+	box-sizing: border-box;
+
+}
+
+.catalog-thumb {
+	box-shadow: 0 0 3px black;
+}
+
+.catalog {
+	display:flex;
+	flex-direction: row;
+	align-items:flex-start;
+	flex-wrap: wrap;
+}
+
 .spoiler {
 	background: black;
 }
@@ -17,7 +41,7 @@ body {
 	color: white;
 }
 
-.post-mode {
+.mode {
 	background-color: red;
 	color: white;
 	font-weight: bold;
@@ -266,6 +290,11 @@ hr {
 
 	.post-container {
 		width: 100%;
+	}
+
+	.catalog-tile {
+		width: 50%;
+		margin: 0px;
 	}
 
 }
