@@ -255,6 +255,21 @@ module.exports = {
 
 	},
 
+    spoilerMany: (board, ids) => {
+
+        return db.updateMany({
+            'postId': {
+                '$in': ids
+            },
+            'board': board
+        }, {
+            '$set': {
+				'spoiler': true
+			}
+        });
+
+    },
+
 	deleteAll: (board) => {
 		return db.deleteMany({
 			'board': board

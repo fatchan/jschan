@@ -7,6 +7,7 @@ const express  = require('express')
 	, Trips = require(__dirname+'/../db-models/trips.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
 	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
+	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
 	, reportPosts = require(__dirname+'/../models/forms/report-post.js')
 	, dismissReports = require(__dirname+'/../models/forms/dismiss-report.js')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
@@ -151,7 +152,7 @@ router.post('/board/:board/posts', Boards.exists, numberConverter, (req, res, ne
 	if (req.body.reason && req.body.reason.length > 50) {
 		errors.push('Report must be 50 characters or less');
 	}
-	if (!(req.body.report || req.body.delete || req.body.dismiss)) {
+	if (!(req.body.report || req.body.delete || req.body.dismiss || req.body.spoiler)) {
 		errors.push('Must select an action')
 	}
 	if (req.body.report && (!req.body.reason || req.body.reason.length === 0)) {
@@ -170,7 +171,9 @@ router.post('/board/:board/posts', Boards.exists, numberConverter, (req, res, ne
 		reportPosts(req, res);
 	} else if (req.body.delete) {
 		deletePosts(req, res);
-	} else {
+	} else if (req.body.spoiler) {
+		spoilerPosts(req, res);
+	} else if (req.body.dismiss) {
 		dismissReports(req, res);
 	}
 

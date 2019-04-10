@@ -29,10 +29,10 @@ module.exports = async (req, res) => {
 
 	//if user is not logged in OR if lgoged in but not authed, filter the posts by passwords that are not null
 	if (!hasPerms(req, res)) {
-		// filter posts by password only if NOT board moderator or owner
+
+		//filter by password
 		posts = posts.filter(post => {
-			// only include posts that have a password and that matches
-			return post.password != null
+	  		return post.password != null
 			&& post.password.length > 0
 			&& post.password == req.body.password
 		});
@@ -43,50 +43,35 @@ module.exports = async (req, res) => {
 				'redirect': `/${req.params.board}`
 			});
 		}
+
 	}
 
-	const threadIds = posts.filter(x => x.thread == null).map(x => x.postId);
+	//filter by not spoilered
+	posts = posts.filter(post => {
+  		return !post.spoiler
+	});
+	if (posts.length === 0) {
+		return res.status(409).render('message', {
+			'title': 'Conflict',
+			'message': 'Selected posts are already spoilered',
+			'redirect': `/${req.params.board}`
+		});
+	}
 
-	//get posts from all threads
-	let threadPosts = []
-	await Promise.all(threadIds.map(async id => {
-		const currentThreadPosts = await Posts.getThreadPosts(req.params.board, id);
-		threadPosts = threadPosts.concat(currentThreadPosts);
-		return;
-	}))
-
-	//combine them all into one array
-	const allPosts = posts.concat(threadPosts)
-
-	//delete posts from DB
-	let deletedPosts = 0;
+	// spoiler posts
+	let spoileredPosts = 0;
 	try {
-		const result = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId));
-		deletedPosts = result.deletedCount;
+		const result = await Posts.spoilerMany(req.params.board, posts.map(x => x.postId));
+		spoileredPosts = result.modifiedCount;
 	} catch (err) {
 		console.error(err);
 		return res.status(500).render('error');
 	}
 
-	//get filenames from all the posts
-	let fileNames = [];
-	allPosts.forEach(post => {
-		fileNames = fileNames.concat(post.files.map(x => x.filename))
-	})
-
-	//delete all the files using the filenames
-	await Promise.all(fileNames.map(async filename => {
-		//dont question it.
-		return Promise.all([
-			unlink(uploadDirectory + filename),
-			unlink(uploadDirectory + 'thumb-' + filename)
-		])
-	}));
-
 	//hooray!
 	return res.render('message', {
 		'title': 'Success',
-		'message': `Deleted ${threadIds.length} threads and ${deletedPosts} posts`,
+		'message': `Spoilered ${spoileredPosts} posts`,
 		'redirect': `/${req.params.board}`
 	});
 

@@ -24,6 +24,10 @@ block content
 					| Delete
 			span
 				label
+					input.post-check(type='checkbox', name='spoiler' value=1)
+					| Spoiler
+			span
+				label
 					input.post-check(type='checkbox', name='dismiss' value=1)
 					| Dismiss
 			input(type='submit', value='submit')
