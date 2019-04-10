@@ -9,21 +9,43 @@ body {
 	margin: 0;
 }
 
-.catalog-tile {
-	text-align: center;
+object {
+	object-fit: scale-down;
+}
+
+.catalog-tile-button {
+	width: 100%;
+	line-height: 30px;
+	float: left;
+	background: #B7C5D9;
+	text-decoration: none;
+	color: black;
+}
+
+.catalog-tile-content {
 	padding: 5px;
-	margin: 1px;
-	height: 150px;
-	width: 150px;
-	min-width: 150px;
+}
+
+.catalog-tile {
+	margin: 2px;
+	text-align: center;
+	max-height: 300px;
+	width: 250px;
 	overflow: hidden;
+	overflow-y: auto;
 	border: 2px solid #B7C5D9;
 	box-sizing: border-box;
+}
 
+.no-m-p {
+	margin: 0px;
+	padding: 0px;
 }
 
 .catalog-thumb {
 	box-shadow: 0 0 3px black;
+	min-width: 64px;
+	min-height: 64px;
 }
 
 .catalog {
@@ -126,7 +148,8 @@ input, textarea {
 .post-file {
 	display: inline-flex;
 	flex-direction: column;
-	margin: 0px 4px;
+	margin: 0 4px;
+	padding: 2px 0;
 }
 
 .post-file-info {
@@ -293,8 +316,9 @@ hr {
 	}
 
 	.catalog-tile {
-		width: 50%;
-		margin: 0px;
+		overflow-y: hidden;
+		width: 49%;
+		justify-content: space-evenly;
 	}
 
 }
