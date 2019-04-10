@@ -204,8 +204,8 @@ input textarea {
 }
 
 .post-container:target, .op:target {
-	outline: 1px dashed blue;
-	outline-offset: -1px;
+	background-color: #d6bad0;
+	border-color: #ba9dbf;
 }
 
 .post-container.op {
