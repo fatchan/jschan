@@ -15,7 +15,11 @@ section.form-wrapper
 	
 		textarea#message(name='message', rows='8', cols='50', placeholder='message' autocomplete='off' maxlength='2000')
 	
-		input#file(type='file', name='file' multiple)
-	
+		span
+			input#file(type='file', name='file' multiple)
+			label
+				input.post-check#spoiler(type='checkbox', name='spoiler', value='true')
+				| Spoiler
+
 		input(type='submit', value='submit')
 	

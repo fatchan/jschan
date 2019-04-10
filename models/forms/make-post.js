@@ -166,7 +166,8 @@ module.exports = async (req, res, numFiles) => {
 		'ip': ip,
 		'files': files,
 		'salt': !req.body.thread ? salt : '',
-		'reports': []
+		'reports': [],
+		'spoiler': req.body.spoiler ? true : false,
 	};
 
 	let postId;

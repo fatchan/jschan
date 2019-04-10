@@ -63,7 +63,8 @@ const Mongo = require(__dirname+'/helpers/db.js')
 	});
 	await readdir('static/img/').then(async files => {
 		await Promise.all(files.map(async file => {
-			unlink(path.join('static/img/', file));
+			if (file != 'spoiler.png')
+				unlink(path.join('static/img/', file));
 		}))
 	});
 	console.log('creating admin account: admin:changeme');
