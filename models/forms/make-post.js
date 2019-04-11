@@ -178,7 +178,7 @@ module.exports = async (req, res, numFiles) => {
 		return res.status(500).render('error');
 	}
 
-	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}`;
+	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}#${postId}`;
 
 	return res.redirect(successRedirect);
 }

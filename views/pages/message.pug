@@ -7,6 +7,10 @@ block content
 	h1 #{title}
 	if message
 		blockquote #{message}
+	if messages
+		ul
+			each msg in messages
+				li #{msg}
 	if errors
 		ul
 			each error in errors

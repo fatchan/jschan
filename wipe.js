@@ -12,6 +12,7 @@ const Mongo = require(__dirname+'/helpers/db.js')
 	await Mongo.connect();
 	const Boards = require(__dirname+'/db-models/boards.js')
 		, Posts = require(__dirname+'/db-models/posts.js')
+		, Bans = require(__dirname+'/db-models/bans.js')
 		, Trips = require(__dirname+'/db-models/trips.js')
 		, Accounts = require(__dirname+'/db-models/accounts.js');
 	console.log('deleting accounts')
@@ -24,6 +25,8 @@ const Mongo = require(__dirname+'/helpers/db.js')
 	await Boards.deleteIncrement('b');
 	await Boards.deleteAll();
 	await Trips.deleteAll();
+	console.log('deleting bans');
+	await Bans.deleteAll();
 	console.log('adding b and pol')
 	await Boards.insertOne({
 		 _id: 'pol',

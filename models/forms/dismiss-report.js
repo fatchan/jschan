@@ -6,26 +6,18 @@ const Posts = require(__dirname+'/../../db-models/posts.js')
 module.exports = async (req, res) => {
 
 	if (!hasPerms(req, res)) {
-		return res.status(403).render('message', {
-			'title': 'Forbidden',
-			'message': `You are not authorised to dismiss reports.`,
-			'redirect': `/${req.params.board}`
-		});
+		throw {
+			'status': 403,
+			'message': {
+				'title': 'Forbidden',
+				'message': `You are not authorised to dismiss reports.`,
+				'redirect': `/${req.params.board}`
+			}
+		};
 	}
 
-	try {
-		//dismiss reports from all checked posts
-		await Posts.dismissReports(req.params.board, req.body.checked);
-	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
-	}
+	await Posts.dismissReports(req.params.board, req.body.checked);
 
-	//hooray!
-	return res.render('message', {
-		'title': 'Success',
-		'message': `Dismissed report(s) successfully`,
-		'redirect': `/${req.params.board}/manage`
-	});
+	return `Dismissed report(s) successfully`
 
 }

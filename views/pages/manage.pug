@@ -2,7 +2,7 @@ extends ../layout.pug
 include ../mixins/post.pug
 
 block head
-	title Login
+	title Manage
 
 block content
 	include ../includes/boardheader.pug
@@ -28,8 +28,13 @@ block content
 					| Spoiler
 			span
 				label
-					input.post-check(type='checkbox', name='dismiss' value=1)
-					| Dismiss
+					input.post-check(type='checkbox', name='ban' value=1)
+					| Ban
+				label
+					input.post-check(type='checkbox', name='global_ban' value=1)
+					| Global Ban
+				label
+					input#report(type='text', name='reason', placeholder='ban reason' autocomplete='off')
 			input(type='submit', value='submit')
 			
 	

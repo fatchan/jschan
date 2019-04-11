@@ -11,19 +11,10 @@ module.exports = async (req, res) => {
 		'ip': ip
 	}
 
-	try {
-		//push the report to all checked posts
-		await Posts.reportMany(req.params.board, req.body.checked, report);
-	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
-	}
+	//push the report to all checked posts
+	await Posts.reportMany(req.params.board, req.body.checked, report);
 
 	//hooray!
-	return res.render('message', {
-		'title': 'Success',
-		'message': `Reported post(s) successfully`,
-		'redirect': `/${req.params.board}`
-	});
+	return `Reported post(s) successfully`
 
 }

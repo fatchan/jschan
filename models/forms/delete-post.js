@@ -11,20 +11,17 @@ const path = require('path')
 module.exports = async (req, res) => {
 
 	//get all posts that were checked
-	let posts;
-	try {
-		posts = await Posts.getPosts(req.params.board, req.body.checked, true); //admin arument true, fetches passwords and salts
-	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
-	}
+	let posts = await Posts.getPosts(req.params.board, req.body.checked, true); //admin arument true, fetches passwords and salts
 
 	if (!posts || posts.length === 0) {
-		return res.status(400).render('message', {
-			'title': 'Bad requests',
-			'message': 'No posts found',
-			'redirect': `/${req.params.board}`
-		});
+		throw {
+            'status': 400,
+            'message': {
+                'title': 'Bad request',
+                'message': 'No posts found',
+                'redirect': `/${req.params.board}`
+            }
+        };
 	}
 
 	//if user is not logged in OR if lgoged in but not authed, filter the posts by passwords that are not null
@@ -37,11 +34,14 @@ module.exports = async (req, res) => {
 			&& post.password == req.body.password
 		});
 		if (posts.length === 0) {
-			return res.status(403).render('message', {
-				'title': 'Forbidden',
-				'message': 'Password did not match any selected posts',
-				'redirect': `/${req.params.board}`
-			});
+        	throw {
+            	'status': 403,
+            	'message': {
+                	'title': 'Forbidden',
+                	'message': 'Password did not match any selected posts',
+                	'redirect': `/${req.params.board}`
+            	}
+        	};
 		}
 	}
 
@@ -60,13 +60,8 @@ module.exports = async (req, res) => {
 
 	//delete posts from DB
 	let deletedPosts = 0;
-	try {
-		const result = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId));
-		deletedPosts = result.deletedCount;
-	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
-	}
+	const result = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId));
+	deletedPosts = result.deletedCount;
 
 	//get filenames from all the posts
 	let fileNames = [];
@@ -84,10 +79,6 @@ module.exports = async (req, res) => {
 	}));
 
 	//hooray!
-	return res.render('message', {
-		'title': 'Success',
-		'message': `Deleted ${threadIds.length} threads and ${deletedPosts} posts`,
-		'redirect': `/${req.params.board}`
-	});
+	return `Deleted ${threadIds.length} threads and ${deletedPosts} posts`
 
 }
