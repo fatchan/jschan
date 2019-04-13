@@ -61,7 +61,8 @@ module.exports = {
 		const data = await Promise.all([
 			db.findOne({
 				'postId': id,
-				'board': board
+				'board': board,
+				'thread': null,
 			}, {
 				'projection': {
 					'salt': 0,
