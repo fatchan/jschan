@@ -30,7 +30,6 @@ router.get('/logout', isLoggedIn, (req, res, next) => {
 
 	//remove session
 	req.session.destroy();
-
 	return res.render('message', {
 		'title': 'Success',
 		'message': 'You have been logged out successfully',

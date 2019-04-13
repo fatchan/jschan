@@ -26,7 +26,7 @@ module.exports = async (req, res, next, board, checkedPosts) => {
 			'ip': post.ip,
 			'reason': req.body.reason || 'No reason specified',
 			'board': board,
-			'post': req.body.delete ? null : post,
+			'post': req.body.preserve_post ? post : null,
 			'issuer': req.session.user.username,
 			'date': new Date(),
 			'expireAt': new Date((new Date).getTime() + (72*1000*60*60)) // 72h ban

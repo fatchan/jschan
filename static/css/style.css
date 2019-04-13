@@ -13,6 +13,12 @@ object {
 	object-fit: scale-down;
 }
 
+.board-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .catalog-tile-button {
 	width: 100%;
 	line-height: 30px;
@@ -116,7 +122,7 @@ input, textarea {
 }
 
 .action-wrapper {
-	align-items: center;
+	/*align-items: center;*/
 	/*flex-direction: row;*/
 }
 
@@ -177,7 +183,7 @@ input textarea {
 
 .board-title {
 	color: #af0a0f;
-	font: bolder;
+	font: bolder 28px Tahoma;
 	letter-spacing: -2px;
 	text-align: center;
 	margin: 0;
@@ -256,6 +262,10 @@ input textarea {
 	border-right: 1px solid lightgray;
 }
 
+.right {
+	float: right;
+}
+
 .nav-item:hover {
 	box-shadow: inset 0 0 100px 100px rgba(255,255,255,.1);
 }
@@ -274,7 +284,6 @@ table, th, td {
 }
 
 .boards-table {
-	font-size: 16pt;
 	margin: 0 auto;
 }
 
@@ -319,6 +328,10 @@ hr {
 		overflow-y: hidden;
 		width: 49%;
 		justify-content: space-evenly;
+	}
+
+	.boards-table {
+		width: 100%;
 	}
 
 }

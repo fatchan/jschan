@@ -16,6 +16,12 @@ module.exports = {
 		}).toArray();
 	},
 
+	getBoardBans: (board) => {
+		return db.find({
+			'board': board,
+		}).toArray();
+	},
+
 	insertOne: (ban) => {
 		return db.insertOne(ban);
 	},

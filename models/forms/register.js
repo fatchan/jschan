@@ -31,10 +31,6 @@ module.exports = async (req, res, next) => {
 		return next(err);
 	}
 
-	return res.render('message', {
-		'title': 'Success',
-		'message': `Welcome, ${username}`,
-		'redirect': '/'
-	});
+	return res.redirect('/login')
 
 }
