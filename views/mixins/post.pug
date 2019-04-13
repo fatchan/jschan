@@ -1,4 +1,4 @@
-mixin post(board, post, truncate, showreports)
+mixin post(post, truncate, showreports)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
 			input.post-check(type='checkbox', name='checked[]' value=post.postId)
@@ -11,7 +11,7 @@ mixin post(board, post, truncate, showreports)
 				span.post-name #{post.name}
 			span #{post.date.toLocaleString()}
 			span.user-id(style=`background: #${post.userId}`) #{post.userId}
-			span: a(href=`/${board._id}/thread/${post.thread ? post.thread : post.postId}#${post.postId}`) ##{post.postId}
+			span: a(href=`/${post.board}/thread/${post.thread ? post.thread : post.postId}#${post.postId}`) ##{post.postId}
 		if post.files.length > 0
 			.post-files
 				each file in post.files
@@ -39,7 +39,7 @@ mixin post(board, post, truncate, showreports)
 					}
 				if truncated
 					blockquote.post-message !{truncatedMessage}
-					p Message too long. #[a(href=`/${board._id}/thread/${post.thread == null ? post.postId : post.thread}#${post.postId}`) Click here] to view the full text.
+					p Message too long. #[a(href=`/${post.board}/thread/${post.thread == null ? post.postId : post.thread}#${post.postId}`) Click here] to view the full text.
 				else
 					blockquote.post-message !{post.message}
 			else 

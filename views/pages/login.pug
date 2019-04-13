@@ -7,6 +7,7 @@ block content
 	section.form-wrapper
 		form.form-post(action='/forms/login' method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
+			input(type='hidden' name='redirect' value=redirect)
 			input#username(type='text', name='username', placeholder='username' maxlength='50')
 			input#password(type='password', name='password', placeholder='password' maxlength='100')
 			input(type='submit', value='submit')

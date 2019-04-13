@@ -1,5 +1,6 @@
 extends ../layout.pug
 include ../mixins/post.pug
+include ../mixins/ban.pug
 
 block head
 	title Manage
@@ -7,38 +8,48 @@ block head
 block content
 	include ../includes/boardheader.pug
 	hr(size=1)
-	h4.board-description Management Panel
-	form(action='/forms/board/'+board._id+'/posts' method='POST' enctype='application/x-www-form-urlencoded')
+	h4 Reports:
+	form(action=`/forms/board/${board._id}/posts` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if posts.length === 0
 			p No reports.
 			hr(size=1)
 		for post in posts
 			section.thread
-				+post(board, post, false, true)
+				+post(post, false, true)
 			hr(size=1)
 		section.action-wrapper
-			span
-				label
-					input.post-check(type='checkbox', name='delete' value=1)
-					| Delete
-			span
-				label
-					input.post-check(type='checkbox', name='spoiler' value=1)
-					| Spoiler
-			span
-				label
-					input.post-check(type='checkbox', name='dismiss' value=1)
-					| Dismiss
-			span
-				label
-					input.post-check(type='checkbox', name='ban' value=1)
-					| Ban
-				label
-					input.post-check(type='checkbox', name='global_ban' value=1)
-					| Global Ban
-				label
-					input#report(type='text', name='reason', placeholder='ban reason' autocomplete='off')
+			label
+				input.post-check(type='checkbox', name='delete' value=1)
+				| Delete Post
+			label
+				input.post-check(type='checkbox', name='spoiler' value=1)
+				| Spoiler Images
+			label
+				input.post-check(type='checkbox', name='dismiss' value=1)
+				| Dismiss Reports
+			label
+				input.post-check(type='checkbox', name='ban' value=1)
+				| Ban Poster
+			label
+				input.post-check(type='checkbox', name='global_ban' value=1)
+				| Global Ban Poster
+			label
+				input.post-check(type='checkbox', name='preserve_post' value=1)
+				| Show Post In Ban
+			label
+				input#report(type='text', name='reason', placeholder='ban reason' autocomplete='off')
 			input(type='submit', value='submit')
-			
-	
+	hr(size=1)
+	h4 Bans:
+	form(action=`/forms/board/${board._id}/unban` method='POST' enctype='application/x-www-form-urlencoded')
+		input(type='hidden' name='_csrf' value=csrf)
+		if bans.length === 0
+			p No bans.
+			hr(size=1)
+		for ban in bans
+			section.thread
+				+ban(ban)
+			hr(size=1)
+		//section.action-wrapper
+			input(type='submit', value='unban')

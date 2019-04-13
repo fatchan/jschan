@@ -17,9 +17,9 @@ block content
 			hr(size=1)
 		for thread in threads
 			section.thread
-				+post(board, thread, true)
+				+post(thread, true)
 				for post in thread.replies
-					+post(board, post, true)
+					+post(post, true)
 			hr(size=1)
 		if pages > 0
 			span.pages Page 

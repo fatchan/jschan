@@ -1,5 +1,5 @@
 extends ../layout.pug
-include ../mixins/post.pug
+include ../mixins/ban.pug
 
 block head
 	title Banned!
@@ -10,16 +10,5 @@ block content
 	Bans currently in place against your IP:
 	hr(size=1)
 	for ban in bans
-		if ban.board
-			div Board: #[a(href=`/${ban.board}`) /#{ban.board}/]
-		else
-			div Global ban.
-		div Reason: #{ban.reason}
-		div Issuer: #{ban.issuer}
-		div Date: #{ban.date}
-		div Expiry: #{ban.expireAt}
-		if ban.post
-			span Post:
-			section.thread
-				+post(ban.post.board, ban.post, false)
+		+ban(ban)
 		hr(size=1)

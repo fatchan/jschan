@@ -1,0 +1,16 @@
+include ./post.pug
+
+mixin ban(ban)
+	if ban.board
+		div Board: #[a(href=`/${ban.board}`) /#{ban.board}/]
+	else
+		div Global ban.
+	div Reason: #{ban.reason}
+	div Issuer: #{ban.issuer}
+	div Date: #{ban.date}
+	div Expiry: #{ban.expireAt}
+	if ban.post
+		span Post:
+		section.thread
+			+post(ban.post, false)
+	
