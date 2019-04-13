@@ -45,7 +45,7 @@ module.exports = async (req, res, next) => {
 		req.session.authenticated = true;
 
 		//successful login
-		return res.redirect(redirect ? `/${redirect}/manage` : '/');
+		return res.redirect(redirect || '/');
 
 	}
 

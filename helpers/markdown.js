@@ -1,9 +1,9 @@
 'use strict';
 
 const Posts = require(__dirname+'/../db-models/posts.js')
-	, quoteRegex = /^>>\d+$/gm
-	, greentextRegex = /^>[^>].+$/gm
-	, redtextRegex = /^<[^<].+$/gm
+	, quoteRegex = /^>>\d+/gm
+	, greentextRegex = /^>[^>].+/gm
+	, redtextRegex = /^<[^<].+/gm
 	, boldRegex = /==.+==/gm
 	, italicRegex = /__.+__/gm
 	, linkRegex = /https?\:\/\/[^\s]+/g
@@ -43,7 +43,7 @@ module.exports = (board, thread, text) => {
 	//italic
 	text = text.replace(italicRegex, (match) => {
 		const italic = match.substring(2, match.length-2);
-		return `<italic>${italic}</em>`;
+		return `<em>${italic}</em>`;
 	});
 
 	//spoilers
