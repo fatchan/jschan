@@ -14,6 +14,7 @@ const express  = require('express')
 	, dismissReports = require(__dirname+'/../models/forms/dismiss-report.js')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
+	, hasPerms = require(__dirname+'/../helpers/haspermsmiddleware.js')
 	, numberConverter = require(__dirname+'/../helpers/number-converter.js')
 	, banCheck = require(__dirname+'/../helpers/bancheck.js');
 
@@ -160,7 +161,8 @@ router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, asy
 		|| req.body.dismiss
 		|| req.body.spoiler
 		|| req.body.ban
-		|| req.body.global_ban)) {
+		|| req.body.global_ban
+		|| req.body.preserve_post)) {
 		errors.push('Must select an action')
 	}
 	if (req.body.report && (!req.body.reason || req.body.reason.length === 0)) {
@@ -224,6 +226,13 @@ router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, asy
 		'messages': messages,
 		'redirect': `/${req.params.board}`
 	});
+
+});
+
+//unban
+router.post('/board/:board/bans', Boards.exists, banCheck, hasPerms, numberConverter, async (req, res, next) => {
+
+	//TODO: unbans
 
 });
 

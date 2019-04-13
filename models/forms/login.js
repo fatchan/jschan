@@ -7,6 +7,7 @@ module.exports = async (req, res, next) => {
 
 	const username = req.body.username.toLowerCase();
 	const password = req.body.password;
+	const redirect = req.body.redirect;
 
 	//fetch an account
 	let account;
@@ -21,7 +22,7 @@ module.exports = async (req, res, next) => {
 		return res.status(403).render('message', {
 			'title': 'Forbidden',
 			'message': 'Incorrect username or password',
-			'redirect': '/login'
+			'redirect': redirect ? `/login?redirect=${redirect}` : '/login'
 		});
 	}
 
@@ -44,18 +45,14 @@ module.exports = async (req, res, next) => {
 		req.session.authenticated = true;
 
 		//successful login
-		return res.render('message', {
-			'title': 'Success',
-			'message': `Welcome, ${username}`,
-			'redirect': '/'
-		});
+		return res.redirect(redirect ? `/${redirect}/manage` : '/');
 
 	}
 
 	return res.status(403).render('message', {
 		'title': 'Forbidden',
 		'message': 'Incorrect username or password',
-		'redirect': '/login'
+		'redirect': redirect ? `/login?redirect=${redirect}` : '/login'
 	});
 
 }
