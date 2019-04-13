@@ -1,13 +1,18 @@
 'use strict';
 
 const uuidv4 = require('uuid/v4')
-    , path = require('path')
-    , Posts = require(__dirname+'/../../db-models/posts.js')
+	, path = require('path')
+	, Posts = require(__dirname+'/../../db-models/posts.js')
 
-module.exports = async (req, res, numFiles) => {
+module.exports = async (req, res, next, numFiles) => {
 
 	// get the post that we are trying to edit
-	let post = await Posts.getPost(req.params.board, req.body.id, true);
+	let post;
+	try {
+		post = await Posts.getPost(req.params.board, req.body.id, true);
+	} catch (err) {
+		return next(err);
+	}
 
 	if (!thread || thread.thread != null) {
 		throw {

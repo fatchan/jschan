@@ -43,6 +43,8 @@ const Mongo = require(__dirname+'/helpers/db.js')
 		moderators: [],
 	})
 	console.log('creating indexes')
+	await Bans.db.dropIndexes();
+	await Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 });
 	await Posts.db.dropIndexes();
 	//these are fucked
 	await Posts.db.createIndex({

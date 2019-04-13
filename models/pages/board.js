@@ -10,8 +10,7 @@ module.exports = async (req, res, next) => {
 		threads = await Posts.getRecent(req.params.board, req.params.page || 1);
 		pages = Math.ceil((await Posts.getPages(req.params.board)) / 10);
 	} catch (err) {
-		console.error(err)
-		return next();
+		return next(err);
 	}
 
 	//render the page

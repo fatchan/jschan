@@ -9,8 +9,7 @@ module.exports = async (req, res, next) => {
     try {
         threads = await Posts.getCatalog(req.params.board);
     } catch (err) {
-		console.error(err);
-        return next();
+        return next(err);
     }
 
     //render the page

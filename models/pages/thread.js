@@ -9,8 +9,7 @@ module.exports = async (req, res, next) => {
     try {
         thread = await Posts.getThread(req.params.board, req.params.id);
     } catch (err) {
-		console.error(err);
-        return next();
+        return next(err);
     }
 
     if (!thread) {

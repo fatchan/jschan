@@ -5,6 +5,8 @@ const Mongo = require(__dirname+'/../helpers/db.js')
 
 module.exports = {
 
+	db,
+
 	find: (ip, board) => {
 		return db.find({
 			'ip': ip,

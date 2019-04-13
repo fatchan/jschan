@@ -9,8 +9,7 @@ module.exports = async (req, res, next) => {
 	try {
 		boards = await Boards.find();
 	} catch (err) {
-		console.error(err)
-		return next();
+		return next(err);
 	}
 
 	//render the page

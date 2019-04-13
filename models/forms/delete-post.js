@@ -5,24 +5,12 @@ const path = require('path')
 	, fs = require('fs')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, hasPerms = require(__dirname+'/../../helpers/has-perms.js')
+	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
 	, Posts = require(__dirname+'/../../db-models/posts.js');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next, checkedPosts) => {
 
-	//get all posts that were checked
-	let posts = await Posts.getPosts(req.params.board, req.body.checked, true); //admin arument true, fetches passwords and salts
-
-	if (!posts || posts.length === 0) {
-		throw {
-            'status': 400,
-            'message': {
-                'title': 'Bad request',
-                'message': 'No posts found',
-                'redirect': `/${req.params.board}`
-            }
-        };
-	}
+	let posts = checkedPosts;
 
 	//if user is not logged in OR if lgoged in but not authed, filter the posts by passwords that are not null
 	if (!hasPerms(req, res)) {
@@ -34,14 +22,14 @@ module.exports = async (req, res) => {
 			&& post.password == req.body.password
 		});
 		if (posts.length === 0) {
-        	throw {
-            	'status': 403,
-            	'message': {
-                	'title': 'Forbidden',
-                	'message': 'Password did not match any selected posts',
-                	'redirect': `/${req.params.board}`
-            	}
-        	};
+			throw {
+				'status': 403,
+				'message': {
+					'title': 'Forbidden',
+					'message': 'Password did not match any selected posts',
+					'redirect': `/${req.params.board}`
+				}
+			};
 		}
 	}
 
@@ -60,8 +48,11 @@ module.exports = async (req, res) => {
 
 	//delete posts from DB
 	let deletedPosts = 0;
-	const result = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId));
-	deletedPosts = result.deletedCount;
+	try {
+		deletedPosts = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId)).then(result => result.deletedCount);
+	} catch (err) {
+		return next(err);
+	}
 
 	//get filenames from all the posts
 	let fileNames = [];

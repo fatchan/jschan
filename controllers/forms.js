@@ -46,7 +46,7 @@ router.post('/login', (req, res, next) => {
 		})
 	}
 
-	loginAccount(req, res);
+	loginAccount(req, res, next);
 
 });
 
@@ -88,7 +88,7 @@ router.post('/register', (req, res, next) => {
 		})
 	}
 
-	registerAccount(req, res);
+	registerAccount(req, res, next);
 
 });
 
@@ -137,11 +137,11 @@ router.post('/board/:board', Boards.exists, banCheck, numberConverter, async (re
 		})
 	}
 
-	makePost(req, res, numFiles);
+	makePost(req, res, next, numFiles);
 
 });
 
-//report, delete, sticky, etc
+//report/delete/spoiler/ban
 router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, async (req, res, next) => {
 
 	const errors = [];
@@ -178,38 +178,45 @@ router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, asy
 		})
 	}
 
+	const posts = await Posts.getPosts(req.params.board, req.body.checked, true);
+	if (!posts || posts.length === 0) {
+		return res.status(404).render('message', {
+			'title': 'Not found',
+			'errors': 'Selected posts not found',
+			'redirect': `/${req.params.board}`
+		})
+	}
+
 	const messages = [];
 	try {
 
-		//TODO: maybe fetch the posts first instead of checking multiple times with multiple actions
-
-		//global or board ban
 		if (req.body.global_ban) {
-			messages.push((await banPoster(req, res, null)));
+			messages.push((await banPoster(req, res, next, null, posts)));
 		} else if (req.body.ban) {
-			messages.push((await banPoster(req, res, req.params.board)));
+			messages.push((await banPoster(req, res, next, req.params.board, posts)));
 		}
 
-		// then if not deleting, we can spoiler and report or dismiss reports
 		if (req.body.delete) {
-			messages.push((await deletePosts(req, res)));
+			messages.push((await deletePosts(req, res, next, posts)));
 		} else {
 			if (req.body.spoiler) {
-				messages.push((await spoilerPosts(req, res)));
+				messages.push((await spoilerPosts(req, res, next, posts)));
 			}
 			if (req.body.report) {
-				messages.push((await reportPosts(req, res)));
+				messages.push((await reportPosts(req, res, next)));
 			} else if (req.body.dismiss) {
-				messages.push((await dismissReports(req, res)));
+				messages.push((await dismissReports(req, res, next)));
 			}
 		}
 
 	} catch (err) {
+		//something not right
 		if (err.status) {
+			// return out special error
 			return res.status(err.status).render('message', err.message);
 		}
-		console.error(err);
-		return res.status(500).render('error');
+		//some other error, use regular error handler
+		return next(err);
 	}
 
 	return res.render('message', {
@@ -219,7 +226,5 @@ router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, asy
 	});
 
 });
-
-
 
 module.exports = router;

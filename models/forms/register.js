@@ -3,7 +3,7 @@
 const bcrypt = require('bcrypt')
 	, Accounts = require(__dirname+'/../../db-models/accounts.js');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
 
 	const username = req.body.username.toLowerCase();
 	const password = req.body.password;
@@ -12,8 +12,7 @@ module.exports = async (req, res) => {
 	try {
 		account = await Accounts.findOne(username);
 	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
+		return next(err);
 	}
 
 	// if the account exists reject
@@ -29,8 +28,7 @@ module.exports = async (req, res) => {
 	try {
 		await Accounts.insertOne(username, password, 1);
 	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
+		return next(err);
 	}
 
 	return res.render('message', {

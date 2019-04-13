@@ -3,13 +3,15 @@
 const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db-models/boards.js')
-	, checkAuth = require(__dirname+'/../helpers/check-auth.js')
+	, hasPerms = require(__dirname+'/../helpers/haspermsmiddleware.js')
+	, isLoggedIn = require(__dirname+'/../helpers/isloggedin.js')
 	, numberConverter = require(__dirname+'/../helpers/number-converter.js')
 	//page models
-    , home = require(__dirname+'/../models/pages/home.js')
-    , register = require(__dirname+'/../models/pages/register.js')
-    , manage = require(__dirname+'/../models/pages/manage.js')
-    , login = require(__dirname+'/../models/pages/login.js')
+	, home = require(__dirname+'/../models/pages/home.js')
+	, register = require(__dirname+'/../models/pages/register.js')
+	, manage = require(__dirname+'/../models/pages/manage.js')
+	, globalmanage = require(__dirname+'/../models/pages/globalmanage.js')
+	, login = require(__dirname+'/../models/pages/login.js')
 	, board = require(__dirname+'/../models/pages/board.js')
 	, catalog = require(__dirname+'/../models/pages/catalog.js')
 	, thread = require(__dirname+'/../models/pages/thread.js');
@@ -24,27 +26,24 @@ router.get('/login', login);
 router.get('/register', register);
 
 //logout
-router.get('/logout', (req, res, next) => {
+router.get('/logout', isLoggedIn, (req, res, next) => {
 
-    if (req.session.authenticated === true) {
-        req.session.destroy();
-        return res.render('message', {
-            'title': 'Success',
-            'message': 'You have been logged out successfully',
-            'redirect': '/'
-        });
-    }
+	//remove session
+	req.session.destroy();
 
-    return res.status(400).render('message', {
-        'title': 'Bad request',
-        'message': 'You are not logged in',
-        'redirect': '/login'
-    })
+	return res.render('message', {
+		'title': 'Success',
+		'message': 'You have been logged out successfully',
+		'redirect': '/'
+	});
 
 });
 
 //board manage page
-router.get('/:board/manage', Boards.exists, checkAuth, Boards.canManage, manage);
+router.get('/:board/manage', Boards.exists, isLoggedIn, hasPerms, manage);
+
+//board manage page
+router.get('/globalmanage', isLoggedIn, hasPerms, globalmanage);
 
 // board page/recents
 router.get('/:board/:page(\\d+)?', Boards.exists, numberConverter, board);

@@ -25,7 +25,7 @@ const uuidv4 = require('uuid/v4')
     , videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
     , formatSize = require(__dirname+'/../../helpers/files/format-size.js')
 
-module.exports = async (req, res, numFiles) => {
+module.exports = async (req, res, next, numFiles) => {
 
 	// check if this is responding to an existing thread
 	let redirect = `/${req.params.board}`
@@ -35,8 +35,7 @@ module.exports = async (req, res, numFiles) => {
 		try {
 			thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		} catch (err) {
-			console.error(err);
-			return res.status(500).render('error');
+			return next(err);
 		}
 		if (!thread || thread.thread != null) {
 			return res.status(400).render('message', {
@@ -100,7 +99,7 @@ module.exports = async (req, res, numFiles) => {
 						await videoThumbnail(filename);
 						break;
 					default:
-						return res.status(500).render('error'); //how did we get here?
+						return next(err);
 				}
 
 				//make thumbnail
@@ -119,9 +118,8 @@ module.exports = async (req, res, numFiles) => {
 				files.push(processedFile);
 
 			} catch (err) {
-				console.error(err);
 				//TODO: DELETE FAILED FILES
-				return res.status(500).render('error');
+				return next(err);
 			}
 		}
 	}
@@ -174,8 +172,7 @@ module.exports = async (req, res, numFiles) => {
 	try {
 		postId = await Posts.insertOne(req.params.board, data);
 	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
+		return next(err);
 	}
 
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}#${postId}`;

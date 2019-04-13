@@ -74,7 +74,10 @@ const express  = require('express')
 			return res.status(403).send('Invalid CSRF token')
 		}
 		console.error(err.stack)
-		return res.status(500).render('error')
+		return res.status(500).render('message', {
+			'title': 'Internal Server Error',
+			'redirect': req.header('Referer') || '/'
+		})
 	})
 
 	// listen

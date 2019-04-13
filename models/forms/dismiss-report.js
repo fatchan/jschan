@@ -1,9 +1,9 @@
 'use strict';
 
 const Posts = require(__dirname+'/../../db-models/posts.js')
-	, hasPerms = require(__dirname+'/../../helpers/has-perms.js');
+	, hasPerms = require(__dirname+'/../../helpers/hasperms.js');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
 
 	if (!hasPerms(req, res)) {
 		throw {
@@ -16,8 +16,12 @@ module.exports = async (req, res) => {
 		};
 	}
 
-	await Posts.dismissReports(req.params.board, req.body.checked);
+	try {
+		await Posts.dismissReports(req.params.board, req.body.checked);
+	} catch (err) {
+		return next(err);
+	}
 
-	return `Dismissed report(s) successfully`
+	return `Dismissed report(s) successfully`;
 
 }

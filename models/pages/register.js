@@ -1,15 +1,6 @@
 'use strict';
 
-module.exports = (req, res) => {
-
-	//send home if already logged in
-	if (req.session.authenticated === true) {
-		return res.status(400).render('message', {
-			'title': 'Notice',
-			'message': 'You are already logged in. Redirecting you to back home.',
-			'redirect': '/'
-		});
-	}
+module.exports = (req, res, next) => {
 
 	//render the page
 	res.render('register', {

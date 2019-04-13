@@ -1,4 +1,4 @@
-mixin post(board, post, truncate)
+mixin post(board, post, truncate, showreports)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
 			input.post-check(type='checkbox', name='checked[]' value=post.postId)
@@ -44,7 +44,7 @@ mixin post(board, post, truncate)
 					blockquote.post-message !{post.message}
 			else 
 				blockquote.post-message !{post.message}
-	if post.reports
+	if showreports && post.reports
 		each report in post.reports
 			.reports.post-container
 				span Date: #{report.date.toLocaleString()}

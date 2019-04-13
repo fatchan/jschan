@@ -6,13 +6,13 @@ module.exports = async (req, res, next) => {
 
 	let posts;
 	try {
-		posts = await Posts.getReports(req.params.board);
+		posts = await Posts.getAllReports();
 	} catch (err) {
-		return next(err)
+		return next(err);
 	}
 
 	//render the page
-	res.render('manage', {
+	res.render('globalmanage', {
 		csrf: req.csrfToken(),
 		posts: posts
 	});

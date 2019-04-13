@@ -240,6 +240,22 @@ module.exports = {
 		}).toArray();
 	},
 
+	getAllReports: () => {
+		return db.find({
+			'reports.0': {
+				'$exists': true
+			}
+		}, {
+			'projection': {
+				'salt': 0,
+				'password': 0,
+				'ip': 0,
+			}
+		}).sort({
+			'board': 1
+		}).toArray();
+	},
+
 	deleteOne: (board, options) => {
 		return db.deleteOne(options);
 	},

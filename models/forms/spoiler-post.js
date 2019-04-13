@@ -5,13 +5,13 @@ const path = require('path')
 	, fs = require('fs')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, hasPerms = require(__dirname+'/../../helpers/has-perms.js')
+	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
 	, Posts = require(__dirname+'/../../db-models/posts.js');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next, checkedPosts) => {
 
 	//get all posts that were checked
-	let posts = await Posts.getPosts(req.params.board, req.body.checked, true); //admin arument true, fetches passwords and salts
+	let posts = checkedPosts;
 
 	if (!posts || posts.length === 0) {
 		throw {
@@ -63,8 +63,11 @@ module.exports = async (req, res) => {
 
 	// spoiler posts
 	let spoileredPosts = 0;
-	const result = await Posts.spoilerMany(req.params.board, posts.map(x => x.postId));
-	spoileredPosts = result.modifiedCount;
+	try {
+		spoileredPosts = await Posts.spoilerMany(req.params.board, posts.map(x => x.postId)).then(result => result.modifiedCount);
+	} catch (err) {
+		return next(err);
+	}
 
 	//hooray!
 	return `Spoilered ${spoileredPosts} posts`
