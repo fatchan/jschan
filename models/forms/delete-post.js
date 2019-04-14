@@ -70,6 +70,6 @@ module.exports = async (req, res, next, checkedPosts) => {
 	}));
 
 	//hooray!
-	return `Deleted ${threadIds.length} threads and ${deletedPosts} posts`
+	return `Deleted ${threadIds.length} threads and ${deletedPosts-threadIds.length} posts`
 
 }

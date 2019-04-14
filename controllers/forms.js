@@ -161,9 +161,8 @@ router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, asy
 		|| req.body.dismiss
 		|| req.body.spoiler
 		|| req.body.ban
-		|| req.body.global_ban
-		|| req.body.preserve_post)) {
-		errors.push('Must select an action')
+		|| req.body.global_ban)) {
+		errors.push('Invalid actions selected')
 	}
 	if (req.body.report && (!req.body.reason || req.body.reason.length === 0)) {
 		errors.push('Reports must have a reason')
