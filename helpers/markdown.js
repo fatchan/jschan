@@ -1,7 +1,6 @@
 'use strict';
 
 const Posts = require(__dirname+'/../db-models/posts.js')
-	, quoteRegex = /^>>\d+/gm
 	, greentextRegex = /^>[^>].+/gm
 	, redtextRegex = /^<[^<].+/gm
 	, boldRegex = /==.+==/gm
@@ -26,12 +25,6 @@ module.exports = (board, thread, text) => {
 	//links
 	text = text.replace(linkRegex, (match) => {
 		return `<a href="${match}">${match}</a>`;
-	});
-
-	//quotes
-	text = text.replace(quoteRegex, (match) => {
-		const quotenum = match.substring(2);
-		return `<a class='quote' href='/${board}/thread/${thread}#${quotenum}'>&gt;&gt;${quotenum}</a>`;
 	});
 
 	//bold
