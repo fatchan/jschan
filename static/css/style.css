@@ -52,6 +52,7 @@ object {
 	box-shadow: 0 0 3px black;
 	min-width: 64px;
 	min-height: 64px;
+	object-fit: cover;
 }
 
 .catalog {
@@ -210,7 +211,7 @@ input textarea {
 }
 
 .post-container:target, .op:target {
-	background-color: #d6bad0;
+	background-color: #d6bad0!important;
 	border-color: #ba9dbf;
 }
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const Posts = require(__dirname+'/../db-models/posts.js')
-	, quoteRegex = /^>>\d+/gm;
+	, quoteRegex = />>\d+/gm;
 
 module.exports = async (board, text) => {
 
@@ -26,7 +26,6 @@ module.exports = async (board, text) => {
 		validQuotes++;
 	}
 
-	console.log(validQuotes);
 	//if none of the quotes were real, dont do a replace
 	if (validQuotes === 0) {
 		return text;
