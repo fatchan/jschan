@@ -1,7 +1,7 @@
 mixin post(post, truncate, showreports)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
-			input.post-check(type='checkbox', name='checked[]' value=post.postId)
+			input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
 			if post.subject
 				span.post-subject #{post.subject}
 			if post.email
@@ -16,7 +16,7 @@ mixin post(post, truncate, showreports)
 			.post-files
 				each file in post.files
 					.post-file
-						.post-file-info
+						small.post-file-info
 							span: a(href='/img/'+file.filename download=file.originalFilename) #{file.originalFilename}
 							br
 							span (#{file.sizeString} #{file.geometryString})

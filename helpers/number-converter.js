@@ -6,9 +6,9 @@ module.exports = (req, res, next) => {
 	if (req.body.thread) {
 		req.body.thread = +req.body.thread;
 	}
-	if (req.body.checked) {
-		//syntax casts all string to number
-		req.body.checked = req.body.checked.map(Number);
+	if (req.body.checkedposts) {
+		//syntax tries to convert all string to number
+		req.body.checkedposts = req.body.checkedposts.map(Number);
 	}
 
 	//and for params

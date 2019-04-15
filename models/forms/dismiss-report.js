@@ -16,11 +16,7 @@ module.exports = async (req, res, next) => {
 		};
 	}
 
-	try {
-		await Posts.dismissReports(req.params.board, req.body.checked);
-	} catch (err) {
-		return next(err);
-	}
+	await Posts.dismissReports(req.params.board, req.body.checkedposts);
 
 	return `Dismissed report(s) successfully`;
 

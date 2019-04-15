@@ -46,7 +46,7 @@ module.exports = async (req, res, next, checkedPosts) => {
 
 	}
 
-	//filter by not spoilered
+	//filter by not spoilered. maybe i add filters with optiins in the controller where it gets the posts?
 	posts = posts.filter(post => {
   		return !post.spoiler
 	});
@@ -62,12 +62,7 @@ module.exports = async (req, res, next, checkedPosts) => {
 	}
 
 	// spoiler posts
-	let spoileredPosts = 0;
-	try {
-		spoileredPosts = await Posts.spoilerMany(req.params.board, posts.map(x => x.postId)).then(result => result.modifiedCount);
-	} catch (err) {
-		return next(err);
-	}
+	const spoileredPosts = await Posts.spoilerMany(req.params.board, posts.map(x => x.postId)).then(result => result.modifiedCount);
 
 	//hooray!
 	return `Spoilered ${spoileredPosts} posts`

@@ -8,7 +8,7 @@ const uuidv4 = require('uuid/v4')
     , uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
     , Posts = require(__dirname+'/../../db-models/posts.js')
 	, getTripCode = require(__dirname+'/../../helpers/tripcode.js')
-	, getQuotes = require(__dirname+'/../../helpers/quotes.js')
+	, linkQuotes = require(__dirname+'/../../helpers/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = {
@@ -149,7 +149,7 @@ module.exports = async (req, res, next, numFiles) => {
 	let message = req.body.message;
 	if (message && message.length > 0) {
 		message = simpleMarkdown(req.params.board, req.body.thread, message);
-		message = await getQuotes(req.params.board, message);
+		message = await linkQuotes(req.params.board, message);
 		message = sanitize(message, sanitizeOptions);
 	}
 

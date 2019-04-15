@@ -9,7 +9,7 @@ block content
 	include ../includes/boardheader.pug
 	hr(size=1)
 	h4 Reports:
-	form(action=`/forms/board/${board._id}/posts` method='POST' enctype='application/x-www-form-urlencoded')
+	form(action=`/forms/board/${board._id}/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if posts.length === 0
 			p No reports.
@@ -51,5 +51,5 @@ block content
 			section.thread
 				+ban(ban)
 			hr(size=1)
-		//section.action-wrapper
+		section.action-wrapper
 			input(type='submit', value='unban')

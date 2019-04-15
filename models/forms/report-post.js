@@ -12,11 +12,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	//push the report to all checked posts
-	try {
-		await Posts.reportMany(req.params.board, req.body.checked, report);
-	} catch (err) {
-		return next(err);
-	}
+	await Posts.reportMany(req.params.board, req.body.checkedposts, report);
 
 	//hooray!
 	return `Reported post(s) successfully`

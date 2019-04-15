@@ -33,12 +33,7 @@ module.exports = async (req, res, next, board, checkedPosts) => {
 		}
 	});
 
-	let bannedIps = 0;
-	try {
-		bannedIps = await Bans.insertMany(bans).then(result => result.insertedCount);
-	} catch (err) {
-		return next(err);
-	}
+	const bannedIps = await Bans.insertMany(bans).then(result => result.insertedCount);
 
 	return `Banned ${bannedIps} ips`;
 

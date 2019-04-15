@@ -47,12 +47,7 @@ module.exports = async (req, res, next, checkedPosts) => {
 	const allPosts = posts.concat(threadPosts)
 
 	//delete posts from DB
-	let deletedPosts = 0;
-	try {
-		deletedPosts = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId)).then(result => result.deletedCount);
-	} catch (err) {
-		return next(err);
-	}
+	const deletedPosts = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId)).then(result => result.deletedCount);
 
 	//get filenames from all the posts
 	let fileNames = [];

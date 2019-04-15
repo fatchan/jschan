@@ -200,7 +200,7 @@ input textarea {
 	margin: 0;
 }
 
-.post-container {
+.post-container, .ban {
 	margin: 1px;
 	padding: 2px;
 	background: #D6DAF0;

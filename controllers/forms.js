@@ -7,6 +7,7 @@ const express  = require('express')
 	, Trips = require(__dirname+'/../db-models/trips.js')
 	, Bans = require(__dirname+'/../db-models/bans.js')
 	, banPoster = require(__dirname+'/../models/forms/ban-poster.js')
+	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
 	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
 	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
@@ -94,7 +95,7 @@ router.post('/register', (req, res, next) => {
 });
 
 // make new post
-router.post('/board/:board', Boards.exists, banCheck, numberConverter, async (req, res, next) => {
+router.post('/board/:board/post', Boards.exists, banCheck, numberConverter, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -143,11 +144,11 @@ router.post('/board/:board', Boards.exists, banCheck, numberConverter, async (re
 });
 
 //report/delete/spoiler/ban
-router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, async (req, res, next) => {
+router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, async (req, res, next) => {
 
 	const errors = [];
 
-	if (!req.body.checked || req.body.checked.length === 0 || req.body.checked.length > 10) {
+	if (!req.body.checkedposts || req.body.checkedposts.length === 0 || req.body.checkedposts.length > 10) {
 		errors.push('Must select 1-10 posts')
 	}
 	if (req.body.password && req.body.password.length > 50) {
@@ -179,7 +180,7 @@ router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, asy
 		})
 	}
 
-	const posts = await Posts.getPosts(req.params.board, req.body.checked, true);
+	const posts = await Posts.getPosts(req.params.board, req.body.checkedposts, true);
 	if (!posts || posts.length === 0) {
 		return res.status(404).render('message', {
 			'title': 'Not found',
@@ -190,7 +191,6 @@ router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, asy
 
 	const messages = [];
 	try {
-
 		if (req.body.global_ban) {
 			messages.push((await banPoster(req, res, next, null, posts)));
 		} else if (req.body.ban) {
@@ -209,7 +209,6 @@ router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, asy
 				messages.push((await dismissReports(req, res, next)));
 			}
 		}
-
 	} catch (err) {
 		//something not right
 		if (err.status) {
@@ -229,10 +228,43 @@ router.post('/board/:board/posts', Boards.exists, banCheck, numberConverter, asy
 });
 
 //unban
-router.post('/board/:board/bans', Boards.exists, banCheck, hasPerms, numberConverter, async (req, res, next) => {
+router.post('/board/:board/unban', Boards.exists, banCheck, hasPerms, numberConverter, async (req, res, next) => {
 
-	//TODO: unbans
+	//keep this for later in case i add other options to unbans
+	const errors = [];
+
+	if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
+		errors.push('Must select 1-10 bans')
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': `/${req.params.board}/manage`
+		});
+	}
+
+	const messages = [];
+	try {
+		messages.push((await removeBans(req, res, next)));
+	} catch (err) {
+		//something not right
+		if (err.status) {
+			// return out special error
+			return res.status(err.status).render('message', err.message);
+		}
+		//some other error, use regular error handler
+		return next(err);
+	}
+
+	return res.render('message', {
+		'title': 'Success',
+		'messages': messages,
+		'redirect': `/${req.params.board}/manage`
+	});
 
 });
 
 module.exports = router;
+
