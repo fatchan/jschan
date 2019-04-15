@@ -1,7 +1,8 @@
 mixin post(post, truncate, showreports)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
-			input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
+			span
+				input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
 			if post.subject
 				span.post-subject #{post.subject}
 			if post.email

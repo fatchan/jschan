@@ -142,9 +142,7 @@ input, textarea {
 .post-check {
 	position: relative;
 	top: 3px;
-	margin: 2px;
-	margin-right: 4px;
-	padding: 0;
+	margin: -3px 1px !important;
 }
 
 .post-files {
@@ -174,6 +172,10 @@ input, textarea {
 figure {
 }
 
+blockquote a {
+	color: #d00;
+}
+
 input textarea {
 	padding: 8px;
 }
@@ -200,6 +202,10 @@ input textarea {
 	margin: 0;
 }
 
+.post-message {
+	overflow-y: auto;
+}
+
 .post-container, .ban {
 	margin: 1px;
 	padding: 2px;
@@ -220,7 +226,6 @@ input textarea {
 	margin-left: 0;
 	display: block;
 	border: none;
-	width: 100%;
 }
 
 .post-subject {
@@ -233,16 +238,22 @@ input textarea {
 	font-weight: bold;
 }
 
+.post-container.op .post-info {
+	background: none;
+}
+
+
 .post-info {
-	margin-top: -2px;
+	margin: -2px;
+	/*margin-left: -3px;*/
+	padding: 2px;
+	padding-left: 1px;
+	/*background-color: #B7C5D9;*/
 }
 
-.post-image {
-
-}
-
-.post-content {
-
+.post-info * {
+    margin-bottom: 0;
+    margin-top: -2px;
 }
 
 .navbar {
@@ -251,6 +262,7 @@ input textarea {
 	position: fixed;
 	width: 100%;
 	background: #eef2ff;
+	z-index: 1;
 }
 
 .nav-item {
@@ -318,6 +330,7 @@ hr {
 
 	.post-check {
 		top: 2px;
+		margin-left: 2px!important;
 		height: 8px;
 	}
 
@@ -333,6 +346,10 @@ hr {
 
 	.boards-table {
 		width: 100%;
+	}
+
+	.post-info {
+		background-color: #B7C5D9;
 	}
 
 }
