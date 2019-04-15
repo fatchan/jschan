@@ -1,0 +1,6 @@
+span.pages Page: 
+	- for(let i = 1; i <= pages; i++)
+		if i === page
+			span: a(href=`/${board._id}?p=${i}`) [#{i}]
+		else
+			span: a(href=`/${board._id}?p=${i}`) #{i}

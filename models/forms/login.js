@@ -1,7 +1,7 @@
 'use strict';
 
 const bcrypt = require('bcrypt')
-	, Accounts = require(__dirname+'/../../db-models/accounts.js');
+	, Accounts = require(__dirname+'/../../db/accounts.js');
 
 module.exports = async (req, res, next) => {
 

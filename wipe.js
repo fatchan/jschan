@@ -10,11 +10,11 @@ const Mongo = require(__dirname+'/helpers/db.js')
 (async () => {
 	console.log('connecting to db...')
 	await Mongo.connect();
-	const Boards = require(__dirname+'/db-models/boards.js')
-		, Posts = require(__dirname+'/db-models/posts.js')
-		, Bans = require(__dirname+'/db-models/bans.js')
-		, Trips = require(__dirname+'/db-models/trips.js')
-		, Accounts = require(__dirname+'/db-models/accounts.js');
+	const Boards = require(__dirname+'/db/boards.js')
+		, Posts = require(__dirname+'/db/posts.js')
+		, Bans = require(__dirname+'/db/bans.js')
+		, Trips = require(__dirname+'/db/trips.js')
+		, Accounts = require(__dirname+'/db/accounts.js');
 	console.log('deleting accounts')
 	await Accounts.deleteAll();
 	console.log('deleting posts')

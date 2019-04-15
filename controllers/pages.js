@@ -45,7 +45,7 @@ router.get('/:board/manage', Boards.exists, isLoggedIn, hasPerms, manage);
 router.get('/globalmanage', isLoggedIn, hasPerms, globalmanage);
 
 // board page/recents
-router.get('/:board/:page(\\d+)?', Boards.exists, numberConverter, board);
+router.get('/:board', Boards.exists, numberConverter, board);
 
 // thread view page
 router.get('/:board/thread/:id(\\d+)', Boards.exists, numberConverter, thread);

@@ -10,6 +10,8 @@ block content
 	include ../includes/postform.pug
 	.mode Posting mode: Thread [#[a.no-decoration(href=`/${board._id}/catalog`) Catalog]]
 	hr(size=1)
+	include ../includes/pages.pug
+	hr(size=1)
 	form(action='/forms/board/'+board._id+'/actions' method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if threads.length === 0
@@ -20,10 +22,7 @@ block content
 				+post(thread, true)
 				for post in thread.replies
 					+post(post, true)
-			hr(size=1)
-		if pages > 0
-			span.pages Page 
-				- for(let i = 0; i < pages; i++)
-					span: a(href=`/${board._id}/${i+1}`) #{i+1}
-			hr(size=1)
+		hr(size=1)
+		include ../includes/pages.pug
+		hr(size=1)
 		include ../includes/deletefooter.pug

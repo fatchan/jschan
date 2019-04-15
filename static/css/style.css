@@ -92,8 +92,12 @@ object {
 	color: green;
 }
 
+blockquote a {
+	color: #d00;
+}
+
 blockquote {
-	word-break: break-all;
+	/*word-break: break-all;*/
 	white-space: pre-wrap;
 }
 
@@ -123,8 +127,12 @@ input, textarea {
 }
 
 .action-wrapper {
-	/*align-items: center;*/
-	/*flex-direction: row;*/
+	display: flex;
+	flex-direction: column;
+}
+
+.action-wrapper * {
+	margin: 3px 0;
 }
 
 .form-post {
@@ -170,10 +178,6 @@ input, textarea {
 }
 
 figure {
-}
-
-blockquote a {
-	color: #d00;
 }
 
 input textarea {
@@ -316,6 +320,10 @@ hr {
 
 @media only screen and (max-width: 800px) {
 
+	body {
+		/*font-size: 14pt;*/
+	}
+
 	input {
 		height: 30px;
 	}
@@ -326,6 +334,10 @@ hr {
 
 	.form-login {
 		width: 100%;
+	}
+
+	blockquote {
+		margin: 1em;
 	}
 
 	.post-check {

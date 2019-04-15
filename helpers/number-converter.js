@@ -19,6 +19,16 @@ module.exports = (req, res, next) => {
 		req.params.page = +req.params.page;
 	}
 
+	//and query
+	if (req.query.p) {
+		const pnum = +req.query.p;
+		if (Number.isSafeInteger(pnum)) {
+			req.query.p = +req.query.p;
+		} else {
+			req.query.p = null;
+		}
+	}
+
 	next();
 
 }

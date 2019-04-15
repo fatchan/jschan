@@ -6,7 +6,7 @@ const path = require('path')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
-	, Posts = require(__dirname+'/../../db-models/posts.js');
+	, Posts = require(__dirname+'/../../db/posts.js');
 
 module.exports = async (req, res, next, checkedPosts) => {
 

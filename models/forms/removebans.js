@@ -1,6 +1,6 @@
 'use strict';
 
-const Bans = require(__dirname+'/../../db-models/bans.js')
+const Bans = require(__dirname+'/../../db/bans.js')
 	, { ObjectId } = require('mongodb');
 
 module.exports = async (req, res, next) => {

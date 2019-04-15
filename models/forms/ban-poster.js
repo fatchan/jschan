@@ -2,8 +2,8 @@
 
 const uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
-	, Bans = require(__dirname+'/../../db-models/bans.js')
-	, Posts = require(__dirname+'/../../db-models/posts.js');
+	, Bans = require(__dirname+'/../../db/bans.js')
+	, Posts = require(__dirname+'/../../db/posts.js');
 
 module.exports = async (req, res, next, board, checkedPosts) => {
 

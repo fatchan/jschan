@@ -1,6 +1,6 @@
 'use strict';
 
-const Boards = require(__dirname+'/../../db-models/boards.js');
+const Boards = require(__dirname+'/../../db/boards.js');
 
 module.exports = async (req, res, next) => {
 
