@@ -8,8 +8,8 @@ module.exports = async (req, res, next) => {
 	let reports;
 	let bans;
 	try {
-		reports = await Posts.getAllReports();
-		bans = await Bans.getAllBans();
+		reports = await Posts.getGlobalReports();
+		bans = await Bans.getGlobalBans();
 	} catch (err) {
 		return next(err)
 	}

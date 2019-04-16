@@ -168,6 +168,7 @@ module.exports = async (req, res, next, numFiles) => {
 		'files': files,
 		'salt': !req.body.thread ? salt : '',
 		'reports': [],
+		'globalreports': [],
 		'spoiler': req.body.spoiler ? true : false,
 	};
 

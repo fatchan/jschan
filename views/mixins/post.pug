@@ -1,8 +1,11 @@
-mixin post(post, truncate, showreports)
+mixin post(post, truncate, manage, globalmanage)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
 			span
-				input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
+				if globalmanage
+					input.post-check(type='checkbox', name='globalcheckedposts[]' value=post._id)
+				else
+					input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
 			if post.subject
 				span.post-subject #{post.subject}
 			if post.email
@@ -45,8 +48,13 @@ mixin post(post, truncate, showreports)
 					blockquote.post-message !{post.message}
 			else 
 				blockquote.post-message !{post.message}
-	if showreports && post.reports
+	if manage === true
 		each report in post.reports
+			.reports.post-container
+				span Date: #{report.date.toLocaleString()}
+				span Reason: #{report.reason}
+	if globalmanage === true
+		each report in post.globalreports
 			.reports.post-container
 				span Date: #{report.date.toLocaleString()}
 				span Reason: #{report.reason}

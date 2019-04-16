@@ -30,6 +30,12 @@ module.exports = {
 		return db.find({}).toArray();
 	},
 
+	getGlobalBans: () => {
+		return db.find({
+			'board': null
+		}).toArray();
+	},
+
 	getBoardBans: (board) => {
 		return db.find({
 			'board': board,

@@ -12,7 +12,9 @@ const express  = require('express')
 	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
 	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
 	, reportPosts = require(__dirname+'/../models/forms/report-post.js')
+	, globalReportPosts = require(__dirname+'/../models/forms/globalreportpost.js')
 	, dismissReports = require(__dirname+'/../models/forms/dismiss-report.js')
+	, dismissGlobalReports = require(__dirname+'/../models/forms/dismissglobalreport.js')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
 	, hasPerms = require(__dirname+'/../helpers/haspermsmiddleware.js')
@@ -161,9 +163,11 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 		errors.push('Ban reason must be 50 characters or less');
 	}
 	if (!(req.body.report
+		|| req.body.global_report
+		|| req.body.spoiler
 		|| req.body.delete
 		|| req.body.dismiss
-		|| req.body.spoiler
+		|| req.body.global_dismiss
 		|| req.body.ban
 		|| req.body.global_ban)) {
 		errors.push('Invalid actions selected')
@@ -191,24 +195,37 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 
 	const messages = [];
 	try {
+
+		// if getting global banned, board ban doesnt matter
 		if (req.body.global_ban) {
 			messages.push((await banPoster(req, res, next, null, posts)));
 		} else if (req.body.ban) {
 			messages.push((await banPoster(req, res, next, req.params.board, posts)));
 		}
 
+		//ban before deleting
 		if (req.body.delete) {
 			messages.push((await deletePosts(req, res, next, posts)));
 		} else {
+			// if it was getting deleted, we cant do any of these
 			if (req.body.spoiler) {
 				messages.push((await spoilerPosts(req, res, next, posts)));
 			}
+			// cannot report and dismiss at same time
 			if (req.body.report) {
 				messages.push((await reportPosts(req, res, next)));
 			} else if (req.body.dismiss) {
 				messages.push((await dismissReports(req, res, next)));
 			}
+
+			// cannot report and dismiss at same time
+			if (req.body.global_report) {
+				messages.push((await globalReportPosts(req, res, next, posts)));
+			} else if (req.body.global_dismiss) {
+				messages.push((await dismissGlobalReports(req, res, next, posts)));
+			}
 		}
+
 	} catch (err) {
 		//something not right
 		if (err.status) {
@@ -268,13 +285,111 @@ router.post('/board/:board/unban', Boards.exists, banCheck, hasPerms, numberConv
 
 router.post('/global/actions', hasPerms, numberConverter, async(req, res, next) => {
 
-	//TODO
+	const errors = [];
+
+	if (!req.body.globalcheckedposts || req.body.globalcheckedposts.length === 0 || req.body.globalcheckedposts.length > 10) {
+		errors.push('Must select 1-10 posts')
+	}
+	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
+		errors.push('Ban reason must be 50 characters or less');
+	}
+	if (!(req.body.spoiler
+		|| req.body.delete
+		|| req.body.global_dismiss
+		|| req.body.global_ban)) {
+		errors.push('Invalid actions selected')
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': '/globalmanage'
+		})
+	}
+
+	const posts = await Posts.globalGetPosts(req.body.globalcheckedposts, true);
+	if (!posts || posts.length === 0) {
+		return res.status(404).render('message', {
+			'title': 'Not found',
+			'errors': 'Selected posts not found',
+			'redirect': '/globalmanage'
+		})
+	}
+
+	const messages = [];
+	try {
+
+		if (req.body.global_ban) {
+			messages.push((await banPoster(req, res, next, null, posts)));
+		}
+
+		//ban before deleting
+		if (req.body.delete) {
+			messages.push((await deletePosts(req, res, next, posts)));
+		} else {
+			// if it was getting deleted, we cant do any of these
+			if (req.body.spoiler) {
+				messages.push((await spoilerPosts(req, res, next, posts)));
+			}
+			if (req.body.global_dismiss) {
+				messages.push((await dismissGlobalReports(req, res, next, posts)));
+			}
+		}
+
+	} catch (err) {
+		//something not right
+		if (err.status) {
+			// return out special error
+			return res.status(err.status).render('message', err.message);
+		}
+		//some other error, use regular error handler
+		return next(err);
+	}
+
+	return res.render('message', {
+		'title': 'Success',
+		'messages': messages,
+		'redirect': `/${req.params.board}`
+	});
 
 });
 
 router.post('/global/unban', hasPerms, numberConverter, async(req, res, next) => {
 
 	//TODO
+	const errors = [];
+
+	if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
+		errors.push('Must select 1-10 bans')
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': `/globalmanage`
+		});
+	}
+
+	const messages = [];
+	try {
+		messages.push((await removeBans(req, res, next)));
+	} catch (err) {
+		//something not right
+		if (err.status) {
+			// return out special error
+			return res.status(err.status).render('message', err.message);
+		}
+		//some other error, use regular error handler
+		return next(err);
+	}
+
+	return res.render('message', {
+		'title': 'Success',
+		'messages': messages,
+		'redirect': `/globalmanage`
+	});
 
 });
 

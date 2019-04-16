@@ -6,23 +6,13 @@ const path = require('path')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
+	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
 
 module.exports = async (req, res, next, checkedPosts) => {
 
 	//get all posts that were checked
 	let posts = checkedPosts;
-
-	if (!posts || posts.length === 0) {
-		throw {
-			'status': 400,
-			'message': {
-				'title': 'Bad requests',
-				'message': 'No posts found',
-				'redirect': `/${req.params.board}`
-			}
-		};
-	}
 
 	//if user is not logged in OR if lgoged in but not authed, filter the posts by passwords that are not null
 	if (!hasPerms(req, res)) {
@@ -39,7 +29,7 @@ module.exports = async (req, res, next, checkedPosts) => {
 				'message': {
 					'title': 'Forbidden',
 					'message': 'Password did not match any selected posts',
-					'redirect': `/${req.params.board}`
+					'redirect': '/'
 				}
 			};
 		}
@@ -56,13 +46,14 @@ module.exports = async (req, res, next, checkedPosts) => {
 			'message': {
 				'title': 'Conflict',
 				'message': 'Posts already spoilered',
-				'redirect': `/${req.params.board}`
+				'redirect': '/'
 			}
 		};
 	}
 
 	// spoiler posts
-	const spoileredPosts = await Posts.spoilerMany(req.params.board, posts.map(x => x.postId)).then(result => result.modifiedCount);
+	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id));
+	const spoileredPosts = await Posts.spoilerMany(postMongoIds).then(result => result.modifiedCount);
 
 	//hooray!
 	return `Spoilered ${spoileredPosts} posts`

@@ -16,8 +16,8 @@ module.exports = async (req, res, next) => {
 		};
 	}
 
-	await Posts.dismissReports(req.params.board, req.body.checkedposts);
+	const dismissedReports = await Posts.dismissReports(req.params.board, req.body.checkedposts).then(result => result.modifiedCount);
 
-	return `Dismissed report(s) successfully`;
+	return `Dismissed ${dismissedReports} reports successfully`;
 
 }

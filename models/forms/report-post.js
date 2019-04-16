@@ -12,9 +12,9 @@ module.exports = async (req, res, next) => {
 	}
 
 	//push the report to all checked posts
-	await Posts.reportMany(req.params.board, req.body.checkedposts, report);
+	const reportedCount = await Posts.reportMany(req.params.board, req.body.checkedposts, report).then(result => result.modifiedCount);
 
 	//hooray!
-	return `Reported post(s) successfully`
+	return `Reported ${reportedCount} posts successfully`
 
 }

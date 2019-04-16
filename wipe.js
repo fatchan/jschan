@@ -66,6 +66,15 @@ const Mongo = require(__dirname+'/db/db.js')
 			}
 		}
 	});
+	await Posts.db.createIndex({
+		'globalreports.0': 1
+	}, {
+		partialFilterExpression: {
+			'globalreports.0': {
+				'$exists': true
+			}
+		}
+	});
 	await readdir('static/img/').then(async files => {
 		await Promise.all(files.map(async file => {
 			if (file != 'spoiler.png')

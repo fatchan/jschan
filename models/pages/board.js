@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
 	let threads;
 	let pages;
 	try {
-		pages = Math.ceil((await Posts.getPages(req.params.board)) / 10);
+		pages = Math.ceil((await Posts.getPages(req.params.board)) / 10) || 1;
 		if (page > pages) {
 			return next();
 		}

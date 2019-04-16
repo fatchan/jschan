@@ -6,6 +6,7 @@ const path = require('path')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
+	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
 
 module.exports = async (req, res, next, checkedPosts) => {
@@ -33,12 +34,18 @@ module.exports = async (req, res, next, checkedPosts) => {
 		}
 	}
 
-	const threadIds = posts.filter(x => x.thread == null).map(x => x.postId);
+	//filter to threads, then get the board and thread for each 
+	const boardThreads = posts.filter(x => x.thread == null).map(x => {
+		return {
+			board: x.board,
+			thread: x.postId
+		};
+	});
 
 	//get posts from all threads
 	let threadPosts = []
-	await Promise.all(threadIds.map(async id => {
-		const currentThreadPosts = await Posts.getThreadPosts(req.params.board, id);
+	await Promise.all(boardThreads.map(async data => {
+		const currentThreadPosts = await Posts.getThreadPosts(data.board, data.thread);
 		threadPosts = threadPosts.concat(currentThreadPosts);
 		return;
 	}))
@@ -47,7 +54,8 @@ module.exports = async (req, res, next, checkedPosts) => {
 	const allPosts = posts.concat(threadPosts)
 
 	//delete posts from DB
-	const deletedPosts = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId)).then(result => result.deletedCount);
+	const postMongoIds = allPosts.map(post => Mongo.ObjectId(post._id))
+	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 
 	//get filenames from all the posts
 	let fileNames = [];
@@ -65,6 +73,6 @@ module.exports = async (req, res, next, checkedPosts) => {
 	}));
 
 	//hooray!
-	return `Deleted ${threadIds.length} threads and ${deletedPosts-threadIds.length} posts`
+	return `Deleted ${boardThreads.length} threads and ${deletedPosts-boardThreads.length} posts`
 
 }

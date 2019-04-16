@@ -1,5 +1,7 @@
 'use strict';
 
+const Mongo = require(__dirname+'/../db/db.js');
+
 module.exports = (req, res, next) => {
 
 	//for body
@@ -9,6 +11,9 @@ module.exports = (req, res, next) => {
 	if (req.body.checkedposts) {
 		//syntax tries to convert all string to number
 		req.body.checkedposts = req.body.checkedposts.map(Number);
+	}
+	if (req.body.globalcheckedposts) {
+		req.body.globalcheckedposts = req.body.globalcheckedposts.map(Mongo.ObjectId)
 	}
 
 	//and for params

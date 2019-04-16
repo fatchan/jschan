@@ -16,9 +16,9 @@ block content
 		else
 			for report in reports
 				section.thread
-					+post(report, false, true)
+					+post(report, false, false, true)
 				hr(size=1)
-			include ../includes/deletefooter.pug
+			include ../includes/actionfooter_globalmanage.pug
 			hr(size=1)
 	h4 All Bans:
 	form(action=`/forms/global/unban` method='POST' enctype='application/x-www-form-urlencoded')

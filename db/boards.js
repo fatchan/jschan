@@ -33,9 +33,9 @@ module.exports = {
 
 	exists: async (req, res, next) => {
 
-		const board = await module.exports.findOne(req.params.board)
+		const board = await module.exports.findOne(req.params.board);
 		if (!board) {
-			return res.status(404).render('404')
+			return res.status(404).render('404');
 		}
 		res.locals.board = board; // can acces this in views or next route handlers
 		next();

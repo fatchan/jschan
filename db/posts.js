@@ -40,7 +40,7 @@ module.exports = {
 				}
 			}).sort({
 				'_id': -1
-			}).limit(3).toArray();
+			}).limit(5).toArray();
 			thread.replies = replies.reverse();
 		}));
 
@@ -172,6 +172,15 @@ module.exports = {
 
 	},
 
+	//takes array "ids" of mongo ids to get posts from any board
+	globalGetPosts: (ids) => {
+		return db.find({
+			'_id': {
+				'$in': ids
+			},
+		}).toArray();
+	},
+
 	insertOne: async (board, data) => {
 
 		// bump thread if name not sage
@@ -213,6 +222,27 @@ module.exports = {
 		});
 	},
 
+	globalReportMany: (ids, report) =>  {
+		return db.updateMany({
+			'_id': {
+				'$in': ids
+			},
+		}, {
+			'$push': {
+				'globalreports': report
+			}
+		});
+	},
+
+	getReports: (board) => {
+		return db.find({
+			'reports.0': {
+				'$exists': true
+			},
+			'board': board
+		}).toArray();
+	},
+
 	dismissReports: (board, ids) => {
 		return db.updateMany({
 			'postId': {
@@ -226,58 +256,60 @@ module.exports = {
 		});
 	},
 
-	getReports: (board) => {
+	getGlobalReports: () => {
 		return db.find({
-			'reports.0': {
+			'globalreports.0': {
 				'$exists': true
-			},
-			'board': board
+			}
 		}, {
 			'projection': {
 				'salt': 0,
 				'password': 0,
 				'ip': 0,
+				'reports': 0,
 			}
 		}).toArray();
 	},
 
-	getAllReports: () => {
-		return db.find({
-			'reports.0': {
-				'$exists': true
+	dismissGlobalReports: (ids) => {
+		return db.updateMany({
+			'_id': {
+				'$in': ids
+			},
+		}, {
+			'$set': {
+				'globalreports': []
 			}
-		}).toArray();
+		});
 	},
 
 	deleteOne: (board, options) => {
 		return db.deleteOne(options);
 	},
 
-	deleteMany: (board, ids) => {
+	deleteMany: (ids) => {
 
 		return db.deleteMany({
-			'postId': {
+			'_id': {
 				'$in': ids
-			},
-			'board': board
+			}
 		});
 
 	},
 
-    spoilerMany: (board, ids) => {
+	spoilerMany: (ids) => {
 
-        return db.updateMany({
-            'postId': {
-                '$in': ids
-            },
-            'board': board
-        }, {
-            '$set': {
+		return db.updateMany({
+			'_id': {
+				'$in': ids
+			}
+		}, {
+			'$set': {
 				'spoiler': true
 			}
-        });
+		});
 
-    },
+	},
 
 	deleteAll: (board) => {
 		return db.deleteMany({
