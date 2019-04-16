@@ -1,6 +1,6 @@
 'use strict';
 
-const Mongo = require(__dirname+'/helpers/db.js')
+const Mongo = require(__dirname+'/db/db.js')
 	, util = require('util')
 	, path = require('path')
 	, fs = require('fs')

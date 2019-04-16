@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
 
 	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
 	const report = {
-		'reason': req.body.reason,
+		'reason': req.body.report_reason,
 		'date': new Date(),
 		'ip': ip
 	}

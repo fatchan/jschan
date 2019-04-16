@@ -9,6 +9,10 @@ body {
 	margin: 0;
 }
 
+.pages a {
+    text-decoration: none;
+}
+
 object {
 	object-fit: scale-down;
 }
@@ -57,9 +61,9 @@ object {
 
 .catalog {
 	display:flex;
-	flex-direction: row;
 	align-items:flex-start;
-	flex-wrap: wrap;
+	justify-content: space-evenly;
+	flex-flow: row wrap;
 }
 
 .spoiler {
@@ -126,13 +130,26 @@ input, textarea {
 	margin: 10px 0;
 }
 
+.actions {
+	background: #D6DAF0;
+	border-color: #B7C5D9;
+	border-width: 0 1px 1px 0;
+	border-style: none solid solid none;
+	max-width: 100%;
+	display: flex;
+	flex-direction: column;
+	margin: 2px 0;
+	padding: 2px;
+}
+
 .action-wrapper {
 	display: flex;
 	flex-direction: column;
+	align-items: flex-start;
 }
 
-.action-wrapper * {
-	margin: 3px 0;
+.actions label {
+	margin: 2px 0;
 }
 
 .form-post {
@@ -211,7 +228,8 @@ input textarea {
 }
 
 .post-container, .ban {
-	margin: 1px;
+	box-sizing: border-box;
+	margin: 2px 0;
 	padding: 2px;
 	background: #D6DAF0;
 	border-color: #B7C5D9;
@@ -242,7 +260,7 @@ input textarea {
 	font-weight: bold;
 }
 
-.post-container.op .post-info {
+.post-container.op .post-info, .catalog-tile-content .post-info {
 	background: none;
 }
 
@@ -320,10 +338,6 @@ hr {
 
 @media only screen and (max-width: 800px) {
 
-	body {
-		/*font-size: 14pt;*/
-	}
-
 	input {
 		height: 30px;
 	}
@@ -352,8 +366,6 @@ hr {
 
 	.catalog-tile {
 		overflow-y: hidden;
-		width: 49%;
-		justify-content: space-evenly;
 	}
 
 	.boards-table {

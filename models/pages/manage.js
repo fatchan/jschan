@@ -5,10 +5,10 @@ const Posts = require(__dirname+'/../../db/posts.js')
 
 module.exports = async (req, res, next) => {
 
-	let posts;
+	let reports;
 	let bans;
 	try {
-		posts = await Posts.getReports(req.params.board);
+		reports = await Posts.getReports(req.params.board);
 		bans = await Bans.getBoardBans(req.params.board);
 	} catch (err) {
 		return next(err)
@@ -17,8 +17,8 @@ module.exports = async (req, res, next) => {
 	//render the page
 	res.render('manage', {
 		csrf: req.csrfToken(),
-		posts: posts,
-		bans: bans || [],
+		reports,
+		bans,
 	});
 
 }

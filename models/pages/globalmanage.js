@@ -1,20 +1,24 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db/posts.js');
+const Posts = require(__dirname+'/../../db/posts.js')
+	, Bans = require(__dirname+'/../../db/bans.js');
 
 module.exports = async (req, res, next) => {
 
-	let posts;
+	let reports;
+	let bans;
 	try {
-		posts = await Posts.getAllReports();
+		reports = await Posts.getAllReports();
+		bans = await Bans.getAllBans();
 	} catch (err) {
-		return next(err);
+		return next(err)
 	}
 
 	//render the page
 	res.render('globalmanage', {
 		csrf: req.csrfToken(),
-		posts: posts
+		reports,
+		bans,
 	});
 
 }

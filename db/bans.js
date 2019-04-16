@@ -1,7 +1,7 @@
 
 'use strict';
 
-const Mongo = require(__dirname+'/../helpers/db.js')
+const Mongo = require(__dirname+'/db.js')
 	, db = Mongo.client.db('jschan').collection('bans');
 
 module.exports = {
@@ -26,7 +26,7 @@ module.exports = {
 		}).toArray();
 	},
 
-	getAll: () => { // for a global ban manage page maybe? still TODO
+	getAllBans: () => {
 		return db.find({}).toArray();
 	},
 

@@ -2,7 +2,7 @@
 
 const express  = require('express')
 	, router = express.Router()
-	, Boards = require(__dirname+'/../db-models/boards.js')
+	, Boards = require(__dirname+'/../db/boards.js')
 	, hasPerms = require(__dirname+'/../helpers/haspermsmiddleware.js')
 	, isLoggedIn = require(__dirname+'/../helpers/isloggedin.js')
 	, numberConverter = require(__dirname+'/../helpers/number-converter.js')

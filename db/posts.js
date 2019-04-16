@@ -1,6 +1,6 @@
 'use strict';
 
-const Mongo = require(__dirname+'/../helpers/db.js')
+const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, db = Mongo.client.db('jschan').collection('posts');
 
@@ -246,14 +246,6 @@ module.exports = {
 			'reports.0': {
 				'$exists': true
 			}
-		}, {
-			'projection': {
-				'salt': 0,
-				'password': 0,
-				'ip': 0,
-			}
-		}).sort({
-			'board': 1
 		}).toArray();
 	},
 

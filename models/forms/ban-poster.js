@@ -24,7 +24,7 @@ module.exports = async (req, res, next, board, checkedPosts) => {
 	const bans = posts.map(post => {
 		return {
 			'ip': post.ip,
-			'reason': req.body.reason || 'No reason specified',
+			'reason': req.body.ban_reason || 'No reason specified',
 			'board': board,
 			'post': req.body.preserve_post ? post : null,
 			'issuer': req.session.user.username,

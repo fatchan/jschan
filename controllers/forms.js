@@ -154,8 +154,11 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 	if (req.body.password && req.body.password.length > 50) {
 		errors.push('Password must be 50 characters or less');
 	}
-	if (req.body.reason && req.body.reason.length > 50) {
+	if (req.body.report_reason && req.body.report_reason.length > 50) {
 		errors.push('Report must be 50 characters or less');
+	}
+	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
+		errors.push('Ban reason must be 50 characters or less');
 	}
 	if (!(req.body.report
 		|| req.body.delete
@@ -165,11 +168,8 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 		|| req.body.global_ban)) {
 		errors.push('Invalid actions selected')
 	}
-	if (req.body.report && (!req.body.reason || req.body.reason.length === 0)) {
+	if (req.body.report && (!req.body.report_reason || req.body.report_reason.length === 0)) {
 		errors.push('Reports must have a reason')
-	}
-	if ((req.body.ban || req.body.global_ban) && (!req.body.reason || req.body.reason.length === 0)) {
-		errors.push('Bans must have a reason')
 	}
 
 	if (errors.length > 0) {
@@ -263,6 +263,18 @@ router.post('/board/:board/unban', Boards.exists, banCheck, hasPerms, numberConv
 		'messages': messages,
 		'redirect': `/${req.params.board}/manage`
 	});
+
+});
+
+router.post('/global/actions', hasPerms, numberConverter, async(req, res, next) => {
+
+	//TODO
+
+});
+
+router.post('/global/unban', hasPerms, numberConverter, async(req, res, next) => {
+
+	//TODO
 
 });
 

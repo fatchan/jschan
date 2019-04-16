@@ -6,7 +6,6 @@ block head
 
 block content
 	include ../includes/boardheader.pug
-	hr(size=1)
 	include ../includes/postform.pug
 	.mode Posting mode: Thread [#[a.no-decoration(href=`/${board._id}/catalog`) Catalog]]
 	hr(size=1)
@@ -22,7 +21,7 @@ block content
 				+post(thread, true)
 				for post in thread.replies
 					+post(post, true)
-		hr(size=1)
+			hr(size=1)
 		include ../includes/pages.pug
 		hr(size=1)
 		include ../includes/deletefooter.pug

@@ -13,7 +13,7 @@ const express  = require('express')
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
-	, Mongo = require(__dirname+'/helpers/db.js')
+	, Mongo = require(__dirname+'/db/db.js')
 	, upload = require('express-fileupload');
 
 (async () => {

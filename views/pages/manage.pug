@@ -7,17 +7,16 @@ block head
 
 block content
 	include ../includes/boardheader.pug
-	hr(size=1)
 	h4 Reports:
 	form(action=`/forms/board/${board._id}/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
-		if posts.length === 0
+		if reports.length === 0
 			p No reports.
 			hr(size=1)
 		else
-			for post in posts
+			for report in reports
 				section.thread
-					+post(post, false, true)
+					+post(report, false, true)
 				hr(size=1)
 			include ../includes/deletefooter.pug
 			hr(size=1)

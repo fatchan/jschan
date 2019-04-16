@@ -1,7 +1,7 @@
 
 'use strict';
 
-const Mongo = require(__dirname+'/../helpers/db.js')
+const Mongo = require(__dirname+'/db.js')
 	, db = Mongo.client.db('jschan').collection('accounts')
 	, bcrypt = require('bcrypt');
 
