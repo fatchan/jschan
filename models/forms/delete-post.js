@@ -68,7 +68,7 @@ module.exports = async (req, res, next, checkedPosts) => {
 		//dont question it.
 		return Promise.all([
 			unlink(uploadDirectory + filename),
-			unlink(uploadDirectory + 'thumb-' + filename)
+			unlink(`${uploadDirectory}thumb-${filename.split('.')[0]}.png`)
 		])
 	}));
 
