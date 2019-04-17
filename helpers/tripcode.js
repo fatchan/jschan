@@ -11,8 +11,9 @@ module.exports = async (password) => {
 		return existing.code;
 	}
 
-	//same as lynxchan does it, but i dont think this is secure. welcome to change.
-	const trip = crypto.createHash('sha256').update(password + Math.random()).digest('base64').substring(0, 6);
+	//fix, not sure how secure
+	const fullTripCodeHash = crypto.createHash('sha256').update(password + Math.random()).digest('base64');
+	const trip = fullTripCodeHash.substring(fullTripCodeHash.length-10);
 	await Tripcodes.insertOne(password, trip);
 	return trip;
 

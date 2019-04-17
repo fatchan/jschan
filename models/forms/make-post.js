@@ -1,12 +1,12 @@
 'use strict';
 
 const uuidv4 = require('uuid/v4')
-    , path = require('path')
+	, path = require('path')
 	, util = require('util')
 	, crypto = require('crypto')
 	, randomBytes = util.promisify(crypto.randomBytes)
-    , uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-    , Posts = require(__dirname+'/../../db/posts.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
+	, Posts = require(__dirname+'/../../db/posts.js')
 	, getTripCode = require(__dirname+'/../../helpers/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/markdown.js')
@@ -18,13 +18,14 @@ const uuidv4 = require('uuid/v4')
 			'span': [ 'class' ]
 		}
 	}
-    , fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
-    , fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
-    , imageThumbnail = require(__dirname+'/../../helpers/files/image-thumbnail.js')
-    , imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
-    , videoThumbnail = require(__dirname+'/../../helpers/files/video-thumbnail.js')
-    , videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
-    , formatSize = require(__dirname+'/../../helpers/files/format-size.js')
+	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
+	, fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
+	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
+	, imageThumbnail = require(__dirname+'/../../helpers/files/image-thumbnail.js')
+	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
+	, videoThumbnail = require(__dirname+'/../../helpers/files/video-thumbnail.js')
+	, videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
+	, formatSize = require(__dirname+'/../../helpers/files/format-size.js')
 
 module.exports = async (req, res, next, numFiles) => {
 
@@ -129,18 +130,34 @@ module.exports = async (req, res, next, numFiles) => {
 		salt = (await randomBytes(128)).toString('hex');
 	}
 	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
-	const userId = crypto.createHash('sha256').update(salt + ip + req.params.board).digest('hex').substring(0, 6);
+	const fullUserIdHash = crypto.createHash('sha256').update(salt + ip + req.params.board).digest('hex');
+	const userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 
-	//tripcodes
 	let name = req.body.name;
-	//if it contains 2 hashtags
-	const tripCodeIndex = name.indexOf('##');
-	if (tripCodeIndex !== -1 ) {
-		const passwordOnly = name.substring(tripCodeIndex+2);
-		if (passwordOnly.length > 0) {
-			const nameOnly = name.substring(0, tripCodeIndex);
-			const tripcode = await getTripCode(passwordOnly);
-			name = `${nameOnly}##${tripcode}`;
+	let capcode = null;
+	if (name && name.length > 0) {
+		// get matches with names groups for name, trip and capcode in 1 regex
+		const matches = name.match(/^(?<name>[^#]+)?(?:##)(?<tripcode>[^#]+)(?:(?:##) (?<capcode>.+))?$/)
+		//regex to include "insecure" tripcodes. not implemented yet
+		//const matches = name.match(/^(?<name>[^#]+)?(?:##|#)(?<tripcode>[^#]+)(?:(?:##) (?<capcode>.+))?$/)
+		if (matches && matches.groups) {
+			const groups = matches.groups;
+			//reset name
+			name = '';
+			//name
+			if (groups.name) {
+				name += groups.name
+			}
+			//tripcode
+			if (groups.tripcode) {
+				const tripcode = await getTripCode(groups.tripcode);
+				name += `!!${tripcode}`;
+			}
+			//capcode
+			if (groups.capcode && hasPerms(req, res)) {
+				// add proper code for different capcodes
+				capcode = ` ${groups.capcode}`;
+			}
 		}
 	}
 
@@ -156,6 +173,7 @@ module.exports = async (req, res, next, numFiles) => {
 	const data = {
 		'board': req.params.board,
 		'name': name || 'Anonymous',
+		'capcode': capcode,
 		'subject': req.body.subject || '',
 		'date': new Date(),
 		'message': message || '',

@@ -1,4 +1,4 @@
-mixin post(post, truncate, manage, globalmanage)
+mixin post(post, truncate, manage=false, globalmanage=false)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
 			span
@@ -13,41 +13,44 @@ mixin post(post, truncate, manage, globalmanage)
 					span.post-name #{post.name}
 			else 
 				span.post-name #{post.name}
+			if post.capcode
+				span.post-capcode #{post.capcode}
 			span #{post.date.toLocaleString()}
 			span.user-id(style=`background: #${post.userId}`) #{post.userId}
 			span: a(href=`/${post.board}/thread/${post.thread || post.postId}#${post.postId}`) ##{post.postId}
-		if post.files.length > 0
-			.post-files
-				each file in post.files
-					.post-file
-						small.post-file-info
-							span: a(href='/img/'+file.filename download=file.originalFilename) #{file.originalFilename}
-							br
-							span (#{file.sizeString} #{file.geometryString})
-						.post-file-src
-							a(target='_blank' href='/img/'+file.filename)
-								if post.spoiler
-									object(data='/img/spoiler.png' width='128' height='128')
-								else
-									object(data=`/img/thumb-${file.filename.split('.')[0]}.png` width='128' height='128')
-		if post.message
-			if truncate
-				-
-					const splitPost = post.message.split('\n');
-					const messageLines = splitPost.length;
-					let truncatedMessage = post.mesage;
-					let truncated = false;
-					if (messageLines > 10 || post.message.length > 1000) {
-						truncatedMessage = splitPost.slice(0, 16).join('\n');
-						truncated = true;
-					}
-				if truncated
-					blockquote.post-message !{truncatedMessage}
-					p Message too long. #[a(href=`/${post.board}/thread/${post.thread || post.postId}#${post.postId}`) Click here] to view the full text.
-				else
+		.post-data
+			if post.files.length > 0
+				.post-files
+					each file in post.files
+						.post-file
+							small.post-file-info
+								span: a(href='/img/'+file.filename download=file.originalFilename) #{file.originalFilename}
+								br
+								span (#{file.sizeString} #{file.geometryString})
+							.post-file-src
+								a(target='_blank' href='/img/'+file.filename)
+									if post.spoiler
+										object(data='/img/spoiler.png' width='128' height='128')
+									else
+										object(data=`/img/thumb-${file.filename.split('.')[0]}.png` width='128' height='128')
+			if post.message
+				if truncate
+					-
+						const splitPost = post.message.split('\n');
+						const messageLines = splitPost.length;
+						let truncatedMessage = post.mesage;
+						let truncated = false;
+						if (messageLines > 10 || post.message.length > 1000) {
+							truncatedMessage = splitPost.slice(0, 16).join('\n');
+							truncated = true;
+						}
+					if truncated
+						blockquote.post-message !{truncatedMessage}
+						blockquote Message too long. #[a(href=`/${post.board}/thread/${post.thread || post.postId}#${post.postId}`) Click here] to view the full text.
+					else
+						blockquote.post-message !{post.message}
+				else 
 					blockquote.post-message !{post.message}
-			else 
-				blockquote.post-message !{post.message}
 	if manage === true
 		each report in post.reports
 			.reports.post-container

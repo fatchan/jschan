@@ -1,9 +1,9 @@
 nav.navbar
 	a.nav-item(href='/') Home
+	a.nav-item.right(href='/logout') Logout
 	if board
-		a.nav-item.right(href=`/${board._id}/manage`) Manage Board
 		a.nav-item.right(href=`/login?redirect=/${board._id}/`) Login
+		a.nav-item.right(href=`/${board._id}/manage`) Board Manage
 	else
 		a.nav-item.right(href='/login') Login
-	a.nav-item.right(href='/register') Register
-	a.nav-item.right(href='/logout') Logout
+	a.nav-item.right(href='/globalmanage') Global Manage	

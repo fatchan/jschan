@@ -210,7 +210,7 @@ input, textarea {
 
 .post-files {
 	float: left;
-	margin: 3px 20px 0 0;
+	margin: 0 10px 10px 0;
 }
 
 .post-file {
@@ -240,7 +240,7 @@ input textarea {
 }
 
 .container {
-	padding: 60px 10px 10px 10px;
+	padding: 10px;
 }
 
 .board-title {
@@ -262,7 +262,8 @@ input textarea {
 }
 
 .post-message {
-	overflow-y: auto;
+	/*overflow-y: auto;*/
+	float: left;
 }
 
 .post-container, .ban {
@@ -276,21 +277,25 @@ input textarea {
 	max-width: 100%;
 }
 
-.post-container:target, .op:target {
+.post-container:target, {
 	background-color: #d6bad0!important;
 	border-color: #ba9dbf;
 }
 
 .post-container.op {
 	background: none;
-	margin-left: 0;
-	display: block;
 	border: none;
+	width: 100%;
 }
 
 .post-subject {
 	color: #0F0C5D;
 	font-weight: bold;
+}
+
+.post-capcode {
+	font-weight: bold;
+	color: red;
 }
 
 .post-name {
@@ -318,11 +323,6 @@ input textarea {
 
 .navbar {
 	border-bottom: 1px solid lightgray;
-	margin: 0;
-	position: fixed;
-	width: 100%;
-	background: #eef2ff;
-	z-index: 1;
 }
 
 .nav-item {
@@ -400,6 +400,7 @@ hr {
 
 	.post-container {
 		width: 100%;
+		border: none;
 	}
 
 	.catalog-tile {
