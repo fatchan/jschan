@@ -20,6 +20,8 @@ const express  = require('express')
 
 	// let db connect
 	await Mongo.connect();
+	const Boards = require(__dirname+'/db/boards.js');
+	await Boards.cache();
 
 	// parse forms and allow file uploads
 	app.use(bodyParser.urlencoded({extended: true}));

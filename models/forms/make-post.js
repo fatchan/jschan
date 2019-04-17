@@ -12,7 +12,7 @@ const uuidv4 = require('uuid/v4')
 	, simpleMarkdown = require(__dirname+'/../../helpers/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = {
-		allowedTags: [ 'span', 'a', 'code', 'em', 'strong' ],
+		allowedTags: [ 'span', 'a', 'em', 'strong' ],
 		allowedAttributes: {
 			'a': [ 'href', 'class' ],
 			'span': [ 'class' ]
@@ -115,7 +115,6 @@ module.exports = async (req, res, next, numFiles) => {
 				if (Array.isArray(processedFile.geometryString)) {
 					processedFile.geometryString = processedFile.geometryString[0];
 				}
-
 				files.push(processedFile);
 
 			} catch (err) {
