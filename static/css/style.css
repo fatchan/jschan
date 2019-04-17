@@ -210,7 +210,7 @@ input, textarea {
 
 .post-files {
 	float: left;
-	margin: 0 10px 10px 0;
+	margin-right: 10px;
 }
 
 .post-file {
@@ -256,6 +256,10 @@ input textarea {
 	color: white;
 }
 
+.board-banner {
+	margin: 10px;
+}
+
 .board-description {
 	text-align:center;
 	margin: 0;
@@ -263,7 +267,7 @@ input textarea {
 
 .post-message {
 	/*overflow-y: auto;*/
-	float: left;
+	/*float: left;*/
 }
 
 .post-container, .ban {
@@ -277,7 +281,7 @@ input textarea {
 	max-width: 100%;
 }
 
-.post-container:target, {
+.post-container:target {
 	background-color: #d6bad0!important;
 	border-color: #ba9dbf;
 }

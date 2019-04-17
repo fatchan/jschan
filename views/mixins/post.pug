@@ -32,7 +32,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 									if post.spoiler
 										object(data='/img/spoiler.png' width='128' height='128')
 									else
-										object(data=`/img/thumb-${file.filename.split('.')[0]}.png` width='128' height='128')
+										object(data=`/img/thumb-${file.filename.split('.')[0]}.png` width='128' height='')
 			if post.message
 				if truncate
 					-
@@ -51,6 +51,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						blockquote.post-message !{post.message}
 				else 
 					blockquote.post-message !{post.message}
+	
 	if manage === true
 		each report in post.reports
 			.reports.post-container

@@ -54,7 +54,7 @@ module.exports = async (req, res, next, numFiles) => {
 	if (numFiles > 0) {
 		// check all mime types befoer we try saving anything
 		for (let i = 0; i < numFiles; i++) {
-			if (!fileCheckMimeType(req.files.file[i].mimetype)) {
+			if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, video: true})) {
 				return res.status(400).render('message', {
 					'title': 'Bad request',
 					'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -65,6 +65,7 @@ module.exports = async (req, res, next, numFiles) => {
 		// then upload, thumb, get metadata, etc.
 		for (let i = 0; i < numFiles; i++) {
 			const file = req.files.file[i];
+console.log(file);
 			const uuid = uuidv4();
 			const filename = uuid + path.extname(file.name);
 

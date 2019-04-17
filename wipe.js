@@ -22,7 +22,7 @@ const Mongo = require(__dirname+'/db/db.js')
 	await Posts.deleteAll('b');
 	console.log('deleting boards')
 	await Boards.deleteIncrement('pol');
-	await Boards.deleteIncrement('b');
+	await Boards.deleteIncrement('b'); 
 	await Boards.deleteAll();
 	await Trips.deleteAll();
 	console.log('deleting bans');
@@ -34,6 +34,7 @@ const Mongo = require(__dirname+'/db/db.js')
 		 description: 'Political posts go here.',
 		owner: '',
 		moderators: [],
+		banners: [],
 	})
 	await Boards.insertOne({
 		 _id: 'b',
@@ -41,6 +42,7 @@ const Mongo = require(__dirname+'/db/db.js')
 		 description: 'post anything here',
 		owner: '',
 		moderators: [],
+		banners: [],
 	})
 	console.log('creating indexes')
 	await Bans.db.dropIndexes();

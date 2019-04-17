@@ -32,6 +32,20 @@ module.exports = {
 		return db.collection('boards').deleteMany({});
 	},
 
+	addBanners: (board, filenames) => {
+		return db.collection('boards').updateOne(
+			{
+				'_id': board,
+			}, {
+				'$push': {
+					'banners': {
+						'$each': filenames
+					}
+				}
+			}
+		);
+	},
+
 	cache: async () => {
 		const boards = await module.exports.find();
 		for (let i = 0; i < boards.length; i++) {

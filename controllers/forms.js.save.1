@@ -9,7 +9,6 @@ const express  = require('express')
 	, banPoster = require(__dirname+'/../models/forms/ban-poster.js')
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
-	, uploadBanners = require(__dirname+'/../models/forms/uploadbanners.js')
 	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
 	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
 	, reportPosts = require(__dirname+'/../models/forms/report-post.js')
@@ -146,42 +145,6 @@ router.post('/board/:board/post', Boards.exists, banCheck, numberConverter, asyn
 
 });
 
-//upload banners
-router.post('/board/:board/addbanners', Boards.exists, banCheck, hasPerms, numberConverter, async (req, res, next) => {
-
-	let numFiles = 0;
-	if (req.files && req.files.file) {
-		if (Array.isArray(req.files.file)) {
-			numFiles = req.files.file.length;
-		} else {
-			numFiles = 1;
-			req.files.file = [req.files.file];
-		}
-	}
-
-	const errors = [];
-
-	if (numFiles === 0) {
-		errors.push('Must provide a file');
-	}
-
-	if (errors.length > 0) {
-		return res.status(400).render('message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': `/${req.params.board}/manage`
-		})
-	}
-
-	try {
-		await uploadBanners(req, res, next, numFiles);
-	} catch (err) {
-		console.error(err);
-		return next(err);
-	}
-
-});
-
 //report/delete/spoiler/ban
 router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, async (req, res, next) => {
 
@@ -278,6 +241,13 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 		'messages': messages,
 		'redirect': `/${req.params.board}`
 	});
+
+});
+
+//unban
+router.post('/board/:board/unban', Boards.exists, banCheck, hasPerms, numberConverter, async (req, res, next) => {
+
+	
 
 });
 
