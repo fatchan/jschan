@@ -1,6 +1,6 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db-models/posts.js');
+const Posts = require(__dirname+'/../../db/posts.js');
 
 module.exports = async (req, res, next) => {
 
@@ -9,8 +9,7 @@ module.exports = async (req, res, next) => {
     try {
         thread = await Posts.getThread(req.params.board, req.params.id);
     } catch (err) {
-		console.error(err);
-        return next();
+        return next(err);
     }
 
     if (!thread) {

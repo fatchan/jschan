@@ -6,24 +6,22 @@ block head
 
 block content
 	include ../includes/boardheader.pug
-	hr(size=1)
 	include ../includes/postform.pug
 	.mode Posting mode: Thread [#[a.no-decoration(href=`/${board._id}/catalog`) Catalog]]
 	hr(size=1)
-	form(action='/forms/board/'+board._id+'/posts' method='POST' enctype='application/x-www-form-urlencoded')
+	include ../includes/pages.pug
+	hr(size=1)
+	form(action='/forms/board/'+board._id+'/actions' method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if threads.length === 0
 			p No posts.
 			hr(size=1)
 		for thread in threads
 			section.thread
-				+post(board, thread, true)
+				+post(thread, true)
 				for post in thread.replies
-					+post(board, post, true)
+					+post(post, true)
 			hr(size=1)
-		if pages > 0
-			span.pages Page 
-				- for(let i = 0; i < pages; i++)
-					span: a(href=`/${board._id}/${i+1}`) #{i+1}
-			hr(size=1)
-		include ../includes/deletefooter.pug
+		include ../includes/pages.pug
+		hr(size=1)
+		include ../includes/actionfooter.pug

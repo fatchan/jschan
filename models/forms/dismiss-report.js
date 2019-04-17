@@ -1,31 +1,23 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db-models/posts.js')
-	, hasPerms = require(__dirname+'/../../helpers/has-perms.js');
+const Posts = require(__dirname+'/../../db/posts.js')
+	, hasPerms = require(__dirname+'/../../helpers/hasperms.js');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
 
 	if (!hasPerms(req, res)) {
-		return res.status(403).render('message', {
-			'title': 'Forbidden',
-			'message': `You are not authorised to dismiss reports.`,
-			'redirect': `/${req.params.board}`
-		});
+		throw {
+			'status': 403,
+			'message': {
+				'title': 'Forbidden',
+				'message': `You are not authorised to dismiss reports.`,
+				'redirect': `/${req.params.board}`
+			}
+		};
 	}
 
-	try {
-		//dismiss reports from all checked posts
-		await Posts.dismissReports(req.params.board, req.body.checked);
-	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
-	}
+	const dismissedReports = await Posts.dismissReports(req.params.board, req.body.checkedposts).then(result => result.modifiedCount);
 
-	//hooray!
-	return res.render('message', {
-		'title': 'Success',
-		'message': `Dismissed report(s) successfully`,
-		'redirect': `/${req.params.board}/manage`
-	});
+	return `Dismissed ${dismissedReports} reports successfully`;
 
 }

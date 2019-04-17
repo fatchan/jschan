@@ -1,6 +1,6 @@
 'use strict';
 
-const Mongo = require(__dirname+'/helpers/db.js')
+const Mongo = require(__dirname+'/db/db.js')
 	, util = require('util')
 	, path = require('path')
 	, fs = require('fs')
@@ -10,10 +10,11 @@ const Mongo = require(__dirname+'/helpers/db.js')
 (async () => {
 	console.log('connecting to db...')
 	await Mongo.connect();
-	const Boards = require(__dirname+'/db-models/boards.js')
-		, Posts = require(__dirname+'/db-models/posts.js')
-		, Trips = require(__dirname+'/db-models/trips.js')
-		, Accounts = require(__dirname+'/db-models/accounts.js');
+	const Boards = require(__dirname+'/db/boards.js')
+		, Posts = require(__dirname+'/db/posts.js')
+		, Bans = require(__dirname+'/db/bans.js')
+		, Trips = require(__dirname+'/db/trips.js')
+		, Accounts = require(__dirname+'/db/accounts.js');
 	console.log('deleting accounts')
 	await Accounts.deleteAll();
 	console.log('deleting posts')
@@ -24,6 +25,8 @@ const Mongo = require(__dirname+'/helpers/db.js')
 	await Boards.deleteIncrement('b');
 	await Boards.deleteAll();
 	await Trips.deleteAll();
+	console.log('deleting bans');
+	await Bans.deleteAll();
 	console.log('adding b and pol')
 	await Boards.insertOne({
 		 _id: 'pol',
@@ -40,6 +43,8 @@ const Mongo = require(__dirname+'/helpers/db.js')
 		moderators: [],
 	})
 	console.log('creating indexes')
+	await Bans.db.dropIndexes();
+	await Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 });
 	await Posts.db.dropIndexes();
 	//these are fucked
 	await Posts.db.createIndex({
@@ -57,6 +62,15 @@ const Mongo = require(__dirname+'/helpers/db.js')
 	}, {
 		partialFilterExpression: {
 			'reports.0': {
+				'$exists': true
+			}
+		}
+	});
+	await Posts.db.createIndex({
+		'globalreports.0': 1
+	}, {
+		partialFilterExpression: {
+			'globalreports.0': {
 				'$exists': true
 			}
 		}

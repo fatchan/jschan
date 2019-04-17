@@ -1,0 +1,14 @@
+extends ../layout.pug
+include ../mixins/ban.pug
+
+block head
+	title Banned!
+
+block content
+	h1.board-title Banned!
+	hr(size=1)
+	Bans currently in place against your IP:
+	hr(size=1)
+	for ban in bans
+		+ban(ban)
+		hr(size=1)

@@ -1,6 +1,6 @@
 'use strict';
 
-const Tripcodes = require(__dirname+'/../db-models/trips.js')
+const Tripcodes = require(__dirname+'/../db/trips.js')
 	, crypto = require('crypto');
 
 module.exports = async (password) => {

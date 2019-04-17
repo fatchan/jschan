@@ -1,29 +1,20 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db-models/posts.js');
+const Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
 
 	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
 	const report = {
-		'reason': req.body.reason,
+		'reason': req.body.report_reason,
 		'date': new Date(),
 		'ip': ip
 	}
 
-	try {
-		//push the report to all checked posts
-		await Posts.reportMany(req.params.board, req.body.checked, report);
-	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
-	}
+	//push the report to all checked posts
+	const reportedCount = await Posts.reportMany(req.params.board, req.body.checkedposts, report).then(result => result.modifiedCount);
 
 	//hooray!
-	return res.render('message', {
-		'title': 'Success',
-		'message': `Reported post(s) successfully`,
-		'redirect': `/${req.params.board}`
-	});
+	return `Reported ${reportedCount} posts successfully`
 
 }

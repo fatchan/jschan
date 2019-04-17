@@ -1,14 +1,19 @@
 'use strict';
 
+const Mongo = require(__dirname+'/../db/db.js');
+
 module.exports = (req, res, next) => {
 
 	//for body
 	if (req.body.thread) {
 		req.body.thread = +req.body.thread;
 	}
-	if (req.body.checked) {
-		//syntax casts all string to number
-		req.body.checked = req.body.checked.map(Number);
+	if (req.body.checkedposts) {
+		//syntax tries to convert all string to number
+		req.body.checkedposts = req.body.checkedposts.map(Number);
+	}
+	if (req.body.globalcheckedposts) {
+		req.body.globalcheckedposts = req.body.globalcheckedposts.map(Mongo.ObjectId)
 	}
 
 	//and for params
@@ -17,6 +22,16 @@ module.exports = (req, res, next) => {
 	}
 	if (req.params.page) {
 		req.params.page = +req.params.page;
+	}
+
+	//and query
+	if (req.query.p) {
+		const pnum = +req.query.p;
+		if (Number.isSafeInteger(pnum)) {
+			req.query.p = +req.query.p;
+		} else {
+			req.query.p = null;
+		}
 	}
 
 	next();

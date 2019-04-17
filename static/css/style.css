@@ -9,8 +9,26 @@ body {
 	margin: 0;
 }
 
+.code {
+	border-left: 10px solid #B7C5D9;
+	display: block;
+	padding-left: 5px;
+	font-family: monospace;
+	margin: 0.5em 0;
+}
+
+.pages a {
+    text-decoration: none;
+}
+
 object {
 	object-fit: scale-down;
+}
+
+.board-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .catalog-tile-button {
@@ -46,13 +64,14 @@ object {
 	box-shadow: 0 0 3px black;
 	min-width: 64px;
 	min-height: 64px;
+	object-fit: cover;
 }
 
 .catalog {
 	display:flex;
-	flex-direction: row;
 	align-items:flex-start;
-	flex-wrap: wrap;
+	justify-content: space-evenly;
+	flex-flow: row wrap;
 }
 
 .spoiler {
@@ -85,6 +104,10 @@ object {
 	color: green;
 }
 
+blockquote a {
+	color: #d00;
+}
+
 blockquote {
 	word-break: break-all;
 	white-space: pre-wrap;
@@ -115,15 +138,62 @@ input, textarea {
 	margin: 10px 0;
 }
 
+.actions {
+	background: #D6DAF0;
+	border-color: #B7C5D9;
+	border-width: 0 1px 1px 0;
+	border-style: none solid solid none;
+	max-width: 100%;
+	display: flex;
+	flex-direction: column;
+	margin: 2px 0;
+	padding: 2px;
+}
+
 .action-wrapper {
-	align-items: center;
-	/*flex-direction: row;*/
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.actions label {
+	margin: 2px 0;
+}
+
+.toggle-label:hover {
+	box-shadow: inset 0 0 100px 100px rgba(255,255,255,.25);
+}
+
+.toggle-label {
+	background: #D6DAF0;
+	padding: 10px;
+	border-radius: 3px;
+	text-align: center;
+	border: 1px solid lightgray;
+	max-width: 100%;
+	box-sizing: border-box;
+	/*-webkit-appearance: button;
+	-moz-appearance: button;
+	appearance: button;*/
+}
+
+.toggle {
+	display: none;
+}
+
+.toggle:checked + .form-post {
+	display: flex;
 }
 
 .form-post {
 	display: flex;
 	flex-direction: column;
 	max-width: 100%;
+	margin-top: 10px;
+}
+
+.togglable {
+	display: none;
 }
 
 .user-id {
@@ -135,9 +205,7 @@ input, textarea {
 .post-check {
 	position: relative;
 	top: 3px;
-	margin: 2px;
-	margin-right: 4px;
-	padding: 0;
+	margin: -3px 1px !important;
 }
 
 .post-files {
@@ -177,7 +245,7 @@ input textarea {
 
 .board-title {
 	color: #af0a0f;
-	font: bolder;
+	font: bolder 28px Tahoma;
 	letter-spacing: -2px;
 	text-align: center;
 	margin: 0;
@@ -193,8 +261,13 @@ input textarea {
 	margin: 0;
 }
 
-.post-container {
-	margin: 1px;
+.post-message {
+	overflow-y: auto;
+}
+
+.post-container, .ban {
+	box-sizing: border-box;
+	margin: 2px 0;
 	padding: 2px;
 	background: #D6DAF0;
 	border-color: #B7C5D9;
@@ -204,7 +277,7 @@ input textarea {
 }
 
 .post-container:target, .op:target {
-	background-color: #d6bad0;
+	background-color: #d6bad0!important;
 	border-color: #ba9dbf;
 }
 
@@ -213,7 +286,6 @@ input textarea {
 	margin-left: 0;
 	display: block;
 	border: none;
-	width: 100%;
 }
 
 .post-subject {
@@ -226,16 +298,22 @@ input textarea {
 	font-weight: bold;
 }
 
+.post-container.op .post-info, .catalog-tile-content .post-info {
+	background: none;
+}
+
+
 .post-info {
-	margin-top: -2px;
+	margin: -2px;
+	/*margin-left: -3px;*/
+	padding: 2px;
+	padding-left: 1px;
+	/*background-color: #B7C5D9;*/
 }
 
-.post-image {
-
-}
-
-.post-content {
-
+.post-info * {
+    margin-bottom: 0;
+    margin-top: -2px;
 }
 
 .navbar {
@@ -244,6 +322,7 @@ input textarea {
 	position: fixed;
 	width: 100%;
 	background: #eef2ff;
+	z-index: 1;
 }
 
 .nav-item {
@@ -256,8 +335,12 @@ input textarea {
 	border-right: 1px solid lightgray;
 }
 
+.right {
+	float: right;
+}
+
 .nav-item:hover {
-	box-shadow: inset 0 0 100px 100px rgba(255,255,255,.1);
+	box-shadow: inset 0 0 100px 100px rgba(255,255,255,.25);
 }
 
 .footer {
@@ -274,7 +357,6 @@ table, th, td {
 }
 
 .boards-table {
-	font-size: 16pt;
 	margin: 0 auto;
 }
 
@@ -306,8 +388,13 @@ hr {
 		width: 100%;
 	}
 
+	blockquote {
+		margin: 1em;
+	}
+
 	.post-check {
 		top: 2px;
+		margin-left: 2px!important;
 		height: 8px;
 	}
 
@@ -317,8 +404,14 @@ hr {
 
 	.catalog-tile {
 		overflow-y: hidden;
-		width: 49%;
-		justify-content: space-evenly;
+	}
+
+	.boards-table {
+		width: 100%;
+	}
+
+	.post-info {
+		background-color: #B7C5D9;
 	}
 
 }

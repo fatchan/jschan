@@ -1,6 +1,6 @@
 'use strict';
 
-const Boards = require(__dirname+'/../../db-models/boards.js');
+const Boards = require(__dirname+'/../../db/boards.js');
 
 module.exports = async (req, res, next) => {
 
@@ -9,8 +9,7 @@ module.exports = async (req, res, next) => {
 	try {
 		boards = await Boards.find();
 	} catch (err) {
-		console.error(err)
-		return next();
+		return next(err);
 	}
 
 	//render the page

@@ -1,0 +1,24 @@
+.action-wrapper
+	.actions Actions:
+		label
+			input.post-check(type='checkbox', name='delete' value=1)
+			| Delete
+		label
+			input.post-check(type='checkbox', name='spoiler' value=1)
+			| Spoiler Images
+		label
+			input#report(type='text', name='report_reason', placeholder='report reason' autocomplete='off')
+	.actions Mod Actions:
+		label
+			input.post-check(type='checkbox', name='global_dismiss' value=1)
+			| Dismiss Global Reports
+		label
+			input.post-check(type='checkbox', name='global_ban' value=1)
+			| Global Ban Poster
+		label
+			input.post-check(type='checkbox', name='preserve_post' value=1)
+			| Show Post In Ban
+		label
+			input#report(type='text', name='ban_reason', placeholder='ban reason' autocomplete='off')
+	input(type='submit', value='submit')
+	

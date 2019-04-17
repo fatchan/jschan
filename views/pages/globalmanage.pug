@@ -6,9 +6,9 @@ block head
 	title Manage
 
 block content
-	include ../includes/boardheader.pug
-	h4 Reports:
-	form(action=`/forms/board/${board._id}/actions` method='POST' enctype='application/x-www-form-urlencoded')
+	h1.board-title Global Management
+	h4 All Reports:
+	form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if reports.length === 0
 			p No reports.
@@ -16,12 +16,12 @@ block content
 		else
 			for report in reports
 				section.thread
-					+post(report, false, true)
+					+post(report, false, false, true)
 				hr(size=1)
-			include ../includes/actionfooter_manage.pug
+			include ../includes/actionfooter_globalmanage.pug
 			hr(size=1)
-	h4 Bans:
-	form(action=`/forms/board/${board._id}/unban` method='POST' enctype='application/x-www-form-urlencoded')
+	h4 All Bans:
+	form(action=`/forms/global/unban` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if bans.length === 0
 			p No bans.
@@ -33,4 +33,3 @@ block content
 				hr(size=1)
 			section.action-wrapper
 				input(type='submit', value='unban')
-

@@ -1,7 +1,11 @@
-mixin post(board, post, truncate)
+mixin post(post, truncate, manage, globalmanage)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
-			input.post-check(type='checkbox', name='checked[]' value=post.postId)
+			span
+				if globalmanage
+					input.post-check(type='checkbox', name='globalcheckedposts[]' value=post._id)
+				else
+					input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
 			if post.subject
 				span.post-subject #{post.subject}
 			if post.email
@@ -11,12 +15,12 @@ mixin post(board, post, truncate)
 				span.post-name #{post.name}
 			span #{post.date.toLocaleString()}
 			span.user-id(style=`background: #${post.userId}`) #{post.userId}
-			span: a(href=`/${board._id}/thread/${post.thread ? post.thread : post.postId}#${post.postId}`) ##{post.postId}
+			span: a(href=`/${post.board}/thread/${post.thread || post.postId}#${post.postId}`) ##{post.postId}
 		if post.files.length > 0
 			.post-files
 				each file in post.files
 					.post-file
-						.post-file-info
+						small.post-file-info
 							span: a(href='/img/'+file.filename download=file.originalFilename) #{file.originalFilename}
 							br
 							span (#{file.sizeString} #{file.geometryString})
@@ -39,13 +43,18 @@ mixin post(board, post, truncate)
 					}
 				if truncated
 					blockquote.post-message !{truncatedMessage}
-					p Message too long. #[a(href=`/${board._id}/thread/${post.thread == null ? post.postId : post.thread}#${post.postId}`) Click here] to view the full text.
+					p Message too long. #[a(href=`/${post.board}/thread/${post.thread || post.postId}#${post.postId}`) Click here] to view the full text.
 				else
 					blockquote.post-message !{post.message}
 			else 
 				blockquote.post-message !{post.message}
-	if post.reports
+	if manage === true
 		each report in post.reports
+			.reports.post-container
+				span Date: #{report.date.toLocaleString()}
+				span Reason: #{report.reason}
+	if globalmanage === true
+		each report in post.globalreports
 			.reports.post-container
 				span Date: #{report.date.toLocaleString()}
 				span Reason: #{report.reason}

@@ -13,13 +13,15 @@ const express  = require('express')
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
-	, Mongo = require(__dirname+'/helpers/db.js')
+	, Mongo = require(__dirname+'/db/db.js')
 	, upload = require('express-fileupload');
 
 (async () => {
 
 	// let db connect
 	await Mongo.connect();
+	const Boards = require(__dirname+'/db/boards.js');
+	await Boards.cache();
 
 	// parse forms and allow file uploads
 	app.use(bodyParser.urlencoded({extended: true}));
@@ -53,7 +55,7 @@ const express  = require('express')
 	// use pug view engine
 	app.set('view engine', 'pug');
 	app.set('views', path.join(__dirname, 'views/pages'));
-//	app.enable('view cache');
+	app.enable('view cache');
 
 	// static files
 	app.use('/css', express.static(__dirname + '/static/css'));
@@ -74,7 +76,10 @@ const express  = require('express')
 			return res.status(403).send('Invalid CSRF token')
 		}
 		console.error(err.stack)
-		return res.status(500).render('error')
+		return res.status(500).render('message', {
+			'title': 'Internal Server Error',
+			'redirect': req.header('Referer') || '/'
+		})
 	})
 
 	// listen

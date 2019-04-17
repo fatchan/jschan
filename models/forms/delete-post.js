@@ -5,27 +5,13 @@ const path = require('path')
 	, fs = require('fs')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, hasPerms = require(__dirname+'/../../helpers/has-perms.js')
-	, Posts = require(__dirname+'/../../db-models/posts.js');
+	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
+	, Mongo = require(__dirname+'/../../db/db.js')
+	, Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next, checkedPosts) => {
 
-	//get all posts that were checked
-	let posts;
-	try {
-		posts = await Posts.getPosts(req.params.board, req.body.checked, true); //admin arument true, fetches passwords and salts
-	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
-	}
-
-	if (!posts || posts.length === 0) {
-		return res.status(400).render('message', {
-			'title': 'Bad requests',
-			'message': 'No posts found',
-			'redirect': `/${req.params.board}`
-		});
-	}
+	let posts = checkedPosts;
 
 	//if user is not logged in OR if lgoged in but not authed, filter the posts by passwords that are not null
 	if (!hasPerms(req, res)) {
@@ -37,20 +23,29 @@ module.exports = async (req, res) => {
 			&& post.password == req.body.password
 		});
 		if (posts.length === 0) {
-			return res.status(403).render('message', {
-				'title': 'Forbidden',
-				'message': 'Password did not match any selected posts',
-				'redirect': `/${req.params.board}`
-			});
+			throw {
+				'status': 403,
+				'message': {
+					'title': 'Forbidden',
+					'message': 'Password did not match any selected posts',
+					'redirect': `/${req.params.board}`
+				}
+			};
 		}
 	}
 
-	const threadIds = posts.filter(x => x.thread == null).map(x => x.postId);
+	//filter to threads, then get the board and thread for each 
+	const boardThreads = posts.filter(x => x.thread == null).map(x => {
+		return {
+			board: x.board,
+			thread: x.postId
+		};
+	});
 
 	//get posts from all threads
 	let threadPosts = []
-	await Promise.all(threadIds.map(async id => {
-		const currentThreadPosts = await Posts.getThreadPosts(req.params.board, id);
+	await Promise.all(boardThreads.map(async data => {
+		const currentThreadPosts = await Posts.getThreadPosts(data.board, data.thread);
 		threadPosts = threadPosts.concat(currentThreadPosts);
 		return;
 	}))
@@ -59,14 +54,8 @@ module.exports = async (req, res) => {
 	const allPosts = posts.concat(threadPosts)
 
 	//delete posts from DB
-	let deletedPosts = 0;
-	try {
-		const result = await Posts.deleteMany(req.params.board, allPosts.map(x => x.postId));
-		deletedPosts = result.deletedCount;
-	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
-	}
+	const postMongoIds = allPosts.map(post => Mongo.ObjectId(post._id))
+	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 
 	//get filenames from all the posts
 	let fileNames = [];
@@ -79,15 +68,11 @@ module.exports = async (req, res) => {
 		//dont question it.
 		return Promise.all([
 			unlink(uploadDirectory + filename),
-			unlink(uploadDirectory + 'thumb-' + filename)
+			unlink(`${uploadDirectory}thumb-${filename.split('.')[0]}.png`)
 		])
 	}));
 
 	//hooray!
-	return res.render('message', {
-		'title': 'Success',
-		'message': `Deleted ${threadIds.length} threads and ${deletedPosts} posts`,
-		'redirect': `/${req.params.board}`
-	});
+	return `Deleted ${boardThreads.length} threads and ${deletedPosts-boardThreads.length} posts`
 
 }

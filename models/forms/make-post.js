@@ -6,12 +6,13 @@ const uuidv4 = require('uuid/v4')
 	, crypto = require('crypto')
 	, randomBytes = util.promisify(crypto.randomBytes)
     , uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-    , Posts = require(__dirname+'/../../db-models/posts.js')
+    , Posts = require(__dirname+'/../../db/posts.js')
 	, getTripCode = require(__dirname+'/../../helpers/tripcode.js')
+	, linkQuotes = require(__dirname+'/../../helpers/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = {
-		allowedTags: [ 'span', 'a', 'code', 'em', 'strong' ],
+		allowedTags: [ 'span', 'a', 'em', 'strong' ],
 		allowedAttributes: {
 			'a': [ 'href', 'class' ],
 			'span': [ 'class' ]
@@ -25,7 +26,7 @@ const uuidv4 = require('uuid/v4')
     , videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
     , formatSize = require(__dirname+'/../../helpers/files/format-size.js')
 
-module.exports = async (req, res, numFiles) => {
+module.exports = async (req, res, next, numFiles) => {
 
 	// check if this is responding to an existing thread
 	let redirect = `/${req.params.board}`
@@ -35,8 +36,7 @@ module.exports = async (req, res, numFiles) => {
 		try {
 			thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		} catch (err) {
-			console.error(err);
-			return res.status(500).render('error');
+			return next(err);
 		}
 		if (!thread || thread.thread != null) {
 			return res.status(400).render('message', {
@@ -100,7 +100,7 @@ module.exports = async (req, res, numFiles) => {
 						await videoThumbnail(filename);
 						break;
 					default:
-						return res.status(500).render('error'); //how did we get here?
+						return next(err);
 				}
 
 				//make thumbnail
@@ -115,13 +115,11 @@ module.exports = async (req, res, numFiles) => {
 				if (Array.isArray(processedFile.geometryString)) {
 					processedFile.geometryString = processedFile.geometryString[0];
 				}
-
 				files.push(processedFile);
 
 			} catch (err) {
-				console.error(err);
 				//TODO: DELETE FAILED FILES
-				return res.status(500).render('error');
+				return next(err);
 			}
 		}
 	}
@@ -149,7 +147,9 @@ module.exports = async (req, res, numFiles) => {
 	//simple markdown and sanitize
 	let message = req.body.message;
 	if (message && message.length > 0) {
-		message = sanitize(simpleMarkdown(req.params.board, req.body.thread, message), sanitizeOptions);
+		message = simpleMarkdown(req.params.board, req.body.thread, message);
+		message = await linkQuotes(req.params.board, message);
+		message = sanitize(message, sanitizeOptions);
 	}
 
 	//add post to DB
@@ -167,6 +167,7 @@ module.exports = async (req, res, numFiles) => {
 		'files': files,
 		'salt': !req.body.thread ? salt : '',
 		'reports': [],
+		'globalreports': [],
 		'spoiler': req.body.spoiler ? true : false,
 	};
 
@@ -174,11 +175,10 @@ module.exports = async (req, res, numFiles) => {
 	try {
 		postId = await Posts.insertOne(req.params.board, data);
 	} catch (err) {
-		console.error(err);
-		return res.status(500).render('error');
+		return next(err);
 	}
 
-	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}`;
+	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}#${postId}`;
 
 	return res.redirect(successRedirect);
 }

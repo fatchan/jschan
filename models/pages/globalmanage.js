@@ -8,14 +8,14 @@ module.exports = async (req, res, next) => {
 	let reports;
 	let bans;
 	try {
-		reports = await Posts.getReports(req.params.board);
-		bans = await Bans.getBoardBans(req.params.board);
+		reports = await Posts.getGlobalReports();
+		bans = await Bans.getGlobalBans();
 	} catch (err) {
 		return next(err)
 	}
 
 	//render the page
-	res.render('manage', {
+	res.render('globalmanage', {
 		csrf: req.csrfToken(),
 		reports,
 		bans,
