@@ -4,7 +4,10 @@ mixin catalogtile(board, post, truncate)
 			if post.files.length > 0
 				.post-file-src
 					a(href=`/${board._id}/thread/${post.postId}#${post.postId}`)
-						object.catalog-thumb(data=`/img/thumb-${post.files[0].filename.split('.')[0]}.png` width='64' height='64')
+						if post.spoiler
+							object(data='/img/spoiler.png' width='64' height='64')
+						else
+							object.catalog-thumb(data=`/img/thumb-${post.files[0].filename.split('.')[0]}.png` width='64' height='64')
 			header.post-info
 				if post.subject
 					span: a.no-decoration.post-subject(href=`/${board._id}/thread/${post.postId}#${post.postId}`) #{post.subject}

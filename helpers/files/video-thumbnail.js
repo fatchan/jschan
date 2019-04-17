@@ -14,7 +14,7 @@ module.exports = (filename) => {
 			count: 1,
 			filename: `thumb-${filename.split('.')[0]}.png`,
 			folder: uploadDirectory,
-			size: '128x128'
+			size: '128x?'
 		});
 	});
 
