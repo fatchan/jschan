@@ -256,8 +256,14 @@ input textarea {
 	color: white;
 }
 
+.banner-check {
+	display: flex;
+	align-items: center;
+}
+
 .board-banner {
 	margin: 10px;
+	max-width: 100%;
 }
 
 .board-description {

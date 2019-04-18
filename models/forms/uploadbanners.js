@@ -11,8 +11,7 @@ const uuidv4 = require('uuid/v4')
 
 module.exports = async (req, res, next, numFiles) => {
 
-	// check if this is responding to an existing thread
-	let redirect = `/${req.params.board}/manage`
+	const redirect = `/${req.params.board}/manage`
 
 	// check all mime types befoer we try saving anything
 	for (let i = 0; i < numFiles; i++) {
@@ -57,6 +56,10 @@ module.exports = async (req, res, next, numFiles) => {
 
 	await Boards.addBanners(req.params.board, filenames);
 
-	return res.redirect(redirect);
+	return res.render('message', {
+		'title': 'Success',
+		'message': `Uploaded ${filenames.length} banners.`,
+		'redirect': redirect
+	});
 
 }

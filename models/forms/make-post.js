@@ -152,7 +152,7 @@ console.log(file);
 			//tripcode
 			if (groups.tripcode) {
 				const tripcode = await getTripCode(groups.tripcode);
-				name += `!!${tripcode}`;
+				name += `##${tripcode}`;
 			}
 			//capcode
 			if (groups.capcode && hasPerms(req, res)) {

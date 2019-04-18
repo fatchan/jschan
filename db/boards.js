@@ -1,8 +1,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, db = Mongo.client.db('jschan')
-	, boardCache = new Map();
+	, db = Mongo.client.db('jschan');
 
 module.exports = {
 
@@ -32,6 +31,18 @@ module.exports = {
 		return db.collection('boards').deleteMany({});
 	},
 
+	removeBanners: (board, filenames) => {
+		return db.collection('boards').updateOne(
+			{
+				'_id': board,
+			}, {
+				'$pullAll': {
+					'banners': filenames
+				}
+			}
+		);
+	},
+
 	addBanners: (board, filenames) => {
 		return db.collection('boards').updateOne(
 			{
@@ -46,18 +57,9 @@ module.exports = {
 		);
 	},
 
-	cache: async () => {
-		const boards = await module.exports.find();
-		for (let i = 0; i < boards.length; i++) {
-			const board = boards[i];
-			boardCache.set(board._id, board);
-		}
-	},
-
 	exists: async (req, res, next) => {
 
-		//const board = await module.exports.findOne(req.params.board);
-		const board = boardCache.get(req.params.board);
+		const board = await module.exports.findOne(req.params.board);
 		if (!board) {
 			return res.status(404).render('404');
 		}

@@ -1,14 +1,20 @@
 section.form-wrapper
-	label.toggle-label Upload Banners
+	label.toggle-label Add Banners
 		input.toggle(type='checkbox')
 		form.form-post.togglable(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
-	
 			input(type='hidden' name='_csrf' value=csrf)
-	
 			span
 				input#file(type='file', name='file' multiple)
-	
 			input(type='submit', value='submit')
-	
-	
+
+section.form-wrapper
+	label.toggle-label Delete Banners
+		input.toggle(type='checkbox')
+		form.form-post.togglable(action=`/forms/board/${board._id}/deletebanners`, enctype='application/x-www-form-urlencoded', method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			each banner in board.banners
+				label.banner-check
+					input(type='checkbox' name='checkedbanners[]' value=banner)
+					object.board-banner(data=`/img/${banner}` width='300' height='100')
+			input(type='submit', value='submit')
 

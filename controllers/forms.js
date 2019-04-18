@@ -10,6 +10,7 @@ const express  = require('express')
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
 	, uploadBanners = require(__dirname+'/../models/forms/uploadbanners.js')
+	, deleteBanners = require(__dirname+'/../models/forms/deletebanners.js')
 	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
 	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
 	, reportPosts = require(__dirname+'/../models/forms/report-post.js')
@@ -175,6 +176,42 @@ router.post('/board/:board/addbanners', Boards.exists, banCheck, hasPerms, numbe
 
 	try {
 		await uploadBanners(req, res, next, numFiles);
+	} catch (err) {
+		console.error(err);
+		return next(err);
+	}
+
+});
+
+//delete banners
+router.post('/board/:board/deletebanners', Boards.exists, banCheck, hasPerms, numberConverter, async (req, res, next) => {
+
+	const errors = [];
+
+	if (!req.body.checkedbanners || req.body.checkedbanners.length === 0 || req.body.checkedbanners.length > 10) {
+		errors.push('Must select 1-10 banners to delete');
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': `/${req.params.board}/manage`
+		})
+	}
+
+	for (let i = 0; i < req.body.checkedbanners.length; i++) {
+		if (!res.locals.board.banners.includes(req.body.checkedbanners[i])) {
+			return res.status(400).render('message', {
+				'title': 'Bad request',
+				'errors': 'Invalid banners selected',
+				'redirect': `/${req.params.board}/manage`
+			})
+		}
+	}
+
+	try {
+		await deleteBanners(req, res, next);
 	} catch (err) {
 		console.error(err);
 		return next(err);
