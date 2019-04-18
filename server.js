@@ -55,15 +55,11 @@ const express  = require('express')
 	app.set('views', path.join(__dirname, 'views/pages'));
 	app.enable('view cache');
 
-	// static files
-	app.use('/css', express.static(__dirname + '/static/css'));
-	app.use('/js', express.static(__dirname + '/static/js'));
-	app.use('/img', express.static(__dirname + '/static/img'));
-
 	// routes
 	app.use('/forms', require(__dirname+'/controllers/forms.js'))
 	app.use('/', require(__dirname+'/controllers/pages.js'))
 
+	//404 catchall
 	app.get('*', (req, res) => {
 		res.status(404).render('404')
 	})

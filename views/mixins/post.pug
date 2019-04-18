@@ -32,7 +32,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 									if post.spoiler
 										object(data='/img/spoiler.png' width='128' height='128')
 									else
-										object(data=`/img/thumb-${file.filename.split('.')[0]}.png` width='128' height='')
+										object(data=`/img/thumb-${file.filename.split('.')[0]}.png`)
 			if post.message
 				if truncate
 					-

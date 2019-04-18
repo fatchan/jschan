@@ -77,10 +77,10 @@ const Mongo = require(__dirname+'/db/db.js')
 			}
 		}
 	});
-	await readdir('static/img/').then(async files => {
+	await readdir('uploads/img/').then(async files => {
 		await Promise.all(files.map(async file => {
 			if (file != 'spoiler.png')
-				unlink(path.join('static/img/', file));
+				unlink(path.join('uploads/img/', file));
 		}))
 	});
 	console.log('creating admin account: admin:changeme');

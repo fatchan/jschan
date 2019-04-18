@@ -22,7 +22,7 @@ body {
 }
 
 object {
-	object-fit: scale-down;
+	object-fit: contain;
 }
 
 .board-header {
