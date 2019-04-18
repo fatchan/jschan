@@ -213,6 +213,11 @@ input, textarea {
 	margin-right: 10px;
 }
 
+.post-data {
+	margin-top: -10px;
+	padding-top: 10px;
+}
+
 .post-file {
 	display: inline-flex;
 	flex-direction: column;

@@ -18,6 +18,7 @@ const uuidv4 = require('uuid/v4')
 			'span': [ 'class' ]
 		}
 	}
+	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?:## (?<capcode>[^\s#]+))?$/
 	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
 	, fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
@@ -65,7 +66,6 @@ module.exports = async (req, res, next, numFiles) => {
 		// then upload, thumb, get metadata, etc.
 		for (let i = 0; i < numFiles; i++) {
 			const file = req.files.file[i];
-console.log(file);
 			const uuid = uuidv4();
 			const filename = uuid + path.extname(file.name);
 
@@ -138,7 +138,7 @@ console.log(file);
 	let capcode = null;
 	if (name && name.length > 0) {
 		// get matches with names groups for name, trip and capcode in 1 regex
-		const matches = name.match(/^(?<name>[^#]+)?(?:##)(?<tripcode>[^#]+)(?:(?:##) (?<capcode>.+))?$/)
+		const matches = name.match(nameRegex);
 		//regex to include "insecure" tripcodes. not implemented yet
 		//const matches = name.match(/^(?<name>[^#]+)?(?:##|#)(?<tripcode>[^#]+)(?:(?:##) (?<capcode>.+))?$/)
 		if (matches && matches.groups) {
@@ -156,8 +156,8 @@ console.log(file);
 			}
 			//capcode
 			if (groups.capcode && hasPerms(req, res)) {
-				// add proper code for different capcodes
-				capcode = ` ${groups.capcode}`;
+				// TODO: add proper code for different capcodes
+				capcode = groups.capcode;
 			}
 		}
 	}

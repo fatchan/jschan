@@ -5,14 +5,14 @@ block head
 
 block content
 	h1 #{title}
-	if message
-		blockquote #{message}
 	if messages
 		ul
-			each msg in messages
-				li #{msg}
-	if errors
-		ul
-			each error in errors
-				li #{error}
+			if message
+				li #{message}
+			if messages
+				each msg in messages
+					li #{msg}
+			if errors
+				each error in errors
+					li #{error}
 	p You will be redirected shortly. If you are not redirected automatically, you can #[a(href=redirect) click here].

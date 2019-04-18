@@ -204,7 +204,7 @@ router.post('/board/:board/deletebanners', Boards.exists, banCheck, hasPerms, nu
 		if (!res.locals.board.banners.includes(req.body.checkedbanners[i])) {
 			return res.status(400).render('message', {
 				'title': 'Bad request',
-				'errors': 'Invalid banners selected',
+				'message': 'Invalid banners selected',
 				'redirect': `/${req.params.board}/manage`
 			})
 		}
