@@ -19,7 +19,8 @@ module.exports = {
 				'salt': 0,
 				'password': 0,
 				'ip': 0,
-				'reports': 0
+				'reports': 0,
+				'globalreports': 0,
 			}
 		}).sort({
 			'bumped': -1
@@ -35,14 +36,24 @@ module.exports = {
 					'salt': 0,
 					'password': 0,
 					'ip': 0,
-					'reports': 0
+					'reports': 0,
+					'globalreports': 0,
 				}
 			}).sort({
 				'_id': -1
 			}).limit(5).toArray();
-			thread.replies = replies.reverse();
-		}));
 
+			//reverse order for board page
+			thread.replies = replies.reverse();
+
+			//count omitted image and posts
+			const numPreviewImages = replies.reduce((acc, post) => {
+				return acc + post.files.length;
+			}, 0);
+			thread.omittedimages = thread.replyimages - numPreviewImages;
+			thread.omittedposts = thread.replyposts - replies.length;
+
+		}));
 		return threads;
 
 	},
@@ -67,7 +78,8 @@ module.exports = {
 					'salt': 0,
 					'password': 0,
 					'ip': 0,
-					'reports': 0
+					'reports': 0,
+					'globalreports': 0,
 				}
 			}),
 			module.exports.getThreadPosts(board, id)
@@ -94,7 +106,8 @@ module.exports = {
 				'salt': 0 ,
 				'password': 0,
 				'ip': 0,
-				'reports': 0
+				'reports': 0,
+				'globalreports': 0,
 			}
 		}).sort({
 			'_id': 1
@@ -113,7 +126,8 @@ module.exports = {
 				'salt': 0,
 				'password': 0,
 				'ip': 0,
-				'reports': 0
+				'reports': 0,
+				'globalreports': 0,
 			}
 		}).toArray();
 
@@ -137,7 +151,8 @@ module.exports = {
 				'salt': 0,
 				'password': 0,
 				'ip': 0,
-				'reports': 0
+				'reports': 0,
+				'globalreports': 0,
 			}
 		});
 
@@ -165,7 +180,8 @@ module.exports = {
 				'salt': 0,
 				'password': 0,
 				'ip': 0,
-				'reports': 0
+				'reports': 0,
+				'globalreports': 0,
 			}
 		}).toArray();
 
@@ -182,25 +198,32 @@ module.exports = {
 
 	insertOne: async (board, data) => {
 
-		// bump thread if name not sage
-		if (data.thread !== null && data.email !== 'sage') {
-			await db.updateOne({
+		if (data.thread !== null) {
+			//if not a thread, update reply and image count on op document;
+			const filter = {
 				'postId': data.thread,
 				'board': board
-			}, {
-				'$set': {
+			}
+			const query = {
+				'$inc': {
+					'replyposts': 1,
+					'replyimages': data.files.length
+				}
+			}
+			// bump thread if name not sage
+			if (data.email !== 'sage') {
+				query['$set'] = {
 					'bumped': Date.now()
 				}
-			})
+			}
+			await db.updateOne(filter, query);
+		} else {
+			//this is a new thread, so set the bump date
+			data.bumped = Date.now()
 		}
 
 		const postId = await Boards.getNextId(board);
 		data.postId = postId;
-
-		//this is a thread, so set the bump date so its pushed to the top
-		if (data.thread == null) {
-			data.bumped = Date.now()
-		}
 
 		await db.insertOne(data);
 
@@ -266,6 +289,7 @@ module.exports = {
 				'password': 0,
 				'ip': 0,
 				'reports': 0,
+				'globalreports': 0,
 			}
 		}).toArray();
 	},

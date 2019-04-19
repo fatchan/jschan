@@ -166,25 +166,27 @@ module.exports = async (req, res, next, numFiles) => {
 		message = sanitize(message, sanitizeOptions);
 	}
 
-	//add post to DB
+	//build post data for db
 	const data = {
-		'board': req.params.board,
+		'date': new Date(),
 		'name': name || 'Anonymous',
+		'board': req.params.board,
 		'tripcode': tripcode,
 		'capcode': capcode,
-		'subject': req.body.subject || '',
-		'date': new Date(),
-		'message': message || '',
+		'subject': req.body.subject || null,
+		'message': message || null,
 		'thread': req.body.thread || null,
-		'password': req.body.password || '',
+		'password': req.body.password || null,
+		'email': req.body.email || null,
+		'salt': !req.body.thread ? salt : null,
+		'spoiler': req.body.spoiler ? true : false,
 		'userId': userId,
-		'email': req.body.email || '',
 		'ip': ip,
 		'files': files,
-		'salt': !req.body.thread ? salt : '',
 		'reports': [],
 		'globalreports': [],
-		'spoiler': req.body.spoiler ? true : false,
+		'replyposts': 0,
+		'replyimages': 0,
 	};
 
 	let postId;

@@ -1,5 +1,6 @@
 mixin post(post, truncate, manage=false, globalmanage=false)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
+		- const postURL = `/${post.board}/thread/${post.thread || post.postId}#${post.postId}`;
 		header.post-info
 			span
 				label
@@ -21,7 +22,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						span.post-capcode #{post.capcode}
 					span #{post.date.toLocaleString()}
 					span.user-id(style=`background: #${post.userId}`) #{post.userId}
-			span: a(href=`/${post.board}/thread/${post.thread || post.postId}#${post.postId}`) ##{post.postId}
+			span: a(href=postURL) ##{post.postId}
 		.post-data
 			if post.files.length > 0
 				.post-files
@@ -50,11 +51,13 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						}
 					if truncated
 						blockquote.post-message !{truncatedMessage}
-						blockquote Message too long. #[a(href=`/${post.board}/thread/${post.thread || post.postId}#${post.postId}`) Click here] to view the full text.
+						blockquote.left Message too long. #[a(href=postURL) Click here] to view the full text.
 					else
 						blockquote.post-message !{post.message}
 				else 
 					blockquote.post-message !{post.message}
+			if post.omittedposts || post.omittedimages
+				blockquote.left.clear-both #{post.omittedposts} post(s)#{post.omittedimages > 0 ? ' and '+post.omittedimages+' image(s)' : ''} omitted. #[a(href=postURL) View the full thread]
 	
 	if manage === true
 		each report in post.reports

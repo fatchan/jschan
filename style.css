@@ -17,13 +17,8 @@ body {
 	margin: 0.5em 0;
 }
 
-.pages {
-	padding: 10px;
-	margin: 10px 0;
-}
-
 .pages a {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 object {
@@ -122,10 +117,20 @@ span {
 	margin-right: 5px;
 }
 
-.thread, .action-wrapper, .form-wrapper {
+section {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+}
+
+input, textarea {
+	font-family: arial, helvetica, sans-serif;
+	font-size: 10pt;
+	border-radius: 3px;
+	max-width:100%;
+	border: none;
+	margin: 2px;
+	padding: 5px;
 }
 
 .form-wrapper {
@@ -133,14 +138,11 @@ span {
 	margin: 10px 0;
 }
 
-.actions, .post-container, .pages {
+.actions {
 	background: #D6DAF0;
 	border-color: #B7C5D9;
 	border-width: 0 1px 1px 0;
 	border-style: none solid solid none;
-}
-
-.actions {
 	max-width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -179,7 +181,7 @@ span {
 	display: none;
 }
 
-.toggle:checked + * {
+.toggle:checked + .form-post {
 	display: flex;
 }
 
@@ -242,17 +244,13 @@ input textarea {
 	padding: 8px;
 }
 
-.no-resize {
-	resize: none;
-}
-
 .container {
 	padding: 10px;
 }
 
 .board-title {
 	color: #af0a0f;
-	font: bolder 28px Tahoma,sans-serif;
+	font: bolder 28px Tahoma;
 	letter-spacing: -2px;
 	text-align: center;
 	margin: 0;
@@ -287,6 +285,10 @@ input textarea {
 	box-sizing: border-box;
 	margin: 2px 0;
 	padding: 2px;
+	background: #D6DAF0;
+	border-color: #B7C5D9;
+	border-width: 0 1px 1px 0;
+	border-style: none solid solid none;
 	max-width: 100%;
 }
 
@@ -298,7 +300,7 @@ input textarea {
 .post-container.op {
 	background: none;
 	border: none;
-	width: 100%
+	width: 100%;
 }
 
 .post-subject {
@@ -311,11 +313,8 @@ input textarea {
 	color: red;
 }
 
-.post-tripcode, .post-name {
-	color: #117743;
-}
-
 .post-name {
+	color: #117743;
 	font-weight: bold;
 }
 
@@ -333,8 +332,8 @@ input textarea {
 }
 
 .post-info * {
-	margin-bottom: 0;
-	margin-top: -2px;
+    margin-bottom: 0;
+    margin-top: -2px;
 }
 
 .navbar {
@@ -349,14 +348,6 @@ input textarea {
 	padding-left: 10px;
 	padding-right: 10px;
 	border-right: 1px solid lightgray;
-}
-
-.left {
-	float: left;
-}
-
-.clear-both {
-	clear: both;
 }
 
 .right {
@@ -375,33 +366,21 @@ input textarea {
 	line-height: 50px;
 }
 
-input[type="text"], input[type="password"], textarea {
-	border: 1px solid #a9a9a9;
-	font-size: inherit;
-	font-family: arial,helvetica,sans-serif;
-	margin: 0;
-	flex-grow: 1;
-}
-
-.postform-section {
-	display: flex;
-	margin-bottom: 1px;
-}
-
-.postform-label {
-	padding: 3px;
-	border: 1px solid black;
-	min-width: 80px;
-	background: #98E;
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	font-weight: bold;
-	margin-right: 1px;
+table, th, td {
+	border-bottom: 1px solid lightgray;
+	border-collapse: collapse;
 }
 
 .boards-table {
 	margin: 0 auto;
+}
+
+th {
+	background: #D6DAF0;
+}
+
+th, td {
+	padding: 5px;
 }
 
 hr {
@@ -449,7 +428,6 @@ hr {
 
 	.post-info {
 		background-color: #B7C5D9;
-		width: 100%;
 	}
 
 }
