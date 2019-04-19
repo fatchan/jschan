@@ -1,3 +1,4 @@
 node_modules/
 configs/*.json
 uploads/img/*
+gulp/dist/

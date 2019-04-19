@@ -31,6 +31,17 @@ module.exports = {
 		});
 	},
 
+	changePassword: async (username, newPassword) => {
+		const passwordHash = await bcrypt.hash(newPassword, 12);
+		return db.updateOne({
+            '_id': username
+        }, {
+            '$set': {
+                'passwordHash': passwordHash
+            }
+        })
+	},
+
 	promoteUser: (username, newlevel) => {
 		//increase users auth level
 		return db.updateOne({
