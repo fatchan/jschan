@@ -51,7 +51,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						}
 					if truncated
 						blockquote.post-message !{truncatedMessage}
-						blockquote.left Message too long. #[a(href=postURL) Click here] to view the full text.
+						blockquote.left.clear-both Message too long. #[a(href=postURL) View the full text]
 					else
 						blockquote.post-message !{post.message}
 				else 

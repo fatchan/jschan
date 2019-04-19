@@ -43,6 +43,7 @@ object {
 	background: #B7C5D9;
 	text-decoration: none;
 	color: black;
+	margin-bottom: 5px;
 }
 
 .catalog-tile-content {
@@ -111,6 +112,10 @@ object {
 
 blockquote a {
 	color: #d00;
+}
+
+.op blockquote {
+    margin: 1em;
 }
 
 blockquote {

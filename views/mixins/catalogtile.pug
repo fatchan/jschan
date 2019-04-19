@@ -1,5 +1,9 @@
 mixin catalogtile(board, post, truncate)
 	article(class='catalog-tile')
+		- const postURL = `/${board._id}/thread/${post.postId}#${post.postId}`
+		a.catalog-tile-button(href=postURL) Open Thread
+		if post.subject
+			span: a.no-decoration.post-subject(href=postURL) #{post.subject}
 		.catalog-tile-content
 			if post.files.length > 0
 				.post-file-src
@@ -9,9 +13,9 @@ mixin catalogtile(board, post, truncate)
 						else
 							object.catalog-thumb(data=`/img/thumb-${post.files[0].filename.split('.')[0]}.png` width='64' height='64')
 			header.post-info
-				if post.subject
-					span: a.no-decoration.post-subject(href=`/${board._id}/thread/${post.postId}#${post.postId}`) #{post.subject}
-				span: a(href=`/${board._id}/thread/${post.postId}#${post.postId}`) ##{post.postId}
+				span: a(href=postURL) ##{post.postId}
+				span Replies: #{post.replyposts}
+				span Images: #{post.replyimages}
+			br
 			if post.message
 				blockquote.no-m-p.post-message !{post.message}
-		a.catalog-tile-button(href=`/${board._id}/thread/${post.postId}#${post.postId}`) Open Thread

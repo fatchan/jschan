@@ -134,14 +134,15 @@ module.exports = async (req, res, next, numFiles) => {
 	const fullUserIdHash = crypto.createHash('sha256').update(salt + ip + req.params.board).digest('hex');
 	const userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 
-	let name = req.body.name;
+	let name = null;
 	let tripcode = null;
 	let capcode = null;
-	if (name && name.length > 0) {
+	if (req.body.name && req.body.name.length > 0) {
 		// get matches with named groups for name, trip and capcode in 1 regex
-		const matches = name.match(nameRegex);
+		const matches = req.body.name.match(nameRegex);
 		if (matches && matches.groups) {
 			const groups = matches.groups;
+		console.log(groups)
 			//name
 			if (groups.name) {
 				name = groups.name
