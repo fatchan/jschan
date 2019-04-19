@@ -8,7 +8,6 @@ module.exports = {
 
 	db,
 
-	//TODO: IMPLEMENT PAGINATION
 	getRecent: async (board, page) => {
 
 		// get all thread posts (posts with null thread id)
@@ -26,7 +25,7 @@ module.exports = {
 			'bumped': -1
 		}).skip(10*(page-1)).limit(10).toArray();
 
-		// add last 3 posts in reverse order to preview
+		// add last 5 posts in reverse order to preview
 		await Promise.all(threads.map(async thread => {
 			const replies = await db.find({
 				'thread': thread.postId,
@@ -285,6 +284,18 @@ module.exports = {
 
 	deleteOne: (board, options) => {
 		return db.deleteOne(options);
+	},
+
+	deleteFilesMany: (ids) => {
+		return db.updateMany({
+			'_id': {
+				'$in': ids
+			}
+		}, {
+			'$set': {
+				'files': []
+			}
+		});
 	},
 
 	deleteMany: (ids) => {

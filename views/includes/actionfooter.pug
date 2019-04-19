@@ -5,6 +5,9 @@
 			input.post-check(type='checkbox', name='delete' value=1)
 			| Delete
 		label
+			input.post-check(type='checkbox', name='delete_file' value=1)
+			| Delete File Only
+		label
 			input.post-check(type='checkbox', name='spoiler' value=1)
 			| Spoiler Images
 		label
@@ -17,7 +20,7 @@
 			| Global Report
 		label
 			input#report(type='text', name='report_reason', placeholder='report reason' autocomplete='off')
-	.actions 
+	.actions
 		header Mod Actions:
 		label
 			input.post-check(type='checkbox', name='ban' value=1)

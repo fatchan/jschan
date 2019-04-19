@@ -13,6 +13,7 @@ const express  = require('express')
 	, deleteBanners = require(__dirname+'/../models/forms/deletebanners.js')
 	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
 	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
+	, deletePostsFiles = require(__dirname+'/../models/forms/deletepostsfiles.js')
 	, reportPosts = require(__dirname+'/../models/forms/report-post.js')
 	, globalReportPosts = require(__dirname+'/../models/forms/globalreportpost.js')
 	, dismissReports = require(__dirname+'/../models/forms/dismiss-report.js')
@@ -293,6 +294,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 		|| req.body.global_report
 		|| req.body.spoiler
 		|| req.body.delete
+		|| req.body.delete_file
 		|| req.body.dismiss
 		|| req.body.global_dismiss
 		|| req.body.ban
@@ -335,7 +337,9 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 			messages.push((await deletePosts(req, res, next, posts)));
 		} else {
 			// if it was getting deleted, we cant do any of these
-			if (req.body.spoiler) {
+			if (req.body.delete_file) {
+				messages.push((await deletePostsFiles(req, res, next, posts)));
+			} if (req.body.spoiler) {
 				messages.push((await spoilerPosts(req, res, next, posts)));
 			}
 			// cannot report and dismiss at same time
@@ -422,6 +426,7 @@ router.post('/global/actions', hasPerms, numberConverter, async(req, res, next) 
 	}
 	if (!(req.body.spoiler
 		|| req.body.delete
+		|| req.body.delete_file
 		|| req.body.global_dismiss
 		|| req.body.global_ban)) {
 		errors.push('Invalid actions selected')
@@ -447,16 +452,19 @@ router.post('/global/actions', hasPerms, numberConverter, async(req, res, next) 
 	const messages = [];
 	try {
 
+		//ban before delete
 		if (req.body.global_ban) {
 			messages.push((await banPoster(req, res, next, null, posts)));
 		}
 
-		//ban before deleting
+		// if its getting deleted, we cant do anythign else
 		if (req.body.delete) {
 			messages.push((await deletePosts(req, res, next, posts)));
-		} else {
-			// if it was getting deleted, we cant do any of these
-			if (req.body.spoiler) {
+		} else{
+			if (req.body.delete_file) {
+				messages.push((await deletePostsFiles(req, res, next, posts)));
+			} else if (req.body.spoiler) {
+				// if it was getting deleted, we cant spoiler
 				messages.push((await spoilerPosts(req, res, next, posts)));
 			}
 			if (req.body.global_dismiss) {
