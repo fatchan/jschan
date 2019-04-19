@@ -7,6 +7,7 @@ block head
 
 block content
 	h1.board-title Global Management
+	p: a(href='/changepassword') Change password
 	h4 All Reports:
 	form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)

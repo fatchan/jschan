@@ -1,5 +1,6 @@
 .action-wrapper
-	.actions Actions:
+	.actions
+		header Actions:
 		label
 			input.post-check(type='checkbox', name='delete' value=1)
 			| Delete
@@ -16,7 +17,8 @@
 			| Global Report
 		label
 			input#report(type='text', name='report_reason', placeholder='report reason' autocomplete='off')
-	.actions Mod Actions:
+	.actions 
+		header Mod Actions:
 		label
 			input.post-check(type='checkbox', name='ban' value=1)
 			| Ban Poster

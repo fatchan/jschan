@@ -10,7 +10,8 @@ const express  = require('express')
 	, home = require(__dirname+'/../models/pages/home.js')
 	, register = require(__dirname+'/../models/pages/register.js')
 	, manage = require(__dirname+'/../models/pages/manage.js')
-	, globalmanage = require(__dirname+'/../models/pages/globalmanage.js')
+	, globalManage = require(__dirname+'/../models/pages/globalmanage.js')
+	, changePassword = require(__dirname+'/../models/pages/changepassword.js')
 	, login = require(__dirname+'/../models/pages/login.js')
 	, board = require(__dirname+'/../models/pages/board.js')
 	, catalog = require(__dirname+'/../models/pages/catalog.js')
@@ -24,6 +25,9 @@ router.get('/login', login);
 
 //registration page
 router.get('/register', register);
+
+//change password page
+router.get('/changepassword', changePassword);
 
 //logout
 router.get('/logout', isLoggedIn, (req, res, next) => {
@@ -42,7 +46,7 @@ router.get('/logout', isLoggedIn, (req, res, next) => {
 router.get('/:board/manage', Boards.exists, isLoggedIn, hasPerms, manage);
 
 //board manage page
-router.get('/globalmanage', isLoggedIn, hasPerms, globalmanage);
+router.get('/globalmanage', isLoggedIn, hasPerms, globalManage);
 
 // board page/recents
 router.get('/:board', Boards.exists, numberConverter, board);

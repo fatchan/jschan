@@ -2,21 +2,25 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
 		header.post-info
 			span
-				if globalmanage
-					input.post-check(type='checkbox', name='globalcheckedposts[]' value=post._id)
-				else
-					input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
-			if post.subject
-				span.post-subject #{post.subject}
-			if post.email
-				a(href=`mailto:${post.email}`)
-					span.post-name #{post.name}
-			else 
-				span.post-name #{post.name}
-			if post.capcode
-				span.post-capcode #{post.capcode}
-			span #{post.date.toLocaleString()}
-			span.user-id(style=`background: #${post.userId}`) #{post.userId}
+				label
+					if globalmanage
+						input.post-check(type='checkbox', name='globalcheckedposts[]' value=post._id)
+					else
+						input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
+					|
+					if post.subject
+						span.post-subject #{post.subject}
+					if post.email
+						a(href=`mailto:${post.email}`)
+							span.post-name #{post.name}
+					else 
+						span.post-name #{post.name}
+					if post.tripcode
+						span.post-tripcode #{post.tripcode}
+					if post.capcode
+						span.post-capcode #{post.capcode}
+					span #{post.date.toLocaleString()}
+					span.user-id(style=`background: #${post.userId}`) #{post.userId}
 			span: a(href=`/${post.board}/thread/${post.thread || post.postId}#${post.postId}`) ##{post.postId}
 		.post-data
 			if post.files.length > 0

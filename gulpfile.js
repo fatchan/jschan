@@ -8,7 +8,7 @@ const gulp = require('gulp')
 const paths = {
 	styles: {
 		src: 'gulp/res/css/*.css',
-		dest: 'dist/css/'
+		dest: 'gulp/dist/css/'
 	},
 	images: {
 		src: 'gulp/res/img/*',
@@ -16,7 +16,7 @@ const paths = {
 	},
 	scripts: {
 		src: 'gulp/res/js/*.js',
-		dest: 'dist/js/'
+		dest: 'gulp/dist/js/'
 	}
 };
 

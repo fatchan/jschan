@@ -1,29 +1,28 @@
 section.form-wrapper
-	label.toggle-label Show Post Form
-		input.toggle(type='checkbox')
-		form.form-post.togglable(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
-	
-			input(type='hidden' name='_csrf' value=csrf)
-	
-			input(type='hidden' name='thread' value=thread != null ? thread.postId : null)
-	
-			input#title(type='text', name='subject', placeholder='subject' autocomplete='off' maxlength='50')
-	
-			input#name(type='text', name='name', placeholder='name' autocomplete='off' maxlength='50')
-	
-			input#name(type='text', name='email', placeholder='email' autocomplete='off' maxlength='50')
-	
-			input#password(type='password', name='password', placeholder='post password' autocomplete='off' maxlength='50')
-	
-			textarea#message(name='message', rows='8', cols='50', placeholder='message' autocomplete='off' maxlength='2000')
-	
+	form.form-post(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
+		input(type='hidden' name='_csrf' value=csrf)
+		input(type='hidden' name='thread' value=thread != null ? thread.postId : null)
+		section.postform-section
+			.postform-label Name
+			input#name(type='text', name='name', placeholder='Anonymous' autocomplete='off' maxlength='50')
+		section.postform-section
+			.postform-label Subject
+			input#title(type='text', name='subject', autocomplete='off' maxlength='50')
+		section.postform-section
+			.postform-label Email
+			input#name(type='text', name='email', autocomplete='off' maxlength='50')
+		section.postform-section
+			.postform-label Password
+			input#password(type='password', name='password', autocomplete='off' maxlength='50')
+		section.postform-section
+			.postform-label Message
+			textarea#message(name='message', rows='5', autocomplete='off' maxlength='2000')
+		section.postform-section
+			.postform-label Files
 			span
 				input#file(type='file', name='file' multiple)
 				label
 					input.post-check#spoiler(type='checkbox', name='spoiler', value='true')
 					| Spoiler
-	
-			input(type='submit', value='submit')
-	
-	
+		input(type='submit', value='submit')
 

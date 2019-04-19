@@ -135,24 +135,20 @@ module.exports = async (req, res, next, numFiles) => {
 	const userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 
 	let name = req.body.name;
+	let tripcode = null;
 	let capcode = null;
 	if (name && name.length > 0) {
-		// get matches with names groups for name, trip and capcode in 1 regex
+		// get matches with named groups for name, trip and capcode in 1 regex
 		const matches = name.match(nameRegex);
-		//regex to include "insecure" tripcodes. not implemented yet
-		//const matches = name.match(/^(?<name>[^#]+)?(?:##|#)(?<tripcode>[^#]+)(?:(?:##) (?<capcode>.+))?$/)
 		if (matches && matches.groups) {
 			const groups = matches.groups;
-			//reset name
-			name = '';
 			//name
 			if (groups.name) {
-				name += groups.name
+				name = groups.name
 			}
 			//tripcode
 			if (groups.tripcode) {
-				const tripcode = await getTripCode(groups.tripcode);
-				name += `##${tripcode}`;
+				tripcode = `!!${(await getTripCode(groups.tripcode))}`;
 			}
 			//capcode
 			if (groups.capcode && hasPerms(req, res)) {
@@ -174,6 +170,7 @@ module.exports = async (req, res, next, numFiles) => {
 	const data = {
 		'board': req.params.board,
 		'name': name || 'Anonymous',
+		'tripcode': tripcode,
 		'capcode': capcode,
 		'subject': req.body.subject || '',
 		'date': new Date(),

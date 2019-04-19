@@ -3,8 +3,7 @@ section.form-wrapper
 		input.toggle(type='checkbox')
 		form.form-post.togglable(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
-			span
-				input#file(type='file', name='file' multiple)
+			input#file(type='file', name='file' multiple)
 			input(type='submit', value='submit')
 
 section.form-wrapper
