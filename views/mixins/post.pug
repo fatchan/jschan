@@ -44,7 +44,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						let truncatedMessage = post.mesage;
 						let truncated = false;
 						if (messageLines > 10 || post.message.length > 1000) {
-							truncatedMessage = splitPost.slice(0, 16).join('\n');
+							truncatedMessage = splitPost.slice(0, 10).join('\n');
 							truncated = true;
 						}
 					if truncated

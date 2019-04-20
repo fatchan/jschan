@@ -5,21 +5,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, Bans = require(__dirname+'/../../db/bans.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = async (req, res, next, board, checkedPosts) => {
-
-	const posts = checkedPosts;
-
-	//if user is not logged in or if logged in but not authed, they cannot ban
-	if (!hasPerms(req, res)) {
-		throw {
-			'status': 403,
-			'message': {
-				'title': 'Forbidden',
-				'message': 'You do not have permission to issue bans',
-				'redirect': `/${req.params.board}`
-			}
-		};
-	}
+module.exports = async (req, res, next, board, posts) => {
 
 	const bans = posts.map(post => {
 		return {

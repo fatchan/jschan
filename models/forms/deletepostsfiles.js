@@ -9,34 +9,7 @@ const path = require('path')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = async (req, res, next, checkedPosts) => {
-
-	let posts = checkedPosts;
-
-	//if user is not logged in OR if lgoged in but not authed, filter the posts by passwords that are not null
-	if (!hasPerms(req, res)) {
-		// filter posts by password only if NOT board moderator or owner
-		posts = posts.filter(post => {
-			// only include posts that have a password and that matches
-			return post.password != null
-			&& post.password.length > 0
-			&& post.password == req.body.password
-		});
-		if (posts.length === 0) {
-			throw {
-				'status': 403,
-				'message': {
-					'title': 'Forbidden',
-					'message': 'Password did not match any selected posts',
-					'redirect': `/${req.params.board}`
-				}
-			};
-		}
-	}
-
-	//delete posts from DB
-	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id))
-	const deletedFilesPosts = await Posts.deleteFilesMany(postMongoIds).then(result => result.deletedCount);
+module.exports = async (req, res, next, posts) => {
 
 	//get filenames from all the posts
 	let fileNames = [];
@@ -52,6 +25,10 @@ module.exports = async (req, res, next, checkedPosts) => {
 			unlink(`${uploadDirectory}thumb-${filename.split('.')[0]}.png`)
 		])
 	}));
+
+	//delete posts from DB
+	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id))
+	const deletedFilesPosts = await Posts.deleteFilesMany(postMongoIds).then(result => result.deletedCount);
 
 	//hooray!
 	return `Deleted ${fileNames.length} files across ${deletedFilesPosts} posts`

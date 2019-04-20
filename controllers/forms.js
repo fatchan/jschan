@@ -21,9 +21,13 @@ const express  = require('express')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
-	, hasPerms = require(__dirname+'/../helpers/haspermsmiddleware.js')
+	, checkPermsMiddleware = require(__dirname+'/../helpers/haspermsmiddleware.js')
+	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
 	, numberConverter = require(__dirname+'/../helpers/number-converter.js')
-	, banCheck = require(__dirname+'/../helpers/bancheck.js');
+	, banCheck = require(__dirname+'/../helpers/bancheck.js')
+	, actionChecker = require(__dirname+'/../helpers/actionchecker.js')
+	, actions = ['report', 'global_report', 'spoiler', 'delete', 'delete_file', 'dismiss', 'global_dismiss', 'ban', 'global_ban']
+	, authActions = ['dismiss', 'global_dismiss', 'ban', 'global_ban'];
 
 // login to account
 router.post('/login', (req, res, next) => {
@@ -202,7 +206,7 @@ router.post('/board/:board/post', Boards.exists, banCheck, numberConverter, asyn
 });
 
 //upload banners
-router.post('/board/:board/addbanners', Boards.exists, banCheck, hasPerms, numberConverter, async (req, res, next) => {
+router.post('/board/:board/addbanners', Boards.exists, banCheck, checkPermsMiddleware, numberConverter, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -238,7 +242,7 @@ router.post('/board/:board/addbanners', Boards.exists, banCheck, hasPerms, numbe
 });
 
 //delete banners
-router.post('/board/:board/deletebanners', Boards.exists, banCheck, hasPerms, numberConverter, async (req, res, next) => {
+router.post('/board/:board/deletebanners', Boards.exists, banCheck, checkPermsMiddleware, numberConverter, async (req, res, next) => {
 
 	const errors = [];
 
@@ -278,9 +282,25 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 
 	const errors = [];
 
+	//make sure they checked 1-10 posts
 	if (!req.body.checkedposts || req.body.checkedposts.length === 0 || req.body.checkedposts.length > 10) {
 		errors.push('Must select 1-10 posts')
 	}
+
+	//get what type of actions
+	const { anyPasswords, anyAuthed, anyValid } = actionChecker(req);
+
+	//make sure they selected at least 1 action
+	if (!anyValid) {
+		errors.push('No actions selected')
+	}
+	//check if they have permission to perform the actions
+	const hasPerms = checkPerms(req, res);
+	if(!hasPerms && anyAuthed) {
+		errors.push('No permission')
+	}
+
+	//check that actions are valid
 	if (req.body.password && req.body.password.length > 50) {
 		errors.push('Password must be 50 characters or less');
 	}
@@ -289,17 +309,6 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 	}
 	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
 		errors.push('Ban reason must be 50 characters or less');
-	}
-	if (!(req.body.report
-		|| req.body.global_report
-		|| req.body.spoiler
-		|| req.body.delete
-		|| req.body.delete_file
-		|| req.body.dismiss
-		|| req.body.global_dismiss
-		|| req.body.ban
-		|| req.body.global_ban)) {
-		errors.push('Invalid actions selected')
 	}
 	if (req.body.report && (!req.body.report_reason || req.body.report_reason.length === 0)) {
 		errors.push('Reports must have a reason')
@@ -317,53 +326,61 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 	if (!posts || posts.length === 0) {
 		return res.status(404).render('message', {
 			'title': 'Not found',
-			'errors': 'Selected posts not found',
+			'error': 'Selected posts not found',
 			'redirect': `/${req.params.board}`
 		})
 	}
 
+	let passwordPosts = posts;
+	if (!hasPerms && anyPasswords) {
+		//if any actions require passwords, filter to ones with correct password
+		passwordPosts = posts.filter(post => {
+            return post.password != null
+            && post.password.length > 0
+            && post.password == req.body.password
+        });
+		if (passwordPosts.length === 0) {
+			return res.status(403).render('message', {
+				'title': 'Forbidden',
+				'error': 'Password did not match any selected posts',
+				'redirect': `/${req.params.board}`
+			});
+		}
+	}
+
 	const messages = [];
 	try {
-
-		// if getting global banned, board ban doesnt matter
-		if (req.body.global_ban) {
-			messages.push((await banPoster(req, res, next, null, posts)));
-		} else if (req.body.ban) {
-			messages.push((await banPoster(req, res, next, req.params.board, posts)));
+		if (hasPerms) {
+			// if getting global banned, board ban doesnt matter
+			if (req.body.global_ban) {
+				messages.push((await banPoster(req, res, next, null, posts)));
+			} else if (req.body.ban) {
+				messages.push((await banPoster(req, res, next, req.params.board, posts)));
+			}
 		}
-
-		//ban before deleting
 		if (req.body.delete) {
-			messages.push((await deletePosts(req, res, next, posts)));
+			messages.push((await deletePosts(req, res, next, passwordPosts)));
 		} else {
 			// if it was getting deleted, we cant do any of these
 			if (req.body.delete_file) {
-				messages.push((await deletePostsFiles(req, res, next, posts)));
-			} if (req.body.spoiler) {
-				messages.push((await spoilerPosts(req, res, next, posts)));
+				messages.push((await deletePostsFiles(req, res, next, passwordPosts)));
+			} else if (req.body.spoiler) {
+				messages.push((await spoilerPosts(req, res, next, passwordPosts)));
 			}
 			// cannot report and dismiss at same time
 			if (req.body.report) {
 				messages.push((await reportPosts(req, res, next)));
-			} else if (req.body.dismiss) {
+			} else if (hasPerms && req.body.dismiss) {
 				messages.push((await dismissReports(req, res, next)));
 			}
-
 			// cannot report and dismiss at same time
 			if (req.body.global_report) {
 				messages.push((await globalReportPosts(req, res, next, posts)));
-			} else if (req.body.global_dismiss) {
+			} else if (hasPerms && req.body.global_dismiss) {
 				messages.push((await dismissGlobalReports(req, res, next, posts)));
 			}
 		}
-
 	} catch (err) {
-		//something not right
-		if (err.status) {
-			// return out special error
-			return res.status(err.status).render('message', err.message);
-		}
-		//some other error, use regular error handler
 		return next(err);
 	}
 
@@ -376,7 +393,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 });
 
 //unban
-router.post('/board/:board/unban', Boards.exists, banCheck, hasPerms, numberConverter, async (req, res, next) => {
+router.post('/board/:board/unban', Boards.exists, banCheck, checkPermsMiddleware, numberConverter, async (req, res, next) => {
 
 	//keep this for later in case i add other options to unbans
 	const errors = [];
@@ -397,12 +414,6 @@ router.post('/board/:board/unban', Boards.exists, banCheck, hasPerms, numberConv
 	try {
 		messages.push((await removeBans(req, res, next)));
 	} catch (err) {
-		//something not right
-		if (err.status) {
-			// return out special error
-			return res.status(err.status).render('message', err.message);
-		}
-		//some other error, use regular error handler
 		return next(err);
 	}
 
@@ -414,32 +425,46 @@ router.post('/board/:board/unban', Boards.exists, banCheck, hasPerms, numberConv
 
 });
 
-router.post('/global/actions', hasPerms, numberConverter, async(req, res, next) => {
+router.post('/global/actions', checkPermsMiddleware, numberConverter, async(req, res, next) => {
 
 	const errors = [];
 
+	//make sure they checked 1-10 posts
 	if (!req.body.globalcheckedposts || req.body.globalcheckedposts.length === 0 || req.body.globalcheckedposts.length > 10) {
 		errors.push('Must select 1-10 posts')
+	}
+
+	const { anyGlobal } = actionChecker(req);
+
+	//make sure they selected at least 1 global action
+	if (!anyGlobal) {
+		errors.push('Invalid actions selected');
+	}
+
+	//check that actions are valid
+	if (req.body.password && req.body.password.length > 50) {
+		errors.push('Password must be 50 characters or less');
+	}
+	if (req.body.report_reason && req.body.report_reason.length > 50) {
+		errors.push('Report must be 50 characters or less');
 	}
 	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
 		errors.push('Ban reason must be 50 characters or less');
 	}
-	if (!(req.body.spoiler
-		|| req.body.delete
-		|| req.body.delete_file
-		|| req.body.global_dismiss
-		|| req.body.global_ban)) {
-		errors.push('Invalid actions selected')
+	if (req.body.report && (!req.body.report_reason || req.body.report_reason.length === 0)) {
+		errors.push('Reports must have a reason')
 	}
 
+	//return the errors
 	if (errors.length > 0) {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/globalmanage'
+			'redirect': `/${req.params.board}`
 		})
 	}
 
+	//get posts with global ids only
 	const posts = await Posts.globalGetPosts(req.body.globalcheckedposts, true);
 	if (!posts || posts.length === 0) {
 		return res.status(404).render('message', {
@@ -451,12 +476,10 @@ router.post('/global/actions', hasPerms, numberConverter, async(req, res, next) 
 
 	const messages = [];
 	try {
-
 		//ban before delete
 		if (req.body.global_ban) {
 			messages.push((await banPoster(req, res, next, null, posts)));
 		}
-
 		// if its getting deleted, we cant do anythign else
 		if (req.body.delete) {
 			messages.push((await deletePosts(req, res, next, posts)));
@@ -471,9 +494,7 @@ router.post('/global/actions', hasPerms, numberConverter, async(req, res, next) 
 				messages.push((await dismissGlobalReports(req, res, next, posts)));
 			}
 		}
-
 	} catch (err) {
-		//something not right
 		if (err.status) {
 			// return out special error
 			return res.status(err.status).render('message', err.message);
@@ -490,9 +511,8 @@ router.post('/global/actions', hasPerms, numberConverter, async(req, res, next) 
 
 });
 
-router.post('/global/unban', hasPerms, numberConverter, async(req, res, next) => {
+router.post('/global/unban', checkPermsMiddleware, numberConverter, async(req, res, next) => {
 
-	//TODO
 	const errors = [];
 
 	if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
@@ -511,12 +531,6 @@ router.post('/global/unban', hasPerms, numberConverter, async(req, res, next) =>
 	try {
 		messages.push((await removeBans(req, res, next)));
 	} catch (err) {
-		//something not right
-		if (err.status) {
-			// return out special error
-			return res.status(err.status).render('message', err.message);
-		}
-		//some other error, use regular error handler
 		return next(err);
 	}
 

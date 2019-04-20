@@ -8,6 +8,8 @@ block content
 	ul
 		if message
 			li #{message}
+		if error
+			li #{error}
 		if messages
 			each msg in messages
 				li #{msg}
