@@ -3,20 +3,20 @@
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return post.reports.length > 0
+		return !post.sticky
 	})
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'No report(s) to dismiss'
-		}
+			message: 'Post(s) already stickied',
+		};
 	}
 
 	return {
-		message: 'Dismissed reports',
+		message: `Stickied ${filteredposts.length} post(s)`,
 		action: '$set',
 		query: {
-			'reports': []
+			'sticky': true
 		}
 	};
 

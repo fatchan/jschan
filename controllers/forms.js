@@ -6,6 +6,7 @@ const express  = require('express')
 	, Posts = require(__dirname+'/../db/posts.js')
 	, Trips = require(__dirname+'/../db/trips.js')
 	, Bans = require(__dirname+'/../db/bans.js')
+	, Mongo = require(__dirname+'/../db/db.js')
 	, banPoster = require(__dirname+'/../models/forms/ban-poster.js')
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
@@ -13,6 +14,9 @@ const express  = require('express')
 	, deleteBanners = require(__dirname+'/../models/forms/deletebanners.js')
 	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
 	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
+	, stickyPosts = require(__dirname+'/../models/forms/stickyposts.js')
+	, sagePosts = require(__dirname+'/../models/forms/sageposts.js')
+	, lockPosts = require(__dirname+'/../models/forms/lockposts.js')
 	, deletePostsFiles = require(__dirname+'/../models/forms/deletepostsfiles.js')
 	, reportPosts = require(__dirname+'/../models/forms/report-post.js')
 	, globalReportPosts = require(__dirname+'/../models/forms/globalreportpost.js')
@@ -25,9 +29,7 @@ const express  = require('express')
 	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
 	, numberConverter = require(__dirname+'/../helpers/number-converter.js')
 	, banCheck = require(__dirname+'/../helpers/bancheck.js')
-	, actionChecker = require(__dirname+'/../helpers/actionchecker.js')
-	, actions = ['report', 'global_report', 'spoiler', 'delete', 'delete_file', 'dismiss', 'global_dismiss', 'ban', 'global_ban']
-	, authActions = ['dismiss', 'global_dismiss', 'ban', 'global_ban'];
+	, actionChecker = require(__dirname+'/../helpers/actionchecker.js');
 
 // login to account
 router.post('/login', (req, res, next) => {
@@ -331,14 +333,20 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 		})
 	}
 
-	let passwordPosts = posts;
+	//get the ids
+	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id));
+	let passwordPostMongoIds = [];
+	let passwordPosts = [];
 	if (!hasPerms && anyPasswords) {
-		//if any actions require passwords, filter to ones with correct password
+		//just to avoid multiple filters and mapping, do it all here
 		passwordPosts = posts.filter(post => {
-            return post.password != null
-            && post.password.length > 0
-            && post.password == req.body.password
-        });
+			if (post.password != null
+				&& post.password.length > 0
+				&& post.password == req.body.password) {
+				passwordPostMongoIds.push(Mongo.ObjectId(post._id))
+				return true;
+			}
+		});
 		if (passwordPosts.length === 0) {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
@@ -346,40 +354,116 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 				'redirect': `/${req.params.board}`
 			});
 		}
+	} else {
+		passwordPosts = posts;
+		passwordPostMongoIds = postMongoIds;
 	}
 
 	const messages = [];
+	const combinedQuery = {};
+	const passwordCombinedQuery = {};
 	try {
 		if (hasPerms) {
 			// if getting global banned, board ban doesnt matter
 			if (req.body.global_ban) {
-				messages.push((await banPoster(req, res, next, null, posts)));
+				const { message } = await banPoster(req, res, next, null, posts);
+				messages.push(message);
 			} else if (req.body.ban) {
-				messages.push((await banPoster(req, res, next, req.params.board, posts)));
+				const { message } = await banPoster(req, res, next, req.params.board, posts);
+				messages.push(message);
 			}
 		}
 		if (req.body.delete) {
-			messages.push((await deletePosts(req, res, next, passwordPosts)));
+			const { message } = await deletePosts(req, res, next, passwordPosts);
+			messages.push(message);
 		} else {
 			// if it was getting deleted, we cant do any of these
 			if (req.body.delete_file) {
-				messages.push((await deletePostsFiles(req, res, next, passwordPosts)));
+				const { message, action, query } = await deletePostsFiles(passwordPosts);
+				if (action) {
+					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
+				}
+				messages.push(message);
 			} else if (req.body.spoiler) {
-				messages.push((await spoilerPosts(req, res, next, passwordPosts)));
+				const { message, action, query } = spoilerPosts(passwordPosts);
+				if (action) {
+					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
+				}
+				messages.push(message);
+			}
+			if (hasPerms) {
+				//lock, sticky, sage
+				if (req.body.sage) {
+					const { message, action, query } = sagePosts(posts);
+					if (action) {
+						combinedQuery[action] = { ...combinedQuery[action], ...query}
+					}
+					messages.push(message);
+				}
+				if (req.body.lock) {
+					const { message, action, query } = lockPosts(posts);
+					if (action) {
+						combinedQuery[action] = { ...combinedQuery[action], ...query}
+					}
+					messages.push(message);
+				}
+				if (req.body.sticky) {
+					const { message, action, query } = stickyPosts(posts);
+					if (action) {
+						combinedQuery[action] = { ...combinedQuery[action], ...query}
+					}
+					messages.push(message);
+				}
 			}
 			// cannot report and dismiss at same time
 			if (req.body.report) {
-				messages.push((await reportPosts(req, res, next)));
+				const { message, action, query } = reportPosts(req, posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
+				}
+				messages.push(message);
 			} else if (hasPerms && req.body.dismiss) {
-				messages.push((await dismissReports(req, res, next)));
+				const { message, action, query } = dismissReports(posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
+				}
+				messages.push(message);
 			}
 			// cannot report and dismiss at same time
 			if (req.body.global_report) {
-				messages.push((await globalReportPosts(req, res, next, posts)));
+				const { message, action, query } = globalReportPosts(req, posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
+				}
+				messages.push(message);
 			} else if (hasPerms && req.body.global_dismiss) {
-				messages.push((await dismissGlobalReports(req, res, next, posts)));
+				const { message, action, query } = dismissGlobalReports(posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
+				}
+				messages.push(message);
 			}
 		}
+		const dbPromises = []
+		if (Object.keys(combinedQuery).length > 0) {
+			dbPromises.push(
+				Posts.db.updateMany({
+					'_id': {
+						'$in': postMongoIds
+					}
+				}, combinedQuery)
+			)
+		}
+		if (Object.keys(passwordCombinedQuery).length > 0) {
+			dbPromises.push(
+				Posts.db.updateMany({
+					'_id': {
+						'$in': passwordPostMongoIds
+					}
+				}, passwordCombinedQuery)
+			)
+		}
+		await Promise.all(dbPromises);
 	} catch (err) {
 		return next(err);
 	}
@@ -460,7 +544,7 @@ router.post('/global/actions', checkPermsMiddleware, numberConverter, async(req,
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}`
+			'redirect': '/globalmanage'
 		})
 	}
 
@@ -474,39 +558,48 @@ router.post('/global/actions', checkPermsMiddleware, numberConverter, async(req,
 		})
 	}
 
+	//get the ids
+	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id));
 	const messages = [];
+	const combinedQuery = {};
 	try {
-		//ban before delete
 		if (req.body.global_ban) {
-			messages.push((await banPoster(req, res, next, null, posts)));
+			const { message } = await banPoster(req, res, next, null, posts);
+			messages.push(message);
 		}
-		// if its getting deleted, we cant do anythign else
 		if (req.body.delete) {
-			messages.push((await deletePosts(req, res, next, posts)));
-		} else{
+			const { message } = await deletePosts(req, res, next, posts);
+			messages.push(message);
+		} else {
+			// if it was getting deleted, we cant do any of these
 			if (req.body.delete_file) {
-				messages.push((await deletePostsFiles(req, res, next, posts)));
-			} else if (req.body.spoiler) {
-				// if it was getting deleted, we cant spoiler
-				messages.push((await spoilerPosts(req, res, next, posts)));
+				const { message, action, query } = await deletePostsFiles(posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
+				}
+				messages.push(message);
 			}
 			if (req.body.global_dismiss) {
-				messages.push((await dismissGlobalReports(req, res, next, posts)));
+				const { message, action, query } = dismissGlobalReports(posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
+				}
+				messages.push(message);
 			}
 		}
+		await Posts.db.updateMany({
+			'_id': {
+				'$in': postMongoIds
+			}
+		}, combinedQuery)
 	} catch (err) {
-		if (err.status) {
-			// return out special error
-			return res.status(err.status).render('message', err.message);
-		}
-		//some other error, use regular error handler
 		return next(err);
 	}
 
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': `/${req.params.board}`
+		'redirect': '/globalmanage'
 	});
 
 });

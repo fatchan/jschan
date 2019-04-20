@@ -5,11 +5,8 @@ const path = require('path')
 	, fs = require('fs')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
-	, Mongo = require(__dirname+'/../../db/db.js')
-	, Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = async (req, res, next, posts) => {
+module.exports = async (posts) => {
 
 	//get filenames from all the posts
 	let fileNames = [];
@@ -26,11 +23,18 @@ module.exports = async (req, res, next, posts) => {
 		])
 	}));
 
-	//delete posts from DB
-	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id))
-	const deletedFilesPosts = await Posts.deleteFilesMany(postMongoIds).then(result => result.deletedCount);
+	if (fileNames.length === 0) {
+		return {
+			message: 'No files to delete'
+		}
+	}
 
-	//hooray!
-	return `Deleted ${fileNames.length} files across ${deletedFilesPosts} posts`
+	return {
+		message:`Deleted ${fileNames.length} file(s) across ${posts.length} post(s)`,
+		action:'$set',
+		query: {
+			'files': []
+		}
+	};
 
 }

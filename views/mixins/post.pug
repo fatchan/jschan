@@ -21,6 +21,13 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 			span #{post.date.toLocaleString()}
 			span.user-id(style=`background: #${post.userId}`) #{post.userId}
 			span: a(href=postURL) ##{post.postId}
+			if !post.thread
+				if post.sticky
+					object(data='/img/sticky.svg' width='16' height='16')
+				if post.saged
+					object(data='/img/saged.svg' width='16' height='16')
+				if post.locked
+					object(data='/img/locked.svg' width='16' height='16')
 		.post-data
 			if post.files.length > 0
 				.post-files

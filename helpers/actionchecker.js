@@ -3,6 +3,7 @@
 const actions = [
 	{name:'lock', global:false, auth:true, passwords:false},
 	{name:'sticky', global:false, auth:true, passwords:false},
+	{name:'sage', global:false, auth:true, passwords:false},
 	{name:'report', global:false, auth:false, passwords:false},
 	{name:'global_report', global:false, auth:false, passwords:false},
 	{name:'spoiler', global:true, auth:false, passwords:true},

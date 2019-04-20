@@ -2,7 +2,7 @@
 
 const Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = async (req, res, next) => {
+module.exports = (req, posts) => {
 
 	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
 	const report = {
@@ -11,10 +11,12 @@ module.exports = async (req, res, next) => {
 		'ip': ip
 	}
 
-	//push the report to all checked posts
-	const reportedCount = await Posts.reportMany(req.params.board, req.body.checkedposts, report).then(result => result.modifiedCount);
-
-	//hooray!
-	return `Reported ${reportedCount} posts successfully`
+	return {
+		message: `Reported ${posts.length} post(s)`,
+		action: '$push',
+		query: {
+			'reports': report
+		}
+	};
 
 }
