@@ -142,7 +142,6 @@ module.exports = async (req, res, next, numFiles) => {
 		const matches = req.body.name.match(nameRegex);
 		if (matches && matches.groups) {
 			const groups = matches.groups;
-		console.log(groups)
 			//name
 			if (groups.name) {
 				name = groups.name

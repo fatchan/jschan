@@ -10,11 +10,16 @@ body {
 }
 
 .code {
+	text-align: left;
 	border-left: 10px solid #B7C5D9;
 	display: block;
 	padding-left: 5px;
 	font-family: monospace;
 	margin: 0.5em 0;
+	display: flex;
+	clear: both;
+	overflow-x: auto;
+	white-space: pre;
 }
 
 .pages {
@@ -44,6 +49,7 @@ object {
 	text-decoration: none;
 	color: black;
 	margin-bottom: 5px;
+	overflow: hidden;
 }
 
 .catalog-tile-content {
@@ -119,7 +125,7 @@ blockquote a {
 }
 
 blockquote {
-	word-break: break-all;
+	/*word-break: break-all;*/
 	white-space: pre-wrap;
 }
 
@@ -133,12 +139,16 @@ span {
 	align-items: flex-start;
 }
 
+.action-wrapper {
+	text-align: left;
+}
+
 .form-wrapper {
 	align-items: center;
 	margin: 10px 0;
 }
 
-.actions, .post-container, .pages {
+.post-container, .pages {
 	background: #D6DAF0;
 	border-color: #B7C5D9;
 	border-width: 0 1px 1px 0;
@@ -175,9 +185,9 @@ span {
 	border: 1px solid lightgray;
 	max-width: 100%;
 	box-sizing: border-box;
-	/*-webkit-appearance: button;
-	-moz-appearance: button;
-	appearance: button;*/
+	display: flex;
+	flex-flow: column wrap;
+	width: max-content;
 }
 
 .toggle {
@@ -214,11 +224,15 @@ span {
 .post-files {
 	float: left;
 	margin-right: 10px;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: end;
 }
 
 .post-data {
 	margin-top: -10px;
 	padding-top: 10px;
+	overflow: hidden;
 }
 
 .post-file {
@@ -286,6 +300,7 @@ input textarea {
 .post-message {
 	/*overflow-y: auto;*/
 	/*float: left;*/
+	text-align: left;
 }
 
 .post-container, .ban {
@@ -353,7 +368,6 @@ input textarea {
 	background: #D6DAF0;
 	padding-left: 10px;
 	padding-right: 10px;
-	border-right: 1px solid lightgray;
 }
 
 .left {
@@ -373,11 +387,10 @@ input textarea {
 }
 
 .footer {
-	border-top: 1px solid lightgray;
 	text-align: center;
 	flex-shrink: 0;
 	margin-top: auto;
-	line-height: 50px;
+	line-height: 30px;
 }
 
 input[type="text"], input[type="password"], textarea {
@@ -391,6 +404,8 @@ input[type="text"], input[type="password"], textarea {
 .postform-section {
 	display: flex;
 	margin-bottom: 1px;
+	overflow: hidden;
+	max-width: 100%;
 }
 
 .postform-label {
