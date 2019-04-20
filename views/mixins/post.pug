@@ -23,11 +23,11 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 			span: a(href=postURL) ##{post.postId}
 			if !post.thread
 				if post.sticky
-					object(data='/img/sticky.svg' width='16' height='16')
+					img(src='/img/sticky.svg' height='14')
 				if post.saged
-					object(data='/img/saged.svg' width='16' height='16')
+					img(src='/img/saged.svg' height='12')
 				if post.locked
-					object(data='/img/locked.svg' width='16' height='16')
+					img(src='/img/locked.svg' height='16')
 		.post-data
 			if post.files.length > 0
 				.post-files
