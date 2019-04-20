@@ -5,34 +5,10 @@ const path = require('path')
 	, fs = require('fs')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = async (req, res, next, checkedPosts) => {
-
-	let posts = checkedPosts;
-
-	//if user is not logged in OR if lgoged in but not authed, filter the posts by passwords that are not null
-	if (!hasPerms(req, res)) {
-		// filter posts by password only if NOT board moderator or owner
-		posts = posts.filter(post => {
-			// only include posts that have a password and that matches
-			return post.password != null
-			&& post.password.length > 0
-			&& post.password == req.body.password
-		});
-		if (posts.length === 0) {
-			throw {
-				'status': 403,
-				'message': {
-					'title': 'Forbidden',
-					'message': 'Password did not match any selected posts',
-					'redirect': `/${req.params.board}`
-				}
-			};
-		}
-	}
+module.exports = async (req, res, next, posts) => {
 
 	//filter to threads, then get the board and thread for each 
 	const boardThreads = posts.filter(x => x.thread == null).map(x => {

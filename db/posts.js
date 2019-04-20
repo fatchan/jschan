@@ -46,13 +46,15 @@ module.exports = {
 			//reverse order for board page
 			thread.replies = replies.reverse();
 
-			//count omitted image and posts
-			const numPreviewImages = replies.reduce((acc, post) => {
-				return acc + post.files.length;
-			}, 0);
-			thread.omittedimages = thread.replyimages - numPreviewImages;
-			thread.omittedposts = thread.replyposts - replies.length;
-
+			//temporary mitigation for deletion issue
+			if (replies.length >= 5) {
+				//count omitted image and posts
+				const numPreviewImages = replies.reduce((acc, post) => {
+					return acc + post.files.length;
+				}, 0);
+				thread.omittedimages = thread.replyimages - numPreviewImages;
+				thread.omittedposts = thread.replyposts - replies.length;
+			}
 		}));
 		return threads;
 
@@ -262,6 +264,13 @@ module.exports = {
 				'$exists': true
 			},
 			'board': board
+		}, {
+			'projection': {
+				'salt': 0,
+				'password': 0,
+				'ip': 0,
+				'globalreports': 0,
+			}
 		}).toArray();
 	},
 
@@ -289,7 +298,6 @@ module.exports = {
 				'password': 0,
 				'ip': 0,
 				'reports': 0,
-				'globalreports': 0,
 			}
 		}).toArray();
 	},

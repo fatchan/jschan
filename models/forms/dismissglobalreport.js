@@ -6,17 +6,6 @@ const Mongo = require(__dirname+'/../../db/db.js')
 
 module.exports = async (req, res, next, posts) => {
 
-	if (!hasPerms(req, res)) {
-		throw {
-			'status': 403,
-			'message': {
-				'title': 'Forbidden',
-				'message': 'You are not authorised to dismiss global reports.',
-				'redirect': '/'
-			}
-		};
-	}
-
 	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id))
 	const dismissedCount = await Posts.dismissGlobalReports(postMongoIds).then(result => result.modifiedCount);
 
