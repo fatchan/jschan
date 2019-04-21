@@ -23,7 +23,8 @@ module.exports = {
 				'globalreports': 0,
 			}
 		}).sort({
-			'bumped': -1
+			'sticky': -1,
+			'bumped': -1,
 		}).skip(10*(page-1)).limit(10).toArray();
 
 		// add last 5 posts in reverse order to preview
@@ -198,7 +199,7 @@ module.exports = {
 		}).toArray();
 	},
 
-	insertOne: async (board, data) => {
+	insertOne: async (board, data, thread) => {
 
 		if (data.thread !== null) {
 			//if not a thread, update reply and image count on op document;
@@ -213,7 +214,7 @@ module.exports = {
 				}
 			}
 			// bump thread if name not sage
-			if (data.email !== 'sage') {
+			if (data.email !== 'sage' && !thread.saged) {
 				query['$set'] = {
 					'bumped': Date.now()
 				}
@@ -233,31 +234,6 @@ module.exports = {
 
 	},
 
-	reportMany: (board, ids, report) =>  {
-		return db.updateMany({
-			'postId': {
-				'$in': ids
-			},
-			'board': board
-		}, {
-			'$push': {
-				'reports': report
-			}
-		});
-	},
-
-	globalReportMany: (ids, report) =>  {
-		return db.updateMany({
-			'_id': {
-				'$in': ids
-			},
-		}, {
-			'$push': {
-				'globalreports': report
-			}
-		});
-	},
-
 	getReports: (board) => {
 		return db.find({
 			'reports.0': {
@@ -272,19 +248,6 @@ module.exports = {
 				'globalreports': 0,
 			}
 		}).toArray();
-	},
-
-	dismissReports: (board, ids) => {
-		return db.updateMany({
-			'postId': {
-				'$in': ids
-			},
-			'board': board
-		}, {
-			'$set': {
-				'reports': []
-			}
-		});
 	},
 
 	getGlobalReports: () => {
@@ -302,32 +265,8 @@ module.exports = {
 		}).toArray();
 	},
 
-	dismissGlobalReports: (ids) => {
-		return db.updateMany({
-			'_id': {
-				'$in': ids
-			},
-		}, {
-			'$set': {
-				'globalreports': []
-			}
-		});
-	},
-
 	deleteOne: (board, options) => {
 		return db.deleteOne(options);
-	},
-
-	deleteFilesMany: (ids) => {
-		return db.updateMany({
-			'_id': {
-				'$in': ids
-			}
-		}, {
-			'$set': {
-				'files': []
-			}
-		});
 	},
 
 	deleteMany: (ids) => {
@@ -335,20 +274,6 @@ module.exports = {
 		return db.deleteMany({
 			'_id': {
 				'$in': ids
-			}
-		});
-
-	},
-
-	spoilerMany: (ids) => {
-
-		return db.updateMany({
-			'_id': {
-				'$in': ids
-			}
-		}, {
-			'$set': {
-				'spoiler': true
 			}
 		});
 

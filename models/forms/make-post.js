@@ -19,7 +19,7 @@ const uuidv4 = require('uuid/v4')
 		}
 	}
 	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?:## (?<capcode>[^\s#]+))?$/
-	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
+	, permsCheck = require(__dirname+'/../../helpers/hasperms.js')
 	, fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
 	, imageThumbnail = require(__dirname+'/../../helpers/files/image-thumbnail.js')
@@ -33,8 +33,9 @@ module.exports = async (req, res, next, numFiles) => {
 	// check if this is responding to an existing thread
 	let redirect = `/${req.params.board}`
 	let salt = '';
+	let thread;
+	let hasPerms = permsCheck(req, res);
 	if (req.body.thread) {
-		let thread;
 		try {
 			thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		} catch (err) {
@@ -44,6 +45,13 @@ module.exports = async (req, res, next, numFiles) => {
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Thread does not exist.',
+				'redirect': redirect
+			});
+		}
+		if (thread.locked && !hasPerms) {
+			return res.status(400).render('message', {
+				'title': 'Bad request',
+				'message': 'Thread Locked',
 				'redirect': redirect
 			});
 		}
@@ -151,7 +159,7 @@ module.exports = async (req, res, next, numFiles) => {
 				tripcode = `!!${(await getTripCode(groups.tripcode))}`;
 			}
 			//capcode
-			if (groups.capcode && hasPerms(req, res)) {
+			if (groups.capcode && hasPerms) {
 				// TODO: add proper code for different capcodes
 				capcode = groups.capcode;
 			}
@@ -185,13 +193,17 @@ module.exports = async (req, res, next, numFiles) => {
 		'files': files,
 		'reports': [],
 		'globalreports': [],
+		'sticky': false,
+		'locked': false,
+		'saged': false,
+		'cyclic': false,
 		'replyposts': 0,
 		'replyimages': 0,
 	};
 
 	let postId;
 	try {
-		postId = await Posts.insertOne(req.params.board, data);
+		postId = await Posts.insertOne(req.params.board, data, thread);
 	} catch (err) {
 		return next(err);
 	}

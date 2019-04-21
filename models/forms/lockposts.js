@@ -3,20 +3,20 @@
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return post.reports.length > 0
+		return !post.locked
 	})
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'No report(s) to dismiss'
-		}
+			message: 'Post(s) already locked',
+		};
 	}
 
 	return {
-		message: 'Dismissed reports',
+		message: `Locked ${filteredposts.length} post(s)`,
 		action: '$set',
 		query: {
-			'reports': []
+			'locked': true
 		}
 	};
 

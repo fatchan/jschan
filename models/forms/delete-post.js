@@ -49,6 +49,6 @@ module.exports = async (req, res, next, posts) => {
 	}));
 
 	//hooray!
-	return `Deleted ${boardThreads.length} threads and ${deletedPosts-boardThreads.length} posts`
+	return { message:`Deleted ${boardThreads.length} threads and ${deletedPosts-boardThreads.length} posts` };
 
 }

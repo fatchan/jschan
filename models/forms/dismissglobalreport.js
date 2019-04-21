@@ -1,14 +1,23 @@
 'use strict';
 
-const Mongo = require(__dirname+'/../../db/db.js')
-	, Posts = require(__dirname+'/../../db/posts.js')
-	, hasPerms = require(__dirname+'/../../helpers/hasperms.js');
+module.exports = (posts) => {
 
-module.exports = async (req, res, next, posts) => {
+	const filteredposts = posts.filter(post => {
+		return post.globalreports.length > 0
+	})
 
-	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id))
-	const dismissedCount = await Posts.dismissGlobalReports(postMongoIds).then(result => result.modifiedCount);
+	if (filteredposts.length === 0) {
+		return {
+			message: 'No global report(s) to dismiss'
+		}
+	}
 
-	return `Dismissed ${dismissedCount} reports successfully`;
+	return {
+		message: 'Dismissed global report(s)',
+		action: '$set',
+		query: {
+			'globalreports': []
+		}
+	};
 
 }

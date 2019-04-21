@@ -3,20 +3,20 @@
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return post.reports.length > 0
+		return !post.saged
 	})
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'No report(s) to dismiss'
-		}
+			message: 'Post(s) already saged',
+		};
 	}
 
 	return {
-		message: 'Dismissed reports',
+		message: `Saged ${filteredposts.length} post(s)`,
 		action: '$set',
 		query: {
-			'reports': []
+			'saged': true
 		}
 	};
 

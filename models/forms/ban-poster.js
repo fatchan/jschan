@@ -1,9 +1,6 @@
 'use strict';
 
-const uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, hasPerms = require(__dirname+'/../../helpers/hasperms.js')
-	, Bans = require(__dirname+'/../../db/bans.js')
-	, Posts = require(__dirname+'/../../db/posts.js');
+const Bans = require(__dirname+'/../../db/bans.js')
 
 module.exports = async (req, res, next, board, posts) => {
 
@@ -21,6 +18,6 @@ module.exports = async (req, res, next, board, posts) => {
 
 	const bannedIps = await Bans.insertMany(bans).then(result => result.insertedCount);
 
-	return `Banned ${bannedIps} ips`;
+	return { message:`Banned ${bannedIps} ips` };
 
 }
