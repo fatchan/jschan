@@ -49,18 +49,17 @@ module.exports = {
 
 			//temporary mitigation for deletion issue
 			if (replies.length >= 5) {
-				//count omitted image and posts
-				const counts = await module.exports.getOmitted(board, thread.postId);
+				//cout omitted image and posts
 				const numPreviewImages = replies.reduce((acc, post) => { return acc + post.files.length }, 0);
-				thread.omittedimages = counts[0].images - numPreviewImages;
-				thread.omittedposts = counts[0].posts - replies.length;
+				thread.omittedimages = thread.replyfiles - numPreviewImages;
+				thread.omittedposts = thread.replyposts - replies.length;
 			}
 		}));
 		return threads;
 
 	},
 
-	getOmitted: (board, thread) => {
+	getReplyCounts: (board, thread) => {
 		return db.aggregate([
 			{
 				'$match': {
@@ -70,12 +69,10 @@ module.exports = {
 			}, {
 				'$group': {
 					'_id': null,
-					// omitted posts is number of documents returned
-					'posts': {
+					'replyposts': {
 						'$sum': 1
 					},
-					//files is sum of all length of files arrays
-					'images': {
+					'replyfiles': {
 						'$sum': {
 							'$size': '$files'
 						}
@@ -83,6 +80,18 @@ module.exports = {
 				}
 			}
 		]).toArray();
+	},
+
+	setReplyCounts: (board, thread, replyposts, replyfiles) => {
+		return db.updateOne({
+			'postId': thread,
+			'board': board
+		}, {
+			'$set': {
+				'replyposts': replyposts,
+				'replyfiles': replyfiles,
+			}
+		})
 	},
 
 	getPages: (board) => {
@@ -93,7 +102,6 @@ module.exports = {
 	},
 
 	getThread: async (board, id) => {
-
 		// get thread post and potential replies concurrently
 		const data = await Promise.all([
 			db.findOne({
@@ -111,13 +119,11 @@ module.exports = {
 			}),
 			module.exports.getThreadPosts(board, id)
 		])
-
 		// attach the replies to the thread post
 		const thread = data[0];
 		if (thread) {
 			thread.replies = data[1];
 		}
-
 		return thread;
 
 	},
@@ -225,18 +231,25 @@ module.exports = {
 
 	insertOne: async (board, data, thread) => {
 
-		//if a reply to thread, bump if not sage
 		if (data.thread !== null && data.email !== 'sage' && !thread.saged) {
-			await db.updateOne({
+			const filter = {
 				'postId': data.thread,
 				'board': board
-			}, {
-				'$set': {
-					'bumped':Date.now()
+			}
+			const query = {
+				'$inc': {
+					'replyposts': 1,
+					'replyfiles': data.files.length
 				}
-			});
+			}
+			if (data.email !== 'sage' && !thread.saged) {
+				query['$set'] = {
+					'bumped': Date.now()
+				}
+			}
+			await db.updateOne(filter, query);
 		} else {
-			//this is a new thread, so set the bump date instead
+			//this is a new thread, so set the bump date
 			data.bumped = Date.now()
 		}
 

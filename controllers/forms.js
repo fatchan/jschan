@@ -312,7 +312,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
 		errors.push('Ban reason must be 50 characters or less');
 	}
-	if (req.body.report && (!req.body.report_reason || req.body.report_reason.length === 0)) {
+	if ((req.body.report || req.body.global_report) && (!req.body.report_reason || req.body.report_reason.length === 0)) {
 		errors.push('Reports must have a reason')
 	}
 
@@ -362,6 +362,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 	const messages = [];
 	const combinedQuery = {};
 	const passwordCombinedQuery = {};
+	let aggregateNeeded = false;
 	try {
 		if (hasPerms) {
 			// if getting global banned, board ban doesnt matter
@@ -376,11 +377,13 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 		if (req.body.delete) {
 			const { message } = await deletePosts(req, res, next, passwordPosts);
 			messages.push(message);
+			aggregateNeeded = true;
 		} else {
 			// if it was getting deleted, we cant do any of these
 			if (req.body.delete_file) {
 				const { message, action, query } = await deletePostsFiles(passwordPosts);
 				if (action) {
+					aggregateNeeded = true;
 					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
 				}
 				messages.push(message);
@@ -464,6 +467,20 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 			)
 		}
 		await Promise.all(dbPromises);
+		if (aggregateNeeded) {
+			const threadsToUpdate = [...new Set(posts.filter(post => post.thread !== null))];
+			//recalculate and set correct aggregation numbers again
+			await Promise.all(threadsToUpdate.map(async (post) => {
+				const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
+				let replyposts = 0;
+				let replyfiles = 0;
+				if (replyCounts[0]) {
+					replyposts = replyCounts[0].replyposts;
+					replyfiles = replyCounts[0].replyfiles;
+				}
+				Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
+			}));
+		}
 	} catch (err) {
 		return next(err);
 	}
@@ -562,6 +579,7 @@ router.post('/global/actions', checkPermsMiddleware, numberConverter, async(req,
 	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id));
 	const messages = [];
 	const combinedQuery = {};
+	let aggregateNeeded = false;
 	try {
 		if (req.body.global_ban) {
 			const { message } = await banPoster(req, res, next, null, posts);
@@ -570,11 +588,13 @@ router.post('/global/actions', checkPermsMiddleware, numberConverter, async(req,
 		if (req.body.delete) {
 			const { message } = await deletePosts(req, res, next, posts);
 			messages.push(message);
+			aggregateNeeded = true;
 		} else {
 			// if it was getting deleted, we cant do any of these
 			if (req.body.delete_file) {
 				const { message, action, query } = await deletePostsFiles(posts);
 				if (action) {
+					aggregateNeeded = true;
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
@@ -587,11 +607,27 @@ router.post('/global/actions', checkPermsMiddleware, numberConverter, async(req,
 				messages.push(message);
 			}
 		}
-		await Posts.db.updateMany({
-			'_id': {
-				'$in': postMongoIds
-			}
-		}, combinedQuery)
+		if (Object.keys(combinedQuery).length > 0) {
+			await Posts.db.updateMany({
+				'_id': {
+					'$in': postMongoIds
+				}
+			}, combinedQuery);
+		}
+		if (aggregateNeeded) {
+			const threadsToUpdate = [...new Set(posts.filter(post => post.thread !== null))];
+			//recalculate and set correct aggregation numbers again
+			await Promise.all(threadsToUpdate.map(async (post) => {
+				const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
+				let replyposts = 0;
+				let replyfiles = 0;
+				if (replyCounts[0]) {
+					replyposts = replyCounts[0].replyposts;
+					replyfiles = replyCounts[0].replyfiles;
+				}
+				Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
+			}));
+		}
 	} catch (err) {
 		return next(err);
 	}

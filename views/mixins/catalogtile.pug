@@ -15,7 +15,7 @@ mixin catalogtile(board, post, truncate)
 			header.post-info
 				span: a(href=postURL) ##{post.postId}
 				span Replies: #{post.replyposts}
-				span Images: #{post.replyimages}
+				span Images: #{post.replyfiles}
 			br
 			if post.message
 				blockquote.no-m-p.post-message !{post.message}

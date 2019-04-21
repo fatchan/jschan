@@ -55,6 +55,13 @@ module.exports = async (req, res, next, numFiles) => {
 				'redirect': redirect
 			});
 		}
+		if (thread.replyposts >= 100) { //reply limit
+			return res.status(400).render('message', {
+				'title': 'Bad request',
+				'message': 'Thread reached reply limit',
+				'redirect': redirect
+			});
+		}
 		salt = thread.salt;
 		redirect += `/thread/${req.body.thread}`
 	}
@@ -193,6 +200,8 @@ module.exports = async (req, res, next, numFiles) => {
 		'files': files,
 		'reports': [],
 		'globalreports': [],
+		'replyposts': 0,
+		'replyfiles': 0,
 		'sticky': false,
 		'locked': false,
 		'saged': false,

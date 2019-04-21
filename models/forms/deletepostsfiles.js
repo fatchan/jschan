@@ -14,6 +14,12 @@ module.exports = async (posts) => {
 		fileNames = fileNames.concat(post.files.map(x => x.filename))
 	})
 
+	if (fileNames.length === 0) {
+		return {
+			message: 'No files to delete'
+		}
+	}
+
 	//delete all the files using the filenames
 	await Promise.all(fileNames.map(async filename => {
 		//dont question it.
@@ -22,12 +28,6 @@ module.exports = async (posts) => {
 			unlink(`${uploadDirectory}thumb-${filename.split('.')[0]}.png`)
 		])
 	}));
-
-	if (fileNames.length === 0) {
-		return {
-			message: 'No files to delete'
-		}
-	}
 
 	return {
 		message:`Deleted ${fileNames.length} file(s) across ${posts.length} post(s)`,
