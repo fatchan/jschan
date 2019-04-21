@@ -148,7 +148,7 @@ span {
 	margin: 10px 0;
 }
 
-.post-container, .pages {
+.post-container, .pages, .toggle-label {
 	background: #D6DAF0;
 	border-color: #B7C5D9;
 	border-width: 0 1px 1px 0;
@@ -170,7 +170,7 @@ span {
 }
 
 .actions label {
-	margin: 2px 0;
+	padding: 2px 0;
 }
 
 .toggle-label:hover {
@@ -178,11 +178,8 @@ span {
 }
 
 .toggle-label {
-	background: #D6DAF0;
 	padding: 10px;
-	border-radius: 3px;
 	text-align: center;
-	border: 1px solid lightgray;
 	max-width: 100%;
 	box-sizing: border-box;
 	display: flex;
