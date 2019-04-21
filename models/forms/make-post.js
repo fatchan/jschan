@@ -196,7 +196,6 @@ module.exports = async (req, res, next, numFiles) => {
 		'sticky': false,
 		'locked': false,
 		'saged': false,
-		'cyclic': false,
 	};
 
 	let postId;

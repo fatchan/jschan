@@ -3,12 +3,12 @@
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return !post.saged
+		return !post.thread && !post.saged
 	})
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'Post(s) already saged',
+			message: 'No thread(s) to sage',
 		};
 	}
 

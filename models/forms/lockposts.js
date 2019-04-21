@@ -3,12 +3,12 @@
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return !post.locked
+		return !post.thread && !post.locked
 	})
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'Post(s) already locked',
+			message: 'No thread(s) to lock',
 		};
 	}
 

@@ -3,12 +3,12 @@
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return !post.sticky
+		return !post.thread && !post.sticky
 	})
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'Post(s) already stickied',
+			message: 'No thread(s) to sticky',
 		};
 	}
 
