@@ -197,8 +197,6 @@ module.exports = async (req, res, next, numFiles) => {
 		'locked': false,
 		'saged': false,
 		'cyclic': false,
-		'replyposts': 0,
-		'replyimages': 0,
 	};
 
 	let postId;
