@@ -54,7 +54,6 @@ module.exports = async (board, text) => {
 
 	//get all the posts from quotes
 	const posts = await Posts.getPostsForQuotes(queryOrs);
-
 	//if none of the quotes were real, dont do a replace
 	if (posts.length === 0) {
 		return text;
@@ -71,22 +70,26 @@ module.exports = async (board, text) => {
 	}
 
 	//then replace the quotes with only ones that exist
-	text = text.replace(quoteRegex, (match) => {
-		const quotenum = +match.substring(2);
-		if (postThreadIdMap[quotenum]) {
-			return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum]}#${quotenum}'>&gt;&gt;${quotenum}</a>`;
-		}
-		return match;
-	});
-	text = text.replace(crossQuoteRegex, (match) => {
-		const quote = match.split('/');
-		const quoteboard = quote[1];
-		const quotenum = +quote[2];
-		if (postThreadIdMap[quoteboard] && postThreadIdMap[quoteboard][quotenum]) {
-			return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum]}#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
-		}
-		return match;
-	});
+	if (quotes) {
+		text = text.replace(quoteRegex, (match) => {
+			const quotenum = +match.substring(2);
+			if (postThreadIdMap[board] && postThreadIdMap[board][quotenum]) {
+				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum]}#${quotenum}'>&gt;&gt;${quotenum}</a>`;
+			}
+			return match;
+		});
+	}
+	if (crossQuotes) {
+		text = text.replace(crossQuoteRegex, (match) => {
+			const quote = match.split('/');
+			const quoteboard = quote[1];
+			const quotenum = +quote[2];
+			if (postThreadIdMap[quoteboard] && postThreadIdMap[quoteboard][quotenum]) {
+				return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum]}#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
+			}
+			return match;
+		});
+	}
 
 	return text;
 
