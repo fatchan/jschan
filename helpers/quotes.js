@@ -1,41 +1,89 @@
 'use strict';
 
 const Posts = require(__dirname+'/../db/posts.js')
-	, quoteRegex = />>\d+/gm;
+	, Boards = require(__dirname+'/../db/posts.js')
+	, quoteRegex = />>\d+/g
+	, crossQuoteRegex = />>>\/\w+\/\d+/g;
 
 module.exports = async (board, text) => {
 
 	//get the matches
-	const matches = text.match(quoteRegex);
-	if (!matches) {
+	const quotes = text.match(quoteRegex);
+	const crossQuotes = text.match(crossQuoteRegex);
+	if (!quotes && !crossQuotes) {
 		return text;
 	}
 
-	//get all the Ids
-	const quoteIds = matches.map(x => +x.substring(2));
-
-	//get all posts with those Ids 
-	const posts = await Posts.getPosts(board, quoteIds, false);
-
-	//turn the result into a map of postId => threadId/postId
-	const postThreadObject = {};
-	let validQuotes = 0;
-	for (let i = 0; i < posts.length; i++) {
-		const post = posts[i];
-		postThreadObject[post.postId] = post.thread || post.postId;
-		validQuotes++;
+	//make query for db including crossquotes
+	const queryOrs = []
+	const crossQuoteMap = {};
+	if (quotes) {
+		const quoteIds = quotes.map(q => +q.substring(2));
+		queryOrs.push({
+			'board': board,
+			'postId': {
+				'$in': quoteIds
+			}
+		});
 	}
+	if (crossQuotes) {
+		for (let i = 0; i < crossQuotes.length; i++) {
+			const crossQuote = crossQuotes[i].split('/');
+			const crossQuoteBoard = crossQuote[1];
+			const crossQuotePostId = +crossQuote[2];
+			if (crossQuoteBoard === board) {
+				continue;
+			}
+			if (!crossQuoteMap[crossQuoteBoard]) {
+				crossQuoteMap[crossQuoteBoard] = [];
+			}
+			crossQuoteMap[crossQuoteBoard].push(crossQuotePostId);
+		}
+		const crossQuoteBoards = Object.keys(crossQuoteMap)
+		for (let i = 0; i < crossQuoteBoards.length; i++) {
+			const crossQuoteBoard = crossQuoteBoards[i];
+			const crossQuoteBoardPostIds = crossQuoteMap[crossQuoteBoard];
+			queryOrs.push({
+				'board': crossQuoteBoard,
+				'postId': {
+					'$in': crossQuoteBoardPostIds
+				}
+			})
+		}
+	}
+
+	//get all the posts from quotes
+	const posts = await Posts.getPostsForQuotes(queryOrs);
 
 	//if none of the quotes were real, dont do a replace
-	if (validQuotes === 0) {
+	if (posts.length === 0) {
 		return text;
+	}
+
+	//turn the result into a map of postId => threadId/postId
+	const postThreadIdMap = {};
+	for (let i = 0; i < posts.length; i++) {
+		const post = posts[i];
+		if (!postThreadIdMap[post.board]) {
+			postThreadIdMap[post.board] = {};
+		}
+		postThreadIdMap[post.board][post.postId] = post.thread || post.postId;
 	}
 
 	//then replace the quotes with only ones that exist
 	text = text.replace(quoteRegex, (match) => {
 		const quotenum = +match.substring(2);
-		if (postThreadObject[quotenum]) {
-			return `<a class='quote' href='/${board}/thread/${postThreadObject[quotenum]}#${quotenum}'>&gt;&gt;${quotenum}</a>`;
+		if (postThreadIdMap[quotenum]) {
+			return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum]}#${quotenum}'>&gt;&gt;${quotenum}</a>`;
+		}
+		return match;
+	});
+	text = text.replace(crossQuoteRegex, (match) => {
+		const quote = match.split('/');
+		const quoteboard = quote[1];
+		const quotenum = +quote[2];
+		if (postThreadIdMap[quoteboard] && postThreadIdMap[quoteboard][quotenum]) {
+			return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum]}#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
 		}
 		return match;
 	});

@@ -220,6 +220,19 @@ module.exports = {
 
 	},
 
+	// get only thread and post id for use in quotes
+	getPostsForQuotes: (queryOrs) => {
+		return db.find({
+			'$or': queryOrs
+		}, {
+			'projection': {
+				'postId': 1,
+				'board': 1,
+				'thread': 1,
+			}
+		}).limit(15).toArray(); //limit 15 quotes for now.
+	},
+
 	//takes array "ids" of mongo ids to get posts from any board
 	globalGetPosts: (ids) => {
 		return db.find({
