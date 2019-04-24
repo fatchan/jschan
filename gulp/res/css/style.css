@@ -1,7 +1,7 @@
 body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
-	background: #EEF2FF;
+	background: #EEF2FF url('/img/bg.png') repeat-x 50% 0%;;
 	flex: 1;
 	display: flex;
 	flex-direction: column;
@@ -130,7 +130,7 @@ blockquote {
 }
 
 span {
-	margin-right: 5px;
+	/*margin-right: 5px;*/
 }
 
 .thread, .action-wrapper, .form-wrapper {
@@ -354,15 +354,10 @@ input textarea {
 	margin-top: -2px;
 }
 
-.navbar {
-	border-bottom: 1px solid lightgray;
-}
-
 .nav-item {
-	line-height: 50px;
+	line-height: 30px;
 	text-decoration: none;
 	float: left;
-	background: #D6DAF0;
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -390,12 +385,18 @@ input textarea {
 	line-height: 30px;
 }
 
-input[type="text"], input[type="password"], textarea {
+input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {
 	border: 1px solid #a9a9a9;
 	font-size: inherit;
 	font-family: arial,helvetica,sans-serif;
 	margin: 0;
 	flex-grow: 1;
+	border-radius: 0px;
+	min-height: 29px;
+}
+
+input[type="file"] {
+	border: none;
 }
 
 .postform-section {
@@ -466,7 +467,7 @@ hr {
 
 	.post-info {
 		background-color: #B7C5D9;
-		width: 100%;
+		/*width: 100%;*/
 	}
 
 }

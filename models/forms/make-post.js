@@ -111,6 +111,8 @@ module.exports = async (req, res, next, numFiles) => {
 					case 'video':
 						//video metadata
 						const videoData = await videoIdentify(filename);
+						processedFile.duration = videoData.format.duration;
+						processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
 						processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
 						processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 						processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string

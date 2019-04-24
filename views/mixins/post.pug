@@ -6,9 +6,18 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 				input.post-check(type='checkbox', name='globalcheckedposts[]' value=post._id)
 			else
 				input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
-			|
+			|	
+			if !post.thread
+				if post.sticky
+					img(src='/img/sticky.svg' height='12')
+				if post.saged
+					img(src='/img/saged.svg' height='12')
+				if post.locked
+					img(src='/img/locked.svg' height='12')
+			| 
 			if post.subject
 				span.post-subject #{post.subject}
+			| 
 			if post.email
 				a(href=`mailto:${post.email}`)
 					span.post-name #{post.name}
@@ -18,16 +27,12 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 				span.post-tripcode #{post.tripcode}
 			if post.capcode
 				span.post-capcode #{post.capcode}
+			| 
 			span #{post.date.toLocaleString()}
+			| 
 			span.user-id(style=`background: #${post.userId}`) #{post.userId}
+			| 
 			span: a(href=postURL) ##{post.postId}
-			if !post.thread
-				if post.sticky
-					img(src='/img/sticky.svg' height='14')
-				if post.saged
-					img(src='/img/saged.svg' height='12')
-				if post.locked
-					img(src='/img/locked.svg' height='16')
 		.post-data
 			if post.files.length > 0
 				.post-files
@@ -36,7 +41,11 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 							small.post-file-info
 								span: a(href='/img/'+file.filename title=file.originalFilename download=file.originalFilename) Download
 								br
-								span (#{file.sizeString} #{file.geometryString})
+								span 
+									| (#{file.sizeString}, #{file.geometryString}
+									if file.durationString
+										| , #{file.durationString}
+									| )
 							.post-file-src
 								a(target='_blank' href='/img/'+file.filename)
 									if post.spoiler

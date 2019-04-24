@@ -33,7 +33,7 @@ const express  = require('express')
 			files: 3
 		},
 		abortOnLimit: true,
-		useTempFile: true,
+		useTempFiles: true,
 		tempFileDir: path.join(__dirname+'/tmp/')
 	}));
 

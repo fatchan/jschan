@@ -164,9 +164,9 @@ router.post('/board/:board/post', Boards.exists, banCheck, numberConverter, asyn
 	let numFiles = 0;
 	if (req.files && req.files.file) {
 		if (Array.isArray(req.files.file)) {
-			numFiles = req.files.file.length;
+			numFiles = req.files.file.filter(file => file.size > 0).length;
 		} else {
-			numFiles = 1;
+			numFiles = req.files.file.size > 0 ? 1 : 0;
 			req.files.file = [req.files.file];
 		}
 	}
@@ -213,9 +213,9 @@ router.post('/board/:board/addbanners', Boards.exists, banCheck, checkPermsMiddl
 	let numFiles = 0;
 	if (req.files && req.files.file) {
 		if (Array.isArray(req.files.file)) {
-			numFiles = req.files.file.length;
+			numFiles = req.files.file.filter(file => file.size > 0).length;
 		} else {
-			numFiles = 1;
+			numFiles = req.files.file.size > 0 ? 1 : 0;
 			req.files.file = [req.files.file];
 		}
 	}
