@@ -5,7 +5,7 @@ const ffmpeg = require('fluent-ffmpeg')
 module.exports = (filename) => {
 
 	return new Promise((resolve, reject) => {
-		ffmpeg(uploadDirectory + filename)
+		ffmpeg(`${uploadDirectory}img/${filename}`)
 		.on('end', () => {
 			return resolve();
 		})
@@ -13,7 +13,7 @@ module.exports = (filename) => {
 			timestamps: [0],
 			count: 1,
 			filename: `thumb-${filename.split('.')[0]}.png`,
-			folder: uploadDirectory,
+			folder: `${uploadDirectory}img/`,
 			size: '128x?'
 		});
 	});

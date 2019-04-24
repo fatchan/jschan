@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
 	const redirect = `/${req.params.board}/manage`
 
 	await Promise.all(req.body.checkedbanners.map(async filename => {
-		unlink(uploadDirectory + filename);
+		unlink(`${uploadDirectory}banner/${filename}`);
 	}));
 
 	// i dont think there is a way to get the number of array items removed with $pullAll 

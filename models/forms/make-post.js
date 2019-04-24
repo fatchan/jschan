@@ -88,7 +88,7 @@ module.exports = async (req, res, next, numFiles) => {
 			try {
 
 				//upload file
-				await fileUpload(req, res, file, filename);
+				await fileUpload(req, res, file, filename, 'img');
 
 				//get metadata
 				let processedFile = {
@@ -102,7 +102,7 @@ module.exports = async (req, res, next, numFiles) => {
 				const mainType = file.mimetype.split('/')[0];
 				switch (mainType) {
 					case 'image':
-						const imageData = await imageIdentify(filename);
+						const imageData = await imageIdentify(filename, 'img');
 						processedFile.geometry = imageData.size // object with width and height pixels
 						processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 						processedFile.geometryString = imageData.Geometry // 123 x 123 string

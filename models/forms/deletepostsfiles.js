@@ -24,8 +24,8 @@ module.exports = async (posts) => {
 	await Promise.all(fileNames.map(async filename => {
 		//dont question it.
 		return Promise.all([
-			unlink(uploadDirectory + filename),
-			unlink(`${uploadDirectory}thumb-${filename.split('.')[0]}.png`)
+			unlink(`${uploadDirectory}img/${filename}`),
+			unlink(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.png`)
 		])
 	}));
 

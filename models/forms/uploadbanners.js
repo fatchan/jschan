@@ -35,12 +35,12 @@ module.exports = async (req, res, next, numFiles) => {
 		// try to save
 		try {
 			//upload it
-			await fileUpload(req, res, file, filename);
-			const imageData = await imageIdentify(filename);
+			await fileUpload(req, res, file, filename, 'banner');
+			const imageData = await imageIdentify(filename, 'banner');
 			const geometry = imageData.size;
 			//make sure its 300x100 banner
 			if (geometry.width !== 300 || geometry.height !== 100) {
-				await deleteFailedFiles(filenames);
+				await deleteFailedFiles(filenames, 'banner');
 				return res.status(400).render('message', {
 					'title': 'Bad request',
 					'message': `Invalid file ${file.name}. Banners must be 300x100.`,
@@ -49,7 +49,7 @@ module.exports = async (req, res, next, numFiles) => {
 			}
 		} catch (err) {
 			//TODO: this better
-			await deleteFailedFiles(filenames);
+			await deleteFailedFiles(filenames, 'banner');
 			return next(err);
 		}
 	}

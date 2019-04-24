@@ -22,6 +22,6 @@ module.exports = async (req, res, next) => {
 
 	const randomBanner = board.banners[Math.floor(Math.random()*board.banners.length)];
 
-	return res.redirect(`/img/${randomBanner}`);
+	return res.redirect(`/banner/${randomBanner}`);
 
 }

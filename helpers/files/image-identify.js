@@ -2,10 +2,10 @@ const gm = require('@tohru/gm')
 	, configs = require(__dirname+'/../../configs/main.json')
 	, uploadDirectory = require(__dirname+'/../uploadDirectory.js');
 
-module.exports = (filename) => {
+module.exports = (filename, folder) => {
 
 	return new Promise((resolve, reject) => {
-		gm(uploadDirectory + filename)
+		gm(`${uploadDirectory}${folder}/${filename}`)
 			.identify(function (err, data) {
 				if (err) {
 					return reject(err);

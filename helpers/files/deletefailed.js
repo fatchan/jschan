@@ -6,10 +6,10 @@ const path = require('path')
 	, unlink = util.promisify(fs.unlink)
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
-module.exports = async (filenames) => {
+module.exports = async (filenames, folder) => {
 
 	await Promise.all(filenames.map(async filename => {
-		unlink(uploadDirectory + filename)
+		unlink(`${uploadDirectory}${folder}/${filename}`)
 	}));
 
 }
