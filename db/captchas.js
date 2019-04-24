@@ -18,6 +18,13 @@ module.exports = {
 		});
 	},
 
+	findOneAndDelete: (id, text) => {
+		return db.findOneAndDelete({
+			'_id': id,
+			'text': text
+		});
+	},
+
 	deleteAll: () => {
 		return db.deleteMany({});
 	},

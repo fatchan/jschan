@@ -23,17 +23,18 @@ module.exports = async (req, res, next) => {
         });
 	}
 
+
 	// try to get the captcha from the DB
 	let captcha;
 	try {
 		const captchaMongoId = Mongo.ObjectId(captchaId);
-		captcha = await Captchas.findOne(captchaMongoId);
+		captcha = await Captchas.findOneAndDelete(captchaMongoId, input);
 	} catch (err) {
 		return next(err);
 	}
 
 	//check that it exists and matches captcha in DB
-	if (!captcha || captcha.text !== input) {
+	if (!captcha || !captcha.value || captcha.value.text !== input) {
 		return res.status(403).render('message', {
             'title': 'Forbidden',
             'message': 'Incorrect captcha'

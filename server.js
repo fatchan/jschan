@@ -53,7 +53,7 @@ const express  = require('express')
 	// use pug view engine
 	app.set('view engine', 'pug');
 	app.set('views', path.join(__dirname, 'views/pages'));
-//	app.enable('view cache');
+	app.enable('view cache');
 
 	// routes
 	app.use('/forms', require(__dirname+'/controllers/forms.js'))

@@ -416,8 +416,8 @@ input[type="file"] {
 }
 
 .captcha {
-	margin: auto;
 	margin-bottom: 1px;
+	border: 1px solid #a9a9a9;
 }
 
 .postform-label {
