@@ -2,7 +2,7 @@ extends ../layout.pug
 include ../mixins/post.pug
 
 block head
-	title /#{board._id}/ - #{thread.subject}
+	title /#{board._id}/ #{thread.subject||thread.postId}
 	meta(property='og:site_name', value='fatchan')
 	meta(property='og:title', content=thread.subject)
 	meta(property='og:url', content='https://fatpeople.lol')
