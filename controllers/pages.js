@@ -5,7 +5,7 @@ const express  = require('express')
 	, Boards = require(__dirname+'/../db/boards.js')
 	, hasPerms = require(__dirname+'/../helpers/haspermsmiddleware.js')
 	, isLoggedIn = require(__dirname+'/../helpers/isloggedin.js')
-	, numberConverter = require(__dirname+'/../helpers/number-converter.js')
+	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	//page models
 	, home = require(__dirname+'/../models/pages/home.js')
 	, register = require(__dirname+'/../models/pages/register.js')
@@ -15,6 +15,8 @@ const express  = require('express')
 	, login = require(__dirname+'/../models/pages/login.js')
 	, board = require(__dirname+'/../models/pages/board.js')
 	, catalog = require(__dirname+'/../models/pages/catalog.js')
+	, banners = require(__dirname+'/../models/pages/banners.js')
+	, captcha = require(__dirname+'/../models/pages/captcha.js')
 	, thread = require(__dirname+'/../models/pages/thread.js');
 
 //homepage with board list
@@ -42,6 +44,12 @@ router.get('/logout', isLoggedIn, (req, res, next) => {
 
 });
 
+// get captcha
+router.get('/captcha', captcha);
+
+// random board banner
+router.get('/banners', banners);
+
 //board manage page
 router.get('/:board/manage', Boards.exists, isLoggedIn, hasPerms, manage);
 
@@ -49,10 +57,10 @@ router.get('/:board/manage', Boards.exists, isLoggedIn, hasPerms, manage);
 router.get('/globalmanage', isLoggedIn, hasPerms, globalManage);
 
 // board page/recents
-router.get('/:board', Boards.exists, numberConverter, board);
+router.get('/:board', Boards.exists, paramConverter, board);
 
 // thread view page
-router.get('/:board/thread/:id(\\d+)', Boards.exists, numberConverter, thread);
+router.get('/:board/thread/:id(\\d+)', Boards.exists, paramConverter, thread);
 
 // board catalog page
 router.get('/:board/catalog', Boards.exists, catalog);

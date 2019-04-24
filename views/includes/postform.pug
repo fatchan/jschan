@@ -26,7 +26,9 @@ section.form-wrapper
 					| Spoiler
 		section.postform-section
 			.postform-label Captcha
-			input#captcha(type='text', name='captcha', autocomplete='off' placeholder='under construction' maxlength='6')
+			span.postform-data
+				img.captcha(src='/captcha' width=200 height=80)
+				input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6')
 				
 		input(type='submit', value='submit')
 

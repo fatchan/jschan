@@ -14,7 +14,10 @@ const Mongo = require(__dirname+'/db/db.js')
 		, Posts = require(__dirname+'/db/posts.js')
 		, Bans = require(__dirname+'/db/bans.js')
 		, Trips = require(__dirname+'/db/trips.js')
+		, Captchas = require(__dirname+'/db/captchas.js')
 		, Accounts = require(__dirname+'/db/accounts.js');
+	console.log('deleting captchas')
+	await Captchas.deleteAll();
 	console.log('deleting accounts')
 	await Accounts.deleteAll();
 	console.log('deleting posts')
@@ -47,6 +50,8 @@ const Mongo = require(__dirname+'/db/db.js')
 	console.log('creating indexes')
 	await Bans.db.dropIndexes();
 	await Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 });
+	await Captchas.db.dropIndexes();
+	await Captchas.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 });
 	await Posts.db.dropIndexes();
 	//these are fucked
 	await Posts.db.createIndex({

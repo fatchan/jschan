@@ -41,6 +41,8 @@ object {
 	align-items: center;
 }
 
+
+
 .catalog-tile-button {
 	width: 100%;
 	line-height: 30px;
@@ -150,9 +152,7 @@ span {
 
 .post-container, .pages, .toggle-label {
 	background: #D6DAF0;
-	border-color: #B7C5D9;
-	border-width: 0 1px 1px 0;
-	border-style: none solid solid none;
+	border: 1px solid #B7C5D9;
 }
 
 .actions {
@@ -392,7 +392,10 @@ input[type="text"], input[type="submit"], input[type="password"], input[type="fi
 	margin: 0;
 	flex-grow: 1;
 	border-radius: 0px;
-	min-height: 29px;
+}
+
+input[type="submit"] {
+	min-height: 30px;
 }
 
 input[type="file"] {
@@ -404,6 +407,17 @@ input[type="file"] {
 	margin-bottom: 1px;
 	overflow: hidden;
 	max-width: 100%;
+}
+
+.postform-data {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.captcha {
+	margin: auto;
+	margin-bottom: 1px;
 }
 
 .postform-label {
@@ -424,8 +438,6 @@ input[type="file"] {
 
 hr {
 	color: lightgray;
-	/*border-top: 1px solid black;
-	background: lightgray;*/
 }
 
 @media only screen and (max-width: 800px) {
@@ -454,7 +466,6 @@ hr {
 
 	.post-container {
 		width: 100%;
-		border: none;
 	}
 
 	.catalog-tile {
@@ -467,7 +478,6 @@ hr {
 
 	.post-info {
 		background-color: #B7C5D9;
-		/*width: 100%;*/
 	}
 
 }

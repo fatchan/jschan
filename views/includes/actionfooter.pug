@@ -44,4 +44,8 @@ label.toggle-label Toggle Post Actions
 				| Show Post In Ban
 			label
 				input#report(type='text', name='ban_reason', placeholder='ban reason' autocomplete='off')
+		.actions
+			h4.no-m-p Captcha:
+			img.captcha(src='/captcha' width=200 height=80)
+			input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6')
 		input(type='submit', value='submit')

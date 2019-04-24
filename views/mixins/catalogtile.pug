@@ -14,7 +14,9 @@ mixin catalogtile(board, post, truncate)
 							object.catalog-thumb(data=`/img/thumb-${post.files[0].filename.split('.')[0]}.png` width='64' height='64')
 			header.post-info
 				span: a(href=postURL) ##{post.postId}
+				| 
 				span Replies: #{post.replyposts}
+				| 
 				span Images: #{post.replyfiles}
 			br
 			if post.message

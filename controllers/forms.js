@@ -4,6 +4,7 @@ const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db/boards.js')
 	, Posts = require(__dirname+'/../db/posts.js')
+	, Captchas = require(__dirname+'/../db/captchas.js')
 	, Trips = require(__dirname+'/../db/trips.js')
 	, Bans = require(__dirname+'/../db/bans.js')
 	, Mongo = require(__dirname+'/../db/db.js')
@@ -27,8 +28,9 @@ const express  = require('express')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
 	, checkPermsMiddleware = require(__dirname+'/../helpers/haspermsmiddleware.js')
 	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
-	, numberConverter = require(__dirname+'/../helpers/number-converter.js')
+	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, banCheck = require(__dirname+'/../helpers/bancheck.js')
+	, verifyCaptcha = require(__dirname+'/../helpers/captchaverify.js')
 	, actionChecker = require(__dirname+'/../helpers/actionchecker.js');
 
 // login to account
@@ -117,7 +119,7 @@ router.post('/changepassword', async (req, res, next) => {
 });
 
 //register account
-router.post('/register', (req, res, next) => {
+router.post('/register', verifyCaptcha, (req, res, next) => {
 
 	const errors = [];
 
@@ -159,7 +161,7 @@ router.post('/register', (req, res, next) => {
 });
 
 // make new post
-router.post('/board/:board/post', Boards.exists, banCheck, numberConverter, async (req, res, next) => {
+router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verifyCaptcha, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -208,7 +210,7 @@ router.post('/board/:board/post', Boards.exists, banCheck, numberConverter, asyn
 });
 
 //upload banners
-router.post('/board/:board/addbanners', Boards.exists, banCheck, checkPermsMiddleware, numberConverter, async (req, res, next) => {
+router.post('/board/:board/addbanners', Boards.exists, banCheck, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -244,7 +246,7 @@ router.post('/board/:board/addbanners', Boards.exists, banCheck, checkPermsMiddl
 });
 
 //delete banners
-router.post('/board/:board/deletebanners', Boards.exists, banCheck, checkPermsMiddleware, numberConverter, async (req, res, next) => {
+router.post('/board/:board/deletebanners', Boards.exists, banCheck, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	const errors = [];
 
@@ -280,7 +282,7 @@ router.post('/board/:board/deletebanners', Boards.exists, banCheck, checkPermsMi
 });
 
 //report/delete/spoiler/ban
-router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, async (req, res, next) => {
+router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, verifyCaptcha, async (req, res, next) => {
 
 	const errors = [];
 
@@ -494,7 +496,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, numberConverter, a
 });
 
 //unban
-router.post('/board/:board/unban', Boards.exists, banCheck, checkPermsMiddleware, numberConverter, async (req, res, next) => {
+router.post('/board/:board/unban', Boards.exists, banCheck, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	//keep this for later in case i add other options to unbans
 	const errors = [];
@@ -526,7 +528,7 @@ router.post('/board/:board/unban', Boards.exists, banCheck, checkPermsMiddleware
 
 });
 
-router.post('/global/actions', checkPermsMiddleware, numberConverter, async(req, res, next) => {
+router.post('/global/actions', checkPermsMiddleware, paramConverter, async(req, res, next) => {
 
 	const errors = [];
 
@@ -640,7 +642,7 @@ router.post('/global/actions', checkPermsMiddleware, numberConverter, async(req,
 
 });
 
-router.post('/global/unban', checkPermsMiddleware, numberConverter, async(req, res, next) => {
+router.post('/global/unban', checkPermsMiddleware, paramConverter, async(req, res, next) => {
 
 	const errors = [];
 

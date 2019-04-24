@@ -1,6 +1,4 @@
 const gm = require('@tohru/gm')
-	, crypto = require('crypto')
-	, fs = require('fs')
 	, rr = (min, max) => Math.floor(Math.random() * (max-min + 1) + min)
 	, width = 200
 	, height = 80;
@@ -14,9 +12,9 @@ function getShape() {
 	return { x1, x2, y1, y2 };
 }
 
-module.exports = () => {
+module.exports = (text, captchaId) => {
 	return new Promise((resolve, reject) => {
-		const text = crypto.randomBytes(20).toString('hex').substring(0,6).split('')
+		text = text.split(''); //array of chars
 		const x = gm(200, 80, '#fff')
 		.fill('#000')
 		.fontSize(80)
@@ -31,7 +29,7 @@ module.exports = () => {
 		x.wave(10, rr(50,80))
 		.blur(1, 2)
 		.crop(200, 80, 0, 0)
-		.write('./static/img/captcha.jpg', (err) => {
+		.write(`./uploads/captcha/${captchaId}.png`, (err) => {
 			if (err) {
 				return reject();
 			}

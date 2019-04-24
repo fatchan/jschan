@@ -1,4 +1,6 @@
 node_modules/
 configs/*.json
 uploads/img/*
+uploads/captcha/*
 gulp/dist/
+tmp/
