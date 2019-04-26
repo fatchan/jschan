@@ -6,11 +6,6 @@ const crypto = require('crypto')
 
 module.exports = async (req, res, next) => {
 
-	//will move captcha cookie check to nginx at some point
-	if (req.cookies.captchaid) {
-		return res.redirect(`/captcha/${req.cookies.captchaid}.png`);
-	}
-
 	// if we got here, they dont have a cookie so we need to
 	// gen a captcha, set their cookie and redirect to the captcha
 	const text = crypto.randomBytes(20).toString('hex').substring(0,6);
@@ -28,6 +23,6 @@ module.exports = async (req, res, next) => {
 			'httpOnly': true,
 			'secure': true
 		})
-		.redirect(`/captcha/${captchaId}.png`);
+		.redirect(`/captcha/${captchaId}.jpg`);
 
 }

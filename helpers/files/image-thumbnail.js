@@ -6,14 +6,14 @@ module.exports = (filename) => {
 
 	return new Promise((resolve, reject) => {
 		gm(`${uploadDirectory}img/${filename}`)
-			.resize(128, 128)
-			.noProfile()
-			.write(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.png`, function (err) {
-				if (err) {
-					return reject(err);
-				}
-			});
-		return resolve();
+		.resize(128, 128)
+//		.quality(30)
+		.write(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`, function (err) {
+			if (err) {
+				return reject(err);
+			}
+			return resolve();
+		});
 	});
 
 };

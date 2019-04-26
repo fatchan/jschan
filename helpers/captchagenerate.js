@@ -29,7 +29,8 @@ module.exports = (text, captchaId) => {
 		x.wave(10, rr(50,80))
 		.blur(1, 2)
 		.crop(200, 80, 0, 0)
-		.write(`./uploads/captcha/${captchaId}.png`, (err) => {
+		.quality(30)
+		.write(`./uploads/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject();
 			}

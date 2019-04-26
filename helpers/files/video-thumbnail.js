@@ -12,7 +12,7 @@ module.exports = (filename) => {
 		.screenshots({
 			timestamps: [0],
 			count: 1,
-			filename: `thumb-${filename.split('.')[0]}.png`,
+			filename: `thumb-${filename.split('.')[0]}.jpg`,
 			folder: `${uploadDirectory}img/`,
 			size: '128x?'
 		});

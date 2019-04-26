@@ -46,7 +46,7 @@ body {
 	padding: 10px;
 }
 
-.pages a, a:visited {
+.pages a {
 	text-decoration: none;
 	color: black;
 }

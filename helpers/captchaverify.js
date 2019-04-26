@@ -47,7 +47,7 @@ module.exports = async (req, res, next) => {
 
 	//it was correct, so delete the file, the cookie and continue
 	res.clearCookie('captchaid');
-	await unlink(`${uploadDirectory}captcha/${captchaId}.png`)
+	await unlink(`${uploadDirectory}captcha/${captchaId}.jpg`)
 
 	return next();
 
