@@ -197,6 +197,7 @@ module.exports = async (req, res, next, numFiles) => {
 		'email': req.body.email || null,
 		'salt': !req.body.thread ? salt : null,
 		'spoiler': req.body.spoiler ? true : false,
+		'banmessage': null,
 		'userId': userId,
 		'ip': ip,
 		'files': files,

@@ -369,10 +369,16 @@ router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, ve
 		if (hasPerms) {
 			// if getting global banned, board ban doesnt matter
 			if (req.body.global_ban) {
-				const { message } = await banPoster(req, res, next, null, posts);
+				const { message, action, query } = await banPoster(req, res, next, null, posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
+				}
 				messages.push(message);
 			} else if (req.body.ban) {
-				const { message } = await banPoster(req, res, next, req.params.board, posts);
+				const { message, action, query } = await banPoster(req, res, next, req.params.board, posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
+				}
 				messages.push(message);
 			}
 		}

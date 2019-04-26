@@ -22,13 +22,33 @@ body {
 	white-space: pre;
 }
 
-.pages {
-	padding: 10px;
-	margin: 10px 0;
+.ml-1 {
+	margin-left: 1px;
+}
+.ml-5 {
+	margin-left: 5px;
+}
+.mr-1 {
+	margin-right: 1px;
+}
+.mr-5 {
+	margin-right: 5px;
+}
+.ph-5 {
+	padding: 0 5px;
+}
+.pv-5 {
+	padding: 5px 0;
 }
 
-.pages a {
+.pages {
+	margin: 10px 0;
+	padding: 10px;
+}
+
+.pages a, a:visited {
 	text-decoration: none;
+	color: black;
 }
 
 object {
@@ -41,7 +61,9 @@ object {
 	align-items: center;
 }
 
-
+.navbar {
+	border-bottom: 1px solid #a9a9a9;
+}
 
 .catalog-tile-button {
 	width: 100%;
@@ -103,6 +125,11 @@ object {
 	text-align: center;
 }
 
+.banmessage {
+	color: red;
+	font-weight: bold;
+}
+
 .reports {
 	background: #fca!important;
 	border-color: #c97!important;
@@ -118,8 +145,8 @@ object {
 	color: green;
 }
 
-blockquote a {
-	color: #d00;
+blockquote a, a:hover {
+	color: #d00!important;
 }
 
 .op blockquote {
@@ -127,12 +154,7 @@ blockquote a {
 }
 
 blockquote {
-	/*word-break: break-all;*/
 	white-space: pre-wrap;
-}
-
-span {
-	/*margin-right: 5px;*/
 }
 
 .thread, .action-wrapper, .form-wrapper {
@@ -223,7 +245,7 @@ span {
 	margin-right: 10px;
 	display: flex;
 	flex-flow: row wrap;
-	align-items: end;
+	align-items: start;
 }
 
 .post-data {
@@ -287,6 +309,7 @@ input textarea {
 .board-banner {
 	margin: 10px;
 	max-width: 100%;
+	border: 1px solid #a9a9a9;
 }
 
 .board-description {
@@ -303,19 +326,19 @@ input textarea {
 .post-container, .ban {
 	box-sizing: border-box;
 	margin: 2px 0;
-	padding: 2px;
+	padding: 5px;
 	max-width: 100%;
 }
 
 .post-container:target {
-	background-color: #d6bad0!important;
+	background-color: #d6bad0;
 	border-color: #ba9dbf;
 }
 
 .post-container.op {
 	background: none;
 	border: none;
-	width: 100%
+	width: 100%;
 }
 
 .post-subject {
@@ -342,11 +365,9 @@ input textarea {
 
 
 .post-info {
-	margin: -2px;
-	/*margin-left: -3px;*/
-	padding: 2px;
-	padding-left: 1px;
-	/*background-color: #B7C5D9;*/
+	margin: -5px;
+	padding: 5px;
+	padding-left: 3px;
 }
 
 .post-info * {
@@ -383,6 +404,7 @@ input textarea {
 	flex-shrink: 0;
 	margin-top: auto;
 	line-height: 30px;
+	border-top: 1px solid #a9a9a9;
 }
 
 input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {
@@ -399,25 +421,38 @@ input[type="submit"] {
 }
 
 input[type="file"] {
-	border: none;
+	background: white;
 }
 
-.postform-section {
+.postform-row, .postform-col {
 	display: flex;
+}
+
+.postform-row {
 	margin-bottom: 1px;
 	overflow: hidden;
 	max-width: 100%;
 }
 
-.postform-data {
-	display: flex;
+.postform-col {
 	flex-direction: column;
 	flex-grow: 1;
 }
 
-.captcha {
-	margin-bottom: 1px;
+.postform-style {
+	display: flex;
 	border: 1px solid #a9a9a9;
+	background: white;
+	align-items: center;
+}
+
+.captcha {
+	border: 1px solid #a9a9a9;
+	background: white;
+	margin-bottom: 1px;
+	width: 100%;
+	box-sizing: border-box;
+	object-fit: contain;
 }
 
 .postform-label {
@@ -442,8 +477,9 @@ hr {
 
 @media only screen and (max-width: 800px) {
 
-	input {
+	input, .postform-style {
 		height: 30px;
+		box-sizing: border-box;
 	}
 
 	.form-post {
@@ -459,7 +495,7 @@ hr {
 	}
 
 	.post-check {
-		top: 2px;
+		top: 1px;
 		margin-left: 2px!important;
 		height: 8px;
 	}

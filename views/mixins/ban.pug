@@ -4,7 +4,7 @@ mixin ban(ban)
 	.ban
 		input.post-check(type='checkbox', name='checkedbans[]' value=ban._id)
 		if ban.board
-			div Board: #[a(href=`/${ban.board}`) /#{ban.board}/]
+			div Board: #[a(href=`/${ban.board}/`) /#{ban.board}/]
 		else
 			div Global ban.
 		div Reason: #{ban.reason}

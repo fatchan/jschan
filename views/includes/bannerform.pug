@@ -3,7 +3,9 @@ section.form-wrapper
 		input.toggle(type='checkbox')
 		form.form-post.togglable(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
-			input#file(type='file', name='file' multiple)
+			section.postform-section
+				span.fileupload
+					input#file(type='file', name='file' multiple)
 			input(type='submit', value='submit')
 
 section.form-wrapper
@@ -14,6 +16,6 @@ section.form-wrapper
 			each banner in board.banners
 				label.banner-check
 					input(type='checkbox' name='checkedbanners[]' value=banner)
-					object.board-banner(data=`/img/${banner}` width='300' height='100')
+					object.board-banner(data=`/banner/${banner}` width='300' height='100')
 			input(type='submit', value='submit')
 

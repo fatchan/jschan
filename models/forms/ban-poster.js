@@ -18,6 +18,12 @@ module.exports = async (req, res, next, board, posts) => {
 
 	const bannedIps = await Bans.insertMany(bans).then(result => result.insertedCount);
 
-	return { message:`Banned ${bannedIps} ips` };
+	return {
+        message:`Banned ${bannedIps} ips`,
+        action:'$set',
+        query: {
+            'banmessage': req.body.ban_reason || ''
+        }
+    };
 
 }
