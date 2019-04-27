@@ -77,9 +77,11 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 		each report in post.reports
 			.reports.post-container
 				span Date: #{report.date.toLocaleString()}
+				| 
 				span Reason: #{report.reason}
 	if globalmanage === true
 		each report in post.globalreports
 			.reports.post-container
 				span Date: #{report.date.toLocaleString()}
+				| 
 				span Reason: #{report.reason}

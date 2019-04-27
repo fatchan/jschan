@@ -383,7 +383,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, ve
 			}
 		}
 		if (req.body.delete) {
-			const { message } = await deletePosts(req, res, next, passwordPosts);
+			const { message } = await deletePosts(req, res, next, passwordPosts, req.params.board);
 			messages.push(message);
 			aggregateNeeded = true;
 		} else {
@@ -590,7 +590,10 @@ router.post('/global/actions', checkPermsMiddleware, paramConverter, async(req, 
 	let aggregateNeeded = false;
 	try {
 		if (req.body.global_ban) {
-			const { message } = await banPoster(req, res, next, null, posts);
+			const { message, action, query } = await banPoster(req, res, next, null, posts);
+			if (action) {
+				combinedQuery[action] = { ...combinedQuery[action], ...query}
+			}
 			messages.push(message);
 		}
 		if (req.body.delete) {

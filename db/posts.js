@@ -2,6 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
+	, deletePostFiles = require(__dirname+'/../helpers/files/deletepostfiles.js')
 	, db = Mongo.client.db('jschan').collection('posts');
 
 module.exports = {
@@ -129,7 +130,6 @@ module.exports = {
 	},
 
 	getThreadPosts: (board, id) => {
-
 		// all posts within a thread
 		return db.find({
 			'thread': id,
@@ -145,7 +145,24 @@ module.exports = {
 		}).sort({
 			'_id': 1
 		}).toArray();
+	},
 
+	getMultipleThreadPosts: (board, ids) => {
+		//all posts from multiple threads in a single board
+		return db.find({
+			'board': board,
+			'thread': {
+				'$in': ids
+			}
+		}, {
+			'projection': {
+				'salt': 0 ,
+				'password': 0,
+				'ip': 0,
+				'reports': 0,
+				'globalreports': 0,
+			}
+		}).toArray();
 	},
 
 	getCatalog: (board) => {
@@ -269,7 +286,9 @@ module.exports = {
 		const postId = await Boards.getNextId(board);
 		data.postId = postId;
 		await db.insertOne(data);
-		//await module.exports.pruneOldThreads(board);
+		if (!data.thread) { //if we just added a new thread, prune anyold ones
+			await module.exports.pruneOldThreads(board);
+		}
 		return postId;
 
 	},
@@ -309,49 +328,43 @@ module.exports = {
 		return db.deleteOne(options);
 	},
 
-/*	pruneOldThreads: async (board) => {
-		const threadsToPrune = await db.find({
+	pruneOldThreads: async (board) => {
+		//get lowest bumped threads
+		const threads = await db.find({
 			'thread': null,
 			'board': board
-		}, {
-			'projection': {
-				'postId': 1,
-				'_id': 0
-			}
 		}).sort({
-            'sticky': -1,
-            'bumped': -1
-        }).skip(3).toArray();
-		console.log(threadsToPrune);
-		const ids = threadsToPrune.map(x => x.postId);
-		console.log(ids);
-		const data = await db.deleteMany({
-			'board': board,
-			'$or': [
-				{
-					'postId': {
-						'$in': ids
-					}
-				},
-				{
-					'thread': {
-						'$in': ids
-					}
-				},
-			]
-		});
-		console.log(data.deletedCount);
-		//wont delete files gotta fetch thread posts for that
-	},*/
+			'sticky': -1,
+			'bumped': -1
+		}).skip(100).toArray(); //100 therads in board limit for now
+		//if there are any
+		if (threads.length > 0) {
+			//get the postIds
+			const threadIds = threads.map(thread => thread.postId);
+			//get all the posts from those threads
+			const threadPosts = await module.exports.getMultipleThreadPosts(board, threadIds);
+			//combine them
+			const postsAndThreads = threads.concat(threadPosts);
+			//get the filenames and delete all the files
+		 	let fileNames = [];
+		 	postsAndThreads.forEach(post => {
+				fileNames = fileNames.concat(post.files.map(x => x.filename))
+			});
+			if (fileNames.length > 0) {
+				await deletePostFiles(fileNames);
+			}
+			//get the mongoIds and delete them all
+			const postMongoIds = postsAndThreads.map(post => Mongo.ObjectId(post._id));
+			await module.exports.deleteMany(postMongoIds);
+		}
+	},
 
 	deleteMany: (ids) => {
-
 		return db.deleteMany({
 			'_id': {
 				'$in': ids
 			}
 		});
-
 	},
 
 	deleteAll: (board) => {

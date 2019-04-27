@@ -1,32 +1,34 @@
 'use strict';
 
-const path = require('path')
-	, util = require('util')
-	, fs = require('fs')
-	, unlink = util.promisify(fs.unlink)
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
+const uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
+	, deletePostFiles = require(__dirname+'/../../helpers/files/deletepostfiles.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = async (req, res, next, posts) => {
+module.exports = async (req, res, next, posts, board) => {
 
-	//filter to threads, then get the board and thread for each 
-	const boardThreads = posts.filter(x => x.thread == null).map(x => {
-		return {
-			board: x.board,
-			thread: x.postId
-		};
-	});
+	//filter to threads
+	const threads = posts.filter(x => x.thread == null);
 
 	//get posts from all threads
 	let threadPosts = []
-	await Promise.all(boardThreads.map(async data => {
-		const currentThreadPosts = await Posts.getThreadPosts(data.board, data.thread);
-		threadPosts = threadPosts.concat(currentThreadPosts);
-		return;
-	}))
+	if (threads.length > 0) {
+		if (board) {
+			//if this is board-specific, we can use a single query
+			const threadPostIds = threads.map(thread => thread.postId);
+			threadPosts = await Posts.getMultipleThreadPosts(board, threadPostIds);
+		} else {
+			//otherwise we fetch posts from threads on different boards separarely
+			//TODO: combine queries from the same board, or ideally construct a large $or query so this can be tackled in a single db query
+			await Promise.all(threads.map(async thread => {
+				//for each thread, fetch all posts from the matching board and thread matching the threads postId
+				const currentThreadPosts = await Posts.getThreadPosts(thread.board, thread.postId);
+				threadPosts = threadPosts.concat(currentThreadPosts);
+			}));
+		}
+	}
 
-	//combine them all into one array
+	//combine them all into one array, there may be duplicates but it shouldnt matter
 	const allPosts = posts.concat(threadPosts)
 
 	//delete posts from DB
@@ -39,16 +41,12 @@ module.exports = async (req, res, next, posts) => {
 		fileNames = fileNames.concat(post.files.map(x => x.filename))
 	})
 
-	//delete all the files using the filenames
-	await Promise.all(fileNames.map(async filename => {
-		//dont question it.
-		return Promise.all([
-			unlink(`${uploadDirectory}img/${filename}`),
-			unlink(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.png`)
-		])
-	}));
+	//delete post files
+	if (fileNames.length > 0) {
+		await deletePostFiles(fileNames);
+	}
 
 	//hooray!
-	return { message:`Deleted ${boardThreads.length} threads and ${deletedPosts-boardThreads.length} posts` };
+	return { message:`Deleted ${threads.length} threads and ${deletedPosts-threads.length} posts` };
 
 }
