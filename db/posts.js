@@ -269,7 +269,7 @@ module.exports = {
 		const postId = await Boards.getNextId(board);
 		data.postId = postId;
 		await db.insertOne(data);
-
+		//await module.exports.pruneOldThreads(board);
 		return postId;
 
 	},
@@ -308,6 +308,41 @@ module.exports = {
 	deleteOne: (board, options) => {
 		return db.deleteOne(options);
 	},
+
+/*	pruneOldThreads: async (board) => {
+		const threadsToPrune = await db.find({
+			'thread': null,
+			'board': board
+		}, {
+			'projection': {
+				'postId': 1,
+				'_id': 0
+			}
+		}).sort({
+            'sticky': -1,
+            'bumped': -1
+        }).skip(3).toArray();
+		console.log(threadsToPrune);
+		const ids = threadsToPrune.map(x => x.postId);
+		console.log(ids);
+		const data = await db.deleteMany({
+			'board': board,
+			'$or': [
+				{
+					'postId': {
+						'$in': ids
+					}
+				},
+				{
+					'thread': {
+						'$in': ids
+					}
+				},
+			]
+		});
+		console.log(data.deletedCount);
+		//wont delete files gotta fetch thread posts for that
+	},*/
 
 	deleteMany: (ids) => {
 
