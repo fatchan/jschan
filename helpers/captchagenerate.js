@@ -32,7 +32,7 @@ module.exports = (text, captchaId) => {
 		.quality(30)
 		.write(`./uploads/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
-				return reject();
+				return reject(err);
 			}
 			return resolve();
 		});

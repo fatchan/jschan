@@ -48,6 +48,8 @@ module.exports = async (req, res, next, numFiles) => {
 				'redirect': redirect
 			});
 		}
+		salt = thread.salt;
+		redirect += `/thread/${req.body.thread}`
 		if (thread.locked && !hasPerms) {
 			return res.status(400).render('message', {
 				'title': 'Bad request',
@@ -62,8 +64,6 @@ module.exports = async (req, res, next, numFiles) => {
 				'redirect': redirect
 			});
 		}
-		salt = thread.salt;
-		redirect += `/thread/${req.body.thread}`
 	}
 	let files = [];
 	// if we got a file
