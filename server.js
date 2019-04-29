@@ -50,6 +50,20 @@ const express  = require('express')
 	app.use(helmet());
 	app.use(csrf());
 
+	//referer header check
+	app.use((req, res, next) => {
+		if (req.method !== 'POST') {
+			return next();
+		}
+		if (!req.headers.referer || !req.headers.referer.startsWith('https://fatpeople.lol')) {
+			return res.status(403).render('message', {
+				'title': 'Forbidden',
+				'message': 'Invalid or missing "Referer" header. Are you posting from the correct URL?'
+			})
+		}
+		next();
+	})
+
 	// use pug view engine
 	app.set('view engine', 'pug');
 	app.set('views', path.join(__dirname, 'views/pages'));
@@ -72,7 +86,7 @@ const express  = require('express')
 		console.error(err.stack)
 		return res.status(500).render('message', {
 			'title': 'Internal Server Error',
-			'redirect': req.header('Referer') || '/'
+			'redirect': req.headers.referer || '/'
 		})
 	})
 
