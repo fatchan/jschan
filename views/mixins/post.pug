@@ -60,8 +60,10 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						const splitPost = post.message.split('\n');
 						const messageLines = splitPost.length;
 						let truncatedMessage = post.message;
+						let truncated = false;
 						if (messageLines > 10 || post.message.length > 1000) {
 							truncatedMessage = splitPost.slice(0, 10).join('\n');
+							truncated = true;
 						}
 					blockquote.post-message !{truncatedMessage}
 					if truncated

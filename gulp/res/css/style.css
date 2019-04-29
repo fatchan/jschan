@@ -155,19 +155,38 @@ blockquote a, a:hover {
 
 blockquote {
 	white-space: pre-wrap;
+	margin: 1em;
 }
 
-.thread, .action-wrapper, .form-wrapper {
+.thread, .action-wrapper, .form-wrapper, .table-container {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+}
+
+.table-row:nth-child(2n+1) {
+	background: #eef2ff;
+}
+
+.table-body {
+	background: #D6DAF0;
+	border: 1px solid #000333;
+	border-spacing: 0;
+}
+
+.table-head {
+	background: #98e;
+}
+
+td, th {
+	padding: 5px;
 }
 
 .action-wrapper {
 	text-align: left;
 }
 
-.form-wrapper {
+.form-wrapper, .table-container {
 	align-items: center;
 	margin: 10px 0;
 }
@@ -464,10 +483,6 @@ input[type="file"] {
 	flex-direction: column;
 	font-weight: bold;
 	margin-right: 1px;
-}
-
-.boards-table {
-	margin: 0 auto;
 }
 
 hr {

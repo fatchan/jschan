@@ -4,14 +4,15 @@ block head
 	title Board list
 
 block content
-	table.boards-table
-		tr
-			th Board
-			th Name
-			th Description
-		each board in boards
-			tr
-				td: a(href='/'+board._id) /#{board._id}/
-				td= board.name
-				td= board.description
-
+	h1.board-title Board List
+	.table-container
+		table.table-body
+			tr.table-head
+				th Board
+				th Name
+				th Description
+			each board in boards
+				tr.table-row
+					td: a(href='/'+board._id) /#{board._id}/
+					td #{board.name}
+					td #{board.description}
