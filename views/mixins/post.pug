@@ -34,7 +34,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 			| 
 			span.user-id(style=`background: #${post.userId}`) #{post.userId}
 			| 
-			span: a(href=postURL) ##{post.postId}
+			span: a(href=postURL) #{post.postId}
 		.post-data
 			if post.files.length > 0
 				.post-files
