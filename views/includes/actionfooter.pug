@@ -25,6 +25,15 @@ label.toggle-label Toggle Post Actions
 		.actions
 			h4.no-m-p Mod Actions:
 			label
+				input.post-check(type='checkbox', name='delete_ip_thread' value=1)
+				| Delete IP+ thread
+			label
+				input.post-check(type='checkbox', name='delete_ip_board' value=1)
+				| Delete IP+ board
+			label
+				input.post-check(type='checkbox', name='delete_ip_global' value=1)
+				| Delete IP+ global
+			label
 				input.post-check(type='checkbox', name='sticky' value=1)
 				| Sticky
 			label

@@ -288,7 +288,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, ve
 
 	//make sure they checked 1-10 posts
 	if (!req.body.checkedposts || req.body.checkedposts.length === 0 || req.body.checkedposts.length > 10) {
-		errors.push('Must select 1-10 posts')
+		errors.push('Must select 1-10 posts');
 	}
 
 	//get what type of actions
@@ -296,12 +296,12 @@ router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, ve
 
 	//make sure they selected at least 1 action
 	if (!anyValid) {
-		errors.push('No actions selected')
+		errors.push('No actions selected');
 	}
 	//check if they have permission to perform the actions
 	const hasPerms = checkPerms(req, res);
 	if(!hasPerms && anyAuthed) {
-		errors.push('No permission')
+		errors.push('No permission');
 	}
 
 	//check that actions are valid
@@ -315,7 +315,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, ve
 		errors.push('Ban reason must be 50 characters or less');
 	}
 	if ((req.body.report || req.body.global_report) && (!req.body.report_reason || req.body.report_reason.length === 0)) {
-		errors.push('Reports must have a reason')
+		errors.push('Reports must have a reason');
 	}
 
 	if (errors.length > 0) {
@@ -382,6 +382,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, ve
 				messages.push(message);
 			}
 		}
+		//TODO: IP-based deletes here. will need to gather all thread/board/global posts by IP, then run them through deletePosts
 		if (req.body.delete) {
 			const { message } = await deletePosts(req, res, next, passwordPosts, req.params.board);
 			messages.push(message);
@@ -596,6 +597,7 @@ router.post('/global/actions', checkPermsMiddleware, paramConverter, async(req, 
 			}
 			messages.push(message);
 		}
+		//TODO: IP-based deletes here. will need to gather all thread/board/global posts by IP, then run them through deletePosts
 		if (req.body.delete) {
 			const { message } = await deletePosts(req, res, next, posts);
 			messages.push(message);
