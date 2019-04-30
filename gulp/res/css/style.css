@@ -45,10 +45,13 @@ body {
 	margin: 10px 0;
 	padding: 10px;
 }
+a, a:visited {
+	text-decoration: underline;
+	color: #34345C;
+}
 
 .pages a {
 	text-decoration: none;
-	color: black;
 }
 
 object {

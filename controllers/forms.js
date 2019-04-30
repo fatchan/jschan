@@ -382,8 +382,23 @@ router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, ve
 				messages.push(message);
 			}
 		}
-		//TODO: IP-based deletes here. will need to gather all thread/board/global posts by IP, then run them through deletePosts
-		if (req.body.delete) {
+		if (hasPerms && (req.body.delete_ip_board || req.body.delete_ip_global)) {
+			const deletePostIps = posts.map(x => x.ip);
+			let query = {
+				'ip': {
+					'$in': deletePostIps
+				}
+			};
+			if (req.body.delete_ip_board) {
+				query['board'] = req.params.board;
+			}
+			const deleteIpPosts = await Posts.db.find(query).toArray();
+			if (deleteIpPosts && deleteIpPosts.length > 0) {
+				const { message } = await deletePosts(req, res, next, deleteIpPosts, req.params.board);
+				messages.push(message);
+				aggregateNeeded = true;
+			}
+		} else if (req.body.delete) {
 			const { message } = await deletePosts(req, res, next, passwordPosts, req.params.board);
 			messages.push(message);
 			aggregateNeeded = true;
@@ -597,8 +612,19 @@ router.post('/global/actions', checkPermsMiddleware, paramConverter, async(req, 
 			}
 			messages.push(message);
 		}
-		//TODO: IP-based deletes here. will need to gather all thread/board/global posts by IP, then run them through deletePosts
-		if (req.body.delete) {
+		if (hasPerms && req.body.delete_ip_global) {
+			const deletePostIps = posts.map(x => x.ip);
+			const deleteIpPosts = await Posts.db.find({
+				'ip': {
+					'$in': deletePostIps
+				}
+			}).toArray();
+			if (deleteIpPosts && deleteIpPosts.length > 0) {
+				const { message } = await deletePosts(req, res, next, deleteIpPosts, null);
+				messages.push(message);
+				aggregateNeeded = true;
+			}
+		} else if (req.body.delete) {
 			const { message } = await deletePosts(req, res, next, posts);
 			messages.push(message);
 			aggregateNeeded = true;
