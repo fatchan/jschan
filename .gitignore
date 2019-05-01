@@ -2,6 +2,6 @@ node_modules/
 configs/*.json
 uploads/img/*
 uploads/captcha/*
-upload/banner/*
+uploads/banner/*
 gulp/dist/
 tmp/
