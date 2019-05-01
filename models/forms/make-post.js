@@ -27,6 +27,7 @@ const uuidv4 = require('uuid/v4')
 	, videoThumbnail = require(__dirname+'/../../helpers/files/video-thumbnail.js')
 	, videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
 	, formatSize = require(__dirname+'/../../helpers/files/format-size.js')
+	, deletePostFiles = require(__dirname+'/../../helpers/files/deletepostfiles.js');
 
 module.exports = async (req, res, next, numFiles) => {
 
@@ -137,7 +138,10 @@ module.exports = async (req, res, next, numFiles) => {
 				files.push(processedFile);
 
 			} catch (err) {
-				//TODO: DELETE FAILED FILES
+				if (files.length > 0) {
+					const fileNames = files.map(file => file.filenname);
+					await deletePostFiles(fileNames);
+				}
 				return next(err);
 			}
 		}
