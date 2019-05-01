@@ -281,8 +281,7 @@ router.post('/board/:board/deletebanners', Boards.exists, banCheck, checkPermsMi
 
 });
 
-//report/delete/spoiler/ban
-router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, verifyCaptcha, async (req, res, next) => {
+async function actions(req, res, next) {
 
 	const errors = [];
 
@@ -515,7 +514,11 @@ router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, ve
 		'redirect': `/${req.params.board}`
 	});
 
-});
+}
+
+//report/delete/spoiler/ban
+router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, verifyCaptcha, actions);
+router.post('/board/:board/modactions', Boards.exists, checkPermsMiddleware, paramConverter, actions);
 
 //unban
 router.post('/board/:board/unban', Boards.exists, banCheck, checkPermsMiddleware, paramConverter, async (req, res, next) => {
