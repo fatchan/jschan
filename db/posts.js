@@ -49,7 +49,7 @@ module.exports = {
 			thread.replies = replies.reverse();
 
 			//temporary mitigation for deletion issue
-			if (replies.length >= 5) {
+			if (replies.length > 5) {
 				//cout omitted image and posts
 				const numPreviewImages = replies.reduce((acc, post) => { return acc + post.files.length }, 0);
 				thread.omittedimages = thread.replyfiles - numPreviewImages;
@@ -260,7 +260,7 @@ module.exports = {
 	},
 
 	insertOne: async (board, data, thread) => {
-
+console.log(thread)
 		if (data.thread !== null && data.email !== 'sage' && !thread.saged) {
 			const filter = {
 				'postId': data.thread,
