@@ -35,7 +35,8 @@ module.exports = async (req, res, next, numFiles) => {
 	let redirect = `/${req.params.board}`
 	let salt = '';
 	let thread;
-	let hasPerms = permsCheck(req, res);
+	const hasPerms = permsCheck(req, res);
+	const forceAnon = res.locals.board.settings.forceAnon;
 	if (req.body.thread) {
 		try {
 			thread = await Posts.getPost(req.params.board, req.body.thread, true);
@@ -160,12 +161,15 @@ module.exports = async (req, res, next, numFiles) => {
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 
+	//forceanon hide reply subjects so cant be used as name
+	let subject = hasPerms || !forceAnon ? req.body.subject : null;
+	//forceanon only allow sage email
+	let email = hasPerms || !forceAnon || req.body.email === 'sage' ? req.body.email : null;
+
 	let name = 'Anonymous';
 	let tripcode = null;
 	let capcode = null;
-	//if forceanon, only allow sage as email
-	const email = res.locals.board.settings.forceAnon && req.body.email !== 'sage' ? null : req.body.email;
-	if ((hasPerms || !res.locals.board.settings.forceAnon) && req.body.name && req.body.name.length > 0) {
+	if ((hasPerms || !forceAnon) && req.body.name && req.body.name.length > 0) {
 		// get matches with named groups for name, trip and capcode in 1 regex
 		const matches = req.body.name.match(nameRegex);
 		if (matches && matches.groups) {
@@ -197,21 +201,21 @@ module.exports = async (req, res, next, numFiles) => {
 	//build post data for db
 	const data = {
 		'date': new Date(),
-		'name': name,
+		name,
 		'board': req.params.board,
-		'tripcode': tripcode,
-		'capcode': capcode,
-		'subject': req.body.subject || null,
+		tripcode,
+		capcode,
+		subject,
 		'message': message || null,
 		'thread': req.body.thread || null,
 		'password': req.body.password || null,
-		'email': email,
+		email,
 		'salt': !req.body.thread ? salt : null,
 		'spoiler': req.body.spoiler ? true : false,
 		'banmessage': null,
-		'userId': userId,
-		'ip': ip,
-		'files': files,
+		userId,
+		ip,
+		files,
 		'reports': [],
 		'globalreports': [],
 	}

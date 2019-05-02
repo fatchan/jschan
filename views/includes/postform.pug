@@ -6,12 +6,18 @@ section.form-wrapper
 			section.postform-row
 				.postform-label Name
 				input#name(type='text', name='name', placeholder='Anonymous' autocomplete='off' maxlength='50')
-		section.postform-row
-			.postform-label Subject
-			input#title(type='text', name='subject', autocomplete='off' maxlength='50')
-		section.postform-row
-			.postform-label Email
-			input#name(type='text', name='email', autocomplete='off' maxlength='50')
+			section.postform-row
+				.postform-label Subject
+				input#title(type='text', name='subject', autocomplete='off' maxlength='50')
+			section.postform-row
+				.postform-label Email
+				input#name(type='text', name='email', autocomplete='off' maxlength='50')
+		else
+			section.postform-row
+				.postform-label Sage
+				label.postform-style.ph-5
+					input#spoiler(type='checkbox', name='email', value='sage')
+					| Sage
 		section.postform-row
 			.postform-label Message
 			textarea#message(name='message', rows='5', autocomplete='off' maxlength='2000')
