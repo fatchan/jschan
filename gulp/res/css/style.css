@@ -140,6 +140,11 @@ object {
 	border-style: solid none;
 }
 
+.title {
+	color: maroon;
+	font-weight: bold;
+}
+
 .redtext {
 	color: maroon;
 }

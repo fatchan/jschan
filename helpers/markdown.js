@@ -3,7 +3,8 @@
 const Posts = require(__dirname+'/../db/posts.js')
 	, greentextRegex = /^>([^>].+)/gm
 	, redtextRegex = /^<([^<].+)/gm
-	, boldRegex = /==(.+)==/gm
+	, boldRegex = /""(.+)""/gm
+	, titleRegex = /==(.+)==/gm
 	, italicRegex = /__(.+)__/gm
 	, linkRegex = /https?\:\/\/[^\s]+/g
 	, spoilerRegex = /\|\|(.+)\|\|/gm
@@ -29,6 +30,11 @@ module.exports = (board, thread, text) => {
 	//bold
 	text = text.replace(boldRegex, (match, bold) => {
 		return `<strong>${bold}</strong>`;
+	});
+
+	//titles
+	text = text.replace(titleRegex, (match, title) => {
+		return `<span class='title'>${title}</span>`;
 	});
 
 	//italic
