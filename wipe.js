@@ -1,3 +1,4 @@
+
 'use strict';
 
 const Mongo = require(__dirname+'/db/db.js')
@@ -38,6 +39,10 @@ const Mongo = require(__dirname+'/db/db.js')
 		owner: '',
 		moderators: [],
 		banners: [],
+		settings: {
+			forceAnon: true,
+			ids: true,
+		}
 	})
 	await Boards.insertOne({
 		 _id: 'b',
@@ -46,6 +51,10 @@ const Mongo = require(__dirname+'/db/db.js')
 		owner: '',
 		moderators: [],
 		banners: [],
+		settings: {
+			forceAnon: false,
+			ids: false,
+		}
 	})
 	console.log('creating indexes')
 	await Bans.db.dropIndexes();

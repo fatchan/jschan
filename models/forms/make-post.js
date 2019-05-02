@@ -147,18 +147,25 @@ module.exports = async (req, res, next, numFiles) => {
 		}
 	}
 
-	//post salt for IDs
+	//poster ip
+	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+
+	let userId = null;
 	if (!salt) {
+		//thread salt for IDs
 		salt = (await randomBytes(128)).toString('hex');
 	}
-	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
-	const fullUserIdHash = crypto.createHash('sha256').update(salt + ip + req.params.board).digest('hex');
-	const userId = fullUserIdHash.substring(fullUserIdHash.length-6);
+	if (res.locals.board.settings.ids) {
+		const fullUserIdHash = crypto.createHash('sha256').update(salt + ip + req.params.board).digest('hex');
+		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
+	}
 
-	let name = null;
+	let name = 'Anonymous';
 	let tripcode = null;
 	let capcode = null;
-	if (req.body.name && req.body.name.length > 0) {
+	//if forceanon, only allow sage as email
+	const email = res.locals.board.settings.forceAnon && req.body.email !== 'sage' ? null : req.body.email;
+	if ((hasPerms || !res.locals.board.settings.forceAnon) && req.body.name && req.body.name.length > 0) {
 		// get matches with named groups for name, trip and capcode in 1 regex
 		const matches = req.body.name.match(nameRegex);
 		if (matches && matches.groups) {
@@ -190,7 +197,7 @@ module.exports = async (req, res, next, numFiles) => {
 	//build post data for db
 	const data = {
 		'date': new Date(),
-		'name': name || 'Anonymous',
+		'name': name,
 		'board': req.params.board,
 		'tripcode': tripcode,
 		'capcode': capcode,
@@ -198,7 +205,7 @@ module.exports = async (req, res, next, numFiles) => {
 		'message': message || null,
 		'thread': req.body.thread || null,
 		'password': req.body.password || null,
-		'email': req.body.email || null,
+		'email': email,
 		'salt': !req.body.thread ? salt : null,
 		'spoiler': req.body.spoiler ? true : false,
 		'banmessage': null,
@@ -207,12 +214,18 @@ module.exports = async (req, res, next, numFiles) => {
 		'files': files,
 		'reports': [],
 		'globalreports': [],
-		'replyposts': 0,
-		'replyfiles': 0,
-		'sticky': false,
-		'locked': false,
-		'saged': false,
-	};
+	}
+
+	if (!req.body.thread) {
+		//if this is a thread, add replies, sticky, sage, lock, etc
+		Object.assign(data, {
+			'replyposts': 0,
+			'replyfiles': 0,
+			'sticky': false,
+			'locked': false,
+			'saged': false
+		});
+	}
 
 	let postId;
 	try {
