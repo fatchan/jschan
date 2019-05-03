@@ -42,6 +42,10 @@ const Mongo = require(__dirname+'/db/db.js')
 		settings: {
 			forceAnon: true,
 			ids: true,
+			threadLimit: 100,
+			replyLimit: 300,
+			maxImages: 3,
+			defaultName: 'Anonymous',
 		}
 	})
 	await Boards.insertOne({
@@ -54,6 +58,10 @@ const Mongo = require(__dirname+'/db/db.js')
 		settings: {
 			forceAnon: false,
 			ids: false,
+			threadLimit: 100,
+			replyLimit: 300,
+			maxImages: 3,
+			defaultNAme: 'Anonymous',
 		}
 	})
 	console.log('creating indexes')

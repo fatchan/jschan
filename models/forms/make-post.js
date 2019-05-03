@@ -59,7 +59,7 @@ module.exports = async (req, res, next, numFiles) => {
 				'redirect': redirect
 			});
 		}
-		if (thread.replyposts >= 100) { //reply limit
+		if (thread.replyposts >= res.locals.board.settings.replyLimit) { //reply limit
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Thread reached reply limit',
@@ -71,7 +71,7 @@ module.exports = async (req, res, next, numFiles) => {
 	// if we got a file
 	if (numFiles > 0) {
 		// check all mime types befoer we try saving anything
-		for (let i = 0; i < numFiles; i++) {
+		for (let i = 0; i < res.locals.board.settings.maxImages; i++) {
 			if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, video: true})) {
 				return res.status(400).render('message', {
 					'title': 'Bad request',
@@ -161,12 +161,12 @@ module.exports = async (req, res, next, numFiles) => {
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 
-	//forceanon hide reply subjects so cant be used as name
-	let subject = hasPerms || !forceAnon ? req.body.subject : null;
+	//forceanon hide reply subjects so cant be used as name for replies
+	let subject = hasPerms || !forceAnon || !req.body.thread ? req.body.subject : null;
 	//forceanon only allow sage email
 	let email = hasPerms || !forceAnon || req.body.email === 'sage' ? req.body.email : null;
 
-	let name = 'Anonymous';
+	let name = res.locals.board.settins.defaultName;
 	let tripcode = null;
 	let capcode = null;
 	if ((hasPerms || !forceAnon) && req.body.name && req.body.name.length > 0) {
@@ -233,7 +233,10 @@ module.exports = async (req, res, next, numFiles) => {
 
 	let postId;
 	try {
-		postId = await Posts.insertOne(req.params.board, data, thread);
+		postId = await Posts.insertOne(res.locals.board, data, thread);
+		if (!data.thread) { //if we just added a new thread, prune anyold ones
+			await module.exports.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		}
 	} catch (err) {
 		return next(err);
 	}

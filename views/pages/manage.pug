@@ -7,8 +7,35 @@ block head
 
 block content
 	include ../includes/boardheader.pug
+	h4 Settings:
+	section.form-wrapper
+		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
+			input(type='hidden' name='_csrf' value=csrf)
+			section.postform-row
+				.postform-label IDs
+				label.postform-style.ph-5
+					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)
+					| Show per-thread IDs
+			section.postform-row
+				.postform-label Force Anon
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
+					| Disable names and only allow sage email
+			section.postform-row
+				.postform-label Anon Name
+				input(type='text' name='default_name' placeholder=board.settings.defaultName)
+			section.postform-row
+				.postform-label Thread Limit
+				input(type='text' name='thread_limit' placeholder=board.settings.threadLimit)
+			section.postform-row
+				.postform-label Reply Limit
+				input(type='text' name='reply_limit' placeholder=board.settings.replyLimit)
+			section.postform-row
+				.postform-label Max Images
+				input(type='text' name='max_images' placeholder=board.settings.maxImages)
+			input(type='submit', value='save settings')
+	h4 Banners:
 	include ../includes/bannerform.pug
-	p: a(href='/changepassword') Change password
 	h4 Reports:
 	form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)

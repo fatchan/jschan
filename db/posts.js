@@ -260,7 +260,6 @@ module.exports = {
 	},
 
 	insertOne: async (board, data, thread) => {
-console.log(thread)
 		if (data.thread !== null && data.email !== 'sage' && !thread.saged) {
 			const filter = {
 				'postId': data.thread,
@@ -286,9 +285,6 @@ console.log(thread)
 		const postId = await Boards.getNextId(board);
 		data.postId = postId;
 		await db.insertOne(data);
-		if (!data.thread) { //if we just added a new thread, prune anyold ones
-			await module.exports.pruneOldThreads(board);
-		}
 		return postId;
 
 	},
@@ -328,7 +324,7 @@ console.log(thread)
 		return db.deleteOne(options);
 	},
 
-	pruneOldThreads: async (board) => {
+	pruneOldThreads: async (board, threadLimit) => {
 		//get lowest bumped threads
 		const threads = await db.find({
 			'thread': null,
@@ -336,7 +332,7 @@ console.log(thread)
 		}).sort({
 			'sticky': -1,
 			'bumped': -1
-		}).skip(100).toArray(); //100 therads in board limit for now
+		}).skip(threadLimit).toArray(); //100 therads in board limit for now
 		//if there are any
 		if (threads.length > 0) {
 			//get the postIds
