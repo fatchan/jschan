@@ -71,7 +71,7 @@ module.exports = async (req, res, next, numFiles) => {
 	// if we got a file
 	if (numFiles > 0) {
 		// check all mime types befoer we try saving anything
-		for (let i = 0; i < res.locals.board.settings.maxImages; i++) {
+		for (let i = 0; i < numFiles; i++) {
 			if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, video: true})) {
 				return res.status(400).render('message', {
 					'title': 'Bad request',
@@ -166,7 +166,7 @@ module.exports = async (req, res, next, numFiles) => {
 	//forceanon only allow sage email
 	let email = hasPerms || !forceAnon || req.body.email === 'sage' ? req.body.email : null;
 
-	let name = res.locals.board.settins.defaultName;
+	let name = res.locals.board.settings.defaultName;
 	let tripcode = null;
 	let capcode = null;
 	if ((hasPerms || !forceAnon) && req.body.name && req.body.name.length > 0) {
@@ -233,9 +233,9 @@ module.exports = async (req, res, next, numFiles) => {
 
 	let postId;
 	try {
-		postId = await Posts.insertOne(res.locals.board, data, thread);
+		postId = await Posts.insertOne(req.params.board, data, thread);
 		if (!data.thread) { //if we just added a new thread, prune anyold ones
-			await module.exports.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+			await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
 		}
 	} catch (err) {
 		return next(err);

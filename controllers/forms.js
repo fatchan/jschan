@@ -171,6 +171,7 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 			numFiles = req.files.file.size > 0 ? 1 : 0;
 			req.files.file = [req.files.file];
 		}
+		numFiles = Math.min(numFiles, res.locals.board.settings.maxFiles)
 	}
 
 	const errors = [];

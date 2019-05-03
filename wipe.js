@@ -44,7 +44,7 @@ const Mongo = require(__dirname+'/db/db.js')
 			ids: true,
 			threadLimit: 100,
 			replyLimit: 300,
-			maxImages: 3,
+			maxFiles: 3,
 			defaultName: 'Anonymous',
 		}
 	})
@@ -60,8 +60,8 @@ const Mongo = require(__dirname+'/db/db.js')
 			ids: false,
 			threadLimit: 100,
 			replyLimit: 300,
-			maxImages: 3,
-			defaultNAme: 'Anonymous',
+			maxFiles: 3,
+			defaultName: 'Anonymous',
 		}
 	})
 	console.log('creating indexes')

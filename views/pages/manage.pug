@@ -7,8 +7,8 @@ block head
 
 block content
 	include ../includes/boardheader.pug
-	h4 Settings:
-	section.form-wrapper
+	h4.no-m-p Settings:
+	section.form-wrapper.flexleft.mv-10
 		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
 			section.postform-row
@@ -31,25 +31,45 @@ block content
 				.postform-label Reply Limit
 				input(type='text' name='reply_limit' placeholder=board.settings.replyLimit)
 			section.postform-row
-				.postform-label Max Images
-				input(type='text' name='max_images' placeholder=board.settings.maxImages)
+				.postform-label Max Files
+				input(type='text' name='max_files' placeholder=board.settings.maxFiles)
 			input(type='submit', value='save settings')
-	h4 Banners:
-	include ../includes/bannerform.pug
-	h4 Reports:
-	form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
-		input(type='hidden' name='_csrf' value=csrf)
-		if reports.length === 0
-			p No reports.
-			hr(size=1)
-		else
-			for report in reports
-				section.thread
-					+post(report, false, true)
+	hr(size=1)
+	h4.no-m-p Add Banners:
+	section.form-wrapper.flexleft.mv-10
+		form.form-post(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			section.postform-row
+				.postform-label Upload
+				input#file(type='file', name='file' multiple)
+			input(type='submit', value='submit')
+	hr(size=1)
+	if board.banners.length > 0
+		h4.no-m-p Delete Banners:
+		section.form-wrapper.flexleft.mv-10
+			form.form-post(action=`/forms/board/${board._id}/deletebanners`, enctype='application/x-www-form-urlencoded', method='POST')
+				input(type='hidden' name='_csrf' value=csrf)
+				each banner in board.banners
+					label.banner-check
+						input(type='checkbox' name='checkedbanners[]' value=banner)
+						object.board-banner(data=`/banner/${banner}` width='300' height='100')
+				input(type='submit', value='delete')
+		hr(size=1)
+	h4.no-m-p Reports:
+	.mv-10
+		form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
+			input(type='hidden' name='_csrf' value=csrf)
+			if reports.length === 0
+				p No reports.
 				hr(size=1)
-			include ../includes/actionfooter_manage.pug
-			hr(size=1)
-	h4 Bans:
+			else
+				for report in reports
+					section.thread
+						+post(report, false, true)
+					hr(size=1)
+				include ../includes/actionfooter_manage.pug
+				hr(size=1)
+	h4.no-m-p Bans:
 	form(action=`/forms/board/${board._id}/unban` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if bans.length === 0

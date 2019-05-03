@@ -4,7 +4,7 @@ block head
 	title Login
 
 block content
-	section.form-wrapper
+	section.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/login' method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			input(type='hidden' name='redirect' value=redirect)

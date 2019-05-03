@@ -1,11 +1,11 @@
-section.form-wrapper
+section.form-wrapper.flex-center.mv-10
 	form.form-post(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
 		input(type='hidden' name='_csrf' value=csrf)
 		input(type='hidden' name='thread' value=thread != null ? thread.postId : null)
 		unless board.settings.forceAnon
 			section.postform-row
 				.postform-label Name
-				input#name(type='text', name='name', placeholder='Anonymous' autocomplete='off' maxlength='50')
+				input#name(type='text', name='name', placeholder=board.defaultName autocomplete='off' maxlength='50')
 			section.postform-row
 				.postform-label Subject
 				input#title(type='text', name='subject', autocomplete='off' maxlength='50')

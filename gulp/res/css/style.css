@@ -34,6 +34,12 @@ body {
 .mr-5 {
 	margin-right: 5px;
 }
+.mv-10 {
+	margin: 10px 0;
+}
+.mb-10 {
+	margin-bottom: 10px;
+}
 .ph-5 {
 	padding: 0 5px;
 }
@@ -194,9 +200,8 @@ td, th {
 	text-align: left;
 }
 
-.form-wrapper, .table-container {
+.flex-center {
 	align-items: center;
-	margin: 10px 0;
 }
 
 .post-container, .pages, .toggle-label {
@@ -248,7 +253,7 @@ td, th {
 	display: flex;
 	flex-direction: column;
 	max-width: 100%;
-	margin-top: 10px;
+	/*margin-top: 10px;*/
 }
 
 .togglable {

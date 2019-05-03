@@ -27,7 +27,6 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-
 	// try to get the captcha from the DB
 	let captcha;
 	try {
