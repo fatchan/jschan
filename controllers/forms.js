@@ -210,8 +210,41 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 
 });
 
+//board settings
+router.post('/board/:board/settings', Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+
+	const errors = [];
+
+	if (req.body.default_name && req.body.default_name.length > 20) {
+		errors.push('Must provide a message or file');
+	}
+	if (typeof req.body.reply_limit === 'number' && (req.body.reply_limit < 1 || req.body.reply_limit > 1000)) {
+		errors.push('Reply Limit must be from 1-1000');
+	}
+	if (typeof req.body.thread_limit === 'number' && (req.body.thread_limit < 1 || req.body.thread_limit > 250)) {
+		errors.push('Threads Limit must be 1-250');
+	}
+	if (typeof req.body.max_files === 'number' && (req.body.max_files < 1 || req.body.max_files > 3)) {
+		errors.push('Max files must be 1-3');
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': `/${req.params.board}/manage`
+		})
+	}
+
+	return res.status(501).render('message', {
+		'title': 'Not implemented',
+		'redirect': `/${req.params.board}/manage`
+	})
+
+});
+
 //upload banners
-router.post('/board/:board/addbanners', Boards.exists, banCheck, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+router.post('/board/:board/addbanners', Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -247,7 +280,7 @@ router.post('/board/:board/addbanners', Boards.exists, banCheck, checkPermsMiddl
 });
 
 //delete banners
-router.post('/board/:board/deletebanners', Boards.exists, banCheck, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+router.post('/board/:board/deletebanners', Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	const errors = [];
 
@@ -522,7 +555,7 @@ router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, ve
 router.post('/board/:board/modactions', Boards.exists, checkPermsMiddleware, paramConverter, actions);
 
 //unban
-router.post('/board/:board/unban', Boards.exists, banCheck, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+router.post('/board/:board/unban', Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	//keep this for later in case i add other options to unbans
 	const errors = [];

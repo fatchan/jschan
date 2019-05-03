@@ -7,20 +7,21 @@ block head
 
 block content
 	h1.board-title Global Management
-	h4 All Reports:
-	form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
-		input(type='hidden' name='_csrf' value=csrf)
-		if reports.length === 0
-			p No reports.
-			hr(size=1)
-		else
-			for report in reports
-				section.thread
-					+post(report, false, false, true)
+	h4.no-m-p Reports:
+	.mv-10
+		form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
+			input(type='hidden' name='_csrf' value=csrf)
+			if reports.length === 0
+				p No reports.
 				hr(size=1)
-			include ../includes/actionfooter_globalmanage.pug
-			hr(size=1)
-	h4 All Bans:
+			else
+				for report in reports
+					section.thread
+						+post(report, false, false, true)
+					hr(size=1)
+				include ../includes/actionfooter_globalmanage.pug
+				hr(size=1)
+	h4.no-m-p Bans:
 	form(action=`/forms/global/unban` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if bans.length === 0
@@ -33,3 +34,5 @@ block content
 				hr(size=1)
 			section.action-wrapper
 				input(type='submit', value='unban')
+
+

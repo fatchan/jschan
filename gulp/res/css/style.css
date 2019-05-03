@@ -301,6 +301,7 @@ td, th {
 	overflow: hidden;
 	max-width: 160px;
 	text-overflow: ellipsis;
+	word-break: keep-all;
 }
 
 .post-file-src {
@@ -352,8 +353,6 @@ input textarea {
 }
 
 .post-message {
-	/*overflow-y: auto;*/
-	/*float: left;*/
 	text-align: left;
 }
 
