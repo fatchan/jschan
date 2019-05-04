@@ -8,6 +8,7 @@ const Posts = require(__dirname+'/../db/posts.js')
 	, italicRegex = /__(.+)__/gm
 	, linkRegex = /https?\:\/\/[^\s]+/g
 	, spoilerRegex = /\|\|(.+)\|\|/gm
+	, detectedRegex = /(\(\(\(.+\)\)\))/gm
 	, codeRegex = /^```\s([\s\S]+)\s```/gm;
 
 module.exports = (board, thread, text) => {
@@ -47,8 +48,14 @@ module.exports = (board, thread, text) => {
 		return `<span class='spoiler'>${spoiler}</span>`;
 	});
 
+	//code
 	text = text.replace(codeRegex, (match, code) => {
         return `<span class='code'>${code.trim()}</span>`;
+    });
+
+	//detected
+	text = text.replace(detectedRegex, (match, detected) => {
+        return `<span class='detected'>${detected}</span>`;
     });
 
 	return text;
