@@ -31,7 +31,7 @@ module.exports = async (board, text) => {
 			const crossQuote = crossQuotes[i].split('/');
 			const crossQuoteBoard = crossQuote[1];
 			const crossQuotePostId = +crossQuote[2];
-			if (crossQuoteBoard === board || crossQuotePostId === 0) { //zero for no postid, i.e. just a board quote
+			if (crossQuoteBoard === board) {
 				continue;
 			}
 			if (!crossQuoteMap[crossQuoteBoard]) {
@@ -53,24 +53,25 @@ module.exports = async (board, text) => {
 	}
 
 	//get all the posts from quotes
-	const posts = await Posts.getPostsForQuotes(queryOrs);
-	//if none of the quotes were real, dont do a replace
-	if (posts.length === 0) {
-		return text;
-	}
-
-	//turn the result into a map of postId => threadId/postId
 	const postThreadIdMap = {};
-	for (let i = 0; i < posts.length; i++) {
-		const post = posts[i];
-		if (!postThreadIdMap[post.board]) {
-			postThreadIdMap[post.board] = {};
+	if (queryOrs.length > 0) {
+		const posts = await Posts.getPostsForQuotes(queryOrs);
+		//if none of the quotes were real, dont do a replace
+		if (posts.length === 0) {
+			return text;
 		}
-		postThreadIdMap[post.board][post.postId] = post.thread || post.postId;
+		//turn the result into a map of postId => threadId/postId
+		for (let i = 0; i < posts.length; i++) {
+			const post = posts[i];
+			if (!postThreadIdMap[post.board]) {
+				postThreadIdMap[post.board] = {};
+			}
+			postThreadIdMap[post.board][post.postId] = post.thread || post.postId;
+		}
 	}
 
 	//then replace the quotes with only ones that exist
-	if (quotes) {
+	if (quotes && Object.keys(postThreadIdMap).length > 0) {
 		text = text.replace(quoteRegex, (match) => {
 			const quotenum = +match.substring(2);
 			if (postThreadIdMap[board] && postThreadIdMap[board][quotenum]) {
