@@ -18,7 +18,7 @@ section.form-wrapper.flex-center.mv-10
 				label.postform-style.ph-5
 					input#spoiler(type='checkbox', name='email', value='sage')
 					| Sage
-			if thread
+			if !thread
 				section.postform-row
 					.postform-label Subject
 					input#title(type='text', name='subject', autocomplete='off' maxlength='50')
