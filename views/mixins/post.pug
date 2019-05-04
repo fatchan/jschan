@@ -32,7 +32,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 				| 
 			span #{post.date.toLocaleString()}
 			| 
-			if board.settings.ids && post.userId
+			if post.userId && board.settings.ids
 				span.user-id(style=`background: #${post.userId}`) #{post.userId}
 				| 
 			span: a(href=postURL) No.#{post.postId}

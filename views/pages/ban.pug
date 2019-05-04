@@ -6,8 +6,7 @@ block head
 
 block content
 	h1.board-title Banned!
-	hr(size=1)
-	Bans currently in place against your IP:
+	h4.board-description Bans currently in place against your IP:
 	hr(size=1)
 	for ban in bans
 		+ban(ban)

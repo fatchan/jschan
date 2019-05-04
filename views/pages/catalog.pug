@@ -13,7 +13,6 @@ block content
 	hr(size=1)
 	if threads.length === 0
 		p No posts.
-		hr(size=1)
 	section.catalog
 		for thread in threads
 			+catalogtile(board, thread)

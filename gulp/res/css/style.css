@@ -119,6 +119,11 @@ object {
 	flex-flow: row wrap;
 }
 
+.detected {
+	background: #FAF8F8;
+	color: #3060A8;
+}
+
 .spoiler {
 	background: black;
 }
@@ -181,6 +186,7 @@ blockquote {
 	background: #D6DAF0;
 	border: 1px solid #000333;
 	border-spacing: 0;
+	width: 800px;
 }
 
 .table-head {
@@ -532,7 +538,7 @@ hr {
 		overflow-y: hidden;
 	}
 
-	.boards-table {
+	.table-body {
 		width: 100%;
 	}
 

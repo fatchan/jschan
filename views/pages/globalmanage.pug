@@ -30,7 +30,7 @@ block content
 		else
 			for ban in bans
 				section.thread
-					+ban(ban)
+					+ban(ban, true)
 				hr(size=1)
 			section.action-wrapper
 				input(type='submit', value='unban')

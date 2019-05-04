@@ -1,18 +1,21 @@
 include ./post.pug
 
-mixin ban(ban)
+mixin ban(ban, showcheck)
 	.ban
-		input.post-check(type='checkbox', name='checkedbans[]' value=ban._id)
-		if ban.board
-			div Board: #[a(href=`/${ban.board}/`) /#{ban.board}/]
-		else
-			div Global ban.
-		div Reason: #{ban.reason}
-		div Issuer: #{ban.issuer}
-		div Date: #{ban.date}
-		div Expiry: #{ban.expireAt}
+		if showcheck
+			input.post-check(type='checkbox', name='checkedbans[]' value=ban._id)
+		span 
+			| You were banned 
+			if ban.board
+				| from #[a(href=`/${ban.board}/`) /#{ban.board}/] 
+			else
+				| globally 
+		| for: #{ban.reason}
+		div Issued by: #{ban.issuer}
+		div Banned: #{ban.date.toLocaleString()}
+		div Expires: #{ban.expireAt.toLocaleString()}
 		if ban.post
-			span Post:
+			span Banned for the following post:
 			section.thread
 				+post(ban.post, false)
 	
