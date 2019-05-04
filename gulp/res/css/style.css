@@ -163,13 +163,8 @@ blockquote a, a:hover {
 	color: #d00!important;
 }
 
-.op blockquote {
-    margin: 1em;
-}
-
 blockquote {
 	white-space: pre-wrap;
-	margin: 1em;
 }
 
 .thread, .action-wrapper, .form-wrapper, .table-container {

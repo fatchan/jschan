@@ -3,7 +3,7 @@
 const Posts = require(__dirname+'/../db/posts.js')
 	, Boards = require(__dirname+'/../db/posts.js')
 	, quoteRegex = />>\d+/g
-	, crossQuoteRegex = />>>\/\w+\/\d+/g;
+	, crossQuoteRegex = />>>\/\w+\/\d*$/gm;
 
 module.exports = async (board, text) => {
 
@@ -31,7 +31,7 @@ module.exports = async (board, text) => {
 			const crossQuote = crossQuotes[i].split('/');
 			const crossQuoteBoard = crossQuote[1];
 			const crossQuotePostId = +crossQuote[2];
-			if (crossQuoteBoard === board) {
+			if (crossQuoteBoard === board || crossQuotePostId === 0) { //zero for no postid, i.e. just a board quote
 				continue;
 			}
 			if (!crossQuoteMap[crossQuoteBoard]) {
@@ -86,6 +86,8 @@ module.exports = async (board, text) => {
 			const quotenum = +quote[2];
 			if (postThreadIdMap[quoteboard] && postThreadIdMap[quoteboard][quotenum]) {
 				return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum]}#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
+			} else if (postThreadIdMap[quoteboard] && quotenum === 0) {
+				return `<a class='quote' href='/${quoteboard}/'>&gt;&gt;&gt;/${quoteboard}/</a>`;
 			}
 			return match;
 		});
