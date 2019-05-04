@@ -101,11 +101,21 @@ const Mongo = require(__dirname+'/db/db.js')
 	});
 	await readdir('uploads/img/').then(async files => {
 		await Promise.all(files.map(async file => {
-			if (file != 'spoiler.png')
-				unlink(path.join('uploads/img/', file));
+			unlink(path.join('uploads/img/', file));
+		}))
+	});
+	await readdir('uploads/captcha/').then(async files => {
+		await Promise.all(files.map(async file => {
+			unlink(path.join('uploads/captcha/', file));
+		}))
+	});
+	await readdir('uploads/banner/').then(async files => {
+		await Promise.all(files.map(async file => {
+			unlink(path.join('uploads/banner/', file));
 		}))
 	});
 	console.log('creating admin account: admin:changeme');
 	await Accounts.insertOne('admin', 'changeme', 3);
 	console.log('done');
+	process.exit(0);
 })();
