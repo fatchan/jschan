@@ -1,8 +1,22 @@
 'use strict';
 
-const Mongo = require(__dirname+'/../db/db.js');
+const Mongo = require(__dirname+'/../db/db.js')
+	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans'])
 
 module.exports = (req, res, next) => {
+
+	const bodyfields = Object.keys(req.body);
+	for (let i = 0; i < bodyfields.length; i++) {
+		const key = bodyfields[i];
+		const val = req.body[key];
+		if (!allowedArrays.has(key) && Array.isArray(val)) {
+			//this is an array from malformed input, deny it.
+			return res.status(400).render('message', {
+				'title': 'Bad request',
+				'message': 'Malformed input'
+			});
+		}
+	}
 
 	//convert to numbers of mongoIds for action routes
 	if (req.body.checkedposts) {
