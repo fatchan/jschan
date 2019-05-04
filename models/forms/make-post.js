@@ -26,23 +26,18 @@ const uuidv4 = require('uuid/v4')
 	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
 	, videoThumbnail = require(__dirname+'/../../helpers/files/video-thumbnail.js')
 	, videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
-	, formatSize = require(__dirname+'/../../helpers/files/format-size.js')
-	, deletePostFiles = require(__dirname+'/../../helpers/files/deletepostfiles.js');
+	, formatSize = require(__dirname+'/../../helpers/files/format-size.js');
 
 module.exports = async (req, res, next, numFiles) => {
 
 	// check if this is responding to an existing thread
 	let redirect = `/${req.params.board}`
-	let salt = '';
-	let thread;
+	let salt = null;
+	let thread = null;
 	const hasPerms = permsCheck(req, res);
 	const forceAnon = res.locals.board.settings.forceAnon;
 	if (req.body.thread) {
-		try {
-			thread = await Posts.getPost(req.params.board, req.body.thread, true);
-		} catch (err) {
-			return next(err);
-		}
+		thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		if (!thread || thread.thread != null) {
 			return res.status(400).render('message', {
 				'title': 'Bad request',
@@ -85,66 +80,54 @@ module.exports = async (req, res, next, numFiles) => {
 			const file = req.files.file[i];
 			const uuid = uuidv4();
 			const filename = uuid + path.extname(file.name);
+			file.filename = filename; //for error to delete failed files
 
-			// try to save, thumbnail and get metadata
-			try {
+			//upload file
+			await fileUpload(req, res, file, filename, 'img');
 
-				//upload file
-				await fileUpload(req, res, file, filename, 'img');
+			//get metadata
+			let processedFile = {
+					filename: filename,
+					originalFilename: file.name,
+					mimetype: file.mimetype,
+					size: file.size,
+			};
 
-				//get metadata
-				let processedFile = {
-						filename: filename,
-						originalFilename: file.name,
-						mimetype: file.mimetype,
-						size: file.size,
-				};
-
-				//handle video vs image ffmpeg vs graphicsmagick
-				const mainType = file.mimetype.split('/')[0];
-				switch (mainType) {
-					case 'image':
-						const imageData = await imageIdentify(filename, 'img');
-						processedFile.geometry = imageData.size // object with width and height pixels
-						processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
-						processedFile.geometryString = imageData.Geometry // 123 x 123 string
-						await imageThumbnail(filename);
-						break;
-					case 'video':
-						//video metadata
-						const videoData = await videoIdentify(filename);
-						processedFile.duration = videoData.format.duration;
-						processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
-						processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
-						processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
-						processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string
-						await videoThumbnail(filename);
-						break;
-					default:
-						return next(err);
-				}
-
-				//make thumbnail
-
-				//handle gifs with multiple geometry and size
-				if (Array.isArray(processedFile.geometry)) {
-					processedFile.geometry = processedFile.geometry[0];
-				}
-				if (Array.isArray(processedFile.sizeString)) {
-					processedFile.sizeString = processedFile.sizeString[0];
-				}
-				if (Array.isArray(processedFile.geometryString)) {
-					processedFile.geometryString = processedFile.geometryString[0];
-				}
-				files.push(processedFile);
-
-			} catch (err) {
-				if (files.length > 0) {
-					const fileNames = files.map(file => file.filenname);
-					await deletePostFiles(fileNames);
-				}
-				return next(err);
+			//handle video/image ffmpeg or graphicsmagick
+			const mainType = file.mimetype.split('/')[0];
+			switch (mainType) {
+				case 'image':
+					const imageData = await imageIdentify(filename, 'img');
+					processedFile.geometry = imageData.size // object with width and height pixels
+					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
+					processedFile.geometryString = imageData.Geometry // 123 x 123 string
+					await imageThumbnail(filename);
+					break;
+				case 'video':
+					//video metadata
+					const videoData = await videoIdentify(filename);
+					processedFile.duration = videoData.format.duration;
+					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
+					processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
+					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
+					processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string
+					await videoThumbnail(filename);
+					break;
+				default:
+					return next(err);
 			}
+
+			//handle gifs with multiple geometry and size
+			if (Array.isArray(processedFile.geometry)) {
+				processedFile.geometry = processedFile.geometry[0];
+			}
+			if (Array.isArray(processedFile.sizeString)) {
+				processedFile.sizeString = processedFile.sizeString[0];
+			}
+			if (Array.isArray(processedFile.geometryString)) {
+				processedFile.geometryString = processedFile.geometryString[0];
+			}
+			files.push(processedFile);
 		}
 	}
 
@@ -165,7 +148,6 @@ module.exports = async (req, res, next, numFiles) => {
 	let subject = hasPerms || !forceAnon || !req.body.thread ? req.body.subject : null;
 	//forceanon only allow sage email
 	let email = hasPerms || !forceAnon || req.body.email === 'sage' ? req.body.email : null;
-
 	let name = res.locals.board.settings.defaultName;
 	let tripcode = null;
 	let capcode = null;
@@ -231,14 +213,9 @@ module.exports = async (req, res, next, numFiles) => {
 		});
 	}
 
-	let postId;
-	try {
-		postId = await Posts.insertOne(req.params.board, data, thread);
-		if (!data.thread) { //if we just added a new thread, prune anyold ones
-			await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
-		}
-	} catch (err) {
-		return next(err);
+	const postId = await Posts.insertOne(req.params.board, data, thread);
+	if (!data.thread) { //if we just added a new thread, prune any old ones
+		await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
 	}
 
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}#${postId}`;

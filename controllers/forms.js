@@ -30,6 +30,7 @@ const express  = require('express')
 	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, banCheck = require(__dirname+'/../helpers/bancheck.js')
+	, deletePostFiles = require(__dirname+'/../helpers/files/deletepostfiles.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captchaverify.js')
 	, actionChecker = require(__dirname+'/../helpers/actionchecker.js');
 
@@ -206,7 +207,15 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 		})
 	}
 
-	makePost(req, res, next, numFiles);
+	try {
+		await makePost(req, res, next, numFiles);
+	} catch (err) {
+		if (numFiles > 0) {
+			const fileNames = req.files.file.map(file => file.filename);
+			await deletePostFiles(fileNames).catch(err => console.error);
+		}
+		return next(err);
+	}
 
 });
 
