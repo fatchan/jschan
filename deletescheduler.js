@@ -12,17 +12,17 @@ async function deleteCaptchas() {
 	try {
 		const files = await readdir(`${uploadDirectory}captcha/`);
 		if (files.length > 0) {
-			console.log('Deleting old captchas:', files);
-			files.forEach(file => {
+			files.forEach(async (file) => {
 				const filePath = `${uploadDirectory}captcha/${file}`;
-				stat(filePath).then(stats => {
-					const now = Date.now();
-					const expiry = new Date(stats.ctime).getTime() + 6*1000*60; //6 minutes ahead
-					if (now > expiry) {
-						return unlink(filePath);
-					}
+				const stats = await stat(filePath).catch(e => console.error);
+				if (!stats) {
 					return;
-				}).catch(e => console.error);
+				}
+				const now = Date.now();
+				const expiry = new Date(stats.ctime).getTime() + 6*1000*60; //6 minutes ahead
+				if (now > expiry) {
+					await unlink(filePath).catch(e => console.error);
+				}
 			});
 		}
 	} catch (err) {
