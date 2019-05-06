@@ -1,7 +1,8 @@
 node_modules/
 configs/*.json
-uploads/img/*
-uploads/captcha/*
-uploads/banner/*
+static/img/*
+static/captcha/*
+static/banner/*
+static/html/*
 gulp/dist/
 tmp/

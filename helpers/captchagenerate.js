@@ -30,7 +30,7 @@ module.exports = (text, captchaId) => {
 		.blur(1, 2)
 		.crop(200, 80, 0, 0)
 		.quality(30)
-		.write(`./uploads/captcha/${captchaId}.jpg`, (err) => {
+		.write(`./static/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);
 			}

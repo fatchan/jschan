@@ -18,7 +18,6 @@ module.exports = async (req, res, next) => {
 
     //render the page
     res.render('thread', {
-        csrf: req.csrfToken(),
-        thread: thread
+		thread
     });
 }

@@ -22,10 +22,11 @@ const express  = require('express')
 	, banCheck = require(__dirname+'/../helpers/bancheck.js')
 	, deletePostFiles = require(__dirname+'/../helpers/files/deletepostfiles.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captchaverify.js')
-	, actionHandler = require(__dirname+'/../models/forms/actionhandler.js');
+	, actionHandler = require(__dirname+'/../models/forms/actionhandler.js')
+	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js');
 
 // login to account
-router.post('/login', (req, res, next) => {
+router.post('/login', csrf, (req, res, next) => {
 
 	const errors = [];
 
@@ -58,7 +59,7 @@ router.post('/login', (req, res, next) => {
 });
 
 //change password
-router.post('/changepassword', async (req, res, next) => {
+router.post('/changepassword', verifyCaptcha, async (req, res, next) => {
 
 	const errors = [];
 
@@ -152,7 +153,7 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 });
 
 // make new post
-router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verifyCaptcha, async (req, res, next) => {
+router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -210,7 +211,7 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 });
 
 //board settings
-router.post('/board/:board/settings', Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	const errors = [];
 
@@ -243,7 +244,7 @@ router.post('/board/:board/settings', Boards.exists, checkPermsMiddleware, param
 });
 
 //upload banners
-router.post('/board/:board/addbanners', Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -279,7 +280,7 @@ router.post('/board/:board/addbanners', Boards.exists, checkPermsMiddleware, par
 });
 
 //delete banners
-router.post('/board/:board/deletebanners', Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+router.post('/board/:board/deletebanners', csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	const errors = [];
 
@@ -315,11 +316,11 @@ router.post('/board/:board/deletebanners', Boards.exists, checkPermsMiddleware, 
 });
 
 //report/delete/spoiler/ban
-router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, verifyCaptcha, actionHandler);
-router.post('/board/:board/modactions', Boards.exists, checkPermsMiddleware, paramConverter, actionHandler);
+router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, verifyCaptcha, actionHandler); //Captcha on regular actions
+router.post('/board/:board/modactions', csrf, Boards.exists, checkPermsMiddleware, paramConverter, actionHandler); //CSRF for mod actions
 
 //unban
-router.post('/board/:board/unban', Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+router.post('/board/:board/unban', csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	//keep this for later in case i add other options to unbans
 	const errors = [];
@@ -351,7 +352,7 @@ router.post('/board/:board/unban', Boards.exists, checkPermsMiddleware, paramCon
 
 });
 
-router.post('/global/actions', checkPermsMiddleware, paramConverter, async(req, res, next) => {
+router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async(req, res, next) => {
 
 	const errors = [];
 
@@ -480,7 +481,7 @@ router.post('/global/actions', checkPermsMiddleware, paramConverter, async(req, 
 
 });
 
-router.post('/global/unban', checkPermsMiddleware, paramConverter, async(req, res, next) => {
+router.post('/global/unban', csrf, checkPermsMiddleware, paramConverter, async(req, res, next) => {
 
 	const errors = [];
 

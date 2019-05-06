@@ -9,7 +9,7 @@ const express  = require('express')
 	, path	 = require('path')
 	, app	  = express()
 	, helmet = require('helmet')
-	, csrf = require('csurf')
+//	, csrf = require('csurf')
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
@@ -48,7 +48,7 @@ const express  = require('express')
 
 	// csurf and helmet
 	app.use(helmet());
-	app.use(csrf());
+//	app.use(csrf());
 
 	//referer header check
 	app.use((req, res, next) => {

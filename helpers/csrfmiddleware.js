@@ -1,5 +1,5 @@
 'use strict';
 
-const csrf = require('csurf')
+const csrf = require('csurf')();
 
-module.exports = csrf();
+module.exports = csrf;

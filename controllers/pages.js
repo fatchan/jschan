@@ -6,6 +6,7 @@ const express  = require('express')
 	, hasPerms = require(__dirname+'/../helpers/haspermsmiddleware.js')
 	, isLoggedIn = require(__dirname+'/../helpers/isloggedin.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
+	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js')
 	//page models
 	, home = require(__dirname+'/../models/pages/home.js')
 	, register = require(__dirname+'/../models/pages/register.js')
@@ -23,7 +24,7 @@ const express  = require('express')
 router.get('/', home);
 
 //login page
-router.get('/login', login);
+router.get('/login', csrf, login);
 
 //registration page
 router.get('/register', register);
@@ -32,15 +33,11 @@ router.get('/register', register);
 router.get('/changepassword', changePassword);
 
 //logout
-router.get('/logout', isLoggedIn, (req, res, next) => {
+router.get('/logout', csrf, isLoggedIn, (req, res, next) => {
 
 	//remove session
 	req.session.destroy();
-	return res.render('message', {
-		'title': 'Success',
-		'message': 'You have been logged out successfully',
-		'redirect': '/'
-	});
+	return res.redirect('/');
 
 });
 
@@ -51,10 +48,10 @@ router.get('/captcha', captcha);
 router.get('/banners', banners);
 
 //board manage page
-router.get('/:board/manage', Boards.exists, isLoggedIn, hasPerms, manage);
+router.get('/:board/manage', Boards.exists, isLoggedIn, hasPerms, csrf, manage);
 
 //board manage page
-router.get('/globalmanage', isLoggedIn, hasPerms, globalManage);
+router.get('/globalmanage', isLoggedIn, hasPerms, csrf, globalManage);
 
 // board page/recents
 router.get('/:board', Boards.exists, paramConverter, board);

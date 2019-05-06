@@ -19,7 +19,6 @@ module.exports = async (req, res, next) => {
 
 	//render the page
 	res.render('board', {
-		csrf: req.csrfToken(),
 		threads: threads || [],
 		pages,
 		page,

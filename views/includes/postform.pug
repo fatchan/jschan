@@ -1,6 +1,6 @@
 section.form-wrapper.flex-center.mv-10
 	form.form-post(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
-		input(type='hidden' name='_csrf' value=csrf)
+		//input(type='hidden' name='_csrf' value=csrf)
 		input(type='hidden' name='thread' value=thread != null ? thread.postId : null)
 		unless board.settings.forceAnon
 			section.postform-row
