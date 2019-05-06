@@ -12,7 +12,7 @@ const paths = {
 	},
 	images: {
 		src: 'gulp/res/img/*',
-		dest: 'uploads/img/'
+		dest: 'static/img/'
 	},
 	scripts: {
 		src: 'gulp/res/js/*.js',

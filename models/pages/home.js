@@ -12,8 +12,6 @@ module.exports = async (req, res, next) => {
 		return next(err);
 	}
 
-	//render the page
-	res.render('home', {
-		boards: boards
-	});
+	res.render('home',  { boards });
+
 }
