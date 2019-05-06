@@ -21,7 +21,7 @@ const express  = require('express')
 	, thread = require(__dirname+'/../models/pages/thread.js');
 
 //homepage with board list
-router.get('/', home);
+router.get('/index', home);
 
 //login page
 router.get('/login', csrf, login);
@@ -54,7 +54,7 @@ router.get('/:board/manage', Boards.exists, isLoggedIn, hasPerms, csrf, manage);
 router.get('/globalmanage', isLoggedIn, hasPerms, csrf, globalManage);
 
 // board page/recents
-router.get('/:board', Boards.exists, paramConverter, board);
+router.get('/:board/(:page([2-9]*|index))?', Boards.exists, paramConverter, board);
 
 // thread view page
 router.get('/:board/thread/:id(\\d+)', Boards.exists, paramConverter, thread);

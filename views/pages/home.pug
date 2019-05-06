@@ -14,6 +14,6 @@ block content
 				th Description
 			each board in boards
 				tr.table-row
-					td: a(href='/'+board._id) /#{board._id}/
+					td: a(href=`/${board._id}/`) /#{board._id}/
 					td #{board.name}
 					td #{board.description}

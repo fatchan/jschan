@@ -10,5 +10,5 @@ const util = require('util')
 
 module.exports = async (htmlName, pugName, pugVars) => {
 	const html = pug.renderFile(`${pugDirectory}/${pugName}`, pugVars);
-	return writeFile(`${uploadDirectory}/htmlName`, html);
+	return writeFile(`${uploadDirectory}html/${htmlName}`, html);
 };

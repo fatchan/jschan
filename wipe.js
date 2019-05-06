@@ -99,19 +99,24 @@ const Mongo = require(__dirname+'/db/db.js')
 			}
 		}
 	});
-	await readdir('uploads/img/').then(async files => {
+	await readdir('static/img/').then(async files => {
 		await Promise.all(files.map(async file => {
-			unlink(path.join('uploads/img/', file));
+			unlink(path.join('static/img/', file));
 		}))
 	});
-	await readdir('uploads/captcha/').then(async files => {
+	await readdir('static/captcha/').then(async files => {
 		await Promise.all(files.map(async file => {
-			unlink(path.join('uploads/captcha/', file));
+			unlink(path.join('static/captcha/', file));
 		}))
 	});
-	await readdir('uploads/banner/').then(async files => {
+	await readdir('static/banner/').then(async files => {
 		await Promise.all(files.map(async file => {
-			unlink(path.join('uploads/banner/', file));
+			unlink(path.join('static/banner/', file));
+		}))
+	});
+	await readdir('static/html/').then(async files => {
+		await Promise.all(files.map(async file => {
+			unlink(path.join('static/html/', file));
 		}))
 	});
 	console.log('creating admin account: admin:changeme');

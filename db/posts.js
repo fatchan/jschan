@@ -10,7 +10,6 @@ module.exports = {
 	db,
 
 	getRecent: async (board, page) => {
-
 		// get all thread posts (posts with null thread id)
 		const threads = await db.find({
 			'thread': null,

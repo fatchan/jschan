@@ -69,6 +69,11 @@ module.exports = (req, res, next) => {
 			req.body.thread_limit = null;
 		}
 	}
+
+	if (req.params.page) {
+		req.params.page = req.params.page === 'index' ? 'index' : +req.params.page;
+	}
+
 	next();
 
 }
