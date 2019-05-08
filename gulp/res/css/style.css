@@ -156,8 +156,8 @@ object {
 	font-weight: bold;
 }
 
-.redtext {
-	color: maroon;
+.pinktext {
+	color: #E0727F;
 }
 
 .greentext {
@@ -254,7 +254,7 @@ td, th {
 	display: flex;
 	flex-direction: column;
 	max-width: 100%;
-	/*margin-top: 10px;*/
+	width: 400px;
 }
 
 .togglable {

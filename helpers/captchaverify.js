@@ -2,9 +2,7 @@
 
 const Captchas = require(__dirname+'/../db/captchas.js')
 	, Mongo = require(__dirname+'/../db/db.js')
-	, util = require('util')
-	, fs = require('fs')
-	, unlink = util.promisify(fs.unlink)
+	, remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../helpers/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
@@ -46,7 +44,7 @@ module.exports = async (req, res, next) => {
 
 	//it was correct, so delete the file, the cookie and continue
 	res.clearCookie('captchaid');
-	await unlink(`${uploadDirectory}captcha/${captchaId}.jpg`)
+	await remove(`${uploadDirectory}captcha/${captchaId}.jpg`)
 
 	return next();
 

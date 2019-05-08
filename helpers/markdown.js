@@ -2,7 +2,7 @@
 
 const Posts = require(__dirname+'/../db/posts.js')
 	, greentextRegex = /^>([^>].+)/gm
-	, redtextRegex = /^<([^<].+)/gm
+	, pinktextRegex = /^<([^<].+)/gm
 	, boldRegex = /""(.+)""/gm
 	, titleRegex = /==(.+)==/gm
 	, italicRegex = /__(.+)__/gm
@@ -13,9 +13,9 @@ const Posts = require(__dirname+'/../db/posts.js')
 
 module.exports = (board, thread, text) => {
 
-	//redtext
-	text = text.replace(redtextRegex, (match, redtext) => {
-		return `<span class='redtext'>&lt;${redtext}</span>`;
+	//pinktext
+	text = text.replace(pinktextRegex, (match, pinktext) => {
+		return `<span class='pinktext'>&lt;${pinktext}</span>`;
 	});
 
 	//greentext

@@ -1,6 +1,6 @@
 mixin post(post, truncate, manage=false, globalmanage=false)
 	article(id=post.postId class='post-container '+(post.thread ? '' : 'op'))
-		- const postURL = `/${post.board}/thread/${post.thread || post.postId}#${post.postId}`;
+		- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html#${post.postId}`;
 		header.post-info
 			if globalmanage
 				input.post-check(type='checkbox', name='globalcheckedposts[]' value=post._id)

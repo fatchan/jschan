@@ -4,12 +4,12 @@ const imageMimeTypes = new Set([
 	'image/jpeg',
 	'image/pjpeg',
 	'image/png',
+	'image/bmp',
 	'image/gif',
+	'image/webp',
 ]);
 
 const videoMimeTypes = new Set([
-	'image/webp',
-	'image/bmp',
 	'video/mp4',
 	'video/webm',
 ]);

@@ -9,6 +9,16 @@ module.exports = {
 
 	db,
 
+	getBeforeCount: (board, thread) => {
+		return db.countDocuments({
+			'board': board,
+			'thread': null,
+			'bumped': {
+				'$gt': thread.bumped
+			}
+		});
+	},
+
 	getRecent: async (board, page) => {
 		// get all thread posts (posts with null thread id)
 		const threads = await db.find({
@@ -331,27 +341,28 @@ module.exports = {
 		}).sort({
 			'sticky': -1,
 			'bumped': -1
-		}).skip(threadLimit).toArray(); //100 therads in board limit for now
+		}).skip(threadLimit).toArray();
 		//if there are any
-		if (threads.length > 0) {
-			//get the postIds
-			const threadIds = threads.map(thread => thread.postId);
-			//get all the posts from those threads
-			const threadPosts = await module.exports.getMultipleThreadPosts(board, threadIds);
-			//combine them
-			const postsAndThreads = threads.concat(threadPosts);
-			//get the filenames and delete all the files
-		 	let fileNames = [];
-		 	postsAndThreads.forEach(post => {
-				fileNames = fileNames.concat(post.files.map(x => x.filename))
-			});
-			if (fileNames.length > 0) {
-				await deletePostFiles(fileNames);
-			}
-			//get the mongoIds and delete them all
-			const postMongoIds = postsAndThreads.map(post => Mongo.ObjectId(post._id));
-			await module.exports.deleteMany(postMongoIds);
+		if (threads.length === 0) {
+			return;
 		}
+		//get the postIds
+		const threadIds = threads.map(thread => thread.postId);
+		//get all the posts from those threads
+		const threadPosts = await module.exports.getMultipleThreadPosts(board, threadIds);
+		//combine them
+		const postsAndThreads = threads.concat(threadPosts);
+		//get the filenames and delete all the files
+		let fileNames = [];
+		postsAndThreads.forEach(post => {
+			fileNames = fileNames.concat(post.files.map(x => x.filename))
+		});
+		if (fileNames.length > 0) {
+			await deletePostFiles(fileNames);
+		}
+		//get the mongoIds and delete them all
+		const postMongoIds = postsAndThreads.map(post => Mongo.ObjectId(post._id));
+		return module.exports.deleteMany(postMongoIds);
 	},
 
 	deleteMany: (ids) => {

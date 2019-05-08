@@ -21,19 +21,19 @@ const express  = require('express')
 	, thread = require(__dirname+'/../models/pages/thread.js');
 
 //homepage with board list
-router.get('/index', home);
+router.get('/index.html', home);
 
 //login page
-router.get('/login', csrf, login);
+router.get('/login.html', login);
 
 //registration page
-router.get('/register', register);
+router.get('/register.html', register);
 
 //change password page
-router.get('/changepassword', changePassword);
+router.get('/changepassword.html', changePassword);
 
 //logout
-router.get('/logout', csrf, isLoggedIn, (req, res, next) => {
+router.get('/logout', isLoggedIn, (req, res, next) => {
 
 	//remove session
 	req.session.destroy();
@@ -48,19 +48,19 @@ router.get('/captcha', captcha);
 router.get('/banners', banners);
 
 //board manage page
-router.get('/:board/manage', Boards.exists, isLoggedIn, hasPerms, csrf, manage);
+router.get('/:board/manage.html', Boards.exists, isLoggedIn, hasPerms, csrf, manage);
 
 //board manage page
-router.get('/globalmanage', isLoggedIn, hasPerms, csrf, globalManage);
+router.get('/globalmanage.html', isLoggedIn, hasPerms, csrf, globalManage);
 
 // board page/recents
-router.get('/:board/(:page([2-9]*|index))?', Boards.exists, paramConverter, board);
+router.get('/:board/:page([2-9]*|index).html', Boards.exists, paramConverter, board);
 
 // thread view page
-router.get('/:board/thread/:id(\\d+)', Boards.exists, paramConverter, thread);
+router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, thread);
 
 // board catalog page
-router.get('/:board/catalog', Boards.exists, catalog);
+router.get('/:board/catalog.html', Boards.exists, catalog);
 
 module.exports = router;
 

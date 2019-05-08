@@ -11,7 +11,7 @@ const uuidv4 = require('uuid/v4')
 
 module.exports = async (req, res, next, numFiles) => {
 
-	const redirect = `/${req.params.board}/manage`
+	const redirect = `/${req.params.board}/manage.html`
 
 	// check all mime types befoer we try saving anything
 	for (let i = 0; i < numFiles; i++) {

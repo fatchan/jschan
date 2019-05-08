@@ -24,14 +24,16 @@ const Mongo = require(__dirname+'/db/db.js')
 	console.log('deleting posts')
 	await Posts.deleteAll('pol');
 	await Posts.deleteAll('b');
+	await Posts.deleteAll('t');
 	console.log('deleting boards')
 	await Boards.deleteIncrement('pol');
-	await Boards.deleteIncrement('b'); 
+	await Boards.deleteIncrement('b');
+	await Boards.deleteIncrement('t');
 	await Boards.deleteAll();
 	await Trips.deleteAll();
 	console.log('deleting bans');
 	await Bans.deleteAll();
-	console.log('adding b and pol')
+	console.log('adding boards')
 	await Boards.insertOne({
 		 _id: 'pol',
 		 name: 'Politically Incorrect',
@@ -61,6 +63,22 @@ const Mongo = require(__dirname+'/db/db.js')
 			threadLimit: 100,
 			replyLimit: 300,
 			maxFiles: 3,
+			defaultName: 'Anonymous',
+		}
+	})
+	await Boards.insertOne({
+		 _id: 't',
+		 name: 'text',
+		 description: 'text only board',
+		owner: '',
+		moderators: [],
+		banners: [],
+		settings: {
+			forceAnon: true,
+			ids: false,
+			threadLimit: 100,
+			replyLimit: 300,
+			maxFiles: 0,
 			defaultName: 'Anonymous',
 		}
 	})

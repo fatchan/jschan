@@ -1,19 +1,15 @@
 'use strict';
 
-const uuidv4 = require('uuid/v4')
-	, path = require('path')
-	, util = require('util')
-	, fs = require('fs')
-	, unlink = util.promisify(fs.unlink)
+const remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, Boards = require(__dirname+'/../../db/boards.js');
 
 module.exports = async (req, res, next) => {
 
-	const redirect = `/${req.params.board}/manage`
+	const redirect = `/${req.params.board}/manage.html`
 
 	await Promise.all(req.body.checkedbanners.map(async filename => {
-		unlink(`${uploadDirectory}banner/${filename}`);
+		remove(`${uploadDirectory}banner/${filename}`);
 	}));
 
 	// i dont think there is a way to get the number of array items removed with $pullAll 

@@ -57,7 +57,7 @@ module.exports = async (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}`
+			'redirect': `/${req.params.board}/`
 		})
 	}
 
@@ -66,7 +66,7 @@ module.exports = async (req, res, next) => {
 		return res.status(404).render('message', {
 			'title': 'Not found',
 			'error': 'Selected posts not found',
-			'redirect': `/${req.params.board}`
+			'redirect': `/${req.params.board}/`
 		})
 	}
 
@@ -88,7 +88,7 @@ module.exports = async (req, res, next) => {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
 				'error': 'Password did not match any selected posts',
-				'redirect': `/${req.params.board}`
+				'redirect': `/${req.params.board}/`
 			});
 		}
 	} else {
@@ -247,7 +247,7 @@ module.exports = async (req, res, next) => {
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': `/${req.params.board}`
+		'redirect': `/${req.params.board}/`
 	});
 
 }

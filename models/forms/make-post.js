@@ -5,6 +5,7 @@ const uuidv4 = require('uuid/v4')
 	, util = require('util')
 	, crypto = require('crypto')
 	, randomBytes = util.promisify(crypto.randomBytes)
+	, remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
 	, getTripCode = require(__dirname+'/../../helpers/tripcode.js')
@@ -31,7 +32,7 @@ const uuidv4 = require('uuid/v4')
 module.exports = async (req, res, next, numFiles) => {
 
 	// check if this is responding to an existing thread
-	let redirect = `/${req.params.board}`
+	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
 	const hasPerms = permsCheck(req, res);
@@ -46,7 +47,7 @@ module.exports = async (req, res, next, numFiles) => {
 			});
 		}
 		salt = thread.salt;
-		redirect += `/thread/${req.body.thread}`
+		redirect += `thread/${req.body.thread}.html`
 		if (thread.locked && !hasPerms) {
 			return res.status(400).render('message', {
 				'title': 'Bad request',
@@ -61,6 +62,13 @@ module.exports = async (req, res, next, numFiles) => {
 				'redirect': redirect
 			});
 		}
+	}
+	if (numFiles > res.locals.board.settings.maxFiles) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'message': `Too many files. Max files per post is ${res.locals.board.settings.maxFiles}.`,
+			'redirect': redirect
+		});
 	}
 	let files = [];
 	// if we got a file
@@ -214,11 +222,36 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 
 	const postId = await Posts.insertOne(req.params.board, data, thread);
-	if (!data.thread) { //if we just added a new thread, prune any old ones
+	if (!data.thread) {
+		//if we just added a new thread, prune any old ones
 		await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
 	}
 
-	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}#${postId}`;
+	//now we need to delete outdated html
+	const removePromises = []
+	//always need to refresh catalog
+	removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/catalog.html`));
+	if (data.thread) {
+		//refresh the thread itself
+		removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${req.body.thread}.html`));
+		if (!data.sage) {
+			//bumping a thread, so delete all pages above it
+			const numThreadsBefore = await Posts.getBeforeCount(req.params.board, thread);
+			const pagesToRemove = Math.ceil(numThreadsBefore/10);
+			for (let i = 1; i <= pagesToRemove; i++) {
+				removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${i == 1 ? 'index' : i}.html`));
+			}
+		}
+	} else {
+		//new thread, remove all pages
+		for (let i = 1; i <= Math.ceil(res.locals.board.settings.threadLimit/10); i++) {
+			removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${i == 1 ? 'index' : i}.html`));
+		}
+	}
+	await Promise.all(removePromises);
+
+	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
 
 	return res.redirect(successRedirect);
+
 }

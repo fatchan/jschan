@@ -75,7 +75,7 @@ module.exports = async (board, text) => {
 		text = text.replace(quoteRegex, (match) => {
 			const quotenum = +match.substring(2);
 			if (postThreadIdMap[board] && postThreadIdMap[board][quotenum]) {
-				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum]}#${quotenum}'>&gt;&gt;${quotenum}</a>`;
+				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum]}.html#${quotenum}'>&gt;&gt;${quotenum}</a>`;
 			}
 			return match;
 		});
@@ -86,9 +86,9 @@ module.exports = async (board, text) => {
 			const quoteboard = quote[1];
 			const quotenum = +quote[2];
 			if (postThreadIdMap[quoteboard] && postThreadIdMap[quoteboard][quotenum]) {
-				return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum]}#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
-			} else if (postThreadIdMap[quoteboard] && quotenum === 0) {
-				return `<a class='quote' href='/${quoteboard}/'>&gt;&gt;&gt;/${quoteboard}/</a>`;
+				return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum]}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
+			} else if (!quote[2]) {
+				return `<a class='quote' href='/${quoteboard}/index.html'>&gt;&gt;&gt;/${quoteboard}/</a>`;
 			}
 			return match;
 		});

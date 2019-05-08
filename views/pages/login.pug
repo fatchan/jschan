@@ -6,8 +6,7 @@ block head
 block content
 	section.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/login' method='POST')
-			input(type='hidden' name='_csrf' value=csrf)
-			input(type='hidden' name='redirect' value=redirect)
+			//input(type='hidden' name='_csrf' value=csrf)
 			section.postform-row
 				.postform-label Username
 				input#username(type='text', name='username', maxlength='50')
@@ -15,5 +14,5 @@ block content
 				.postform-label Password
 				input#password(type='password', name='password', maxlength='100')
 			input(type='submit', value='submit')
-		p No account? #[a(href='/register') Register]
+		p No account? #[a(href='/register.html') Register]
 

@@ -17,16 +17,17 @@ const express  = require('express')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
 	, checkPermsMiddleware = require(__dirname+'/../helpers/haspermsmiddleware.js')
-	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, banCheck = require(__dirname+'/../helpers/bancheck.js')
 	, deletePostFiles = require(__dirname+'/../helpers/files/deletepostfiles.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captchaverify.js')
 	, actionHandler = require(__dirname+'/../models/forms/actionhandler.js')
-	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js');
+	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js')
+	, actionChecker = require(__dirname+'/../helpers/actionchecker.js');
+
 
 // login to account
-router.post('/login', csrf, (req, res, next) => {
+router.post('/login', (req, res, next) => {
 
 	const errors = [];
 
@@ -50,7 +51,7 @@ router.post('/login', csrf, (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/login'
+			'redirect': '/login.html'
 		})
 	}
 
@@ -98,7 +99,7 @@ router.post('/changepassword', verifyCaptcha, async (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/changepassword'
+			'redirect': '/changepassword.html'
 		})
 	}
 
@@ -144,7 +145,7 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/register'
+			'redirect': '/register.html'
 		})
 	}
 
@@ -153,7 +154,7 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 });
 
 // make new post
-router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, async (req, res, next) => {
+router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verifyCaptcha, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -194,7 +195,7 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, async
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread : ''}`
+			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
 		})
 	}
 
@@ -232,13 +233,13 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage`
+			'redirect': `/${req.params.board}/manage.html`
 		})
 	}
 
 	return res.status(501).render('message', {
 		'title': 'Not implemented',
-		'redirect': `/${req.params.board}/manage`
+		'redirect': `/${req.params.board}/manage.html`
 	})
 
 });
@@ -266,7 +267,7 @@ router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddlewar
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage`
+			'redirect': `/${req.params.board}/manage.html`
 		})
 	}
 
@@ -292,7 +293,7 @@ router.post('/board/:board/deletebanners', csrf, Boards.exists, checkPermsMiddle
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage`
+			'redirect': `/${req.params.board}/manage.html`
 		})
 	}
 
@@ -301,7 +302,7 @@ router.post('/board/:board/deletebanners', csrf, Boards.exists, checkPermsMiddle
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Invalid banners selected',
-				'redirect': `/${req.params.board}/manage`
+				'redirect': `/${req.params.board}/manage.html`
 			})
 		}
 	}
@@ -333,7 +334,7 @@ router.post('/board/:board/unban', csrf, Boards.exists, checkPermsMiddleware, pa
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage`
+			'redirect': `/${req.params.board}/manage.html`
 		});
 	}
 
@@ -347,7 +348,7 @@ router.post('/board/:board/unban', csrf, Boards.exists, checkPermsMiddleware, pa
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': `/${req.params.board}/manage`
+		'redirect': `/${req.params.board}/manage.html`
 	});
 
 });
@@ -387,7 +388,7 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/globalmanage'
+			'redirect': '/globalmanage.html'
 		})
 	}
 
@@ -397,7 +398,7 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 		return res.status(404).render('message', {
 			'title': 'Not found',
 			'errors': 'Selected posts not found',
-			'redirect': '/globalmanage'
+			'redirect': '/globalmanage.html'
 		})
 	}
 
@@ -414,7 +415,7 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 			}
 			messages.push(message);
 		}
-		if (hasPerms && req.body.delete_ip_global) {
+		if (req.body.delete_ip_global) {
 			const deletePostIps = posts.map(x => x.ip);
 			const deleteIpPosts = await Posts.db.find({
 				'ip': {
@@ -476,7 +477,7 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': '/globalmanage'
+		'redirect': '/globalmanage.html'
 	});
 
 });
@@ -493,7 +494,7 @@ router.post('/global/unban', csrf, checkPermsMiddleware, paramConverter, async(r
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/globalmanage`
+			'redirect': `/globalmanage.html`
 		});
 	}
 
@@ -507,7 +508,7 @@ router.post('/global/unban', csrf, checkPermsMiddleware, paramConverter, async(r
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': `/globalmanage`
+		'redirect': `/globalmanage.html`
 	});
 
 });

@@ -25,12 +25,13 @@ section.form-wrapper.flex-center.mv-10
 		section.postform-row
 			.postform-label Message
 			textarea#message(name='message', rows='5', autocomplete='off' maxlength='2000')
-		section.postform-row
-			.postform-label Files
-			input#file(type='file', name='file' multiple='multiple')
-			label.postform-style.ph-5.ml-1
-				input#spoiler(type='checkbox', name='spoiler', value='true')
-				| Spoiler
+		if board.settings.maxFiles !== 0
+			section.postform-row
+				.postform-label Files
+				input#file(type='file', name='file' multiple='multiple')
+				label.postform-style.ph-5.ml-1
+					input#spoiler(type='checkbox', name='spoiler', value='true')
+					| Spoiler
 		section.postform-row
 			.postform-label Password
 			input#password(type='password', name='password', autocomplete='off' placeholder='password for deleting post later' maxlength='50')
