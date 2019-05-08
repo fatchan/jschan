@@ -188,6 +188,9 @@ module.exports = {
 				'reports': 0,
 				'globalreports': 0,
 			}
+		}).sort({
+			'sticky': -1,
+			'bumped': -1,
 		}).toArray();
 
 	},
