@@ -237,7 +237,7 @@ module.exports = async (req, res, next, numFiles) => {
 		if (!data.sage) {
 			//bumping a thread, so delete all pages above it
 			const numThreadsBefore = await Posts.getBeforeCount(req.params.board, thread);
-			const pagesToRemove = Math.ceil(numThreadsBefore/10);
+			const pagesToRemove = Math.ceil(numThreadsBefore/10) || 1; //|| 1, so we always refresh first page incase this is the top thread nothing will be before it
 			for (let i = 1; i <= pagesToRemove; i++) {
 				removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${i == 1 ? 'index' : i}.html`));
 			}

@@ -14,7 +14,9 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, dismissReports = require(__dirname+'/dismiss-report.js')
 	, dismissGlobalReports = require(__dirname+'/dismissglobalreport.js')
 	, actionChecker = require(__dirname+'/../../helpers/actionchecker.js')
-	, checkPerms = require(__dirname+'/../../helpers/hasperms.js');
+	, checkPerms = require(__dirname+'/../../helpers/hasperms.js')
+	, remove = require('fs-extra').remove
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 
@@ -226,8 +228,8 @@ module.exports = async (req, res, next) => {
 			)
 		}
 		await Promise.all(dbPromises);
+		const threadsToUpdate = [...new Set(posts.filter(post => post.thread !== null))];
 		if (aggregateNeeded) {
-			const threadsToUpdate = [...new Set(posts.filter(post => post.thread !== null))];
 			//recalculate and set correct aggregation numbers again
 			await Promise.all(threadsToUpdate.map(async (post) => {
 				const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
@@ -240,6 +242,34 @@ module.exports = async (req, res, next) => {
 				Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
 			}));
 		}
+
+		//now we need to delete outdated html
+		//TODO: not do this for reports, handle global actions & move to separate handler + optimize and test
+		const removePromises = []
+		const postThreadIds = threadsToUpdate.map(x => x.thread);
+		const oldestThread = await Posts.db.find({
+			'thread': null,
+			'board': req.params.board,
+			'postId': {
+				'$in': postThreadIds
+			}
+		}).sort({
+			'bumped': 1
+		}).limit(1).toArray();
+		//always need to refresh catalog
+		removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/catalog.html`));
+		//refresh any impacted threads
+		for (let i = 0; i < threadsToUpdate.length; i++) {
+			removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${threadsToUpdate[i].thread}.html`));
+		}
+		//refersh all pages above oldest thread affected
+		const numThreadsBefore = await Posts.getBeforeCount(req.params.board, oldestThread);
+		const pagesToRemove = Math.ceil(numThreadsBefore/10) || 1;
+		for (let i = 1; i <= pagesToRemove; i++) {
+			removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${i == 1 ? 'index' : i}.html`));
+		}
+		await Promise.all(removePromises);
+
 	} catch (err) {
 		return next(err);
 	}
