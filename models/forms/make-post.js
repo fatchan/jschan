@@ -234,11 +234,14 @@ module.exports = async (req, res, next, numFiles) => {
 	if (data.thread) {
 		//refresh the thread itself
 		removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${req.body.thread}.html`));
+		//refersh pages
+		const numThreadsBefore = await Posts.getBeforeCount(req.params.board, thread);
+		const pagesToRemove = Math.ceil(numThreadsBefore/10) || 1;
+		//refresh the page that the thread is on
+		removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${pagesToRemove == 1 ? 'index' : pagesToRemove}.html`));
 		if (!data.sage) {
-			//bumping a thread, so delete all pages above it
-			const numThreadsBefore = await Posts.getBeforeCount(req.params.board, thread);
-			const pagesToRemove = Math.ceil(numThreadsBefore/10) || 1; //|| 1, so we always refresh first page incase this is the top thread nothing will be before it
-			for (let i = 1; i <= pagesToRemove; i++) {
+			//if not saged, it will bump so we should refresh any pages above it as well
+			for (let i = pagesToRemove-1; i >= 1; i--) {
 				removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${i == 1 ? 'index' : i}.html`));
 			}
 		}
