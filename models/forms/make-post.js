@@ -27,7 +27,8 @@ const uuidv4 = require('uuid/v4')
 	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
 	, videoThumbnail = require(__dirname+'/../../helpers/files/video-thumbnail.js')
 	, videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
-	, formatSize = require(__dirname+'/../../helpers/files/format-size.js');
+	, formatSize = require(__dirname+'/../../helpers/files/format-size.js')
+	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../build.js');
 
 module.exports = async (req, res, next, numFiles) => {
 
@@ -153,9 +154,10 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 
 	//forceanon hide reply subjects so cant be used as name for replies
-	let subject = hasPerms || !forceAnon || !req.body.thread ? req.body.subject : null;
 	//forceanon only allow sage email
-	let email = hasPerms || !forceAnon || req.body.email === 'sage' ? req.body.email : null;
+	let subject = (hasPerms || !forceAnon || !req.body.thread) ? req.body.subject : null;
+	let email = (hasPerms || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
+
 	let name = res.locals.board.settings.defaultName;
 	let tripcode = null;
 	let capcode = null;
@@ -223,38 +225,32 @@ module.exports = async (req, res, next, numFiles) => {
 
 	const postId = await Posts.insertOne(req.params.board, data, thread);
 
-	//now we need to delete outdated html
-	const removePromises = []
-	if (!data.thread) {
+	//now we need to rebuild pages
+	const parallelPromises = []
+	//always need to rebuild catalog
+	parallelPromises.push(buildCatalog(res.locals.board));
+	if (data.thread) {
 		//if we just added a new thread, prune any old ones
 		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
 		for (let i = 0; i < prunedThreads.length; i++) {
-			removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
+			parallelPromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
 		}
-	}
-	//always need to refresh catalog
-	removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/catalog.html`));
-	if (data.thread) {
 		//refresh the thread itself
-		removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${req.body.thread}.html`));
+		parallelPromises.push(buildThread(thread.postId, res.locals.board));
 		//refersh pages
-		const numThreadsBefore = await Posts.getBeforeCount(req.params.board, thread);
-		const pagesToRemove = Math.ceil(numThreadsBefore/10) || 1;
-		//refresh the page that the thread is on
-		removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${pagesToRemove == 1 ? 'index' : pagesToRemove}.html`));
-		if (!data.sage) {
+		const threadPage = await Posts.getThreadPage(req.params.board, thread);
+		if (data.email === 'sage') {
+			//refresh the page that the thread is on
+			parallelPromises.push(buildBoard(res.locals.board, threadPage));
+		} else {
 			//if not saged, it will bump so we should refresh any pages above it as well
-			for (let i = pagesToRemove-1; i >= 1; i--) {
-				removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${i == 1 ? 'index' : i}.html`));
-			}
+			parallelPromises.push(buildBoardMultiple(res.locals.board, 1, threadPage));
 		}
 	} else {
-		//new thread, remove all pages
-		for (let i = 1; i <= Math.ceil(res.locals.board.settings.threadLimit/10); i++) {
-			removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${i == 1 ? 'index' : i}.html`));
-		}
+		//new thread, rebuild all pages
+		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, 10));
 	}
-	await Promise.all(removePromises);
+	await Promise.all(parallelPromises);
 
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
 

@@ -9,27 +9,18 @@ module.exports = {
 
 	db,
 
-	getBeforeCount: (board, thread) => {
-		return db.countDocuments({
+	getThreadPage: async (board, thread) => {
+		const threadsBefore = await db.countDocuments({
 			'board': board,
 			'thread': null,
 			'bumped': {
 				'$gte': thread.bumped
 			}
 		});
+		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
 	},
 
-	getAfterCount: (board, thread) => {
-		return db.countDocuments({
-			'board': board,
-			'thread': null,
-			'bumped': {
-				'$lte': thread.bumped
-			}
-		});
-	},
-
-	getRecent: async (board, page) => {
+	getRecent: async (board, page, limit=10) => {
 		// get all thread posts (posts with null thread id)
 		const threads = await db.find({
 			'thread': null,
@@ -45,7 +36,7 @@ module.exports = {
 		}).sort({
 			'sticky': -1,
 			'bumped': -1,
-		}).skip(10*(page-1)).limit(10).toArray();
+		}).skip(10*(page-1)).limit(limit).toArray();
 
 		// add last 5 posts in reverse order to preview
 		await Promise.all(threads.map(async thread => {
@@ -145,7 +136,6 @@ module.exports = {
 			thread.replies = data[1];
 		}
 		return thread;
-
 	},
 
 	getThreadPosts: (board, id) => {
@@ -392,5 +382,14 @@ module.exports = {
 			'board': board
 		});
 	},
+
+	exists: async (req, res, next) => {
+		const thread = await module.exports.getThread(req.params.board, req.params.id);
+		if (!thread) {
+			return res.status(404).render('404');
+		}
+		res.locals.thread = thread; // can acces this in views or next route handlers
+		next();
+	}
 
 }

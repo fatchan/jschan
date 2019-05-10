@@ -16,7 +16,8 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, actionChecker = require(__dirname+'/../../helpers/actionchecker.js')
 	, checkPerms = require(__dirname+'/../../helpers/hasperms.js')
 	, remove = require('fs-extra').remove
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
+	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../build.js');
 
 module.exports = async (req, res, next) => {
 
@@ -234,6 +235,29 @@ module.exports = async (req, res, next) => {
 				}
 			});
 		}
+
+		//get a map of boards to threads affected
+		const boardThreadMap = {};
+		const queryOrs = [];
+		for (let i = 0; i < posts.length; i++) {
+			const post = posts[i];
+			if (!boardThreadMap[post.board]) {
+				boardThreadMap[post.board] = [];
+			}
+			boardThreadMap[post.board].push(post.thread || post.postId);
+		}
+
+		const beforePages = {};
+		const threadBoards = Object.keys(boardThreadMap);
+		//get how many pages each board is to know whether we should rebuild all pages (because of page nav changes)
+		//only if deletes actions selected because this could result in number of pages to change
+		if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
+			await Promise.all(threadBoards.map(async board => {
+				beforePages[board] = Math.ceil((await Posts.getPages(board)) / 10);
+			}));
+		}
+
+		//execute actions now
 		if (bulkWrites.length > 0) {
 			await Posts.db.bulkWrite(bulkWrites);
 		}
@@ -254,19 +278,7 @@ module.exports = async (req, res, next) => {
 			}));
 		}
 
-		//map thread ids to board
-		const boardThreadMap = {};
-		const queryOrs = [];
-		for (let i = 0; i < posts.length; i++) {
-			const post = posts[i];
-			if (!boardThreadMap[post.board]) {
-				boardThreadMap[post.board] = [];
-			}
-			boardThreadMap[post.board].push(post.thread || post.postId);
-		}
-
 		//make it into an OR query for the db
-		const threadBoards = Object.keys(boardThreadMap);
 		for (let i = 0; i < threadBoards.length; i++) {
 			const threadBoard = threadBoards[i];
 			boardThreadMap[threadBoard] = [...new Set(boardThreadMap[threadBoard])]
@@ -300,70 +312,43 @@ module.exports = async (req, res, next) => {
 			return acc;
 		}, {});
 
-//console.log(threadBounds);
-//console.log(boardThreadMap);
 		//now we need to delete outdated html
 		//TODO: not do this for reports, handle global actions & move to separate handler + optimize and test
-		const removePromises = []
+		const parallelPromises = []
 		const boardsWithChanges = Object.keys(threadBounds);
 		for (let i = 0; i < boardsWithChanges.length; i++) {
 			const changeBoard = boardsWithChanges[i];
 			const bounds = threadBounds[changeBoard];
-//console.log(changeBoard, 'OLDEST thread', bounds.oldest.postId)
-//console.log(changeBoard, 'NEWEST thread', bounds.newest.postId)
 			//always need to refresh catalog
-			removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/catalog.html`));
-			//refresh any impacted threads
+			parallelPromises.push(buildCatalog(res.locals.board));
+			//rebuild impacted threads
 			for (let j = 0; j < boardThreadMap[changeBoard].length; j++) {
-				removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/thread/${boardThreadMap[changeBoard][j]}.html`));
-//console.log(changeBoard, 'update thread', boardThreadMap[changeBoard][j]);
+				parallelPromises.push(buildThread(boardThreadMap[changeBoard][j], changeBoard));
 			}
-			//refersh all pages affected
-			const maxPages = Math.ceil((await Posts.getPages(changeBoard)) / 10);
-			let pagesToRemoveAfter;
-			let pagesToRemoveBefore;
-			if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) { //deletes only affect later pages as they end up higher up
-				//remove current and later pages for deletes
-				pagesToRemoveAfter = Math.ceil((await Posts.getAfterCount(changeBoard, bounds.newest))/10) || 1;
-//console.log(changeBoard, 'pages to remove after newest affected thread', pagesToRemoveAfter);
-				for (let j = maxPages; j > maxPages-pagesToRemoveAfter; j--) {
-//console.log(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`)
-					removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`));
-				}
-			} else if (req.body.sticky) { //use an else if because if deleting, other actions are not executed/irrelevant
-				//remove current and newer pages for stickies
-				pagesToRemoveBefore = Math.ceil((await Posts.getBeforeCount(changeBoard, bounds.oldest))/10) || 1;
-//console.log(changeBoard, 'pages to remove before oldest affected thread', pagesToRemoveBefore);
-				for (let j = 1; j <= pagesToRemoveBefore; j++) {
-//console.log(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`)
-					removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`));
-				}
-			} else if ((hasPerms && (req.body.lock || req.body.sage)) || req.body.spoiler) { //these actions do not affect other pages
-				//remove only pages with affected threads
-				if (!pagesToRemoveBefore) {
-					pagesToRemoveBefore = Math.ceil((await Posts.getBeforeCount(changeBoard, bounds.oldest))/10) || 1;
-				}
-				if (!pagesToRemoveAfter) {
-					pagesToRemoveAfter = Math.ceil((await Posts.getAfterCount(changeBoard, bounds.newest))/10) || 1;
-				}
-//console.log(changeBoard, 'remove all inbetween pages because finding affected pages is hard at 1am', pagesToRemoveBefore, pagesToRemoveAfter)
-	//console.log(pagesToRemoveBefore, pagesToRemoveAfter, maxPages)
-				for (let j = pagesToRemoveBefore; j <= maxPages-pagesToRemoveAfter+1; j++) {
-	//console.log(j)
-//console.log(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`)
-					removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`));
-				}
-			}
-			const maxPagesAfter = Math.ceil((await Posts.getPages(changeBoard)) / 10);
-			if (maxPages !== maxPagesAfter) {
-				// number of pages changed, delete all pages (because of page number buttons on existing pages)
-				for (let j = 1; j <= maxPages; j++) {
-//console.log(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`)
-					removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`));
+			//refersh any pages affected
+			const afterPages = Math.ceil((await Posts.getPages(changeBoard)) / 10);
+			if (beforePages[changeBoard] && beforePages[changeBoard] !== afterPages) {
+				//amount of pages changed, rebuild all pages
+				parallelPromises.push(buildBoardMultiple(res.locals.board, 1, afterPages));
+			} else {
+				const threadPageOldest = await Posts.getThreadPage(req.params.board, bounds.oldest);
+				const threadPageNewest = await Posts.getThreadPage(req.params.board, bounds.newest);
+				if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
+					//rebuild current and older pages for deletes
+					parallelPromises.push(buildBoardMultiple(res.locals.board, threadPageNewest, afterPages));
+				} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
+					//rebuild current and newer pages for stickies
+					parallelPromises.push(buildBoardMultiple(res.locals.board, 1, threadPageOldest));
+				} else if ((hasPerms && (req.body.lock || req.body.sage)) || req.body.spoiler) {
+					//rebuild inbewteen pages for things that dont cause page/thread movement
+					//should rebuild only affected pages, but finding the page of all affected
+					//threads could end up being slower/more resource intensive. this is simpler
+					//but still avoids rebuilding _some_ pages unnecessarily
+					parallelPromises.push(buildBoardMultiple(res.locals.board, threadPageNewest, threadPageOldest));
 				}
 			}
 		}
-		await Promise.all(removePromises);
+		await Promise.all(parallelPromises);
 
 	} catch (err) {
 		return next(err);

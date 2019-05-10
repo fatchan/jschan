@@ -1,33 +1,22 @@
 'use strict';
 
 const Posts = require(__dirname+'/../../db/posts.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, writePageHTML = require(__dirname+'/../../helpers/writepagehtml.js');
+	, { buildBoard } = require(__dirname+'/../../build.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 
 	const page = req.params.page === 'index' ? 1 : req.params.page;
-	const pageName = page === 1 ? 'index' : page;
-	let threads;
-	let pages;
-	let pageURL;
 	try {
-		pages = Math.ceil((await Posts.getPages(req.params.board)) / 10)
-		if (page > pages && pages > 0) {
+		const maxPage = Math.ceil((await Posts.getPages(req.params.board)) / 10);
+		if (page > maxPage && maxPage > 0) {
 			return next();
 		}
-		threads = await Posts.getRecent(req.params.board, page);
-		pageURL = `${req.params.board}/${pageName}.html`;
-		await writePageHTML(pageURL, 'board.pug', {
-			board: res.locals.board,
-			threads: threads || [],
-			pages,
-			page
-		});
+		await buildBoard(res.locals.board, page, maxPage);
 	} catch (err) {
 		return next(err);
 	}
 
-	return res.sendFile(`${uploadDirectory}html/${pageURL}`);
+	return res.sendFile(`${uploadDirectory}html/${req.params.board}/${page === 1 ? 'index' : page}.html`);
 
 }

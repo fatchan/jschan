@@ -7,7 +7,7 @@ else
 	span
 		a(href=`/${board._id}/index.html`) #{1}
 		| 
-- for(let i = 2; i <= pages; i++)
+- for(let i = 2; i <= maxPage; i++)
 	if i === page
 		span
 			a(href=`/${board._id}/${i}.html`) [#{i}]

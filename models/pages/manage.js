@@ -2,7 +2,6 @@
 
 const Posts = require(__dirname+'/../../db/posts.js')
 	, Bans = require(__dirname+'/../../db/bans.js')
-	, writePageHTML = require(__dirname+'/../../helpers/writepagehtml.js');
 
 module.exports = async (req, res, next) => {
 

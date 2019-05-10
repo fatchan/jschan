@@ -3,6 +3,7 @@
 const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db/boards.js')
+	, Posts = require(__dirname+'/../db/posts.js')
 	, hasPerms = require(__dirname+'/../helpers/haspermsmiddleware.js')
 	, isLoggedIn = require(__dirname+'/../helpers/isloggedin.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
@@ -57,7 +58,7 @@ router.get('/globalmanage.html', isLoggedIn, hasPerms, csrf, globalManage);
 router.get('/:board/:page(1[0-9]*|[2-9]*|index).html', Boards.exists, paramConverter, board);
 
 // thread view page
-router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, thread);
+router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, Posts.exists, thread);
 
 // board catalog page
 router.get('/:board/catalog.html', Boards.exists, catalog);

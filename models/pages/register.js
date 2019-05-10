@@ -1,12 +1,12 @@
 'use strict';
 
-const writePageHTML = require(__dirname+'/../../helpers/writepagehtml.js')
+const { buildRegister } = require(__dirname+'/../../build.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 
 	try {
-		await writePageHTML('register.html', 'register.pug');
+		await buildRegister();
 	} catch (err) {
 		return next(err);
 	}
