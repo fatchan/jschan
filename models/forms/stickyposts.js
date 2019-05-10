@@ -16,7 +16,8 @@ module.exports = (posts) => {
 		message: `Stickied ${filteredposts.length} post(s)`,
 		action: '$set',
 		query: {
-			'sticky': true
+			'sticky': true,
+			'bumped': 8640000000000000
 		}
 	};
 

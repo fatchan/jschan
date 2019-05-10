@@ -222,13 +222,16 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 
 	const postId = await Posts.insertOne(req.params.board, data, thread);
-	if (!data.thread) {
-		//if we just added a new thread, prune any old ones
-		await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
-	}
 
 	//now we need to delete outdated html
 	const removePromises = []
+	if (!data.thread) {
+		//if we just added a new thread, prune any old ones
+		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		for (let i = 0; i < prunedThreads.length; i++) {
+			removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
+		}
+	}
 	//always need to refresh catalog
 	removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/catalog.html`));
 	if (data.thread) {

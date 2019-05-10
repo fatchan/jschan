@@ -6,7 +6,8 @@ const Posts = require(__dirname+'/../../db/posts.js')
 
 module.exports = async (req, res, next) => {
 
-	const page = req.params.page === 'index' ? 1 : (req.params.page || 1);
+	const page = req.params.page === 'index' ? 1 : req.params.page;
+	const pageName = page === 1 ? 'index' : page;
 	let threads;
 	let pages;
 	let pageURL;
@@ -16,7 +17,7 @@ module.exports = async (req, res, next) => {
 			return next();
 		}
 		threads = await Posts.getRecent(req.params.board, page);
-		pageURL = `${req.params.board}/${req.params.page}.html`;
+		pageURL = `${req.params.board}/${pageName}.html`;
 		await writePageHTML(pageURL, 'board.pug', {
 			board: res.locals.board,
 			threads: threads || [],

@@ -14,7 +14,17 @@ module.exports = {
 			'board': board,
 			'thread': null,
 			'bumped': {
-				'$gt': thread.bumped
+				'$gte': thread.bumped
+			}
+		});
+	},
+
+	getAfterCount: (board, thread) => {
+		return db.countDocuments({
+			'board': board,
+			'thread': null,
+			'bumped': {
+				'$lte': thread.bumped
 			}
 		});
 	},
@@ -347,7 +357,7 @@ module.exports = {
 		}).skip(threadLimit).toArray();
 		//if there are any
 		if (threads.length === 0) {
-			return;
+			return [];
 		}
 		//get the postIds
 		const threadIds = threads.map(thread => thread.postId);
@@ -365,7 +375,8 @@ module.exports = {
 		}
 		//get the mongoIds and delete them all
 		const postMongoIds = postsAndThreads.map(post => Mongo.ObjectId(post._id));
-		return module.exports.deleteMany(postMongoIds);
+		await module.exports.deleteMany(postMongoIds);
+		return threadIds;
 	},
 
 	deleteMany: (ids) => {

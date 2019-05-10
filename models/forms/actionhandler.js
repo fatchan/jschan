@@ -63,7 +63,7 @@ module.exports = async (req, res, next) => {
 		})
 	}
 
-	const posts = await Posts.getPosts(req.params.board, req.body.checkedposts, true);
+	let posts = await Posts.getPosts(req.params.board, req.body.checkedposts, true);
 	if (!posts || posts.length === 0) {
 		return res.status(404).render('message', {
 			'title': 'Not found',
@@ -130,6 +130,7 @@ module.exports = async (req, res, next) => {
 				query['board'] = req.params.board;
 			}
 			const deleteIpPosts = await Posts.db.find(query).toArray();
+			posts = posts.concat(deleteIpPosts);
 			if (deleteIpPosts && deleteIpPosts.length > 0) {
 				const { message } = await deletePosts(req, res, next, deleteIpPosts, req.params.board);
 				messages.push(message);
@@ -208,30 +209,40 @@ module.exports = async (req, res, next) => {
 				messages.push(message);
 			}
 		}
-		const dbPromises = []
+		const bulkWrites = []
 		if (Object.keys(combinedQuery).length > 0) {
-			dbPromises.push(
-				Posts.db.updateMany({
-					'_id': {
-						'$in': postMongoIds
-					}
-				}, combinedQuery)
-			)
+			bulkWrites.push({
+				'updateMany': {
+					'filter': {
+						'_id': {
+							'$in': postMongoIds
+						}
+					},
+					'update': combinedQuery
+				}
+			});
 		}
 		if (Object.keys(passwordCombinedQuery).length > 0) {
-			dbPromises.push(
-				Posts.db.updateMany({
-					'_id': {
-						'$in': passwordPostMongoIds
-					}
-				}, passwordCombinedQuery)
-			)
+			bulkWrites.push({
+				'updateMany': {
+					'filter': {
+						'_id': {
+							'$in': passwordPostMongoIds
+						}
+					},
+					'update': passwordCombinedQuery
+				}
+			});
 		}
-		await Promise.all(dbPromises);
-		const threadsToUpdate = [...new Set(posts.filter(post => post.thread !== null))];
+		if (bulkWrites.length > 0) {
+			await Posts.db.bulkWrite(bulkWrites);
+		}
+
+		//get only posts (so we can use them for thread ids
+		const postThreadsToUpdate = posts.filter(post => post.thread !== null);
 		if (aggregateNeeded) {
-			//recalculate and set correct aggregation numbers again
-			await Promise.all(threadsToUpdate.map(async (post) => {
+			//recalculate replies and image counts
+			await Promise.all(postThreadsToUpdate.map(async (post) => {
 				const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
 				let replyposts = 0;
 				let replyfiles = 0;
@@ -243,30 +254,114 @@ module.exports = async (req, res, next) => {
 			}));
 		}
 
+		//map thread ids to board
+		const boardThreadMap = {};
+		const queryOrs = [];
+		for (let i = 0; i < posts.length; i++) {
+			const post = posts[i];
+			if (!boardThreadMap[post.board]) {
+				boardThreadMap[post.board] = [];
+			}
+			boardThreadMap[post.board].push(post.thread || post.postId);
+		}
+
+		//make it into an OR query for the db
+		const threadBoards = Object.keys(boardThreadMap);
+		for (let i = 0; i < threadBoards.length; i++) {
+			const threadBoard = threadBoards[i];
+			boardThreadMap[threadBoard] = [...new Set(boardThreadMap[threadBoard])]
+			queryOrs.push({
+				'board': threadBoard,
+				'postId': {
+					'$in': boardThreadMap[threadBoard]
+				}
+			})
+		}
+
+		//fetch threads per board that we only checked posts for
+		let threadsEachBoard = await Posts.db.find({
+			'thread': null,
+			'$or': queryOrs
+		}).toArray();
+		//combine it with what we already had
+		threadsEachBoard = threadsEachBoard.concat(posts.filter(post => post.thread === null))
+
+		//get the oldest and newest thread for each board to determine how to delete
+		const threadBounds = threadsEachBoard.reduce((acc, curr) => {
+			if (!acc[curr.board] || curr.bumped < acc[curr.board].bumped) {
+				acc[curr.board] = { oldest: null, newest: null};
+			}
+			if (!acc[curr.board].oldest || curr.bumped < acc[curr.board].oldest.bumped) {
+				acc[curr.board].oldest = curr;
+			}
+			if (!acc[curr.board].newest || curr.bumped > acc[curr.board].newest.bumped) {
+				acc[curr.board].newest = curr;
+			}
+			return acc;
+		}, {});
+
+//console.log(threadBounds);
+//console.log(boardThreadMap);
 		//now we need to delete outdated html
 		//TODO: not do this for reports, handle global actions & move to separate handler + optimize and test
 		const removePromises = []
-		const postThreadIds = threadsToUpdate.map(x => x.thread);
-		const oldestThread = await Posts.db.find({
-			'thread': null,
-			'board': req.params.board,
-			'postId': {
-				'$in': postThreadIds
+		const boardsWithChanges = Object.keys(threadBounds);
+		for (let i = 0; i < boardsWithChanges.length; i++) {
+			const changeBoard = boardsWithChanges[i];
+			const bounds = threadBounds[changeBoard];
+//console.log(changeBoard, 'OLDEST thread', bounds.oldest.postId)
+//console.log(changeBoard, 'NEWEST thread', bounds.newest.postId)
+			//always need to refresh catalog
+			removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/catalog.html`));
+			//refresh any impacted threads
+			for (let j = 0; j < boardThreadMap[changeBoard].length; j++) {
+				removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/thread/${boardThreadMap[changeBoard][j]}.html`));
+//console.log(changeBoard, 'update thread', boardThreadMap[changeBoard][j]);
 			}
-		}).sort({
-			'bumped': 1
-		}).limit(1).toArray();
-		//always need to refresh catalog
-		removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/catalog.html`));
-		//refresh any impacted threads
-		for (let i = 0; i < threadsToUpdate.length; i++) {
-			removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${threadsToUpdate[i].thread}.html`));
-		}
-		//refersh all pages above oldest thread affected
-		const numThreadsBefore = await Posts.getBeforeCount(req.params.board, oldestThread);
-		const pagesToRemove = Math.ceil(numThreadsBefore/10) || 1;
-		for (let i = 1; i <= pagesToRemove; i++) {
-			removePromises.push(remove(`${uploadDirectory}html/${req.params.board}/${i == 1 ? 'index' : i}.html`));
+			//refersh all pages affected
+			const maxPages = Math.ceil((await Posts.getPages(changeBoard)) / 10);
+			let pagesToRemoveAfter;
+			let pagesToRemoveBefore;
+			if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) { //deletes only affect later pages as they end up higher up
+				//remove current and later pages for deletes
+				pagesToRemoveAfter = Math.ceil((await Posts.getAfterCount(changeBoard, bounds.newest))/10) || 1;
+//console.log(changeBoard, 'pages to remove after newest affected thread', pagesToRemoveAfter);
+				for (let j = maxPages; j > maxPages-pagesToRemoveAfter; j--) {
+//console.log(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`)
+					removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`));
+				}
+			} else if (req.body.sticky) { //use an else if because if deleting, other actions are not executed/irrelevant
+				//remove current and newer pages for stickies
+				pagesToRemoveBefore = Math.ceil((await Posts.getBeforeCount(changeBoard, bounds.oldest))/10) || 1;
+//console.log(changeBoard, 'pages to remove before oldest affected thread', pagesToRemoveBefore);
+				for (let j = 1; j <= pagesToRemoveBefore; j++) {
+//console.log(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`)
+					removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`));
+				}
+			} else if ((hasPerms && (req.body.lock || req.body.sage)) || req.body.spoiler) { //these actions do not affect other pages
+				//remove only pages with affected threads
+				if (!pagesToRemoveBefore) {
+					pagesToRemoveBefore = Math.ceil((await Posts.getBeforeCount(changeBoard, bounds.oldest))/10) || 1;
+				}
+				if (!pagesToRemoveAfter) {
+					pagesToRemoveAfter = Math.ceil((await Posts.getAfterCount(changeBoard, bounds.newest))/10) || 1;
+				}
+//console.log(changeBoard, 'remove all inbetween pages because finding affected pages is hard at 1am', pagesToRemoveBefore, pagesToRemoveAfter)
+	//console.log(pagesToRemoveBefore, pagesToRemoveAfter, maxPages)
+				for (let j = pagesToRemoveBefore; j <= maxPages-pagesToRemoveAfter+1; j++) {
+	//console.log(j)
+//console.log(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`)
+					removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`));
+				}
+			}
+			const maxPagesAfter = Math.ceil((await Posts.getPages(changeBoard)) / 10);
+			if (maxPages !== maxPagesAfter) {
+				// number of pages changed, delete all pages (because of page number buttons on existing pages)
+				for (let j = 1; j <= maxPages; j++) {
+//console.log(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`)
+					removePromises.push(remove(`${uploadDirectory}html/${changeBoard}/${j == 1 ? 'index' : j}.html`));
+				}
+			}
 		}
 		await Promise.all(removePromises);
 
