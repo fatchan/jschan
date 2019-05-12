@@ -8,6 +8,7 @@ const express  = require('express')
 	, Trips = require(__dirname+'/../db/trips.js')
 	, Bans = require(__dirname+'/../db/bans.js')
 	, Mongo = require(__dirname+'/../db/db.js')
+	, remove = require('fs-extra').remove
 	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
 	, dismissGlobaReports = require(__dirname+'/../models/forms/dismissglobalreport.js')
 	, banPoster = require(__dirname+'/../models/forms/ban-poster.js')
@@ -174,7 +175,7 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 	if (!req.body.message && numFiles === 0) {
 		errors.push('Must provide a message or file');
 	}
-	if (!req.body.thread && (res.locals.board.settings.forceOPFile && res.locals.board.settings.maxFiles > 0)) {
+	if (!req.body.thread && (res.locals.board.settings.forceOPFile && res.locals.board.settings.maxFiles === 0)) {
 		errors.push('Threads must include a file');
 	}
 	if (!req.body.thread && res.locals.board.settings.forceOPMessage && (!req.body.message || req.body.message.length === 0)) {
@@ -214,8 +215,13 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 	try {
 		await makePost(req, res, next, numFiles);
 	} catch (err) {
+		//handler errors here better
 		if (numFiles > 0) {
-			const fileNames = req.files.file.map(file => file.filename);
+			const fileNames = []
+			for (let i = 0; i < req.files.file.length; i++) {
+				await remove(req.files.file[i].tempFilePath).catch(e => console.error);
+				fileNames.push(file.filename);
+			}
 			await deletePostFiles(fileNames).catch(err => console.error);
 		}
 		return next(err);

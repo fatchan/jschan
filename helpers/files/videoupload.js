@@ -1,9 +1,8 @@
 'use strict';
 
-const configs = require(__dirname+'/../../configs/main.json')
-	, uploadDirectory = require(__dirname+'/../uploadDirectory.js');
+const uploadDirectory = require(__dirname+'/../uploadDirectory.js');
 
-module.exports = (req, res, file, filename, folder) => {
+module.exports = (file, filename, folder) => {
 
 	return new Promise((resolve, reject) => {
 		file.mv(`${uploadDirectory}${folder}/${filename}`, function (err) {

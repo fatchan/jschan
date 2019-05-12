@@ -21,7 +21,8 @@ const uuidv4 = require('uuid/v4')
 	}
 	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?:## (?<capcode>[^\s#]+))?$/
 	, permsCheck = require(__dirname+'/../../helpers/hasperms.js')
-	, fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
+	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
+	, videoUpload = require(__dirname+'/../../helpers/files/videoupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
 	, imageThumbnail = require(__dirname+'/../../helpers/files/image-thumbnail.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
@@ -91,9 +92,6 @@ module.exports = async (req, res, next, numFiles) => {
 			const filename = uuid + path.extname(file.name);
 			file.filename = filename; //for error to delete failed files
 
-			//upload file
-			await fileUpload(req, res, file, filename, 'img');
-
 			//get metadata
 			let processedFile = {
 					filename: filename,
@@ -106,6 +104,7 @@ module.exports = async (req, res, next, numFiles) => {
 			const mainType = file.mimetype.split('/')[0];
 			switch (mainType) {
 				case 'image':
+					await imageUpload(file, filename, 'img');
 					const imageData = await imageIdentify(filename, 'img');
 					processedFile.geometry = imageData.size // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
@@ -114,6 +113,7 @@ module.exports = async (req, res, next, numFiles) => {
 					break;
 				case 'video':
 					//video metadata
+					await videoUpload(file, filename, 'img');
 					const videoData = await videoIdentify(filename);
 					processedFile.duration = videoData.format.duration;
 					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
@@ -126,6 +126,9 @@ module.exports = async (req, res, next, numFiles) => {
 					return next(err);
 			}
 
+			//delete the temp file
+			await remove(file.tempFilePath);
+
 			//handle gifs with multiple geometry and size
 			if (Array.isArray(processedFile.geometry)) {
 				processedFile.geometry = processedFile.geometry[0];
@@ -137,6 +140,7 @@ module.exports = async (req, res, next, numFiles) => {
 				processedFile.geometryString = processedFile.geometryString[0];
 			}
 			files.push(processedFile);
+
 		}
 	}
 
@@ -230,12 +234,7 @@ module.exports = async (req, res, next, numFiles) => {
 	//always need to rebuild catalog
 	parallelPromises.push(buildCatalog(res.locals.board));
 	if (data.thread) {
-		//if we just added a new thread, prune any old ones
-		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
-		for (let i = 0; i < prunedThreads.length; i++) {
-			parallelPromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
-		}
-		//refresh the thread itself
+		//new reply, so build the thread first
 		parallelPromises.push(buildThread(thread.postId, res.locals.board));
 		//refersh pages
 		const threadPage = await Posts.getThreadPage(req.params.board, thread);
@@ -247,7 +246,11 @@ module.exports = async (req, res, next, numFiles) => {
 			parallelPromises.push(buildBoardMultiple(res.locals.board, 1, threadPage));
 		}
 	} else {
-		//new thread, rebuild all pages
+		//new thread, rebuild all pages and prune old threads
+		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		for (let i = 0; i < prunedThreads.length; i++) {
+			parallelPromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
+		}
 		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, 10));
 	}
 	await Promise.all(parallelPromises);
