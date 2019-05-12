@@ -174,14 +174,24 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 	if (!req.body.message && numFiles === 0) {
 		errors.push('Must provide a message or file');
 	}
-	if (req.body.message && req.body.message.length > 2000) {
-		errors.push('Message must be 2000 characters or less');
+	if (!req.body.thread && (res.locals.board.settings.forceOPFile && res.locals.board.settings.maxFiles > 0)) {
+		errors.push('Threads must include a file');
 	}
-	if (!req.body.thread && (!req.body.message || req.body.message.length === 0)) {
+	if (!req.body.thread && res.locals.board.settings.forceOPMessage && (!req.body.message || req.body.message.length === 0)) {
 		errors.push('Threads must include a message');
+	}
+	if (req.body.message) {
+		if (req.body.message.length > 2000) {
+			errors.push('Message must be 2000 characters or less');
+		} else if (req.body.message.length < res.locals.board.settings.minMessageLength) {
+			errors.push(`Message must be at least ${res.locals.board.settings.minMessageLength} characters long`);
+		}
 	}
 	if (req.body.name && req.body.name.length > 50) {
 		errors.push('Name must be 50 characters or less');
+	}
+	if (res.locals.board.settings.forceOPSubject && (!req.body.subject || req.body.subject.length === 0)) {
+		errors.push('Threads must include a subject');
 	}
 	if (req.body.subject && req.body.subject.length > 50) {
 		errors.push('Subject must be 50 characters or less');

@@ -47,6 +47,10 @@ const Mongo = require(__dirname+'/db/db.js')
 			threadLimit: 100,
 			replyLimit: 300,
 			maxFiles: 3,
+			forceOPSubject: false,
+			forceOPMessage: true,
+			forceOPFile: true,
+			minMessageLength: 0,
 			defaultName: 'Anonymous',
 		}
 	})
@@ -63,6 +67,10 @@ const Mongo = require(__dirname+'/db/db.js')
 			threadLimit: 100,
 			replyLimit: 300,
 			maxFiles: 3,
+			forceOPSubject: false,
+			forceOPMessage: true,
+			forceOPFile: true,
+			minMessageLength: 0,
 			defaultName: 'Anonymous',
 		}
 	})
@@ -79,6 +87,10 @@ const Mongo = require(__dirname+'/db/db.js')
 			threadLimit: 100,
 			replyLimit: 300,
 			maxFiles: 0,
+			forceOPSubject: false,
+			forceOPMessage: true,
+			forceOPFile: true,
+			minMessageLength: 0,
 			defaultName: 'Anonymous',
 		}
 	})

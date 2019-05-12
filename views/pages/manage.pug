@@ -22,8 +22,23 @@ block content
 					input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
 					| Disable names and only allow sage email
 			section.postform-row
+				.postform-label Force OP Message
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_op_message', value='true' checked=board.settings.forceOPMessage)
+			section.postform-row
+				.postform-label Force OP Subject
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_op_subject', value='true' checked=board.settings.forceOPSubject)
+			section.postform-row
+				.postform-label Force OP File
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_op_file', value='true' checked=board.settings.forceOPFile)
+			section.postform-row
 				.postform-label Anon Name
 				input(type='text' name='default_name' placeholder=board.settings.defaultName)
+			section.postform-row
+				.postform-label Min Message Length
+				input(type='text' name='min_message_length' placeholder=board.settings.minMessageLength)
 			section.postform-row
 				.postform-label Thread Limit
 				input(type='text' name='thread_limit' placeholder=board.settings.threadLimit)
