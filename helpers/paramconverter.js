@@ -1,7 +1,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/../db/db.js')
-	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans'])
+	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners'])
 
 module.exports = (req, res, next) => {
 

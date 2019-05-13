@@ -26,6 +26,7 @@ const express  = require('express')
 	, verifyCaptcha = require(__dirname+'/../helpers/captchaverify.js')
 	, actionHandler = require(__dirname+'/../models/forms/actionhandler.js')
 	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js')
+	, deleteFailedFiles = require(__dirname+'/../helpers/files/deletefailed.js')
 	, actionChecker = require(__dirname+'/../helpers/actionchecker.js');
 
 
@@ -219,10 +220,10 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 		if (numFiles > 0) {
 			const fileNames = []
 			for (let i = 0; i < req.files.file.length; i++) {
-				await remove(req.files.file[i].tempFilePath).catch(e => console.error);
-				fileNames.push(file.filename);
+				remove(req.files.file[i].tempFilePath).catch(e => console.error);
+				fileNames.push(req.files.file[i].filename);
 			}
-			await deletePostFiles(fileNames).catch(err => console.error);
+			deletePostFiles(fileNames).catch(err => console.error);
 		}
 		return next(err);
 	}
@@ -280,6 +281,9 @@ router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddlewar
 	if (numFiles === 0) {
 		errors.push('Must provide a file');
 	}
+	if (res.locals.board.banners.length > 100) {
+		errors.push('Limit of 100 banners reached');
+	}
 
 	if (errors.length > 0) {
 		return res.status(400).render('message', {
@@ -292,7 +296,14 @@ router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddlewar
 	try {
 		await uploadBanners(req, res, next, numFiles);
 	} catch (err) {
-		console.error(err);
+		const fileNames = [];
+		if (numFiles > 0) {
+			for (let i = 0; i < req.files.file.length; i++) {
+				remove(req.files.file[i].tempFilePath).catch(e => console.error);
+				fileNames.push(req.files.file[i].filename);
+			}
+		}
+		deleteFailedFiles(fileNames, 'banner').catch(e => console.error);
 		return next(err);
 	}
 

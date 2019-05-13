@@ -31,33 +31,33 @@ module.exports = async (req, res, next, numFiles) => {
 		const file = req.files.file[i];
 		const uuid = uuidv4();
 		const filename = uuid + path.extname(file.name);
-		//add filenames to array add processing to delete previous if one fails
+		file.filename = filename; //for error to delete failed files
 		filenames.push(filename);
-		// try to save
-		try {
-			//upload it
-			await imageUpload(file, filename, 'banner');
-			const imageData = await imageIdentify(filename, 'banner');
-			const geometry = imageData.size;
-			await remove(file.tempFilePath);
-			//make sure its 300x100 banner
-			if (geometry.width !== 300 || geometry.height !== 100) {
-				await deleteFailedFiles(filenames, 'banner');
-				return res.status(400).render('message', {
-					'title': 'Bad request',
-					'message': `Invalid file ${file.name}. Banners must be 300x100.`,
-					'redirect': redirect
-				});
+
+		//upload it
+		await imageUpload(file, filename, 'banner');
+		const imageData = await imageIdentify(filename, 'banner');
+		const geometry = imageData.size;
+		await remove(file.tempFilePath);
+
+		//make sure its 300x100 banner
+		if (geometry.width !== 300 || geometry.height !== 100) {
+			const fileNames = [];
+			for (let i = 0; i < req.files.file.length; i++) {
+				remove(req.files.file[i].tempFilePath).catch(e => console.error);
+				fileNames.push(req.files.file[i].filename);
 			}
-		} catch (err) {
-			//TODO: this better, catch errors some how
-			await remove(file.tempFilePath).catch(e => console.error);
-			await deleteFailedFiles(filenames, 'banner').catch(e => console.error);
-			return next(err);
+			deleteFailedFiles(fileNames, 'banner').catch(e => console.error);
+			return res.status(400).render('message', {
+				'title': 'Bad request',
+				'message': `Invalid file ${file.name}. Banners must be 300x100.`,
+				'redirect': redirect
+			});
 		}
 	}
 
 	await Boards.addBanners(req.params.board, filenames);
+//	await buildBanners(res.locals.board);
 
 	return res.render('message', {
 		'title': 'Success',
