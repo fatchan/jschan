@@ -1,6 +1,5 @@
 section.board-header
-	if board.banners.length > 0
-		object.board-banner(data=`/banners?board=${board._id}` width='300' height='100')
+	object.board-banner(data=`/banners?board=${board._id}` width='300' height='100')
 	a.no-decoration(href=`/${board._id}/index.html`)
 		h1.board-title /#{board._id}/ - #{board.name}
 	h4.board-description #{board.description}
