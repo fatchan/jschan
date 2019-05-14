@@ -37,11 +37,17 @@ const express  = require('express')
 	}));
 
 	// session store
+	app.set('trust proxy', 1);
 	app.use(session({
 		secret: configs.sessionSecret,
 		store: new MongoStore({ db: Mongo.client.db('sessions') }),
 		resave: false,
-		saveUninitialized: false
+		saveUninitialized: false,
+		cookie: {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'lax',
+		}
 	}));
 	app.use(cookieParser());
 
@@ -89,7 +95,7 @@ const express  = require('express')
 	})
 
 	// listen
-	app.listen(configs.port, () => {
+	app.listen(configs.port, '127.0.0.1', () => {
         console.log(`Listening on port ${configs.port}`);
     });
 
