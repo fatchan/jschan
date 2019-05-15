@@ -72,6 +72,7 @@ object {
 
 .navbar {
 	border-bottom: 1px solid #a9a9a9;
+	background: #d6daf0;
 }
 
 .catalog-tile-button {
@@ -133,6 +134,7 @@ object {
 }
 
 .mode {
+	margin-top: 1px;
 	background-color: red;
 	color: white;
 	font-weight: bold;
@@ -211,7 +213,8 @@ td, th {
 }
 
 .actions {
-	max-width: 100%;
+	text-align: left;
+	max-width: 200px;
 	display: flex;
 	flex-direction: column;
 	margin: 2px 0;
@@ -439,6 +442,7 @@ input textarea {
 	margin-top: auto;
 	line-height: 30px;
 	border-top: 1px solid #a9a9a9;
+	background: #d6daf0;
 }
 
 input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {
@@ -536,6 +540,7 @@ hr {
 
 	.catalog-tile {
 		overflow-y: hidden;
+		width: 48%;
 	}
 
 	.table-body {

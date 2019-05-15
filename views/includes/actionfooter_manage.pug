@@ -1,36 +1,35 @@
-label.toggle-label Toggle Post Actions
-	input.toggle(type='checkbox')
-	.action-wrapper.togglable
-		.actions
-			h4.no-m-p Actions:
-			label
-				input.post-check(type='checkbox', name='delete' value=1)
-				| Delete
-			label
-				input.post-check(type='checkbox', name='delete_file' value=1)
-				| Delete File Only
-			label
-				input.post-check(type='checkbox', name='spoiler' value=1)
-				| Spoiler Images
-			label
-				input.post-check(type='checkbox', name='delete_ip_board' value=1)
-				| Delete from IP on board
-			label
-				input.post-check(type='checkbox', name='delete_ip_global' value=1)
-				| Delete from IP globally
-			label
-				input.post-check(type='checkbox', name='dismiss' value=1)
-				| Dismiss Reports
-			label
-				input.post-check(type='checkbox', name='ban' value=1)
-				| Ban Poster
-			label
-				input.post-check(type='checkbox', name='global_ban' value=1)
-				| Global Ban Poster
-			label
-				input.post-check(type='checkbox', name='preserve_post' value=1)
-				| Show Post In Ban
-			label
-				input#ban_reason(type='text', name='ban_reason', placeholder='ban reason' autocomplete='off')
-		input(type='submit', value='submit')
+details.toggle-label
+	summary Show Post Actions
+	.actions 
+		h4.no-m-p Actions:
+		label
+			input.post-check(type='checkbox', name='delete' value=1)
+			| Delete
+		label
+			input.post-check(type='checkbox', name='delete_file' value=1)
+			| Delete File Only
+		label
+			input.post-check(type='checkbox', name='spoiler' value=1)
+			| Spoiler Images
+		label
+			input.post-check(type='checkbox', name='delete_ip_board' value=1)
+			| Delete from IP on board
+		label
+			input.post-check(type='checkbox', name='delete_ip_global' value=1)
+			| Delete from IP globally
+		label
+			input.post-check(type='checkbox', name='dismiss' value=1)
+			| Dismiss Reports
+		label
+			input.post-check(type='checkbox', name='ban' value=1)
+			| Ban Poster
+		label
+			input.post-check(type='checkbox', name='global_ban' value=1)
+			| Global Ban Poster
+		label
+			input.post-check(type='checkbox', name='preserve_post' value=1)
+			| Show Post In Ban
+		label
+			input#ban_reason(type='text', name='ban_reason', placeholder='ban reason' autocomplete='off')
+	input(type='submit', value='submit')
 	

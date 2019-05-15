@@ -7,7 +7,6 @@ block head
 block content
 	include ../includes/boardheader.pug
 	include ../includes/postform.pug
-	.mode Posting mode: Thread
 	nav.pages#top 
 		include ../includes/pages.pug
 		a(href='#bottom') [Bottom]
@@ -26,6 +25,7 @@ block content
 					+post(post, true)
 			hr(size=1)
 		nav.pages#bottom
+			include ../includes/pages.pug
 			a(href='#top') [Top]
 			| 
 			a(href=`/${board._id}/catalog.html`) [Catalog]
