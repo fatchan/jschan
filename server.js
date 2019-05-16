@@ -95,8 +95,33 @@ const express  = require('express')
 	})
 
 	// listen
-	app.listen(configs.port, '127.0.0.1', () => {
+	const server = app.listen(configs.port, '127.0.0.1', () => {
         console.log(`Listening on port ${configs.port}`);
     });
+
+	//let PM@ know that this is ready (forgraceful reloads)
+	process.send('ready');
+
+	process.on('SIGINT', () => {
+
+		console.info('SIGINT signal received.')
+
+		// Stops the server from accepting new connections and finishes existing connections.
+		server.close((err) => {
+
+			// if error, log and exit with error (1 code)
+			if (err) {
+				console.error(err);
+				process.exit(1);
+			}
+
+			// close database connection
+			Mongo.client.close();
+
+			// now close without error
+			process.exit(0);
+
+		})
+	})
 
 })();

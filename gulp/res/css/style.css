@@ -48,9 +48,11 @@ body {
 }
 
 .pages {
-	margin: 10px 0;
+	box-sizing: border-box;
 	padding: 10px;
+	width: max-content;
 }
+
 a, a:visited {
 	text-decoration: underline;
 	color: #34345C;
@@ -207,7 +209,7 @@ td, th {
 	align-items: center;
 }
 
-.post-container, .pages, .toggle-label {
+.post-container, .pages, summary {
 	background: #D6DAF0;
 	border: 1px solid #B7C5D9;
 }
@@ -235,8 +237,12 @@ td, th {
 	box-shadow: inset 0 0 100px 100px rgba(255,255,255,.25);
 }
 
-.toggle-label {
+summary {
+	margin-bottom: 1px;
 	padding: 10px;
+}
+
+.toggle-label {
 	text-align: center;
 	max-width: 100%;
 	box-sizing: border-box;
@@ -301,9 +307,8 @@ td, th {
 	text-align: center;
 	margin: 2px;
 	margin-top: 0px;
-	max-width: 160px;
+	max-width: 128px;
 	overflow: hidden;
-	max-width: 160px;
 	text-overflow: ellipsis;
 	word-break: keep-all;
 }
@@ -413,7 +418,7 @@ input textarea {
 }
 
 .nav-item {
-	line-height: 30px;
+	line-height: 38px;
 	text-decoration: none;
 	float: left;
 	padding-left: 10px;
@@ -532,6 +537,10 @@ hr {
 		top: 1px;
 		margin-left: 2px!important;
 		height: 8px;
+	}
+
+	.pages {
+		width:100%;
 	}
 
 	.post-container {
