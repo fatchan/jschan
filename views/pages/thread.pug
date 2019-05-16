@@ -11,7 +11,9 @@ block head
 
 block content
 	include ../includes/boardheader.pug
+	br
 	include ../includes/postform.pug
+	br
 	nav.pages#top
 		a(href='#bottom') [Bottom]
 		| 
@@ -32,4 +34,5 @@ block content
 			a(href=`/${board._id}/index.html`) [Return]
 			| 
 			a(href=`/${board._id}/catalog.html`) [Catalog]		
+		br
 		include ../includes/actionfooter.pug

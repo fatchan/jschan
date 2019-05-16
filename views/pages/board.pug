@@ -6,15 +6,17 @@ block head
 
 block content
 	include ../includes/boardheader.pug
+	br
 	include ../includes/postform.pug
+	br
 	nav.pages#top 
 		include ../includes/pages.pug
 		a(href='#bottom') [Bottom]
 		| 
 		a(href=`/${board._id}/catalog.html`) [Catalog]
+		|
 	hr(size=1)
 	form(action='/forms/board/'+board._id+'/actions' method='POST' enctype='application/x-www-form-urlencoded')
-		//input(type='hidden' name='_csrf' value=csrf)
 		if threads.length === 0
 			p No posts.
 			hr(size=1)
@@ -29,4 +31,5 @@ block content
 			a(href='#top') [Top]
 			| 
 			a(href=`/${board._id}/catalog.html`) [Catalog]
+		br
 		include ../includes/actionfooter.pug
