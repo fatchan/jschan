@@ -58,8 +58,8 @@ module.exports = {
 			//reverse order for board page
 			thread.replies = replies.reverse();
 
-			//temporary mitigation for deletion issue
-			if (replies.length > 5) {
+			//if enough replies, show omitted count
+			if (thread.replyposts > 5) {
 				//cout omitted image and posts
 				const numPreviewImages = replies.reduce((acc, post) => { return acc + post.files.length }, 0);
 				thread.omittedimages = thread.replyfiles - numPreviewImages;
