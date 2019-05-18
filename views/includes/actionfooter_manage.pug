@@ -12,6 +12,11 @@ details.toggle-label
 			input.post-check(type='checkbox', name='spoiler' value=1)
 			| Spoiler Images
 		label
+			input.post-check(type='checkbox', name='global_report' value=1)
+			| Global Report
+		label
+			input#report(type='text', name='report_reason', placeholder='report reason' autocomplete='off')
+		label
 			input.post-check(type='checkbox', name='delete_ip_board' value=1)
 			| Delete from IP on board
 		label
@@ -32,4 +37,3 @@ details.toggle-label
 		label
 			input#ban_reason(type='text', name='ban_reason', placeholder='ban reason' autocomplete='off')
 	input(type='submit', value='submit')
-	
