@@ -10,7 +10,8 @@ const express  = require('express')
 	, Mongo = require(__dirname+'/../db/db.js')
 	, remove = require('fs-extra').remove
 	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
-	, dismissGlobaReports = require(__dirname+'/../models/forms/dismissglobalreport.js')
+	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
+	, dismissGlobalReports = require(__dirname+'/../models/forms/dismissglobalreport.js')
 	, banPoster = require(__dirname+'/../models/forms/ban-poster.js')
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
@@ -469,7 +470,13 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
-			}
+			} else if (req.body.spoiler) {
+                const { message, action, query } = spoilerPosts(posts);
+                if (action) {
+                    combinedQuery[action] = { ...combinedQuery[action], ...query}
+                }
+                messages.push(message);
+            }
 			if (req.body.global_dismiss) {
 				const { message, action, query } = dismissGlobalReports(posts);
 				if (action) {
