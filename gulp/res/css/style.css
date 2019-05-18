@@ -240,6 +240,7 @@ td, th {
 summary {
 	margin-bottom: 1px;
 	padding: 10px;
+	cursor: pointer;
 }
 
 .toggle-label {
