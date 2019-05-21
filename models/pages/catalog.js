@@ -1,20 +1,16 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db/posts.js');
+const { buildCatalog } = require(__dirname+'/../../build.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 
-	// get all threads
-    let threads;
     try {
-        threads = await Posts.getCatalog(req.params.board);
+		await buildCatalog(res.locals.board);
     } catch (err) {
         return next(err);
     }
 
-    //render the page
-    res.render('catalog', {
-		threads: threads || [],
-    });
+	return res.sendFile(`${uploadDirectory}html/${req.params.board}/catalog.html`);
 
 }

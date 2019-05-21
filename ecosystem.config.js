@@ -8,6 +8,9 @@ module.exports = {
 		watch: false,
 		max_memory_restart: '1G',
 		log_date_format: 'YYYY-MM-DD HH:mm:ss',
+		wait_ready: true,
+		listen_timeout: 5000,
+		kill_timeout: 5000,
 		env: {
 			NODE_ENV: 'development'
 		},

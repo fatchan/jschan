@@ -2,8 +2,9 @@
 
 const uuidv4 = require('uuid/v4')
 	, path = require('path')
+	, remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
+	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
 	, deleteFailedFiles = require(__dirname+'/../../helpers/files/deletefailed.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
@@ -11,11 +12,11 @@ const uuidv4 = require('uuid/v4')
 
 module.exports = async (req, res, next, numFiles) => {
 
-	const redirect = `/${req.params.board}/manage`
+	const redirect = `/${req.params.board}/manage.html`
 
 	// check all mime types befoer we try saving anything
 	for (let i = 0; i < numFiles; i++) {
-		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, video: false})) {
+		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false})) {
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -30,31 +31,33 @@ module.exports = async (req, res, next, numFiles) => {
 		const file = req.files.file[i];
 		const uuid = uuidv4();
 		const filename = uuid + path.extname(file.name);
-		//add filenames to array add processing to delete previous if one fails
+		file.filename = filename; //for error to delete failed files
 		filenames.push(filename);
-		// try to save
-		try {
-			//upload it
-			await fileUpload(req, res, file, filename, 'banner');
-			const imageData = await imageIdentify(filename, 'banner');
-			const geometry = imageData.size;
-			//make sure its 300x100 banner
-			if (geometry.width !== 300 || geometry.height !== 100) {
-				await deleteFailedFiles(filenames, 'banner');
-				return res.status(400).render('message', {
-					'title': 'Bad request',
-					'message': `Invalid file ${file.name}. Banners must be 300x100.`,
-					'redirect': redirect
-				});
+
+		//upload it
+		await imageUpload(file, filename, 'banner');
+		const imageData = await imageIdentify(filename, 'banner');
+		const geometry = imageData.size;
+		await remove(file.tempFilePath);
+
+		//make sure its 300x100 banner
+		if (geometry.width !== 300 || geometry.height !== 100) {
+			const fileNames = [];
+			for (let i = 0; i < req.files.file.length; i++) {
+				remove(req.files.file[i].tempFilePath).catch(e => console.error);
+				fileNames.push(req.files.file[i].filename);
 			}
-		} catch (err) {
-			//TODO: this better
-			await deleteFailedFiles(filenames, 'banner');
-			return next(err);
+			deleteFailedFiles(fileNames, 'banner').catch(e => console.error);
+			return res.status(400).render('message', {
+				'title': 'Bad request',
+				'message': `Invalid file ${file.name}. Banners must be 300x100.`,
+				'redirect': redirect
+			});
 		}
 	}
 
 	await Boards.addBanners(req.params.board, filenames);
+//	await buildBanners(res.locals.board);
 
 	return res.render('message', {
 		'title': 'Success',

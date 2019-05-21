@@ -1,10 +1,16 @@
 'use strict';
 
-module.exports = (req, res, next) => {
+const { buildRegister } = require(__dirname+'/../../build.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
-	//render the page
-	res.render('register', {
-		csrf: req.csrfToken()
-	});
+module.exports = async (req, res, next) => {
+
+	try {
+		await buildRegister();
+	} catch (err) {
+		return next(err);
+	}
+
+	return res.sendFile(`${uploadDirectory}html/register.html`);
 
 }

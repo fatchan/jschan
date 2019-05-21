@@ -1,15 +1,15 @@
 | Page: 
-span
-	a(href=`/${board._id}/index`) [#{1}]
+if page === 1
+	a(href=`/${board._id}/index.html`) [#{1}]
 	| 
-- for(let i = 2; i <= pages; i++)
+else
+	a(href=`/${board._id}/index.html`) #{1}
+	| 
+- for(let i = 2; i <= maxPage; i++)
 	if i === page
-		span
-			a(href=`/${board._id}/${i}`) [#{i}]
-			| 
-			
+		a(href=`/${board._id}/${i}.html`) [#{i}]
+		| 
 	else
-		span
-			a(href=`/${board._id}/${i}`) #{i}
-			| 
+		a(href=`/${board._id}/${i}.html`) #{i}
+		| 
 |   |  

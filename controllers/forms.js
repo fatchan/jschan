@@ -8,6 +8,10 @@ const express  = require('express')
 	, Trips = require(__dirname+'/../db/trips.js')
 	, Bans = require(__dirname+'/../db/bans.js')
 	, Mongo = require(__dirname+'/../db/db.js')
+	, remove = require('fs-extra').remove
+	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
+	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
+	, dismissGlobalReports = require(__dirname+'/../models/forms/dismissglobalreport.js')
 	, banPoster = require(__dirname+'/../models/forms/ban-poster.js')
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
@@ -17,16 +21,18 @@ const express  = require('express')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
 	, checkPermsMiddleware = require(__dirname+'/../helpers/haspermsmiddleware.js')
-	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, banCheck = require(__dirname+'/../helpers/bancheck.js')
 	, deletePostFiles = require(__dirname+'/../helpers/files/deletepostfiles.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captchaverify.js')
 	, actionHandler = require(__dirname+'/../models/forms/actionhandler.js')
-	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js');
+	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js')
+	, deleteFailedFiles = require(__dirname+'/../helpers/files/deletefailed.js')
+	, actionChecker = require(__dirname+'/../helpers/actionchecker.js');
+
 
 // login to account
-router.post('/login', csrf, (req, res, next) => {
+router.post('/login', (req, res, next) => {
 
 	const errors = [];
 
@@ -50,7 +56,7 @@ router.post('/login', csrf, (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/login'
+			'redirect': '/login.html'
 		})
 	}
 
@@ -98,7 +104,7 @@ router.post('/changepassword', verifyCaptcha, async (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/changepassword'
+			'redirect': '/changepassword.html'
 		})
 	}
 
@@ -144,7 +150,7 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/register'
+			'redirect': '/register.html'
 		})
 	}
 
@@ -153,7 +159,7 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 });
 
 // make new post
-router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, async (req, res, next) => {
+router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verifyCaptcha, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -171,14 +177,24 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, async
 	if (!req.body.message && numFiles === 0) {
 		errors.push('Must provide a message or file');
 	}
-	if (req.body.message && req.body.message.length > 2000) {
-		errors.push('Message must be 2000 characters or less');
+	if (!req.body.thread && (res.locals.board.settings.forceOPFile && res.locals.board.settings.maxFiles === 0)) {
+		errors.push('Threads must include a file');
 	}
-	if (!req.body.thread && (!req.body.message || req.body.message.length === 0)) {
+	if (!req.body.thread && res.locals.board.settings.forceOPMessage && (!req.body.message || req.body.message.length === 0)) {
 		errors.push('Threads must include a message');
+	}
+	if (req.body.message) {
+		if (req.body.message.length > 2000) {
+			errors.push('Message must be 2000 characters or less');
+		} else if (req.body.message.length < res.locals.board.settings.minMessageLength) {
+			errors.push(`Message must be at least ${res.locals.board.settings.minMessageLength} characters long`);
+		}
 	}
 	if (req.body.name && req.body.name.length > 50) {
 		errors.push('Name must be 50 characters or less');
+	}
+	if (res.locals.board.settings.forceOPSubject && (!req.body.subject || req.body.subject.length === 0)) {
+		errors.push('Threads must include a subject');
 	}
 	if (req.body.subject && req.body.subject.length > 50) {
 		errors.push('Subject must be 50 characters or less');
@@ -194,16 +210,21 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, async
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread : ''}`
+			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
 		})
 	}
 
 	try {
 		await makePost(req, res, next, numFiles);
 	} catch (err) {
+		//handler errors here better
 		if (numFiles > 0) {
-			const fileNames = req.files.file.map(file => file.filename);
-			await deletePostFiles(fileNames).catch(err => console.error);
+			const fileNames = []
+			for (let i = 0; i < req.files.file.length; i++) {
+				remove(req.files.file[i].tempFilePath).catch(e => console.error);
+				fileNames.push(req.files.file[i].filename);
+			}
+			deletePostFiles(fileNames).catch(err => console.error);
 		}
 		return next(err);
 	}
@@ -232,13 +253,13 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage`
+			'redirect': `/${req.params.board}/manage.html`
 		})
 	}
 
 	return res.status(501).render('message', {
 		'title': 'Not implemented',
-		'redirect': `/${req.params.board}/manage`
+		'redirect': `/${req.params.board}/manage.html`
 	})
 
 });
@@ -261,19 +282,29 @@ router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddlewar
 	if (numFiles === 0) {
 		errors.push('Must provide a file');
 	}
+	if (res.locals.board.banners.length > 100) {
+		errors.push('Limit of 100 banners reached');
+	}
 
 	if (errors.length > 0) {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage`
+			'redirect': `/${req.params.board}/manage.html`
 		})
 	}
 
 	try {
 		await uploadBanners(req, res, next, numFiles);
 	} catch (err) {
-		console.error(err);
+		const fileNames = [];
+		if (numFiles > 0) {
+			for (let i = 0; i < req.files.file.length; i++) {
+				remove(req.files.file[i].tempFilePath).catch(e => console.error);
+				fileNames.push(req.files.file[i].filename);
+			}
+		}
+		deleteFailedFiles(fileNames, 'banner').catch(e => console.error);
 		return next(err);
 	}
 
@@ -292,7 +323,7 @@ router.post('/board/:board/deletebanners', csrf, Boards.exists, checkPermsMiddle
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage`
+			'redirect': `/${req.params.board}/manage.html`
 		})
 	}
 
@@ -301,7 +332,7 @@ router.post('/board/:board/deletebanners', csrf, Boards.exists, checkPermsMiddle
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Invalid banners selected',
-				'redirect': `/${req.params.board}/manage`
+				'redirect': `/${req.params.board}/manage.html`
 			})
 		}
 	}
@@ -333,7 +364,7 @@ router.post('/board/:board/unban', csrf, Boards.exists, checkPermsMiddleware, pa
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage`
+			'redirect': `/${req.params.board}/manage.html`
 		});
 	}
 
@@ -347,7 +378,7 @@ router.post('/board/:board/unban', csrf, Boards.exists, checkPermsMiddleware, pa
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': `/${req.params.board}/manage`
+		'redirect': `/${req.params.board}/manage.html`
 	});
 
 });
@@ -387,7 +418,7 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/globalmanage'
+			'redirect': '/globalmanage.html'
 		})
 	}
 
@@ -397,7 +428,7 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 		return res.status(404).render('message', {
 			'title': 'Not found',
 			'errors': 'Selected posts not found',
-			'redirect': '/globalmanage'
+			'redirect': '/globalmanage.html'
 		})
 	}
 
@@ -414,7 +445,7 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 			}
 			messages.push(message);
 		}
-		if (hasPerms && req.body.delete_ip_global) {
+		if (req.body.delete_ip_global) {
 			const deletePostIps = posts.map(x => x.ip);
 			const deleteIpPosts = await Posts.db.find({
 				'ip': {
@@ -439,7 +470,13 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
-			}
+			} else if (req.body.spoiler) {
+                const { message, action, query } = spoilerPosts(posts);
+                if (action) {
+                    combinedQuery[action] = { ...combinedQuery[action], ...query}
+                }
+                messages.push(message);
+            }
 			if (req.body.global_dismiss) {
 				const { message, action, query } = dismissGlobalReports(posts);
 				if (action) {
@@ -476,7 +513,7 @@ router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': '/globalmanage'
+		'redirect': '/globalmanage.html'
 	});
 
 });
@@ -493,7 +530,7 @@ router.post('/global/unban', csrf, checkPermsMiddleware, paramConverter, async(r
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/globalmanage`
+			'redirect': `/globalmanage.html`
 		});
 	}
 
@@ -507,7 +544,7 @@ router.post('/global/unban', csrf, checkPermsMiddleware, paramConverter, async(r
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': `/globalmanage`
+		'redirect': `/globalmanage.html`
 	});
 
 });

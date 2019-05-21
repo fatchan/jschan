@@ -6,10 +6,11 @@ block head
 
 block content
 	include ../includes/boardheader.pug
+	br
 	nav.pages#top
 		a(href='#bottom') [Bottom]
 		| 
-		a(href=`/${board._id}/index`) [Return]
+		a(href=`/${board._id}/index.html`) [Return]
 	hr(size=1)
 	if threads.length === 0
 		p No posts.
@@ -20,4 +21,4 @@ block content
 	nav.pages#bottom
 		a(href='#top') [Top]
 		| 
-		a(href=`/${board._id}/index`) [Return]
+		a(href=`/${board._id}/index.html`) [Return]

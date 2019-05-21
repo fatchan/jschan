@@ -1,8 +1,6 @@
 'use strict';
 
-const util = require('util')
-	, fs = require('fs')
-	, unlink = util.promisify(fs.unlink)
+const remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 
 module.exports = (fileNames) => {
@@ -11,8 +9,8 @@ module.exports = (fileNames) => {
 	return Promise.all(fileNames.map(async filename => {
 		//dont question it.
 		return Promise.all([
-			unlink(`${uploadDirectory}img/${filename}`),
-			unlink(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`)
+			remove(`${uploadDirectory}img/${filename}`),
+			remove(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`)
 		]).catch(e => console.error) //ignore for now
 	}));
 

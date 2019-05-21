@@ -1,17 +1,16 @@
 'use strict';
 
-const Boards = require(__dirname+'/../../db/boards.js');
+const { buildHomepage } = require(__dirname+'/../../build.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 
-	//get a list of boards
-	let boards;
 	try {
-		boards = await Boards.find();
+		await buildHomepage();
 	} catch (err) {
 		return next(err);
 	}
 
-	res.render('home',  { boards });
+	return res.sendFile(`${uploadDirectory}html/index.html`);
 
 }

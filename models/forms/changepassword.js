@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
 		return res.status(403).render('message', {
 			'title': 'Forbidden',
 			'message': 'Incorrect username or password',
-			'redirect': redirect ? `/login?redirect=${redirect}` : '/changepassword'
+			'redirect': '/changepassword.html'
 		});
 	}
 
@@ -25,16 +25,16 @@ module.exports = async (req, res, next) => {
 	const passwordMatch = await bcrypt.compare(password, account.passwordHash);
 
 	//if hashes matched
-	if (passwordMatch === true) {
-		//change the password
-		await Accounts.changePassword(username, newPassword);
-		return res.redirect('/login');
+	if (passwordMatch === false) {
+		return res.status(403).render('message', {
+			'title': 'Forbidden',
+			'message': 'Incorrect username or password',
+			'redirect': '/changepassword.html'
+		});
 	}
 
-	return res.status(403).render('message', {
-		'title': 'Forbidden',
-		'message': 'Incorrect username or password',
-		'redirect': redirect ? `/login?redirect=${redirect}` : '/login'
-	});
+	//change the password
+	await Accounts.changePassword(username, newPassword);
+	return res.redirect('/login.html');
 
 }

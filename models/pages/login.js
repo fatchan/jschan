@@ -1,11 +1,16 @@
 'use strict';
 
-module.exports = (req, res, next) => {
+const { buildLogin } = require(__dirname+'/../../build.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
-	//render the page
-	res.render('login', {
-		csrf: req.csrfToken(),
-		redirect: req.query.redirect,
-	});
+module.exports = async (req, res, next) => {
+
+	try {
+		await buildLogin();
+	} catch (err) {
+		return next(err);
+	}
+
+	return res.sendFile(`${uploadDirectory}html/login.html`);
 
 }

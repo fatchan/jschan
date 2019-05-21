@@ -4,12 +4,12 @@ module.exports = (posts) => {
 
 	// filter to ones not spoilered
 	const filteredPosts = posts.filter(post => {
-  		return !post.spoiler
+  		return !post.spoiler && post.files.length > 0;
 	});
 
 	if (filteredPosts.length === 0) {
 		return {
-			message:'Post(s) already spoilered'
+			message:'No post(s) to spoiler'
 		};
 	}
 

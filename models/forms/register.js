@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
 		return res.status(409).render('message', {
 			'title': 'Conflict',
 			'message': 'Account with this username already exists',
-			'redirect': '/register'
+			'redirect': '/register.html'
 		});
 	}
 
@@ -31,6 +31,6 @@ module.exports = async (req, res, next) => {
 		return next(err);
 	}
 
-	return res.redirect('/login')
+	return res.redirect('/login.html')
 
 }

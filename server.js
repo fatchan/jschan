@@ -37,11 +37,17 @@ const express  = require('express')
 	}));
 
 	// session store
+	app.set('trust proxy', 1);
 	app.use(session({
 		secret: configs.sessionSecret,
 		store: new MongoStore({ db: Mongo.client.db('sessions') }),
 		resave: false,
-		saveUninitialized: false
+		saveUninitialized: false,
+		cookie: {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'lax',
+		}
 	}));
 	app.use(cookieParser());
 
@@ -53,7 +59,7 @@ const express  = require('express')
 		if (req.method !== 'POST') {
 			return next();
 		}
-		if (!req.headers.referer || !req.headers.referer.startsWith('https://fatpeople.lol')) {
+		if (!req.headers.referer || !req.headers.referer.match(/^https:\/\/(www\.)?fatpeople\.lol/)) {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
 				'message': 'Invalid or missing "Referer" header. Are you posting from the correct URL?'
@@ -89,8 +95,38 @@ const express  = require('express')
 	})
 
 	// listen
-	app.listen(configs.port, () => {
+	const server = app.listen(configs.port, '127.0.0.1', () => {
+
         console.log(`Listening on port ${configs.port}`);
+
+		//let PM2 know that this is ready (for graceful reloads)
+		if (typeof process.send === 'function') { //make sure we are a child process
+			console.info('Sending ready signal to PM2')
+			process.send('ready');
+		}
+
     });
+
+	process.on('SIGINT', () => {
+
+		console.info('SIGINT signal received.')
+
+		// Stops the server from accepting new connections and finishes existing connections.
+		server.close((err) => {
+
+			// if error, log and exit with error (1 code)
+			if (err) {
+				console.error(err);
+				process.exit(1);
+			}
+
+			// close database connection
+			Mongo.client.close();
+
+			// now close without error
+			process.exit(0);
+
+		})
+	})
 
 })();

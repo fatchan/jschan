@@ -1,8 +1,5 @@
 nav.navbar
 	a.nav-item(href='/') Home
 	a.nav-item.right(href='/logout') Logout
-	if board
-		a.nav-item.right(href=`/login?redirect=/${board._id}/index`) Login
-		a.nav-item.right(href=`/${board._id}/manage`) Manage
-	else
-		a.nav-item.right(href='/login') Login
+	a.nav-item.right(href=`/${board ? board._id+'/' : 'global'}manage.html`) Manage
+	a.nav-item.right(href='/login.html') Login

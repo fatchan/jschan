@@ -14,7 +14,10 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, dismissReports = require(__dirname+'/dismiss-report.js')
 	, dismissGlobalReports = require(__dirname+'/dismissglobalreport.js')
 	, actionChecker = require(__dirname+'/../../helpers/actionchecker.js')
-	, checkPerms = require(__dirname+'/../../helpers/hasperms.js');
+	, checkPerms = require(__dirname+'/../../helpers/hasperms.js')
+	, remove = require('fs-extra').remove
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
+	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../build.js');
 
 module.exports = async (req, res, next) => {
 
@@ -57,16 +60,16 @@ module.exports = async (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}`
+			'redirect': `/${req.params.board}/`
 		})
 	}
 
-	const posts = await Posts.getPosts(req.params.board, req.body.checkedposts, true);
+	let posts = await Posts.getPosts(req.params.board, req.body.checkedposts, true);
 	if (!posts || posts.length === 0) {
 		return res.status(404).render('message', {
 			'title': 'Not found',
 			'error': 'Selected posts not found',
-			'redirect': `/${req.params.board}`
+			'redirect': `/${req.params.board}/`
 		})
 	}
 
@@ -88,7 +91,7 @@ module.exports = async (req, res, next) => {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
 				'error': 'Password did not match any selected posts',
-				'redirect': `/${req.params.board}`
+				'redirect': `/${req.params.board}/`
 			});
 		}
 	} else {
@@ -128,6 +131,7 @@ module.exports = async (req, res, next) => {
 				query['board'] = req.params.board;
 			}
 			const deleteIpPosts = await Posts.db.find(query).toArray();
+			posts = posts.concat(deleteIpPosts);
 			if (deleteIpPosts && deleteIpPosts.length > 0) {
 				const { message } = await deletePosts(req, res, next, deleteIpPosts, req.params.board);
 				messages.push(message);
@@ -206,30 +210,63 @@ module.exports = async (req, res, next) => {
 				messages.push(message);
 			}
 		}
-		const dbPromises = []
+		const bulkWrites = []
 		if (Object.keys(combinedQuery).length > 0) {
-			dbPromises.push(
-				Posts.db.updateMany({
-					'_id': {
-						'$in': postMongoIds
-					}
-				}, combinedQuery)
-			)
+			bulkWrites.push({
+				'updateMany': {
+					'filter': {
+						'_id': {
+							'$in': postMongoIds
+						}
+					},
+					'update': combinedQuery
+				}
+			});
 		}
 		if (Object.keys(passwordCombinedQuery).length > 0) {
-			dbPromises.push(
-				Posts.db.updateMany({
-					'_id': {
-						'$in': passwordPostMongoIds
-					}
-				}, passwordCombinedQuery)
-			)
+			bulkWrites.push({
+				'updateMany': {
+					'filter': {
+						'_id': {
+							'$in': passwordPostMongoIds
+						}
+					},
+					'update': passwordCombinedQuery
+				}
+			});
 		}
-		await Promise.all(dbPromises);
+
+		//get a map of boards to threads affected
+		const boardThreadMap = {};
+		const queryOrs = [];
+		for (let i = 0; i < posts.length; i++) {
+			const post = posts[i];
+			if (!boardThreadMap[post.board]) {
+				boardThreadMap[post.board] = [];
+			}
+			boardThreadMap[post.board].push(post.thread || post.postId);
+		}
+
+		const beforePages = {};
+		const threadBoards = Object.keys(boardThreadMap);
+		//get how many pages each board is to know whether we should rebuild all pages (because of page nav changes)
+		//only if deletes actions selected because this could result in number of pages to change
+		if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
+			await Promise.all(threadBoards.map(async board => {
+				beforePages[board] = Math.ceil((await Posts.getPages(board)) / 10);
+			}));
+		}
+
+		//execute actions now
+		if (bulkWrites.length > 0) {
+			await Posts.db.bulkWrite(bulkWrites);
+		}
+
+		//get only posts (so we can use them for thread ids
+		const postThreadsToUpdate = posts.filter(post => post.thread !== null);
 		if (aggregateNeeded) {
-			const threadsToUpdate = [...new Set(posts.filter(post => post.thread !== null))];
-			//recalculate and set correct aggregation numbers again
-			await Promise.all(threadsToUpdate.map(async (post) => {
+			//recalculate replies and image counts
+			await Promise.all(postThreadsToUpdate.map(async (post) => {
 				const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
 				let replyposts = 0;
 				let replyfiles = 0;
@@ -240,6 +277,79 @@ module.exports = async (req, res, next) => {
 				Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
 			}));
 		}
+
+		//make it into an OR query for the db
+		for (let i = 0; i < threadBoards.length; i++) {
+			const threadBoard = threadBoards[i];
+			boardThreadMap[threadBoard] = [...new Set(boardThreadMap[threadBoard])]
+			queryOrs.push({
+				'board': threadBoard,
+				'postId': {
+					'$in': boardThreadMap[threadBoard]
+				}
+			})
+		}
+
+		//fetch threads per board that we only checked posts for
+		let threadsEachBoard = await Posts.db.find({
+			'thread': null,
+			'$or': queryOrs
+		}).toArray();
+		//combine it with what we already had
+		threadsEachBoard = threadsEachBoard.concat(posts.filter(post => post.thread === null))
+
+		//get the oldest and newest thread for each board to determine how to delete
+		const threadBounds = threadsEachBoard.reduce((acc, curr) => {
+			if (!acc[curr.board] || curr.bumped < acc[curr.board].bumped) {
+				acc[curr.board] = { oldest: null, newest: null};
+			}
+			if (!acc[curr.board].oldest || curr.bumped < acc[curr.board].oldest.bumped) {
+				acc[curr.board].oldest = curr;
+			}
+			if (!acc[curr.board].newest || curr.bumped > acc[curr.board].newest.bumped) {
+				acc[curr.board].newest = curr;
+			}
+			return acc;
+		}, {});
+
+		//now we need to delete outdated html
+		//TODO: not do this for reports, handle global actions & move to separate handler + optimize and test
+		const parallelPromises = []
+		const boardsWithChanges = Object.keys(threadBounds);
+		for (let i = 0; i < boardsWithChanges.length; i++) {
+			const changeBoard = boardsWithChanges[i];
+			const bounds = threadBounds[changeBoard];
+			//always need to refresh catalog
+			parallelPromises.push(buildCatalog(res.locals.board));
+			//rebuild impacted threads
+			for (let j = 0; j < boardThreadMap[changeBoard].length; j++) {
+				parallelPromises.push(buildThread(boardThreadMap[changeBoard][j], changeBoard));
+			}
+			//refersh any pages affected
+			const afterPages = Math.ceil((await Posts.getPages(changeBoard)) / 10);
+			if (beforePages[changeBoard] && beforePages[changeBoard] !== afterPages) {
+				//amount of pages changed, rebuild all pages
+				parallelPromises.push(buildBoardMultiple(res.locals.board, 1, afterPages));
+			} else {
+				const threadPageOldest = await Posts.getThreadPage(req.params.board, bounds.oldest);
+				const threadPageNewest = await Posts.getThreadPage(req.params.board, bounds.newest);
+				if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
+					//rebuild current and older pages for deletes
+					parallelPromises.push(buildBoardMultiple(res.locals.board, threadPageNewest, afterPages));
+				} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
+					//rebuild current and newer pages for stickies
+					parallelPromises.push(buildBoardMultiple(res.locals.board, 1, threadPageOldest));
+				} else if ((hasPerms && (req.body.lock || req.body.sage)) || req.body.spoiler) {
+					//rebuild inbewteen pages for things that dont cause page/thread movement
+					//should rebuild only affected pages, but finding the page of all affected
+					//threads could end up being slower/more resource intensive. this is simpler
+					//but still avoids rebuilding _some_ pages unnecessarily
+					parallelPromises.push(buildBoardMultiple(res.locals.board, threadPageNewest, threadPageOldest));
+				}
+			}
+		}
+		await Promise.all(parallelPromises);
+
 	} catch (err) {
 		return next(err);
 	}
@@ -247,7 +357,7 @@ module.exports = async (req, res, next) => {
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': `/${req.params.board}`
+		'redirect': `/${req.params.board}/`
 	});
 
 }

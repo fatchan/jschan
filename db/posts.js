@@ -9,7 +9,18 @@ module.exports = {
 
 	db,
 
-	getRecent: async (board, page) => {
+	getThreadPage: async (board, thread) => {
+		const threadsBefore = await db.countDocuments({
+			'board': board,
+			'thread': null,
+			'bumped': {
+				'$gte': thread.bumped
+			}
+		});
+		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
+	},
+
+	getRecent: async (board, page, limit=10) => {
 		// get all thread posts (posts with null thread id)
 		const threads = await db.find({
 			'thread': null,
@@ -25,7 +36,7 @@ module.exports = {
 		}).sort({
 			'sticky': -1,
 			'bumped': -1,
-		}).skip(10*(page-1)).limit(10).toArray();
+		}).skip(10*(page-1)).limit(limit).toArray();
 
 		// add last 5 posts in reverse order to preview
 		await Promise.all(threads.map(async thread => {
@@ -47,8 +58,8 @@ module.exports = {
 			//reverse order for board page
 			thread.replies = replies.reverse();
 
-			//temporary mitigation for deletion issue
-			if (replies.length > 5) {
+			//if enough replies, show omitted count
+			if (thread.replyposts > 5) {
 				//cout omitted image and posts
 				const numPreviewImages = replies.reduce((acc, post) => { return acc + post.files.length }, 0);
 				thread.omittedimages = thread.replyfiles - numPreviewImages;
@@ -125,7 +136,6 @@ module.exports = {
 			thread.replies = data[1];
 		}
 		return thread;
-
 	},
 
 	getThreadPosts: (board, id) => {
@@ -178,6 +188,9 @@ module.exports = {
 				'reports': 0,
 				'globalreports': 0,
 			}
+		}).sort({
+			'sticky': -1,
+			'bumped': -1,
 		}).toArray();
 
 	},
@@ -331,27 +344,29 @@ module.exports = {
 		}).sort({
 			'sticky': -1,
 			'bumped': -1
-		}).skip(threadLimit).toArray(); //100 therads in board limit for now
+		}).skip(threadLimit).toArray();
 		//if there are any
-		if (threads.length > 0) {
-			//get the postIds
-			const threadIds = threads.map(thread => thread.postId);
-			//get all the posts from those threads
-			const threadPosts = await module.exports.getMultipleThreadPosts(board, threadIds);
-			//combine them
-			const postsAndThreads = threads.concat(threadPosts);
-			//get the filenames and delete all the files
-		 	let fileNames = [];
-		 	postsAndThreads.forEach(post => {
-				fileNames = fileNames.concat(post.files.map(x => x.filename))
-			});
-			if (fileNames.length > 0) {
-				await deletePostFiles(fileNames);
-			}
-			//get the mongoIds and delete them all
-			const postMongoIds = postsAndThreads.map(post => Mongo.ObjectId(post._id));
-			await module.exports.deleteMany(postMongoIds);
+		if (threads.length === 0) {
+			return [];
 		}
+		//get the postIds
+		const threadIds = threads.map(thread => thread.postId);
+		//get all the posts from those threads
+		const threadPosts = await module.exports.getMultipleThreadPosts(board, threadIds);
+		//combine them
+		const postsAndThreads = threads.concat(threadPosts);
+		//get the filenames and delete all the files
+		let fileNames = [];
+		postsAndThreads.forEach(post => {
+			fileNames = fileNames.concat(post.files.map(x => x.filename))
+		});
+		if (fileNames.length > 0) {
+			await deletePostFiles(fileNames);
+		}
+		//get the mongoIds and delete them all
+		const postMongoIds = postsAndThreads.map(post => Mongo.ObjectId(post._id));
+		await module.exports.deleteMany(postMongoIds);
+		return threadIds;
 	},
 
 	deleteMany: (ids) => {
@@ -367,5 +382,14 @@ module.exports = {
 			'board': board
 		});
 	},
+
+	exists: async (req, res, next) => {
+		const thread = await module.exports.getThread(req.params.board, req.params.id);
+		if (!thread) {
+			return res.status(404).render('404');
+		}
+		res.locals.thread = thread; // can acces this in views or next route handlers
+		next();
+	}
 
 }

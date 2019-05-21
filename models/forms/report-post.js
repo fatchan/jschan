@@ -15,7 +15,10 @@ module.exports = (req, posts) => {
 		message: `Reported ${posts.length} post(s)`,
 		action: '$push',
 		query: {
-			'reports': report
+			'reports': {
+				'$each': [report],
+				'$slice': -5 //limit number of  reports
+			}
 		}
 	};
 

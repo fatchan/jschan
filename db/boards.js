@@ -78,7 +78,7 @@ module.exports = {
 		return res.status(403).render('message', {
 			'title': 'Forbidden',
 			'message': 'You do not have permission to manage this board',
-			'redirect': '/login'
+			'redirect': '/login.html'
 		});
 
 	},

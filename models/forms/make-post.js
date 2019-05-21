@@ -5,6 +5,7 @@ const uuidv4 = require('uuid/v4')
 	, util = require('util')
 	, crypto = require('crypto')
 	, randomBytes = util.promisify(crypto.randomBytes)
+	, remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
 	, getTripCode = require(__dirname+'/../../helpers/tripcode.js')
@@ -20,18 +21,20 @@ const uuidv4 = require('uuid/v4')
 	}
 	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?:## (?<capcode>[^\s#]+))?$/
 	, permsCheck = require(__dirname+'/../../helpers/hasperms.js')
-	, fileUpload = require(__dirname+'/../../helpers/files/file-upload.js')
+	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
+	, videoUpload = require(__dirname+'/../../helpers/files/videoupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
 	, imageThumbnail = require(__dirname+'/../../helpers/files/image-thumbnail.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
 	, videoThumbnail = require(__dirname+'/../../helpers/files/video-thumbnail.js')
 	, videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
-	, formatSize = require(__dirname+'/../../helpers/files/format-size.js');
+	, formatSize = require(__dirname+'/../../helpers/files/format-size.js')
+	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../build.js');
 
 module.exports = async (req, res, next, numFiles) => {
 
 	// check if this is responding to an existing thread
-	let redirect = `/${req.params.board}`
+	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
 	const hasPerms = permsCheck(req, res);
@@ -46,7 +49,7 @@ module.exports = async (req, res, next, numFiles) => {
 			});
 		}
 		salt = thread.salt;
-		redirect += `/thread/${req.body.thread}`
+		redirect += `thread/${req.body.thread}.html`
 		if (thread.locked && !hasPerms) {
 			return res.status(400).render('message', {
 				'title': 'Bad request',
@@ -62,12 +65,19 @@ module.exports = async (req, res, next, numFiles) => {
 			});
 		}
 	}
+	if (numFiles > res.locals.board.settings.maxFiles) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'message': `Too many files. Max files per post is ${res.locals.board.settings.maxFiles}.`,
+			'redirect': redirect
+		});
+	}
 	let files = [];
 	// if we got a file
 	if (numFiles > 0) {
 		// check all mime types befoer we try saving anything
 		for (let i = 0; i < numFiles; i++) {
-			if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, video: true})) {
+			if (!fileCheckMimeType(req.files.file[i].mimetype, {animatedImage: true, image: true, video: true})) {
 				return res.status(400).render('message', {
 					'title': 'Bad request',
 					'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -82,9 +92,6 @@ module.exports = async (req, res, next, numFiles) => {
 			const filename = uuid + path.extname(file.name);
 			file.filename = filename; //for error to delete failed files
 
-			//upload file
-			await fileUpload(req, res, file, filename, 'img');
-
 			//get metadata
 			let processedFile = {
 					filename: filename,
@@ -97,25 +104,38 @@ module.exports = async (req, res, next, numFiles) => {
 			const mainType = file.mimetype.split('/')[0];
 			switch (mainType) {
 				case 'image':
+					await imageUpload(file, filename, 'img');
 					const imageData = await imageIdentify(filename, 'img');
 					processedFile.geometry = imageData.size // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = imageData.Geometry // 123 x 123 string
-					await imageThumbnail(filename);
+					if (fileCheckMimeType(file.mimetype, {image: true}) //always thumbnail gif/webp
+						&& processedFile.geometry.height <= 128
+						&& processedFile.geometry.width <= 128) {
+						processedFile.hasThumb = false;
+					} else {
+						processedFile.hasThumb = true;
+						await imageThumbnail(filename);
+					}
 					break;
 				case 'video':
 					//video metadata
+					await videoUpload(file, filename, 'img');
 					const videoData = await videoIdentify(filename);
 					processedFile.duration = videoData.format.duration;
 					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
 					processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string
+					processedFile.hasThumb = true;
 					await videoThumbnail(filename);
 					break;
 				default:
 					return next(err);
 			}
+
+			//delete the temp file
+			await remove(file.tempFilePath);
 
 			//handle gifs with multiple geometry and size
 			if (Array.isArray(processedFile.geometry)) {
@@ -128,6 +148,7 @@ module.exports = async (req, res, next, numFiles) => {
 				processedFile.geometryString = processedFile.geometryString[0];
 			}
 			files.push(processedFile);
+
 		}
 	}
 
@@ -145,9 +166,10 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 
 	//forceanon hide reply subjects so cant be used as name for replies
-	let subject = hasPerms || !forceAnon || !req.body.thread ? req.body.subject : null;
 	//forceanon only allow sage email
-	let email = hasPerms || !forceAnon || req.body.email === 'sage' ? req.body.email : null;
+	let subject = (hasPerms || !forceAnon || !req.body.thread) ? req.body.subject : null;
+	let email = (hasPerms || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
+
 	let name = res.locals.board.settings.defaultName;
 	let tripcode = null;
 	let capcode = null;
@@ -214,11 +236,37 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 
 	const postId = await Posts.insertOne(req.params.board, data, thread);
-	if (!data.thread) { //if we just added a new thread, prune any old ones
-		await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
+
+	//build just the thread they need to see first and send them immediately
+	await buildThread(data.thread || postId, res.locals.board);
+	res.redirect(successRedirect);
+
+	//now rebuild other pages
+	const parallelPromises = []
+	if (data.thread) {
+		//refersh pages
+		const threadPage = await Posts.getThreadPage(req.params.board, thread);
+		if (data.email === 'sage') {
+			//refresh the page that the thread is on
+			parallelPromises.push(buildBoard(res.locals.board, threadPage));
+		} else {
+			//if not saged, it will bump so we should refresh any pages above it as well
+			parallelPromises.push(buildBoardMultiple(res.locals.board, 1, threadPage));
+		}
+	} else {
+		//new thread, rebuild all pages and prunes old threads
+		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		for (let i = 0; i < prunedThreads.length; i++) {
+			parallelPromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
+		}
+		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, 10));
 	}
 
-	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}#${postId}`;
+	//always rebuild catalog for post counts and ordering
+	parallelPromises.push(buildCatalog(res.locals.board));
 
-	return res.redirect(successRedirect);
+	//finish building other pages
+	await Promise.all(parallelPromises);
+
 }

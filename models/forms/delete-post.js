@@ -2,6 +2,7 @@
 
 const uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, deletePostFiles = require(__dirname+'/../../helpers/files/deletepostfiles.js')
+	, remove = require('fs-extra').remove
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
 
@@ -9,6 +10,13 @@ module.exports = async (req, res, next, posts, board) => {
 
 	//filter to threads
 	const threads = posts.filter(x => x.thread == null);
+
+	//delete the html for threads
+	const deleteHTML = []
+	for (let i = 0; i < threads.length; i++) {
+		deleteHTML.push(remove(`${uploadDirectory}html/${threads[i].board}/thread/${threads[i].postId}.html`));
+	}
+	await Promise.all(deleteHTML);
 
 	//get posts from all threads
 	let threadPosts = []

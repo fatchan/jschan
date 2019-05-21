@@ -1,23 +1,16 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db/posts.js');
+const { buildThread } = require(__dirname+'/../../build.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 
-    //get the recently bumped thread & preview posts
-    let thread;
     try {
-        thread = await Posts.getThread(req.params.board, req.params.id);
+		await buildThread(res.locals.thread.postId, res.locals.board);
     } catch (err) {
         return next(err);
-    }
+	}
 
-    if (!thread) {
-        return res.status(404).render('404');
-    }
+	return res.sendFile(`${uploadDirectory}html/${req.params.board}/thread/${req.params.id}.html`);
 
-    //render the page
-    res.render('thread', {
-		thread
-    });
 }
