@@ -234,14 +234,15 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 
 	const postId = await Posts.insertOne(req.params.board, data, thread);
+	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
 
-	//now we need to rebuild pages
+	//build just the thread they need to see first and send them immediately
+	await buildThread(data.thread || postId, res.locals.board);
+	res.redirect(successRedirect);
+
+	//now rebuild other pages
 	const parallelPromises = []
-	//always need to rebuild catalog
-	parallelPromises.push(buildCatalog(res.locals.board));
 	if (data.thread) {
-		//new reply, so build the thread first
-		parallelPromises.push(buildThread(thread.postId, res.locals.board));
 		//refersh pages
 		const threadPage = await Posts.getThreadPage(req.params.board, thread);
 		if (data.email === 'sage') {
@@ -252,17 +253,18 @@ module.exports = async (req, res, next, numFiles) => {
 			parallelPromises.push(buildBoardMultiple(res.locals.board, 1, threadPage));
 		}
 	} else {
-		//new thread, rebuild all pages and prune old threads
+		//new thread, rebuild all pages and prunes old threads
 		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
 		for (let i = 0; i < prunedThreads.length; i++) {
 			parallelPromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
 		}
 		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, 10));
 	}
+
+	//always rebuild catalog for post counts and ordering
+	parallelPromises.push(buildCatalog(res.locals.board));
+
+	//finish building other pages
 	await Promise.all(parallelPromises);
-
-	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
-
-	return res.redirect(successRedirect);
 
 }

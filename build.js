@@ -16,7 +16,7 @@ module.exports = {
 	},
 
 	buildThread: async (threadId, board) => {
-//console.log('building thread', `${board._id}/thread/${threadId}.html`);
+//console.log('building thread', `${board._id || board}/thread/${threadId}.html`);
 		if (!board._id) {
 			board = await Boards.findOne(board);
 		}
@@ -47,7 +47,13 @@ module.exports = {
 	//building multiple pages (for rebuilds)
 	buildBoardMultiple: async (board, startpage=1, endpage=10) => {
 		const maxPage = Math.ceil((await Posts.getPages(board._id)) / 10);
-		endpage = maxPage < endpage ? maxPage : endpage;
+		if (endpage === 0) {
+			//deleted only/all posts, so only 1 page will remain
+			endpage = 1;
+		} else if (maxPage < endpage) {
+			//else just build up to the max page if it is greater than input page number
+			endpage = maxPage
+		}
 		const difference = endpage-startpage + 1; //+1 because for single pagemust be > 0
 		const threads = await Posts.getRecent(board._id, startpage, difference*10);
 		const buildArray = [];
