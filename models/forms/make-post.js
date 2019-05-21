@@ -77,7 +77,7 @@ module.exports = async (req, res, next, numFiles) => {
 	if (numFiles > 0) {
 		// check all mime types befoer we try saving anything
 		for (let i = 0; i < numFiles; i++) {
-			if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, video: true})) {
+			if (!fileCheckMimeType(req.files.file[i].mimetype, {animatedImage: true, image: true, video: true})) {
 				return res.status(400).render('message', {
 					'title': 'Bad request',
 					'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -109,7 +109,9 @@ module.exports = async (req, res, next, numFiles) => {
 					processedFile.geometry = imageData.size // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = imageData.Geometry // 123 x 123 string
-					if (processedFile.geometry.height <= 128 && processedFile.geometry.width <= 128) {
+					if (fileCheckMimeType(file.mimetype, {image: true}) //always thumbnail gif/webp
+						&& processedFile.geometry.height <= 128
+						&& processedFile.geometry.width <= 128) {
 						processedFile.hasThumb = false;
 					} else {
 						processedFile.hasThumb = true;

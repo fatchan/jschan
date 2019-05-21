@@ -16,7 +16,7 @@ module.exports = async (req, res, next, numFiles) => {
 
 	// check all mime types befoer we try saving anything
 	for (let i = 0; i < numFiles; i++) {
-		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, video: false})) {
+		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false})) {
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
