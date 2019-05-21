@@ -41,7 +41,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 				.post-files
 					each file in post.files
 						.post-file
-							small.post-file-info
+							span.post-file-info
 								span: a(href='/img/'+file.filename title=file.originalFilename download=file.originalFilename) #{file.originalFilename}
 								br
 								span 
@@ -50,11 +50,13 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 										| , #{file.durationString}
 									| )
 							.post-file-src
-								a(target='_blank' href='/img/'+file.filename)
+								a(target='_blank' href=`/img/${file.filename}`)
 									if post.spoiler
-										object(data='/img/spoiler.png' width='128' height='128')
+										object.file-thumb(data='/img/spoiler.png' width='128' height='128')
+									else if file.hasThumb
+										object.file-thumb(data=`/img/thumb-${file.filename.split('.')[0]}.jpg`)
 									else
-										object(data=`/img/thumb-${file.filename.split('.')[0]}.jpg`)
+										object.file-thumb(data=`/img/${file.filename}`)
 			if post.message
 				if truncate
 					-

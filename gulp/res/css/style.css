@@ -312,10 +312,16 @@ summary {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	word-break: keep-all;
+	font-size: x-small;
 }
 
 .post-file-src {
 	margin: 0 auto;
+}
+
+.file-thumb {
+	max-width: 128px;
+	max-height: 128px;
 }
 
 figure {
