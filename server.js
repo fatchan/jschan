@@ -96,13 +96,16 @@ const express  = require('express')
 
 	// listen
 	const server = app.listen(configs.port, '127.0.0.1', () => {
-        console.log(`Listening on port ${configs.port}`);
-    });
 
-	//let PM2 know that this is ready (for graceful reloads)
-	if (typeof process.send === 'function') { //make sure we are a child process
-		process.send('ready');
-	}
+        console.log(`Listening on port ${configs.port}`);
+
+		//let PM2 know that this is ready (for graceful reloads)
+		if (typeof process.send === 'function') { //make sure we are a child process
+			console.info('Sending ready signal to PM2')
+			process.send('ready');
+		}
+
+    });
 
 	process.on('SIGINT', () => {
 
