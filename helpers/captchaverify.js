@@ -7,7 +7,8 @@ const Captchas = require(__dirname+'/../db/captchas.js')
 
 module.exports = async (req, res, next) => {
 
-	if (!res.locals.board.settings.captcha) {
+	//skip captcha if disabled on board for posts only
+	if (res.locals.board && req.path === `/board/${res.locals.board._id}/post` && !res.locals.board.settings.captcha) {
 		return next();
 	}
 
