@@ -37,10 +37,11 @@ section.form-wrapper.flex-center
 			section.postform-row
 				.postform-label Password
 				input#password(type='password', name='password', autocomplete='off' placeholder='password for deleting post later' maxlength='50')
-			section.postform-row
-				.postform-label Captcha
-				.postform-col
-					img.captcha(src='/captcha' width=200 height=80)
-					input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6')
+			if board.settings.captcha
+				section.postform-row
+					.postform-label Captcha
+					.postform-col
+						img.captcha(src='/captcha' width=200 height=80)
+						input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6')
 			input(type='submit', value=`New ${threads ? 'Thread' : 'Reply'}`)
 		//.mode Posting mode: #{threads ? 'Thread' : 'Reply'}

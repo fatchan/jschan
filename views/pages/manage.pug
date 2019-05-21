@@ -23,6 +23,10 @@ block content
 					input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
 					| Disable names and only allow sage email
 			section.postform-row
+				.postform-label Post Captcha
+				label.postform-style.ph-5
+					input(type='checkbox', name='captcha', value='true' checked=board.settings.captcha)
+			section.postform-row
 				.postform-label Force OP Message
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_op_message', value='true' checked=board.settings.forceOPMessage)

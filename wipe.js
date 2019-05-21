@@ -42,6 +42,7 @@ const Mongo = require(__dirname+'/db/db.js')
 		moderators: [],
 		banners: [],
 		settings: {
+			captcha: false,
 			forceAnon: true,
 			ids: true,
 			threadLimit: 100,
@@ -62,6 +63,7 @@ const Mongo = require(__dirname+'/db/db.js')
 		moderators: [],
 		banners: [],
 		settings: {
+			captcha: true,
 			forceAnon: false,
 			ids: false,
 			threadLimit: 100,
@@ -82,6 +84,7 @@ const Mongo = require(__dirname+'/db/db.js')
 		moderators: [],
 		banners: [],
 		settings: {
+			captcha: true,
 			forceAnon: true,
 			ids: false,
 			threadLimit: 100,
@@ -129,28 +132,9 @@ const Mongo = require(__dirname+'/db/db.js')
 			}
 		}
 	});
-	await readdir('static/img/').then(async files => {
-		await Promise.all(files.map(async file => {
-			unlink(path.join('static/img/', file));
-		}))
-	});
-	await readdir('static/captcha/').then(async files => {
-		await Promise.all(files.map(async file => {
-			unlink(path.join('static/captcha/', file));
-		}))
-	});
-	await readdir('static/banner/').then(async files => {
-		await Promise.all(files.map(async file => {
-			unlink(path.join('static/banner/', file));
-		}))
-	});
-	await readdir('static/html/').then(async files => {
-		await Promise.all(files.map(async file => {
-			unlink(path.join('static/html/', file));
-		}))
-	});
 	console.log('creating admin account: admin:changeme');
 	await Accounts.insertOne('admin', 'changeme', 3);
+	Mongo.client.close()
 	console.log('done');
 	process.exit(0);
 })();

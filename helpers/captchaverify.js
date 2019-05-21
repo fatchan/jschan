@@ -7,6 +7,10 @@ const Captchas = require(__dirname+'/../db/captchas.js')
 
 module.exports = async (req, res, next) => {
 
+	if (!res.locals.board.settings.captcha) {
+		return next();
+	}
+
 	//check if captcha field in form is valid
 	const input = req.body.captcha;
 	if (!input || input.length !== 6) {
