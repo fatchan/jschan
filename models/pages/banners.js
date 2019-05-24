@@ -20,8 +20,11 @@ module.exports = async (req, res, next) => {
 		return next();
 	}
 
-	const randomBanner = board.banners[Math.floor(Math.random()*board.banners.length)];
+	if (board.banners.length > 0) {
+		const randomBanner = board.banners[Math.floor(Math.random()*board.banners.length)];
+		return res.redirect(`/banner/${randomBanner}`);
+	}
 
-	return res.redirect(`/banner/${randomBanner}`);
+	return res.redirect('/img/defaultbanner.png');
 
 }
