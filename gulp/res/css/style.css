@@ -9,6 +9,16 @@ body {
 	margin: 0;
 }
 
+.row {
+	display: flex;
+	flex-direction: row;
+}
+
+.col {
+	display: flex;
+	flex-direction: column;
+}
+
 .code {
 	text-align: left;
 	border-left: 10px solid #B7C5D9;
@@ -209,7 +219,7 @@ td, th {
 	align-items: center;
 }
 
-.post-container, .pages, summary {
+.post-container, .pages, .toggle-summary {
 	background: #D6DAF0;
 	border: 1px solid #B7C5D9;
 }
@@ -237,7 +247,7 @@ td, th {
 	box-shadow: inset 0 0 100px 100px rgba(255,255,255,.25);
 }
 
-summary {
+.toggle-summary {
 	margin-bottom: 1px;
 	padding: 10px;
 	cursor: pointer;
@@ -308,7 +318,7 @@ summary {
 	text-align: center;
 	margin: 2px;
 	margin-top: 0px;
-	max-width: 128px;
+	max-width: 150px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	word-break: keep-all;
@@ -360,7 +370,7 @@ input textarea {
 .board-banner {
 	margin: 10px;
 	max-width: 100%;
-	border: 1px solid #a9a9a9;
+	/*border: 1px solid #a9a9a9;*/
 }
 
 .board-description {
