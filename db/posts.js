@@ -152,7 +152,7 @@ module.exports = {
 				'globalreports': 0,
 			}
 		}).sort({
-			'_id': 1
+			'postId': 1
 		}).toArray();
 	},
 
