@@ -25,4 +25,4 @@ mixin catalogtile(board, post, truncate)
 			span: a.no-decoration.post-subject(href=postURL) #{post.subject || 'No Subject'}
 		if post.message
 			br
-			blockquote.no-m-p.post-message !{post.message}
+			pre.no-m-p.post-message !{post.message}

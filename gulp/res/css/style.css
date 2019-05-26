@@ -19,6 +19,11 @@ body {
 	flex-direction: column;
 }
 
+pre {
+	font-family: inherit;
+	margin: 1em 3em;
+}
+
 .code {
 	text-align: left;
 	border-left: 10px solid #B7C5D9;
@@ -176,12 +181,8 @@ object {
 	color: green;
 }
 
-blockquote a, a:hover {
+pre a, a:hover {
 	color: #d00!important;
-}
-
-blockquote {
-	white-space: pre-wrap;
 }
 
 .thread, .action-wrapper, .form-wrapper, .table-container {
@@ -545,7 +546,7 @@ hr {
 		width: 100%;
 	}
 
-	blockquote {
+	pre {
 		margin: 1em;
 	}
 

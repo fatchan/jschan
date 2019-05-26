@@ -70,11 +70,11 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 							truncatedMessage = splitPost.slice(0, 10).join('\n');
 							truncated = true;
 						}
-					blockquote.post-message !{truncatedMessage}
+					pre.post-message !{truncatedMessage}
 					if truncated
 						blockquote.left.clear-both Message too long. #[a(href=postURL) View the full text]
 				else 
-					blockquote.post-message !{post.message}
+					pre.post-message !{post.message}
 			if post.banmessage
 				blockquote.left.clear-both.banmessage USER WAS BANNED FOR THIS POST (#{post.banmessage})
 			if post.omittedposts || post.omittedimages
