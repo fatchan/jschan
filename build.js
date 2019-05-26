@@ -8,6 +8,10 @@ const Posts = require(__dirname+'/db/posts.js')
 module.exports = {
 
 	buildCatalog: async (board) => {
+//console.log('building catalog', `${board._id}/catalog.html`);
+		if (!board._id) {
+			board = await Boards.findOne(board);
+		}
 		const threads = await Posts.getCatalog(board._id);
 		return render(`${board._id}/catalog.html`, 'catalog.pug', {
 			board,
@@ -22,7 +26,7 @@ module.exports = {
 		}
 		const thread = await Posts.getThread(board._id, threadId)
 		if (!thread) {
-			return; //this thread may have been an OP that was deleted during a rebuild
+			return; //this thread may have been an OP that was deleted
 		}
 		return render(`${board._id}/thread/${threadId}.html`, 'thread.pug', {
 			board,

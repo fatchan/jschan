@@ -5,7 +5,7 @@ const Mongo = require(__dirname+'/db.js')
 
 module.exports = {
 
-	db,
+	db: db.collection('boards'),
 
 	findOne: (name) => {
 		return db.collection('boards').findOne({ '_id': name });

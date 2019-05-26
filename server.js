@@ -115,6 +115,7 @@ const express  = require('express')
 		server.close((err) => {
 
 			// if error, log and exit with error (1 code)
+			console.info('closing http server')
 			if (err) {
 				console.error(err);
 				process.exit(1);

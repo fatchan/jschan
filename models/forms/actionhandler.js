@@ -1,6 +1,7 @@
 'use strict';
 
 const Posts = require(__dirname+'/../../db/posts.js')
+	, Boards = require(__dirname+'/../../db/boards.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, banPoster = require(__dirname+'/ban-poster.js')
 	, deletePosts = require(__dirname+'/delete-post.js')
@@ -13,73 +14,17 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, globalReportPosts = require(__dirname+'/globalreportpost.js')
 	, dismissReports = require(__dirname+'/dismiss-report.js')
 	, dismissGlobalReports = require(__dirname+'/dismissglobalreport.js')
-	, actionChecker = require(__dirname+'/../../helpers/actionchecker.js')
-	, checkPerms = require(__dirname+'/../../helpers/hasperms.js')
-	, remove = require('fs-extra').remove
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../build.js');
 
 module.exports = async (req, res, next) => {
 
-
-	const errors = [];
-
-	//make sure they checked 1-10 posts
-	if (!req.body.checkedposts || req.body.checkedposts.length === 0 || req.body.checkedposts.length > 10) {
-		errors.push('Must select 1-10 posts');
-	}
-
-	//get what type of actions
-	const { anyPasswords, anyAuthed, anyValid } = actionChecker(req);
-
-	//make sure they selected at least 1 action
-	if (!anyValid) {
-		errors.push('No actions selected');
-	}
-	//check if they have permission to perform the actions
-	const hasPerms = checkPerms(req, res);
-	if(!hasPerms && anyAuthed) {
-		errors.push('No permission');
-	}
-
-	//check that actions are valid
-	if (req.body.password && req.body.password.length > 50) {
-		errors.push('Password must be 50 characters or less');
-	}
-	if (req.body.report_reason && req.body.report_reason.length > 50) {
-		errors.push('Report must be 50 characters or less');
-	}
-	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
-		errors.push('Ban reason must be 50 characters or less');
-	}
-	if ((req.body.report || req.body.global_report) && (!req.body.report_reason || req.body.report_reason.length === 0)) {
-		errors.push('Reports must have a reason');
-	}
-
-	if (errors.length > 0) {
-		return res.status(400).render('message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': `/${req.params.board}/`
-		})
-	}
-
-	let posts = await Posts.getPosts(req.params.board, req.body.checkedposts, true);
-	if (!posts || posts.length === 0) {
-		return res.status(404).render('message', {
-			'title': 'Not found',
-			'error': 'Selected posts not found',
-			'redirect': `/${req.params.board}/`
-		})
-	}
-
 	//get the ids
-	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id));
+	const postMongoIds = res.locals.posts.map(post => Mongo.ObjectId(post._id));
 	let passwordPostMongoIds = [];
 	let passwordPosts = [];
-	if (!hasPerms && anyPasswords) {
+	if (!res.locals.hasPerms && res.locals.actions.anyPasswords) {
 		//just to avoid multiple filters and mapping, do it all here
-		passwordPosts = posts.filter(post => {
+		passwordPosts = res.locals.posts.filter(post => {
 			if (post.password != null
 				&& post.password.length > 0
 				&& post.password == req.body.password) {
@@ -91,11 +36,11 @@ module.exports = async (req, res, next) => {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
 				'error': 'Password did not match any selected posts',
-				'redirect': `/${req.params.board}/`
+				'redirect': `/${req.params.board ? req.params.board+'/' : 'globalmanage.html'}`
 			});
 		}
 	} else {
-		passwordPosts = posts;
+		passwordPosts = res.locals.posts;
 		passwordPostMongoIds = postMongoIds;
 	}
 
@@ -104,24 +49,24 @@ module.exports = async (req, res, next) => {
 	const passwordCombinedQuery = {};
 	let aggregateNeeded = false;
 	try {
-		if (hasPerms) {
+		if (res.locals.hasPerms) {
 			// if getting global banned, board ban doesnt matter
 			if (req.body.global_ban) {
-				const { message, action, query } = await banPoster(req, res, next, null, posts);
+				const { message, action, query } = await banPoster(req, res, next, null, res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
 			} else if (req.body.ban) {
-				const { message, action, query } = await banPoster(req, res, next, req.params.board, posts);
+				const { message, action, query } = await banPoster(req, res, next, req.params.board, res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
 			}
 		}
-		if (hasPerms && (req.body.delete_ip_board || req.body.delete_ip_global)) {
-			const deletePostIps = posts.map(x => x.ip);
+		if (res.locals.hasPerms && (req.body.delete_ip_board || req.body.delete_ip_global)) {
+			const deletePostIps = res.locals.posts.map(x => x.ip);
 			let query = {
 				'ip': {
 					'$in': deletePostIps
@@ -131,7 +76,7 @@ module.exports = async (req, res, next) => {
 				query['board'] = req.params.board;
 			}
 			const deleteIpPosts = await Posts.db.find(query).toArray();
-			posts = posts.concat(deleteIpPosts);
+			res.locals.posts = res.locals.posts.concat(deleteIpPosts);
 			if (deleteIpPosts && deleteIpPosts.length > 0) {
 				const { message } = await deletePosts(req, res, next, deleteIpPosts, req.params.board);
 				messages.push(message);
@@ -157,24 +102,24 @@ module.exports = async (req, res, next) => {
 				}
 				messages.push(message);
 			}
-			if (hasPerms) {
+			if (res.locals.hasPerms) {
 				//lock, sticky, sage
 				if (req.body.sage) {
-					const { message, action, query } = sagePosts(posts);
+					const { message, action, query } = sagePosts(res.locals.posts);
 					if (action) {
 						combinedQuery[action] = { ...combinedQuery[action], ...query}
 					}
 					messages.push(message);
 				}
 				if (req.body.lock) {
-					const { message, action, query } = lockPosts(posts);
+					const { message, action, query } = lockPosts(res.locals.posts);
 					if (action) {
 						combinedQuery[action] = { ...combinedQuery[action], ...query}
 					}
 					messages.push(message);
 				}
 				if (req.body.sticky) {
-					const { message, action, query } = stickyPosts(posts);
+					const { message, action, query } = stickyPosts(res.locals.posts);
 					if (action) {
 						combinedQuery[action] = { ...combinedQuery[action], ...query}
 					}
@@ -183,13 +128,13 @@ module.exports = async (req, res, next) => {
 			}
 			// cannot report and dismiss at same time
 			if (req.body.report) {
-				const { message, action, query } = reportPosts(req, posts);
+				const { message, action, query } = reportPosts(req, res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
-			} else if (hasPerms && req.body.dismiss) {
-				const { message, action, query } = dismissReports(posts);
+			} else if (res.locals.hasPerms && req.body.dismiss) {
+				const { message, action, query } = dismissReports(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
@@ -197,13 +142,13 @@ module.exports = async (req, res, next) => {
 			}
 			// cannot report and dismiss at same time
 			if (req.body.global_report) {
-				const { message, action, query } = globalReportPosts(req, posts);
+				const { message, action, query } = globalReportPosts(req, res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
-			} else if (hasPerms && req.body.global_dismiss) {
-				const { message, action, query } = dismissGlobalReports(posts);
+			} else if (res.locals.hasPerms && req.body.global_dismiss) {
+				const { message, action, query } = dismissGlobalReports(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
@@ -239,8 +184,8 @@ module.exports = async (req, res, next) => {
 		//get a map of boards to threads affected
 		const boardThreadMap = {};
 		const queryOrs = [];
-		for (let i = 0; i < posts.length; i++) {
-			const post = posts[i];
+		for (let i = 0; i < res.locals.posts.length; i++) {
+			const post = res.locals.posts[i];
 			if (!boardThreadMap[post.board]) {
 				boardThreadMap[post.board] = [];
 			}
@@ -263,7 +208,7 @@ module.exports = async (req, res, next) => {
 		}
 
 		//get only posts (so we can use them for thread ids
-		const postThreadsToUpdate = posts.filter(post => post.thread !== null);
+		const postThreadsToUpdate = res.locals.posts.filter(post => post.thread !== null);
 		if (aggregateNeeded) {
 			//recalculate replies and image counts
 			await Promise.all(postThreadsToUpdate.map(async (post) => {
@@ -296,7 +241,7 @@ module.exports = async (req, res, next) => {
 			'$or': queryOrs
 		}).toArray();
 		//combine it with what we already had
-		threadsEachBoard = threadsEachBoard.concat(posts.filter(post => post.thread === null))
+		threadsEachBoard = threadsEachBoard.concat(res.locals.posts.filter(post => post.thread === null))
 
 		//get the oldest and newest thread for each board to determine how to delete
 		const threadBounds = threadsEachBoard.reduce((acc, curr) => {
@@ -315,36 +260,45 @@ module.exports = async (req, res, next) => {
 		//now we need to delete outdated html
 		//TODO: not do this for reports, handle global actions & move to separate handler + optimize and test
 		const parallelPromises = []
-		const boardsWithChanges = Object.keys(threadBounds);
-		for (let i = 0; i < boardsWithChanges.length; i++) {
-			const changeBoard = boardsWithChanges[i];
-			const bounds = threadBounds[changeBoard];
+		const boardNames = Object.keys(threadBounds);
+		const buildBoards = {};
+		const multiBoards = await Boards.db.find({
+			'_id': {
+				'$in': boardNames
+			}
+		}).toArray();
+		multiBoards.forEach(board => {
+			buildBoards[board._id] = board;
+		})
+		for (let i = 0; i < boardNames.length; i++) {
+			const boardName = boardNames[i];
+			const bounds = threadBounds[boardName];
 			//always need to refresh catalog
-			parallelPromises.push(buildCatalog(res.locals.board));
+			parallelPromises.push(buildCatalog(buildBoards[boardName]));
 			//rebuild impacted threads
-			for (let j = 0; j < boardThreadMap[changeBoard].length; j++) {
-				parallelPromises.push(buildThread(boardThreadMap[changeBoard][j], changeBoard));
+			for (let j = 0; j < boardThreadMap[boardName].length; j++) {
+				parallelPromises.push(buildThread(boardThreadMap[boardName][j], buildBoards[boardName]));
 			}
 			//refersh any pages affected
-			const afterPages = Math.ceil((await Posts.getPages(changeBoard)) / 10);
-			if (beforePages[changeBoard] && beforePages[changeBoard] !== afterPages) {
+			const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
+			if (beforePages[boardName] && beforePages[boardName] !== afterPages) {
 				//amount of pages changed, rebuild all pages
-				parallelPromises.push(buildBoardMultiple(res.locals.board, 1, afterPages));
+				parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, afterPages));
 			} else {
-				const threadPageOldest = await Posts.getThreadPage(req.params.board, bounds.oldest);
-				const threadPageNewest = await Posts.getThreadPage(req.params.board, bounds.newest);
+				const threadPageOldest = await Posts.getThreadPage(boardName, bounds.oldest);
+				const threadPageNewest = await Posts.getThreadPage(boardName, bounds.newest);
 				if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
 					//rebuild current and older pages for deletes
-					parallelPromises.push(buildBoardMultiple(res.locals.board, threadPageNewest, afterPages));
+					parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, afterPages));
 				} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
 					//rebuild current and newer pages for stickies
-					parallelPromises.push(buildBoardMultiple(res.locals.board, 1, threadPageOldest));
-				} else if ((hasPerms && (req.body.lock || req.body.sage)) || req.body.spoiler) {
+					parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, threadPageOldest));
+				} else if ((res.locals.hasPerms && (req.body.lock || req.body.sage)) || req.body.spoiler) {
 					//rebuild inbewteen pages for things that dont cause page/thread movement
 					//should rebuild only affected pages, but finding the page of all affected
-					//threads could end up being slower/more resource intensive. this is simpler
-					//but still avoids rebuilding _some_ pages unnecessarily
-					parallelPromises.push(buildBoardMultiple(res.locals.board, threadPageNewest, threadPageOldest));
+					//threads could end up being slower/more resource intensive. this is simpler.
+					//it avoids rebuilding _some_ but not all pages unnecessarily
+					parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
 				}
 			}
 		}
@@ -357,7 +311,7 @@ module.exports = async (req, res, next) => {
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': `/${req.params.board}/`
+		'redirect': `/${req.params.board ? req.params.board+'/' : 'globalmanage.html'}`
 	});
 
 }
