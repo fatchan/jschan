@@ -10,11 +10,13 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 			if !post.thread
 				if post.sticky
 					img(src='/img/sticky.svg' height='12')
+					| 
 				if post.saged
 					img(src='/img/saged.svg' height='12')
+					| 
 				if post.locked
 					img(src='/img/locked.svg' height='12')
-				|
+					| 
 			if post.subject
 				span.post-subject #{post.subject}
 				| 

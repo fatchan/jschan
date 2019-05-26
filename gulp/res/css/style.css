@@ -61,6 +61,7 @@ body {
 	box-sizing: border-box;
 	padding: 10px;
 	width: max-content;
+	width: -moz-max-content;
 }
 
 a, a:visited {
@@ -87,7 +88,7 @@ object {
 	background: #d6daf0;
 }
 
-.catalog-tile-button {
+.ecatalog-tile-button {
 	width: 100%;
 	line-height: 30px;
 	float: left;
@@ -98,11 +99,8 @@ object {
 	overflow: hidden;
 }
 
-.catalog-tile-content {
-	padding: 5px;
-}
-
 .catalog-tile {
+	padding: 5px;
 	margin: 2px;
 	text-align: center;
 	max-height: 300px;
@@ -128,7 +126,7 @@ object {
 .catalog {
 	display:flex;
 	align-items:flex-start;
-	justify-content: space-evenly;
+	justify-content: center;
 	flex-flow: row wrap;
 }
 
@@ -219,7 +217,7 @@ td, th {
 	align-items: center;
 }
 
-.post-container, .pages, .toggle-summary {
+.post-container, .pages, .toggle-summary, .catalog-tile {
 	background: #D6DAF0;
 	border: 1px solid #B7C5D9;
 }
@@ -260,6 +258,7 @@ td, th {
 	display: flex;
 	flex-flow: column wrap;
 	width: max-content;
+	width: -moz-max-content;
 }
 
 .toggle {
@@ -470,7 +469,7 @@ input textarea {
 input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {
 	border: 1px solid #a9a9a9;
 	font-size: inherit;
-	font-family: arial,helvetica,sans-serif;
+	font-family: arial, helvetica, sans-serif;
 	margin: 0;
 	flex-grow: 1;
 	border-radius: 0px;
@@ -574,7 +573,7 @@ hr {
 	}
 
 	.post-info {
-		background-color: #B7C5D9;
+		/*background-color: #B7C5D9;*/
 	}
 
 }

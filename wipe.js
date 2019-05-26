@@ -42,7 +42,7 @@ const Mongo = require(__dirname+'/db/db.js')
 		moderators: [],
 		banners: [],
 		settings: {
-			captcha: false,
+			captcha: true,
 			forceAnon: true,
 			ids: true,
 			threadLimit: 100,
@@ -63,7 +63,7 @@ const Mongo = require(__dirname+'/db/db.js')
 		moderators: [],
 		banners: [],
 		settings: {
-			captcha: true,
+			captcha: false,
 			forceAnon: false,
 			ids: false,
 			threadLimit: 100,
