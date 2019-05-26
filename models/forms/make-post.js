@@ -122,6 +122,7 @@ module.exports = async (req, res, next, numFiles) => {
 					//video metadata
 					await videoUpload(file, filename, 'img');
 					const videoData = await videoIdentify(filename);
+					videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
 					processedFile.duration = videoData.format.duration;
 					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
 					processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
@@ -131,7 +132,7 @@ module.exports = async (req, res, next, numFiles) => {
 					await videoThumbnail(filename);
 					break;
 				default:
-					return next(err);
+					return next(new Error(`invalid file mime type: ${mainType}`));
 			}
 
 			//delete the temp file
