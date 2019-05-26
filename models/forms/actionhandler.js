@@ -291,9 +291,9 @@ module.exports = async (req, res, next) => {
 					//rebuild current and older pages for deletes
 					parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, afterPages));
 				} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
-					//rebuild current and newer pages for stickies
+					//rebuild current and newer pages
 					parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, threadPageOldest));
-				} else if ((res.locals.hasPerms && (req.body.lock || req.body.sage)) || req.body.spoiler) {
+				} else if (req.body.lock || req.body.sage || req.body.spoiler || req.body.ban || req.body.global_ban) {
 					//rebuild inbewteen pages for things that dont cause page/thread movement
 					//should rebuild only affected pages, but finding the page of all affected
 					//threads could end up being slower/more resource intensive. this is simpler.
