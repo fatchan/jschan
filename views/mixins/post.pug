@@ -66,8 +66,11 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						const messageLines = splitPost.length;
 						let truncatedMessage = post.message;
 						let truncated = false;
-						if (messageLines > 10 || post.message.length > 1000) {
+						if (messageLines > 10) {
 							truncatedMessage = splitPost.slice(0, 10).join('\n');
+							truncated = true;
+						} else if (post.message.length > 1000) {
+							truncatedMessage = `${post.message.substring(0,1000)}...`;
 							truncated = true;
 						}
 					pre.post-message !{truncatedMessage}
