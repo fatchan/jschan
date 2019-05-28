@@ -117,8 +117,8 @@ object {
 
 .catalog-thumb {
 	box-shadow: 0 0 3px black;
-	min-width: 64px;
-	min-height: 64px;
+	width: 64px;
+	height: 64px;
 	object-fit: cover;
 }
 

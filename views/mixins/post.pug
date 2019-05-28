@@ -37,7 +37,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 			if post.userId
 				span.user-id(style=`background: #${post.userId}`) #{post.userId}
 				| 
-			span No.#[a(href=postURL) #{post.postId}]
+			span: a(href=postURL) No.#{post.postId}
 			if !post.thread
 				| 
 				span: a(href=`/${post.board}/thread/${post.thread || post.postId}.html#postform`) [Reply]
