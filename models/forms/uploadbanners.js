@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path')
-	, remove = require('fs-extra').remove
+	, { remove, pathExists, ensureDir } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
@@ -32,23 +32,40 @@ module.exports = async (req, res, next, numFiles) => {
 		file.filename = filename; //for error to delete failed files
 		filenames.push(filename);
 
-//todo: CHECK FILE HASHES before uploading, if exists skip identifying and uploading
-		//upload and get metadata
+		//check if already exists
+		const exists = await pathExists(`${uploadDirectory}banner/${req.params.board}/${filename}`);
+		if (exists) {
+			await deleteTempFiles(req.files.file);
+			return res.status(409).render('message', {
+				'title': 'Conflict',
+				'message': `Invalid file ${file.name}. Banner already exists.`,
+				'redirect': redirect
+			});
+		}
+
+		await ensureDir(`${uploadDirectory}banner/${req.params.board}/`);
+
+		//get metadata from tempfile
 		const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
-		const geometry = imageData.size;
+		let geometry = imageData.size;
+		if (Array.isArray(geometry)) {
+			geometry = geometry[0];
+		}
 
 		//make sure its 300x100 banner
 		if (geometry.width !== 300 || geometry.height !== 100) {
-			await deleteTempFiles(req.files.file)
+			await deleteTempFiles(req.files.file);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': `Invalid file ${file.name}. Banners must be 300x100.`,
 				'redirect': redirect
 			});
 		}
-		await imageUpload(file, filename, `banner/${req.params.board}`);
-//end todo
 
+		//then upload it
+		await imageUpload(file, filename, `banner/${req.params.board}`);
+
+		//and delete the temp file
 		await remove(file.tempFilePath);
 
 	}
