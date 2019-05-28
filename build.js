@@ -28,6 +28,34 @@ module.exports = {
 		if (!thread) {
 			return; //this thread may have been an OP that was deleted
 		}
+
+	/*
+		temporary, jsut seeing how well this works
+	*/
+		const postMap = new Map()
+		postMap.set(thread.postId, thread)
+		for (let i = 0; i < thread.replies.length; i++) {
+			const reply = thread.replies[i];
+			postMap.set(reply.postId, reply);
+		}
+		for (let i = 0; i < thread.replies.length; i++) {
+			const reply = thread.replies[i];
+			if (!reply.quotes) continue;
+			for (let j = 0; j < reply.quotes.length; j++) {
+				const quote = reply.quotes[j];
+				if (postMap.has(quote)) {
+					const post = postMap.get(quote)
+					if (!post.backlinks) {
+						post.backlinks = [];
+					}
+					post.backlinks.push(reply.postId);
+				}
+			}
+		}
+	/*
+		temporary, jsut seeing how well this works
+	*/
+
 		return render(`${board._id}/thread/${threadId}.html`, 'thread.pug', {
 			board,
 			thread
@@ -40,6 +68,35 @@ module.exports = {
 		if (!maxPage) {
 			maxPage = Math.ceil((await Posts.getPages(board._id)) / 10);
 		}
+	/*
+		temporary, jsut seeing how well this works
+	*/
+		for (let k = 0; k < threads.length; k++) {
+			const thread = threads[k];
+			const postMap = new Map()
+			postMap.set(thread.postId, thread)
+			for (let i = 0; i < thread.replies.length; i++) {
+				const reply = thread.replies[i];
+				postMap.set(reply.postId, reply);
+			}
+			for (let i = 0; i < thread.replies.length; i++) {
+				const reply = thread.replies[i];
+				if (!reply.quotes) continue;
+				for (let j = 0; j < reply.quotes.length; j++) {
+					const quote = reply.quotes[j];
+					if (postMap.has(quote)) {
+						const post = postMap.get(quote)
+						if (!post.backlinks) {
+							post.backlinks = [];
+						}
+						post.backlinks.push(reply.postId);
+					}
+				}
+			}
+		}
+	/*
+		temporary, jsut seeing how well this works
+	*/
 		return render(`${board._id}/${page === 1 ? 'index' : page}.html`, 'board.pug', {
 			board,
 			threads,
@@ -60,6 +117,35 @@ module.exports = {
 		}
 		const difference = endpage-startpage + 1; //+1 because for single pagemust be > 0
 		const threads = await Posts.getRecent(board._id, startpage, difference*10);
+	/*
+		temporary, jsut seeing how well this works
+	*/
+		for (let k = 0; k < threads.length; k++) {
+			const thread = threads[k];
+			const postMap = new Map()
+			postMap.set(thread.postId, thread)
+			for (let i = 0; i < thread.replies.length; i++) {
+				const reply = thread.replies[i];
+				postMap.set(reply.postId, reply);
+			}
+			for (let i = 0; i < thread.replies.length; i++) {
+				const reply = thread.replies[i];
+				if (!reply.quotes) continue;
+				for (let j = 0; j < reply.quotes.length; j++) {
+					const quote = reply.quotes[j];
+					if (postMap.has(quote)) {
+						const post = postMap.get(quote)
+						if (!post.backlinks) {
+							post.backlinks = [];
+						}
+						post.backlinks.push(reply.postId);
+					}
+				}
+			}
+		}
+	/*
+		temporary, jsut seeing how well this works
+	*/
 		const buildArray = [];
 		for (let i = startpage; i <= endpage; i++) {
 //console.log('multi building board page', `${board._id}/${i === 1 ? 'index' : i}.html`);

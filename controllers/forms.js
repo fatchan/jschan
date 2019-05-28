@@ -13,15 +13,14 @@ const express  = require('express')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
+	, deleteTempFiles = require(__dirname+'/../helpers/files/deletetempfiles.js')
 	, checkPermsMiddleware = require(__dirname+'/../helpers/haspermsmiddleware.js')
 	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, banCheck = require(__dirname+'/../helpers/bancheck.js')
-	, deletePostFiles = require(__dirname+'/../helpers/files/deletepostfiles.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captchaverify.js')
 	, actionHandler = require(__dirname+'/../models/forms/actionhandler.js')
 	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js')
-	, deleteFailedFiles = require(__dirname+'/../helpers/files/deletefailed.js')
 	, actionChecker = require(__dirname+'/../helpers/actionchecker.js');
 
 
@@ -201,6 +200,9 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 	}
 
 	if (errors.length > 0) {
+		if (numFiles > 0) {
+			await deleteTempFiles(req.files.file)
+		}
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
@@ -211,14 +213,8 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 	try {
 		await makePost(req, res, next, numFiles);
 	} catch (err) {
-		//handler errors here better
 		if (numFiles > 0) {
-			const fileNames = []
-			for (let i = 0; i < req.files.file.length; i++) {
-				remove(req.files.file[i].tempFilePath).catch(e => console.error);
-				fileNames.push(req.files.file[i].filename);
-			}
-			deletePostFiles(fileNames).catch(err => console.error);
+			await deleteTempFiles(req.files.file)
 		}
 		return next(err);
 	}
@@ -276,11 +272,14 @@ router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddlewar
 	if (numFiles === 0) {
 		errors.push('Must provide a file');
 	}
-	if (res.locals.board.banners.length > 100) {
-		errors.push('Limit of 100 banners reached');
+	if (res.locals.board.banners.length+numFiles > 100) {
+		errors.push('Number of uploads would exceed 100 banner limit');
 	}
 
 	if (errors.length > 0) {
+		if (numFiles > 0) {
+			await deleteTempFiles(req.files.file)
+		}
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
@@ -291,14 +290,9 @@ router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddlewar
 	try {
 		await uploadBanners(req, res, next, numFiles);
 	} catch (err) {
-		const fileNames = [];
 		if (numFiles > 0) {
-			for (let i = 0; i < req.files.file.length; i++) {
-				remove(req.files.file[i].tempFilePath).catch(e => console.error);
-				fileNames.push(req.files.file[i].filename);
-			}
+			await deleteTempFiles(req.files.file)
 		}
-		deleteFailedFiles(fileNames, 'banner').catch(e => console.error);
 		return next(err);
 	}
 

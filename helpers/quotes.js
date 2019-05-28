@@ -11,14 +11,14 @@ module.exports = async (board, text) => {
 	const quotes = text.match(quoteRegex);
 	const crossQuotes = text.match(crossQuoteRegex);
 	if (!quotes && !crossQuotes) {
-		return text;
+		return { quotedMessage: text, threadQuotes: [] };
 	}
 
 	//make query for db including crossquotes
 	const queryOrs = []
 	const crossQuoteMap = {};
 	if (quotes) {
-		const quoteIds = quotes.map(q => +q.substring(2));
+		const quoteIds = [...new Set(quotes.map(q => +q.substring(2)))]; //only uniques
 		queryOrs.push({
 			'board': board,
 			'postId': {
@@ -58,7 +58,7 @@ module.exports = async (board, text) => {
 		const posts = await Posts.getPostsForQuotes(queryOrs);
 		//if none of the quotes were real, dont do a replace
 		if (posts.length === 0) {
-			return text;
+			return { quotedMessage: text, threadQuotes: [] };
 		}
 		//turn the result into a map of postId => threadId/postId
 		for (let i = 0; i < posts.length; i++) {
@@ -71,10 +71,12 @@ module.exports = async (board, text) => {
 	}
 
 	//then replace the quotes with only ones that exist
+	const threadQuotes = [];
 	if (quotes && Object.keys(postThreadIdMap).length > 0) {
 		text = text.replace(quoteRegex, (match) => {
 			const quotenum = +match.substring(2);
 			if (postThreadIdMap[board] && postThreadIdMap[board][quotenum]) {
+				threadQuotes.push(quotenum)
 				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum]}.html#${quotenum}'>&gt;&gt;${quotenum}</a>`;
 			}
 			return match;
@@ -94,6 +96,6 @@ module.exports = async (board, text) => {
 		});
 	}
 
-	return text;
+	return { quotedMessage: text, threadQuotes };
 
 }

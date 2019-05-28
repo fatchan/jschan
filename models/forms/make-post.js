@@ -1,11 +1,10 @@
 'use strict';
 
-const uuidv4 = require('uuid/v4')
-	, path = require('path')
+const path = require('path')
 	, util = require('util')
 	, crypto = require('crypto')
 	, randomBytes = util.promisify(crypto.randomBytes)
-	, remove = require('fs-extra').remove
+	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
 	, getTripCode = require(__dirname+'/../../helpers/tripcode.js')
@@ -88,40 +87,43 @@ module.exports = async (req, res, next, numFiles) => {
 		// then upload, thumb, get metadata, etc.
 		for (let i = 0; i < numFiles; i++) {
 			const file = req.files.file[i];
-			const uuid = uuidv4();
-			const filename = uuid + path.extname(file.name);
+			const filename = file.sha256 + path.extname(file.name);
 			file.filename = filename; //for error to delete failed files
 
 			//get metadata
 			let processedFile = {
+					hash: file.sha256,
 					filename: filename,
 					originalFilename: file.name,
 					mimetype: file.mimetype,
 					size: file.size,
 			};
 
+			//check if already exists
+			const existsFull = await pathExists(`${uploadDirectory}img/${filename}`);
+			const existsThumb = await pathExists(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`);
+
 			//handle video/image ffmpeg or graphicsmagick
 			const mainType = file.mimetype.split('/')[0];
 			switch (mainType) {
 				case 'image':
-					await imageUpload(file, filename, 'img');
-					const imageData = await imageIdentify(filename, 'img');
+					const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
 					processedFile.geometry = imageData.size // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = imageData.Geometry // 123 x 123 string
-					if (fileCheckMimeType(file.mimetype, {image: true}) //always thumbnail gif/webp
+					processedFile.hasThumb = !(fileCheckMimeType(file.mimetype, {image: true})
 						&& processedFile.geometry.height <= 128
-						&& processedFile.geometry.width <= 128) {
-						processedFile.hasThumb = false;
-					} else {
-						processedFile.hasThumb = true;
+						&& processedFile.geometry.width <= 128);
+					if (!existsFull) {
+						await imageUpload(file, filename, 'img');
+					}
+					if (!existsThumb && processedFile.hasThumb) {
 						await imageThumbnail(filename);
 					}
 					break;
 				case 'video':
 					//video metadata
-					await videoUpload(file, filename, 'img');
-					const videoData = await videoIdentify(filename);
+					const videoData = await videoIdentify(req.files.file[i].tempFilePath, null, true);
 					videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
 					processedFile.duration = videoData.format.duration;
 					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
@@ -129,10 +131,15 @@ module.exports = async (req, res, next, numFiles) => {
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string
 					processedFile.hasThumb = true;
-					await videoThumbnail(filename);
+					if (!existsFull) {
+						await videoUpload(file, filename, 'img');
+					}
+					if (!existsThumb) {
+						await videoThumbnail(filename);
+					}
 					break;
 				default:
-					return next(new Error(`invalid file mime type: ${mainType}`));
+					throw new Error(`invalid file mime type: ${mainType}`); //throw so goes to error handler before next'ing
 			}
 
 			//delete the temp file
@@ -197,9 +204,12 @@ module.exports = async (req, res, next, numFiles) => {
 
 	//simple markdown and sanitize
 	let message = req.body.message;
+	let quotes = [];
 	if (message && message.length > 0) {
 		message = simpleMarkdown(req.params.board, req.body.thread, message);
-		message = await linkQuotes(req.params.board, message);
+		const { quotedMessage, threadQuotes } = await linkQuotes(req.params.board, message);
+		message = quotedMessage;
+		quotes = threadQuotes;
 		message = sanitize(message, sanitizeOptions);
 	}
 
@@ -223,6 +233,7 @@ module.exports = async (req, res, next, numFiles) => {
 		files,
 		'reports': [],
 		'globalreports': [],
+		quotes
 	}
 
 	if (!req.body.thread) {
@@ -248,7 +259,7 @@ module.exports = async (req, res, next, numFiles) => {
 	if (data.thread) {
 		//refersh pages
 		const threadPage = await Posts.getThreadPage(req.params.board, thread);
-		if (data.email === 'sage') {
+		if (data.email === 'sage' || thread.sage) {
 			//refresh the page that the thread is on
 			parallelPromises.push(buildBoard(res.locals.board, threadPage));
 		} else {
@@ -259,6 +270,14 @@ module.exports = async (req, res, next, numFiles) => {
 		//new thread, rebuild all pages and prunes old threads
 		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
 		for (let i = 0; i < prunedThreads.length; i++) {
+			//TODO: consider:
+			//should i keep these? as an "archive" since they are removed from the DB
+			//posting wouldnt work and it would just be served as a static file
+			//files dont matter
+			//or i could add and set to "archive:true" with the same affect as locking
+			//but additionally does not appear in board index/catalog but allows to be rebuilt for template updates?
+			//or is a first party archive kinda against the point of an imageboard?
+			//i feel like threads epiring and not existing anymore is part of the design
 			parallelPromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
 		}
 		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, 10));
