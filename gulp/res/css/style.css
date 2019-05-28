@@ -21,7 +21,13 @@ body {
 
 pre {
 	font-family: inherit;
-	margin: 1em 3em;
+	margin: 1em 2em;
+	white-space: pre-wrap;
+}
+
+.replies {
+	font-size: smaller;
+	clear: both;
 }
 
 .code {
@@ -32,7 +38,6 @@ pre {
 	font-family: monospace;
 	margin: 0.5em 0;
 	display: flex;
-	clear: both;
 	overflow-x: auto;
 	white-space: pre;
 }
@@ -93,17 +98,6 @@ object {
 	background: #d6daf0;
 }
 
-.ecatalog-tile-button {
-	width: 100%;
-	line-height: 30px;
-	float: left;
-	background: #B7C5D9;
-	text-decoration: none;
-	color: black;
-	margin-bottom: 5px;
-	overflow: hidden;
-}
-
 .catalog-tile {
 	padding: 5px;
 	margin: 2px;
@@ -159,6 +153,13 @@ object {
 .banmessage {
 	color: red;
 	font-weight: bold;
+}
+
+.close {
+	text-decoration: none;
+	width: 1.75em;
+	justify-content: center;
+	font-weight: bolder;
 }
 
 .reports {
@@ -390,8 +391,8 @@ input textarea {
 }
 
 .post-container:target {
-	background-color: #d6bad0;
-	border-color: #ba9dbf;
+	background-color: #d6bad0 !important;
+	border: 1px solid #ba9dbf !important;
 }
 
 .post-container.op {
@@ -484,6 +485,24 @@ input[type="file"] {
 	background: white;
 }
 
+#postform {
+	display: none;
+	width: 400px;
+	max-width: calc(100% - 10px);
+	position: fixed;
+	top: 45px;
+	right: 5px;
+	background-color: #D6DAF0;
+	border: 1px solid #b7c5d9;
+	padding: 5px;
+	z-index: 1;
+	box-sizing: border-box;
+}
+
+#postform:target {
+	display: flex;
+}
+
 .postform-row, .postform-col {
 	display: flex;
 }
@@ -539,7 +558,7 @@ hr {
 	}
 
 	.form-post {
-		width: 100%;
+		width: calc(100% - 10px)!important;
 	}
 
 	.form-login {
@@ -573,8 +592,8 @@ hr {
 		width: 100%;
 	}
 
-	.post-info {
-		/*background-color: #B7C5D9;*/
+	#postform {
+		top: 5px!important;
 	}
 
 }

@@ -37,7 +37,10 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 			if post.userId
 				span.user-id(style=`background: #${post.userId}`) #{post.userId}
 				| 
-			span: a(href=postURL) No.#{post.postId}
+			span No.#[a(href=postURL) #{post.postId}]
+			if !post.thread
+				| 
+				span: a(href=`/${post.board}/thread/${post.thread || post.postId}.html#postform`) [Reply]
 		.post-data
 			if post.files.length > 0
 				.post-files
@@ -57,8 +60,10 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 										object.file-thumb(data='/img/spoiler.png' width='128' height='128')
 									else if file.hasThumb
 										object.file-thumb(data=`/img/thumb-${file.filename.split('.')[0]}.jpg`)
+											img(src='/img/deleted.png')
 									else
 										object.file-thumb(data=`/img/${file.filename}`)
+											img(src='/img/deleted.png')
 			if post.message
 				if truncate
 					-
@@ -75,14 +80,18 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						}
 					pre.post-message !{truncatedMessage}
 					if truncated
-						blockquote.left.clear-both Message too long. #[a(href=postURL) View the full text]
+						blockquote Message too long. #[a(href=postURL) View the full text]
 				else 
 					pre.post-message !{post.message}
 			if post.banmessage
-				blockquote.left.clear-both.banmessage USER WAS BANNED FOR THIS POST (#{post.banmessage})
+				blockquote.banmessage USER WAS BANNED FOR THIS POST (#{post.banmessage})
 			if post.omittedposts || post.omittedimages
-				blockquote.left.clear-both #{post.omittedposts} post(s)#{post.omittedimages > 0 ? ' and '+post.omittedimages+' image(s)' : ''} omitted. #[a(href=postURL) View the full thread]
-	
+				blockquote #{post.omittedposts} post(s)#{post.omittedimages > 0 ? ' and '+post.omittedimages+' image(s)' : ''} omitted. #[a(href=postURL) View the full thread]
+			if post.backlinks && post.backlinks.length > 0
+				.replies Replies: 
+					each backlink in post.backlinks
+						a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink}`) &gt;&gt;#{backlink}
+						|  
 	if manage === true
 		each report in post.reports
 			.reports.post-container
