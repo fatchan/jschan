@@ -12,7 +12,7 @@ const path = require('path')
 	, simpleMarkdown = require(__dirname+'/../../helpers/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = {
-		allowedTags: [ 'span', 'a', 'em', 'strong' ],
+		allowedTags: [ 'span', 'a', 'em', 'strong', 'small' ],
 		allowedAttributes: {
 			'a': [ 'href', 'class' ],
 			'span': [ 'class' ]

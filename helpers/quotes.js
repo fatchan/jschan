@@ -77,7 +77,7 @@ module.exports = async (board, text) => {
 			const quotenum = +match.substring(2);
 			if (postThreadIdMap[board] && postThreadIdMap[board][quotenum]) {
 				threadQuotes.push(quotenum)
-				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum]}.html#${quotenum}'>&gt;&gt;${quotenum}</a>`;
+				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum]}.html#${quotenum}'>&gt;&gt;${quotenum}</a>${postThreadIdMap[board][quotenum] === quotenum ? ' <small>(OP)</small> ' : ''}`;
 			}
 			return match;
 		});
@@ -96,6 +96,6 @@ module.exports = async (board, text) => {
 		});
 	}
 
-	return { quotedMessage: text, threadQuotes };
+	return { quotedMessage: text, threadQuotes: [...new Set(threadQuotes)] };
 
 }
