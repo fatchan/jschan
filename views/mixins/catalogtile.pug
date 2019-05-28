@@ -18,11 +18,11 @@ mixin catalogtile(board, post, truncate)
 			if post.locked
 				img(src='/img/locked.svg' height='12')
 				| 
+			span: a.no-decoration.post-subject(href=postURL) #{post.subject || 'No Subject'}
+			br
 			span Replies: #{post.replyposts}
 			| 
 			span Files: #{post.replyfiles}
-			br
-			span: a.no-decoration.post-subject(href=postURL) #{post.subject || 'No Subject'}
 		if post.message
 			br
 			pre.no-m-p.post-message !{post.message}
