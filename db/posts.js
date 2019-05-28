@@ -2,7 +2,6 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
-	, deletePostFiles = require(__dirname+'/../helpers/files/deletepostfiles.js')
 	, db = Mongo.client.db('jschan').collection('posts');
 
 module.exports = {
@@ -272,7 +271,7 @@ module.exports = {
 	},
 
 	insertOne: async (board, data, thread) => {
-		if (data.thread !== null && data.email !== 'sage' && !thread.saged) {
+		if (data.thread !== null) {
 			const filter = {
 				'postId': data.thread,
 				'board': board
@@ -355,14 +354,6 @@ module.exports = {
 		const threadPosts = await module.exports.getMultipleThreadPosts(board, threadIds);
 		//combine them
 		const postsAndThreads = threads.concat(threadPosts);
-		//get the filenames and delete all the files
-		let fileNames = [];
-		postsAndThreads.forEach(post => {
-			fileNames = fileNames.concat(post.files.map(x => x.filename))
-		});
-		if (fileNames.length > 0) {
-			await deletePostFiles(fileNames);
-		}
 		//get the mongoIds and delete them all
 		const postMongoIds = postsAndThreads.map(post => Mongo.ObjectId(post._id));
 		await module.exports.deleteMany(postMongoIds);

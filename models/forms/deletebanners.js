@@ -12,8 +12,6 @@ module.exports = async (req, res, next) => {
 		remove(`${uploadDirectory}banner/${filename}`);
 	}));
 
-	// i dont think there is a way to get the number of array items removed with $pullAll 
-	// so i cant return how many banners were deleted
 	await Boards.removeBanners(req.params.board, req.body.checkedbanners);
 
 	return res.render('message', {

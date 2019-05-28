@@ -49,23 +49,21 @@ module.exports = async (req, res, next) => {
 	const passwordCombinedQuery = {};
 	let aggregateNeeded = false;
 	try {
-		if (res.locals.hasPerms) {
-			// if getting global banned, board ban doesnt matter
-			if (req.body.global_ban) {
-				const { message, action, query } = await banPoster(req, res, next, null, res.locals.posts);
-				if (action) {
-					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				}
-				messages.push(message);
-			} else if (req.body.ban) {
-				const { message, action, query } = await banPoster(req, res, next, req.params.board, res.locals.posts);
-				if (action) {
-					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				}
-				messages.push(message);
+		// if getting global banned, board ban doesnt matter
+		if (req.body.global_ban) {
+			const { message, action, query } = await banPoster(req, res, next, null, res.locals.posts);
+			if (action) {
+				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
+			messages.push(message);
+		} else if (req.body.ban) {
+			const { message, action, query } = await banPoster(req, res, next, req.params.board, res.locals.posts);
+			if (action) {
+				combinedQuery[action] = { ...combinedQuery[action], ...query}
+			}
+			messages.push(message);
 		}
-		if (res.locals.hasPerms && (req.body.delete_ip_board || req.body.delete_ip_global)) {
+		if (req.body.delete_ip_board || req.body.delete_ip_global) {
 			const deletePostIps = res.locals.posts.map(x => x.ip);
 			let query = {
 				'ip': {
@@ -88,8 +86,8 @@ module.exports = async (req, res, next) => {
 			aggregateNeeded = true;
 		} else {
 			// if it was getting deleted, we cant do any of these
-			if (req.body.delete_file) {
-				const { message, action, query } = await deletePostsFiles(passwordPosts);
+			if (req.body.delete_file || req.body.unlink_file) {
+				const { message, action, query } = await deletePostsFiles(passwordPosts, req.body.unlink_file);
 				if (action) {
 					aggregateNeeded = true;
 					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
@@ -102,29 +100,27 @@ module.exports = async (req, res, next) => {
 				}
 				messages.push(message);
 			}
-			if (res.locals.hasPerms) {
-				//lock, sticky, sage
-				if (req.body.sage) {
-					const { message, action, query } = sagePosts(res.locals.posts);
-					if (action) {
-						combinedQuery[action] = { ...combinedQuery[action], ...query}
-					}
-					messages.push(message);
+			//lock, sticky, sage
+			if (req.body.sage) {
+				const { message, action, query } = sagePosts(res.locals.posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
-				if (req.body.lock) {
-					const { message, action, query } = lockPosts(res.locals.posts);
-					if (action) {
-						combinedQuery[action] = { ...combinedQuery[action], ...query}
-					}
-					messages.push(message);
+				messages.push(message);
+			}
+			if (req.body.lock) {
+				const { message, action, query } = lockPosts(res.locals.posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
-				if (req.body.sticky) {
-					const { message, action, query } = stickyPosts(res.locals.posts);
-					if (action) {
-						combinedQuery[action] = { ...combinedQuery[action], ...query}
-					}
-					messages.push(message);
+				messages.push(message);
+			}
+			if (req.body.sticky) {
+				const { message, action, query } = stickyPosts(res.locals.posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
+				messages.push(message);
 			}
 			// cannot report and dismiss at same time
 			if (req.body.report) {
@@ -133,7 +129,7 @@ module.exports = async (req, res, next) => {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
-			} else if (res.locals.hasPerms && req.body.dismiss) {
+			} else if (req.body.dismiss) {
 				const { message, action, query } = dismissReports(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
@@ -147,7 +143,7 @@ module.exports = async (req, res, next) => {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
-			} else if (res.locals.hasPerms && req.body.global_dismiss) {
+			} else if (req.body.global_dismiss) {
 				const { message, action, query } = dismissGlobalReports(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
@@ -293,7 +289,7 @@ module.exports = async (req, res, next) => {
 				} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
 					//rebuild current and newer pages
 					parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, threadPageOldest));
-				} else if (req.body.lock || req.body.sage || req.body.spoiler || req.body.ban || req.body.global_ban) {
+				} else if (req.body.lock || req.body.sage || req.body.spoiler || req.body.ban || req.body.global_ban || req.body.unlink_file) {
 					//rebuild inbewteen pages for things that dont cause page/thread movement
 					//should rebuild only affected pages, but finding the page of all affected
 					//threads could end up being slower/more resource intensive. this is simpler.
