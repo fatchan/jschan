@@ -135,7 +135,7 @@ module.exports = async (req, res, next, numFiles) => {
 						await videoUpload(file, filename, 'img');
 					}
 					if (!existsThumb) {
-						await videoThumbnail(filename);
+						await videoThumbnail(filename, processedFile.geometry);
 					}
 					break;
 				default:

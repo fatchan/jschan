@@ -327,7 +327,8 @@ td, th {
 }
 
 .post-file-src {
-	margin: 0 auto;
+	justify-content: center;
+	display: flex;
 }
 
 .file-thumb {
