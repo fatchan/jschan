@@ -6,6 +6,32 @@ const express  = require('express')
 	, Posts = require(__dirname+'/../db/posts.js')
 	, Mongo = require(__dirname+'/../db/db.js')
 	, remove = require('fs-extra').remove
+	, upload = require('express-fileupload')
+	, path = require('path')
+	, postFiles = upload({
+        createParentPath: true,
+        safeFileNames: /[^\w-]+/g,
+        preserveExtension: 4,
+        limits: {
+            fileSize: 10 * 1024 * 1024,
+            files: 3
+        },
+        abortOnLimit: true,
+        useTempFiles: true,
+        tempFileDir: path.join(__dirname+'/../tmp/')
+    })
+	, bannerFiles = upload({
+        createParentPath: true,
+        safeFileNames: /[^\w-]+/g,
+        preserveExtension: 4,
+        limits: {
+            fileSize: 10 * 1024 * 1024,
+            files: 10
+        },
+        abortOnLimit: true,
+        useTempFiles: true,
+        tempFileDir: path.join(__dirname+'/../tmp/')
+    })
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/make-post.js')
 	, uploadBanners = require(__dirname+'/../models/forms/uploadbanners.js')
@@ -152,7 +178,7 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 });
 
 // make new post
-router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verifyCaptcha, async (req, res, next) => {
+router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConverter, verifyCaptcha, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -255,7 +281,7 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 });
 
 //upload banners
-router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {

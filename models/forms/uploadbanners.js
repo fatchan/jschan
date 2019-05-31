@@ -29,20 +29,27 @@ module.exports = async (req, res, next, numFiles) => {
 	for (let i = 0; i < numFiles; i++) {
 		const file = req.files.file[i];
 		const filename = file.sha256 + path.extname(file.name);
-		file.filename = filename; //for error to delete failed files
-		filenames.push(filename);
+		file.filename = filename;
 
 		//check if already exists
 		const exists = await pathExists(`${uploadDirectory}banner/${req.params.board}/${filename}`);
+
 		if (exists) {
-			await deleteTempFiles(req.files.file);
+			await remove(file.tempFilePath);
+			continue;
+/* dont stop uploading the other banners just because one already exists.
 			return res.status(409).render('message', {
 				'title': 'Conflict',
 				'message': `Invalid file ${file.name}. Banner already exists.`,
 				'redirect': redirect
 			});
+*/
 		}
 
+		//add to list after checking it doesnt already exist
+		filenames.push(filename);
+
+		//make directory if doesnt exist
 		await ensureDir(`${uploadDirectory}banner/${req.params.board}/`);
 
 		//get metadata from tempfile
@@ -76,7 +83,7 @@ module.exports = async (req, res, next, numFiles) => {
 
 	return res.render('message', {
 		'title': 'Success',
-		'message': `Uploaded ${filenames.length} banners.`,
+		'message': `Uploaded ${filenames.length} new banners.`,
 		'redirect': redirect
 	});
 

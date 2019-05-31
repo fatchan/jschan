@@ -12,8 +12,7 @@ const express  = require('express')
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
-	, Mongo = require(__dirname+'/db/db.js')
-	, upload = require('express-fileupload');
+	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {
 
@@ -23,18 +22,6 @@ const express  = require('express')
 	// parse forms and allow file uploads
 	app.use(bodyParser.urlencoded({extended: true}));
 	app.use(bodyParser.json());
-	app.use(upload({
-		createParentPath: true,
-		safeFileNames: true,
-		preserveExtension: 4,
-		limits: {
-			fileSize: 10 * 1024 * 1024,
-			files: 3
-		},
-		abortOnLimit: true,
-		useTempFiles: true,
-		tempFileDir: path.join(__dirname+'/tmp/')
-	}));
 
 	// session store
 	app.set('trust proxy', 1);
