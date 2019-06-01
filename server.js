@@ -3,12 +3,11 @@
 process.on('uncaughtException', console.error);
 process.on('unhandledRejection', console.error);
 
-const express  = require('express')
-	, session  = require('express-session')
+const express = require('express')
+	, session = require('express-session')
 	, MongoStore = require('connect-mongo')(session)
-	, path	 = require('path')
-	, app	  = express()
-	, helmet = require('helmet')
+	, path = require('path')
+	, app = express()
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
@@ -19,12 +18,14 @@ const express  = require('express')
 	// let db connect
 	await Mongo.connect();
 
-	// parse forms and allow file uploads
+	// parse forms
 	app.use(bodyParser.urlencoded({extended: true}));
 	app.use(bodyParser.json());
 
+	//parse cookies
+	app.use(cookieParser());
+
 	// session store
-	app.set('trust proxy', 1);
 	app.use(session({
 		secret: configs.sessionSecret,
 		store: new MongoStore({ db: Mongo.client.db('sessions') }),
@@ -36,10 +37,9 @@ const express  = require('express')
 			sameSite: 'lax',
 		}
 	}));
-	app.use(cookieParser());
 
-	// csurf and helmet
-	app.use(helmet());
+	//trust proxy for nginx
+	app.set('trust proxy', 1);
 
 	//referer header check
 	app.use((req, res, next) => {
@@ -84,11 +84,11 @@ const express  = require('express')
 	// listen
 	const server = app.listen(configs.port, '127.0.0.1', () => {
 
-        console.log(`Listening on port ${configs.port}`);
+        console.log(`listening on port ${configs.port}`);
 
 		//let PM2 know that this is ready (for graceful reloads)
 		if (typeof process.send === 'function') { //make sure we are a child process
-			console.info('Sending ready signal to PM2')
+			console.info('sending ready signal to PM2')
 			process.send('ready');
 		}
 
@@ -96,7 +96,7 @@ const express  = require('express')
 
 	process.on('SIGINT', () => {
 
-		console.info('SIGINT signal received.')
+		console.info('SIGINT signal received')
 
 		// Stops the server from accepting new connections and finishes existing connections.
 		server.close((err) => {
@@ -109,6 +109,7 @@ const express  = require('express')
 			}
 
 			// close database connection
+			console.info('closing db connection')
 			Mongo.client.close();
 
 			// now close without error
