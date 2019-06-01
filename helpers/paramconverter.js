@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners'])
-	, numberFields = ['p'. 'reply_limit', 'max_files', 'thread_limit', 'id', 'thread']
+	, numberFields = ['reply_limit', 'max_files', 'thread_limit', 'thread']
 
 module.exports = (req, res, next) => {
 
@@ -26,15 +26,18 @@ module.exports = (req, res, next) => {
 	if (req.body.globalcheckedposts) {
 		req.body.globalcheckedposts = req.body.globalcheckedposts.map(Mongo.ObjectId)
 	}
+	if (req.params.id) {
+		req.params.id = +req.params.id;
+	}
 
 	for (let i = 0; i < numberFields.length; i++) {
 		const field = numberFields[i];
-		if (req.query[field]) {
-			const num = parseInt(req.query[field]);
+		if (req.body[field]) {
+			const num = parseInt(req.body[field]);
 			if (Number.isSafeInteger(num)) {
-				req.query[field] = num;
+				req.body[field] = num;
 			} else {
-				req.query[field] = null;
+				req.body[field] = null;
 			}
 		}
 	}
