@@ -169,7 +169,7 @@ module.exports = async (req, res, next, numFiles) => {
 		salt = (await randomBytes(128)).toString('hex');
 	}
 	if (res.locals.board.settings.ids) {
-		const fullUserIdHash = crypto.createHash('sha256').update(salt + ip + req.params.board).digest('hex');
+		const fullUserIdHash = crypto.createHash('sha256').update(salt + ip).digest('hex');
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 
@@ -188,7 +188,7 @@ module.exports = async (req, res, next, numFiles) => {
 			const groups = matches.groups;
 			//name
 			if (groups.name) {
-				name = groups.name
+				name = groups.name;
 			}
 			//tripcode
 			if (groups.tripcode) {
@@ -197,7 +197,7 @@ module.exports = async (req, res, next, numFiles) => {
 			//capcode
 			if (groups.capcode && hasPerms) {
 				// TODO: add proper code for different capcodes
-				capcode = groups.capcode;
+				capcode = `## ${groups.capcode}`;
 			}
 		}
 	}
@@ -270,14 +270,6 @@ module.exports = async (req, res, next, numFiles) => {
 		//new thread, rebuild all pages and prunes old threads
 		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
 		for (let i = 0; i < prunedThreads.length; i++) {
-			//TODO: consider:
-			//should i keep these? as an "archive" since they are removed from the DB
-			//posting wouldnt work and it would just be served as a static file
-			//files dont matter
-			//or i could add and set to "archive:true" with the same affect as locking
-			//but additionally does not appear in board index/catalog but allows to be rebuilt for template updates?
-			//or is a first party archive kinda against the point of an imageboard?
-			//i feel like threads epiring and not existing anymore is part of the design
 			parallelPromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
 		}
 		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, 10));
