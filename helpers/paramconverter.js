@@ -2,6 +2,7 @@
 
 const Mongo = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners'])
+	, numberFields = ['p'. 'reply_limit', 'max_files', 'thread_limit', 'id', 'thread']
 
 module.exports = (req, res, next) => {
 
@@ -26,47 +27,15 @@ module.exports = (req, res, next) => {
 		req.body.globalcheckedposts = req.body.globalcheckedposts.map(Mongo.ObjectId)
 	}
 
-	//thread in post form
-	if (req.params.id) {
-		req.params.id = +req.params.id;
-	}
-	if (req.body.thread) {
-		req.body.thread = +req.body.thread;
-	}
-
-	//page number
-	if (req.query.p) {
-		const num = parseInt(req.query.p);
-		if (Number.isSafeInteger(num)) {
-			req.query.p = num;
-		} else {
-			req.query.p = null;
-		}
-	}
-
-	//board settings
-	if (req.body.reply_limit != null) {
-		const num = parseInt(req.body.reply_limit);
-		if (Number.isSafeInteger(num)) {
-			req.body.reply_limit = num;
-		} else {
-			req.body.reply_limit = null;
-		}
-	}
-	if (req.body.max_files != null) {
-		const num = parseInt(req.body.max_files);
-		if (Number.isSafeInteger(num)) {
-			req.body.max_files = num;
-		} else {
-			req.body.max_files = null;
-		}
-	}
-	if (req.body.thread_limit != null) {
-		const num = +parseInt(req.body.thread_limit);
-		if (Number.isSafeInteger(num)) {
-			req.body.thread_limit = num;
-		} else {
-			req.body.thread_limit = null;
+	for (let i = 0; i < numberFields.length; i++) {
+		const field = numberFields[i];
+		if (req.query[field]) {
+			const num = parseInt(req.query[field]);
+			if (Number.isSafeInteger(num)) {
+				req.query[field] = num;
+			} else {
+				req.query[field] = null;
+			}
 		}
 	}
 
