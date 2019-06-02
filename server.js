@@ -3,41 +3,29 @@
 process.on('uncaughtException', console.error);
 process.on('unhandledRejection', console.error);
 
-const express  = require('express')
-	, session  = require('express-session')
+const express = require('express')
+	, session = require('express-session')
 	, MongoStore = require('connect-mongo')(session)
-	, path	 = require('path')
-	, app	  = express()
-	, helmet = require('helmet')
+	, path = require('path')
+	, app = express()
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
-	, Mongo = require(__dirname+'/db/db.js')
-	, upload = require('express-fileupload');
+	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {
 
 	// let db connect
 	await Mongo.connect();
 
-	// parse forms and allow file uploads
+	// parse forms
 	app.use(bodyParser.urlencoded({extended: true}));
 	app.use(bodyParser.json());
-	app.use(upload({
-		createParentPath: true,
-		safeFileNames: true,
-		preserveExtension: 4,
-		limits: {
-			fileSize: 10 * 1024 * 1024,
-			files: 3
-		},
-		abortOnLimit: true,
-		useTempFiles: true,
-		tempFileDir: path.join(__dirname+'/tmp/')
-	}));
+
+	//parse cookies
+	app.use(cookieParser());
 
 	// session store
-	app.set('trust proxy', 1);
 	app.use(session({
 		secret: configs.sessionSecret,
 		store: new MongoStore({ db: Mongo.client.db('sessions') }),
@@ -49,10 +37,9 @@ const express  = require('express')
 			sameSite: 'lax',
 		}
 	}));
-	app.use(cookieParser());
 
-	// csurf and helmet
-	app.use(helmet());
+	//trust proxy for nginx
+	app.set('trust proxy', 1);
 
 	//referer header check
 	app.use((req, res, next) => {
@@ -97,11 +84,11 @@ const express  = require('express')
 	// listen
 	const server = app.listen(configs.port, '127.0.0.1', () => {
 
-        console.log(`Listening on port ${configs.port}`);
+        console.log(`listening on port ${configs.port}`);
 
 		//let PM2 know that this is ready (for graceful reloads)
 		if (typeof process.send === 'function') { //make sure we are a child process
-			console.info('Sending ready signal to PM2')
+			console.info('sending ready signal to PM2')
 			process.send('ready');
 		}
 
@@ -109,18 +96,20 @@ const express  = require('express')
 
 	process.on('SIGINT', () => {
 
-		console.info('SIGINT signal received.')
+		console.info('SIGINT signal received')
 
 		// Stops the server from accepting new connections and finishes existing connections.
 		server.close((err) => {
 
 			// if error, log and exit with error (1 code)
+			console.info('closing http server')
 			if (err) {
 				console.error(err);
 				process.exit(1);
 			}
 
 			// close database connection
+			console.info('closing db connection')
 			Mongo.client.close();
 
 			// now close without error

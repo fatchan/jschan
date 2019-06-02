@@ -13,6 +13,7 @@ const animatedImageMimeTypes = new Set([
 ]);
 
 const videoMimeTypes = new Set([
+	'video/quicktime',
 	'video/mp4',
 	'video/webm',
 ]);

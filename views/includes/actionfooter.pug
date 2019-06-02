@@ -6,11 +6,11 @@ details.toggle-label
 			input.post-check(type='checkbox', name='delete' value=1)
 			| Delete
 		label
-			input.post-check(type='checkbox', name='delete_file' value=1)
-			| Delete File Only
+			input.post-check(type='checkbox', name='unlink_file' value=1)
+			| Unlink Files
 		label
 			input.post-check(type='checkbox', name='spoiler' value=1)
-			| Spoiler Images
+			| Spoiler Files
 		label
 			input#password(type='text', name='password', placeholder='post password' autocomplete='off')
 		label
@@ -29,6 +29,9 @@ details.toggle-label
 		label
 			input.post-check(type='checkbox', name='delete_ip_global' value=1)
 			| Delete from IP globally
+		label
+			input.post-check(type='checkbox', name='delete_file' value=1)
+			| Delete Files
 		label
 			input.post-check(type='checkbox', name='sticky' value=1)
 			| Sticky

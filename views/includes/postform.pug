@@ -1,47 +1,46 @@
 section.form-wrapper.flex-center
-	details.toggle-label
-		summary.toggle-summary Show Post Form
-		form.form-post(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
-			//input(type='hidden' name='_csrf' value=csrf)
-			input(type='hidden' name='thread' value=thread != null ? thread.postId : null)
-			unless board.settings.forceAnon
-				section.postform-row
-					.postform-label Name
-					input#name(type='text', name='name', placeholder=board.defaultName autocomplete='off' maxlength='50')
+	a.toggle-summary(href='#postform') Show Post Form
+	form.form-post#postform(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
+		input(type='hidden' name='thread' value=thread != null ? thread.postId : null)
+		unless board.settings.forceAnon
+			section.postform-row
+				.postform-label Name
+				input#name(type='text', name='name', placeholder=board.defaultName autocomplete='off' maxlength='50')
+				a.close.postform-style.ml-1(href='#!') X
+			section.postform-row
+				.postform-label Subject
+				input#title(type='text', name='subject', autocomplete='off' maxlength='50')
+			section.postform-row
+				.postform-label Email
+				input#name(type='text', name='email', autocomplete='off' maxlength='50')
+		else 
+			section.postform-row
+				.postform-label Sage
+				label.postform-style.ph-5
+					input#spoiler(type='checkbox', name='email', value='sage')
+					| Sage
+				a.close.postform-style.ml-1(href='#!') X
+			if !thread
 				section.postform-row
 					.postform-label Subject
 					input#title(type='text', name='subject', autocomplete='off' maxlength='50')
-				section.postform-row
-					.postform-label Email
-					input#name(type='text', name='email', autocomplete='off' maxlength='50')
-			else 
-				section.postform-row
-					.postform-label Sage
-					label.postform-style.ph-5
-						input#spoiler(type='checkbox', name='email', value='sage')
-						| Sage
-				if !thread
-					section.postform-row
-						.postform-label Subject
-						input#title(type='text', name='subject', autocomplete='off' maxlength='50')
+		section.postform-row
+			.postform-label Message
+			textarea#message(name='message', rows='5', autocomplete='off' maxlength='2000')
+		if board.settings.maxFiles !== 0
 			section.postform-row
-				.postform-label Message
-				textarea#message(name='message', rows='5', autocomplete='off' maxlength='2000')
-			if board.settings.maxFiles !== 0
-				section.postform-row
-					.postform-label Files
-					input#file(type='file', name='file' multiple='multiple')
-					label.postform-style.ph-5.ml-1
-						input#spoiler(type='checkbox', name='spoiler', value='true')
-						| Spoiler
+				.postform-label Files
+				input#file(type='file', name='file' multiple)
+				label.postform-style.ph-5.ml-1
+					input#spoiler(type='checkbox', name='spoiler', value='true')
+					| Spoiler
+		section.postform-row
+			.postform-label Password
+			input#password(type='password', name='password', autocomplete='off' placeholder='password for deleting post later' maxlength='50')
+		if board.settings.captcha
 			section.postform-row
-				.postform-label Password
-				input#password(type='password', name='password', autocomplete='off' placeholder='password for deleting post later' maxlength='50')
-			if board.settings.captcha
-				section.postform-row
-					.postform-label Captcha
-					.postform-col
-						img.captcha(src='/captcha' width=200 height=80)
-						input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6')
-			input(type='submit', value=`New ${threads ? 'Thread' : 'Reply'}`)
-		//.mode Posting mode: #{threads ? 'Thread' : 'Reply'}
+				.postform-label Captcha
+				.postform-col
+					img.captcha(src='/captcha' width=200 height=80)
+					input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6')
+		input(type='submit', value=`New ${threads ? 'Thread' : 'Reply'}`)

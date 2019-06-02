@@ -4,30 +4,49 @@ const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db/boards.js')
 	, Posts = require(__dirname+'/../db/posts.js')
-	, Captchas = require(__dirname+'/../db/captchas.js')
-	, Trips = require(__dirname+'/../db/trips.js')
-	, Bans = require(__dirname+'/../db/bans.js')
 	, Mongo = require(__dirname+'/../db/db.js')
 	, remove = require('fs-extra').remove
-	, deletePosts = require(__dirname+'/../models/forms/delete-post.js')
-	, spoilerPosts = require(__dirname+'/../models/forms/spoiler-post.js')
-	, dismissGlobalReports = require(__dirname+'/../models/forms/dismissglobalreport.js')
-	, banPoster = require(__dirname+'/../models/forms/ban-poster.js')
+	, upload = require('express-fileupload')
+	, path = require('path')
+	, postFiles = upload({
+        createParentPath: true,
+        safeFileNames: /[^\w-]+/g,
+        preserveExtension: 4,
+        limits: {
+            fileSize: 10 * 1024 * 1024,
+            files: 3
+        },
+        abortOnLimit: true,
+        useTempFiles: true,
+        tempFileDir: path.join(__dirname+'/../tmp/')
+    })
+	, bannerFiles = upload({
+        createParentPath: true,
+        safeFileNames: /[^\w-]+/g,
+        preserveExtension: 4,
+        limits: {
+            fileSize: 10 * 1024 * 1024,
+            files: 10
+        },
+        abortOnLimit: true,
+        useTempFiles: true,
+        tempFileDir: path.join(__dirname+'/../tmp/')
+    })
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
-	, makePost = require(__dirname+'/../models/forms/make-post.js')
+	, makePost = require(__dirname+'/../models/forms/makepost.js')
+	, deleteTempFiles = require(__dirname+'/../helpers/files/deletetempfiles.js')
 	, uploadBanners = require(__dirname+'/../models/forms/uploadbanners.js')
 	, deleteBanners = require(__dirname+'/../models/forms/deletebanners.js')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
 	, checkPermsMiddleware = require(__dirname+'/../helpers/haspermsmiddleware.js')
+	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, banCheck = require(__dirname+'/../helpers/bancheck.js')
-	, deletePostFiles = require(__dirname+'/../helpers/files/deletepostfiles.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captchaverify.js')
 	, actionHandler = require(__dirname+'/../models/forms/actionhandler.js')
 	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js')
-	, deleteFailedFiles = require(__dirname+'/../helpers/files/deletefailed.js')
 	, actionChecker = require(__dirname+'/../helpers/actionchecker.js');
 
 
@@ -159,7 +178,7 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 });
 
 // make new post
-router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verifyCaptcha, async (req, res, next) => {
+router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConverter, verifyCaptcha, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -207,25 +226,18 @@ router.post('/board/:board/post', Boards.exists, banCheck, paramConverter, verif
 	}
 
 	if (errors.length > 0) {
+		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
-		})
+	        'title': 'Bad request',
+            'errors': errors,
+            'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
+        });
 	}
 
 	try {
 		await makePost(req, res, next, numFiles);
 	} catch (err) {
-		//handler errors here better
-		if (numFiles > 0) {
-			const fileNames = []
-			for (let i = 0; i < req.files.file.length; i++) {
-				remove(req.files.file[i].tempFilePath).catch(e => console.error);
-				fileNames.push(req.files.file[i].filename);
-			}
-			deletePostFiles(fileNames).catch(err => console.error);
-		}
+		await deleteTempFiles(req).catch(e => console.error);
 		return next(err);
 	}
 
@@ -236,8 +248,8 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 
 	const errors = [];
 
-	if (req.body.default_name && req.body.default_name.length > 20) {
-		errors.push('Must provide a message or file');
+	if (req.body.default_name && req.body.default_name.length < 1 || req.body.default_name.length > 50) {
+		errors.push('Anon name must be 1-50 characters');
 	}
 	if (typeof req.body.reply_limit === 'number' && (req.body.reply_limit < 1 || req.body.reply_limit > 1000)) {
 		errors.push('Reply Limit must be from 1-1000');
@@ -257,15 +269,19 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 		})
 	}
 
-	return res.status(501).render('message', {
-		'title': 'Not implemented',
-		'redirect': `/${req.params.board}/manage.html`
-	})
+	try {
+		return res.status(501).render('message', {
+			'title': 'Not implemented',
+			'redirect': `/${req.params.board}/manage.html`
+		})
+	} catch (err) {
+		return next(err);
+	}
 
 });
 
 //upload banners
-router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
+router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
 	let numFiles = 0;
 	if (req.files && req.files.file) {
@@ -282,11 +298,12 @@ router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddlewar
 	if (numFiles === 0) {
 		errors.push('Must provide a file');
 	}
-	if (res.locals.board.banners.length > 100) {
-		errors.push('Limit of 100 banners reached');
+	if (res.locals.board.banners.length+numFiles > 100) {
+		errors.push('Number of uploads would exceed 100 banner limit');
 	}
 
 	if (errors.length > 0) {
+		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
@@ -297,14 +314,7 @@ router.post('/board/:board/addbanners', csrf, Boards.exists, checkPermsMiddlewar
 	try {
 		await uploadBanners(req, res, next, numFiles);
 	} catch (err) {
-		const fileNames = [];
-		if (numFiles > 0) {
-			for (let i = 0; i < req.files.file.length; i++) {
-				remove(req.files.file[i].tempFilePath).catch(e => console.error);
-				fileNames.push(req.files.file[i].filename);
-			}
-		}
-		deleteFailedFiles(fileNames, 'banner').catch(e => console.error);
+		await deleteTempFiles(req).catch(e => console.error);
 		return next(err);
 	}
 
@@ -346,9 +356,123 @@ router.post('/board/:board/deletebanners', csrf, Boards.exists, checkPermsMiddle
 
 });
 
-//report/delete/spoiler/ban
-router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, verifyCaptcha, actionHandler); //Captcha on regular actions
-router.post('/board/:board/modactions', csrf, Boards.exists, checkPermsMiddleware, paramConverter, actionHandler); //CSRF for mod actions
+//actions for a specific board
+router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, verifyCaptcha, boardActionController); //Captcha on regular actions
+router.post('/board/:board/modactions', csrf, Boards.exists, checkPermsMiddleware, paramConverter, boardActionController); //CSRF for mod actions
+async function boardActionController(req, res, next) {
+
+	const errors = [];
+
+	//make sure they checked 1-10 posts
+	if (!req.body.checkedposts || req.body.checkedposts.length === 0 || req.body.checkedposts.length > 10) {
+		errors.push('Must select 1-10 posts');
+	}
+
+	res.locals.actions = actionChecker(req);
+
+	//make sure they selected at least 1 action
+	if (!res.locals.actions.anyValid) {
+		errors.push('No actions selected');
+	}
+	//check if they have permission to perform the actions
+	res.locals.hasPerms = checkPerms(req, res);
+	if(!res.locals.hasPerms && res.locals.actions.anyAuthed) {
+		errors.push('No permission');
+	}
+
+	//check that actions are valid
+	if (req.body.password && req.body.password.length > 50) {
+		errors.push('Password must be 50 characters or less');
+	}
+	if (req.body.report_reason && req.body.report_reason.length > 50) {
+		errors.push('Report must be 50 characters or less');
+	}
+	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
+		errors.push('Ban reason must be 50 characters or less');
+	}
+	if ((req.body.report || req.body.global_report) && (!req.body.report_reason || req.body.report_reason.length === 0)) {
+		errors.push('Reports must have a reason');
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': `/${req.params.board}/`
+		})
+	}
+
+	res.locals.posts = await Posts.getPosts(req.params.board, req.body.checkedposts, true);
+	if (!res.locals.posts || res.locals.posts.length === 0) {
+		return res.status(404).render('message', {
+			'title': 'Not found',
+			'error': 'Selected posts not found',
+			'redirect': `/${req.params.board}/`
+		})
+	}
+
+	try {
+		await actionHandler(req, res, next);
+	} catch (err) {
+		console.error(err);
+		return next(err);
+	}
+
+}
+
+//global actions (global manage page)
+router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, globalActionController);
+async function globalActionController(req, res, next) {
+
+	const errors = [];
+
+	//make sure they checked 1-10 posts
+	if (!req.body.globalcheckedposts || req.body.globalcheckedposts.length === 0 || req.body.globalcheckedposts.length > 10) {
+		errors.push('Must select 1-10 posts')
+	}
+
+	res.locals.actions = actionChecker(req);
+
+	//make sure they have any global actions, and that they only selected global actions
+	if (!res.locals.actions.anyGlobal || res.locals.actions.anyValid > res.locals.actions.anyGlobal) {
+		errors.push('Invalid actions selected');
+	}
+
+	//check that actions are valid
+	if (req.body.password && req.body.password.length > 50) {
+		errors.push('Password must be 50 characters or less');
+	}
+	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
+		errors.push('Ban reason must be 50 characters or less');
+	}
+
+	//return the errors
+	if (errors.length > 0) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': '/globalmanage.html'
+		})
+	}
+
+	//get posts with global ids only
+	res.locals.posts = await Posts.globalGetPosts(req.body.globalcheckedposts, true);
+	if (!res.locals.posts || res.locals.posts.length === 0) {
+		return res.status(404).render('message', {
+			'title': 'Not found',
+			'errors': 'Selected posts not found',
+			'redirect': '/globalmanage.html'
+		})
+	}
+
+	try {
+		await actionHandler(req, res, next);
+	} catch (err) {
+		console.error(err);
+		return next(err);
+	}
+
+}
 
 //unban
 router.post('/board/:board/unban', csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
@@ -379,141 +503,6 @@ router.post('/board/:board/unban', csrf, Boards.exists, checkPermsMiddleware, pa
 		'title': 'Success',
 		'messages': messages,
 		'redirect': `/${req.params.board}/manage.html`
-	});
-
-});
-
-router.post('/global/actions', csrf, checkPermsMiddleware, paramConverter, async(req, res, next) => {
-
-	const errors = [];
-
-	//make sure they checked 1-10 posts
-	if (!req.body.globalcheckedposts || req.body.globalcheckedposts.length === 0 || req.body.globalcheckedposts.length > 10) {
-		errors.push('Must select 1-10 posts')
-	}
-
-	const { anyGlobal } = actionChecker(req);
-
-	//make sure they selected at least 1 global action
-	if (!anyGlobal) {
-		errors.push('Invalid actions selected');
-	}
-
-	//check that actions are valid
-	if (req.body.password && req.body.password.length > 50) {
-		errors.push('Password must be 50 characters or less');
-	}
-	if (req.body.report_reason && req.body.report_reason.length > 50) {
-		errors.push('Report must be 50 characters or less');
-	}
-	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
-		errors.push('Ban reason must be 50 characters or less');
-	}
-	if (req.body.report && (!req.body.report_reason || req.body.report_reason.length === 0)) {
-		errors.push('Reports must have a reason')
-	}
-
-	//return the errors
-	if (errors.length > 0) {
-		return res.status(400).render('message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': '/globalmanage.html'
-		})
-	}
-
-	//get posts with global ids only
-	const posts = await Posts.globalGetPosts(req.body.globalcheckedposts, true);
-	if (!posts || posts.length === 0) {
-		return res.status(404).render('message', {
-			'title': 'Not found',
-			'errors': 'Selected posts not found',
-			'redirect': '/globalmanage.html'
-		})
-	}
-
-	//get the ids
-	const postMongoIds = posts.map(post => Mongo.ObjectId(post._id));
-	const messages = [];
-	const combinedQuery = {};
-	let aggregateNeeded = false;
-	try {
-		if (req.body.global_ban) {
-			const { message, action, query } = await banPoster(req, res, next, null, posts);
-			if (action) {
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
-			}
-			messages.push(message);
-		}
-		if (req.body.delete_ip_global) {
-			const deletePostIps = posts.map(x => x.ip);
-			const deleteIpPosts = await Posts.db.find({
-				'ip': {
-					'$in': deletePostIps
-				}
-			}).toArray();
-			if (deleteIpPosts && deleteIpPosts.length > 0) {
-				const { message } = await deletePosts(req, res, next, deleteIpPosts, null);
-				messages.push(message);
-				aggregateNeeded = true;
-			}
-		} else if (req.body.delete) {
-			const { message } = await deletePosts(req, res, next, posts);
-			messages.push(message);
-			aggregateNeeded = true;
-		} else {
-			// if it was getting deleted, we cant do any of these
-			if (req.body.delete_file) {
-				const { message, action, query } = await deletePostsFiles(posts);
-				if (action) {
-					aggregateNeeded = true;
-					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				}
-				messages.push(message);
-			} else if (req.body.spoiler) {
-                const { message, action, query } = spoilerPosts(posts);
-                if (action) {
-                    combinedQuery[action] = { ...combinedQuery[action], ...query}
-                }
-                messages.push(message);
-            }
-			if (req.body.global_dismiss) {
-				const { message, action, query } = dismissGlobalReports(posts);
-				if (action) {
-					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				}
-				messages.push(message);
-			}
-		}
-		if (Object.keys(combinedQuery).length > 0) {
-			await Posts.db.updateMany({
-				'_id': {
-					'$in': postMongoIds
-				}
-			}, combinedQuery);
-		}
-		if (aggregateNeeded) {
-			const threadsToUpdate = [...new Set(posts.filter(post => post.thread !== null))];
-			//recalculate and set correct aggregation numbers again
-			await Promise.all(threadsToUpdate.map(async (post) => {
-				const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
-				let replyposts = 0;
-				let replyfiles = 0;
-				if (replyCounts[0]) {
-					replyposts = replyCounts[0].replyposts;
-					replyfiles = replyCounts[0].replyfiles;
-				}
-				Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
-			}));
-		}
-	} catch (err) {
-		return next(err);
-	}
-
-	return res.render('message', {
-		'title': 'Success',
-		'messages': messages,
-		'redirect': '/globalmanage.html'
 	});
 
 });

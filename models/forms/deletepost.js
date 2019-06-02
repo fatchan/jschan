@@ -1,7 +1,6 @@
 'use strict';
 
 const uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, deletePostFiles = require(__dirname+'/../../helpers/files/deletepostfiles.js')
 	, remove = require('fs-extra').remove
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
@@ -39,7 +38,7 @@ module.exports = async (req, res, next, posts, board) => {
 	//combine them all into one array, there may be duplicates but it shouldnt matter
 	const allPosts = posts.concat(threadPosts)
 
-	//delete posts from DB
+	//get all mongoids and delete posts from
 	const postMongoIds = allPosts.map(post => Mongo.ObjectId(post._id))
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 
@@ -48,11 +47,6 @@ module.exports = async (req, res, next, posts, board) => {
 	allPosts.forEach(post => {
 		fileNames = fileNames.concat(post.files.map(x => x.filename))
 	})
-
-	//delete post files
-	if (fileNames.length > 0) {
-		await deletePostFiles(fileNames);
-	}
 
 	//hooray!
 	return { message:`Deleted ${threads.length} threads and ${deletedPosts-threads.length} posts` };

@@ -1,13 +1,12 @@
 'use strict';
 
-const uuidv4 = require('uuid/v4')
-	, path = require('path')
-	, remove = require('fs-extra').remove
+const path = require('path')
+	, { remove, pathExists, ensureDir } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
-	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
-	, deleteFailedFiles = require(__dirname+'/../../helpers/files/deletefailed.js')
-	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
+	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
+	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
+	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, Boards = require(__dirname+'/../../db/boards.js')
 
 module.exports = async (req, res, next, numFiles) => {
@@ -17,6 +16,7 @@ module.exports = async (req, res, next, numFiles) => {
 	// check all mime types befoer we try saving anything
 	for (let i = 0; i < numFiles; i++) {
 		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false})) {
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -26,42 +26,57 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 
 	const filenames = [];
-	// then upload
 	for (let i = 0; i < numFiles; i++) {
 		const file = req.files.file[i];
-		const uuid = uuidv4();
-		const filename = uuid + path.extname(file.name);
-		file.filename = filename; //for error to delete failed files
+		const filename = file.sha256 + path.extname(file.name);
+		file.filename = filename;
+
+		//check if already exists
+		const exists = await pathExists(`${uploadDirectory}banner/${req.params.board}/${filename}`);
+
+		if (exists) {
+			await remove(file.tempFilePath);
+			continue;
+		}
+
+		//add to list after checking it doesnt already exist
 		filenames.push(filename);
 
-		//upload it
-		await imageUpload(file, filename, 'banner');
-		const imageData = await imageIdentify(filename, 'banner');
-		const geometry = imageData.size;
-		await remove(file.tempFilePath);
+		//make directory if doesnt exist
+		await ensureDir(`${uploadDirectory}banner/${req.params.board}/`);
+
+		//get metadata from tempfile
+		const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
+		let geometry = imageData.size;
+		if (Array.isArray(geometry)) {
+			geometry = geometry[0];
+		}
 
 		//make sure its 300x100 banner
 		if (geometry.width !== 300 || geometry.height !== 100) {
-			const fileNames = [];
-			for (let i = 0; i < req.files.file.length; i++) {
-				remove(req.files.file[i].tempFilePath).catch(e => console.error);
-				fileNames.push(req.files.file[i].filename);
-			}
-			deleteFailedFiles(fileNames, 'banner').catch(e => console.error);
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': `Invalid file ${file.name}. Banners must be 300x100.`,
 				'redirect': redirect
 			});
 		}
+
+		//then upload it
+		await imageUpload(file, filename, `banner/${req.params.board}`);
+
+		//and delete the temp file
+		await remove(file.tempFilePath);
+
 	}
 
 	await Boards.addBanners(req.params.board, filenames);
+//TODO: banners pages
 //	await buildBanners(res.locals.board);
 
 	return res.render('message', {
 		'title': 'Success',
-		'message': `Uploaded ${filenames.length} banners.`,
+		'message': `Uploaded ${filenames.length} new banners.`,
 		'redirect': redirect
 	});
 

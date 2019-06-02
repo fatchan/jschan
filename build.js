@@ -5,9 +5,43 @@ const Posts = require(__dirname+'/db/posts.js')
 	, uploadDirectory = require(__dirname+'/helpers/uploadDirectory.js')
 	, render = require(__dirname+'/helpers/render.js');
 
+
+function addBacklinks(thread, preview) { //preview means this is not the full thread
+	const postMap = new Map()
+	postMap.set(thread.postId, thread)
+	for (let i = 0; i < thread.replies.length; i++) {
+		const reply = thread.replies[i];
+		postMap.set(reply.postId, reply);
+	}
+	for (let i = 0; i < thread.replies.length; i++) {
+		const reply = thread.replies[i];
+		if (!reply.quotes) continue;
+		for (let j = 0; j < reply.quotes.length; j++) {
+			const quote = reply.quotes[j];
+			if (postMap.has(quote)) {
+				const post = postMap.get(quote)
+				if (!post.backlinks) {
+					post.backlinks = [];
+				}
+				post.backlinks.push(reply.postId);
+			} else if (!preview) {
+				/*
+					quote was valid on post creation, but points to postID that has been deleted
+					or possibly removed from cyclical thread (whenever i implement those)
+					could re-markdown the post here to remove the quotes (or convert to greentext)
+				*/
+			}
+		}
+	}
+}
+
 module.exports = {
 
 	buildCatalog: async (board) => {
+//console.log('building catalog', `${board._id}/catalog.html`);
+		if (!board._id) {
+			board = await Boards.findOne(board);
+		}
 		const threads = await Posts.getCatalog(board._id);
 		return render(`${board._id}/catalog.html`, 'catalog.pug', {
 			board,
@@ -22,8 +56,11 @@ module.exports = {
 		}
 		const thread = await Posts.getThread(board._id, threadId)
 		if (!thread) {
-			return; //this thread may have been an OP that was deleted during a rebuild
+			return; //this thread may have been an OP that was deleted
 		}
+
+		addBacklinks(thread, false);
+
 		return render(`${board._id}/thread/${threadId}.html`, 'thread.pug', {
 			board,
 			thread
@@ -36,6 +73,12 @@ module.exports = {
 		if (!maxPage) {
 			maxPage = Math.ceil((await Posts.getPages(board._id)) / 10);
 		}
+
+		for (let k = 0; k < threads.length; k++) {
+			const thread = threads[k];
+			addBacklinks(thread, true);
+		}
+
 		return render(`${board._id}/${page === 1 ? 'index' : page}.html`, 'board.pug', {
 			board,
 			threads,
@@ -56,6 +99,12 @@ module.exports = {
 		}
 		const difference = endpage-startpage + 1; //+1 because for single pagemust be > 0
 		const threads = await Posts.getRecent(board._id, startpage, difference*10);
+
+		for (let k = 0; k < threads.length; k++) {
+			const thread = threads[k];
+			addBacklinks(thread, true);
+		}
+
 		const buildArray = [];
 		for (let i = startpage; i <= endpage; i++) {
 //console.log('multi building board page', `${board._id}/${i === 1 ? 'index' : i}.html`);

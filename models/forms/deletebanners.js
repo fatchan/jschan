@@ -9,11 +9,9 @@ module.exports = async (req, res, next) => {
 	const redirect = `/${req.params.board}/manage.html`
 
 	await Promise.all(req.body.checkedbanners.map(async filename => {
-		remove(`${uploadDirectory}banner/${filename}`);
+		remove(`${uploadDirectory}banner/${req.params.board}/${filename}`);
 	}));
 
-	// i dont think there is a way to get the number of array items removed with $pullAll 
-	// so i cant return how many banners were deleted
 	await Boards.removeBanners(req.params.board, req.body.checkedbanners);
 
 	return res.render('message', {

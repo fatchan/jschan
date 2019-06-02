@@ -19,6 +19,17 @@ body {
 	flex-direction: column;
 }
 
+pre {
+	font-family: inherit;
+	margin: 1em 2em;
+	white-space: pre-wrap;
+}
+
+.replies {
+	font-size: smaller;
+	clear: both;
+}
+
 .code {
 	text-align: left;
 	border-left: 10px solid #B7C5D9;
@@ -27,7 +38,6 @@ body {
 	font-family: monospace;
 	margin: 0.5em 0;
 	display: flex;
-	clear: both;
 	overflow-x: auto;
 	white-space: pre;
 }
@@ -61,6 +71,7 @@ body {
 	box-sizing: border-box;
 	padding: 10px;
 	width: max-content;
+	width: -moz-max-content;
 }
 
 a, a:visited {
@@ -87,22 +98,8 @@ object {
 	background: #d6daf0;
 }
 
-.catalog-tile-button {
-	width: 100%;
-	line-height: 30px;
-	float: left;
-	background: #B7C5D9;
-	text-decoration: none;
-	color: black;
-	margin-bottom: 5px;
-	overflow: hidden;
-}
-
-.catalog-tile-content {
-	padding: 5px;
-}
-
 .catalog-tile {
+	padding: 5px;
 	margin: 2px;
 	text-align: center;
 	max-height: 300px;
@@ -120,15 +117,15 @@ object {
 
 .catalog-thumb {
 	box-shadow: 0 0 3px black;
-	min-width: 64px;
-	min-height: 64px;
+	width: 64px;
+	height: 64px;
 	object-fit: cover;
 }
 
 .catalog {
 	display:flex;
 	align-items:flex-start;
-	justify-content: space-evenly;
+	justify-content: center;
 	flex-flow: row wrap;
 }
 
@@ -158,6 +155,13 @@ object {
 	font-weight: bold;
 }
 
+.close {
+	text-decoration: none;
+	width: 1.75em;
+	justify-content: center;
+	font-weight: bolder;
+}
+
 .reports {
 	background: #fca!important;
 	border-color: #c97!important;
@@ -178,12 +182,8 @@ object {
 	color: green;
 }
 
-blockquote a, a:hover {
+pre a, a:hover {
 	color: #d00!important;
-}
-
-blockquote {
-	white-space: pre-wrap;
 }
 
 .thread, .action-wrapper, .form-wrapper, .table-container {
@@ -219,7 +219,7 @@ td, th {
 	align-items: center;
 }
 
-.post-container, .pages, .toggle-summary {
+.post-container, .pages, .toggle-summary, .catalog-tile {
 	background: #D6DAF0;
 	border: 1px solid #B7C5D9;
 }
@@ -260,6 +260,7 @@ td, th {
 	display: flex;
 	flex-flow: column wrap;
 	width: max-content;
+	width: -moz-max-content;
 }
 
 .toggle {
@@ -326,7 +327,8 @@ td, th {
 }
 
 .post-file-src {
-	margin: 0 auto;
+	justify-content: center;
+	display: flex;
 }
 
 .file-thumb {
@@ -390,8 +392,8 @@ input textarea {
 }
 
 .post-container:target {
-	background-color: #d6bad0;
-	border-color: #ba9dbf;
+	background-color: #d6bad0 !important;
+	border: 1px solid #ba9dbf !important;
 }
 
 .post-container.op {
@@ -470,7 +472,7 @@ input textarea {
 input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {
 	border: 1px solid #a9a9a9;
 	font-size: inherit;
-	font-family: arial,helvetica,sans-serif;
+	font-family: arial, helvetica, sans-serif;
 	margin: 0;
 	flex-grow: 1;
 	border-radius: 0px;
@@ -482,6 +484,24 @@ input[type="submit"] {
 
 input[type="file"] {
 	background: white;
+}
+
+#postform {
+	display: none;
+	width: 400px;
+	max-width: calc(100% - 10px);
+	position: fixed;
+	top: 45px;
+	right: 5px;
+	background-color: #D6DAF0;
+	border: 1px solid #b7c5d9;
+	padding: 5px;
+	z-index: 1;
+	box-sizing: border-box;
+}
+
+#postform:target {
+	display: flex;
 }
 
 .postform-row, .postform-col {
@@ -539,14 +559,14 @@ hr {
 	}
 
 	.form-post {
-		width: 100%;
+		width: calc(100% - 10px)!important;
 	}
 
 	.form-login {
 		width: 100%;
 	}
 
-	blockquote {
+	pre {
 		margin: 1em;
 	}
 
@@ -573,8 +593,8 @@ hr {
 		width: 100%;
 	}
 
-	.post-info {
-		background-color: #B7C5D9;
+	#postform {
+		top: 5px!important;
 	}
 
 }

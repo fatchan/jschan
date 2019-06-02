@@ -1,11 +1,10 @@
 'use strict';
 
-const uuidv4 = require('uuid/v4')
-	, path = require('path')
+const path = require('path')
 	, util = require('util')
 	, crypto = require('crypto')
 	, randomBytes = util.promisify(crypto.randomBytes)
-	, remove = require('fs-extra').remove
+	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
 	, getTripCode = require(__dirname+'/../../helpers/tripcode.js')
@@ -13,7 +12,7 @@ const uuidv4 = require('uuid/v4')
 	, simpleMarkdown = require(__dirname+'/../../helpers/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = {
-		allowedTags: [ 'span', 'a', 'em', 'strong' ],
+		allowedTags: [ 'span', 'a', 'em', 'strong', 'small' ],
 		allowedAttributes: {
 			'a': [ 'href', 'class' ],
 			'span': [ 'class' ]
@@ -23,12 +22,13 @@ const uuidv4 = require('uuid/v4')
 	, permsCheck = require(__dirname+'/../../helpers/hasperms.js')
 	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
 	, videoUpload = require(__dirname+'/../../helpers/files/videoupload.js')
-	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
-	, imageThumbnail = require(__dirname+'/../../helpers/files/image-thumbnail.js')
-	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
-	, videoThumbnail = require(__dirname+'/../../helpers/files/video-thumbnail.js')
-	, videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
-	, formatSize = require(__dirname+'/../../helpers/files/format-size.js')
+	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
+	, imageThumbnail = require(__dirname+'/../../helpers/files/imagethumbnail.js')
+	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
+	, videoThumbnail = require(__dirname+'/../../helpers/files/videothumbnail.js')
+	, videoIdentify = require(__dirname+'/../../helpers/files/videoidentify.js')
+	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
+	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../build.js');
 
 module.exports = async (req, res, next, numFiles) => {
@@ -42,6 +42,7 @@ module.exports = async (req, res, next, numFiles) => {
 	if (req.body.thread) {
 		thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		if (!thread || thread.thread != null) {
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Thread does not exist.',
@@ -51,6 +52,7 @@ module.exports = async (req, res, next, numFiles) => {
 		salt = thread.salt;
 		redirect += `thread/${req.body.thread}.html`
 		if (thread.locked && !hasPerms) {
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Thread Locked',
@@ -58,6 +60,7 @@ module.exports = async (req, res, next, numFiles) => {
 			});
 		}
 		if (thread.replyposts >= res.locals.board.settings.replyLimit) { //reply limit
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Thread reached reply limit',
@@ -66,6 +69,7 @@ module.exports = async (req, res, next, numFiles) => {
 		}
 	}
 	if (numFiles > res.locals.board.settings.maxFiles) {
+		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'message': `Too many files. Max files per post is ${res.locals.board.settings.maxFiles}.`,
@@ -78,6 +82,7 @@ module.exports = async (req, res, next, numFiles) => {
 		// check all mime types befoer we try saving anything
 		for (let i = 0; i < numFiles; i++) {
 			if (!fileCheckMimeType(req.files.file[i].mimetype, {animatedImage: true, image: true, video: true})) {
+				await deleteTempFiles(req).catch(e => console.error);
 				return res.status(400).render('message', {
 					'title': 'Bad request',
 					'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -88,50 +93,59 @@ module.exports = async (req, res, next, numFiles) => {
 		// then upload, thumb, get metadata, etc.
 		for (let i = 0; i < numFiles; i++) {
 			const file = req.files.file[i];
-			const uuid = uuidv4();
-			const filename = uuid + path.extname(file.name);
+			const filename = file.sha256 + path.extname(file.name);
 			file.filename = filename; //for error to delete failed files
 
 			//get metadata
 			let processedFile = {
+					hash: file.sha256,
 					filename: filename,
 					originalFilename: file.name,
 					mimetype: file.mimetype,
 					size: file.size,
 			};
 
+			//check if already exists
+			const existsFull = await pathExists(`${uploadDirectory}img/${filename}`);
+			const existsThumb = await pathExists(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`);
+
 			//handle video/image ffmpeg or graphicsmagick
 			const mainType = file.mimetype.split('/')[0];
 			switch (mainType) {
 				case 'image':
-					await imageUpload(file, filename, 'img');
-					const imageData = await imageIdentify(filename, 'img');
+					const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
 					processedFile.geometry = imageData.size // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = imageData.Geometry // 123 x 123 string
-					if (fileCheckMimeType(file.mimetype, {image: true}) //always thumbnail gif/webp
+					processedFile.hasThumb = !(fileCheckMimeType(file.mimetype, {image: true})
 						&& processedFile.geometry.height <= 128
-						&& processedFile.geometry.width <= 128) {
-						processedFile.hasThumb = false;
-					} else {
-						processedFile.hasThumb = true;
+						&& processedFile.geometry.width <= 128);
+					if (!existsFull) {
+						await imageUpload(file, filename, 'img');
+					}
+					if (!existsThumb && processedFile.hasThumb) {
 						await imageThumbnail(filename);
 					}
 					break;
 				case 'video':
 					//video metadata
-					await videoUpload(file, filename, 'img');
-					const videoData = await videoIdentify(filename);
+					const videoData = await videoIdentify(req.files.file[i].tempFilePath, null, true);
+					videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
 					processedFile.duration = videoData.format.duration;
 					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
 					processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string
 					processedFile.hasThumb = true;
-					await videoThumbnail(filename);
+					if (!existsFull) {
+						await videoUpload(file, filename, 'img');
+					}
+					if (!existsThumb) {
+						await videoThumbnail(filename, processedFile.geometry);
+					}
 					break;
 				default:
-					return next(err);
+					throw new Error(`invalid file mime type: ${mainType}`); //throw so goes to error handler before next'ing
 			}
 
 			//delete the temp file
@@ -161,7 +175,7 @@ module.exports = async (req, res, next, numFiles) => {
 		salt = (await randomBytes(128)).toString('hex');
 	}
 	if (res.locals.board.settings.ids) {
-		const fullUserIdHash = crypto.createHash('sha256').update(salt + ip + req.params.board).digest('hex');
+		const fullUserIdHash = crypto.createHash('sha256').update(salt + ip).digest('hex');
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 
@@ -180,7 +194,7 @@ module.exports = async (req, res, next, numFiles) => {
 			const groups = matches.groups;
 			//name
 			if (groups.name) {
-				name = groups.name
+				name = groups.name;
 			}
 			//tripcode
 			if (groups.tripcode) {
@@ -189,16 +203,19 @@ module.exports = async (req, res, next, numFiles) => {
 			//capcode
 			if (groups.capcode && hasPerms) {
 				// TODO: add proper code for different capcodes
-				capcode = groups.capcode;
+				capcode = `## ${groups.capcode}`;
 			}
 		}
 	}
 
 	//simple markdown and sanitize
 	let message = req.body.message;
+	let quotes = [];
 	if (message && message.length > 0) {
 		message = simpleMarkdown(req.params.board, req.body.thread, message);
-		message = await linkQuotes(req.params.board, message);
+		const { quotedMessage, threadQuotes } = await linkQuotes(req.params.board, message);
+		message = quotedMessage;
+		quotes = threadQuotes;
 		message = sanitize(message, sanitizeOptions);
 	}
 
@@ -222,6 +239,7 @@ module.exports = async (req, res, next, numFiles) => {
 		files,
 		'reports': [],
 		'globalreports': [],
+		quotes
 	}
 
 	if (!req.body.thread) {
@@ -247,7 +265,7 @@ module.exports = async (req, res, next, numFiles) => {
 	if (data.thread) {
 		//refersh pages
 		const threadPage = await Posts.getThreadPage(req.params.board, thread);
-		if (data.email === 'sage') {
+		if (data.email === 'sage' || thread.sage) {
 			//refresh the page that the thread is on
 			parallelPromises.push(buildBoard(res.locals.board, threadPage));
 		} else {

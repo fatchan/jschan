@@ -72,7 +72,7 @@ block content
 				each banner in board.banners
 					label.banner-check
 						input(type='checkbox' name='checkedbanners[]' value=banner)
-						object.board-banner(data=`/banner/${banner}` width='300' height='100')
+						object.board-banner(data=`/banner/${board._id}/${banner}` width='300' height='100')
 				input(type='submit', value='delete')
 		hr(size=1)
 	h4.no-m-p Reports:

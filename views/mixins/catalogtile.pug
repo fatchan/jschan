@@ -1,30 +1,28 @@
 mixin catalogtile(board, post, truncate)
 	article(class='catalog-tile')
 		- const postURL = `/${board._id}/thread/${post.postId}.html#${post.postId}`
-		a.catalog-tile-button(href=postURL) Open Thread
-		if post.subject
-			span: a.no-decoration.post-subject(href=postURL) #{post.subject}
-		.catalog-tile-content
-			if post.files.length > 0
-				.post-file-src
-					a(href=postURL)
-						if post.spoiler
-							object(data='/img/spoiler.png' width='64' height='64')
-						else
-							object.catalog-thumb(data=`/img/thumb-${post.files[0].filename.split('.')[0]}.jpg` width='64' height='64')
-			header.post-info
-				if post.sticky
-					img(src='/img/sticky.svg' height='12')
-				if post.saged
-					img(src='/img/saged.svg' height='12')
-				if post.locked
-					img(src='/img/locked.svg' height='12')
+		if post.files.length > 0
+			.post-file-src
+				a(href=postURL)
+					if post.spoiler
+						object(data='/img/spoiler.png' width='64' height='64')
+					else
+						object.catalog-thumb(data=`/img/thumb-${post.files[0].filename.split('.')[0]}.jpg` width='64' height='64')
+		header.post-info
+			if post.sticky
+				img(src='/img/sticky.svg' height='12')
 				| 
-				span: a(href=postURL) No.#{post.postId}
+			if post.saged
+				img(src='/img/saged.svg' height='12')
 				| 
-				span Replies: #{post.replyposts}
+			if post.locked
+				img(src='/img/locked.svg' height='12')
 				| 
-				span Images: #{post.replyfiles}
-			if post.message
-				br
-				blockquote.no-m-p.post-message !{post.message}
+			span: a.no-decoration.post-subject(href=postURL) #{post.subject || 'No Subject'}
+			br
+			span Replies: #{post.replyposts}
+			| 
+			span Files: #{post.replyfiles}
+		if post.message
+			br
+			pre.no-m-p.post-message !{post.message}

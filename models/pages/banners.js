@@ -8,21 +8,20 @@ module.exports = async (req, res, next) => {
 		return next();
 	}
 
-	// get all threads
-    let board;
-    try {
-        board = await Boards.findOne(req.query.board);
-    } catch (err) {
-        return next(err);
-    }
+	//agregate to get single random item from banners array
+	const board = await Boards.db.aggregate([
+		{
+			'$unwind': '$banners'
+		},
+		{
+			'$sample': {
+				'size' : 1
+			}
+		}
+	]).toArray().then(res => res[0]);
 
-	if (!board) {
-		return next();
-	}
-
-	if (board.banners.length > 0) {
-		const randomBanner = board.banners[Math.floor(Math.random()*board.banners.length)];
-		return res.redirect(`/banner/${randomBanner}`);
+	if (board && board.banners != null) {
+		return res.redirect(`/banner/${req.query.board}/${board.banners}`);
 	}
 
 	return res.redirect('/img/defaultbanner.png');
