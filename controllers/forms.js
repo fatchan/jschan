@@ -33,13 +33,13 @@ const express  = require('express')
         tempFileDir: path.join(__dirname+'/../tmp/')
     })
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
-	, makePost = require(__dirname+'/../models/forms/make-post.js')
+	, makePost = require(__dirname+'/../models/forms/makepost.js')
+	, deleteTempFiles = require(__dirname+'/../helpers/files/deletetempfiles.js')
 	, uploadBanners = require(__dirname+'/../models/forms/uploadbanners.js')
 	, deleteBanners = require(__dirname+'/../models/forms/deletebanners.js')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
-	, deleteTempFiles = require(__dirname+'/../helpers/files/deletetempfiles.js')
 	, checkPermsMiddleware = require(__dirname+'/../helpers/haspermsmiddleware.js')
 	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
@@ -226,22 +226,18 @@ router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConve
 	}
 
 	if (errors.length > 0) {
-		if (numFiles > 0) {
-			await deleteTempFiles(req.files.file)
-		}
+		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
-		})
+	        'title': 'Bad request',
+            'errors': errors,
+            'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
+        });
 	}
 
 	try {
 		await makePost(req, res, next, numFiles);
 	} catch (err) {
-		if (numFiles > 0) {
-			await deleteTempFiles(req.files.file)
-		}
+		await deleteTempFiles(req).catch(e => console.error);
 		return next(err);
 	}
 
@@ -252,8 +248,8 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 
 	const errors = [];
 
-	if (req.body.default_name && req.body.default_name.length > 20) {
-		errors.push('Must provide a message or file');
+	if (req.body.default_name && req.body.default_name.length < 1 || req.body.default_name.length > 50) {
+		errors.push('Anon name must be 1-50 characters');
 	}
 	if (typeof req.body.reply_limit === 'number' && (req.body.reply_limit < 1 || req.body.reply_limit > 1000)) {
 		errors.push('Reply Limit must be from 1-1000');
@@ -273,10 +269,14 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 		})
 	}
 
-	return res.status(501).render('message', {
-		'title': 'Not implemented',
-		'redirect': `/${req.params.board}/manage.html`
-	})
+	try {
+		return res.status(501).render('message', {
+			'title': 'Not implemented',
+			'redirect': `/${req.params.board}/manage.html`
+		})
+	} catch (err) {
+		return next(err);
+	}
 
 });
 
@@ -303,9 +303,7 @@ router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, checkP
 	}
 
 	if (errors.length > 0) {
-		if (numFiles > 0) {
-			await deleteTempFiles(req.files.file)
-		}
+		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
@@ -316,9 +314,7 @@ router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, checkP
 	try {
 		await uploadBanners(req, res, next, numFiles);
 	} catch (err) {
-		if (numFiles > 0) {
-			await deleteTempFiles(req.files.file)
-		}
+		await deleteTempFiles(req).catch(e => console.error);
 		return next(err);
 	}
 

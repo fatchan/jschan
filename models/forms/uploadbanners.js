@@ -4,8 +4,8 @@ const path = require('path')
 	, { remove, pathExists, ensureDir } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
 	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
-	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
-	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
+	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
+	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, Boards = require(__dirname+'/../../db/boards.js')
 
@@ -16,7 +16,7 @@ module.exports = async (req, res, next, numFiles) => {
 	// check all mime types befoer we try saving anything
 	for (let i = 0; i < numFiles; i++) {
 		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false})) {
-			await deleteTempFiles(req.files.file)
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -37,13 +37,6 @@ module.exports = async (req, res, next, numFiles) => {
 		if (exists) {
 			await remove(file.tempFilePath);
 			continue;
-/* dont stop uploading the other banners just because one already exists.
-			return res.status(409).render('message', {
-				'title': 'Conflict',
-				'message': `Invalid file ${file.name}. Banner already exists.`,
-				'redirect': redirect
-			});
-*/
 		}
 
 		//add to list after checking it doesnt already exist
@@ -61,7 +54,7 @@ module.exports = async (req, res, next, numFiles) => {
 
 		//make sure its 300x100 banner
 		if (geometry.width !== 300 || geometry.height !== 100) {
-			await deleteTempFiles(req.files.file);
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': `Invalid file ${file.name}. Banners must be 300x100.`,

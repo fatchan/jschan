@@ -22,12 +22,13 @@ const path = require('path')
 	, permsCheck = require(__dirname+'/../../helpers/hasperms.js')
 	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
 	, videoUpload = require(__dirname+'/../../helpers/files/videoupload.js')
-	, fileCheckMimeType = require(__dirname+'/../../helpers/files/file-check-mime-types.js')
-	, imageThumbnail = require(__dirname+'/../../helpers/files/image-thumbnail.js')
-	, imageIdentify = require(__dirname+'/../../helpers/files/image-identify.js')
-	, videoThumbnail = require(__dirname+'/../../helpers/files/video-thumbnail.js')
-	, videoIdentify = require(__dirname+'/../../helpers/files/video-identify.js')
-	, formatSize = require(__dirname+'/../../helpers/files/format-size.js')
+	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
+	, imageThumbnail = require(__dirname+'/../../helpers/files/imagethumbnail.js')
+	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
+	, videoThumbnail = require(__dirname+'/../../helpers/files/videothumbnail.js')
+	, videoIdentify = require(__dirname+'/../../helpers/files/videoidentify.js')
+	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
+	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../build.js');
 
 module.exports = async (req, res, next, numFiles) => {
@@ -41,6 +42,7 @@ module.exports = async (req, res, next, numFiles) => {
 	if (req.body.thread) {
 		thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		if (!thread || thread.thread != null) {
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Thread does not exist.',
@@ -50,6 +52,7 @@ module.exports = async (req, res, next, numFiles) => {
 		salt = thread.salt;
 		redirect += `thread/${req.body.thread}.html`
 		if (thread.locked && !hasPerms) {
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Thread Locked',
@@ -57,6 +60,7 @@ module.exports = async (req, res, next, numFiles) => {
 			});
 		}
 		if (thread.replyposts >= res.locals.board.settings.replyLimit) { //reply limit
+			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Thread reached reply limit',
@@ -65,6 +69,7 @@ module.exports = async (req, res, next, numFiles) => {
 		}
 	}
 	if (numFiles > res.locals.board.settings.maxFiles) {
+		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'message': `Too many files. Max files per post is ${res.locals.board.settings.maxFiles}.`,
@@ -77,6 +82,7 @@ module.exports = async (req, res, next, numFiles) => {
 		// check all mime types befoer we try saving anything
 		for (let i = 0; i < numFiles; i++) {
 			if (!fileCheckMimeType(req.files.file[i].mimetype, {animatedImage: true, image: true, video: true})) {
+				await deleteTempFiles(req).catch(e => console.error);
 				return res.status(400).render('message', {
 					'title': 'Bad request',
 					'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,

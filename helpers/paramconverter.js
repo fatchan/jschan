@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners'])
-	, numberFields = ['reply_limit', 'max_files', 'thread_limit', 'thread']
+	, numberFields = ['reply_limit', 'max_files', 'thread_limit', 'thread', 'min_message_length'];
 
 module.exports = (req, res, next) => {
 
