@@ -69,10 +69,10 @@ module.exports = async (req, res, next, numFiles) => {
 		await remove(file.tempFilePath);
 
 	}
+	// because express middleware is autistic i need to do this
+	deleteTempFiles(req).catch(e => console.error);
 
 	await Boards.addBanners(req.params.board, filenames);
-//TODO: banners pages
-//	await buildBanners(res.locals.board);
 
 	return res.render('message', {
 		'title': 'Success',

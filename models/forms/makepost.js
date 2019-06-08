@@ -165,6 +165,8 @@ module.exports = async (req, res, next, numFiles) => {
 
 		}
 	}
+	// because express middleware is autistic i need to do this
+	deleteTempFiles(req).catch(e => console.error);
 
 	//poster ip
 	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;

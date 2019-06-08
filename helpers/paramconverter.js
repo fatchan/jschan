@@ -1,8 +1,9 @@
 'use strict';
 
 const Mongo = require(__dirname+'/../db/db.js')
-	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners'])
-	, numberFields = ['reply_limit', 'max_files', 'thread_limit', 'thread', 'min_message_length'];
+	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners']) //only these can be arrays, since express bodyparser will output arrays
+	, trimFields = ['message', 'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
+	, numberFields = ['reply_limit', 'max_files', 'thread_limit', 'thread', 'min_message_length']; //convert these to numbers before they hit our routes
 
 module.exports = (req, res, next) => {
 
@@ -11,7 +12,6 @@ module.exports = (req, res, next) => {
 		const key = bodyfields[i];
 		const val = req.body[key];
 		if (!allowedArrays.has(key) && Array.isArray(val)) {
-			//this is an array from malformed input, deny it.
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Malformed input'
@@ -19,15 +19,11 @@ module.exports = (req, res, next) => {
 		}
 	}
 
-	//convert to numbers of mongoIds for action routes
-	if (req.body.checkedposts) {
-		req.body.checkedposts = req.body.checkedposts.map(Number);
-	}
-	if (req.body.globalcheckedposts) {
-		req.body.globalcheckedposts = req.body.globalcheckedposts.map(Mongo.ObjectId)
-	}
-	if (req.params.id) {
-		req.params.id = +req.params.id;
+	for (let i = 0; i < trimFields.length; i++) {
+		const field = trimFields[i];
+		if (req.body[field]) {
+			req.body[field] = req.body[field].trim();
+		}
 	}
 
 	for (let i = 0; i < numberFields.length; i++) {
@@ -42,6 +38,20 @@ module.exports = (req, res, next) => {
 		}
 	}
 
+	//convert checked post ids to mongoid/number
+	if (req.body.checkedposts) {
+		req.body.checkedposts = req.body.checkedposts.map(Number);
+	}
+	if (req.body.globalcheckedposts) {
+		req.body.globalcheckedposts = req.body.globalcheckedposts.map(Mongo.ObjectId)
+	}
+
+	//thread id
+	if (req.params.id) {
+		req.params.id = +req.params.id;
+	}
+
+	//board page
 	if (req.params.page) {
 		req.params.page = req.params.page === 'index' ? 'index' : +req.params.page;
 	}

@@ -19,14 +19,6 @@ module.exports = {
 		return db.collection('boards').insertOne(data);
 	},
 
-	deleteOne: (board, options) => {
-
-	},
-
-	deleteMany: (board, options) => {
-
-	},
-
 	deleteAll: (board) => {
 		return db.collection('boards').deleteMany({});
 	},
@@ -68,21 +60,6 @@ module.exports = {
 
 	},
 
-	canManage: (req, res, next) => {
-
-		if (req.session.user.authLevel === 3
-			|| res.locals.board.owner == req.session.user.username
-			|| res.locals.board.moderators.includes(req.session.user.username)) {
-			return next();
-		}
-		return res.status(403).render('message', {
-			'title': 'Forbidden',
-			'message': 'You do not have permission to manage this board',
-			'redirect': '/login.html'
-		});
-
-	},
-
 	getNextId: async (board) => {
 
 		const increment = await db.collection('counters').findOneAndUpdate(
@@ -105,7 +82,7 @@ module.exports = {
 
 	deleteIncrement: async (board) => {
 
-		await db.collection('counters').findOneAndUpdate(
+		return db.collection('counters').findOneAndUpdate(
 			{
 				'_id': board
 			},
@@ -119,8 +96,6 @@ module.exports = {
 			}
 		);
 
-		return;
-
-	},
+	}
 
 }
