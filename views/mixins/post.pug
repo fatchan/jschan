@@ -70,16 +70,13 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						const splitPost = post.message.split('\n');
 						const messageLines = splitPost.length;
 						let truncatedMessage = post.message;
-						let truncated = false;
 						if (messageLines > 10) {
 							truncatedMessage = splitPost.slice(0, 10).join('\n');
-							truncated = true;
 						} else if (post.message.length > 1000) {
-							truncatedMessage = `${post.message.substring(0,1000)}...`;
-							truncated = true;
+							truncatedMessage = post.message.substring(0,1000).replace(/<([\w]+)?([^>]*)?$/, '');
 						}
 					pre.post-message !{truncatedMessage}
-					if truncated
+					if truncatedMessage !== post.message
 						blockquote Message too long. #[a(href=postURL) View the full text]
 				else 
 					pre.post-message !{post.message}

@@ -254,7 +254,7 @@ module.exports = async (req, res, next) => {
 		}, {});
 
 		//now we need to delete outdated html
-		//TODO: not do this for reports, handle global actions & move to separate handler + optimize and test
+		//TODO: not do this for reports
 		const parallelPromises = []
 		const boardNames = Object.keys(threadBounds);
 		const buildBoards = {};
