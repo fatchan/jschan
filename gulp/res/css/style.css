@@ -23,6 +23,7 @@ pre {
 	font-family: inherit;
 	margin: 1em 2em;
 	white-space: pre-wrap;
+	word-break: break-word;
 }
 
 .replies {

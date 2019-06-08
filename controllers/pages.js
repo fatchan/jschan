@@ -18,6 +18,7 @@ const express  = require('express')
 	, board = require(__dirname+'/../models/pages/board.js')
 	, catalog = require(__dirname+'/../models/pages/catalog.js')
 	, banners = require(__dirname+'/../models/pages/banners.js')
+	, captchaPage = require(__dirname+'/../models/pages/captchapage.js')
 	, captcha = require(__dirname+'/../models/pages/captcha.js')
 	, thread = require(__dirname+'/../models/pages/thread.js');
 
@@ -29,6 +30,9 @@ router.get('/login.html', login);
 
 //registration page
 router.get('/register.html', register);
+
+//captcha page
+router.get('/captcha.html', captchaPage);
 
 //change password page
 router.get('/changepassword.html', changePassword);
@@ -42,7 +46,7 @@ router.get('/logout', isLoggedIn, (req, res, next) => {
 
 });
 
-// get captcha
+// get captcha image and cookie
 router.get('/captcha', captcha);
 
 // random board banner

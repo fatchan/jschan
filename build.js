@@ -143,4 +143,8 @@ module.exports = {
 		return render('register.html', 'register.pug');
 	},
 
+	buildCaptcha: () => {
+		return render('captcha.html', 'captcha.pug');
+	},
+
 }

@@ -39,6 +39,7 @@ const express  = require('express')
 	, deleteBanners = require(__dirname+'/../models/forms/deletebanners.js')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
+	, changeBoardSettings = require(__dirname+'/../models/forms/changeboardsettings.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
 	, checkPermsMiddleware = require(__dirname+'/../helpers/haspermsmiddleware.js')
 	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
@@ -196,15 +197,15 @@ router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConve
 	if (!req.body.message && numFiles === 0) {
 		errors.push('Must provide a message or file');
 	}
-	if (!req.body.thread && (res.locals.board.settings.forceOPFile && res.locals.board.settings.maxFiles === 0)) {
+	if (!req.body.thread && (res.locals.board.settings.forceOPFile && res.locals.board.settings.maxFiles !== 0) && numFiles === 0) {
 		errors.push('Threads must include a file');
 	}
 	if (!req.body.thread && res.locals.board.settings.forceOPMessage && (!req.body.message || req.body.message.length === 0)) {
 		errors.push('Threads must include a message');
 	}
 	if (req.body.message) {
-		if (req.body.message.length > 2000) {
-			errors.push('Message must be 2000 characters or less');
+		if (req.body.message.length > 4000) {
+			errors.push('Message must be 4000 characters or less');
 		} else if (req.body.message.length < res.locals.board.settings.minMessageLength) {
 			errors.push(`Message must be at least ${res.locals.board.settings.minMessageLength} characters long`);
 		}
@@ -260,6 +261,9 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 	if (typeof req.body.max_files === 'number' && (req.body.max_files < 1 || req.body.max_files > 3)) {
 		errors.push('Max files must be 1-3');
 	}
+	if (typeof req.body.min_message_length === 'number' && (req.body.min_message_length < 0 || req.body.min_message_length > 4000)) {
+		errors.push('Min message length must be 0-4000. 0 is disabled.');
+	}
 
 	if (errors.length > 0) {
 		return res.status(400).render('message', {
@@ -270,10 +274,7 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 	}
 
 	try {
-		return res.status(501).render('message', {
-			'title': 'Not implemented',
-			'redirect': `/${req.params.board}/manage.html`
-		})
+		await changeBoardSettings(req, res, next);
 	} catch (err) {
 		return next(err);
 	}
@@ -535,6 +536,13 @@ router.post('/global/unban', csrf, checkPermsMiddleware, paramConverter, async(r
 		'messages': messages,
 		'redirect': `/globalmanage.html`
 	});
+
+});
+
+router.post('/newcaptcha', async(req, res, next) => {
+
+	res.clearCookie('captchaid');
+	return res.redirect('/captcha.html');
 
 });
 
