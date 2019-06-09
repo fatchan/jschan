@@ -26,7 +26,7 @@ module.exports = async (req, res, next, posts, board) => {
 			threadPosts = await Posts.getMultipleThreadPosts(board, threadPostIds);
 		} else {
 			//otherwise we fetch posts from threads on different boards separarely
-			//TODO: combine queries from the same board, or ideally construct a large $or query so this can be tackled in a single db query
+			//TODO: use bulkwrite or construct a large $or query so this can be tackled in a single db query
 			await Promise.all(threads.map(async thread => {
 				//for each thread, fetch all posts from the matching board and thread matching the threads postId
 				const currentThreadPosts = await Posts.getThreadPosts(thread.board, thread.postId);
@@ -41,12 +41,6 @@ module.exports = async (req, res, next, posts, board) => {
 	//get all mongoids and delete posts from
 	const postMongoIds = allPosts.map(post => Mongo.ObjectId(post._id))
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
-
-	//get filenames from all the posts
-	let fileNames = [];
-	allPosts.forEach(post => {
-		fileNames = fileNames.concat(post.files.map(x => x.filename))
-	})
 
 	//hooray!
 	return { message:`Deleted ${threads.length} threads and ${deletedPosts-threads.length} posts` };

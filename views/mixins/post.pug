@@ -57,7 +57,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 							.post-file-src
 								a(target='_blank' href=`/img/${file.filename}`)
 									if post.spoiler
-										object.file-thumb(data='/img/spoiler.png' width='128' height='128')
+										img.file-thumb(src='/img/spoiler.png' width='128' height='128')
 									else if file.hasThumb
 										object.file-thumb(data=`/img/thumb-${file.filename.split('.')[0]}.jpg`)
 											img(src='/img/deleted.png')
