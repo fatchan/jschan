@@ -2,7 +2,7 @@ extends ../layout.pug
 include ../mixins/post.pug
 
 block head
-	title /#{board._id}/ - Recent Posts
+	title /#{board._id}/ - #{board.description}
 
 block content
 	include ../includes/boardheader.pug

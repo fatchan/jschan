@@ -1,7 +1,8 @@
 'use strict';
 
-process.on('uncaughtException', console.error);
-process.on('unhandledRejection', console.error);
+process
+	.on('uncaughtException', console.error)
+	.on('unhandledRejection', console.error);
 
 const express = require('express')
 	, session = require('express-session')
@@ -11,6 +12,7 @@ const express = require('express')
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
+	, refererRegex = new RegExp(configs.refererRegex)
 	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {
@@ -46,11 +48,11 @@ const express = require('express')
 		if (req.method !== 'POST') {
 			return next();
 		}
-		if (!req.headers.referer || !req.headers.referer.match(/^https:\/\/(www\.)?fatpeople\.lol/)) {
+		if (!req.headers.referer || !req.headers.referer.match(refererRegex)) {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
 				'message': 'Invalid or missing "Referer" header. Are you posting from the correct URL?'
-			})
+			});
 		}
 		next();
 	})
@@ -58,27 +60,29 @@ const express = require('express')
 	// use pug view engine
 	app.set('view engine', 'pug');
 	app.set('views', path.join(__dirname, 'views/pages'));
-	app.enable('view cache');
+	if (configs.cacheTemplates === true) {
+		app.enable('view cache');
+	}
 
 	// routes
-	app.use('/forms', require(__dirname+'/controllers/forms.js'))
-	app.use('/', require(__dirname+'/controllers/pages.js'))
+	app.use('/forms', require(__dirname+'/controllers/forms.js'));
+	app.use('/', require(__dirname+'/controllers/pages.js'));
 
 	//404 catchall
 	app.get('*', (req, res) => {
-		res.status(404).render('404')
+		res.status(404).render('404');
 	})
 
 	// catch any unhandled errors
 	app.use((err, req, res, next) => {
 		if (err.code === 'EBADCSRFTOKEN') {
-			return res.status(403).send('Invalid CSRF token')
+			return res.status(403).send('Invalid CSRF token');
 		}
-		console.error(err.stack)
+		console.error(err.stack);
 		return res.status(500).render('message', {
 			'title': 'Internal Server Error',
 			'redirect': req.headers.referer || '/'
-		})
+		});
 	})
 
 	// listen
@@ -88,7 +92,7 @@ const express = require('express')
 
 		//let PM2 know that this is ready (for graceful reloads)
 		if (typeof process.send === 'function') { //make sure we are a child process
-			console.info('sending ready signal to PM2')
+			console.info('sending ready signal to PM2');
 			process.send('ready');
 		}
 
@@ -96,20 +100,20 @@ const express = require('express')
 
 	process.on('SIGINT', () => {
 
-		console.info('SIGINT signal received')
+		console.info('SIGINT signal received');
 
 		// Stops the server from accepting new connections and finishes existing connections.
 		server.close((err) => {
 
 			// if error, log and exit with error (1 code)
-			console.info('closing http server')
+			console.info('closing http server');
 			if (err) {
 				console.error(err);
 				process.exit(1);
 			}
 
 			// close database connection
-			console.info('closing db connection')
+			console.info('closing db connection');
 			Mongo.client.close();
 
 			// now close without error

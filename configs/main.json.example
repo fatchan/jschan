@@ -1,5 +1,11 @@
 {
-	"dbURL": "mongodb://",
-	"port": 7777,
-	"sessionSecret": "xxxxx"
+    "dbURL": "mongodb://username:password@localhost:27017",
+    "port": 7000,
+    "sessionSecret": "CHANGE ME",
+	"cacheTemplates": true,
+	"refererRegex": "^https?:\\/\\/(?:www\\.)?DOMAIN\\.TLD\\/",
+	"openGraph": {
+		"siteName": "CHANGE ME",
+		"url": "https://DOMAIN.TLD"
+	}
 }
