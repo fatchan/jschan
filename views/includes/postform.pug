@@ -38,7 +38,7 @@ section.form-wrapper.flex-center
 		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink
 			section.postform-row
 				.postform-label Password
-				input#password(type='password', name='password', autocomplete='off' placeholder='post deletion password' maxlength='50')
+				input#password(type='password', name='password', autocomplete='off' placeholder='password to delete/spoiler/unlink later' maxlength='50')
 		if board.settings.captcha
 			section.postform-row
 				.postform-label Captcha
