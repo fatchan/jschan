@@ -375,10 +375,22 @@ async function boardActionController(req, res, next) {
 	if (!res.locals.actions.anyValid) {
 		errors.push('No actions selected');
 	}
+
 	//check if they have permission to perform the actions
 	res.locals.hasPerms = checkPerms(req, res);
-	if(!res.locals.hasPerms && res.locals.actions.anyAuthed) {
-		errors.push('No permission');
+	if(!res.locals.hasPerms) {
+		if (res.locals.actions.anyAuthed) {
+			errors.push('No permission');
+		}
+		if (req.body.delete && !res.locals.board.settings.userPostDelete) {
+			errors.push('Post deletion is disabled on this board');
+		}
+		if (req.body.spoiler && !res.locals.board.settings.userPostSpoiler) {
+			errors.push('File spoilers are disabled on this board');
+		}
+		if (req.body.unlink_file && !res.locals.board.settings.userPostUnlink) {
+			errors.push('File unlinking disabled on this board');
+		}
 	}
 
 	//check that actions are valid

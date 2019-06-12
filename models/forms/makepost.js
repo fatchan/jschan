@@ -186,6 +186,9 @@ module.exports = async (req, res, next, numFiles) => {
 	let subject = (hasPerms || !forceAnon || !req.body.thread) ? req.body.subject : null;
 	let email = (hasPerms || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
 
+	//spoiler files only if board settings allow
+	const spoiler = res.locals.board.settings.userPostSpoiler && req.body.spoiler ? true : false;
+
 	let name = res.locals.board.settings.defaultName;
 	let tripcode = null;
 	let capcode = null;
@@ -233,8 +236,7 @@ module.exports = async (req, res, next, numFiles) => {
 		'thread': req.body.thread || null,
 		'password': req.body.password || null,
 		email,
-		'salt': !req.body.thread ? salt : null,
-		'spoiler': req.body.spoiler ? true : false,
+		spoiler,
 		'banmessage': null,
 		userId,
 		ip,
@@ -245,13 +247,14 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 
 	if (!req.body.thread) {
-		//if this is a thread, add replies, sticky, sage, lock, etc
+		//if this is a thread, add thread specific properties
 		Object.assign(data, {
 			'replyposts': 0,
 			'replyfiles': 0,
 			'sticky': false,
 			'locked': false,
-			'saged': false
+			'saged': false,
+			'salt': salt
 		});
 	}
 

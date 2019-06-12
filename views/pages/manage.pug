@@ -25,6 +25,18 @@ block content
 				label.postform-style.ph-5
 					input(type='checkbox', name='captcha', value='true' checked=board.settings.captcha)
 			section.postform-row
+				.postform-label Post Deletion
+				label.postform-style.ph-5
+					input(type='checkbox', name='user_post_delete', value='true' checked=board.settings.userPostDelete)
+			section.postform-row
+				.postform-label File Spoilers
+				label.postform-style.ph-5
+					input(type='checkbox', name='user_post_spoiler', value='true' checked=board.settings.userPostSpoiler)
+			section.postform-row
+				.postform-label File Unlinking
+				label.postform-style.ph-5
+					input(type='checkbox', name='user_post_unlink', value='true' checked=board.settings.userPostUnlink)
+			section.postform-row
 				.postform-label Force OP Message
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_op_message', value='true' checked=board.settings.forceOPMessage)

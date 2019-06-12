@@ -40,9 +40,6 @@ module.exports = (req, res) => {
 				anyPasswords++;
 			}
 		}
-		if (anyGlobal && anyAuthed && anyValid) {
-			break;
-		}
 	}
 
 	return { anyGlobal, anyAuthed, anyValid, anyPasswords };

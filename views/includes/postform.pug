@@ -31,12 +31,14 @@ section.form-wrapper.flex-center
 			section.postform-row
 				.postform-label Files
 				input#file(type='file', name='file' multiple)
-				label.postform-style.ph-5.ml-1
-					input#spoiler(type='checkbox', name='spoiler', value='true')
-					| Spoiler
-		section.postform-row
-			.postform-label Password
-			input#password(type='password', name='password', autocomplete='off' placeholder='password for deleting post later' maxlength='50')
+				if board.settings.userPostSpoiler
+					label.postform-style.ph-5.ml-1
+						input#spoiler(type='checkbox', name='spoiler', value='true')
+						| Spoiler
+		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink
+			section.postform-row
+				.postform-label Password
+				input#password(type='password', name='password', autocomplete='off' placeholder='post deletion password' maxlength='50')
 		if board.settings.captcha
 			section.postform-row
 				.postform-label Captcha
