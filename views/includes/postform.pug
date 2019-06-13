@@ -55,4 +55,8 @@ section.form-wrapper.flex-center
 				.postform-col
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
 					input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6' required)
+		if !isThread && (board.settings.forceOPFile || board.settings.forceOPMessage || board.settings.forceOPSubject)
+			small
+				span.required *
+				|  = required field
 		input(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)

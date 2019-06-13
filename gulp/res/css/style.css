@@ -345,7 +345,8 @@ td, th {
 	max-height: 128px;
 }
 
-figure {
+input:invalid, textarea:invalid {
+	box-shadow: none;
 }
 
 input textarea {
@@ -381,7 +382,6 @@ input textarea {
 .board-banner {
 	margin: 10px;
 	max-width: 100%;
-	/*border: 1px solid #a9a9a9;*/
 }
 
 .board-description {
