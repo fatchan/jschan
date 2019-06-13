@@ -9,17 +9,21 @@ block content
 			//input(type='hidden' name='_csrf' value=csrf)
 			section.postform-row
 				.postform-label Username
-				input#username(type='text', name='username', maxlength='50')
+					.required *
+				input#username(type='text', name='username', maxlength='50' required)
 			section.postform-row
 				.postform-label Password
-				input#password(type='password', name='password', maxlength='100')
+					.required *
+				input#password(type='password', name='password', maxlength='100' required)
 			section.postform-row
 				.postform-label Confirm Password
-				input#password(type='password', name='passwordconfirm', maxlength='100')
+					.required *
+				input#password(type='password', name='passwordconfirm', maxlength='100' required)
 			section.postform-row
 				.postform-label Captcha
+					.required *
 				span.postform-col
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
-					input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6')
+					input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6' required)
 			input(type='submit', value='Register')
 		p Already have an account? #[a(href='/login.html') Login]

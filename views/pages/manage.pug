@@ -71,7 +71,8 @@ block content
 			input(type='hidden' name='_csrf' value=csrf)
 			section.postform-row
 				.postform-label Upload
-				input#file(type='file', name='file' multiple)
+					.required *
+				input#file(type='file', name='file' multiple required)
 			input(type='submit', value='submit')
 	hr(size=1)
 	if board.banners.length > 0

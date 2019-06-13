@@ -174,9 +174,13 @@ object {
 	border-style: solid none;
 }
 
-.title {
+.title, .required {
 	color: maroon;
 	font-weight: bold;
+}
+
+.required {
+	margin-left: 5px;
 }
 
 .pinktext {
@@ -546,8 +550,7 @@ input[type="file"] {
 	min-width: 80px;
 	background: #98E;
 	display: flex;
-	justify-content: center;
-	flex-direction: column;
+	align-items: center;
 	font-weight: bold;
 	margin-right: 1px;
 }
