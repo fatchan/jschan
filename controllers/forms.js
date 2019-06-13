@@ -255,7 +255,7 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 
 	const errors = [];
 
-	if (req.body.default_name && req.body.default_name.length < 1 || req.body.default_name.length > 50) {
+	if (req.body.default_name && (req.body.default_name.length < 1 || req.body.default_name.length > 50)) {
 		errors.push('Anon name must be 1-50 characters');
 	}
 	if (typeof req.body.reply_limit === 'number' && (req.body.reply_limit < 1 || req.body.reply_limit > 1000)) {
