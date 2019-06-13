@@ -264,8 +264,8 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 	if (typeof req.body.thread_limit === 'number' && (req.body.thread_limit < 1 || req.body.thread_limit > 250)) {
 		errors.push('Threads Limit must be 1-250');
 	}
-	if (typeof req.body.max_files === 'number' && (req.body.max_files < 1 || req.body.max_files > 3)) {
-		errors.push('Max files must be 1-3');
+	if (typeof req.body.max_files === 'number' && (req.body.max_files < 0 || req.body.max_files > 3)) {
+		errors.push('Max files must be 0-3');
 	}
 	if (typeof req.body.min_message_length === 'number' && (req.body.min_message_length < 0 || req.body.min_message_length > 4000)) {
 		errors.push('Min message length must be 0-4000. 0 is disabled.');
