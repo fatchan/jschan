@@ -181,28 +181,35 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 // make new post
 router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConverter, verifyCaptcha, async (req, res, next) => {
 
-	let numFiles = 0;
 	if (req.files && req.files.file) {
 		if (Array.isArray(req.files.file)) {
-			numFiles = req.files.file.filter(file => file.size > 0).length;
+			res.locals.numFiles = req.files.file.filter(file => file.size > 0).length;
 		} else {
-			numFiles = req.files.file.size > 0 ? 1 : 0;
+			res.locals.numFiles = req.files.file.size > 0 ? 1 : 0;
 			req.files.file = [req.files.file];
 		}
-		numFiles = Math.min(numFiles, res.locals.board.settings.maxFiles)
+		res.locals.numFiles = Math.min(res.locals.numFiles, res.locals.board.settings.maxFiles)
 	}
 
 	const errors = [];
 
-	if (!req.body.message && numFiles === 0) {
+	// even if force file and message are off, the psot must contain one of either.
+	if (!req.body.message && res.locals.numFiles === 0) {
 		errors.push('Must provide a message or file');
 	}
-	if (!req.body.thread && (res.locals.board.settings.forceOPFile && res.locals.board.settings.maxFiles !== 0) && numFiles === 0) {
+
+	// ensure OP has file, subject and message acording to board settings
+	if (!req.body.thread && res.locals.board.settings.forceOPSubject && (!req.body.subject || req.body.subject.length === 0)) {
+		errors.push('Threads must include a subject');
+	}
+	if (!req.body.thread && (res.locals.board.settings.forceOPFile && res.locals.board.settings.maxFiles !== 0) && res.locals.numFiles === 0) {
 		errors.push('Threads must include a file');
 	}
 	if (!req.body.thread && res.locals.board.settings.forceOPMessage && (!req.body.message || req.body.message.length === 0)) {
 		errors.push('Threads must include a message');
 	}
+
+	// make sure, min message length <= message length < max length (4k)
 	if (req.body.message) {
 		if (req.body.message.length > 4000) {
 			errors.push('Message must be 4000 characters or less');
@@ -210,11 +217,10 @@ router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConve
 			errors.push(`Message must be at least ${res.locals.board.settings.minMessageLength} characters long`);
 		}
 	}
+
+	// subject, email, name, password limited length
 	if (req.body.name && req.body.name.length > 50) {
 		errors.push('Name must be 50 characters or less');
-	}
-	if (res.locals.board.settings.forceOPSubject && (!req.body.subject || req.body.subject.length === 0)) {
-		errors.push('Threads must include a subject');
 	}
 	if (req.body.subject && req.body.subject.length > 50) {
 		errors.push('Subject must be 50 characters or less');
@@ -236,7 +242,7 @@ router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConve
 	}
 
 	try {
-		await makePost(req, res, next, numFiles);
+		await makePost(req, res, next);
 	} catch (err) {
 		await deleteTempFiles(req).catch(e => console.error);
 		return next(err);
@@ -284,22 +290,21 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 //upload banners
 router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, checkPermsMiddleware, paramConverter, async (req, res, next) => {
 
-	let numFiles = 0;
 	if (req.files && req.files.file) {
 		if (Array.isArray(req.files.file)) {
-			numFiles = req.files.file.filter(file => file.size > 0).length;
+			res.locals.numFiles = req.files.file.filter(file => file.size > 0).length;
 		} else {
-			numFiles = req.files.file.size > 0 ? 1 : 0;
+			res.locals.numFiles = req.files.file.size > 0 ? 1 : 0;
 			req.files.file = [req.files.file];
 		}
 	}
 
 	const errors = [];
 
-	if (numFiles === 0) {
+	if (res.locals.numFiles === 0) {
 		errors.push('Must provide a file');
 	}
-	if (res.locals.board.banners.length+numFiles > 100) {
+	if (res.locals.board.banners.length+res.locals.numFiles > 100) {
 		errors.push('Number of uploads would exceed 100 banner limit');
 	}
 
@@ -313,7 +318,7 @@ router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, checkP
 	}
 
 	try {
-		await uploadBanners(req, res, next, numFiles);
+		await uploadBanners(req, res, next);
 	} catch (err) {
 		await deleteTempFiles(req).catch(e => console.error);
 		return next(err);

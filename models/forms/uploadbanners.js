@@ -9,12 +9,12 @@ const path = require('path')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, Boards = require(__dirname+'/../../db/boards.js')
 
-module.exports = async (req, res, next, numFiles) => {
+module.exports = async (req, res, next) => {
 
 	const redirect = `/${req.params.board}/manage.html`
 
 	// check all mime types befoer we try saving anything
-	for (let i = 0; i < numFiles; i++) {
+	for (let i = 0; i < res.locals.numFiles; i++) {
 		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false})) {
 			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
@@ -26,7 +26,7 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 
 	const filenames = [];
-	for (let i = 0; i < numFiles; i++) {
+	for (let i = 0; i < res.locals.numFiles; i++) {
 		const file = req.files.file[i];
 		const filename = file.sha256 + path.extname(file.name);
 		file.filename = filename;

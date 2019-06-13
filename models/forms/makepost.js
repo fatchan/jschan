@@ -31,7 +31,7 @@ const path = require('path')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../build.js');
 
-module.exports = async (req, res, next, numFiles) => {
+module.exports = async (req, res, next) => {
 
 	// check if this is responding to an existing thread
 	let redirect = `/${req.params.board}/`
@@ -68,7 +68,7 @@ module.exports = async (req, res, next, numFiles) => {
 			});
 		}
 	}
-	if (numFiles > res.locals.board.settings.maxFiles) {
+	if (res.locals.numFiles > res.locals.board.settings.maxFiles) {
 		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
 			'title': 'Bad request',
@@ -78,9 +78,9 @@ module.exports = async (req, res, next, numFiles) => {
 	}
 	let files = [];
 	// if we got a file
-	if (numFiles > 0) {
+	if (res.locals.numFiles > 0) {
 		// check all mime types befoer we try saving anything
-		for (let i = 0; i < numFiles; i++) {
+		for (let i = 0; i < res.locals.numFiles; i++) {
 			if (!fileCheckMimeType(req.files.file[i].mimetype, {animatedImage: true, image: true, video: true})) {
 				await deleteTempFiles(req).catch(e => console.error);
 				return res.status(400).render('message', {
@@ -91,7 +91,7 @@ module.exports = async (req, res, next, numFiles) => {
 			}
 		}
 		// then upload, thumb, get metadata, etc.
-		for (let i = 0; i < numFiles; i++) {
+		for (let i = 0; i < res.locals.numFiles; i++) {
 			const file = req.files.file[i];
 			const filename = file.sha256 + path.extname(file.name);
 			file.filename = filename; //for error to delete failed files
