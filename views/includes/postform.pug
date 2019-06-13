@@ -34,7 +34,7 @@ section.form-wrapper.flex-center
 				if !isThread && board.settings.forceOPMessage
 					.required *
 			textarea(name='message', rows='5', autocomplete='off' maxlength='4000' required=!isThread && board.settings.forceOPMessage)
-		if board.settings.maxFiles !== 0
+		if board.settings.maxFiles > 0
 			section.postform-row
 				.postform-label Files
 					if !isThread && board.settings.forceOPFile
@@ -55,7 +55,7 @@ section.form-wrapper.flex-center
 				.postform-col
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
 					input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6' required)
-		if !isThread && (board.settings.forceOPFile || board.settings.forceOPMessage || board.settings.forceOPSubject)
+		if !isThread && ((board.settings.forceOPFile && board.settings.maxFiles > 0) || board.settings.forceOPMessage || board.settings.forceOPSubject)
 			small
 				span.required *
 				|  = required field
