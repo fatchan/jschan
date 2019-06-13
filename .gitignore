@@ -4,5 +4,6 @@ static/img/*
 static/captcha/*
 static/banner/*
 static/html/*
+static/css/*
 gulp/dist/
 tmp/
