@@ -2,7 +2,7 @@
 
 const remove = require('fs-extra').remove;
 
-module.exports = (req) => {
+module.exports = async (req) => {
 
 	if (req.files != null) {
 		let files = [];

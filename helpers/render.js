@@ -8,6 +8,6 @@ const configs = require(__dirname+'/../configs/main.json')
 	, templateDirectory = path.join(__dirname+'/../views/pages/');
 
 module.exports = async (htmlName, templateName, options) => {
-	const html = pug.renderFile(`${templateDirectory}${templateName}`, { ...options, cache: configs.cacheTemplates, openGraph: configs.openGraph });
+	const html = pug.renderFile(`${templateDirectory}${templateName}`, { ...options, renderStart: Date.now(), cache: configs.cacheTemplates, openGraph: configs.openGraph });
 	return outputFile(`${uploadDirectory}html/${htmlName}`, html);
 };
