@@ -93,8 +93,8 @@ module.exports = async (req, res, next) => {
 		// then upload, thumb, get metadata, etc.
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			const file = req.files.file[i];
-			const filename = file.sha256 + path.extname(file.name);
-			file.filename = filename; //for error to delete failed files
+			const extension = path.extname(file.name);
+			const filename = file.sha256 + extension;
 
 			//get metadata
 			let processedFile = {

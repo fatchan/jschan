@@ -9,13 +9,13 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 			|	
 			if !post.thread
 				if post.sticky
-					img(src='/img/sticky.svg' height='12')
+					img(src='/img/sticky.svg' height='12' title='Stickied')
 					| 
 				if post.saged
-					img(src='/img/saged.svg' height='12')
+					img(src='/img/saged.svg' height='12' title='Permasaged')
 					| 
 				if post.locked
-					img(src='/img/locked.svg' height='12')
+					img(src='/img/locked.svg' height='12' title='Locked')
 					| 
 			if post.subject
 				span.post-subject #{post.subject}
