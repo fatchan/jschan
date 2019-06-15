@@ -17,8 +17,14 @@ const express = require('express')
 
 (async () => {
 
+	console.log('Starting in mode:', process.env.NODE_ENV);
+
 	// let db connect
+	console.log('connecting to db');
 	await Mongo.connect();
+
+	// disable useless express header
+	app.disable('x-powered-by');
 
 	// parse forms
 	app.use(bodyParser.urlencoded({extended: true}));
