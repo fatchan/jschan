@@ -131,6 +131,14 @@ module.exports = async (req, res, next) => {
 					//video metadata
 					const videoData = await videoIdentify(req.files.file[i].tempFilePath, null, true);
 					videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
+					if (videoData.streams.length <= 0) {
+						await deleteTempFiles(req).catch(e => console.error);
+						return res.status(400).render('message', {
+							'title': 'Bad request',
+							'message': 'Audio only file not supported (yet)',
+							'redirect': redirect
+						});
+					}
 					processedFile.duration = videoData.format.duration;
 					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
 					processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
