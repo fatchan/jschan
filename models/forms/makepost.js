@@ -291,7 +291,7 @@ module.exports = async (req, res, next) => {
 		for (let i = 0; i < prunedThreads.length; i++) {
 			parallelPromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
 		}
-		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, 10));
+		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, Math.ceil(res.locals.board.settings.threadLimit/10)));
 	}
 
 	//always rebuild catalog for post counts and ordering

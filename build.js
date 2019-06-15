@@ -5,7 +5,6 @@ const Posts = require(__dirname+'/db/posts.js')
 	, uploadDirectory = require(__dirname+'/helpers/uploadDirectory.js')
 	, render = require(__dirname+'/helpers/render.js');
 
-
 function addBacklinks(thread, preview) { //preview means this is not the full thread
 	const postMap = new Map()
 	postMap.set(thread.postId, thread)
@@ -38,7 +37,7 @@ function addBacklinks(thread, preview) { //preview means this is not the full th
 module.exports = {
 
 	buildCatalog: async (board) => {
-//console.log('building catalog', `${board._id}/catalog.html`);
+console.log('building catalog', `${board._id}/catalog.html`);
 		if (!board._id) {
 			board = await Boards.findOne(board);
 		}
@@ -50,7 +49,7 @@ module.exports = {
 	},
 
 	buildThread: async (threadId, board) => {
-//console.log('building thread', `${board._id || board}/thread/${threadId}.html`);
+console.log('building thread', `${board._id || board}/thread/${threadId}.html`);
 		if (!board._id) {
 			board = await Boards.findOne(board);
 		}
@@ -68,10 +67,10 @@ module.exports = {
 	},
 
 	buildBoard: async (board, page, maxPage=null) => {
-//console.log('building board page', `${board._id}/${page === 1 ? 'index' : page}.html`);
+console.log('building board page', `${board._id}/${page === 1 ? 'index' : page}.html`);
 		const threads = await Posts.getRecent(board._id, page);
 		if (!maxPage) {
-			maxPage = Math.ceil((await Posts.getPages(board._id)) / 10);
+			maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
 		}
 
 		for (let k = 0; k < threads.length; k++) {
@@ -88,8 +87,8 @@ module.exports = {
 	},
 
 	//building multiple pages (for rebuilds)
-	buildBoardMultiple: async (board, startpage=1, endpage=10) => {
-		const maxPage = Math.ceil((await Posts.getPages(board._id)) / 10);
+	buildBoardMultiple: async (board, startpage=1, endpage) => {
+		const maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
 		if (endpage === 0) {
 			//deleted only/all posts, so only 1 page will remain
 			endpage = 1;
@@ -98,8 +97,7 @@ module.exports = {
 			endpage = maxPage
 		}
 		const difference = endpage-startpage + 1; //+1 because for single pagemust be > 0
-		const threads = await Posts.getRecent(board._id, startpage, difference*10);
-
+		const threads = await Posts.getRecent(board._id, startpage, difference*Math.ceil(board.settings.threadLimit/10));
 		for (let k = 0; k < threads.length; k++) {
 			const thread = threads[k];
 			addBacklinks(thread, true);
@@ -107,7 +105,7 @@ module.exports = {
 
 		const buildArray = [];
 		for (let i = startpage; i <= endpage; i++) {
-//console.log('multi building board page', `${board._id}/${i === 1 ? 'index' : i}.html`);
+console.log('multi building board page', `${board._id}/${i === 1 ? 'index' : i}.html`);
 			let spliceStart = (i-1)*10;
 			if (spliceStart > 0) {
 				spliceStart = spliceStart - 1;

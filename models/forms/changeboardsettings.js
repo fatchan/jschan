@@ -1,6 +1,10 @@
 'use strict';
 
 const Boards = require(__dirname+'/../../db/boards.js')
+	, Posts = require(__dirname+'/../../db/posts.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
+	, { buildCatalog, buildBoardMultiple } = require(__dirname+'/../../build.js')
+	, remove = require('fs-extra').remove
 
 module.exports = async (req, res, next) => {
 
@@ -30,12 +34,43 @@ module.exports = async (req, res, next) => {
 		}
 	});
 
-	//should i rebuild any pages here since the post form might change? probably not. at most board pages.
+	//update this in locals incase is used in later parts
+	res.locals.board.settings = newSettings;
 
-    return res.render('message', {
-        'title': 'Success',
-        'message': 'Updated settings.',
-        'redirect': `/${req.params.board}/manage.html`
-    });
+	//do rebuilding and pruning if max number of pages is changed and any threads are pruned
+	const oldMaxPage = Math.ceil(oldSettings.threadLimit/10);
+	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
+	if (newMaxPage < oldMaxPage) {
+		//prune old threads
+		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		if (prunedThreads.length > 0) {
+			const promises = [];
+			//remove pruned threads html also
+			for (let i = 0; i < prunedThreads.length; i++) {
+				promises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
+			}
+			//remove board page html for pages > newMaxPage
+			for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
+				promises.push(remove(`${uploadDirectory}html/${req.params.board}/${i}.html`));
+			}
+			//rebuild valid board pages for page numbers to be <= newMaxPage
+			promises.push(buildBoardMultiple(res.locals.board, 1, newMaxPage));
+			//rebuild catalog since some threads were pruned
+			promises.push(buildCatalog(res.locals.board));
+			await Promise.all(promises);
+		}
+	}
+
+	/*
+		TODO: delete all board html when breaking change is made (captcha is enabled, specifically)
+		not a complete rebuild because we could not rebuild the page for every thread.
+		just leave them to build on load. maybe rebuild index pages only as a smart compromise
+	*/
+
+	return res.render('message', {
+		'title': 'Success',
+		'message': 'Updated settings.',
+		'redirect': `/${req.params.board}/manage.html`
+	});
 
 }
