@@ -394,7 +394,7 @@ async function boardActionController(req, res, next) {
 			errors.push('File spoilers are disabled on this board');
 		}
 		if (req.body.unlink_file && !res.locals.board.settings.userPostUnlink) {
-			errors.push('File unlinking disabled on this board');
+			errors.push('File unlinking is disabled on this board');
 		}
 	}
 

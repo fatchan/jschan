@@ -346,7 +346,7 @@ module.exports = {
 		}).skip(threadLimit).toArray();
 		//if there are any
 		if (threads.length === 0) {
-			return [];
+			return threads;
 		}
 		//get the postIds
 		const threadIds = threads.map(thread => thread.postId);
