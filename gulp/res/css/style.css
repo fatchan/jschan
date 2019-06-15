@@ -284,7 +284,6 @@ td, th {
 	display: flex;
 	flex-direction: column;
 	max-width: 100%;
-	width: 400px;
 }
 
 .togglable {
@@ -497,8 +496,8 @@ input[type="file"] {
 
 #postform {
 	display: none;
-	width: 400px;
 	max-width: calc(100% - 10px);
+	max-height: calc(100% - 50px);
 	position: fixed;
 	top: 45px;
 	right: 5px;
