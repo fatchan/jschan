@@ -1,21 +1,18 @@
 details.toggle-label
 	summary.toggle-summary Show Post Actions
 	.actions 
-		h4.no-m-p User Actions:
-		if board.settings.userPostDelete
-			label
-				input.post-check(type='checkbox', name='delete' value=1)
-				| Delete Posts
-		if board.settings.userPostUnlink
-			label
-				input.post-check(type='checkbox', name='unlink_file' value=1)
-				| Unlink Files
-		if board.settings.userPostSpoiler
-			label
-				input.post-check(type='checkbox', name='spoiler' value=1)
-				| Spoiler Files
-			label
-				input#password(type='text', name='password', placeholder='post password' autocomplete='off')
+		h4.no-m-p Actions:
+		label
+			input.post-check(type='checkbox', name='delete' value=1)
+			| Delete Posts
+		label
+			input.post-check(type='checkbox', name='unlink_file' value=1)
+			| Unlink Files
+		label
+			input.post-check(type='checkbox', name='spoiler' value=1)
+			| Spoiler Files
+		label
+			input#password(type='text', name='password', placeholder='post password' autocomplete='off')
 		label
 			input.post-check(type='checkbox', name='report' value=1)
 			| Report
