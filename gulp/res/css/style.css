@@ -1,3 +1,7 @@
+html {
+	scroll-behavior: smooth;
+}
+
 body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
@@ -321,6 +325,10 @@ td, th {
 	flex-direction: column;
 	margin: 0 4px;
 	padding: 2px 0;
+}
+
+.post-file-info:hover {
+	word-break: break-all;
 }
 
 .post-file-info {

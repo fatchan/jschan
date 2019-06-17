@@ -104,8 +104,8 @@ console.log('building board page', `${board._id}/${page === 1 ? 'index' : page}.
 		}
 
 		const buildArray = [];
+console.log('multi building board pages', `${board._id}/ ${startpage === 1 ? 'index' : startpage} -> ${endpage === 1 ? 'index' : endpage} .html`);
 		for (let i = startpage; i <= endpage; i++) {
-console.log('multi building board page', `${board._id}/${i === 1 ? 'index' : i}.html`);
 			let spliceStart = (i-1)*10;
 			if (spliceStart > 0) {
 				spliceStart = spliceStart - 1;
@@ -131,10 +131,6 @@ console.log('multi building board page', `${board._id}/${i === 1 ? 'index' : i}.
 
 	buildChangePassword: () => {
 		return render('changepassword.html', 'changepassword.pug');
-	},
-
-	buildLogin: () => {
-		return render('login.html', 'login.pug');
 	},
 
 	buildRegister: () => {
