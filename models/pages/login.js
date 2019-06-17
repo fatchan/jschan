@@ -5,12 +5,8 @@ const { buildLogin } = require(__dirname+'/../../build.js')
 
 module.exports = async (req, res, next) => {
 
-	try {
-		await buildLogin();
-	} catch (err) {
-		return next(err);
-	}
-
-	return res.sendFile(`${uploadDirectory}html/login.html`);
+    res.render('login', {
+		'goto': req.query.goto
+    });
 
 }

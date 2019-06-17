@@ -38,7 +38,7 @@ router.get('/captcha.html', captchaPage);
 router.get('/changepassword.html', changePassword);
 
 //logout
-router.get('/logout', isLoggedIn, (req, res, next) => {
+router.get('/logout', (req, res, next) => {
 
 	//remove session
 	req.session.destroy();

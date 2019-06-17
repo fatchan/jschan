@@ -4,5 +4,6 @@ module.exports = (req, res, next) => {
 	if (req.session.authenticated === true) {
 		return next();
 	}
-	res.redirect('/login.html');
+	const board = req.params ? req.params.board : null;
+	res.redirect(`/login.html${board ? '?goto=/'+board+'/manage.html' : ''}`);
 }

@@ -9,29 +9,29 @@ const express  = require('express')
 	, upload = require('express-fileupload')
 	, path = require('path')
 	, postFiles = upload({
-        createParentPath: true,
-        safeFileNames: /[^\w-]+/g,
-        preserveExtension: 4,
-        limits: {
-            fileSize: 10 * 1024 * 1024,
-            files: 3
-        },
-        abortOnLimit: true,
-        useTempFiles: true,
-        tempFileDir: path.join(__dirname+'/../tmp/')
-    })
+		createParentPath: true,
+		safeFileNames: /[^\w-]+/g,
+		preserveExtension: 4,
+		limits: {
+			fileSize: 10 * 1024 * 1024,
+			files: 3
+		},
+		abortOnLimit: true,
+		useTempFiles: true,
+		tempFileDir: path.join(__dirname+'/../tmp/')
+	})
 	, bannerFiles = upload({
-        createParentPath: true,
-        safeFileNames: /[^\w-]+/g,
-        preserveExtension: 4,
-        limits: {
-            fileSize: 10 * 1024 * 1024,
-            files: 10
-        },
-        abortOnLimit: true,
-        useTempFiles: true,
-        tempFileDir: path.join(__dirname+'/../tmp/')
-    })
+		createParentPath: true,
+		safeFileNames: /[^\w-]+/g,
+		preserveExtension: 4,
+		limits: {
+			fileSize: 10 * 1024 * 1024,
+			files: 10
+		},
+		abortOnLimit: true,
+		useTempFiles: true,
+		tempFileDir: path.join(__dirname+'/../tmp/')
+	})
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/makepost.js')
 	, deleteTempFiles = require(__dirname+'/../helpers/files/deletetempfiles.js')
@@ -52,7 +52,7 @@ const express  = require('express')
 
 
 // login to account
-router.post('/login', (req, res, next) => {
+router.post('/login', async (req, res, next) => {
 
 	const errors = [];
 
@@ -80,7 +80,11 @@ router.post('/login', (req, res, next) => {
 		})
 	}
 
-	loginAccount(req, res, next);
+	try {
+		await loginAccount(req, res, next);
+	} catch (err) {
+		return next(err);
+	}
 
 });
 
@@ -235,10 +239,10 @@ router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConve
 	if (errors.length > 0) {
 		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
-	        'title': 'Bad request',
-            'errors': errors,
-            'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
-        });
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
+		});
 	}
 
 	try {

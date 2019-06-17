@@ -47,7 +47,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 					each file in post.files
 						.post-file
 							span.post-file-info
-								span: a(href='/img/'+file.filename title=file.originalFilename download=file.originalFilename) #{post.spoiler ? 'Spoiler File' : file.originalFilename}
+								span: a(href='/img/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler ? 'Spoiler File' : file.originalFilename}
 								br
 								span 
 									| (#{file.sizeString}, #{file.geometryString}
