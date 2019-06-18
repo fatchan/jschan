@@ -4,9 +4,9 @@ include ../mixins/post.pug
 block head
 	title /#{board._id}/ - #{thread.subject||thread.postId}
 	meta(property='og:site_name', value=openGraph.siteName)
-	meta(property='og:title', content=thread.subjct)
+	meta(property='og:title', content=thread.subject)
 	meta(property='og:url', content=openGraph.url)
-	meta(property='og:description', content=thread.message.substring(0,200))
+	meta(property='og:description', content=thread.message)
 	if thread.files.length > 0
 		if thread.spoiler
 			meta(property='og:image', content='/img/spoiler.png')
@@ -20,9 +20,8 @@ block content
 	br
 	include ../includes/postform.pug
 	br
+	include ../includes/stickynav.pug
 	nav.pages#top
-		a(href='#bottom') [Bottom]
-		| 
 		a(href=`/${board._id}/index.html`) [Return]
 		| 
 		a(href=`/${board._id}/catalog.html`) [Catalog]
@@ -34,8 +33,6 @@ block content
 				+post(post)
 		hr(size=1)
 		nav.pages#bottom
-			a(href='#top') [Top]
-			| 
 			a(href=`/${board._id}/index.html`) [Return]
 			| 
 			a(href=`/${board._id}/catalog.html`) [Catalog]		

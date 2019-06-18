@@ -9,10 +9,9 @@ block content
 	br
 	include ../includes/postform.pug
 	br
+	include ../includes/stickynav.pug
 	nav.pages#top 
 		include ../includes/pages.pug
-		a(href='#bottom') [Bottom]
-		| 
 		a(href=`/${board._id}/catalog.html`) [Catalog]
 		|
 	hr(size=1)
@@ -28,8 +27,6 @@ block content
 			hr(size=1)
 		nav.pages#bottom
 			include ../includes/pages.pug
-			a(href='#top') [Top]
-			| 
 			a(href=`/${board._id}/catalog.html`) [Catalog]
 		br
 		include ../includes/actionfooter.pug

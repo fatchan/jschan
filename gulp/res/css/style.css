@@ -84,7 +84,7 @@ a, a:visited {
 	color: #34345C;
 }
 
-.pages a {
+.pages a, .stickynav a {
 	text-decoration: none;
 }
 
@@ -232,7 +232,15 @@ td, th {
 	align-items: center;
 }
 
-.post-container, .pages, .toggle-summary, .catalog-tile {
+.stickynav {
+	bottom: 5px;
+	right: 5px;
+	position: fixed;
+	z-index: 1;
+	padding: 5px;
+}
+
+.post-container, .stickynav, .pages, .toggle-summary, .catalog-tile {
 	background: #D6DAF0;
 	border: 1px solid #B7C5D9;
 }
