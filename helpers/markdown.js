@@ -6,7 +6,7 @@ const Posts = require(__dirname+'/../db/posts.js')
 	, boldRegex = /""(.+)""/gm
 	, titleRegex = /==(.+)==/gm
 	, italicRegex = /__(.+)__/gm
-	, linkRegex = /https?\:\/\/[^\s]+/g
+	, linkRegex = /https?\:\/\/[^\s<>\[\]{}|\\^]+/g
 	, spoilerRegex = /\|\|(.+)\|\|/gm
 	, detectedRegex = /(\(\(\(.+\)\)\))/gm
 	, codeRegex = /^```\s([\s\S]+)\s```/gm;

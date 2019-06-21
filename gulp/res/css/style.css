@@ -141,14 +141,16 @@ object {
 }
 
 .spoiler {
-	color: transparent;
-	text-shadow: 0 0 5px rgba(0,0,0,1);
-	transition: color 0.2s, text-shadow 0.2s;
+	background: black;
+	color: black;
 }
 
 .spoiler:hover {
+	color: white;
+}
+
+.spoiler:not(:hover) * {
 	color: black;
-	text-shadow: none;
 }
 
 .mode {
@@ -196,7 +198,7 @@ object {
 }
 
 pre a, a:hover {
-	color: #d00!important;
+	color: #d00;
 }
 
 .thread, .action-wrapper, .form-wrapper, .table-container {
@@ -306,6 +308,7 @@ td, th {
 	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
 	color: white;
 	padding: 0px 2px;
+	border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .post-check {
@@ -316,7 +319,7 @@ td, th {
 
 .post-files {
 	float: left;
-	margin-right: 10px;
+	margin: 5px 10px 0 0;
 	display: flex;
 	flex-flow: row wrap;
 	align-items: start;
@@ -444,12 +447,9 @@ input textarea {
 	font-weight: bold;
 }
 
-.post-container.op .post-info, .catalog-tile-content .post-info {
-	background: none;
-}
-
-
 .post-info {
+	background-color: #00000010;
+	border-bottom: 1px solid #00000010;
 	margin: -5px;
 	padding: 5px;
 	padding-left: 3px;
@@ -458,6 +458,11 @@ input textarea {
 .post-info * {
 	margin-bottom: 0;
 	margin-top: -2px;
+}
+
+.post-container.op .post-info, .catalog-tile .post-info {
+	background: none;
+	border: none;
 }
 
 .nav-item {
@@ -604,6 +609,7 @@ hr {
 	}
 
 	.post-container {
+		box-shadow: none;
 		width: 100%;
 	}
 
