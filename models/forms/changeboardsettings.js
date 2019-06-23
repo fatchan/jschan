@@ -37,6 +37,9 @@ module.exports = async (req, res, next) => {
 	//update this in locals incase is used in later parts
 	res.locals.board.settings = newSettings;
 
+	//array of promises we might need
+	const promises = [];
+
 	//do rebuilding and pruning if max number of pages is changed and any threads are pruned
 	const oldMaxPage = Math.ceil(oldSettings.threadLimit/10);
 	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
@@ -44,7 +47,6 @@ module.exports = async (req, res, next) => {
 		//prune old threads
 		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
 		if (prunedThreads.length > 0) {
-			const promises = [];
 			//remove pruned threads html also
 			for (let i = 0; i < prunedThreads.length; i++) {
 				promises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
@@ -57,15 +59,23 @@ module.exports = async (req, res, next) => {
 			promises.push(buildBoardMultiple(res.locals.board, 1, newMaxPage));
 			//rebuild catalog since some threads were pruned
 			promises.push(buildCatalog(res.locals.board));
-			await Promise.all(promises);
 		}
 	}
 
-	/*
-		TODO: delete all board html when breaking change is made (captcha is enabled, specifically)
-		not a complete rebuild because we could not rebuild the page for every thread.
-		just leave them to build on load. maybe rebuild index pages only as a smart compromise
-	*/
+	if (oldSettings.captcha !== newSettings.captcha) {
+		/*
+			&& newSettings.captcha === true
+			should it only delete all pages if enabling captcha, since the check is skipped if disabled?
+			or in both cases so that users dont enter a captcha that doesnt apply. i think in both is nicer
+			captcha shouldnt be toggled too often, because this could be expensive for popular boards
+			could also rebuild index pages here if wanted
+		*/
+		promises.push(remove(`${uploadDirectory}html/${req.params.board}/`));
+	}
+
+	if (promises.length > 0) {
+		await Promise.all(promises);
+	}
 
 	return res.render('message', {
 		'title': 'Success',
