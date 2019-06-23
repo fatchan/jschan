@@ -21,10 +21,11 @@ block content
 	include ../includes/postform.pug
 	br
 	include ../includes/stickynav.pug
-	nav.pages#top
-		a(href=`/${board._id}/index.html`) [Return]
-		| 
-		a(href=`/${board._id}/catalog.html`) [Catalog]
+	.pad-anchor#top
+		nav.pages
+			a(href=`/${board._id}/index.html`) [Return]
+			| 
+			a(href=`/${board._id}/catalog.html`) [Catalog]
 	hr(size=1)
 	form(action=`/forms/board/${board._id}/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		section.thread

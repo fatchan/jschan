@@ -414,14 +414,20 @@ input textarea {
 
 .post-container, .ban {
 	box-sizing: border-box;
-	margin: 2px 0;
 	padding: 5px;
 	max-width: 100%;
+	margin-bottom: -10px;
 }
 
-.post-container:target {
+.pad-anchor:target .post-container {
 	background-color: #d6bad0 !important;
 	border: 1px solid #ba9dbf !important;
+}
+
+.pad-anchor:before {
+	content: "";
+	display: block;
+	height: 15px;
 }
 
 .post-container.op {
@@ -607,6 +613,10 @@ hr {
 
 	.pages {
 		width:100%;
+	}
+
+	.pad-anchor {
+		width: 100%;
 	}
 
 	.post-container {
