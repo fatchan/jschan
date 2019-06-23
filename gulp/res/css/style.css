@@ -151,6 +151,7 @@ object {
 
 .spoiler:not(:hover) * {
 	color: black;
+	background: black!important; /*for detected coloring*/
 }
 
 .mode {
@@ -197,7 +198,7 @@ object {
 	color: green;
 }
 
-pre a, a:hover {
+pre a, pre a:visited, a:hover {
 	color: #d00;
 }
 
