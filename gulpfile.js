@@ -13,38 +13,33 @@ const paths = {
 	images: {
 		src: 'gulp/res/img/*',
 		dest: 'static/img/'
-	},
-	scripts: {
-		src: 'gulp/res/js/*.js',
-		dest: 'static/js/'
 	}
 };
 
 function clean() {
-	return del([ 'dist' ]);
+	return del([ 'static/html/*' ]);
 }
 
-function styles() {
+//update the css file
+function css() {
 	return gulp.src(paths.styles.src)
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(paths.styles.dest));
 }
 
-function scripts() {
-	return gulp.src(paths.scripts.src)
-		.pipe(uglify())
-		.pipe(gulp.dest(paths.scripts.dest));
+//favicon, spoiler image, default banner, spoiler/sticky/sage icons
+function images() {
+	return gulp.src(paths.images.src)
+		.pipe(gulp.dest(paths.images.dest));
 }
 
-function images() { //basically the favicon and spoiler image
-  return gulp.src(paths.images.src)
-    .pipe(gulp.dest(paths.images.dest));
-}
+const build = gulp.parallel(css, images);
 
-
-const build = gulp.parallel(styles, scripts, images);
-
-module.exports.clean = clean;
-module.exports.default = build;
+module.exports = {
+	clean,
+	css,
+	images,
+	default: build
+};
 
