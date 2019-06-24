@@ -241,8 +241,8 @@ module.exports = async (req, res, next) => {
 			}
 
 			//get only posts (so we can use them for thread ids
-			const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
 			if (aggregateNeeded) {
+				const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
 				//recalculate replies and image counts
 				await Promise.all(selectedPosts.map(async (post) => {
 					const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
@@ -311,13 +311,18 @@ module.exports = async (req, res, next) => {
 					const boardName = boardNames[i];
 					const bounds = threadBounds[boardName];
 					//always need to refresh catalog
-					parallelPromises.push(buildCatalog(buildBoards[boardName]));
+					/*
+						TODO: not rebuild catalog when a building action occurs that only affects thread posts
+						e.g. spoiler a post images that isnt an OP. This wont affect the catalog at all since
+						reply and image counts dont change, and the OP isnt changed in the catalog tile.
+					*/
 					//rebuild impacted threads
 					for (let j = 0; j < boardThreadMap[boardName].length; j++) {
 						parallelPromises.push(buildThread(boardThreadMap[boardName][j], buildBoards[boardName]));
 					}
 					//refersh any pages affected
 					const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
+					let catalogRebuild = true;
 					if (beforePages[boardName] && beforePages[boardName] !== afterPages) {
 						//amount of pages changed, rebuild all pages
 						parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, afterPages));
@@ -335,13 +340,19 @@ module.exports = async (req, res, next) => {
 						} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
 							//rebuild current and newer pages
 							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, threadPageOldest));
-						} else if (req.body.lock || req.body.sage || req.body.spoiler || req.body.ban || req.body.global_ban || req.body.unlink_file) {
-							//rebuild inbewteen pages for things that dont cause page/thread movement
-							//should rebuild only affected pages, but finding the page of all affected
-							//threads could end up being slower/more resource intensive. this is simpler.
-							//it avoids rebuilding _some_ but not all pages unnecessarily
+						} else if (req.body.lock || req.body.sage || req.body.unlink_file) {
 							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
+						} else if (req.body.spoiler || req.body.ban || req.body.global_ban) {
+							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
+							if (!boardThreadMap[boardName].selectedThreads) {
+								catalogRebuild = false;
+								//these actions dont affect the catalog tile since not on an OP and dont change reply/image counts
+							}
 						}
+					}
+					if (catalogRebuild) {
+						//the actions will affect the catalog, so we better rebuild it
+						parallelPromises.push(buildCatalog(buildBoards[boardName]));
 					}
 				}
 				await Promise.all(parallelPromises);

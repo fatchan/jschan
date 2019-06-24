@@ -14,8 +14,8 @@ const actions = [
 	{name:'delete_ip_global', global:true, auth:true, passwords:false, build:true},
 	{name:'dismiss', global:false, auth:true, passwords:false, build:false},
 	{name:'global_dismiss', global:true, auth:true, passwords:false, build:false},
-	{name:'ban', global:false, auth:true, passwords:false, build:false},
-	{name:'global_ban', global:true, auth:true, passwords:false, build:false},
+	{name:'ban', global:false, auth:true, passwords:false, build:true},
+	{name:'global_ban', global:true, auth:true, passwords:false, build:true},
 ];
 
 module.exports = (req, res) => {
