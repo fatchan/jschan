@@ -1,29 +1,16 @@
 'use strict';
 
-const Boards = require(__dirname+'/../../db/boards.js');
+const { buildBanners } = require(__dirname+'/../../build.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 
-	if (!req.query.board) {
-		return next();
-	}
+    try {
+		await buildBanners(res.locals.board);
+    } catch (err) {
+        return next(err);
+    }
 
-	//agregate to get single random item from banners array
-	const board = await Boards.db.aggregate([
-		{
-			'$unwind': '$banners'
-		},
-		{
-			'$sample': {
-				'size' : 1
-			}
-		}
-	]).toArray().then(res => res[0]);
-
-	if (board && board.banners != null) {
-		return res.redirect(`/banner/${req.query.board}/${board.banners}`);
-	}
-
-	return res.redirect('/img/defaultbanner.png');
+	return res.sendFile(`${uploadDirectory}html/${req.params.board}/banners.html`);
 
 }

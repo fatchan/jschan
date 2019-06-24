@@ -36,6 +36,13 @@ function addBacklinks(thread, preview) { //preview means this is not the full th
 
 module.exports = {
 
+	buildBanners: async(board) => {
+console.log('building banners', `${board._id}/banners.html`);
+		return render(`${board._id}/banners.html`, 'banners.pug', {
+			board: board
+		});
+	},
+
 	buildCatalog: async (board) => {
 console.log('building catalog', `${board._id}/catalog.html`);
 		if (!board._id) {

@@ -18,6 +18,7 @@ const express  = require('express')
 	, board = require(__dirname+'/../models/pages/board.js')
 	, catalog = require(__dirname+'/../models/pages/catalog.js')
 	, banners = require(__dirname+'/../models/pages/banners.js')
+	, randombanner = require(__dirname+'/../models/pages/randombanner.js')
 	, captchaPage = require(__dirname+'/../models/pages/captchapage.js')
 	, captcha = require(__dirname+'/../models/pages/captcha.js')
 	, thread = require(__dirname+'/../models/pages/thread.js');
@@ -50,12 +51,15 @@ router.get('/logout', (req, res, next) => {
 router.get('/captcha', captcha);
 
 // random board banner
-router.get('/banners', banners);
+router.get('/randombanner', randombanner);
+
+//public board banners page
+router.get('/:board/banners.html', Boards.exists, banners);
 
 //board manage page
 router.get('/:board/manage.html', Boards.exists, isLoggedIn, hasPerms, csrf, manage);
 
-//board manage page
+//global manage page
 router.get('/globalmanage.html', isLoggedIn, hasPerms, csrf, globalManage);
 
 // board page/recents

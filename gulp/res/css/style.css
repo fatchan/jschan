@@ -23,11 +23,15 @@ body {
 	flex-direction: column;
 }
 
+.bold {
+	font-weight: bold;
+}
+
 pre {
 	font-family: inherit;
 	margin: 1em 2em;
 	white-space: pre-wrap;
-	word-break: break-word;
+	overflow-wrap: break-word;
 }
 
 .replies {

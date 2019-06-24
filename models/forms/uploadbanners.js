@@ -8,12 +8,13 @@ const path = require('path')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, Boards = require(__dirname+'/../../db/boards.js')
+	, { buildBanners } = require(__dirname+'/../../build.js')
 
 module.exports = async (req, res, next) => {
 
 	const redirect = `/${req.params.board}/manage.html`
 
-	// check all mime types befoer we try saving anything
+	// check all mime types before we try saving anything
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false})) {
 			await deleteTempFiles(req).catch(e => console.error);
@@ -69,10 +70,17 @@ module.exports = async (req, res, next) => {
 		await remove(file.tempFilePath);
 
 	}
-	// because express middleware is autistic i need to do this
+
 	deleteTempFiles(req).catch(e => console.error);
 
+	// add banners to the db
 	await Boards.addBanners(req.params.board, filenames);
+
+	//add banners to board in memory
+	res.locals.board.banners = res.locals.board.banners.concat(filenames);
+
+	// rebuild the public banners page
+	await buildBanners(res.locals.board);
 
 	return res.render('message', {
 		'title': 'Success',

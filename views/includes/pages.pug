@@ -1,15 +1,5 @@
 | Page: 
-if page === 1
-	a(href=`/${board._id}/index.html`) [#{1}]
-	| 
-else
-	a(href=`/${board._id}/index.html`) #{1}
-	| 
-- for(let i = 2; i <= maxPage; i++)
-	if i === page
-		a(href=`/${board._id}/${i}.html`) [#{i}]
-		| 
-	else
-		a(href=`/${board._id}/${i}.html`) #{i}
-		| 
+- for(let i = 1; i <= maxPage; i++)
+	a(class=`${page === i ? 'bold' : ''}` href=`/${board._id}/${i === 1 ? 'index' : i}.html`) [#{i}]
+	|  
 |   |  
