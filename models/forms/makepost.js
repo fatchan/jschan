@@ -268,6 +268,8 @@ module.exports = async (req, res, next) => {
 
 	const postId = await Posts.insertOne(req.params.board, data, thread);
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
+console.log('--------------------------------')
+console.log(`NEW POST -> ${successRedirect}`)
 
 	//build just the thread they need to see first and send them immediately
 	await buildThread(data.thread || postId, res.locals.board);
@@ -299,5 +301,7 @@ module.exports = async (req, res, next) => {
 
 	//finish building other pages
 	await Promise.all(parallelPromises);
+
+console.log('--------------------------------')
 
 }

@@ -43,6 +43,6 @@ module.exports = async (req, res, next, posts, board) => {
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 
 	//hooray!
-	return { message:`Deleted ${threads.length} threads and ${deletedPosts-threads.length} posts` };
+	return { action: deletedPosts > 0, message:`Deleted ${threads.length} threads and ${deletedPosts-threads.length} posts` };
 
 }
