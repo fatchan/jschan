@@ -12,7 +12,11 @@ block content
 	include ../includes/stickynav.pug
 	.anchor#top
 	nav.pages
-		a(href=`/${board._id}/index.html`) [Return]
+		a(href=`/${board._id}/index.html`) [Index]
+		|  
+		a.bold(href=`/${board._id}/catalog.html`) [Catalog]
+		|  
+		a(href=`/${board._id}/banners.html`) [Banners]
 	hr(size=1)
 	if threads.length === 0
 		p No posts.
@@ -21,4 +25,8 @@ block content
 			+catalogtile(board, thread)
 	hr(size=1)
 	nav.pages#bottom
-		a(href=`/${board._id}/index.html`) [Return]
+		a(href=`/${board._id}/index.html`) [Index]
+		|  
+		a.bold(href=`/${board._id}/catalog.html`) [Catalog]
+		|  
+		a(href=`/${board._id}/banners.html`) [Banners]

@@ -5,6 +5,13 @@ block head
 
 block content
 	include ../includes/bannersheader.pug
+	br
+	nav.pages
+		a(href=`/${board._id}/index.html`) [Index]
+		|  
+		a(href=`/${board._id}/catalog.html`) [Catalog]
+		|  
+		a.bold(href=`/${board._id}/banners.html`) [Banners]
 	hr(size=1)
 	section.catalog
 		if board.banners.length > 0
