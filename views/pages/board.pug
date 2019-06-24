@@ -10,11 +10,11 @@ block content
 	include ../includes/postform.pug
 	br
 	include ../includes/stickynav.pug
-	.pad-anchor#top
-		nav.pages
-			include ../includes/pages.pug
-			a(href=`/${board._id}/catalog.html`) [Catalog]
-			|
+	.anchor#top
+	nav.pages
+		include ../includes/pages.pug
+		a(href=`/${board._id}/catalog.html`) [Catalog]
+		|
 	hr(size=1)
 	form(action='/forms/board/'+board._id+'/actions' method='POST' enctype='application/x-www-form-urlencoded')
 		if threads.length === 0

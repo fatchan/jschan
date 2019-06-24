@@ -10,9 +10,9 @@ block content
 	include ../includes/postform.pug
 	br
 	include ../includes/stickynav.pug
-	.pad-anchor#top
-		nav.pages
-			a(href=`/${board._id}/index.html`) [Return]
+	.anchor#top
+	nav.pages
+		a(href=`/${board._id}/index.html`) [Return]
 	hr(size=1)
 	if threads.length === 0
 		p No posts.

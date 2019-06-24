@@ -416,18 +416,15 @@ input textarea {
 	box-sizing: border-box;
 	padding: 5px;
 	max-width: 100%;
-	margin-bottom: -10px;
 }
 
-.pad-anchor:target .post-container {
+.anchor:target + .post-container {
 	background-color: #d6bad0 !important;
 	border: 1px solid #ba9dbf !important;
 }
 
-.pad-anchor:before {
-	content: "";
-	display: block;
-	height: 15px;
+.anchor {
+	height: 5px;
 }
 
 .post-container.op {
