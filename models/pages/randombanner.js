@@ -11,6 +11,11 @@ module.exports = async (req, res, next) => {
 	//agregate to get single random item from banners array
 	const board = await Boards.db.aggregate([
 		{
+			'$match': {
+				'_id': req.query.board
+			}
+		},
+		{
 			'$unwind': '$banners'
 		},
 		{
