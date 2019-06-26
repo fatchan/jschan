@@ -17,16 +17,30 @@ module.exports = (text, captchaId) => {
 		text = text.split(''); //array of chars
 		const x = gm(200, 80, '#fff')
 		.fill('#000')
-		.fontSize(80)
+		.fontSize(70)
+		let lastx = 0;
 		for (let i = 0; i <6; i++) {
-			x.drawText(i*30, 55+rr(0,10), text[i])
+			x.drawText(lastx, 50+rr(0,10), text[i])
+			switch (text[i]) {
+				case 'w':
+				case 'm':
+					lastx += 40;
+					break;
+				case 'i':
+				case 'f':
+				case 'l':
+				case 'j':
+				case 't':
+					lastx += 15;
+					break;
+				default:
+					lastx += 30;
+					break;
+			}
 		}
-		for (let i = 0; i <4; i++) {
-			const shape = getShape();
-			x.strokeWidth(rr(3, 5))
-			x.drawCircle(shape.x1, shape.y1, shape.x2, shape.y1)
-		}
-		x.wave(10, rr(50,80))
+		const recy1 = rr(30,50)
+		x.drawRectangle(rr(5,10), recy1, rr(190,195), recy1+5)
+		.wave(10, rr(80,120))
 		.blur(1, 2)
 		.crop(200, 80, 0, 0)
 		.quality(30)
