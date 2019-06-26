@@ -50,13 +50,13 @@ module.exports = async (req, res, next) => {
 	try {
 		// if getting global banned, board ban doesnt matter
 		if (req.body.global_ban) {
-			const { message, action, query } = await banPoster(req, res, next, null, res.locals.posts);
+			const { message, action, query } = await banPoster(req, res, next);
 			if (action) {
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
 			messages.push(message);
 		} else if (req.body.ban) {
-			const { message, action, query } = await banPoster(req, res, next, req.params.board, res.locals.posts);
+			const { message, action, query } = await banPoster(req, res, next);
 			if (action) {
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}

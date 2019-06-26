@@ -2,27 +2,32 @@
 
 const Bans = require(__dirname+'/../../db/bans.js')
 
-module.exports = async (req, res, next, board, posts) => {
+module.exports = async (req, res, next) => {
 
-	const bans = posts.map(post => {
+	const banDate = new Date();
+	const banExpiry = new Date(req.body.ban_duration ? banDate.getTime() + req.body.ban_duration : 8640000000000000);
+	const banReason = req.body.ban_reason || 'No reason specified';
+	const banBoard = req.body.global_ban ? null : req.params.board;
+
+	const bans = res.locals.posts.map(post => {
 		return {
 			'ip': post.ip,
-			'reason': req.body.ban_reason || 'No reason specified',
-			'board': board,
+			'reason': banReason,
+			'board': banBoard,
 			'post': req.body.preserve_post ? post : null,
 			'issuer': req.session.user.username,
-			'date': new Date(),
-			'expireAt': new Date((new Date).getTime() + (72*1000*60*60)) // 72h ban
+			'date': banDate,
+			'expireAt': banExpiry
 		}
 	});
 
-	const bannedIps = await Bans.insertMany(bans).then(result => result.insertedCount);
+	const numBans = await Bans.insertMany(bans).then(result => result.insertedCount);
 
 	return {
-        message:`Banned ${bannedIps} ips`,
+        message: `Added ${numBans} bans`,
         action:'$set',
         query: {
-            'banmessage': req.body.ban_reason || ''
+            'banmessage': req.body.ban_reason || null
         }
     };
 

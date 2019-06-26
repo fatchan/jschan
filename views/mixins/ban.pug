@@ -5,13 +5,15 @@ mixin ban(ban, showcheck)
 		if showcheck
 			input.post-check(type='checkbox', name='checkedbans[]' value=ban._id)
 		span 
-			| You were banned 
+			| Banned 
 			if ban.board
 				| from #[a(href=`/${ban.board}/`) /#{ban.board}/] 
 			else
 				| globally 
 		| for: #{ban.reason}
 		div Issued by: #{ban.issuer}
+		//todo: hash ips
+		div Issued against: #{ban.ip}
 		div Banned: #{ban.date.toLocaleString()}
 		div Expires: #{ban.expireAt.toLocaleString()}
 		if ban.post

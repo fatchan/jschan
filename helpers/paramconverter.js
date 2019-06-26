@@ -3,7 +3,15 @@
 const Mongo = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners']) //only these can be arrays, since express bodyparser will output arrays
 	, trimFields = ['message', 'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
-	, numberFields = ['reply_limit', 'max_files', 'thread_limit', 'thread', 'min_message_length']; //convert these to numbers before they hit our routes
+	, numberFields = ['reply_limit', 'max_files', 'thread_limit', 'thread', 'min_message_length'] //convert these to numbers before they hit our routes
+	, banDurationRegex = /^(?<years>[\d]+y)?(?<months>[\d]+m)?(?<weeks>[\d]+w)?(?<days>[\d]+d)?(?<hours>[\d]+h)?$/
+	, banDurations = { //times in millisecond, to be added to date for ban duration
+		'years': 31536000000,
+		'months': 2592000000,
+		'weeks': 604800000,
+		'days': 86400000,
+		'hours': 3600000
+	};
 
 module.exports = (req, res, next) => {
 
@@ -46,7 +54,31 @@ module.exports = (req, res, next) => {
 		req.body.globalcheckedposts = req.body.globalcheckedposts.map(Mongo.ObjectId)
 	}
 
-	//thread id
+	//ban duration convert to ban time in ms
+	if (req.body.ban_duration) {
+		const matches = req.body.ban_duration.match(banDurationRegex);
+		if (matches && matches.groups) {
+			const groups = matches.groups;
+			let banDuration = 0;
+			const groupKeys = Object.keys(groups);
+			for (let i = 0; i < groupKeys.length; i++) {
+				const key = groupKeys[i];
+				if (!groups[key]) {
+					continue;
+				}
+				const mult = +groups[key].substring(0,groups[key].length-1); //remove the d, m, y, etc from end of the value
+				if (Number.isSafeInteger(mult) //if the multiplier is safe int
+					&& Number.isSafeInteger(mult*banDurations[key]) //and multiplying it is safe int
+					&& Number.isSafeInteger((mult*banDurations[key])+banDuration)) { //and adding it to the total is safe
+					banDuration += mult*banDurations[key];
+				}
+			}
+			req.body.ban_duration = banDuration;
+		} else {
+			req.body.ban_duration = null;
+		}
+	}
+
 	if (req.params.id) {
 		req.params.id = +req.params.id;
 	}
