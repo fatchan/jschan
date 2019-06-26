@@ -20,7 +20,7 @@ module.exports = (text, captchaId) => {
 		.fontSize(70)
 		let lastx = 0;
 		for (let i = 0; i <6; i++) {
-			x.drawText(lastx, 50+rr(0,10), text[i])
+			x.drawText(lastx, 45+rr(0,10), text[i])
 			switch (text[i]) {
 				case 'w':
 				case 'm':
@@ -38,7 +38,7 @@ module.exports = (text, captchaId) => {
 					break;
 			}
 		}
-		const recy1 = rr(30,50)
+		const recy1 = rr(20,40)
 		x.drawRectangle(rr(5,10), recy1, rr(190,195), recy1+5)
 		.wave(10, rr(80,120))
 		.blur(1, 2)
