@@ -14,7 +14,6 @@ const Mongo = require(__dirname+'/db/db.js')
 	const Boards = require(__dirname+'/db/boards.js')
 		, Posts = require(__dirname+'/db/posts.js')
 		, Bans = require(__dirname+'/db/bans.js')
-		, Trips = require(__dirname+'/db/trips.js')
 		, Captchas = require(__dirname+'/db/captchas.js')
 		, Accounts = require(__dirname+'/db/accounts.js');
 	console.log('deleting captchas')
@@ -30,7 +29,6 @@ const Mongo = require(__dirname+'/db/db.js')
 	await Boards.deleteIncrement('b');
 	await Boards.deleteIncrement('t');
 	await Boards.deleteAll();
-	await Trips.deleteAll();
 	console.log('deleting bans');
 	await Bans.deleteAll();
 	console.log('adding boards')
