@@ -5,7 +5,22 @@ block head
 
 block content
 	h1.board-title Imageboard
-	h4.board-description Board list
+	.table-container.flex-center.mv-10
+		table.table-body
+			tr.table-head
+				th Welcome
+			tr.table-row
+				td
+					p
+						| This is an anonymous imageboard, a discussion board/BBS where users share text or images about various topics. 
+					p
+						| The most notable feature of imageboards and primary difference to traditional forums is 
+						| that anybody can make a post without the need to register an account or provide 
+						| any personal information. This way, what is said becomes more important than who says it.
+						| As new threads are started, the least recently replied to are pruned. This creates an 
+						| element of transience and keeps making room for new content. 
+					p 
+						| Pick a board below to join the discussion.
 	.table-container.flex-center.mv-10
 		table.table-body
 			tr.table-head
@@ -15,5 +30,15 @@ block content
 			each board in boards
 				tr.table-row
 					td: a(href=`/${board._id}/`) /#{board._id}/
-					td #{board.name}
-					td #{board.description}
+					td #{board.settings.name}
+					td #{board.settings.description}
+	.table-container.flex-center.mv-10
+		table.table-body
+			tr.table-head
+				th Source Code
+			tr.table-row
+				td
+					p
+						| The source code for this site is available 
+						a(href='https://github.com/fatchan/jschan/') here
+						|  and is licensed under the Affero General Public License v3.

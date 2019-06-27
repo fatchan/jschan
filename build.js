@@ -39,7 +39,7 @@ module.exports = {
 	buildBanners: async(board) => {
 console.log('building banners', `${board._id}/banners.html`);
 		return render(`${board._id}/banners.html`, 'banners.pug', {
-			board: board
+			board: board,
 		});
 	},
 
@@ -51,7 +51,7 @@ console.log('building catalog', `${board._id}/catalog.html`);
 		const threads = await Posts.getCatalog(board._id);
 		return render(`${board._id}/catalog.html`, 'catalog.pug', {
 			board,
-			threads
+			threads,
 		});
 	},
 
@@ -69,7 +69,7 @@ console.log('building thread', `${board._id || board}/thread/${threadId}.html`);
 
 		return render(`${board._id}/thread/${threadId}.html`, 'thread.pug', {
 			board,
-			thread
+			thread,
 		});
 	},
 
@@ -89,7 +89,7 @@ console.log('building board page', `${board._id}/${page === 1 ? 'index' : page}.
 			board,
 			threads,
 			maxPage,
-			page
+			page,
 		});
 	},
 
@@ -132,7 +132,7 @@ console.log('multi building board pages', `${board._id}/ ${startpage === 1 ? 'in
 	buildHomepage: async () => {
 		const boards = await Boards.find();
 		return render('index.html', 'home.pug', {
-			boards
+			boards,
 		});
 	},
 
