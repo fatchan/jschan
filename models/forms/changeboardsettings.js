@@ -3,7 +3,7 @@
 const Boards = require(__dirname+'/../../db/boards.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, { buildCatalog, buildBoardMultiple } = require(__dirname+'/../../build.js')
+	, { buildHomepage, buildCatalog, buildBoardMultiple } = require(__dirname+'/../../build.js')
 	, remove = require('fs-extra').remove
 
 module.exports = async (req, res, next) => {
@@ -11,9 +11,11 @@ module.exports = async (req, res, next) => {
 	const oldSettings = res.locals.board.settings;
 
 	const newSettings = {
+		name: req.body.name && req.body.name.trim().length > 0 ? req.body.name : oldSettings.name,
+		description: req.body.description && req.body.description.trim().length > 0 ? req.body.description : oldSettings.description,
+		ids: req.body.ids ? true : false,
 		captcha: req.body.captcha ? true : false,
 		forceAnon: req.body.force_anon ? true : false,
-		ids: req.body.ids ? true : false,
 		userPostDelete: req.body.user_post_delete ? true : false,
 		userPostSpoiler: req.body.user_post_spoiler ? true : false,
 		userPostUnlink: req.body.user_post_unlink ? true : false,
@@ -71,6 +73,10 @@ module.exports = async (req, res, next) => {
 			could also rebuild index pages here if wanted
 		*/
 		promises.push(remove(`${uploadDirectory}html/${req.params.board}/`));
+	}
+
+	if (oldSettings.name !== newSettings.name || oldSettings.description !== newSettings.description) {
+		promises.push(buildHomepage())
 	}
 
 	if (promises.length > 0) {

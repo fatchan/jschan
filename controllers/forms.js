@@ -259,6 +259,12 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 
 	const errors = [];
 
+	if (req.body.description && (req.body.description.length < 1 || req.body.description.length > 50)) {
+		errors.push('Board description must be 1-50 characters');
+	}
+	if (req.body.name && (req.body.name.length < 1 || req.body.name.length > 50)) {
+		errors.push('Board name must be 1-50 characters');
+	}
 	if (req.body.default_name && (req.body.default_name.length < 1 || req.body.default_name.length > 50)) {
 		errors.push('Anon name must be 1-50 characters');
 	}

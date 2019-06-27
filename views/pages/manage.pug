@@ -13,6 +13,12 @@ block content
 		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
 			section.postform-row
+				.postform-label Board name
+				input(type='text' name='name' placeholder=board.settings.name)
+			section.postform-row
+				.postform-label Board Description
+				input(type='text' name='description' placeholder=board.settings.description)
+			section.postform-row
 				.postform-label IDs
 				label.postform-style.ph-5
 					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)

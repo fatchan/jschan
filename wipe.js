@@ -33,13 +33,13 @@ const Mongo = require(__dirname+'/db/db.js')
 	await Bans.deleteAll();
 	console.log('adding boards')
 	await Boards.insertOne({
-		 _id: 'pol',
-		 name: 'Politically Incorrect',
-		 description: 'Political posts go here.',
+		_id: 'pol',
 		owner: '',
 		moderators: [],
 		banners: [],
 		settings: {
+			name: 'politically incorrect',
+			description: 'posts about politics',
 			captcha: true,
 			forceAnon: true,
 			ids: true,
@@ -57,13 +57,13 @@ const Mongo = require(__dirname+'/db/db.js')
 		}
 	})
 	await Boards.insertOne({
-		 _id: 'b',
-		 name: 'Random',
-		 description: 'post anything here',
+		_id: 'b',
 		owner: '',
 		moderators: [],
 		banners: [],
 		settings: {
+			name: 'random',
+			description: 'anything and everything',
 			captcha: false,
 			forceAnon: false,
 			ids: false,
@@ -83,7 +83,7 @@ const Mongo = require(__dirname+'/db/db.js')
 	await Boards.insertOne({
 		 _id: 't',
 		 name: 'text',
-		 description: 'text only board',
+		 description: 'no images allowed',
 		owner: '',
 		moderators: [],
 		banners: [],

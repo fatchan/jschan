@@ -241,6 +241,7 @@ module.exports = async (req, res, next) => {
 		capcode,
 		subject,
 		'message': message || null,
+		'nomarkup': req.body.message || null,
 		'thread': req.body.thread || null,
 		'password': req.body.password || null,
 		email,
