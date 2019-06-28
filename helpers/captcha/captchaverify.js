@@ -1,9 +1,9 @@
 'use strict';
 
-const Captchas = require(__dirname+'/../db/captchas.js')
-	, Mongo = require(__dirname+'/../db/db.js')
+const Captchas = require(__dirname+'/../../db/captchas.js')
+	, Mongo = require(__dirname+'/../../db/db.js')
 	, remove = require('fs-extra').remove
-	, uploadDirectory = require(__dirname+'/../helpers/uploadDirectory.js');
+	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 

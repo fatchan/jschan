@@ -1,6 +1,7 @@
 'use strict';
-const sizes = ['B', 'KB', 'MB'];
-const k = 1024;
+
+const sizes = ['B', 'KB', 'MB']
+	, k = 1024;
 
 module.exports = (bytes) => {
     if (bytes === 0)  {

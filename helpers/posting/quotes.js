@@ -1,7 +1,7 @@
 'use strict';
 
-const Posts = require(__dirname+'/../db/posts.js')
-	, Boards = require(__dirname+'/../db/posts.js')
+const Posts = require(__dirname+'/../../db/posts.js')
+	, Boards = require(__dirname+'/../../db/boards.js')
 	, quoteRegex = />>\d+/g
 	, crossQuoteRegex = />>>\/\w+\/\d*$/gm;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const uploadDirectory = require(__dirname+'/../uploadDirectory.js');
+const uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (file, filename, folder) => {
 

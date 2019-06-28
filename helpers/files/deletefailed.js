@@ -1,7 +1,7 @@
 'use strict';
 
-const remove = require('fs-extra').remove
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
+const { remove } = require('fs-extra')
+	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = async (filenames, folder) => {
 

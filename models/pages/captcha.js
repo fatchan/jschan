@@ -1,7 +1,7 @@
 'use strict';
 
 const Captchas = require(__dirname+'/../../db/captchas.js')
-	, generateCaptcha = require(__dirname+'/../../helpers/captchagenerate.js');
+	, generateCaptcha = require(__dirname+'/../../helpers/captcha/captchagenerate.js');
 
 module.exports = async (req, res, next) => {
 

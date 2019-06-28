@@ -1,7 +1,7 @@
 'use strict';
 
-const uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, remove = require('fs-extra').remove
+const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, { remove } = require('fs-extra')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
 

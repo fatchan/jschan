@@ -1,6 +1,6 @@
 'use strict';
 
-const remove = require('fs-extra').remove;
+const { remove } = require('fs-extra')
 
 module.exports = async (req) => {
 

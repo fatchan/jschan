@@ -1,9 +1,9 @@
 'use strict';
 
-const Posts = require(__dirname+'/db/posts.js')
-	, Boards = require(__dirname+'/db/boards.js')
-	, uploadDirectory = require(__dirname+'/helpers/uploadDirectory.js')
-	, render = require(__dirname+'/helpers/render.js');
+const Posts = require(__dirname+'/../db/posts.js')
+	, Boards = require(__dirname+'/../db/boards.js')
+	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
+	, render = require(__dirname+'/render.js');
 
 function addBacklinks(thread, preview) { //preview means this is not the full thread
 	const postMap = new Map()

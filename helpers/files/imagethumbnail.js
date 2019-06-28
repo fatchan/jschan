@@ -1,6 +1,6 @@
 const gm = require('@tohru/gm')
 	, configs = require(__dirname+'/../../configs/main.json')
-	, uploadDirectory = require(__dirname+'/../uploadDirectory.js');
+	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (filename) => {
 

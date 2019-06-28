@@ -5,7 +5,7 @@ const express  = require('express')
 	, Boards = require(__dirname+'/../db/boards.js')
 	, Posts = require(__dirname+'/../db/posts.js')
 	, Mongo = require(__dirname+'/../db/db.js')
-	, remove = require('fs-extra').remove
+	, { remove } = require('fs-extra')
 	, upload = require('express-fileupload')
 	, path = require('path')
 	, postFiles = upload({
@@ -41,14 +41,14 @@ const express  = require('express')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
 	, changeBoardSettings = require(__dirname+'/../models/forms/changeboardsettings.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
-	, checkPermsMiddleware = require(__dirname+'/../helpers/haspermsmiddleware.js')
-	, checkPerms = require(__dirname+'/../helpers/hasperms.js')
+	, checkPermsMiddleware = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
+	, checkPerms = require(__dirname+'/../helpers/checks/hasperms.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
-	, banCheck = require(__dirname+'/../helpers/bancheck.js')
-	, verifyCaptcha = require(__dirname+'/../helpers/captchaverify.js')
+	, banCheck = require(__dirname+'/../helpers/checks/bancheck.js')
+	, verifyCaptcha = require(__dirname+'/../helpers/captcha/captchaverify.js')
 	, actionHandler = require(__dirname+'/../models/forms/actionhandler.js')
-	, csrf = require(__dirname+'/../helpers/csrfmiddleware.js')
-	, actionChecker = require(__dirname+'/../helpers/actionchecker.js');
+	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
+	, actionChecker = require(__dirname+'/../helpers/checks/actionchecker.js');
 
 
 // login to account

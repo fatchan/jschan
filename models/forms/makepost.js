@@ -5,11 +5,11 @@ const path = require('path')
 	, crypto = require('crypto')
 	, randomBytes = util.promisify(crypto.randomBytes)
 	, { remove, pathExists } = require('fs-extra')
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
-	, getTripCode = require(__dirname+'/../../helpers/tripcode.js')
-	, linkQuotes = require(__dirname+'/../../helpers/quotes.js')
-	, simpleMarkdown = require(__dirname+'/../../helpers/markdown.js')
+	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
+	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
+	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = {
 		allowedTags: [ 'span', 'a', 'em', 'strong', 'small' ],
@@ -19,7 +19,7 @@ const path = require('path')
 		}
 	}
 	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?:## (?<capcode>[^\s#]+))?$/
-	, permsCheck = require(__dirname+'/../../helpers/hasperms.js')
+	, permsCheck = require(__dirname+'/../../helpers/checks/hasperms.js')
 	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
 	, videoUpload = require(__dirname+'/../../helpers/files/videoupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
@@ -29,7 +29,7 @@ const path = require('path')
 	, videoIdentify = require(__dirname+'/../../helpers/files/videoidentify.js')
 	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
-	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../build.js');
+	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
 

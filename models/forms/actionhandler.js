@@ -14,7 +14,7 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, globalReportPosts = require(__dirname+'/globalreportpost.js')
 	, dismissReports = require(__dirname+'/dismissreport.js')
 	, dismissGlobalReports = require(__dirname+'/dismissglobalreport.js')
-	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../build.js');
+	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
 

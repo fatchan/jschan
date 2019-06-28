@@ -2,13 +2,13 @@
 
 const path = require('path')
 	, { remove, pathExists, ensureDir } = require('fs-extra')
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, Boards = require(__dirname+'/../../db/boards.js')
-	, { buildBanners } = require(__dirname+'/../../build.js')
+	, { buildBanners } = require(__dirname+'/../../helpers/build.js')
 
 module.exports = async (req, res, next) => {
 

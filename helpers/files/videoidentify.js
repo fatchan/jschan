@@ -1,6 +1,6 @@
 const ffmpeg = require('fluent-ffmpeg')
 	, configs = require(__dirname+'/../../configs/main.json')
-	, uploadDirectory = require(__dirname+'/../uploadDirectory.js');
+	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (filename, folder, temp) => {
 

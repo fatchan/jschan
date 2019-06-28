@@ -1,7 +1,7 @@
 'use strict';
 
-const { buildChangePassword } = require(__dirname+'/../../build.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
+const { buildChangePassword } = require(__dirname+'/../../helpers/build.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 

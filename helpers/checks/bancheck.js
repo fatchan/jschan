@@ -1,6 +1,6 @@
 'use strict';
 
-const Bans = require(__dirname+'/../db/bans.js')
+const Bans = require(__dirname+'/../../db/bans.js')
 	, hasPerms = require(__dirname+'/hasperms.js');
 
 module.exports = async (req, res, next) => {

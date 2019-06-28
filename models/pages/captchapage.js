@@ -1,7 +1,7 @@
 'use strict';
 
-const { buildCaptcha } = require(__dirname+'/../../build.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js');
+const { buildCaptcha } = require(__dirname+'/../../helpers/build.js')
+	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
 

@@ -2,9 +2,9 @@
 
 const Boards = require(__dirname+'/../../db/boards.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/uploadDirectory.js')
-	, { buildHomepage, buildCatalog, buildBoardMultiple } = require(__dirname+'/../../build.js')
-	, remove = require('fs-extra').remove
+	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, { buildHomepage, buildCatalog, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
+	, { remove } = require('fs-extra')
 
 module.exports = async (req, res, next) => {
 
