@@ -134,6 +134,7 @@ p {
 	width: 64px;
 	height: 64px;
 	object-fit: cover;
+	margin: 5px;
 }
 
 .catalog {
@@ -462,17 +463,17 @@ input textarea {
 .post-info {
 	background-color: #00000010;
 	border-bottom: 1px solid #00000010;
-	margin: -5px;
+	margin: -5px -5px 0 -5px;
 	padding: 5px;
 	padding-left: 3px;
 }
 
 .post-info * {
-	margin-bottom: 0;
-	margin-top: -2px;
+	/*margin-bottom: 0;*/
+	/*margin-top: -2px;*/
 }
 
-.post-container.op .post-info, .catalog-tile .post-info {
+.post-container.op .post-info {
 	background: none;
 	border: none;
 }

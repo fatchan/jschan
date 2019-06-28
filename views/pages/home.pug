@@ -17,14 +17,14 @@ block content
 						| The most notable feature of imageboards and primary difference to traditional forums is 
 						| that anybody can make a post without the need to register an account or provide 
 						| any personal information. This way, what is said becomes more important than who says it.
-						| As new threads are started, the least recently replied to are pruned. This creates an 
+						| Threads do not last forever and the least recently bumped threads are pruned as they fall off the last page. This creates an 
 						| element of transience and keeps making room for new content. 
 					p 
 						| Pick a board below to join the discussion.
 	.table-container.flex-center.mv-10
 		table.table-body
 			tr.table-head
-				th Board
+				th Id
 				th Name
 				th Description
 			each board in boards
@@ -41,4 +41,4 @@ block content
 					p
 						| The source code for this site is available 
 						a(href='https://github.com/fatchan/jschan/') here
-						|  and is licensed under the Affero General Public License v3.
+						|  (and in the footer of each page) and is licensed under the Affero General Public License v3.
