@@ -1,31 +1,36 @@
-const gm = require('@tohru/gm')
+const gm = require('gm').subClass({ imageMagick: true })
 	, rr = (min, max) => Math.floor(Math.random() * (max-min + 1) + min)
 	, width = 200
-	, height = 80;
-
-function getShape() {
-	const x1 = rr(width * 0.1, width * 0.9)
-		, y1 = rr(height * 0.1, height * 0.9)
-		, size = rr(15, 30)
-		, x2 = rr(x1, x1 + size)
-		, y2 = rr(y1, y1 + size);
-	return { x1, x2, y1, y2 };
-}
+	, height = 80
+	, distortion = 15
 
 module.exports = (text, captchaId) => {
 	return new Promise((resolve, reject) => {
-		text = text.split(''); //array of chars
-		const x = gm(200, 80, '#fff')
+		const recy = rr(35,45);
+		const distorts = [];
+		const numDistorts = rr(3,5);
+		const div = width/numDistorts;
+		for (let i = 0; i < numDistorts; i++) {
+			const originx = rr((div*i)+distortion, (div*(i+1))-distortion);
+			const originy = rr(distortion,height-distortion);
+			const destx = rr(Math.max(distortion,originx-distortion),Math.min(width-distortion,originx+distortion));
+			const desty = rr(Math.max(distortion,originy-distortion*2),Math.min(height-distortion,originy+distortion*2));
+			distorts.push([
+				{x:originx,y:originy}, //origin
+				{x:destx,y:desty} //dest
+			]);
+		}
+		const x = gm(width,height, '#fff')
 		.fill('#000')
-		.fontSize(70)
-		let lastx = 0;
+		.fontSize(65)
+		let lastx = 7;
 		for (let i = 0; i <6; i++) {
-			x.drawText(lastx, 45+rr(0,10), text[i])
+			x.drawText(lastx, 60, text[i])
 			switch (text[i]) {
 				case 'w':
 				case 'm':
-					lastx += 40;
-					break;
+						lastx += 45;
+						break;
 				case 'i':
 				case 'f':
 				case 'l':
@@ -35,14 +40,12 @@ module.exports = (text, captchaId) => {
 					break;
 				default:
 					lastx += 30;
-					break;
+				break;
 			}
 		}
-		const recy1 = rr(20,40)
-		x.drawRectangle(rr(5,10), recy1, rr(190,195), recy1+5)
-		.wave(10, rr(80,120))
-		.blur(1, 2)
-		.crop(200, 80, 0, 0)
+		//.drawText(5, 60, text)
+		x.drawRectangle(5, recy, 195, recy+4)
+		.distort(distorts, 'Shepards')
 		.quality(30)
 		.write(`./static/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {

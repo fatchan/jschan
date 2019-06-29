@@ -16,6 +16,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
     "fs-extra": "^7.0.1",
+    "gm": "github:fatchan/gm",
     "mongodb": "^3.2.7",
     "path": "^0.12.7",
     "pug": "^2.0.3",
