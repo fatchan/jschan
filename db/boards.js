@@ -62,7 +62,7 @@ module.exports = {
 
 	getNextId: async (board) => {
 
-		const increment = await db.collection('counters').findOneAndUpdate(
+		const increment = await db.collection('boards').findOneAndUpdate(
 			{
 				'_id': board
 			},
@@ -72,30 +72,13 @@ module.exports = {
 				}
 			},
 			{
-				'upsert': true
+				'projection': {
+					'sequence_value': 1
+				}
 			}
 		);
-
 		return increment.value.sequence_value;
 
 	},
-
-	deleteIncrement: async (board) => {
-
-		return db.collection('counters').findOneAndUpdate(
-			{
-				'_id': board
-			},
-			{
-				'$set': {
-					'sequence_value': 1
-				}
-			},
-			{
-				'upsert': true
-			}
-		);
-
-	}
 
 }

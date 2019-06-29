@@ -5,7 +5,9 @@ const util = require('util')
 	, unlink = util.promisify(fs.unlink)
 	, stat = util.promisify(fs.stat)
 	, readdir = util.promisify(fs.readdir)
-	, uploadDirectory = require(__dirname+'/helpers/uploadDirectory.js');
+	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
+	, msTime = require(__dirname+'/helpers/mstime.js')
+	, Mongo = require(__dirname+'/db/db.js')
 
 async function deleteCaptchas() {
 
@@ -31,5 +33,14 @@ async function deleteCaptchas() {
 
 }
 
-deleteCaptchas();
-setInterval(deleteCaptchas, 6*1000*60);
+(async () => {
+
+    await Mongo.connect();
+	const { buildHomepage } = require(__dirname+'/helpers/build.js');
+	buildHomepage();
+	setInterval(buildHomepage, msTime.hour); //hourly rebuild homepage for posts/day
+
+	deleteCaptchas();
+	setInterval(deleteCaptchas, msTime.minute*6); //delete files for expired captchas
+
+})();

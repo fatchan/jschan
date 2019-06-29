@@ -18,8 +18,8 @@ module.exports = {
 			NODE_ENV: 'production'
 		}
 	}, {
-		name: 'deleter',
-		script: 'deletescheduler.js',
+		name: 'schedules',
+		script: 'schedules.js',
 		instances: 1,
 		autorestart: true,
 		watch: false,

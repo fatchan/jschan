@@ -5,7 +5,7 @@ const Bans = require(__dirname+'/../../db/bans.js')
 module.exports = async (req, res, next) => {
 
 	const banDate = new Date();
-	const banExpiry = new Date(req.body.ban_duration ? banDate.getTime() + req.body.ban_duration : 8640000000000000);
+	const banExpiry = new Date(req.body.ban_duration ? banDate.getTime() + req.body.ban_duration : 8640000000000000); //perm if none or malformed input
 	const banReason = req.body.ban_reason || 'No reason specified';
 	const banBoard = req.body.global_ban ? null : req.params.board;
 

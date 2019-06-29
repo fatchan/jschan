@@ -1,6 +1,8 @@
 'use strict';
 
-const Posts = require(__dirname+'/../db/posts.js')
+const Mongo = require(__dirname+'/../db/db.js')
+	, msTime = require(__dirname+'/mstime.js')
+	, Posts = require(__dirname+'/../db/posts.js')
 	, Boards = require(__dirname+'/../db/boards.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, render = require(__dirname+'/render.js');
@@ -76,10 +78,9 @@ console.log('building thread', `${board._id || board}/thread/${threadId}.html`);
 	buildBoard: async (board, page, maxPage=null) => {
 console.log('building board page', `${board._id}/${page === 1 ? 'index' : page}.html`);
 		const threads = await Posts.getRecent(board._id, page);
-		if (!maxPage) {
+		if (maxPage == null) {
 			maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
 		}
-
 		for (let k = 0; k < threads.length; k++) {
 			const thread = threads[k];
 			addBacklinks(thread, true);
@@ -131,6 +132,32 @@ console.log('multi building board pages', `${board._id}/ ${startpage === 1 ? 'in
 
 	buildHomepage: async () => {
 		const boards = await Boards.find();
+		const yesterday = Math.floor((Date.now() - msTime.day)/1000);
+		const yesterdayObjectId = Mongo.ObjectId.createFromTime(yesterday);
+		const ppd = await Posts.db.aggregate([
+			{
+				'$match': {
+					'_id': {
+						'$gt': yesterdayObjectId
+					}
+				}
+			},
+			{
+				'$group': {
+					'_id': '$board',
+					'ppd': { '$sum': 1 },
+				}
+			},
+		]).toArray().then(res => {
+			return res.reduce((acc, item) => {
+				acc[item._id] = item.ppd;
+				return acc;
+			}, {});
+		});
+		for (let i = 0; i < boards.length; i++) {
+			const board = boards[i];
+			board.ppd = ppd[board._id] || 0;
+		}
 		return render('index.html', 'home.pug', {
 			boards,
 		});
