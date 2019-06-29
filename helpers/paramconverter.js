@@ -2,16 +2,10 @@
 
 const Mongo = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners']) //only these can be arrays, since express bodyparser will output arrays
-	, trimFields = ['message', 'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
+	, trimFields = ['description', 'message', 'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
 	, numberFields = ['reply_limit', 'max_files', 'thread_limit', 'thread', 'min_message_length'] //convert these to numbers before they hit our routes
-	, banDurationRegex = /^(?<years>[\d]+y)?(?<months>[\d]+m)?(?<weeks>[\d]+w)?(?<days>[\d]+d)?(?<hours>[\d]+h)?$/
-	, banDurations = { //times in millisecond, to be added to date for ban duration
-		'years': 31536000000,
-		'months': 2592000000,
-		'weeks': 604800000,
-		'days': 86400000,
-		'hours': 3600000
-	};
+	, banDurationRegex = /^(?<year>[\d]+y)?(?<month>[\d]+m)?(?<week>[\d]+w)?(?<day>[\d]+d)?(?<hour>[\d]+h)?$/
+	, msTime = require(__dirname+'/mstime.js')
 
 module.exports = (req, res, next) => {
 
@@ -68,9 +62,9 @@ module.exports = (req, res, next) => {
 				}
 				const mult = +groups[key].substring(0,groups[key].length-1); //remove the d, m, y, etc from end of the value
 				if (Number.isSafeInteger(mult) //if the multiplier is safe int
-					&& Number.isSafeInteger(mult*banDurations[key]) //and multiplying it is safe int
-					&& Number.isSafeInteger((mult*banDurations[key])+banDuration)) { //and adding it to the total is safe
-					banDuration += mult*banDurations[key];
+					&& Number.isSafeInteger(mult*msTime[key]) //and multiplying it is safe int
+					&& Number.isSafeInteger((mult*msTime[key])+banDuration)) { //and adding it to the total is safe
+					banDuration += mult*msTime[key];
 				}
 			}
 			req.body.ban_duration = banDuration;
@@ -79,10 +73,10 @@ module.exports = (req, res, next) => {
 		}
 	}
 
+	//thread id
 	if (req.params.id) {
 		req.params.id = +req.params.id;
 	}
-
 	//board page
 	if (req.params.page) {
 		req.params.page = req.params.page === 'index' ? 'index' : +req.params.page;
