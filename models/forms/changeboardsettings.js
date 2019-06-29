@@ -65,19 +65,14 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (oldSettings.captcha !== newSettings.captcha) {
-		/*
-			&& newSettings.captcha === true
-			should it only delete all pages if enabling captcha, since the check is skipped if disabled?
-			or in both cases so that users dont enter a captcha that doesnt apply. i think in both is nicer
-			captcha shouldnt be toggled too often, because this could be expensive for popular boards
-			could also rebuild index pages here if wanted
-		*/
 		promises.push(remove(`${uploadDirectory}html/${req.params.board}/`));
 	}
 
+/* disabled since homepage is built daily on schedule
 	if (oldSettings.name !== newSettings.name || oldSettings.description !== newSettings.description) {
 		promises.push(buildHomepage())
 	}
+*/
 
 	if (promises.length > 0) {
 		await Promise.all(promises);

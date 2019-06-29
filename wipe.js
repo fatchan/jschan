@@ -37,9 +37,10 @@ const Mongo = require(__dirname+'/db/db.js')
 		owner: '',
 		moderators: [],
 		banners: [],
+		sequence_value: 1,
 		settings: {
-			name: 'politically incorrect',
-			description: 'posts about politics',
+			name: 'politics',
+			description: 'talk about politics',
 			captcha: true,
 			forceAnon: true,
 			ids: true,
@@ -61,6 +62,7 @@ const Mongo = require(__dirname+'/db/db.js')
 		owner: '',
 		moderators: [],
 		banners: [],
+		sequence_value: 1,
 		settings: {
 			name: 'random',
 			description: 'anything and everything',
@@ -81,13 +83,14 @@ const Mongo = require(__dirname+'/db/db.js')
 		}
 	})
 	await Boards.insertOne({
-		 _id: 't',
-		 name: 'text',
-		 description: 'no images allowed',
+		_id: 't',
 		owner: '',
 		moderators: [],
 		banners: [],
+		sequence_value: 1,
 		settings: {
+			name: 'test',
+			description: 'testing board',
 			captcha: true,
 			forceAnon: true,
 			ids: false,

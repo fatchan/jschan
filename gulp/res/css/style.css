@@ -83,7 +83,7 @@ pre {
 	width: -moz-max-content;
 }
 
-a, a:visited {
+a, a:visited, a .post-name {
 	text-decoration: underline;
 	color: #34345C;
 }
@@ -207,7 +207,7 @@ p {
 	color: green;
 }
 
-pre a, pre a:visited, a:hover {
+a .post-name:hover, pre a, pre a:visited, a:hover {
 	color: #d00;
 }
 
@@ -466,6 +466,7 @@ input textarea {
 	margin: -5px -5px 0 -5px;
 	padding: 5px;
 	padding-left: 3px;
+	display:block;
 }
 
 .post-info * {
@@ -632,7 +633,17 @@ hr {
 
 	.catalog-tile {
 		overflow-y: hidden;
-		width: 48%;
+		width: 50%;
+		margin: 0 0 2px 0;
+	}
+
+	.catalog-tile:nth-child(odd) {
+		margin-right: 2px;
+		width: calc(50% - 2px);
+	}
+
+	.catalog-tile:hover {
+		overflow-y: scroll;
 	}
 
 	.table-body {
@@ -644,3 +655,4 @@ hr {
 	}
 
 }
+

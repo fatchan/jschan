@@ -22,14 +22,16 @@ block content
 	.table-container.flex-center.mv-10
 		table.table-body
 			tr.table-head
-				th Id
-				th Name
+				th Board
+				th Title
 				th Description
+				th Posts/day
 			each board in boards
 				tr.table-row
 					td: a(href=`/${board._id}/`) /#{board._id}/
 					td #{board.settings.name}
 					td #{board.settings.description}
+					td #{board.ppd}
 	.table-container.flex-center.mv-10
 		table.table-body
 			tr.table-head

@@ -2,7 +2,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 	.anchor(id=post.postId)
 	article(class=`post-container ${post.thread ? '' : 'op'}`)
 		- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html#${post.postId}`;
-		header.post-info
+		label.post-info
 			if globalmanage
 				input.post-check(type='checkbox', name='globalcheckedposts[]' value=post._id)
 			else
