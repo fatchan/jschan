@@ -12,7 +12,7 @@ mixin catalogtile(board, post, truncate)
 				img(src='/img/locked.svg' height='12')
 				| 
 			span
-				a.no-decoration.post-subject(href=postURL) #{post.subject || 'No Subject #'+post.postId}
+				a.no-decoration.post-subject(href=postURL) #{post.subject || '#'+post.postId}
 				|  - 
 				| R: #{post.replyposts}
 				|  / 
