@@ -25,13 +25,15 @@ block content
 				th Board
 				th Title
 				th Description
-				th Posts/day
+				th Posts/h
+				th Total Posts
 			each board in boards
 				tr.table-row
 					td: a(href=`/${board._id}/`) /#{board._id}/
 					td #{board.settings.name}
 					td #{board.settings.description}
-					td #{board.ppd}
+					td #{board.pph}
+					td #{board.sequence_value-1}
 	.table-container.flex-center.mv-10
 		table.table-body
 			tr.table-head

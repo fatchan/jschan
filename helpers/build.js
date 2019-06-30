@@ -132,9 +132,9 @@ console.log('multi building board pages', `${board._id}/ ${startpage === 1 ? 'in
 
 	buildHomepage: async () => {
 		const boards = await Boards.find();
-		const yesterday = Math.floor((Date.now() - msTime.day)/1000);
+		const yesterday = Math.floor((Date.now() - msTime.hour)/1000);
 		const yesterdayObjectId = Mongo.ObjectId.createFromTime(yesterday);
-		const ppd = await Posts.db.aggregate([
+		const pph = await Posts.db.aggregate([
 			{
 				'$match': {
 					'_id': {
@@ -145,18 +145,18 @@ console.log('multi building board pages', `${board._id}/ ${startpage === 1 ? 'in
 			{
 				'$group': {
 					'_id': '$board',
-					'ppd': { '$sum': 1 },
+					'pph': { '$sum': 1 },
 				}
 			},
 		]).toArray().then(res => {
 			return res.reduce((acc, item) => {
-				acc[item._id] = item.ppd;
+				acc[item._id] = item.pph;
 				return acc;
 			}, {});
 		});
 		for (let i = 0; i < boards.length; i++) {
 			const board = boards[i];
-			board.ppd = ppd[board._id] || 0;
+			board.pph = pph[board._id] || 0;
 		}
 		return render('index.html', 'home.pug', {
 			boards,
