@@ -5,13 +5,15 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, pinktextRegex = /^<([^<].+)/gm
 	, boldRegex = /""(.+)""/gm
 	, titleRegex = /==(.+)==/gm
-	, italicRegex = /__(.+)__/gm
+	, underlineRegex = /__(.+)__/gm
+	, strikethroughRegex = /~~(.+)~~/gm
+	, italicRegex = /\*\*(.+)\*\*/gm
 	, linkRegex = /https?\:\/\/[^\s<>\[\]{}|\\^]+/g
 	, spoilerRegex = /\|\|(.+)\|\|/gm
 	, detectedRegex = /(\(\(\(.+\)\)\))/gm
 	, codeRegex = /^```\s([\s\S]+)\s```/gm;
 
-module.exports = (board, thread, text) => {
+module.exports = (text) => {
 
 	//pinktext
 	text = text.replace(pinktextRegex, (match, pinktext) => {
@@ -31,6 +33,21 @@ module.exports = (board, thread, text) => {
 	//bold
 	text = text.replace(boldRegex, (match, bold) => {
 		return `<strong>${bold}</strong>`;
+	});
+
+	//bold
+	text = text.replace(boldRegex, (match, bold) => {
+		return `<strong>${bold}</strong>`;
+	});
+
+	//underline
+	text = text.replace(underlineRegex, (match, underline) => {
+		return `<span class='underline'>${underline}</span>`;
+	});
+
+	//strikethrough
+	text = text.replace(strikethroughRegex, (match, strike) => {
+		return `<span class='strikethrough'>${strike}</span>`;
 	});
 
 	//titles

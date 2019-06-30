@@ -23,6 +23,14 @@ body {
 	flex-direction: column;
 }
 
+.strikethrough {
+	text-decoration: line-through;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
 .bold {
 	font-weight: bold;
 }
@@ -230,6 +238,7 @@ a .post-name:hover, pre a, pre a:visited, a:hover {
 
 .table-head {
 	background: #98e;
+	text-align: left;
 }
 
 td, th {

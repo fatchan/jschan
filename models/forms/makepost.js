@@ -225,7 +225,7 @@ module.exports = async (req, res, next) => {
 	let message = req.body.message;
 	let quotes = [];
 	if (message && message.length > 0) {
-		message = simpleMarkdown(req.params.board, req.body.thread, message);
+		message = simpleMarkdown(message);
 		const { quotedMessage, threadQuotes } = await linkQuotes(req.params.board, message);
 		message = quotedMessage;
 		quotes = threadQuotes;
