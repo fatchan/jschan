@@ -21,8 +21,8 @@ block content
 	if threads.length === 0
 		p No posts.
 	section.catalog
-		for thread in threads
-			+catalogtile(board, thread)
+		for thread, i in threads
+			+catalogtile(board, thread, i+1)
 	hr(size=1)
 	nav.pages#bottom
 		a(href=`/${board._id}/index.html`) [Index]
