@@ -47,19 +47,14 @@ module.exports = async (req, res, next) => {
 	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
 	if (newMaxPage < oldMaxPage) {
 		//prune old threads
-		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
-		if (prunedThreads.length > 0) {
-			//remove pruned threads html also
-			for (let i = 0; i < prunedThreads.length; i++) {
-				promises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
-			}
-			//remove board page html for pages > newMaxPage
-			for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
-				promises.push(remove(`${uploadDirectory}html/${req.params.board}/${i}.html`));
-			}
-			//rebuild valid board pages for page numbers to be <= newMaxPage
+		const { action } = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		//remove board page html for pages > newMaxPage
+		for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
+			promises.push(remove(`${uploadDirectory}html/${req.params.board}/${i}.html`));
+		}
+		if (action) {
+			//rebuild valid board pages for page numbers, and catalog for prunedthreads
 			promises.push(buildBoardMultiple(res.locals.board, 1, newMaxPage));
-			//rebuild catalog since some threads were pruned
 			promises.push(buildCatalog(res.locals.board));
 		}
 	}
@@ -67,12 +62,6 @@ module.exports = async (req, res, next) => {
 	if (oldSettings.captcha !== newSettings.captcha) {
 		promises.push(remove(`${uploadDirectory}html/${req.params.board}/`));
 	}
-
-/* disabled since homepage is built daily on schedule
-	if (oldSettings.name !== newSettings.name || oldSettings.description !== newSettings.description) {
-		promises.push(buildHomepage())
-	}
-*/
 
 	if (promises.length > 0) {
 		await Promise.all(promises);

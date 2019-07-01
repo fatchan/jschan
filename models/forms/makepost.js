@@ -250,7 +250,8 @@ module.exports = async (req, res, next) => {
 		files,
 		'reports': [],
 		'globalreports': [],
-		quotes
+		quotes, //posts this post replies to
+		'backlinks': [], //posts replying to this post
 	}
 
 	if (!req.body.thread) {
@@ -267,8 +268,8 @@ module.exports = async (req, res, next) => {
 
 	const postId = await Posts.insertOne(req.params.board, data, thread);
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
-console.log('--------------------------------')
-console.log(`NEW POST -> ${successRedirect}`)
+console.log('--------------------------------');
+console.log(`NEW POST -> ${successRedirect}`);
 
 	//build just the thread they need to see first and send them immediately
 	await buildThread(data.thread || postId, res.locals.board);
@@ -287,11 +288,8 @@ console.log(`NEW POST -> ${successRedirect}`)
 			parallelPromises.push(buildBoardMultiple(res.locals.board, 1, threadPage));
 		}
 	} else {
-		//new thread, rebuild all pages and prunes old threads
-		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
-		for (let i = 0; i < prunedThreads.length; i++) {
-			parallelPromises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/${prunedThreads[i]}.html`));
-		}
+		//new thread, prunes any old threads before rebuilds
+		await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
 		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, Math.ceil(res.locals.board.settings.threadLimit/10)));
 	}
 
@@ -301,6 +299,6 @@ console.log(`NEW POST -> ${successRedirect}`)
 	//finish building other pages
 	await Promise.all(parallelPromises);
 
-console.log('--------------------------------')
+console.log('--------------------------------');
 
 }

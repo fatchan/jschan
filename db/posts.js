@@ -2,6 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
+	, deletePosts = require(__dirname+'/../models/forms/deletepost.js')
 	, db = Mongo.client.db('jschan').collection('posts');
 
 module.exports = {
@@ -276,26 +277,47 @@ module.exports = {
 				'postId': data.thread,
 				'board': board
 			}
+			//update thread reply and reply file count
 			const query = {
 				'$inc': {
 					'replyposts': 1,
 					'replyfiles': data.files.length
 				}
 			}
+			//if post email is not sage, and thread not saged, set bump date
 			if (data.email !== 'sage' && !thread.saged) {
 				query['$set'] = {
 					'bumped': Date.now()
 				}
 			}
+			//update the thread
 			await db.updateOne(filter, query);
 		} else {
-			//this is a new thread, so set the bump date
-			data.bumped = Date.now()
+			//this is a new thread so just set the bump date
+			data.bumped = Date.now();
 		}
 
+		//get the postId and add it to the post
 		const postId = await Boards.getNextId(board);
 		data.postId = postId;
+
+		//insert the post itself
 		await db.insertOne(data);
+
+		//add backlinks to the posts this post quotes
+		if (data.quotes.length > 0) {
+			await db.updateMany({
+				'postId': {
+					'$in': data.quotes
+				},
+				'board': board
+			}, {
+				'$push': {
+					'backlinks': postId
+				}
+			});
+		}
+
 		return postId;
 
 	},
@@ -344,20 +366,10 @@ module.exports = {
 			'sticky': -1,
 			'bumped': -1
 		}).skip(threadLimit).toArray();
-		//if there are any
 		if (threads.length === 0) {
-			return threads;
+			return;
 		}
-		//get the postIds
-		const threadIds = threads.map(thread => thread.postId);
-		//get all the posts from those threads
-		const threadPosts = await module.exports.getMultipleThreadPosts(board, threadIds);
-		//combine them
-		const postsAndThreads = threads.concat(threadPosts);
-		//get the mongoIds and delete them all
-		const postMongoIds = postsAndThreads.map(post => Mongo.ObjectId(post._id));
-		await module.exports.deleteMany(postMongoIds);
-		return threadIds;
+		await deletePosts(threads, board);
 	},
 
 	deleteMany: (ids) => {

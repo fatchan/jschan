@@ -5,7 +5,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = async (req, res, next, posts, board) => {
+module.exports = async (posts, board) => {
 
 	//filter to threads
 	const threads = posts.filter(x => x.thread == null);
@@ -37,6 +37,11 @@ module.exports = async (req, res, next, posts, board) => {
 
 	//combine them all into one array, there may be duplicates but it shouldnt matter
 	const allPosts = posts.concat(threadPosts)
+
+//NOTE: this is where, when implemented, file ref counts would be decremented
+//NOTE: this is where, when implemented, re-marking up posts that quoted deleted posts would be done
+//could use a destructuring with Array.reduce when i need to get files array, backlinks array and mongoId array
+//instead of doing 3 maps or big for loop
 
 	//get all mongoids and delete posts from
 	const postMongoIds = allPosts.map(post => Mongo.ObjectId(post._id))
