@@ -2,11 +2,6 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db/db.js')
-	, util = require('util')
-	, path = require('path')
-	, fs = require('fs')
-	, unlink = util.promisify(fs.unlink)
-	, readdir = util.promisify(fs.readdir);
 
 (async () => {
 	console.log('connecting to db...')

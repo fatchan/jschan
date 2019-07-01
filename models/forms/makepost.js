@@ -1,9 +1,7 @@
 'use strict';
 
 const path = require('path')
-	, util = require('util')
-	, crypto = require('crypto')
-	, randomBytes = util.promisify(crypto.randomBytes)
+	, { createHash, randomBytes } = require('crypto')
 	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
@@ -182,10 +180,10 @@ module.exports = async (req, res, next) => {
 	let userId = null;
 	if (!salt) {
 		//thread salt for IDs
-		salt = (await randomBytes(128)).toString('hex');
+		salt = (await randomBytes(128)).toString('base64');
 	}
 	if (res.locals.board.settings.ids) {
-		const fullUserIdHash = crypto.createHash('sha256').update(salt + ip).digest('hex');
+		const fullUserIdHash = createHash('sha256').update(salt + ip).digest('hex');
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 
