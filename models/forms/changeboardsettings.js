@@ -5,6 +5,7 @@ const Boards = require(__dirname+'/../../db/boards.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { buildHomepage, buildCatalog, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
 	, { remove } = require('fs-extra')
+	, deletePosts = require(__dirname+'/deletepost.js')
 
 module.exports = async (req, res, next) => {
 
@@ -47,12 +48,13 @@ module.exports = async (req, res, next) => {
 	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
 	if (newMaxPage < oldMaxPage) {
 		//prune old threads
-		const { action } = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
-		//remove board page html for pages > newMaxPage
-		for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
-			promises.push(remove(`${uploadDirectory}html/${req.params.board}/${i}.html`));
-		}
-		if (action) {
+		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		if (prunedThreads.length > 0) {
+			await deletePosts(prunedThreads, req.params.board);
+			//remove board page html for pages > newMaxPage
+			for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
+				promises.push(remove(`${uploadDirectory}html/${req.params.board}/${i}.html`));
+			}
 			//rebuild valid board pages for page numbers, and catalog for prunedthreads
 			promises.push(buildBoardMultiple(res.locals.board, 1, newMaxPage));
 			promises.push(buildCatalog(res.locals.board));

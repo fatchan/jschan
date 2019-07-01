@@ -75,7 +75,7 @@ module.exports = async (req, res, next) => {
 			const deleteIpPosts = await Posts.db.find(query).toArray();
 			res.locals.posts = res.locals.posts.concat(deleteIpPosts);
 			if (deleteIpPosts && deleteIpPosts.length > 0) {
-				const { action, message } = await deletePosts(req, res, next, deleteIpPosts, req.params.board);
+				const { action, message } = await deletePosts(deleteIpPosts, req.params.board);
 				messages.push(message);
 				if (action) {
 					aggregateNeeded = true;
@@ -86,7 +86,7 @@ module.exports = async (req, res, next) => {
 				}
 			}
 		} else if (req.body.delete) {
-			const { action, message } = await deletePosts(req, res, next, passwordPosts, req.params.board);
+			const { action, message } = await deletePosts(passwordPosts, req.params.board);
 			messages.push(message);
 			if (action) {
 				aggregateNeeded = true;

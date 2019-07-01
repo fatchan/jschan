@@ -2,8 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
-	, deletePosts = require(__dirname+'/../models/forms/deletepost.js')
-	, db = Mongo.client.db('jschan').collection('posts');
+	, db = Mongo.client.db('jschan').collection('posts')
 
 module.exports = {
 
@@ -366,10 +365,7 @@ module.exports = {
 			'sticky': -1,
 			'bumped': -1
 		}).skip(threadLimit).toArray();
-		if (threads.length === 0) {
-			return;
-		}
-		await deletePosts(threads, board);
+		return threads;
 	},
 
 	deleteMany: (ids) => {

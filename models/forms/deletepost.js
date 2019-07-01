@@ -36,7 +36,7 @@ module.exports = async (posts, board) => {
 	}
 
 	//combine them all into one array, there may be duplicates but it shouldnt matter
-	const allPosts = posts.concat(threadPosts)
+	const allPosts = posts.concat(threadPosts);
 
 //NOTE: this is where, when implemented, file ref counts would be decremented
 //NOTE: this is where, when implemented, re-marking up posts that quoted deleted posts would be done
@@ -44,7 +44,7 @@ module.exports = async (posts, board) => {
 //instead of doing 3 maps or big for loop
 
 	//get all mongoids and delete posts from
-	const postMongoIds = allPosts.map(post => Mongo.ObjectId(post._id))
+	const postMongoIds = allPosts.map(post => Mongo.ObjectId(post._id));
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 
 	//hooray!

@@ -27,6 +27,7 @@ const path = require('path')
 	, videoIdentify = require(__dirname+'/../../helpers/files/videoidentify.js')
 	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
+	, deletePosts = require(__dirname+'/deletepost.js')
 	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
@@ -289,7 +290,10 @@ console.log(`NEW POST -> ${successRedirect}`);
 		}
 	} else {
 		//new thread, prunes any old threads before rebuilds
-		await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		if (prunedThreads.length > 0) {
+			await deletePosts(prunedThreads, req.params.board);
+		}
 		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, Math.ceil(res.locals.board.settings.threadLimit/10)));
 	}
 

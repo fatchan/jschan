@@ -70,7 +70,7 @@ console.log('building board page', `${board._id}/${page === 1 ? 'index' : page}.
 			endpage = maxPage
 		}
 		const difference = endpage-startpage + 1; //+1 because for single pagemust be > 0
-		const threads = await Posts.getRecent(board._id, startpage, difference*Math.ceil(board.settings.threadLimit/10));
+		const threads = await Posts.getRecent(board._id, startpage, difference*10);
 
 		const buildArray = [];
 console.log('multi building board pages', `${board._id}/ ${startpage === 1 ? 'index' : startpage} -> ${endpage === 1 ? 'index' : endpage} .html`);
