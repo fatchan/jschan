@@ -271,8 +271,8 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 	if (typeof req.body.reply_limit === 'number' && (req.body.reply_limit < 1 || req.body.reply_limit > 1000)) {
 		errors.push('Reply Limit must be from 1-1000');
 	}
-	if (typeof req.body.thread_limit === 'number' && (req.body.thread_limit < 1 || req.body.thread_limit > 250)) {
-		errors.push('Threads Limit must be 1-250');
+	if (typeof req.body.thread_limit === 'number' && (req.body.thread_limit < 10 || req.body.thread_limit > 250)) {
+		errors.push('Threads Limit must be 10-250');
 	}
 	if (typeof req.body.max_files === 'number' && (req.body.max_files < 0 || req.body.max_files > 3)) {
 		errors.push('Max files must be 0-3');

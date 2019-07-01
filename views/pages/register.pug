@@ -26,4 +26,5 @@ block content
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
 					input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6' required)
 			input(type='submit', value='Register')
-		p Already have an account? #[a(href='/login.html') Login]
+		p: a(href='/login.html') Login
+		p: a(href='/changepassword.html') Change Password

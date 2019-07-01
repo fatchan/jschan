@@ -301,22 +301,20 @@ module.exports = {
 		data.postId = postId;
 
 		//insert the post itself
-		await db.insertOne(data);
+		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
 		//add backlinks to the posts this post quotes
-		if (data.quotes.length > 0) {
+		if (data.thread && data.quotes.length > 0) {
 			await db.updateMany({
-				'postId': {
-					'$in': data.quotes
-				},
-				'board': board
+				'_id': {
+					'$in': data.quotes.map(q => q._id)
+				}
 			}, {
 				'$push': {
-					'backlinks': postId
+					'backlinks': { _id: postMongoId, postId: postId }
 				}
 			});
 		}
-
 		return postId;
 
 	},
@@ -377,9 +375,7 @@ module.exports = {
 	},
 
 	deleteAll: (board) => {
-		return db.deleteMany({
-			'board': board
-		});
+		return db.deleteMany();
 	},
 
 	exists: async (req, res, next) => {

@@ -9,7 +9,7 @@ module.exports = async (posts, unlinkOnly) => {
 	let fileNames = [];
 	posts.forEach(post => {
 		fileNames = fileNames.concat(post.files.map(x => x.filename))
-	})
+	});
 
 	if (fileNames.length === 0) {
 		return {
@@ -18,6 +18,7 @@ module.exports = async (posts, unlinkOnly) => {
 	}
 
 	if (unlinkOnly) {
+//TODO: decrement ref counters when implemented
 		return {
 			message:`Unlinked ${fileNames.length} file(s) across ${posts.length} post(s)`,
 			action:'$set',
@@ -38,6 +39,5 @@ module.exports = async (posts, unlinkOnly) => {
 			message:`Deleted ${fileNames.length} file(s) from server`,
 		};
 	}
-
 
 }

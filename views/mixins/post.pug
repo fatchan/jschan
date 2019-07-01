@@ -88,7 +88,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 			if post.backlinks && post.backlinks.length > 0
 				.replies Replies: 
 					each backlink in post.backlinks
-						a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink}`) &gt;&gt;#{backlink}
+						a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`) &gt;&gt;#{backlink.postId}
 						|  
 	if manage === true
 		each report in post.reports

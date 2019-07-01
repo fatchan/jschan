@@ -3,7 +3,7 @@
 const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
 	, Mongo = require(__dirname+'/../../db/db.js')
-	, Posts = require(__dirname+'/../../db/posts.js');
+	, Posts = require(__dirname+'/../../db/posts.js')
 
 module.exports = async (posts, board) => {
 
@@ -38,13 +38,46 @@ module.exports = async (posts, board) => {
 	//combine them all into one array, there may be duplicates but it shouldnt matter
 	const allPosts = posts.concat(threadPosts);
 
-//NOTE: this is where, when implemented, file ref counts would be decremented
-//NOTE: this is where, when implemented, re-marking up posts that quoted deleted posts would be done
-//could use a destructuring with Array.reduce when i need to get files array, backlinks array and mongoId array
-//instead of doing 3 maps or big for loop
+	//get files for ref counting, backlinks for post re-markup, mongoids for deleting
+	const { postFiles, postBacklinks, postMongoIds } = allPosts.reduce((acc, post) => {
+		if (post.files.length > 0) {
+			acc.postFiles = acc.postFiles.concat(post.files);
+		}
+		if (post.backlinks.length > 0) {
+			acc.postBacklinks = acc.postBacklinks.concat(post.backlinks);
+		}
+		acc.postMongoIds.push(post._id);
+		return acc;
+	}, { postFiles: [], postBacklinks: [], postMongoIds: [] });
 
-	//get all mongoids and delete posts from
-	const postMongoIds = allPosts.map(post => Mongo.ObjectId(post._id));
+	//is there a nicer way to do this
+	const bulkWrites = [];
+	for (let j = 0; j < allPosts.length; j++) {
+		const post = allPosts[j];
+		for (let i = 0; i < post.quotes.length; i++) {
+			const quote = post.quotes[i];
+			//remove the backlink to this post from any post that it quoted
+			bulkWrites.push({
+				'updateOne': {
+					'filter': {
+						'_id': quote._id
+					},
+					'update': {
+						'$pull': {
+							'backlinks': {
+								'postId': post.postId
+							}
+						}
+					}
+				}
+			});
+		}
+	}
+	await Posts.db.bulkWrite(bulkWrites);
+
+//TODO: remarkup to unlink quotes in posts that quote deleted posts
+//TODO: file ref counting decrement, oncei implement counting in make post
+
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 
 	//hooray!

@@ -1,7 +1,7 @@
 
 'use strict';
 
-const Mongo = require(__dirname+'/db/db.js')
+const Mongo = require(__dirname+'/db/db.js');
 
 (async () => {
 	console.log('connecting to db...')
@@ -16,13 +16,8 @@ const Mongo = require(__dirname+'/db/db.js')
 	console.log('deleting accounts')
 	await Accounts.deleteAll();
 	console.log('deleting posts')
-	await Posts.deleteAll('pol');
-	await Posts.deleteAll('b');
-	await Posts.deleteAll('t');
+	await Posts.deleteAll();
 	console.log('deleting boards')
-	await Boards.deleteIncrement('pol');
-	await Boards.deleteIncrement('b');
-	await Boards.deleteIncrement('t');
 	await Boards.deleteAll();
 	console.log('deleting bans');
 	await Bans.deleteAll();
@@ -164,7 +159,7 @@ const Mongo = require(__dirname+'/db/db.js')
 	});
 	console.log('creating admin account: admin:changeme');
 	await Accounts.insertOne('admin', 'changeme', 3);
-	Mongo.client.close()
+	Mongo.client.close();
 	console.log('done');
 	process.exit(0);
 })();

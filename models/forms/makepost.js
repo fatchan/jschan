@@ -225,7 +225,7 @@ module.exports = async (req, res, next) => {
 	let quotes = [];
 	if (message && message.length > 0) {
 		message = simpleMarkdown(message);
-		const { quotedMessage, threadQuotes } = await linkQuotes(req.params.board, message);
+		const { quotedMessage, threadQuotes } = await linkQuotes(req.params.board, message, req.body.thread || null);
 		message = quotedMessage;
 		quotes = threadQuotes;
 		message = sanitize(message, sanitizeOptions);

@@ -5,7 +5,7 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, quoteRegex = />>\d+/g
 	, crossQuoteRegex = />>>\/\w+\/\d*$/gm;
 
-module.exports = async (board, text) => {
+module.exports = async (board, text, thread) => {
 
 	//get the matches
 	const quotes = text.match(quoteRegex);
@@ -66,29 +66,38 @@ module.exports = async (board, text) => {
 			if (!postThreadIdMap[post.board]) {
 				postThreadIdMap[post.board] = {};
 			}
-			postThreadIdMap[post.board][post.postId] = post.thread || post.postId;
+			postThreadIdMap[post.board][post.postId] = {
+				'_id': post._id,
+				'thread': post.thread || post.postId,
+				'postId': post.postId
+			};
 		}
 	}
 
 	//then replace the quotes with only ones that exist
+	const addedQuotes = new Set();
 	const threadQuotes = [];
 	if (quotes && Object.keys(postThreadIdMap).length > 0) {
 		text = text.replace(quoteRegex, (match) => {
 			const quotenum = +match.substring(2);
 			if (postThreadIdMap[board] && postThreadIdMap[board][quotenum]) {
-				threadQuotes.push(quotenum)
-				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum]}.html#${quotenum}'>&gt;&gt;${quotenum}</a>${postThreadIdMap[board][quotenum] === quotenum ? ' <small>(OP)</small> ' : ''}`;
+				if (!addedQuotes.has(postThreadIdMap[board][quotenum]._id) && postThreadIdMap[board][quotenum].thread === thread) {
+					threadQuotes.push(postThreadIdMap[board][quotenum]);
+					addedQuotes.add(postThreadIdMap[board][quotenum]._id);
+				}
+				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum].thread}.html#${quotenum}'>&gt;&gt;${quotenum}</a>${postThreadIdMap[board][quotenum].postId == thread ? ' <small>(OP)</small> ' : ''}`;
 			}
 			return match;
 		});
 	}
+
 	if (crossQuotes) {
 		text = text.replace(crossQuoteRegex, (match) => {
 			const quote = match.split('/');
 			const quoteboard = quote[1];
 			const quotenum = +quote[2];
 			if (postThreadIdMap[quoteboard] && postThreadIdMap[quoteboard][quotenum]) {
-				return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum]}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
+				return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum].thread}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
 			} else if (!quote[2]) {
 				return `<a class='quote' href='/${quoteboard}/index.html'>&gt;&gt;&gt;/${quoteboard}/</a>`;
 			}
@@ -96,6 +105,6 @@ module.exports = async (board, text) => {
 		});
 	}
 
-	return { quotedMessage: text, threadQuotes: [...new Set(threadQuotes)] };
+	return { quotedMessage: text, threadQuotes };
 
 }
