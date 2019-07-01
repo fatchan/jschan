@@ -42,7 +42,7 @@ const express = require('express')
 		cookie: {
 			httpOnly: true,
 			secure: true,
-			sameSite: 'lax',
+			sameSite: 'strict',
 		}
 	}));
 

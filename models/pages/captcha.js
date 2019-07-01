@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 			'maxAge': 5*60*1000, //5 minute cookie
 			'httpOnly': true,
 			'secure': true,
-			'sameSite': 'lax'
+			'sameSite': 'strict'
 		})
 		.redirect(`/captcha/${captchaId}.jpg`);
 
