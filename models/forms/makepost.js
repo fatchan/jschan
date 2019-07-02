@@ -58,7 +58,7 @@ module.exports = async (req, res, next) => {
 				'redirect': redirect
 			});
 		}
-		if (thread.replyposts >= res.locals.board.settings.replyLimit) { //reply limit
+		if (thread.replyposts >= res.locals.board.settings.replyLimit && !thread.cyclic) { //reply limit
 			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
@@ -263,11 +263,25 @@ module.exports = async (req, res, next) => {
 			'sticky': false,
 			'locked': false,
 			'saged': false,
+			'cyclic': false,
 			'salt': salt
 		});
 	}
 
-	const postId = await Posts.insertOne(req.params.board, data, thread);
+	const postId = await Posts.insertOne(res.locals.board, data, thread);
+
+	//for cyclic threads, delete posts beyond bump limit
+	if (thread && thread.cyclic && thread.replyposts > res.locals.board.settings.replyLimit) {
+		//is there a way to NOT have to fetch before deleting for this?
+		const cyclicOverflowPosts = await Posts.db.find({
+			'thread': data.thread,
+			'board': req.params.board
+		}).sort({
+			'postId': -1,
+		}).skip(res.locals.board.settings.replyLimit).toArray();
+		await deletePosts(cyclicOverflowPosts, req.params.board);
+	}
+
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
 console.log('--------------------------------');
 console.log(`NEW POST -> ${successRedirect}`);

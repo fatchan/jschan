@@ -10,13 +10,16 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 			|	
 			if !post.thread
 				if post.sticky
-					img(src='/img/sticky.svg' height='12' title='Stickied')
+					img(src='/img/sticky.svg' height='12' title='Sticky')
 					| 
 				if post.saged
-					img(src='/img/saged.svg' height='12' title='Permasaged')
+					img(src='/img/saged.svg' height='12' title='Bumplocked')
 					| 
 				if post.locked
 					img(src='/img/locked.svg' height='12' title='Locked')
+					| 
+				if post.cyclic
+					img(src='/img/cyclic.svg' height='13' title='Cyclic')
 					| 
 			if post.subject
 				span.post-subject #{post.subject}

@@ -274,7 +274,7 @@ module.exports = {
 		if (data.thread !== null) {
 			const filter = {
 				'postId': data.thread,
-				'board': board
+				'board': board._id
 			}
 			//update thread reply and reply file count
 			const query = {
@@ -297,7 +297,7 @@ module.exports = {
 		}
 
 		//get the postId and add it to the post
-		const postId = await Boards.getNextId(board);
+		const postId = await Boards.getNextId(board._id);
 		data.postId = postId;
 
 		//insert the post itself

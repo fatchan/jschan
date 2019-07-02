@@ -26,6 +26,7 @@ module.exports = async (board, text, thread) => {
 			}
 		});
 	}
+
 	if (crossQuotes) {
 		for (let i = 0; i < crossQuotes.length; i++) {
 			const crossQuote = crossQuotes[i].split('/');

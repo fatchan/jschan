@@ -3,13 +3,16 @@ mixin catalogtile(board, post, index)
 		- const postURL = `/${board._id}/thread/${post.postId}.html#${post.postId}`
 		header.post-info
 			if post.sticky
-				img(src='/img/sticky.svg' height='12')
+				img(src='/img/sticky.svg' height='12' title='Sticky')
 				| 
 			if post.saged
-				img(src='/img/saged.svg' height='12')
+				img(src='/img/saged.svg' height='12' title='Bumplocked')
 				| 
 			if post.locked
-				img(src='/img/locked.svg' height='12')
+				img(src='/img/locked.svg' height='12' title='Locked')
+				| 
+			if post.cyclic
+				img(src='/img/cyclic.svg' height='13' title='Cyclic')
 				| 
 			a.no-decoration.post-subject(href=postURL) #{post.subject || '#'+post.postId}
 			|  - 
@@ -24,7 +27,11 @@ mixin catalogtile(board, post, index)
 					if post.spoiler
 						img.catalog-thumb(src='/img/spoiler.png' width='64' height='64')
 					else
-						object.catalog-thumb(data=`/img/thumb-${post.files[0].filename.split('.')[0]}.jpg` width='64' height='64')
-							img(src='/img/deleted.png' width='64' height='64')
+						if post.files[0].hasThumb
+							object.catalog-thumb(data=`/img/thumb-${post.files[0].filename.split('.')[0]}.jpg` width='64' height='64')
+								img(src='/img/deleted.png' width='64' height='64')
+						else
+							object.catalog-thumb(data=`/img/${post.files[0].filename}` width='64' height='64')
+								img(src='/img/deleted.png' width='64' height='64')
 		if post.message
 			pre.no-m-p.post-message !{post.message}

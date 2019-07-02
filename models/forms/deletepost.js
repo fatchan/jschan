@@ -73,7 +73,9 @@ module.exports = async (posts, board) => {
 			});
 		}
 	}
-	await Posts.db.bulkWrite(bulkWrites);
+	if (bulkWrites.length > 0) {
+		await Posts.db.bulkWrite(bulkWrites);
+	}
 
 //TODO: remarkup to unlink quotes in posts that quote deleted posts
 //TODO: file ref counting decrement, oncei implement counting in make post

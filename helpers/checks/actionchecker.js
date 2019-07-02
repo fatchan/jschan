@@ -7,6 +7,7 @@ const actions = [
 	{name:'delete', global:true, auth:false, passwords:true, build:true},
 	{name:'lock', global:false, auth:true, passwords:false, build:true},
 	{name:'sticky', global:false, auth:true, passwords:false, build:true},
+	{name:'cyclic', global:false, auth:true, passwords:false, build:true},
 	{name:'sage', global:false, auth:true, passwords:false, build:true},
 	{name:'report', global:false, auth:false, passwords:false, build:false},
 	{name:'global_report', global:false, auth:false, passwords:false, build:false},
