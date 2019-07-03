@@ -9,6 +9,7 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, stickyPosts = require(__dirname+'/stickyposts.js')
 	, sagePosts = require(__dirname+'/sageposts.js')
 	, lockPosts = require(__dirname+'/lockposts.js')
+	, cyclePosts = require(__dirname+'/cycleposts.js')
 	, deletePostsFiles = require(__dirname+'/deletepostsfiles.js')
 	, reportPosts = require(__dirname+'/reportpost.js')
 	, globalReportPosts = require(__dirname+'/globalreportpost.js')
@@ -106,7 +107,7 @@ module.exports = async (req, res, next) => {
 				if (action) {
 					aggregateNeeded = true;
 				} else {
-					req.body.delete_uiip_board = false;
+					req.body.delete_ip_board = false;
 					req.body.delete_ip_global = false;
 					res.locals.actions.anyValid--;
 				}
@@ -143,7 +144,7 @@ module.exports = async (req, res, next) => {
 				}
 				messages.push(message);
 			}
-			//lock, sticky, sage
+			//lock, sticky, sage, cyclic
 			if (req.body.sage) {
 				const { message, action, query } = sagePosts(res.locals.posts);
 				if (action) {
@@ -170,6 +171,16 @@ module.exports = async (req, res, next) => {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				} else {
                     req.body.sticky = false;
+					res.locals.actions.anyValid--;
+                }
+				messages.push(message);
+			}
+			if (req.body.cyclic) {
+				const { message, action, query } = cyclePosts(res.locals.posts);
+				if (action) {
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
+				} else {
+                    req.body.cyclic = false;
 					res.locals.actions.anyValid--;
                 }
 				messages.push(message);
@@ -244,10 +255,10 @@ module.exports = async (req, res, next) => {
 			//if there are actions that can cause some rebuilding
 			if (res.locals.actions.anyBuild > 0) {
 
-				//get only posts (so we can use them for thread ids
+				//recalculate replies and image counts
 				if (aggregateNeeded) {
 					const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
-					//recalculate replies and image counts
+//TODO: do this in a better way.
 					await Promise.all(selectedPosts.map(async (post) => {
 						const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
 						let replyposts = 0;
@@ -343,7 +354,7 @@ module.exports = async (req, res, next) => {
 						} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
 							//rebuild current and newer pages
 							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, threadPageOldest));
-						} else if (req.body.lock || req.body.sage || req.body.unlink_file) {
+						} else if (req.body.lock || req.body.sage || req.body.cyclic || req.body.unlink_file) {
 							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
 						} else if (req.body.spoiler || req.body.ban || req.body.global_ban) {
 							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
