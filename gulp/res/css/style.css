@@ -122,9 +122,12 @@ object {
 	max-height: 300px;
 	width: 250px;
 	overflow: hidden;
-	overflow-y: auto;
 	border: 2px solid #B7C5D9;
 	box-sizing: border-box;
+}
+
+.catalog-tile:hover {
+	overflow-y: scroll;
 }
 
 p {
@@ -641,7 +644,6 @@ hr {
 	}
 
 	.catalog-tile {
-		overflow-y: hidden;
 		width: 50%;
 		margin: 0 0 2px 0;
 	}
@@ -649,10 +651,6 @@ hr {
 	.catalog-tile:nth-child(odd) {
 		margin-right: 2px;
 		width: calc(50% - 2px);
-	}
-
-	.catalog-tile:hover {
-		overflow-y: scroll;
 	}
 
 	.table-body {

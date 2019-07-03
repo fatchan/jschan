@@ -15,7 +15,7 @@ const Posts = require(__dirname+'/../../db/posts.js')
 
 module.exports = (text) => {
 
-	//pinktext
+	//pinktext 
 	text = text.replace(pinktextRegex, (match, pinktext) => {
 		return `<span class='pinktext'>&lt;${pinktext}</span>`;
 	});
@@ -27,7 +27,7 @@ module.exports = (text) => {
 
 	//links
 	text = text.replace(linkRegex, (match) => {
-		return `<a href="${match}">${match}</a>`;
+		return `<a referrerpolicy='strict-origin' href='${match}'>${match}</a>`;
 	});
 
 	//bold
