@@ -50,28 +50,26 @@ module.exports = async (posts, board) => {
 		return acc;
 	}, { postFiles: [], postBacklinks: [], postMongoIds: [] });
 
-	//is there a nicer way to do this
 	const bulkWrites = [];
 	for (let j = 0; j < allPosts.length; j++) {
 		const post = allPosts[j];
-		for (let i = 0; i < post.quotes.length; i++) {
-			const quote = post.quotes[i];
-			//remove the backlink to this post from any post that it quoted
-			bulkWrites.push({
-				'updateOne': {
-					'filter': {
-						'_id': quote._id
-					},
-					'update': {
-						'$pull': {
-							'backlinks': {
-								'postId': post.postId
-							}
+		//remove the backlink to this post from any post that it quoted
+		bulkWrites.push({
+			'updateMany': {
+				'filter': {
+					'_id': {
+						'$in': post.quotes.map(q => q._id)
+					}
+				},
+				'update': {
+					'$pull': {
+						'backlinks': {
+							'postId': post.postId
 						}
 					}
 				}
-			});
-		}
+			}
+		});
 	}
 	if (bulkWrites.length > 0) {
 		await Posts.db.bulkWrite(bulkWrites);

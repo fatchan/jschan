@@ -272,7 +272,6 @@ module.exports = async (req, res, next) => {
 
 	//for cyclic threads, delete posts beyond bump limit
 	if (thread && thread.cyclic && thread.replyposts > res.locals.board.settings.replyLimit) {
-		//is there a way to NOT have to fetch before deleting for this?
 		const cyclicOverflowPosts = await Posts.db.find({
 			'thread': data.thread,
 			'board': req.params.board
