@@ -7,18 +7,21 @@ module.exports = async (posts, unlinkOnly) => {
 
 	//get filenames from all the posts
 	let fileNames = [];
-	posts.forEach(post => {
-		fileNames = fileNames.concat(post.files.map(x => x.filename))
-	});
-
-	if (fileNames.length === 0) {
-		return {
-			message: 'No files found'
+	for (let i = 0; i < posts.length; i++) {
+		const post = posts[i];
+		if (post.files.length > 0) {
+			fileNames = fileNames.concat(post.files.map(x => x.filename));
 		}
 	}
 
+	if (fileNames.length == 0) {
+		return {
+			 message: 'No files found'
+		};
+	}
+
 	if (unlinkOnly) {
-//TODO: decrement ref counters when implemented
+//TODO: decrement ref counters here when implemented
 		return {
 			message:`Unlinked ${fileNames.length} file(s) across ${posts.length} post(s)`,
 			action:'$set',
@@ -27,6 +30,7 @@ module.exports = async (posts, unlinkOnly) => {
 			}
 		};
 	} else {
+//TODO: delete ref counters for this file here
 		//delete all the files using the filenames
 		await Promise.all(fileNames.map(async filename => {
 			//dont question it.

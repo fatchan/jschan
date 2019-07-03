@@ -14,6 +14,8 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, globalReportPosts = require(__dirname+'/globalreportpost.js')
 	, dismissReports = require(__dirname+'/dismissreport.js')
 	, dismissGlobalReports = require(__dirname+'/dismissglobalreport.js')
+	, { remove } = require('fs-extra')
+	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
@@ -43,6 +45,30 @@ module.exports = async (req, res, next) => {
 		passwordPosts = res.locals.posts;
 		passwordPostMongoIds = postMongoIds;
 	}
+
+	//get a map of boards to threads affected
+	const boardThreadMap = {};
+	for (let i = 0; i < res.locals.posts.length; i++) {
+		const post = res.locals.posts[i];
+		if (!boardThreadMap[post.board]) {
+			boardThreadMap[post.board] = [];
+		}
+		if (!post.thread) {
+			//a thread was directly selected on this board, not just posts. so we handle deletes differently
+			boardThreadMap[post.board]['selectedThreads'] = true;
+		}
+		boardThreadMap[post.board].push(post.thread || post.postId);
+	}
+
+	const beforePages = {};
+	const threadBoards = Object.keys(boardThreadMap);
+	//get number of pages for each before actions for deleting old pages and changing page nav numbers incase number of pages changes
+	if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
+		await Promise.all(threadBoards.map(async board => {
+			beforePages[board] = Math.ceil((await Posts.getPages(board)) / 10);
+		}));
+	}
+
 	const messages = [];
 	const combinedQuery = {};
 	const passwordCombinedQuery = {};
@@ -210,90 +236,65 @@ module.exports = async (req, res, next) => {
 				});
 			}
 
-			//get a map of boards to threads affected
-			const boardThreadMap = {};
-			const queryOrs = [];
-			for (let i = 0; i < res.locals.posts.length; i++) {
-				const post = res.locals.posts[i];
-				if (!boardThreadMap[post.board]) {
-					boardThreadMap[post.board] = [];
-				}
-				if (!post.thread) {
-					//a thread was directly selected on this board, not just posts. so we handle deletes differently
-					boardThreadMap[post.board]['selectedThreads'] = true;
-				}
-				boardThreadMap[post.board].push(post.thread || post.postId);
-			}
-
-			const beforePages = {};
-			const threadBoards = Object.keys(boardThreadMap);
-			//get how many pages each board is to know whether we should rebuild all pages (because of page nav changes)
-			//only if deletes actions selected because this could result in number of pages to change
-			if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
-				await Promise.all(threadBoards.map(async board => {
-					beforePages[board] = Math.ceil((await Posts.getPages(board)) / 10);
-				}));
-			}
-
 			//execute actions now
 			if (bulkWrites.length > 0) {
 				await Posts.db.bulkWrite(bulkWrites);
 			}
 
-			//get only posts (so we can use them for thread ids
-			if (aggregateNeeded) {
-				const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
-				//recalculate replies and image counts
-				await Promise.all(selectedPosts.map(async (post) => {
-					const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
-					let replyposts = 0;
-					let replyfiles = 0;
-					if (replyCounts[0]) {
-						replyposts = replyCounts[0].replyposts;
-						replyfiles = replyCounts[0].replyfiles;
-					}
-					Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
-				}));
-			}
-
-			//make it into an OR query for the db
-			for (let i = 0; i < threadBoards.length; i++) {
-				const threadBoard = threadBoards[i];
-				boardThreadMap[threadBoard] = [...new Set(boardThreadMap[threadBoard])]
-				queryOrs.push({
-					'board': threadBoard,
-					'postId': {
-						'$in': boardThreadMap[threadBoard]
-					}
-				})
-			}
-
-			//fetch threads per board that we only checked posts for
-			let threadsEachBoard = await Posts.db.find({
-				'thread': null,
-				'$or': queryOrs
-			}).toArray();
-			//combine it with what we already had
-			const selectedThreads = res.locals.posts.filter(post => post.thread === null)
-			threadsEachBoard = threadsEachBoard.concat(selectedThreads)
-
-			//get the oldest and newest thread for each board to determine how to delete
-			const threadBounds = threadsEachBoard.reduce((acc, curr) => {
-				if (!acc[curr.board] || curr.bumped < acc[curr.board].bumped) {
-					acc[curr.board] = { oldest: null, newest: null};
-				}
-				if (!acc[curr.board].oldest || curr.bumped < acc[curr.board].oldest.bumped) {
-					acc[curr.board].oldest = curr;
-				}
-				if (!acc[curr.board].newest || curr.bumped > acc[curr.board].newest.bumped) {
-					acc[curr.board].newest = curr;
-				}
-				return acc;
-			}, {});
-
 			//if there are actions that can cause some rebuilding
-			//TODO: move this check earlier and move the db builkwrite earlier if possible
 			if (res.locals.actions.anyBuild > 0) {
+
+				//get only posts (so we can use them for thread ids
+				if (aggregateNeeded) {
+					const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
+					//recalculate replies and image counts
+					await Promise.all(selectedPosts.map(async (post) => {
+						const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
+						let replyposts = 0;
+						let replyfiles = 0;
+						if (replyCounts[0]) {
+							replyposts = replyCounts[0].replyposts;
+							replyfiles = replyCounts[0].replyfiles;
+						}
+						Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
+					}));
+				}
+
+				//make it into an OR query for the db
+				const queryOrs = [];
+				for (let i = 0; i < threadBoards.length; i++) {
+					const threadBoard = threadBoards[i];
+					boardThreadMap[threadBoard] = [...new Set(boardThreadMap[threadBoard])]
+					queryOrs.push({
+						'board': threadBoard,
+						'postId': {
+							'$in': boardThreadMap[threadBoard]
+						}
+					})
+				}
+
+				//fetch threads per board that we only checked posts for
+				let threadsEachBoard = await Posts.db.find({
+					'thread': null,
+					'$or': queryOrs
+				}).toArray();
+				//combine it with what we already had
+				const selectedThreads = res.locals.posts.filter(post => post.thread === null)
+				threadsEachBoard = threadsEachBoard.concat(selectedThreads)
+
+				//get the oldest and newest thread for each board to determine how to delete
+				const threadBounds = threadsEachBoard.reduce((acc, curr) => {
+					if (!acc[curr.board] || curr.bumped < acc[curr.board].bumped) {
+						acc[curr.board] = { oldest: null, newest: null};
+					}
+					if (!acc[curr.board].oldest || curr.bumped < acc[curr.board].oldest.bumped) {
+						acc[curr.board].oldest = curr;
+					}
+					if (!acc[curr.board].newest || curr.bumped > acc[curr.board].newest.bumped) {
+						acc[curr.board].newest = curr;
+					}
+					return acc;
+				}, {});
 
 				const parallelPromises = []
 				const boardNames = Object.keys(threadBounds);
@@ -310,12 +311,6 @@ module.exports = async (req, res, next) => {
 				for (let i = 0; i < boardNames.length; i++) {
 					const boardName = boardNames[i];
 					const bounds = threadBounds[boardName];
-					//always need to refresh catalog
-					/*
-						TODO: not rebuild catalog when a building action occurs that only affects thread posts
-						e.g. spoiler a post images that isnt an OP. This wont affect the catalog at all since
-						reply and image counts dont change, and the OP isnt changed in the catalog tile.
-					*/
 					//rebuild impacted threads
 					for (let j = 0; j < boardThreadMap[boardName].length; j++) {
 						parallelPromises.push(buildThread(boardThreadMap[boardName][j], buildBoards[boardName]));
@@ -324,9 +319,17 @@ module.exports = async (req, res, next) => {
 					const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
 					let catalogRebuild = true;
 					if (beforePages[boardName] && beforePages[boardName] !== afterPages) {
-						//amount of pages changed, rebuild all pages
+						//amount of pages changed, rebuild all pages and delete  any further pages (if pages amount decreased)
+						if (afterPages < beforePages[boardName]) {
+							//amount of pages decreased
+							for (let k = beforePages[boardName]; k > afterPages; k--) {
+								//deleting html for pages that no longer should exist
+								parallelPromises.push(remove(`${uploadDirectory}html/${boardName}/${k}.html`));
+							}
+						}
 						parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, afterPages));
 					} else {
+						//number of pages did not change, only possibly building existing pages
 						const threadPageOldest = await Posts.getThreadPage(boardName, bounds.oldest);
 						const threadPageNewest = bounds.oldest.postId === bounds.newest.postId ? threadPageOldest : await Posts.getThreadPage(boardName, bounds.newest);
 						if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
