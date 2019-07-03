@@ -3,21 +3,20 @@
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return !post.thread && !post.sticky
+		return !post.thread && !post.cyclic
 	})
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'No thread(s) to sticky',
+			message: 'No thread(s) to cycle',
 		};
 	}
 
 	return {
-		message: `Stickied ${filteredposts.length} thread(s)`,
+		message: `Cycled ${filteredposts.length} thread(s)`,
 		action: '$set',
 		query: {
-			'sticky': true,
-			'bumped': 8640000000000000
+			'cyclic': true,
 		}
 	};
 

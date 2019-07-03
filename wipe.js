@@ -30,7 +30,7 @@ const Mongo = require(__dirname+'/db/db.js');
 		sequence_value: 1,
 		settings: {
 			name: 'file',
-			description: 'catching people from 2016',
+			description: 'testing new file types',
 			captcha: false,
 			forceAnon: false,
 			ids: false,
@@ -65,7 +65,7 @@ const Mongo = require(__dirname+'/db/db.js');
 			threadLimit: 200,
 			replyLimit: 500,
 			maxFiles: 3,
-			forceOPSubject: false,
+			forceOPSubject: true,
 			forceOPMessage: true,
 			forceOPFile: true,
 			minMessageLength: 0,
@@ -117,7 +117,7 @@ const Mongo = require(__dirname+'/db/db.js');
 			maxFiles: 0,
 			forceOPSubject: false,
 			forceOPMessage: true,
-			forceOPFile: true,
+			forceOPFile: false,
 			minMessageLength: 0,
 			defaultName: 'Anonymous',
 		}

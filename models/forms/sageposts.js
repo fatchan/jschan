@@ -13,7 +13,7 @@ module.exports = (posts) => {
 	}
 
 	return {
-		message: `Saged ${filteredposts.length} post(s)`,
+		message: `Saged ${filteredposts.length} thread(s)`,
 		action: '$set',
 		query: {
 			'saged': true

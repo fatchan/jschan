@@ -13,7 +13,7 @@ module.exports = (posts) => {
 	}
 
 	return {
-		message: `Locked ${filteredposts.length} post(s)`,
+		message: `Locked ${filteredposts.length} thread(s)`,
 		action: '$set',
 		query: {
 			'locked': true
