@@ -4,6 +4,16 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, { remove } = require('fs-extra')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
+	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
+	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
+	, sanitize = require('sanitize-html')
+	, sanitizeOptions = {
+		allowedTags: [ 'span', 'a', 'em', 'strong', 'small' ],
+		allowedAttributes: {
+			'a': [ 'href', 'class' ],
+			'span': [ 'class' ]
+		}
+	}
 
 module.exports = async (posts, board) => {
 
@@ -26,7 +36,7 @@ module.exports = async (posts, board) => {
 			threadPosts = await Posts.getMultipleThreadPosts(board, threadPostIds);
 		} else {
 			//otherwise we fetch posts from threads on different boards separarely
-			//TODO: use bulkwrite or construct a large $or query so this can be tackled in a single db query
+//TODO: use and $or/$in query so this can be tackled in a single db query
 			await Promise.all(threads.map(async thread => {
 				//for each thread, fetch all posts from the matching board and thread matching the threads postId
 				const currentThreadPosts = await Posts.getThreadPosts(thread.board, thread.postId);
@@ -50,35 +60,91 @@ module.exports = async (posts, board) => {
 		return acc;
 	}, { postFiles: [], postBacklinks: [], postMongoIds: [] });
 
+//TODO: file ref counting decrement, once i implement counting in make post
+
+	//use this to not do unnecessary actions for posts where the thread is being deleted
+	const deleteThreadMap = {};
+	for (let i = 0; i < threads.length; i++) {
+		const thread = threads[i];
+		//if exists, add to set, else make the set
+		if (!deleteThreadMap[thread.board]) {
+			 deleteThreadMap[thread.board] = new Set();
+		}
+		deleteThreadMap[thread.board].add(thread.postId);
+	}
+
 	const bulkWrites = [];
+	const backlinkRebuilds = new Set();
 	for (let j = 0; j < allPosts.length; j++) {
 		const post = allPosts[j];
-		//remove the backlink to this post from any post that it quoted
-		bulkWrites.push({
-			'updateMany': {
-				'filter': {
-					'_id': {
-						'$in': post.quotes.map(q => q._id)
-					}
-				},
-				'update': {
-					'$pull': {
-						'backlinks': {
-							'postId': post.postId
-						}
-					}
+		backlinkRebuilds.delete(post._id); //make sure we dont try and remarkup this post since its getting deleted.
+		if (post.thread != null && !deleteThreadMap[post.board] || !deleteThreadMap[post.board].has(post.thread)) {
+			//get backlinks for posts to remarkup
+			for (let i = 0; i < post.backlinks.length; i++) {
+				const backlink = post.backlinks[i];
+				if (!backlinkRebuilds.has(backlink._id)) {
+					backlinkRebuilds.add(backlink._id);
 				}
 			}
-		});
+
+			//remove backlinks to this post from anything it quoted
+			if (post.quotes.length > 0) {
+				bulkWrites.push({
+					'updateMany': {
+						'filter': {
+							'_id': {
+								'$in': post.quotes.map(q => q._id)
+							}
+						},
+						'update': {
+							'$pull': {
+								'backlinks': {
+									'postId': post.postId
+								}
+							}
+						}
+					}
+				});
+			}
+		}
+
 	}
+
+	//deleting before remarkup so quotes are accurate
+	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
+
+	//get posts that quoted deleted posts so we can remarkup them
+	if (backlinkRebuilds.size > 0) {
+		const remarkupPosts = await Posts.globalGetPosts([...backlinkRebuilds]);
+		for (let i = 0; i < remarkupPosts.length; i++) {
+			const post = remarkupPosts[i];
+//TODO: make this more efficient. possible to do posts from same thread at same time.
+			if (post.nomarkup && post.nomarkup.length > 0) {
+				//if the post had a message, redo the markup
+				let message = simpleMarkdown(post.nomarkup);
+				const { quotedMessage, threadQuotes } = await linkQuotes(post.board, post.nomarkup, post.thread);
+				message = sanitize(quotedMessage, sanitizeOptions);
+				bulkWrites.push({
+					'updateOne': {
+		                'filter': {
+		                    '_id': post._id
+		                },
+		                'update': {
+		                    '$set': {
+		                        'quotes': threadQuotes,
+								'message': message
+		                    }
+		                }
+		            }
+		        });
+			}
+		}
+	}
+
+	//bulkwrite it all
 	if (bulkWrites.length > 0) {
 		await Posts.db.bulkWrite(bulkWrites);
 	}
-
-//TODO: remarkup to unlink quotes in posts that quote deleted posts
-//TODO: file ref counting decrement, oncei implement counting in make post
-
-	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 
 	//hooray!
 	return { action: deletedPosts > 0, message:`Deleted ${threads.length} threads and ${deletedPosts-threads.length} posts` };

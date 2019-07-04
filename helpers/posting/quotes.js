@@ -76,15 +76,13 @@ module.exports = async (board, text, thread) => {
 	}
 
 	//then replace the quotes with only ones that exist
-	const addedQuotes = new Set();
-	const threadQuotes = [];
+	const threadQuotes = new Set();
 	if (quotes && Object.keys(postThreadIdMap).length > 0) {
 		text = text.replace(quoteRegex, (match) => {
 			const quotenum = +match.substring(2);
 			if (postThreadIdMap[board] && postThreadIdMap[board][quotenum]) {
-				if (!addedQuotes.has(postThreadIdMap[board][quotenum]._id) && postThreadIdMap[board][quotenum].thread === thread) {
-					threadQuotes.push(postThreadIdMap[board][quotenum]);
-					addedQuotes.add(postThreadIdMap[board][quotenum]._id);
+				if (!threadQuotes.has(postThreadIdMap[board][quotenum]) && postThreadIdMap[board][quotenum].thread === thread) {
+					threadQuotes.add(postThreadIdMap[board][quotenum]);
 				}
 				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum].thread}.html#${quotenum}'>&gt;&gt;${quotenum}</a>${postThreadIdMap[board][quotenum].postId == thread ? ' <small>(OP)</small> ' : ''}`;
 			}
@@ -106,6 +104,6 @@ module.exports = async (board, text, thread) => {
 		});
 	}
 
-	return { quotedMessage: text, threadQuotes };
+	return { quotedMessage: text, threadQuotes: [...threadQuotes] };
 
 }
