@@ -52,13 +52,19 @@ module.exports = async (req, res, next) => {
 	for (let i = 0; i < res.locals.posts.length; i++) {
 		const post = res.locals.posts[i];
 		if (!boardThreadMap[post.board]) {
-			boardThreadMap[post.board] = [];
+			boardThreadMap[post.board] = {
+				'directThreads': false,
+				'threads': new Set()
+			};
 		}
 		if (!post.thread) {
 			//a thread was directly selected on this board, not just posts. so we handle deletes differently
-			boardThreadMap[post.board]['selectedThreads'] = true;
+			boardThreadMap[post.board].directThreads = true;
 		}
-		boardThreadMap[post.board].push(post.thread || post.postId);
+		const threadId = post.thread || post.postId;
+		if (!boardThreadMap[post.board].threads.has(threadId)) {
+			boardThreadMap[post.board].threads.add(threadId);
+		}
 	}
 
 	const beforePages = {};
@@ -275,11 +281,12 @@ module.exports = async (req, res, next) => {
 				const queryOrs = [];
 				for (let i = 0; i < threadBoards.length; i++) {
 					const threadBoard = threadBoards[i];
-					boardThreadMap[threadBoard] = [...new Set(boardThreadMap[threadBoard])]
+					//convert this to an array while we are here
+					boardThreadMap[threadBoard].threads = [...boardThreadMap[threadBoard].threads]
 					queryOrs.push({
 						'board': threadBoard,
 						'postId': {
-							'$in': boardThreadMap[threadBoard]
+							'$in': boardThreadMap[threadBoard].threads
 						}
 					})
 				}
@@ -289,6 +296,7 @@ module.exports = async (req, res, next) => {
 					'thread': null,
 					'$or': queryOrs
 				}).toArray();
+
 				//combine it with what we already had
 				const selectedThreads = res.locals.posts.filter(post => post.thread === null)
 				threadsEachBoard = threadsEachBoard.concat(selectedThreads)
@@ -323,8 +331,8 @@ module.exports = async (req, res, next) => {
 					const boardName = boardNames[i];
 					const bounds = threadBounds[boardName];
 					//rebuild impacted threads
-					for (let j = 0; j < boardThreadMap[boardName].length; j++) {
-						parallelPromises.push(buildThread(boardThreadMap[boardName][j], buildBoards[boardName]));
+					for (let j = 0; j < boardThreadMap[boardName].threads.length; j++) {
+						parallelPromises.push(buildThread(boardThreadMap[boardName].threads[j], buildBoards[boardName]));
 					}
 					//refersh any pages affected
 					const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
@@ -344,7 +352,7 @@ module.exports = async (req, res, next) => {
 						const threadPageOldest = await Posts.getThreadPage(boardName, bounds.oldest);
 						const threadPageNewest = bounds.oldest.postId === bounds.newest.postId ? threadPageOldest : await Posts.getThreadPage(boardName, bounds.newest);
 						if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
-							if (!boardThreadMap[boardName].selectedThreads) {
+							if (!boardThreadMap[boardName].directThreads) {
 								//onyl deleting posts from threads, so thread order wont change, thus we dont delete all pages after
 								parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
 							} else {
@@ -358,7 +366,7 @@ module.exports = async (req, res, next) => {
 							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
 						} else if (req.body.spoiler || req.body.ban || req.body.global_ban) {
 							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
-							if (!boardThreadMap[boardName].selectedThreads) {
+							if (!boardThreadMap[boardName].directThreads) {
 								catalogRebuild = false;
 								//these actions dont affect the catalog tile since not on an OP and dont change reply/image counts
 							}

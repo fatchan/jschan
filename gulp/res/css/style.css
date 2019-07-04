@@ -389,8 +389,8 @@ input:invalid, textarea:invalid {
 	box-shadow: none;
 }
 
-input textarea {
-	padding: 8px;
+textarea {
+	min-width: 250px;
 }
 
 .no-resize {

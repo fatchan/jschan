@@ -74,7 +74,7 @@ module.exports = async (posts, board) => {
 	}
 
 	const bulkWrites = [];
-	const backlinkRebuilds = new Set();
+	const backlinkRebuilds = new Set(); //im obsessed with sets because of no duplicates :^)
 	for (let j = 0; j < allPosts.length; j++) {
 		const post = allPosts[j];
 		backlinkRebuilds.delete(post._id); //make sure we dont try and remarkup this post since its getting deleted.
@@ -118,7 +118,6 @@ module.exports = async (posts, board) => {
 		const remarkupPosts = await Posts.globalGetPosts([...backlinkRebuilds]);
 		for (let i = 0; i < remarkupPosts.length; i++) {
 			const post = remarkupPosts[i];
-//TODO: make this more efficient. possible to do posts from same thread at same time.
 			if (post.nomarkup && post.nomarkup.length > 0) {
 				//if the post had a message, redo the markup
 				let message = simpleMarkdown(post.nomarkup);
