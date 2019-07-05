@@ -43,6 +43,7 @@ const express  = require('express')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
 	, checkPermsMiddleware = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, checkPerms = require(__dirname+'/../helpers/checks/hasperms.js')
+	, spamCheck = require(__dirname+'/../helpers/checks/spamcheck.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, banCheck = require(__dirname+'/../helpers/checks/bancheck.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captcha/captchaverify.js')
@@ -241,6 +242,16 @@ router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConve
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
+			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
+		});
+	}
+
+	const flood = await spamCheck(req, res);
+	if (flood) {
+		deleteTempFiles(req).catch(e => console.error);
+		return res.status(429).render('message', {
+			'title': 'Too many requests',
+			'message': 'Flood detected',
 			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
 		});
 	}
