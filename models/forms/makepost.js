@@ -279,8 +279,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
-console.log('--------------------------------');
-console.log(`NEW POST -> ${successRedirect}`);
+	console.log(`NEW POST -> ${successRedirect}`);
 
 	//build just the thread they need to see first and send them immediately
 	await buildThread(data.thread || postId, res.locals.board);
@@ -300,7 +299,7 @@ console.log(`NEW POST -> ${successRedirect}`);
 		}
 	} else {
 		//new thread, prunes any old threads before rebuilds
-		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		const prunedThreads = await Posts.pruneOldThreads(res.locals.board);
 //TODO: could add early404 here alongside thread pruning.
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
@@ -313,7 +312,5 @@ console.log(`NEW POST -> ${successRedirect}`);
 
 	//finish building other pages
 	await Promise.all(parallelPromises);
-
-console.log('--------------------------------');
 
 }

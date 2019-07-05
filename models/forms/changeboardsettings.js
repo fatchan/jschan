@@ -48,7 +48,7 @@ module.exports = async (req, res, next) => {
 	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
 	if (newMaxPage < oldMaxPage) {
 		//prune old threads
-		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+		const prunedThreads = await Posts.pruneOldThreads(res.locals.board);
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
 			//remove board page html for pages > newMaxPage

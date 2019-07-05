@@ -354,16 +354,26 @@ module.exports = {
 		return db.deleteOne(options);
 	},
 
-	pruneOldThreads: async (board, threadLimit) => {
-		//get lowest bumped threads
-		const threads = await db.find({
+	pruneOldThreads: async (board) => {
+
+		//get threads that have been bumped off last page
+		const oldThreads = await db.find({
 			'thread': null,
-			'board': board
+			'board': board._id
 		}).sort({
 			'sticky': -1,
 			'bumped': -1
-		}).skip(threadLimit).toArray();
-		return threads;
+		}).skip(board.settings.threadLimit).toArray();
+
+		const early404Threads = await db.find({
+			'thread': null,
+			'board': board._id,
+			'replyposts': {
+				'$lte': 5 //less than 5 replies
+			}
+		}).skip(30).toArray() //after page 3
+
+		return oldThreads.concat(early404Threads);
 	},
 
 	deleteMany: (ids) => {
