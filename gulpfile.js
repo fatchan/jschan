@@ -135,10 +135,13 @@ async function wipe() {
 
 	//add indexes - should profiled and changed at some point if necessary
 	await Bans.db.dropIndexes();
-	await Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 });
-	await Captchas.db.dropIndexes();
-	await Captchas.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 });
+	await Captchas.captcha.dropIndexes();
+	await Captchas.ratelimit.dropIndexes();
 	await Posts.db.dropIndexes();
+
+	await Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 }); //custom expiry
+	await Captchas.captcha.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 300 });
+	await Captchas.ratelimit.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 60 });
 	await Posts.db.createIndex({
 		'postId': 1,
 		'board': 1,

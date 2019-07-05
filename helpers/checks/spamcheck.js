@@ -11,7 +11,6 @@ module.exports = async (req, res) => {
 		return false;
 	}
 
-	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
 	const now = Date.now();
 	const last120id = Mongo.ObjectId.createFromTime(Math.floor((now - (msTime.minute*2))/1000));
 	const last30id = Mongo.ObjectId.createFromTime(Math.floor((now - (msTime.minute*0.5))/1000));
@@ -46,7 +45,7 @@ module.exports = async (req, res) => {
 		'_id': {
 			'$gt': last120id
 		},
-		'ip': ip,
+		'ip': res.locals.ip,
 		'$or': contentOr
 	});
 	//any posts from same IP in past 15 seconds
@@ -54,7 +53,7 @@ module.exports = async (req, res) => {
 		'_id': {
 			'$gt': last15id
 		},
-		'ip': ip
+		'ip': res.locals.ip
 	})
 
 	let flood = await Posts.db.find({

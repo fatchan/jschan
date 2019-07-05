@@ -4,11 +4,10 @@ const Posts = require(__dirname+'/../../db/posts.js');
 
 module.exports = (req, posts) => {
 
-	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
 	const report = {
 		'reason': req.body.report_reason,
 		'date': new Date(),
-		'ip': ip
+		'ip': res.locals.ip
 	}
 
 	return {

@@ -51,6 +51,7 @@ const express = require('express')
 
 	//referer header check
 	app.use((req, res, next) => {
+		res.locals.ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
 		if (req.method !== 'POST') {
 			return next();
 		}

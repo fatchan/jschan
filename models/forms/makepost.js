@@ -175,16 +175,13 @@ module.exports = async (req, res, next) => {
 	// because express middleware is autistic i need to do this
 	deleteTempFiles(req).catch(e => console.error);
 
-	//poster ip
-	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
-
 	let userId = null;
 	if (!salt) {
 		//thread salt for IDs
 		salt = (await randomBytes(128)).toString('base64');
 	}
 	if (res.locals.board.settings.ids) {
-		const fullUserIdHash = createHash('sha256').update(salt + ip).digest('hex');
+		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip).digest('hex');
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 
@@ -247,7 +244,7 @@ module.exports = async (req, res, next) => {
 		spoiler,
 		'banmessage': null,
 		userId,
-		ip,
+		'ip': res.locals.ip,
 		files,
 		'reports': [],
 		'globalreports': [],
