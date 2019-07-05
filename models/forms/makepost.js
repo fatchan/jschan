@@ -304,6 +304,7 @@ console.log(`NEW POST -> ${successRedirect}`);
 	} else {
 		//new thread, prunes any old threads before rebuilds
 		const prunedThreads = await Posts.pruneOldThreads(req.params.board, res.locals.board.settings.threadLimit);
+//TODO: could add early404 here alongside thread pruning.
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
 		}

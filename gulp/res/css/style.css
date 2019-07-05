@@ -110,11 +110,6 @@ object {
 	align-items: center;
 }
 
-.navbar {
-	border-bottom: 1px solid #a9a9a9;
-	background: #d6daf0;
-}
-
 .catalog-tile {
 	padding: 5px;
 	margin: 2px;
@@ -450,7 +445,7 @@ textarea {
 
 .post-container.op {
 	background: none;
-	border: none;
+	border-color: transparent;
 	width: 100%;
 }
 
@@ -520,8 +515,6 @@ textarea {
 	flex-shrink: 0;
 	margin-top: auto;
 	line-height: 30px;
-	border-top: 1px solid #a9a9a9;
-	background: #d6daf0;
 }
 
 input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {

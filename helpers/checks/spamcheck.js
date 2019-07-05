@@ -20,14 +20,14 @@ module.exports = async (req, res) => {
 	const contentOr = [];
 	if (res.locals.numFiles > 0) {
 		contentOr.push({
-            'files': {
+			'files': {
 				'$elemMatch': {
-	                'hash': { //any file hash will match, doesnt need to be all
-	                    '$in': req.files.file.map(f => f.sha256)
-	                }
+					'hash': { //any file hash will match, doesnt need to be all
+						'$in': req.files.file.map(f => f.sha256)
+					}
 				}
-            }
-        });
+			}
+		});
 	}
 	if (req.body.message) {
 		contentOr.push({
@@ -58,8 +58,8 @@ module.exports = async (req, res) => {
 	})
 
 	let flood = await Posts.db.find({
-        '$or': ors
-    }).toArray();
+		'$or': ors
+	}).toArray();
 
 	return flood.length > 0;
 

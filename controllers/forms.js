@@ -250,8 +250,8 @@ router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConve
 	if (flood) {
 		deleteTempFiles(req).catch(e => console.error);
 		return res.status(429).render('message', {
-			'title': 'Too many requests',
-			'message': 'Flood detected',
+			'title': 'Flood detected',
+			'message': 'Please wait before making another post, or a post similar to another user',
 			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
 		});
 	}
