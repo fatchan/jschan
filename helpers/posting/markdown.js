@@ -11,7 +11,7 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, linkRegex = /https?\:\/\/[^\s<>\[\]{}|\\^]+/g
 	, spoilerRegex = /\|\|(.+)\|\|/gm
 	, detectedRegex = /(\(\(\(.+\)\)\))/gm
-	, codeRegex = /^```\s([\s\S]+)\s```/gm;
+	, codeRegex = /```([\s\S]+?)```/gm;
 
 module.exports = (text) => {
 
@@ -67,7 +67,7 @@ module.exports = (text) => {
 
 	//code
 	text = text.replace(codeRegex, (match, code) => {
-        return `<span class='code'>${code.trim()}</span>`;
+        return `<span class='code'>${code.replace(/^\s*\n/, '')}</span>`;
     });
 
 	//detected

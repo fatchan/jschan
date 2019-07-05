@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
 	for (let i = 0; i < trimFields.length; i++) {
 		const field = trimFields[i];
 		if (req.body[field]) {
-			req.body[field] = req.body[field].trim();
+			req.body[field] = req.body[field].trimEnd();
 		}
 	}
 
