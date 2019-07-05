@@ -116,10 +116,9 @@ module.exports = async (posts, board) => {
 	//get posts that quoted deleted posts so we can remarkup them
 	if (backlinkRebuilds.size > 0) {
 		const remarkupPosts = await Posts.globalGetPosts([...backlinkRebuilds]);
-		for (let i = 0; i < remarkupPosts.length; i++) {
-			const post = remarkupPosts[i];
-			if (post.nomarkup && post.nomarkup.length > 0) {
-				//if the post had a message, redo the markup
+		await Promise.all(remarkupPosts.map(async post => { //doing these all at once
+			if (post.nomarkup && post.nomarkup.length > 0) { //is this check even necessary? how would it have a quote with no message
+				//redo the markup
 				let message = simpleMarkdown(post.nomarkup);
 				const { quotedMessage, threadQuotes } = await linkQuotes(post.board, post.nomarkup, post.thread);
 				message = sanitize(quotedMessage, sanitizeOptions);
@@ -137,7 +136,7 @@ module.exports = async (posts, board) => {
 		            }
 		        });
 			}
-		}
+		}));
 	}
 
 	//bulkwrite it all
