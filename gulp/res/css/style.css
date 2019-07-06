@@ -294,7 +294,6 @@ td, th {
 }
 
 .toggle-label {
-	text-align: center;
 	max-width: 100%;
 	box-sizing: border-box;
 	display: flex;
@@ -406,7 +405,6 @@ textarea {
 
 .no-decoration {
 	text-decoration: none;
-	color: white;
 }
 
 .banner-check {
@@ -517,13 +515,23 @@ textarea {
 	line-height: 30px;
 }
 
-input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {
+input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {
 	border: 1px solid #a9a9a9;
 	font-size: inherit;
 	font-family: arial, helvetica, sans-serif;
 	margin: 0;
 	flex-grow: 1;
 	border-radius: 0px;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type=number] {
+	-moz-appearance:textfield;
 }
 
 input[type="submit"] {
@@ -534,8 +542,26 @@ input[type="file"] {
 	background: white;
 }
 
+.open-postform[open] {
+	z-index: 1;
+	position: fixed;
+	top: 4px;
+	right: 5px;
+}
+
+.open-postform[open] + .openpadding {
+	height: 39px;
+}
+
+.open-postform[open] summary:before {
+	content: "Close";
+}
+
+.open-postform summary:before {
+	content: "Open Post Form";
+}
+
 #postform {
-	display: none;
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
 	position: fixed;
@@ -651,7 +677,7 @@ hr {
 	}
 
 	#postform {
-		top: 5px!important;
+		width: 100%;
 	}
 
 }

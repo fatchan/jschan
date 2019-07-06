@@ -4,7 +4,9 @@ const path = require('path')
 	, { createHash, randomBytes } = require('crypto')
 	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
+	, Boards = require(__dirname+'/../../db/boards.js')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
@@ -27,6 +29,7 @@ const path = require('path')
 	, videoIdentify = require(__dirname+'/../../helpers/files/videoidentify.js')
 	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
+	, msTime = require(__dirname+'/../../helpers/mstime.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js');
 
@@ -266,6 +269,32 @@ module.exports = async (req, res, next) => {
 	}
 
 	const postId = await Posts.insertOne(res.locals.board, data, thread);
+
+	//if captcha not currently enabled, and the trigger threshhold is > 0 (i.e. enabled)
+	if (res.locals.board.settings.captchaTrigger > 0 && !res.locals.board.settings.captcha) {
+		const pastHourMongoId = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000));
+		//count posts in part hour (pph)
+		const pph = await Posts.db.countDocuments({
+			'_id': {
+				'$gt': pastHourMongoId
+			},
+			'board': res.locals.board._id
+		});
+		//if its above the trigger
+		if (pph > res.locals.board.settings.captchaTrigger) {
+			res.locals.board.settings.captcha = true; //update in memory too
+			//set it in the db
+			await Boards.db.updateOne({
+				'_id': res.locals.board._id,
+			}, {
+				'$set': {
+					'settings.captcha': true
+				}
+			});
+			//remove the html (since pages will need captcha in postform now)
+			await remove(`${uploadDirectory}html/${req.params.board}/`);
+		}
+	}
 
 	//for cyclic threads, delete posts beyond bump limit
 	if (thread && thread.cyclic && thread.replyposts > res.locals.board.settings.replyLimit) {

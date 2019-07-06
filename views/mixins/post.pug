@@ -2,49 +2,47 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 	.anchor(id=post.postId)
 	article(class=`post-container ${post.thread ? '' : 'op'}`)
 		- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html#${post.postId}`;
-		label.post-info
-			if globalmanage
-				input.post-check(type='checkbox', name='globalcheckedposts[]' value=post._id)
-			else
-				input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
-			|	
-			if !post.thread
-				if post.sticky
-					img(src='/img/sticky.svg' height='12' title='Sticky')
+		header.post-info
+			label
+				if globalmanage
+					input.post-check(type='checkbox', name='globalcheckedposts[]' value=post._id)
+				else
+					input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
+				|	
+				if !post.thread
+					if post.sticky
+						img(src='/img/sticky.svg' height='12' title='Sticky')
+						| 
+					if post.saged
+						img(src='/img/saged.svg' height='12' title='Bumplocked')
+						| 
+					if post.locked
+						img(src='/img/locked.svg' height='12' title='Locked')
+						| 
+					if post.cyclic
+						img(src='/img/cyclic.svg' height='13' title='Cyclic')
+						| 
+				if post.subject
+					span.post-subject #{post.subject}
 					| 
-				if post.saged
-					img(src='/img/saged.svg' height='12' title='Bumplocked')
-					| 
-				if post.locked
-					img(src='/img/locked.svg' height='12' title='Locked')
-					| 
-				if post.cyclic
-					img(src='/img/cyclic.svg' height='13' title='Cyclic')
-					| 
-			if post.subject
-				span.post-subject #{post.subject}
-				| 
-			if post.email
-				a(href=`mailto:${post.email}`)
+				if post.email
+					a(href=`mailto:${post.email}`)
+						span.post-name #{post.name}
+				else 
 					span.post-name #{post.name}
-			else 
-				span.post-name #{post.name}
-			| 
-			if post.tripcode
-				span.post-tripcode #{post.tripcode}
 				| 
-			if post.capcode
-				span.post-capcode #{post.capcode}
+				if post.tripcode
+					span.post-tripcode #{post.tripcode}
+					| 
+				if post.capcode
+					span.post-capcode #{post.capcode}
+					| 
+				span #{post.date.toLocaleString()}
 				| 
-			span #{post.date.toLocaleString()}
-			| 
-			if post.userId
-				span.user-id(style=`background: #${post.userId}`) #{post.userId}
-				| 
+				if post.userId
+					span.user-id(style=`background: #${post.userId}`) #{post.userId}
+					| 
 			span: a(href=postURL) No.#{post.postId}
-			if !post.thread
-				| 
-				span: a(href=`/${post.board}/thread/${post.thread || post.postId}.html#postform`) [Reply]
 		.post-data
 			if post.files.length > 0
 				.post-files

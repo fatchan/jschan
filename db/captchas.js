@@ -29,6 +29,10 @@ module.exports = {
 		});
 	},
 
+	resetQuota: (ip) => {
+		return ratelimit.deleteOne({ '_id': ip });
+	},
+
 	incrmentQuota: (ip) => {
 		return ratelimit.findOneAndUpdate(
             {

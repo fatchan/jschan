@@ -94,13 +94,13 @@ console.log('multi building board pages', `${board._id}/ ${startpage === 1 ? 'in
 	buildHomepage: async () => {
 console.log('building homepage /index.html');
 		const boards = await Boards.find();
-		const yesterday = Math.floor((Date.now() - msTime.hour)/1000);
-		const yesterdayObjectId = Mongo.ObjectId.createFromTime(yesterday);
+		const pastHour = Math.floor((Date.now() - msTime.hour)/1000);
+		const pastHourObjectId = Mongo.ObjectId.createFromTime(pastHour);
 		const pph = await Posts.db.aggregate([
 			{
 				'$match': {
 					'_id': {
-						'$gt': yesterdayObjectId
+						'$gt': pastHourObjectId
 					}
 				}
 			},

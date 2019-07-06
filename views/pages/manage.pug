@@ -31,6 +31,9 @@ block content
 				label.postform-style.ph-5
 					input(type='checkbox', name='captcha', value='true' checked=board.settings.captcha)
 			section.postform-row
+				.postform-label Captcha PPH Trigger
+				input(type='number' name='captcha_trigger' placeholder=board.settings.captchaTrigger)
+			section.postform-row
 				.postform-label Post Deletion
 				label.postform-style.ph-5
 					input(type='checkbox', name='user_post_delete', value='true' checked=board.settings.userPostDelete)
@@ -59,16 +62,16 @@ block content
 				input(type='text' name='default_name' placeholder=board.settings.defaultName)
 			section.postform-row
 				.postform-label Min Message Length
-				input(type='text' name='min_message_length' placeholder=board.settings.minMessageLength)
+				input(type='number' name='min_message_length' placeholder=board.settings.minMessageLength)
 			section.postform-row
 				.postform-label Thread Limit
-				input(type='text' name='thread_limit' placeholder=board.settings.threadLimit)
+				input(type='number' name='thread_limit' placeholder=board.settings.threadLimit)
 			section.postform-row
 				.postform-label Reply Limit
-				input(type='text' name='reply_limit' placeholder=board.settings.replyLimit)
+				input(type='number' name='reply_limit' placeholder=board.settings.replyLimit)
 			section.postform-row
 				.postform-label Max Files
-				input(type='text' name='max_files' placeholder=board.settings.maxFiles)
+				input(type='number' name='max_files' placeholder=board.settings.maxFiles)
 			input(type='submit', value='save settings')
 	hr(size=1)
 	h4.no-m-p Add Banners:

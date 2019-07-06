@@ -1,63 +1,63 @@
 - const isThread = thread != null
 section.form-wrapper.flex-center
-	a.toggle-summary(href='#postform') Show Post Form
-	form.form-post#postform(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
-		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
-		unless board.settings.forceAnon
-			section.postform-row
-				.postform-label Name
-				input(type='text', name='name', placeholder=board.settings.defaultName autocomplete='off' maxlength='50')
-				a.close.postform-style.ml-1(href='#!') X
-			section.postform-row
-				.postform-label Subject
-					if !isThread && board.settings.forceOPSubject
-						.required *
-				input(type='text', name='subject', autocomplete='off' maxlength='50' required=!isThread && board.settings.forceOPSubject)
-			section.postform-row
-				.postform-label Email
-				input(type='text', name='email', autocomplete='off' maxlength='50')
-		else 
-			section.postform-row
-				.postform-label Sage
-				label.postform-style.ph-5
-					input(type='checkbox', name='email', value='sage')
-					| Sage
-				a.close.postform-style.ml-1(href='#!') X
-			if !isThread
+	details.toggle-label.open-postform
+		summary.toggle-summary
+		div#postform
+			form.form-post(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
+				input(type='hidden' name='thread' value=isThread ? thread.postId : null)
+				unless board.settings.forceAnon
+					section.postform-row
+						.postform-label Name
+						input(type='text', name='name', placeholder=board.settings.defaultName autocomplete='off' maxlength='50')
+					section.postform-row
+						.postform-label Subject
+							if !isThread && board.settings.forceOPSubject
+								.required *
+						input(type='text', name='subject', autocomplete='off' maxlength='50' required=!isThread && board.settings.forceOPSubject)
+					section.postform-row
+						.postform-label Email
+						input(type='text', name='email', autocomplete='off' maxlength='50')
+				else 
+					section.postform-row
+						.postform-label Sage
+						label.postform-style.ph-5
+							input(type='checkbox', name='email', value='sage')
+							| Sage
+					if !isThread
+						section.postform-row
+							.postform-label Subject
+								if board.settings.forceOPSubject
+									.required *
+							input(type='text', name='subject', autocomplete='off' maxlength='50' required=board.settings.forceOPSubject)
 				section.postform-row
-					.postform-label Subject
-						if board.settings.forceOPSubject
+					.postform-label Message
+						if !isThread && board.settings.forceOPMessage
 							.required *
-					input(type='text', name='subject', autocomplete='off' maxlength='50' required=board.settings.forceOPSubject)
-		section.postform-row
-			.postform-label Message
-				if !isThread && board.settings.forceOPMessage
-					.required *
-			textarea(name='message', rows='5', autocomplete='off' maxlength='4000' required=!isThread && board.settings.forceOPMessage)
-		if board.settings.maxFiles > 0
-			section.postform-row
-				.postform-label Files
-					if !isThread && board.settings.forceOPFile
-						.required *
-				input(type='file', name='file' multiple required=!isThread && board.settings.forceOPFile)
-				if board.settings.userPostSpoiler
-					label.postform-style.ph-5.ml-1
-						input(type='checkbox', name='spoiler', value='true')
-						| Spoiler
-		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink
-			section.postform-row
-				.postform-label Password
-				input(type='password', name='password', autocomplete='off' placeholder='password to delete/spoiler/unlink later' maxlength='50')
-		if board.settings.captcha
-			section.postform-row
-				.postform-label Captcha
-					.required *
-				.postform-col
-					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
-					input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6' required)
-		if !isThread && ((board.settings.forceOPFile && board.settings.maxFiles > 0) || board.settings.forceOPMessage || board.settings.forceOPSubject)
-			small
-				span.required *
-				|  = required field
-		input(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)
-
+					textarea(name='message', rows='5', autocomplete='off' maxlength='4000' required=!isThread && board.settings.forceOPMessage)
+				if board.settings.maxFiles > 0
+					section.postform-row
+						.postform-label Files
+							if !isThread && board.settings.forceOPFile
+								.required *
+						input(type='file', name='file' multiple required=!isThread && board.settings.forceOPFile)
+						if board.settings.userPostSpoiler
+							label.postform-style.ph-5.ml-1
+								input(type='checkbox', name='spoiler', value='true')
+								| Spoiler
+				if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink
+					section.postform-row
+						.postform-label Password
+						input(type='password', name='password', autocomplete='off' placeholder='password to delete/spoiler/unlink later' maxlength='50')
+				if board.settings.captcha
+					section.postform-row
+						.postform-label Captcha
+							.required *
+						.postform-col
+							iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
+							input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6' required)
+				if !isThread && ((board.settings.forceOPFile && board.settings.maxFiles > 0) || board.settings.forceOPMessage || board.settings.forceOPSubject)
+					small
+						span.required *
+						|  = required field
+				input(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)
+	.openpadding

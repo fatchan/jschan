@@ -41,6 +41,7 @@ async function wipe() {
 		settings: {
 			name: 'file',
 			description: 'testing new file types',
+			captchaTrigger: 10,
 			captcha: false,
 			forceAnon: false,
 			ids: false,
@@ -66,6 +67,7 @@ async function wipe() {
 		settings: {
 			name: 'politics',
 			description: 'talk about politics',
+			captchaTrigger: 10,
 			captcha: false,
 			forceAnon: true,
 			ids: true,
@@ -91,6 +93,7 @@ async function wipe() {
 		settings: {
 			name: 'random',
 			description: 'anything and everything',
+			captchaTrigger: 10,
 			captcha: false,
 			forceAnon: false,
 			ids: false,
@@ -116,6 +119,7 @@ async function wipe() {
 		settings: {
 			name: 'test',
 			description: 'testing board',
+			captchaTrigger: 10,
 			captcha: false,
 			forceAnon: true,
 			ids: false,
@@ -203,7 +207,7 @@ function html() {
 }
 
 
-const build = gulp.parallel(css, images);
+const build = gulp.parallel(css, images, html);
 const reset = gulp.series(wipe, build)
 
 module.exports = {

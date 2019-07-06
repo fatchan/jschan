@@ -20,6 +20,7 @@ module.exports = async (req, res, next) => {
 		userPostDelete: req.body.user_post_delete ? true : false,
 		userPostSpoiler: req.body.user_post_spoiler ? true : false,
 		userPostUnlink: req.body.user_post_unlink ? true : false,
+		captchaTrigger: typeof req.body.captcha_trigger === 'number' && req.body.captcha_trigger !== oldSettings.captchaTrigger ? req.body.captcha_trigger : oldSettings.captchaTrigger,
 		threadLimit: typeof req.body.thread_limit === 'number' && req.body.thread_limit !== oldSettings.threadLimit ? req.body.thread_limit : oldSettings.threadLimit,
 		replyLimit: typeof req.body.reply_limit === 'number' && req.body.reply_limit !== oldSettings.replyLimit ? req.body.reply_limit : oldSettings.replyLimit,
 		maxFiles: typeof req.body.max_files === 'number' && req.body.max_files !== oldSettings.maxFiles ? req.body.max_files : oldSettings.maxFiles,

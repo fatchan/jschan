@@ -6,6 +6,9 @@ block head
 block content
 	include ../includes/bannersheader.pug
 	br
+	include ../includes/stickynav.pug
+	.anchor#top
+	include ../includes/stickynav.pug
 	nav.pages
 		a(href=`/${board._id}/index.html`) [Index]
 		|  
@@ -19,3 +22,11 @@ block content
 				img.board-banner(src=`/banner/${board._id}/${banner}` width='300' height='100')
 		else
 			p Board has no custom banners.
+	include ../includes/stickynav.pug
+	hr(size=1)
+	nav.pages#bottom
+		a(href=`/${board._id}/index.html`) [Index]
+		|  
+		a(href=`/${board._id}/catalog.html`) [Catalog]
+		|  
+		a.bold(href=`/${board._id}/banners.html`) [Banners]

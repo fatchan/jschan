@@ -49,9 +49,12 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-	//it was correct, so delete the file, the cookie and continue
+	//it was correct, so delete the file, the cookie and reset their quota
 	res.clearCookie('captchaid');
-	await remove(`${uploadDirectory}captcha/${captchaId}.jpg`)
+	await Promise.all([
+		Captcha.resetQuota(res.locals.ip),
+		remove(`${uploadDirectory}captcha/${captchaId}.jpg`)
+	]);
 
 	return next();
 
