@@ -95,58 +95,42 @@ module.exports = async (req, res, next) => {
 			}
 			messages.push(message);
 		}
-		if (req.body.delete_ip_board || req.body.delete_ip_global) {
-			const deletePostIps = res.locals.posts.map(x => x.ip);
-			let query = {
-				'ip': {
-					'$in': deletePostIps
+		if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
+			if (req.body.delete_ip_board || req.body.delete_ip_global) {
+				const deletePostIps = res.locals.posts.map(x => x.ip);
+				let query = {
+					'ip': {
+						'$in': deletePostIps
+					}
+				};
+				if (req.body.delete_ip_board) {
+					query['board'] = req.params.board;
 				}
-			};
-			if (req.body.delete_ip_board) {
-				query['board'] = req.params.board;
+				const deleteIpPosts = await Posts.db.find(query).toArray();
+				res.locals.posts = res.locals.posts.concat(deleteIpPosts);
 			}
-			const deleteIpPosts = await Posts.db.find(query).toArray();
-			res.locals.posts = res.locals.posts.concat(deleteIpPosts);
-			if (deleteIpPosts && deleteIpPosts.length > 0) {
-				const { action, message } = await deletePosts(deleteIpPosts, req.params.board);
+			if (req.body.delete_file) {
+				const { message } = await deletePostsFiles(res.locals.posts, false); //delete files, not just unlink
 				messages.push(message);
-				if (action) {
-					aggregateNeeded = true;
-				} else {
-					req.body.delete_ip_board = false;
-					req.body.delete_ip_global = false;
-					res.locals.actions.anyValid--;
-				}
 			}
-		} else if (req.body.delete) {
-			const { action, message } = await deletePosts(passwordPosts, req.params.board);
+			const { action, message } = await deletePosts(res.locals.posts, req.body.delete_ip_global ? null : req.params.board);
 			messages.push(message);
 			if (action) {
 				aggregateNeeded = true;
-			} else {
-				req.body.delete = false;
-				res.locals.actions.anyValid--;
 			}
 		} else {
 			// if it was getting deleted, we cant do any of these
-			if (req.body.delete_file || req.body.unlink_file) {
+			if (req.body.unlink_file || req.body.delete_file) {
 				const { message, action, query } = await deletePostsFiles(passwordPosts, req.body.unlink_file);
 				if (action) {
 					aggregateNeeded = true;
 					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
-				} else {
-					req.body.delete_file = false;
-					req.body.unlink_file = false;
-					res.locals.actions.anyValid--;
 				}
 				messages.push(message);
 			} else if (req.body.spoiler) {
 				const { message, action, query } = spoilerPosts(passwordPosts);
 				if (action) {
 					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
-				} else {
-					req.body.spoiler = false;
-					res.locals.actions.anyValid--;
 				}
 				messages.push(message);
 			}
@@ -155,9 +139,6 @@ module.exports = async (req, res, next) => {
 				const { message, action, query } = sagePosts(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				} else {
-					req.body.sage = false;
-					res.locals.actions.anyValid--;
 				}
 				messages.push(message);
 			}
@@ -165,9 +146,6 @@ module.exports = async (req, res, next) => {
 				const { message, action, query } = lockPosts(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				} else {
-                    req.body.lock = false;
-					res.locals.actions.anyValid--;
                 }
 				messages.push(message);
 			}
@@ -175,9 +153,6 @@ module.exports = async (req, res, next) => {
 				const { message, action, query } = stickyPosts(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				} else {
-                    req.body.sticky = false;
-					res.locals.actions.anyValid--;
                 }
 				messages.push(message);
 			}
@@ -185,9 +160,6 @@ module.exports = async (req, res, next) => {
 				const { message, action, query } = cyclePosts(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				} else {
-                    req.body.cyclic = false;
-					res.locals.actions.anyValid--;
                 }
 				messages.push(message);
 			}
@@ -202,9 +174,6 @@ module.exports = async (req, res, next) => {
 				const { message, action, query } = dismissReports(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				} else {
-                    req.body.dismiss = false;
-					res.locals.actions.anyValid--;
                 }
 				messages.push(message);
 			}
@@ -219,166 +188,161 @@ module.exports = async (req, res, next) => {
 				const { message, action, query } = dismissGlobalReports(res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-				} else {
-                    req.body.global_dismiss = false;
-					res.locals.actions.anyValid--;
                 }
 				messages.push(message);
 			}
 		}
-		if (res.locals.actions.anyValid > 0) {
-			const bulkWrites = [];
-			if (Object.keys(combinedQuery).length > 0) {
-				bulkWrites.push({
-					'updateMany': {
-						'filter': {
-							'_id': {
-								'$in': postMongoIds
-							}
-						},
-						'update': combinedQuery
-					}
-				});
-			}
-			if (Object.keys(passwordCombinedQuery).length > 0) {
-				bulkWrites.push({
-					'updateMany': {
-						'filter': {
-							'_id': {
-								'$in': passwordPostMongoIds
-							}
-						},
-						'update': passwordCombinedQuery
-					}
-				});
-			}
+		const bulkWrites = [];
+		if (Object.keys(combinedQuery).length > 0) {
+			bulkWrites.push({
+				'updateMany': {
+					'filter': {
+						'_id': {
+							'$in': postMongoIds
+						}
+					},
+					'update': combinedQuery
+				}
+			});
+		}
+		if (Object.keys(passwordCombinedQuery).length > 0) {
+			bulkWrites.push({
+				'updateMany': {
+					'filter': {
+						'_id': {
+							'$in': passwordPostMongoIds
+						}
+					},
+					'update': passwordCombinedQuery
+				}
+			});
+		}
 
-			//execute actions now
-			if (bulkWrites.length > 0) {
-				await Posts.db.bulkWrite(bulkWrites);
-			}
+		//execute actions now
+		if (bulkWrites.length > 0) {
+			await Posts.db.bulkWrite(bulkWrites);
+		}
 
-			//if there are actions that can cause some rebuilding
-			if (res.locals.actions.anyBuild > 0) {
+		//if there are actions that can cause some rebuilding
+		if (res.locals.actions.anyBuild > 0) {
 
-				//recalculate replies and image counts
-				if (aggregateNeeded) {
-					const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
+			//recalculate replies and image counts
+			if (aggregateNeeded) {
+				const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
 //TODO: do this in a better way.
-					await Promise.all(selectedPosts.map(async (post) => {
-						const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
-						let replyposts = 0;
-						let replyfiles = 0;
-						if (replyCounts[0]) {
-							replyposts = replyCounts[0].replyposts;
-							replyfiles = replyCounts[0].replyfiles;
-						}
-						Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
-					}));
-				}
-
-				//make it into an OR query for the db
-				const queryOrs = [];
-				for (let i = 0; i < threadBoards.length; i++) {
-					const threadBoard = threadBoards[i];
-					//convert this to an array while we are here
-					boardThreadMap[threadBoard].threads = [...boardThreadMap[threadBoard].threads]
-					queryOrs.push({
-						'board': threadBoard,
-						'postId': {
-							'$in': boardThreadMap[threadBoard].threads
-						}
-					})
-				}
-
-				//fetch threads per board that we only checked posts for
-				let threadsEachBoard = await Posts.db.find({
-					'thread': null,
-					'$or': queryOrs
-				}).toArray();
-
-				//combine it with what we already had
-				const selectedThreads = res.locals.posts.filter(post => post.thread === null)
-				threadsEachBoard = threadsEachBoard.concat(selectedThreads)
-
-				//get the oldest and newest thread for each board to determine how to delete
-				const threadBounds = threadsEachBoard.reduce((acc, curr) => {
-					if (!acc[curr.board] || curr.bumped < acc[curr.board].bumped) {
-						acc[curr.board] = { oldest: null, newest: null};
+				await Promise.all(selectedPosts.map(async (post) => {
+					const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
+					let replyposts = 0;
+					let replyfiles = 0;
+					if (replyCounts[0]) {
+						replyposts = replyCounts[0].replyposts;
+						replyfiles = replyCounts[0].replyfiles;
 					}
-					if (!acc[curr.board].oldest || curr.bumped < acc[curr.board].oldest.bumped) {
-						acc[curr.board].oldest = curr;
-					}
-					if (!acc[curr.board].newest || curr.bumped > acc[curr.board].newest.bumped) {
-						acc[curr.board].newest = curr;
-					}
-					return acc;
-				}, {});
-
-				const parallelPromises = []
-				const boardNames = Object.keys(threadBounds);
-				const buildBoards = {};
-				const multiBoards = await Boards.db.find({
-					'_id': {
-						'$in': boardNames
-					}
-				}).toArray();
-				multiBoards.forEach(board => {
-					buildBoards[board._id] = board;
-				});
-
-				for (let i = 0; i < boardNames.length; i++) {
-					const boardName = boardNames[i];
-					const bounds = threadBounds[boardName];
-					//rebuild impacted threads
-					for (let j = 0; j < boardThreadMap[boardName].threads.length; j++) {
-						parallelPromises.push(buildThread(boardThreadMap[boardName].threads[j], buildBoards[boardName]));
-					}
-					//refersh any pages affected
-					const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
-					let catalogRebuild = true;
-					if (beforePages[boardName] && beforePages[boardName] !== afterPages) {
-						//amount of pages changed, rebuild all pages and delete  any further pages (if pages amount decreased)
-						if (afterPages < beforePages[boardName]) {
-							//amount of pages decreased
-							for (let k = beforePages[boardName]; k > afterPages; k--) {
-								//deleting html for pages that no longer should exist
-								parallelPromises.push(remove(`${uploadDirectory}html/${boardName}/${k}.html`));
-							}
-						}
-						parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, afterPages));
-					} else {
-						//number of pages did not change, only possibly building existing pages
-						const threadPageOldest = await Posts.getThreadPage(boardName, bounds.oldest);
-						const threadPageNewest = bounds.oldest.postId === bounds.newest.postId ? threadPageOldest : await Posts.getThreadPage(boardName, bounds.newest);
-						if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
-							if (!boardThreadMap[boardName].directThreads) {
-								//onyl deleting posts from threads, so thread order wont change, thus we dont delete all pages after
-								parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
-							} else {
-								//deleting threads, so we delete all pages after
-								parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, afterPages));
-							}
-						} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
-							//rebuild current and newer pages
-							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, threadPageOldest));
-						} else if (req.body.lock || req.body.sage || req.body.cyclic || req.body.unlink_file) {
-							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
-						} else if (req.body.spoiler || req.body.ban || req.body.global_ban) {
-							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
-							if (!boardThreadMap[boardName].directThreads) {
-								catalogRebuild = false;
-								//these actions dont affect the catalog tile since not on an OP and dont change reply/image counts
-							}
-						}
-					}
-					if (catalogRebuild) {
-						//the actions will affect the catalog, so we better rebuild it
-						parallelPromises.push(buildCatalog(buildBoards[boardName]));
-					}
-				}
-				await Promise.all(parallelPromises);
+					Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
+				}));
 			}
+
+			//make it into an OR query for the db
+			const queryOrs = [];
+			for (let i = 0; i < threadBoards.length; i++) {
+				const threadBoard = threadBoards[i];
+				//convert this to an array while we are here
+				boardThreadMap[threadBoard].threads = [...boardThreadMap[threadBoard].threads]
+				queryOrs.push({
+					'board': threadBoard,
+					'postId': {
+						'$in': boardThreadMap[threadBoard].threads
+					}
+				})
+			}
+
+			//fetch threads per board that we only checked posts for
+			let threadsEachBoard = await Posts.db.find({
+				'thread': null,
+				'$or': queryOrs
+			}).toArray();
+
+			//combine it with what we already had
+			const selectedThreads = res.locals.posts.filter(post => post.thread === null)
+			threadsEachBoard = threadsEachBoard.concat(selectedThreads)
+
+			//get the oldest and newest thread for each board to determine how to delete
+			const threadBounds = threadsEachBoard.reduce((acc, curr) => {
+				if (!acc[curr.board] || curr.bumped < acc[curr.board].bumped) {
+					acc[curr.board] = { oldest: null, newest: null};
+				}
+				if (!acc[curr.board].oldest || curr.bumped < acc[curr.board].oldest.bumped) {
+					acc[curr.board].oldest = curr;
+				}
+				if (!acc[curr.board].newest || curr.bumped > acc[curr.board].newest.bumped) {
+					acc[curr.board].newest = curr;
+				}
+				return acc;
+			}, {});
+
+			const parallelPromises = []
+			const boardNames = Object.keys(threadBounds);
+			const buildBoards = {};
+			const multiBoards = await Boards.db.find({
+				'_id': {
+					'$in': boardNames
+				}
+			}).toArray();
+			multiBoards.forEach(board => {
+				buildBoards[board._id] = board;
+			});
+
+			for (let i = 0; i < boardNames.length; i++) {
+				const boardName = boardNames[i];
+				const bounds = threadBounds[boardName];
+				//rebuild impacted threads
+				for (let j = 0; j < boardThreadMap[boardName].threads.length; j++) {
+					parallelPromises.push(buildThread(boardThreadMap[boardName].threads[j], buildBoards[boardName]));
+				}
+				//refersh any pages affected
+				const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
+				let catalogRebuild = true;
+				if (beforePages[boardName] && beforePages[boardName] !== afterPages) {
+					//amount of pages changed, rebuild all pages and delete  any further pages (if pages amount decreased)
+					if (afterPages < beforePages[boardName]) {
+						//amount of pages decreased
+						for (let k = beforePages[boardName]; k > afterPages; k--) {
+							//deleting html for pages that no longer should exist
+							parallelPromises.push(remove(`${uploadDirectory}html/${boardName}/${k}.html`));
+						}
+					}
+					parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, afterPages));
+				} else {
+					//number of pages did not change, only possibly building existing pages
+					const threadPageOldest = await Posts.getThreadPage(boardName, bounds.oldest);
+					const threadPageNewest = bounds.oldest.postId === bounds.newest.postId ? threadPageOldest : await Posts.getThreadPage(boardName, bounds.newest);
+					if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
+						if (!boardThreadMap[boardName].directThreads) {
+							//onyl deleting posts from threads, so thread order wont change, thus we dont delete all pages after
+							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
+						} else {
+							//deleting threads, so we delete all pages after
+							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, afterPages));
+						}
+					} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
+						//rebuild current and newer pages
+						parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, threadPageOldest));
+					} else if (req.body.lock || req.body.sage || req.body.cyclic || req.body.unlink_file) {
+						parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
+					} else if (req.body.spoiler || req.body.ban || req.body.global_ban) {
+						parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
+						if (!boardThreadMap[boardName].directThreads) {
+							catalogRebuild = false;
+							//these actions dont affect the catalog tile since not on an OP and dont change reply/image counts
+						}
+					}
+				}
+				if (catalogRebuild) {
+					//the actions will affect the catalog, so we better rebuild it
+					parallelPromises.push(buildCatalog(buildBoards[boardName]));
+				}
+			}
+			await Promise.all(parallelPromises);
 		}
 
 	} catch (err) {
