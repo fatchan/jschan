@@ -6,8 +6,11 @@ block head
 
 block content
 	h1.board-title Banned!
-	h4.board-description Bans currently in place against your IP:
-	hr(size=1)
-	for ban in bans
-		+ban(ban)
-		hr(size=1)
+	.table-container.flex-center.mv-10
+		table.table-body
+			tr.table-head
+				th Bans currently in place against your IP:
+			for ban in bans
+				tr.table-row
+					td
+						+ban(ban)

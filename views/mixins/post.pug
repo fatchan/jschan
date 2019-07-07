@@ -1,7 +1,7 @@
 mixin post(post, truncate, manage=false, globalmanage=false)
 	.anchor(id=post.postId)
 	article(class=`post-container ${post.thread ? '' : 'op'}`)
-		- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html#${post.postId}`;
+		- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
 		header.post-info
 			label
 				if globalmanage
@@ -42,7 +42,11 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 				if post.userId
 					span.user-id(style=`background: #${post.userId}`) #{post.userId}
 					| 
-			span: a(href=postURL) No.#{post.postId}
+			span: a(href=`${postURL}#${post.postId}`) No.
+			span: a(href=`${postURL}#postform`) #{post.postId}
+			if !post.thread
+				|  
+				span: a(href=`/${post.board}/thread/${post.thread || post.postId}.html#postform`) [Reply]
 		.post-data
 			if post.files.length > 0
 				.post-files
@@ -79,13 +83,15 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 						}
 					pre.post-message !{truncatedMessage}
 					if truncatedMessage !== post.message
-						blockquote Message too long. #[a(href=postURL) View the full text]
+						blockquote.muted Message too long. #[a(href=`${postURL}#${post.postId}`) View the full text]
 				else 
 					pre.post-message !{post.message}
+			if !post.message && post.files.length === 0
+				blockquote.muted Post file(s) unlinked
 			if post.banmessage
-				blockquote.banmessage USER WAS BANNED FOR THIS POST (#{post.banmessage})
+				blockquote.banmessage USER BANNED FOR THIS POST (#{post.banmessage || 'No reason specified'})
 			if post.omittedposts || post.omittedimages
-				blockquote #{post.omittedposts} post(s)#{post.omittedimages > 0 ? ' and '+post.omittedimages+' image(s)' : ''} omitted. #[a(href=postURL) View the full thread]
+				blockquote.muted #{post.omittedposts} post(s)#{post.omittedimages > 0 ? ' and '+post.omittedimages+' image(s)' : ''} omitted. #[a(href=`${postURL}#${post.postId}`) View the full thread]
 			if post.backlinks && post.backlinks.length > 0
 				.replies Replies: 
 					each backlink in post.backlinks

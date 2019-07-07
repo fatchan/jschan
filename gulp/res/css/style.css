@@ -500,6 +500,10 @@ textarea {
 	clear: both;
 }
 
+.muted {
+	color: #000c;
+}
+
 .right {
 	float: right;
 }
@@ -542,30 +546,12 @@ input[type="file"] {
 	background: white;
 }
 
-.open-postform[open] {
-	z-index: 1;
-	position: fixed;
-	top: 4px;
-	right: 5px;
-}
-
-.open-postform[open] + .openpadding {
-	height: 39px;
-}
-
-.open-postform[open] summary:before {
-	content: "Close";
-}
-
-.open-postform summary:before {
-	content: "Open Post Form";
-}
-
 #postform {
+	display: none;
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
 	position: fixed;
-	top: 45px;
+	top: 5px;
 	right: 5px;
 	background-color: #D6DAF0;
 	border: 1px solid #b7c5d9;
