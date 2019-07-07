@@ -59,6 +59,10 @@ module.exports = {
 
 			//if enough replies, show omitted count
 			if (thread.replyposts > 5) {
+				//dont show ALL backlinks on OP for previews on index page
+				const firstPreviewId = thread.replies[0].postId;
+				const firstPreviewBacklinkIndex = thread.backlinks.map(bl => bl.postId).indexOf(firstPreviewId);
+				thread.previewbacklinks = thread.backlinks.slice(firstPreviewBacklinkIndex);
 				//cout omitted image and posts
 				const numPreviewImages = replies.reduce((acc, post) => { return acc + post.files.length }, 0);
 				thread.omittedimages = thread.replyfiles - numPreviewImages;

@@ -92,7 +92,14 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 				blockquote.banmessage USER BANNED FOR THIS POST (#{post.banmessage || 'No reason specified'})
 			if post.omittedposts || post.omittedimages
 				blockquote.muted #{post.omittedposts} post(s)#{post.omittedimages > 0 ? ' and '+post.omittedimages+' image(s)' : ''} omitted. #[a(href=`${postURL}#${post.postId}`) View the full thread]
-			if post.backlinks && post.backlinks.length > 0
+			if post.previewbacklinks
+				.replies Replies: 
+					each backlink in post.previewbacklinks
+						a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`) &gt;&gt;#{backlink.postId}
+						|  
+					if post.previewbacklinks.length < post.backlinks.length
+						| + #{post.backlinks.length-post.previewbacklinks.length} reply link(s) omitted
+			else if post.backlinks && post.backlinks.length > 0
 				.replies Replies: 
 					each backlink in post.backlinks
 						a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`) &gt;&gt;#{backlink.postId}
