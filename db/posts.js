@@ -61,8 +61,13 @@ module.exports = {
 			if (thread.replyposts > 5) {
 				//dont show ALL backlinks on OP for previews on index page
 				const firstPreviewId = thread.replies[0].postId;
-				const firstPreviewBacklinkIndex = thread.backlinks.map(bl => bl.postId).indexOf(firstPreviewId);
-				thread.previewbacklinks = thread.backlinks.slice(firstPreviewBacklinkIndex);
+				const latestPreviewBacklink = thread.backlinks.find(bl => { return bl.postId >= firstPreviewId });
+				if (latestPreviewBacklink != null) {
+					const latestPreviewIndex = thread.backlinks.map(bl => bl.postId).indexOf(latestPreviewBacklink);
+					thread.previewbacklinks = thread.backlinks.slice(latestPreviewIndex);
+				} else {
+					thread.previewbacklinks = [];
+				}
 				//cout omitted image and posts
 				const numPreviewImages = replies.reduce((acc, post) => { return acc + post.files.length }, 0);
 				thread.omittedimages = thread.replyfiles - numPreviewImages;
