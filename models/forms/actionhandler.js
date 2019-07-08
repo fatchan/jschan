@@ -113,7 +113,7 @@ module.exports = async (req, res, next) => {
 				const { message } = await deletePostsFiles(res.locals.posts, false); //delete files, not just unlink
 				messages.push(message);
 			}
-			const { action, message } = await deletePosts(res.locals.posts, req.body.delete_ip_global ? null : req.params.board);
+			const { action, message } = await deletePosts(passwordPosts, req.body.delete_ip_global ? null : req.params.board);
 			messages.push(message);
 			if (action) {
 				aggregateNeeded = true;
