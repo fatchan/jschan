@@ -13,7 +13,8 @@ const express = require('express')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
 	, refererRegex = new RegExp(configs.refererRegex)
-	, Mongo = require(__dirname+'/db/db.js');
+	, Mongo = require(__dirname+'/db/db.js')
+	, { createHash, randomBytes } = require('crypto');
 
 (async () => {
 
@@ -51,7 +52,9 @@ const express = require('express')
 
 	//referer header check
 	app.use((req, res, next) => {
-		res.locals.ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+		const ip = req.headers['x-real-ip'] || req.connection.remoteAddress
+		const ipHash = createHash('sha256').update(configs.ipHashSecret + ip).digest('base64');
+		res.locals.ip = ipHash;
 		if (req.method !== 'POST') {
 			return next();
 		}

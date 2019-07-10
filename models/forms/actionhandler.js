@@ -165,7 +165,7 @@ module.exports = async (req, res, next) => {
 			}
 			// cannot report and dismiss at same time
 			if (req.body.report) {
-				const { message, action, query } = reportPosts(req, res.locals.posts);
+				const { message, action, query } = reportPosts(req, res, res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
                 }
@@ -179,7 +179,7 @@ module.exports = async (req, res, next) => {
 			}
 			// cannot report and dismiss at same time
 			if (req.body.global_report) {
-				const { message, action, query } = globalReportPosts(req, res.locals.posts);
+				const { message, action, query } = globalReportPosts(req, res, res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}

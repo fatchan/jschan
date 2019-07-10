@@ -2,7 +2,7 @@
 
 const Posts = require(__dirname+'/../../db/posts.js');
 
-module.exports = (req, posts) => {
+module.exports = (req, res, posts) => {
 
 	const report = {
 		'reason': req.body.report_reason,
