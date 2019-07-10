@@ -329,7 +329,6 @@ module.exports = async (req, res, next) => {
 	} else {
 		//new thread, prunes any old threads before rebuilds
 		const prunedThreads = await Posts.pruneOldThreads(res.locals.board);
-//TODO: could add early404 here alongside thread pruning.
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
 		}
