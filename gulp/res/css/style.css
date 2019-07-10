@@ -201,6 +201,10 @@ p {
 	font-weight: bold;
 }
 
+#bottom {
+	margin-bottom: 10px;
+}
+
 .required {
 	margin-left: 5px;
 }
@@ -221,6 +225,10 @@ a .post-name:hover, pre a, pre a:visited, a:hover {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+}
+
+.thread .anchor:first-child {
+	height: 0;
 }
 
 .table-row:nth-child(2n+1) {
@@ -424,6 +432,7 @@ textarea {
 
 .post-message {
 	text-align: left;
+	overflow: hidden;
 }
 
 .post-container, .ban {
