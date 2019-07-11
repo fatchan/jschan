@@ -190,6 +190,7 @@ p {
 }
 
 .reports {
+	margin-top: 5px;
 	background: #fca!important;
 	border-color: #c97!important;
 	border-width: 1px 0;
@@ -228,7 +229,7 @@ a .post-name:hover, pre a, pre a:visited, a:hover {
 }
 
 .thread .anchor:first-child {
-	height: 0;
+	margin-top: -10px;
 }
 
 .table-row:nth-child(2n+1) {
@@ -269,7 +270,10 @@ td, th {
 
 .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile {
 	background: #D6DAF0;
-	border: 1px solid #B7C5D9;
+	/*border: 1px solid #B7C5D9;*/
+	border-width: 0 1px 1px 0;
+	border-style: solid;
+	border-color: #b7c5d9;
 }
 
 .actions {
@@ -296,9 +300,16 @@ td, th {
 }
 
 .toggle-summary {
-	margin-bottom: 1px;
 	padding: 10px;
 	cursor: pointer;
+}
+
+#postform:target ~ .toggle-summary {
+	display: none;
+}
+
+#postform:target ~ .toggle-hidden {
+	height: 37px;
 }
 
 .toggle-label {
@@ -443,11 +454,13 @@ textarea {
 
 .anchor:target + .post-container {
 	background-color: #d6bad0 !important;
-	border: 1px solid #ba9dbf !important;
+	/*border: 1px solid #ba9dbf !important;*/
+	border-color: #ba9dbf !important;
 }
 
 .anchor {
-	height: 5px;
+	height: 10px;
+	margin-top: -5px;
 }
 
 .post-container.op {
@@ -475,8 +488,8 @@ textarea {
 }
 
 .post-info {
-	background-color: #00000010;
-	border-bottom: 1px solid #00000010;
+	/*background-color: #00000010;
+	border-bottom: 1px solid #00000010;*/
 	margin: -5px -5px 0 -5px;
 	padding: 5px;
 	padding-left: 3px;

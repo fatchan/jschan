@@ -1,6 +1,5 @@
 - const isThread = thread != null
 section.form-wrapper.flex-center
-	a.toggle-summary(href='#postform') Open Postform
 	form.form-post#postform(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
 		unless board.settings.forceAnon
@@ -60,3 +59,5 @@ section.form-wrapper.flex-center
 				span.required *
 				|  = required field
 		input(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)
+	.toggle-hidden
+	a.toggle-summary(href='#postform') Open Postform
