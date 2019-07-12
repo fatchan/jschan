@@ -37,13 +37,13 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 				if post.capcode
 					span.post-capcode #{post.capcode}
 					| 
-				span #{post.date.toLocaleString()}
+				time(datetime=post.date.toISOString()) #{post.date.toLocaleString()}
 				| 
 				if post.userId
 					span.user-id(style=`background: #${post.userId}`) #{post.userId}
 					| 
-			span: a(href=`${postURL}#${post.postId}`) No.
-			span: a(href=`${postURL}#postform`) #{post.postId}
+			span: a.no-decoration(href=`${postURL}#${post.postId}`) No.
+			span: a.no-decoration(href=`${postURL}#postform`) #{post.postId}
 			if !post.thread
 				|  
 				span: a(href=`/${post.board}/thread/${post.thread || post.postId}.html#postform`) [Reply]

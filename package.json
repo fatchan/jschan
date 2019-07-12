@@ -17,6 +17,8 @@
     "fs": "0.0.1-security",
     "fs-extra": "^7.0.1",
     "gm": "github:fatchan/gm",
+    "lodash": "^4.17.14",
+    "lodash.mergewith": "^4.6.2",
     "mongodb": "^3.2.7",
     "path": "^0.12.7",
     "pug": "^2.0.3",

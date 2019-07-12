@@ -5,8 +5,8 @@ section.form-wrapper.flex-center
 		unless board.settings.forceAnon
 			section.postform-row
 				.postform-label Name
-				input(type='text', name='name', placeholder=board.settings.defaultName autocomplete='off' maxlength='50')
-				a.close.postform-style.ml-1(href='#!') X
+				input.mr-1(type='text', name='name', placeholder=board.settings.defaultName autocomplete='off' maxlength='50')
+				a.close.postform-style(href='#!') X
 			section.postform-row
 				.postform-label Subject
 					if !isThread && board.settings.forceOPSubject
@@ -21,7 +21,7 @@ section.form-wrapper.flex-center
 				label.postform-style.ph-5
 					input(type='checkbox', name='email', value='sage')
 					| Sage
-				a.close.postform-style.ml-1(href='#!') X
+				a.close.postform-style(href='#!') X
 			if !isThread
 				section.postform-row
 					.postform-label Subject
