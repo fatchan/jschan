@@ -60,10 +60,10 @@ module.exports = {
 			//if enough replies, show omitted count
 			if (thread.replyposts > 5) {
 				//dont show ALL backlinks on OP for previews on index page
-				const firstPreviewId = thread.replies[0].postId;
-				const latestPreviewBacklink = thread.backlinks.find(bl => { return bl.postId >= firstPreviewId });
+				const firstPreviewId = thread.replies[0].postId; //34
+				const latestPreviewBacklink = thread.backlinks.find(bl => { return bl.postId >= firstPreviewId }); //post with 34
 				if (latestPreviewBacklink != null) {
-					const latestPreviewIndex = thread.backlinks.map(bl => bl.postId).indexOf(latestPreviewBacklink);
+					const latestPreviewIndex = thread.backlinks.map(bl => bl.postId).indexOf(latestPreviewBacklink.postId);
 					thread.previewbacklinks = thread.backlinks.slice(latestPreviewIndex);
 				} else {
 					thread.previewbacklinks = [];
