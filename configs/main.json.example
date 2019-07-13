@@ -1,10 +1,11 @@
 {
-    "dbURL": "mongodb://username:password@host:port",
-    "port": 7000,
-    "sessionSecret": "long random string",
+	"dbURL": "mongodb://username:password@host:port",
+	"port": 7000,
+	"sessionSecret": "long random string",
 	"tripcodeSecret": "long random string",
 	"ipHashSecret": "long random string",
 	"cacheTemplates": true,
+	"refererCheck": false,
 	"refererRegex": "^https?:\\/\\/(?:www\\.)?domain\\.com\\/",
 	"openGraph": {
 		"siteName": "site name",

@@ -58,7 +58,7 @@ const express = require('express')
 		if (req.method !== 'POST') {
 			return next();
 		}
-		if (!req.headers.referer || !req.headers.referer.match(refererRegex)) {
+		if (configs.refererCheck === true && (!req.headers.referer || !req.headers.referer.match(refererRegex))) {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
 				'message': 'Invalid or missing "Referer" header. Are you posting from the correct URL?'
