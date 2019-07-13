@@ -39,13 +39,14 @@ module.exports = async (board, text, thread) => {
 			if (!crossQuoteMap[crossQuoteBoard]) {
 				crossQuoteMap[crossQuoteBoard] = [];
 			}
-			if (!isNaN(crossQuotePostId)) {
+			if (!isNaN(crossQuotePostId) && crossQuotePostId > 0) {
 				crossQuoteMap[crossQuoteBoard].push(crossQuotePostId);
 			}
 		}
 		const crossQuoteBoards = Object.keys(crossQuoteMap)
 		for (let i = 0; i < crossQuoteBoards.length; i++) {
 			const crossQuoteBoard = crossQuoteBoards[i];
+			boardQueryIns.push(crossQuoteBoard);
 			const crossQuoteBoardPostIds = crossQuoteMap[crossQuoteBoard];
 			if (crossQuoteBoardPostIds.length > 0) {
 				postQueryOrs.push({
@@ -54,8 +55,6 @@ module.exports = async (board, text, thread) => {
 						'$in': crossQuoteBoardPostIds
 					}
 				});
-			} else {
-				boardQueryIns.push(crossQuoteBoard);
 			}
 		}
 	}
@@ -109,7 +108,7 @@ module.exports = async (board, text, thread) => {
 			const quoteboard = quote[1];
 			const quotenum = +quote[2];
 			if (postThreadIdMap[quoteboard]) {
-				if (!isNaN(quotenum) && postThreadIdMap[quoteboard][quotenum]) {
+				if (!isNaN(quotenum) && quoteNnum > 0 && postThreadIdMap[quoteboard][quotenum]) {
 					return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum].thread}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
 				} else {
 					return `<a class='quote' href='/${quoteboard}/index.html'>&gt;&gt;&gt;/${quoteboard}/</a>`;
