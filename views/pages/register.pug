@@ -24,7 +24,7 @@ block content
 					.required *
 				span.postform-col
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
-					input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6' required)
+					input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' pattern=".{6}" required title='6 characters')
 			input(type='submit', value='Register')
 		p: a(href='/login.html') Login
 		p: a(href='/changepassword.html') Change Password

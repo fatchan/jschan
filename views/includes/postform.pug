@@ -53,7 +53,7 @@ section.form-wrapper.flex-center
 					.required *
 				.postform-col
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
-					input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' maxlength='6' required)
+					input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' pattern=".{6}" required title='6 characters')
 		if !isThread && ((board.settings.forceOPFile && board.settings.maxFiles > 0) || board.settings.forceOPMessage || board.settings.forceOPSubject)
 			small
 				span.required *
