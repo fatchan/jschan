@@ -95,7 +95,7 @@ module.exports = async (req, res, next) => {
 		// then upload, thumb, get metadata, etc.
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			const file = req.files.file[i];
-			const extension = path.extname(file.name);
+			let extension = path.extname(file.name) || file.name.substring(file.name.indexOf('.'));
 			const filename = file.sha256 + extension;
 
 			//get metadata

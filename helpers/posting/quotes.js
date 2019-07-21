@@ -108,7 +108,7 @@ module.exports = async (board, text, thread) => {
 			const quoteboard = quote[1];
 			const quotenum = +quote[2];
 			if (postThreadIdMap[quoteboard]) {
-				if (!isNaN(quotenum) && quoteNnum > 0 && postThreadIdMap[quoteboard][quotenum]) {
+				if (!isNaN(quotenum) && quotenum > 0 && postThreadIdMap[quoteboard][quotenum]) {
 					return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum].thread}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
 				} else {
 					return `<a class='quote' href='/${quoteboard}/index.html'>&gt;&gt;&gt;/${quoteboard}/</a>`;
