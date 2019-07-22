@@ -14,7 +14,7 @@ const path = require('path')
 	, sanitizeOptions = {
 		allowedTags: [ 'span', 'a', 'em', 'strong', 'small' ],
 		allowedAttributes: {
-			'a': [ 'href', 'class' ],
+			'a': [ 'href', 'class', 'referrerpolicy', 'target' ],
 			'span': [ 'class' ]
 		}
 	}
