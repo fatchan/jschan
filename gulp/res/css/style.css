@@ -81,14 +81,17 @@ pre {
 	border-width: 1px 1px 1px 10px;
 	border-style: solid;
 	border-color: var(--transparent-darken);
-	background: var(--transparent-darken);
 	display: block;
-	padding: 3px;
-	font-family: monospace;
 	margin: 0.5em 0;
 	display: flex;
 	overflow-x: auto;
 	white-space: pre;
+}
+
+.code, .mono {
+    background: var(--transparent-darken);
+    padding: 2px;
+    font-family: monospace;
 }
 
 .ml-1 {

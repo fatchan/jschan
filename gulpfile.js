@@ -4,6 +4,7 @@ const gulp = require('gulp')
 	, less = require('gulp-less')
 	, cleanCSS = require('gulp-clean-css')
 	, del = require('del')
+	, pug = require('gulp-pug')
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/*.css',
@@ -12,6 +13,10 @@ const gulp = require('gulp')
 		images: {
 			src: 'gulp/res/img/*',
 			dest: 'static/img/'
+		},
+		pug: {
+			src: 'views/custompages/*.pug',
+			dest: 'static/html/'
 		}
 	};
 
@@ -180,11 +185,13 @@ async function wipe() {
 	Mongo.client.close();
 
 	//delete all the static files
-	return del([ 'static/html/*' ]);
-	return del([ 'static/banner/*' ]);
-	return del([ 'static/captcha/*' ]);
-	return del([ 'static/img/*' ]);
-	return del([ 'static/css/*' ]);
+	return Promise.all([
+		del([ 'static/html/*' ]),
+		del([ 'static/banner/*' ]),
+		del([ 'static/captcha/*' ]),
+		del([ 'static/img/*' ]),
+		del([ 'static/css/*' ])
+	]);
 }
 
 //update the css file
@@ -202,10 +209,12 @@ function images() {
 }
 
 //TODO: pages here that users should edit built and output by pug e.g. homepage, FAQ, contact, privacy policy, tos, etc
-function html() {
-	return del([ 'static/html/*' ]);
+async function html() {
+	await del([ 'static/html/*' ]); //these will be now build-on-load
+	return gulp.src(paths.pug.src)
+		.pipe(pug())
+		.pipe(gulp.dest(paths.pug.dest));
 }
-
 
 const build = gulp.parallel(css, images, html);
 const reset = gulp.series(wipe, build)

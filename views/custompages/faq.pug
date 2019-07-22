@@ -1,0 +1,71 @@
+extends ../layout.pug
+
+block head
+	title Frequently Asked Questions
+
+block content
+	h1.board-title FAQ
+	.table-container.flex-center.mv-10
+		table.table-body
+			tr.table-head
+				th Post styling
+			tr.table-row
+				td.post-message
+					p When posting, you can use certain characters to style your post with bold, italics, code blocks, quotes, etc. The formatting is as follows:
+
+					b Greentext
+					div &gt;greentext  &rarr;  
+						span.greentext &gt;greentext
+					br
+
+					b Pinktext
+					div &lt;pinktext  &rarr;  
+						span.pinktext &lt;pinktext
+					br
+
+					b Title
+					div ==title==  &rarr;  
+						span.title title
+					br
+
+
+					b Bold
+					div ""bold""  &rarr;  
+						strong bold
+					br
+
+					b Underline
+					div __underline__  &rarr;  
+						span.underline underline
+					br
+
+					b Strikethrough
+					div ~~strikethrough~~  &rarr;  
+						span.strikethrough strikethrough
+					br
+
+					b Italic
+					div **italic**  &rarr;  
+						em italic
+					br
+
+					b Detected
+					div (((detected)))  &rarr;  
+						span.detected (((detected)))
+					br
+
+					b Code Block
+					pre.no-m-p
+						| ```
+						| var foo = 'bar';
+						| ```
+					span.code var foo = 'bar';
+					br
+
+					b Inline monospace
+					div `monospace`  &rarr;  
+						span.mono monospace
+					br
+
+					b Hyperlinking
+					div https://example.com  &rarr;  #[a(href='https://example.com') https://example.com]

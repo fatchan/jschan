@@ -3,9 +3,9 @@ include ../mixins/post.pug
 
 block head
 	title /#{board._id}/ - #{thread.subject||thread.postId}
-	meta(property='og:site_name', value=openGraph.siteName)
+	meta(property='og:site_name', value=meta.siteName)
 	meta(property='og:title', content=thread.subject)
-	meta(property='og:url', content=openGraph.url)
+	meta(property='og:url', content=meta.url)
 	meta(property='og:description', content=thread.message)
 	if thread.files.length > 0
 		if thread.spoiler
