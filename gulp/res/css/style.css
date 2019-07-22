@@ -1,3 +1,30 @@
+:root {
+	--background-top: #d6daf0;
+	--background-rest: #eef2ff;
+	--post-color: #D6DAF0;
+	--post-outline-color: #B7C5D9;
+	--label-color: #98E;
+	--box-border-color: #000;
+	--transparent-darken: #00000010;
+	--highlighted-post-color: #d6bad0;
+	--highlighted-post-outline-color: #ba9dbf;
+	--report-color: #fca;
+	--report-outline-color: #c97;
+	--table-row-even-color: #eef2ff;
+	--board-title: #af0a0f;
+	--hr: lightgray;
+	--font-color: black;
+	--name-color: #117743;
+	--capcode-color: #f00;
+	--subject-color: #0F0C5D;
+	--link-color: #34345C;
+	--post-link-color: #d00;
+	--link-hover: #d00;
+	--input-borders: #a9a9a9;
+	--input-color: #000;
+	--input-background: white;
+}
+
 html {
 	scroll-behavior: smooth;
 }
@@ -5,7 +32,8 @@ html {
 body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
-	background: linear-gradient(#d6daf0 38px, #eef2ff 238px);
+	color: var(--font-color);
+	background: linear-gradient(var(--background-top) 38px, var(--background-rest) 238px);
 	flex: 1;
 	display: flex;
 	flex-direction: column;
@@ -50,9 +78,12 @@ pre {
 
 .code {
 	text-align: left;
-	border-left: 10px solid #00000010;
+	border-width: 1px 1px 1px 10px;
+	border-style: solid;
+	border-color: var(--transparent-darken);
+	background: var(--transparent-darken);
 	display: block;
-	padding-left: 5px;
+	padding: 3px;
 	font-family: monospace;
 	margin: 0.5em 0;
 	display: flex;
@@ -94,7 +125,12 @@ pre {
 
 a, a:visited, a .post-name {
 	text-decoration: underline;
-	color: #34345C;
+	color: var(--link-color);
+}
+
+.post-message a {
+	text-decoration: underline;
+	color: var(--post-link-color);
 }
 
 .pages a, .stickynav a {
@@ -118,7 +154,7 @@ object {
 	max-height: 300px;
 	width: 250px;
 	overflow: hidden;
-	border: 2px solid #B7C5D9;
+	border: 2px solid var(--post-outline-color);
 	box-sizing: border-box;
 }
 
@@ -193,8 +229,8 @@ p {
 
 .reports {
 	margin-top: 5px;
-	background: #fca!important;
-	border-color: #c97!important;
+	background: var(--report-color) !important;
+	border-color: var(--report-outline-color)!important;
 	border-width: 1px 0;
 	border-style: solid none;
 }
@@ -220,8 +256,8 @@ p {
 	color: green;
 }
 
-a .post-name:hover, pre a, pre a:visited, a:hover {
-	color: #d00;
+a .post-name:hover, a:hover {
+	color: var(--link-hover);
 }
 
 .thread, .action-wrapper, .form-wrapper, .table-container {
@@ -235,18 +271,18 @@ a .post-name:hover, pre a, pre a:visited, a:hover {
 }
 
 .table-row:nth-child(2n+1) {
-	background: #eef2ff;
+	background: var(--table-row-even-color);
 }
 
 .table-body {
-	background: #D6DAF0;
-	border: 1px solid #000333;
+	background: var(--post-color);
+	border: 1px solid var(--box-border-color);
 	border-spacing: 0;
 	width: 600px;
 }
 
 .table-head {
-	background: #98e;
+	background: var(--label-color);
 	text-align: left;
 }
 
@@ -271,11 +307,10 @@ td, th {
 }
 
 .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile {
-	background: #D6DAF0;
-	/*border: 1px solid #B7C5D9;*/
+	background: var(--post-color);
 	border-width: 0 1px 1px 0;
 	border-style: solid;
-	border-color: #b7c5d9;
+	border-color: var(--post-outline-color);
 }
 
 .actions {
@@ -298,7 +333,7 @@ td, th {
 }
 
 .toggle-label:hover {
-	box-shadow: inset 0 0 100px 100px rgba(255,255,255,.25);
+	/*box-shadow: inset 0 0 100px 100px rgba(255,255,255,.25);*/
 }
 
 .toggle-summary {
@@ -367,8 +402,6 @@ a, input, summary {
 }
 
 .post-data {
-	/*margin-top: -10px;
-	padding-top: 10px;*/
 	overflow: hidden;
 }
 
@@ -421,7 +454,7 @@ textarea {
 }
 
 .board-title {
-	color: #af0a0f;
+	color: var(--board-title);
 	font: bolder 28px Tahoma,sans-serif;
 	letter-spacing: -2px;
 	text-align: center;
@@ -449,7 +482,6 @@ textarea {
 
 .post-message {
 	text-align: left;
-	/*overflow: hidden;*/
 }
 
 .post-container, .ban {
@@ -459,9 +491,8 @@ textarea {
 }
 
 .anchor:target + .post-container {
-	background-color: #d6bad0 !important;
-	/*border: 1px solid #ba9dbf !important;*/
-	border-color: #ba9dbf !important;
+	background-color: var(--highlighted-post-color) !important;
+	border-color: var(--highlighted-post-outline-color) !important;
 }
 
 .anchor {
@@ -476,17 +507,17 @@ textarea {
 }
 
 .post-subject {
-	color: #0F0C5D;
+	color: var(--subject-color);
 	font-weight: bold;
 }
 
 .post-capcode {
 	font-weight: bold;
-	color: red;
+	color:var(--capcode-color);
 }
 
 .post-tripcode, .post-name {
-	color: #117743;
+	color: var(--name-color);
 }
 
 .post-name {
@@ -494,8 +525,6 @@ textarea {
 }
 
 .post-info {
-	/*background-color: #00000010;
-	border-bottom: 1px solid #00000010;*/
 	margin: -5px -5px 0 -5px;
 	padding: 5px;
 	padding-left: 3px;
@@ -528,7 +557,7 @@ textarea {
 }
 
 .muted {
-	color: #000c;
+	/*color: #000c;*/
 }
 
 .right {
@@ -547,7 +576,9 @@ textarea {
 }
 
 input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {
-	border: 1px solid #a9a9a9;
+	border: 1px solid var(--input-borders);
+	background: var(--input-background);
+	color: var(--input-color);
 	font-size: inherit;
 	font-family: arial, helvetica, sans-serif;
 	margin: 0;
@@ -571,7 +602,7 @@ input[type="submit"] {
 
 input[type="file"] {
 	width: 200px;
-	background: white;
+	background: var(--input-background);
 }
 
 #postform {
@@ -581,8 +612,8 @@ input[type="file"] {
 	position: fixed;
 	top: 5px;
 	right: 5px;
-	background-color: #D6DAF0;
-	border: 1px solid #b7c5d9;
+	background-color: var(--post-color);
+	border: 1px solid var(--post-outline-color);
 	padding: 5px;
 	z-index: 1;
 	box-sizing: border-box;
@@ -605,18 +636,17 @@ input[type="file"] {
 .postform-col {
 	flex-direction: column;
 	flex-grow: 1;
-	/*align-items: end;*/
 }
 
 .postform-style {
 	display: flex;
-	border: 1px solid #a9a9a9;
-	background: white;
+	border: 1px solid var(--input-borders);
+	background: var(--input-background);
 	align-items: center;
 }
 
 .captcha {
-	border: 1px solid #a9a9a9;
+	border: 1px solid var(--input-borders);
 	background: white;
 	margin-bottom: 1px;
 	width: 100%;
@@ -626,9 +656,9 @@ input[type="file"] {
 
 .postform-label {
 	padding: 3px;
-	border: 1px solid black;
+	border: 1px solid var(--box-border-color);
 	min-width: 80px;
-	background: #98E;
+	background: var(--label-color);
 	display: flex;
 	align-items: center;
 	font-weight: bold;
@@ -636,7 +666,7 @@ input[type="file"] {
 }
 
 hr {
-	color: lightgray;
+	color: var(--hr);
 }
 
 @media only screen and (max-width: 600px) {
