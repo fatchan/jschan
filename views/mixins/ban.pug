@@ -1,8 +1,8 @@
 include ./post.pug
 
-mixin ban(ban, showcheck)
+mixin ban(ban, modpage)
 	.ban
-		if showcheck
+		if modpage
 			input.post-check(type='checkbox', name='checkedbans[]' value=ban._id)
 		span 
 			| Banned 
@@ -12,8 +12,7 @@ mixin ban(ban, showcheck)
 				| globally 
 		| for: #{ban.reason}
 		div Issued by: #{ban.issuer}
-		//todo: hash ips
-		div Issued against: #{ban.ip}
+		div Issued against: ...#{ban.ip.slice(-10)}
 		div Banned: #{ban.date.toLocaleString()}
 		div Expires: #{ban.expireAt.toLocaleString()}
 		if ban.post
