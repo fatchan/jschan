@@ -1,7 +1,6 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db/posts.js')
-	, greentextRegex = /^>([^>].+)/gm
+const greentextRegex = /^>([^>].+)/gm
 	, pinktextRegex = /^<([^<].+)/gm
 	, boldRegex = /""(.+)""/gm
 	, titleRegex = /==(.+)==/gm
