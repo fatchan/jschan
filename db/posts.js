@@ -363,7 +363,7 @@ module.exports = {
 		return db.deleteOne(options);
 	},
 
-	pruneOldThreads: async (board) => {
+	pruneThreads: async (board) => {
 
 		//get threads that have been bumped off last page
 		const oldThreads = await db.find({

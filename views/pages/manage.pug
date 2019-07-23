@@ -27,12 +27,20 @@ block content
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
 			section.row
-				.label Post Captcha
-				label.postform-style.ph-5
-					input(type='checkbox', name='captcha', value='true' checked=board.settings.captcha)
+				.label Captcha Mode
+				select(name='captcha_mode' checked=board.settings.captchaMode)
+					option(value='0', selected=board.settings.captchaMode === 0) No Captcha
+					option(value='1', selected=board.settings.captchaMode === 1) Captcha for new thread
+					option(value='2', selected=board.settings.captchaMode === 2) Captcha for all posts
 			section.row
-				.label Captcha PPH Trigger
-				input(type='number' name='captcha_trigger' placeholder=board.settings.captchaTrigger)
+				.label Captcha Trigger Threshold
+				input(type='number', name='captcha_trigger', placeholder=board.settings.captchaTrigger)
+			section.row
+				.label Captcha Trigger Mode
+				select(name='captcha_trigger_mode' placeholder=board.settings.captchaTriggerMode)
+					option(value='0', selected=board.settings.captchaTriggerMode === 0) Do nothing
+					option(value='1', selected=board.settings.captchaTriggerMode === 1) Enable for new thread
+					option(value='2', selected=board.settings.captchaTriggerMode === 2) Enable for all posts
 			section.row
 				.label Post Deletion
 				label.postform-style.ph-5

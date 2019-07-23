@@ -9,9 +9,11 @@ module.exports = async (req, res, next) => {
 
 	//skip captcha if disabled on board for posts only
 	if (res.locals.board
-		&& req.path === `/board/${res.locals.board._id}/post`
-		&& !res.locals.board.settings.captcha) {
-		return next();
+		&& req.path === `/board/${res.locals.board._id}/post`) {
+		if (res.locals.board.settings.captchaMode === 0 //if captcha disabled
+			|| (res.locals.board.settings.captchaMode === 1 && req.body.thread)) { //or if enabled for threads, and not a thread
+			return next(); //then skip checking captcha
+		}
 	}
 
 	//check if captcha field in form is valid

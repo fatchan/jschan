@@ -573,7 +573,7 @@ textarea {
 	line-height: 30px;
 }
 
-input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea {
+input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea, select {
 	border: 1px solid var(--input-borders);
 	background: var(--input-background);
 	color: var(--input-color);

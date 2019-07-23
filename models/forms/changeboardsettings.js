@@ -32,11 +32,12 @@ module.exports = async (req, res, next) => {
 		name: req.body.name && req.body.name.trim().length > 0 ? req.body.name : oldSettings.name,
 		description: req.body.description && req.body.description.trim().length > 0 ? req.body.description : oldSettings.description,
 		ids: req.body.ids ? true : false,
-		captcha: req.body.captcha ? true : false,
 		forceAnon: req.body.force_anon ? true : false,
 		userPostDelete: req.body.user_post_delete ? true : false,
 		userPostSpoiler: req.body.user_post_spoiler ? true : false,
 		userPostUnlink: req.body.user_post_unlink ? true : false,
+		captchaMode: typeof req.body.captcha_mode === 'number' && req.body.captcha_mode !== oldSettings.captchaMode ? req.body.captcha_mode : oldSettings.captchaMode,
+		captchaTriggerMode: typeof req.body.captcha_trigger === 'number' && req.body.captcha_trigger_mode !== oldSettings.captchaTriggerMode ? req.body.captcha_trigger_mode : oldSettings.captchaTriggerMode,
 		captchaTrigger: typeof req.body.captcha_trigger === 'number' && req.body.captcha_trigger !== oldSettings.captchaTrigger ? req.body.captcha_trigger : oldSettings.captchaTrigger,
 		threadLimit: typeof req.body.thread_limit === 'number' && req.body.thread_limit !== oldSettings.threadLimit ? req.body.thread_limit : oldSettings.threadLimit,
 		replyLimit: typeof req.body.reply_limit === 'number' && req.body.reply_limit !== oldSettings.replyLimit ? req.body.reply_limit : oldSettings.replyLimit,
@@ -67,7 +68,7 @@ module.exports = async (req, res, next) => {
 	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
 	if (newMaxPage < oldMaxPage) {
 		//prune old threads
-		const prunedThreads = await Posts.pruneOldThreads(res.locals.board);
+		const prunedThreads = await Posts.pruneThreads(res.locals.board);
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
 			//remove board page html for pages > newMaxPage
@@ -80,7 +81,8 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	if (oldSettings.captcha !== newSettings.captcha) {
+	if (newSettings.captchaMode !== oldSettings.captchaMode) {
+		//TODO: only remove necessary pages here
 		promises.push(remove(`${uploadDirectory}html/${req.params.board}/`));
 	}
 

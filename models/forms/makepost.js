@@ -271,25 +271,27 @@ module.exports = async (req, res, next) => {
 
 	const postId = await Posts.insertOne(res.locals.board, data, thread);
 
-	//if captcha not currently enabled, and the trigger threshhold is > 0 (i.e. enabled)
-	if (res.locals.board.settings.captchaTrigger > 0 && !res.locals.board.settings.captcha) {
+	if (!data.thread //if this is a new thread
+		&& res.locals.board.settings.captchaTriggerMode > 0 //and the triger mode is not nothing
+		&& res.locals.board.settings.captchaMode < res.locals.board.settings.captchaTriggerMode) { //and the current captcha mode is less than the trigger mode
 		const pastHourMongoId = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000));
-		//count posts in part hour (pph)
-		const pph = await Posts.db.countDocuments({
+		//count threads in past hour
+		const tph = await Posts.db.countDocuments({
 			'_id': {
 				'$gt': pastHourMongoId
 			},
+			'thread': null,
 			'board': res.locals.board._id
 		});
 		//if its above the trigger
-		if (pph > res.locals.board.settings.captchaTrigger) {
-			res.locals.board.settings.captcha = true; //update in memory too
+		if (tph > res.locals.board.settings.captchaTrigger) {
+			res.locals.board.settings.captchaMode = res.locals.board.settings.captchaTriggerMode; //update in memory too
 			//set it in the db
 			await Boards.db.updateOne({
 				'_id': res.locals.board._id,
 			}, {
 				'$set': {
-					'settings.captcha': true
+					'settings.captchaMode': res.locals.board.settings.captchaTriggerMode
 				}
 			});
 			//remove the html (since pages will need captcha in postform now)
@@ -329,7 +331,7 @@ module.exports = async (req, res, next) => {
 		}
 	} else {
 		//new thread, prunes any old threads before rebuilds
-		const prunedThreads = await Posts.pruneOldThreads(res.locals.board);
+		const prunedThreads = await Posts.pruneThreads(res.locals.board);
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
 		}

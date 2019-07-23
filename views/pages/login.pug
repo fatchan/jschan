@@ -9,12 +9,10 @@ block content
 			input(type='hidden' name='goto' value=goto)
 			section.row
 				.label Username
-					.required *
-				input#username(type='text', name='username', maxlength='50' required)
+				input(type='text', name='username', maxlength='50' required)
 			section.row
 				.label Password
-					.required *
-				input#password(type='password', name='password', maxlength='100' required)
+				input(type='password', name='password', maxlength='100' required)
 			input(type='submit', value='submit')
 		p: a(href='/register.html') Register
 		p: a(href='/changepassword.html') Change Password

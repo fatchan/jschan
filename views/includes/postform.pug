@@ -47,14 +47,14 @@ section.form-wrapper.flex-center
 			section.row
 				.label Password
 				input(type='password', name='password', autocomplete='off' placeholder='password to delete/spoiler/unlink later' maxlength='50')
-		if board.settings.captcha
+		if (board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2
 			section.row
 				.label Captcha
 					.required *
 				.col
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
 					input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' pattern=".{6}" required title='6 characters')
-		if !isThread && ((board.settings.forceOPFile && board.settings.maxFiles > 0) || board.settings.forceOPMessage || board.settings.forceOPSubject)
+		//if !isThread && ((board.settings.forceOPFile && board.settings.maxFiles > 0) || board.settings.forceOPMessage || board.settings.forceOPSubject)
 			small
 				span.required *
 				|  = required field

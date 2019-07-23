@@ -294,6 +294,15 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 	if (typeof req.body.min_message_length === 'number' && (req.body.min_message_length < 0 || req.body.min_message_length > 4000)) {
 		errors.push('Min message length must be 0-4000. 0 is disabled.');
 	}
+	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {
+		errors.push('Invalid captcha mode.');
+	}
+	if (typeof req.body.captcha_trigger === 'number' && (req.body.captcha_trigger < 0 || req.body.captcha_trigger > 10000)) {
+		errors.push('Invalid captcha trigger threshold.');
+	}
+	if (typeof req.body.captcha_trigger_mode === 'number' && (req.body.captcha_trigger_mode < 0 || req.body.captcha_trigger_mode > 2)) {
+		errors.push('Invalid captcha trigger mode.')
+	}
 
 	if (errors.length > 0) {
 		return res.status(400).render('message', {
