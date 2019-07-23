@@ -7,22 +7,22 @@ block content
 	section.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/register' method='POST')
 			//input(type='hidden' name='_csrf' value=csrf)
-			section.postform-row
-				.postform-label Username
+			section.row
+				.label Username
 					.required *
 				input#username(type='text', name='username', maxlength='50' required)
-			section.postform-row
-				.postform-label Password
+			section.row
+				.label Password
 					.required *
 				input#password(type='password', name='password', maxlength='100' required)
-			section.postform-row
-				.postform-label Confirm Password
+			section.row
+				.label Confirm Password
 					.required *
 				input#password(type='password', name='passwordconfirm', maxlength='100' required)
-			section.postform-row
-				.postform-label Captcha
+			section.row
+				.label Captcha
 					.required *
-				span.postform-col
+				span.col
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
 					input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' pattern=".{6}" required title='6 characters')
 			input(type='submit', value='Register')

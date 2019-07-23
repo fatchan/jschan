@@ -69,3 +69,13 @@ block content
 
 					b Hyperlinking
 					div https://example.com  &rarr;  #[a(href='https://example.com') https://example.com]
+					br
+
+					b Quotes
+					div &gt;&gt;123  &rarr;  #[a(class="quote" href="#!") &gt;&gt;123]
+					br
+
+					b Cross Board Quotes
+					div &gt;&gt;&gt;/b/  &rarr;  #[a(class="quote" href="#!") &gt;&gt;&gt;/b/]
+					div &gt;&gt;&gt;/b/123  &rarr;  #[a(class="quote" href="#!") &gt;&gt;&gt;/b/123]
+					br

@@ -6,10 +6,10 @@ block head
 block content
 	h1.board-title Fatchan
 	.table-container.flex-center.mv-10
-		table.table-body
-			tr.table-head
+		table
+			tr
 				th Welcome
-			tr.table-row
+			tr
 				td
 					p
 						| This is an anonymous imageboard, a type of discussion board where users share images and text about various topics. 
@@ -20,25 +20,25 @@ block content
 					p 
 						| Choose a board below and join the discussion!
 	.table-container.flex-center.mv-10
-		table.table-body
-			tr.table-head
+		table
+			tr
 				th Board
 				th Title
 				th Description
 				th Posts/h
 				th Total Posts
 			each board in boards
-				tr.table-row
+				tr
 					td: a(href=`/${board._id}/`) /#{board._id}/
 					td #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}
 					td #{board.sequence_value-1}
 	.table-container.flex-center.mv-10
-		table.table-body
-			tr.table-head
+		table
+			tr
 				th Source Code
-			tr.table-row
+			tr
 				td
 					p
 						| The source code for this site is available 

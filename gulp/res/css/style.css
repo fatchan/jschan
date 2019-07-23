@@ -10,7 +10,6 @@
 	--highlighted-post-outline-color: #ba9dbf;
 	--report-color: #fca;
 	--report-outline-color: #c97;
-	--table-row-even-color: #eef2ff;
 	--board-title: #af0a0f;
 	--hr: lightgray;
 	--font-color: black;
@@ -273,18 +272,14 @@ a .post-name:hover, a:hover {
 	margin-top: -10px;
 }
 
-.table-row:nth-child(2n+1) {
-	background: var(--table-row-even-color);
-}
-
-.table-body {
-	background: var(--post-color);
+table {
+	background: var(--background-rest);
 	border: 1px solid var(--box-border-color);
 	border-spacing: 0;
 	width: 600px;
 }
 
-.table-head {
+th {
 	background: var(--label-color);
 	text-align: left;
 }
@@ -626,17 +621,17 @@ input[type="file"] {
 	display: flex;
 }
 
-.postform-row, .postform-col {
+.row, .col {
 	display: flex;
 }
 
-.postform-row {
+.row {
 	margin-bottom: 1px;
 	overflow: hidden;
 	max-width: 100%;
 }
 
-.postform-col {
+.col {
 	flex-direction: column;
 	flex-grow: 1;
 }
@@ -657,7 +652,7 @@ input[type="file"] {
 	object-fit: contain;
 }
 
-.postform-label {
+.label {
 	padding: 3px;
 	border: 1px solid var(--box-border-color);
 	min-width: 80px;
@@ -724,7 +719,7 @@ hr {
 		width: calc(50% - 2px);
 	}
 
-	.table-body {
+	table {
 		width: 100%;
 	}
 

@@ -12,65 +12,65 @@ block content
 	section.form-wrapper.flexleft.mv-10
 		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
-			section.postform-row
-				.postform-label Board name
+			section.row
+				.label Board name
 				input(type='text' name='name' placeholder=board.settings.name)
-			section.postform-row
-				.postform-label Board Description
+			section.row
+				.label Board Description
 				input(type='text' name='description' placeholder=board.settings.description)
-			section.postform-row
-				.postform-label IDs
-				label.postform-style.ph-5
+			section.row
+				.label IDs
+				label.style.ph-5
 					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)
-			section.postform-row
-				.postform-label Force Anon
-				label.postform-style.ph-5
+			section.row
+				.label Force Anon
+				label.style.ph-5
 					input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
-			section.postform-row
-				.postform-label Post Captcha
-				label.postform-style.ph-5
+			section.row
+				.label Post Captcha
+				label.style.ph-5
 					input(type='checkbox', name='captcha', value='true' checked=board.settings.captcha)
-			section.postform-row
-				.postform-label Captcha PPH Trigger
+			section.row
+				.label Captcha PPH Trigger
 				input(type='number' name='captcha_trigger' placeholder=board.settings.captchaTrigger)
-			section.postform-row
-				.postform-label Post Deletion
-				label.postform-style.ph-5
+			section.row
+				.label Post Deletion
+				label.style.ph-5
 					input(type='checkbox', name='user_post_delete', value='true' checked=board.settings.userPostDelete)
-			section.postform-row
-				.postform-label File Spoilers
-				label.postform-style.ph-5
+			section.row
+				.label File Spoilers
+				label.style.ph-5
 					input(type='checkbox', name='user_post_spoiler', value='true' checked=board.settings.userPostSpoiler)
-			section.postform-row
-				.postform-label File Unlinking
-				label.postform-style.ph-5
+			section.row
+				.label File Unlinking
+				label.style.ph-5
 					input(type='checkbox', name='user_post_unlink', value='true' checked=board.settings.userPostUnlink)
-			section.postform-row
-				.postform-label Force OP Message
-				label.postform-style.ph-5
+			section.row
+				.label Force OP Message
+				label.style.ph-5
 					input(type='checkbox', name='force_op_message', value='true' checked=board.settings.forceOPMessage)
-			section.postform-row
-				.postform-label Force OP Subject
-				label.postform-style.ph-5
+			section.row
+				.label Force OP Subject
+				label.style.ph-5
 					input(type='checkbox', name='force_op_subject', value='true' checked=board.settings.forceOPSubject)
-			section.postform-row
-				.postform-label Force OP File
-				label.postform-style.ph-5
+			section.row
+				.label Force OP File
+				label.style.ph-5
 					input(type='checkbox', name='force_op_file', value='true' checked=board.settings.forceOPFile)
-			section.postform-row
-				.postform-label Anon Name
+			section.row
+				.label Anon Name
 				input(type='text' name='default_name' placeholder=board.settings.defaultName)
-			section.postform-row
-				.postform-label Min Message Length
+			section.row
+				.label Min Message Length
 				input(type='number' name='min_message_length' placeholder=board.settings.minMessageLength)
-			section.postform-row
-				.postform-label Thread Limit
+			section.row
+				.label Thread Limit
 				input(type='number' name='thread_limit' placeholder=board.settings.threadLimit)
-			section.postform-row
-				.postform-label Reply Limit
+			section.row
+				.label Reply Limit
 				input(type='number' name='reply_limit' placeholder=board.settings.replyLimit)
-			section.postform-row
-				.postform-label Max Files
+			section.row
+				.label Max Files
 				input(type='number' name='max_files' placeholder=board.settings.maxFiles)
 			input(type='submit', value='save settings')
 	hr(size=1)
@@ -78,8 +78,8 @@ block content
 	section.form-wrapper.flexleft.mv-10
 		form.form-post(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
-			section.postform-row
-				.postform-label Upload
+			section.row
+				.label Upload
 					.required *
 				input#file(type='file', name='file' multiple required)
 			input(type='submit', value='submit')

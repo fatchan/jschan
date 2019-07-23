@@ -3,39 +3,39 @@ section.form-wrapper.flex-center
 	form.form-post#postform(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
 		unless board.settings.forceAnon
-			section.postform-row
-				.postform-label Name
+			section.row
+				.label Name
 				input.mr-1(type='text', name='name', placeholder=board.settings.defaultName autocomplete='off' maxlength='50')
 				a.close.postform-style(href='#!') X
-			section.postform-row
-				.postform-label Subject
+			section.row
+				.label Subject
 					if !isThread && board.settings.forceOPSubject
 						.required *
 				input(type='text', name='subject', autocomplete='off' maxlength='50' required=!isThread && board.settings.forceOPSubject)
-			section.postform-row
-				.postform-label Email
+			section.row
+				.label Email
 				input(type='text', name='email', autocomplete='off' maxlength='50')
 		else 
-			section.postform-row
-				.postform-label Sage
+			section.row
+				.label Sage
 				label.postform-style.ph-5
 					input(type='checkbox', name='email', value='sage')
 					| Sage
 				a.close.postform-style(href='#!') X
 			if !isThread
-				section.postform-row
-					.postform-label Subject
+				section.row
+					.label Subject
 						if board.settings.forceOPSubject
 							.required *
 					input(type='text', name='subject', autocomplete='off' maxlength='50' required=board.settings.forceOPSubject)
-		section.postform-row
-			.postform-label Message
+		section.row
+			.label Message
 				if !isThread && board.settings.forceOPMessage
 					.required *
 			textarea(name='message', rows='5', autocomplete='off' maxlength='4000' required=!isThread && board.settings.forceOPMessage)
 		if board.settings.maxFiles > 0
-			section.postform-row
-				.postform-label Files
+			section.row
+				.label Files
 					if !isThread && board.settings.forceOPFile
 						.required *
 				input(type='file', name='file' multiple required=!isThread && board.settings.forceOPFile)
@@ -44,14 +44,14 @@ section.form-wrapper.flex-center
 						input(type='checkbox', name='spoiler', value='true')
 						| Spoiler
 		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink
-			section.postform-row
-				.postform-label Password
+			section.row
+				.label Password
 				input(type='password', name='password', autocomplete='off' placeholder='password to delete/spoiler/unlink later' maxlength='50')
 		if board.settings.captcha
-			section.postform-row
-				.postform-label Captcha
+			section.row
+				.label Captcha
 					.required *
-				.postform-col
+				.col
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
 					input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' pattern=".{6}" required title='6 characters')
 		if !isThread && ((board.settings.forceOPFile && board.settings.maxFiles > 0) || board.settings.forceOPMessage || board.settings.forceOPSubject)
