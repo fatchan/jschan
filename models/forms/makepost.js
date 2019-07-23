@@ -260,10 +260,11 @@ module.exports = async (req, res, next) => {
 		Object.assign(data, {
 			'replyposts': 0,
 			'replyfiles': 0,
-			'sticky': false,
-			'locked': false,
-			'saged': false,
-			'cyclic': false,
+			//NOTE: these are numbers because we XOR them for toggling in action handler
+			'sticky': Mongo.NumberInt(0),
+			'locked': Mongo.NumberInt(0),
+			'saged': Mongo.NumberInt(0),
+			'cyclic': Mongo.NumberInt(0),
 			'salt': salt
 		});
 	}

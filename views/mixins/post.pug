@@ -10,16 +10,16 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 					input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
 				|	
 				if !post.thread
-					if post.sticky
+					if post.sticky 
 						img(src='/img/sticky.svg' height='12' title='Sticky')
 						| 
-					if post.saged
+					if post.saged 
 						img(src='/img/saged.svg' height='12' title='Bumplocked')
 						| 
-					if post.locked
+					if post.locked 
 						img(src='/img/locked.svg' height='12' title='Locked')
 						| 
-					if post.cyclic
+					if post.cyclic 
 						img(src='/img/cyclic.svg' height='13' title='Cyclic')
 						| 
 				if post.subject

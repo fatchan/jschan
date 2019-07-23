@@ -33,18 +33,6 @@ details.toggle-label
 			input.post-check(type='checkbox', name='delete_file' value=1)
 			| Delete Files
 		label
-			input.post-check(type='checkbox', name='sticky' value=1)
-			| Sticky
-		label
-			input.post-check(type='checkbox', name='lock' value=1)
-			| Lock
-		label
-			input.post-check(type='checkbox', name='sage' value=1)
-			| Sage
-		label
-			input.post-check(type='checkbox', name='cyclic' value=1)
-			| Cycle
-		label
 			input.post-check(type='checkbox', name='ban' value=1)
 			| Ban Poster
 		label
@@ -57,6 +45,18 @@ details.toggle-label
 			input(type='text', name='ban_reason', placeholder='ban reason' autocomplete='off')
 		label
 			input(type='text', name='ban_duration', placeholder='ban duration e.g. 7d' autocomplete='off')
+		label
+			input.post-check(type='checkbox', name='sticky' value=1)
+			| Toggle Sticky
+		label
+			input.post-check(type='checkbox', name='lock' value=1)
+			| Toggle Lock
+		label
+			input.post-check(type='checkbox', name='sage' value=1)
+			| Toggle Sage
+		label
+			input.post-check(type='checkbox', name='cyclic' value=1)
+			| Toggle Cycle
 	.actions
 		h4.no-m-p Captcha:
 		iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')

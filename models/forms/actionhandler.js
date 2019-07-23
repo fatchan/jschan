@@ -192,6 +192,7 @@ module.exports = async (req, res, next) => {
 				messages.push(message);
 			}
 		}
+//console.log(require('util').inspect(combinedQuery, {depth: null}))
 		const bulkWrites = [];
 		if (Object.keys(combinedQuery).length > 0) {
 			bulkWrites.push({

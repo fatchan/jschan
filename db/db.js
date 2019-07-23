@@ -1,6 +1,6 @@
 'use strict';
 
-const { MongoClient, ObjectId } = require('mongodb')
+const { MongoClient, ObjectId, Int32 } = require('mongodb')
 	, configs = require(__dirname+'/../configs/main.json');
 
 module.exports = {
@@ -12,6 +12,8 @@ module.exports = {
 		module.exports.client = await MongoClient.connect(configs.dbURL, { useNewUrlParser: true });
 	},
 
-	ObjectId
+	ObjectId,
+
+	NumberInt: Int32,
 
 }

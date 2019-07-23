@@ -1,9 +1,11 @@
 'use strict';
 
+const { NumberInt } = require(__dirname+'/../../db/db.js')
+
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return !post.thread && !post.sticky
+		return !post.thread
 	})
 
 	if (filteredposts.length === 0) {
@@ -13,11 +15,12 @@ module.exports = (posts) => {
 	}
 
 	return {
-		message: `Stickied ${filteredposts.length} thread(s)`,
-		action: '$set',
+		message: `Toggled sticky for ${filteredposts.length} thread(s)`,
+		action: '$bit',
 		query: {
-			'sticky': true,
-			'bumped': 8640000000000000
+			'sticky': {
+				'xor': NumberInt(1)
+			},
 		}
 	};
 

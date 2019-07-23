@@ -1,9 +1,11 @@
 'use strict';
 
+const { NumberInt } = require(__dirname+'/../../db/db.js')
+
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return !post.thread && !post.locked
+		return !post.thread
 	})
 
 	if (filteredposts.length === 0) {
@@ -13,10 +15,12 @@ module.exports = (posts) => {
 	}
 
 	return {
-		message: `Locked ${filteredposts.length} thread(s)`,
-		action: '$set',
+		message: `Toggled Lock for ${filteredposts.length} thread(s)`,
+		action: '$bit',
 		query: {
-			'locked': true
+			'locked': {
+				'xor': NumberInt(1)
+			},
 		}
 	};
 

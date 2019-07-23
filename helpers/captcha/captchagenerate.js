@@ -46,7 +46,7 @@ module.exports = (text, captchaId) => {
 		//.drawText(5, 60, text)
 		x.drawRectangle(5, recy, 195, recy+4)
 		.distort(distorts, 'Shepards')
-		.quality(30)
+		//.quality(30)
 		.write(`./static/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);
