@@ -6,10 +6,27 @@ const Boards = require(__dirname+'/../../db/boards.js')
 	, { buildHomepage, buildCatalog, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
 	, { remove } = require('fs-extra')
 	, deletePosts = require(__dirname+'/deletepost.js')
+	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
+	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
+	, sanitize = require('sanitize-html')
+	, sanitizeOptions = {
+		allowedTags: [ 'span', 'a', 'em', 'strong', 'small' ],
+		allowedAttributes: {
+			'a': [ 'href', 'class', 'referrerpolicy', 'target' ],
+			'span': [ 'class' ]
+		}
+	};
 
 module.exports = async (req, res, next) => {
 
 	const oldSettings = res.locals.board.settings;
+
+	let announcements;
+	if (req.body.announcements) {
+		const markdownAnnouncements = simpleMarkdown(req.body.announcements);
+		const quotedAnnouncements = (await linkQuotes(req.params.board, markdownAnnouncements, null)).quotedMessage;
+		announcements = sanitize(quotedAnnouncements, sanitizeOptions);
+	}
 
 	const newSettings = {
 		name: req.body.name && req.body.name.trim().length > 0 ? req.body.name : oldSettings.name,
@@ -29,6 +46,7 @@ module.exports = async (req, res, next) => {
 		forceOPMessage: req.body.force_op_message ? true : false,
 		forceOPFile: req.body.force_op_file ? true : false,
 		defaultName: req.body.default_name && req.body.default_name.trim().length > 0 ? req.body.default_name : oldSettings.defaultName,
+		announcements: announcements ? announcements : oldSettings.announcements
 	};
 
 	//settings changed in the db

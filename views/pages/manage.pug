@@ -20,42 +20,42 @@ block content
 				input(type='text' name='description' placeholder=board.settings.description)
 			section.row
 				.label IDs
-				label.style.ph-5
+				label.postform-style.ph-5
 					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)
 			section.row
 				.label Force Anon
-				label.style.ph-5
+				label.postform-style.ph-5
 					input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
 			section.row
 				.label Post Captcha
-				label.style.ph-5
+				label.postform-style.ph-5
 					input(type='checkbox', name='captcha', value='true' checked=board.settings.captcha)
 			section.row
 				.label Captcha PPH Trigger
 				input(type='number' name='captcha_trigger' placeholder=board.settings.captchaTrigger)
 			section.row
 				.label Post Deletion
-				label.style.ph-5
+				label.postform-style.ph-5
 					input(type='checkbox', name='user_post_delete', value='true' checked=board.settings.userPostDelete)
 			section.row
 				.label File Spoilers
-				label.style.ph-5
+				label.postform-style.ph-5
 					input(type='checkbox', name='user_post_spoiler', value='true' checked=board.settings.userPostSpoiler)
 			section.row
 				.label File Unlinking
-				label.style.ph-5
+				label.postform-style.ph-5
 					input(type='checkbox', name='user_post_unlink', value='true' checked=board.settings.userPostUnlink)
 			section.row
 				.label Force OP Message
-				label.style.ph-5
+				label.postform-style.ph-5
 					input(type='checkbox', name='force_op_message', value='true' checked=board.settings.forceOPMessage)
 			section.row
 				.label Force OP Subject
-				label.style.ph-5
+				label.postform-style.ph-5
 					input(type='checkbox', name='force_op_subject', value='true' checked=board.settings.forceOPSubject)
 			section.row
 				.label Force OP File
-				label.style.ph-5
+				label.postform-style.ph-5
 					input(type='checkbox', name='force_op_file', value='true' checked=board.settings.forceOPFile)
 			section.row
 				.label Anon Name
@@ -72,6 +72,9 @@ block content
 			section.row
 				.label Max Files
 				input(type='number' name='max_files' placeholder=board.settings.maxFiles)
+			section.row
+				.label Announcements
+				textarea(name='announcements')
 			input(type='submit', value='save settings')
 	hr(size=1)
 	h4.no-m-p Add Banners:

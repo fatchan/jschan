@@ -273,6 +273,9 @@ router.post('/board/:board/settings', csrf, Boards.exists, checkPermsMiddleware,
 	if (req.body.description && (req.body.description.length < 1 || req.body.description.length > 50)) {
 		errors.push('Board description must be 1-50 characters');
 	}
+	if (req.body.announcements && (req.body.announcements.length < 1 || req.body.announcements.length > 2000)) {
+		errors.push('Board announcements must be 1-2000 characters');
+	}
 	if (req.body.name && (req.body.name.length < 1 || req.body.name.length > 50)) {
 		errors.push('Board name must be 1-50 characters');
 	}
