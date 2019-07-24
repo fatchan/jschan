@@ -21,11 +21,12 @@ module.exports = async (req, res, next) => {
 
 	const oldSettings = res.locals.board.settings;
 
-	let announcements;
-	if (req.body.announcements) {
-		const markdownAnnouncements = simpleMarkdown(req.body.announcements);
-		const quotedAnnouncements = (await linkQuotes(req.params.board, markdownAnnouncements, null)).quotedMessage;
-		announcements = sanitize(quotedAnnouncements, sanitizeOptions);
+	let markdownAnnouncement;
+	if (req.body.announcement !== oldSettings.announcement.raw) {
+		const styled = simpleMarkdown(req.body.announcement);
+		const quoted = (await linkQuotes(req.params.board, styled, null)).quotedMessage;
+		const sanitized = sanitize(quoted, sanitizeOptions);
+		markdownAnnouncement = sanitized;
 	}
 
 	const newSettings = {
@@ -47,7 +48,11 @@ module.exports = async (req, res, next) => {
 		forceOPMessage: req.body.force_op_message ? true : false,
 		forceOPFile: req.body.force_op_file ? true : false,
 		defaultName: req.body.default_name && req.body.default_name.trim().length > 0 ? req.body.default_name : oldSettings.defaultName,
-		announcements: announcements ? announcements : oldSettings.announcements
+		announcement: {
+			raw: req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
+			markdown: markdownAnnouncement || oldSettings.announcement.markdown
+		},
+		filters: req.body.filters !== null ? req.body.filters.split('\n').filter(n => n) /*prevents empty*/ : oldSettings.filters
 	};
 
 	//settings changed in the db

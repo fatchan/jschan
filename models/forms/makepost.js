@@ -40,7 +40,7 @@ module.exports = async (req, res, next) => {
 	let salt = null;
 	let thread = null;
 	const hasPerms = permsCheck(req, res);
-	const forceAnon = res.locals.board.settings.forceAnon;
+	const { filters, maxFiles, forceAnon, replyLimit, threadLimit, ids, userPostSpoiler, defaultName, captchaTrigger, captchaTriggerMode, captchaMode } = res.locals.board.settings;
 	if (req.body.thread) {
 		thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		if (!thread || thread.thread != null) {
@@ -61,7 +61,7 @@ module.exports = async (req, res, next) => {
 				'redirect': redirect
 			});
 		}
-		if (thread.replyposts >= res.locals.board.settings.replyLimit && !thread.cyclic) { //reply limit
+		if (thread.replyposts >= replyLimit && !thread.cyclic) { //reply limit
 			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
@@ -70,13 +70,25 @@ module.exports = async (req, res, next) => {
 			});
 		}
 	}
-	if (res.locals.numFiles > res.locals.board.settings.maxFiles) {
+	if (res.locals.numFiles > maxFiles) {
 		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
 			'title': 'Bad request',
-			'message': `Too many files. Max files per post is ${res.locals.board.settings.maxFiles}.`,
+			'message': `Too many files. Max files per post is ${maxFiles}.`,
 			'redirect': redirect
 		});
+	}
+	//filters
+	if (filters && filters.length > 0) {
+		const containsFilter = filters.some(filter => { return req.body.message.includes(filter) });
+		if (containsFilter) {
+			await deleteTempFiles(req).catch(e => console.error);
+			return res.status(400).render('message', { //is this a 400?
+				'title': 'Bad request',
+				'message': `Your message was blocked by a filter.`,
+				'redirect': redirect
+			});
+		}
 	}
 	let files = [];
 	// if we got a file
@@ -183,7 +195,7 @@ module.exports = async (req, res, next) => {
 		//thread salt for IDs
 		salt = (await randomBytes(128)).toString('base64');
 	}
-	if (res.locals.board.settings.ids) {
+	if (ids === true) {
 		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip).digest('hex');
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
@@ -194,9 +206,9 @@ module.exports = async (req, res, next) => {
 	let email = (hasPerms || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
 
 	//spoiler files only if board settings allow
-	const spoiler = res.locals.board.settings.userPostSpoiler && req.body.spoiler ? true : false;
+	const spoiler = userPostSpoiler && req.body.spoiler ? true : false;
 
-	let name = res.locals.board.settings.defaultName;
+	let name = defaultName;
 	let tripcode = null;
 	let capcode = null;
 	if ((hasPerms || !forceAnon) && req.body.name && req.body.name.length > 0) {
@@ -272,8 +284,8 @@ module.exports = async (req, res, next) => {
 	const postId = await Posts.insertOne(res.locals.board, data, thread);
 
 	if (!data.thread //if this is a new thread
-		&& res.locals.board.settings.captchaTriggerMode > 0 //and the triger mode is not nothing
-		&& res.locals.board.settings.captchaMode < res.locals.board.settings.captchaTriggerMode) { //and the current captcha mode is less than the trigger mode
+		&& captchaTriggerMode > 0 //and the triger mode is not nothing
+		&& captchaMode < captchaTriggerMode) { //and the current captcha mode is less than the trigger mode
 		const pastHourMongoId = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000));
 		//count threads in past hour
 		const tph = await Posts.db.countDocuments({
@@ -284,14 +296,15 @@ module.exports = async (req, res, next) => {
 			'board': res.locals.board._id
 		});
 		//if its above the trigger
-		if (tph > res.locals.board.settings.captchaTrigger) {
-			res.locals.board.settings.captchaMode = res.locals.board.settings.captchaTriggerMode; //update in memory too
+		if (tph > captchaTrigger) {
+			//update in memory for other stuff done e.g. rebuilds
+			res.locals.board.settings.captchaMode = captchaTriggerMode;
 			//set it in the db
 			await Boards.db.updateOne({
 				'_id': res.locals.board._id,
 			}, {
 				'$set': {
-					'settings.captchaMode': res.locals.board.settings.captchaTriggerMode
+					'settings.captchaMode': captchaTriggerMode
 				}
 			});
 			//remove the html (since pages will need captcha in postform now)
@@ -300,13 +313,13 @@ module.exports = async (req, res, next) => {
 	}
 
 	//for cyclic threads, delete posts beyond bump limit
-	if (thread && thread.cyclic && thread.replyposts > res.locals.board.settings.replyLimit) {
+	if (thread && thread.cyclic && thread.replyposts > replyLimit) {
 		const cyclicOverflowPosts = await Posts.db.find({
 			'thread': data.thread,
 			'board': req.params.board
 		}).sort({
 			'postId': -1,
-		}).skip(res.locals.board.settings.replyLimit).toArray();
+		}).skip(replyLimit).toArray();
 		await deletePosts(cyclicOverflowPosts, req.params.board);
 	}
 
@@ -335,7 +348,7 @@ module.exports = async (req, res, next) => {
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
 		}
-		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, Math.ceil(res.locals.board.settings.threadLimit/10)));
+		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, Math.ceil(threadLimit/10)));
 	}
 
 	//always rebuild catalog for post counts and ordering

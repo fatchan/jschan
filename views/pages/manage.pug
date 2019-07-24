@@ -14,10 +14,10 @@ block content
 			input(type='hidden' name='_csrf' value=csrf)
 			section.row
 				.label Board name
-				input(type='text' name='name' placeholder=board.settings.name)
+				input(type='text' name='name' value=board.settings.name)
 			section.row
 				.label Board Description
-				input(type='text' name='description' placeholder=board.settings.description)
+				input(type='text' name='description' value=board.settings.description)
 			section.row
 				.label IDs
 				label.postform-style.ph-5
@@ -34,10 +34,10 @@ block content
 					option(value='2', selected=board.settings.captchaMode === 2) Captcha for all posts
 			section.row
 				.label Captcha Trigger Threshold
-				input(type='number', name='captcha_trigger', placeholder=board.settings.captchaTrigger)
+				input(type='number', name='captcha_trigger', value=board.settings.captchaTrigger)
 			section.row
 				.label Captcha Trigger Mode
-				select(name='captcha_trigger_mode' placeholder=board.settings.captchaTriggerMode)
+				select(name='captcha_trigger_mode')
 					option(value='0', selected=board.settings.captchaTriggerMode === 0) Do nothing
 					option(value='1', selected=board.settings.captchaTriggerMode === 1) Enable for new thread
 					option(value='2', selected=board.settings.captchaTriggerMode === 2) Enable for all posts
@@ -67,22 +67,25 @@ block content
 					input(type='checkbox', name='force_op_file', value='true' checked=board.settings.forceOPFile)
 			section.row
 				.label Anon Name
-				input(type='text' name='default_name' placeholder=board.settings.defaultName)
+				input(type='text' name='default_name' value=board.settings.defaultName)
 			section.row
 				.label Min Message Length
-				input(type='number' name='min_message_length' placeholder=board.settings.minMessageLength)
+				input(type='number' name='min_message_length' value=board.settings.minMessageLength)
 			section.row
 				.label Thread Limit
-				input(type='number' name='thread_limit' placeholder=board.settings.threadLimit)
+				input(type='number' name='thread_limit' value=board.settings.threadLimit)
 			section.row
 				.label Reply Limit
-				input(type='number' name='reply_limit' placeholder=board.settings.replyLimit)
+				input(type='number' name='reply_limit' value=board.settings.replyLimit)
 			section.row
 				.label Max Files
-				input(type='number' name='max_files' placeholder=board.settings.maxFiles)
+				input(type='number' name='max_files' value=board.settings.maxFiles)
 			section.row
-				.label Announcements
-				textarea(name='announcements')
+				.label Announcement
+				textarea(name='announcement' placeholder='supports post styling') #{board.settings.announcement.raw}
+			section.row
+				.label Filters
+				textarea(name='filters' placeholder='newline separated') #{board.settings.filters.join('\n')}
 			input(type='submit', value='save settings')
 	hr(size=1)
 	h4.no-m-p Add Banners:
