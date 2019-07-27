@@ -17,7 +17,8 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, dismissGlobalReports = require(__dirname+'/dismissglobalreport.js')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js');
+	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
+	, { timingSafeEqual } = require('crypto');
 
 module.exports = async (req, res, next) => {
 
@@ -27,12 +28,14 @@ module.exports = async (req, res, next) => {
 	let passwordPosts = [];
 	if (!res.locals.hasPerms && res.locals.actions.anyPasswords) {
 		//just to avoid multiple filters and mapping, do it all here
+		const inputBuffer = Buffer.from(req.body.password || '', 0, 100);
 		passwordPosts = res.locals.posts.filter(post => {
-			if (post.password != null
-				&& post.password.length > 0
-				&& post.password == req.body.password) {
-				passwordPostMongoIds.push(Mongo.ObjectId(post._id))
-				return true;
+			const postBuffer = Buffer.from(post.password || '', 0, 100);
+			if (timingSafeEqual(inputBuffer, postBuffer) === true
+				&& post.password != null
+				&& post.password.length > 0) {
+					passwordPostMongoIds.push(Mongo.ObjectId(post._id))
+					return true;
 			}
 		});
 		if (passwordPosts.length === 0) {
