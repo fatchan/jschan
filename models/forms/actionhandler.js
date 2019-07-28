@@ -18,7 +18,8 @@ const Posts = require(__dirname+'/../../db/posts.js')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
-	, { timingSafeEqual } = require('crypto');
+	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
+	, { createHash, timingSafeEqual } = require('crypto');
 
 module.exports = async (req, res, next) => {
 
@@ -26,18 +27,22 @@ module.exports = async (req, res, next) => {
 	const postMongoIds = res.locals.posts.map(post => Mongo.ObjectId(post._id));
 	let passwordPostMongoIds = [];
 	let passwordPosts = [];
-	if (!res.locals.hasPerms && res.locals.actions.anyPasswords) {
-		//just to avoid multiple filters and mapping, do it all here
-		const inputBuffer = Buffer.from(req.body.password || '', 0, 100);
-		passwordPosts = res.locals.posts.filter(post => {
-			const postBuffer = Buffer.from(post.password || '', 0, 100);
-			if (timingSafeEqual(inputBuffer, postBuffer) === true
-				&& post.password != null
-				&& post.password.length > 0) {
-					passwordPostMongoIds.push(Mongo.ObjectId(post._id))
-					return true;
-			}
-		});
+	if (res.locals.authLevel >= 4 && res.locals.actions.anyPasswords) {
+		if (req.body.password && req.body.password.length > 0) {
+			//hash their input and make it a buffer
+			const inputPasswordHash = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
+			const inputPasswordBuffer = Buffer.from(inputPasswordHash);
+			passwordPosts = res.locals.posts.filter(post => {
+				//length comparison could reveal the length, but not contents, and is better than comparing and hashing for empty password (most posts)
+				if (post.password != null && post.password.length === req.body.password) {
+					const postBuffer = Buffer.from(post.password);
+					if (timingSafeEqual(inputBuffer, postBuffer) === true) {
+						passwordPostMongoIds.push(Mongo.ObjectId(post._id));
+						return true;
+					}
+				}
+			});
+		}
 		if (passwordPosts.length === 0) {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',

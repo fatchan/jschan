@@ -181,7 +181,7 @@ async function wipe() {
 	});
 
 	//default admin acc
-	await Accounts.insertOne('admin', 'changeme', 3);
+	await Accounts.insertOne('admin', 'changeme', 0);
 	Mongo.client.close();
 
 	//delete all the static files

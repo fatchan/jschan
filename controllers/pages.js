@@ -57,10 +57,10 @@ router.get('/randombanner', randombanner);
 router.get('/:board/banners.html', Boards.exists, banners);
 
 //board manage page
-router.get('/:board/manage.html', Boards.exists, isLoggedIn, hasPerms, csrf, manage);
+router.get('/:board/manage.html', Boards.exists, isLoggedIn, hasPerms(3), csrf, manage);
 
 //global manage page
-router.get('/globalmanage.html', isLoggedIn, hasPerms, csrf, globalManage);
+router.get('/globalmanage.html', isLoggedIn, hasPerms(1), csrf, globalManage);
 
 // board page/recents
 router.get('/:board/:page(1[0-9]*|[2-9]*|index).html', Boards.exists, paramConverter, board);

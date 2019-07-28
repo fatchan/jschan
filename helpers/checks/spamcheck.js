@@ -7,7 +7,7 @@ const Mongo = require(__dirname+'/../../db/db.js')
 
 module.exports = async (req, res) => {
 
-	if (hasPerms(req, res)) {
+	if (hasPerms(req, res) <= 1) { //global staff bypass spam check
 		return false;
 	}
 

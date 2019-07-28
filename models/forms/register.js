@@ -26,7 +26,7 @@ module.exports = async (req, res, next) => {
 
 	// add account to db. password is hashed in db model func for easier tests
 	try {
-		await Accounts.insertOne(username, password, 1);
+		await Accounts.insertOne(username, password, 4);
 	} catch (err) {
 		return next(err);
 	}

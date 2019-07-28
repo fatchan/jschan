@@ -31,6 +31,7 @@ const path = require('path')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, msTime = require(__dirname+'/../../helpers/mstime.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
+	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
 	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
@@ -39,7 +40,7 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const hasPerms = permsCheck(req, res);
+	const permLevel = permsCheck(req, res);
 	const { filters, maxFiles, forceAnon, replyLimit, threadLimit, ids, userPostSpoiler, defaultName, captchaTrigger, captchaTriggerMode, captchaMode } = res.locals.board.settings;
 	if (req.body.thread) {
 		thread = await Posts.getPost(req.params.board, req.body.thread, true);
@@ -53,7 +54,7 @@ module.exports = async (req, res, next) => {
 		}
 		salt = thread.salt;
 		redirect += `thread/${req.body.thread}.html`
-		if (thread.locked && !hasPerms) {
+		if (thread.locked && permLevel >= 4) {
 			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
@@ -200,10 +201,15 @@ module.exports = async (req, res, next) => {
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 
+	let password = null;
+	if (req.body.password) {
+		password = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
+	}
+
 	//forceanon hide reply subjects so cant be used as name for replies
 	//forceanon only allow sage email
-	let subject = (hasPerms || !forceAnon || !req.body.thread) ? req.body.subject : null;
-	let email = (hasPerms || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
+	let subject = (permLevel < 4 || !forceAnon || !req.body.thread) ? req.body.subject : null;
+	let email = (permLevel < 4 || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
 
 	//spoiler files only if board settings allow
 	const spoiler = userPostSpoiler && req.body.spoiler ? true : false;
@@ -211,7 +217,7 @@ module.exports = async (req, res, next) => {
 	let name = defaultName;
 	let tripcode = null;
 	let capcode = null;
-	if ((hasPerms || !forceAnon) && req.body.name && req.body.name.length > 0) {
+	if ((permLevel < 4 || !forceAnon) && req.body.name && req.body.name.length > 0) {
 		// get matches with named groups for name, trip and capcode in 1 regex
 		const matches = req.body.name.match(nameRegex);
 		if (matches && matches.groups) {
@@ -225,7 +231,7 @@ module.exports = async (req, res, next) => {
 				tripcode = `!!${(await getTripCode(groups.tripcode))}`;
 			}
 			//capcode
-			if (groups.capcode && hasPerms) {
+			if (groups.capcode && permLevel < 4) {
 				// TODO: add proper code for different capcodes
 				capcode = `## ${groups.capcode}`;
 			}
@@ -254,7 +260,7 @@ module.exports = async (req, res, next) => {
 		'message': message || null,
 		'nomarkup': req.body.message || null,
 		'thread': req.body.thread || null,
-		'password': req.body.password || null,
+		password,
 		email,
 		spoiler,
 		'banmessage': null,
