@@ -1,6 +1,7 @@
 'use strict';
 
 const { remove } = require('fs-extra')
+	, Files = require(__dirname+'/../../db/files.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 
 module.exports = async (posts, unlinkOnly) => {
@@ -20,8 +21,11 @@ module.exports = async (posts, unlinkOnly) => {
 		};
 	}
 
+	if (fileNames.length > 0) {
+        await Files.decrement(fileNames);
+	}
+
 	if (unlinkOnly) {
-//TODO: decrement ref counters here when implemented
 		return {
 			message:`Unlinked ${fileNames.length} file(s) across ${posts.length} post(s)`,
 			action:'$set',
@@ -30,7 +34,6 @@ module.exports = async (posts, unlinkOnly) => {
 			}
 		};
 	} else {
-//TODO: delete ref counters for this file here
 		//delete all the files using the filenames
 		await Promise.all(fileNames.map(async filename => {
 			//dont question it.

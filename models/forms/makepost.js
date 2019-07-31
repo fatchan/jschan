@@ -7,6 +7,7 @@ const path = require('path')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
 	, Boards = require(__dirname+'/../../db/boards.js')
+	, Files = require(__dirname+'/../../db/files.js')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
@@ -110,6 +111,9 @@ module.exports = async (req, res, next) => {
 			const file = req.files.file[i];
 			let extension = path.extname(file.name) || file.name.substring(file.name.indexOf('.'));
 			const filename = file.sha256 + extension;
+
+			await Files.increment([filename]);
+//TODO: reduce increments for failed file uploads, potentially just add it to the deleteTempFiles handler
 
 			//get metadata
 			let processedFile = {
@@ -337,7 +341,7 @@ module.exports = async (req, res, next) => {
 	res.redirect(successRedirect);
 
 	//now rebuild other pages
-	const parallelPromises = []
+	const parallelPromises = [];
 	if (data.thread) {
 		//refersh pages
 		const threadPage = await Posts.getThreadPage(req.params.board, thread);

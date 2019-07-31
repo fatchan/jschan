@@ -31,8 +31,9 @@ async function deleteCaptchas() {
 
 (async () => {
 
-    await Mongo.connect();
-	const { buildHomepage } = require(__dirname+'/helpers/build.js');
+	await Mongo.connect();
+	const { buildHomepage } = require(__dirname+'/helpers/build.js')
+		, Files = require(__dirname+'/db/files.js');
 
 	console.log('Starting schedules');
 
@@ -51,5 +52,35 @@ async function deleteCaptchas() {
 			console.error(e);
 		}
 	}, msTime.minute*5); //delete files for expired captchas
+
+	setInterval(async () => {
+		try {
+			const files = await Files.db.find({
+				'count': {
+					'$lte': 0
+				}
+			}, {
+				'count': 0
+			}).toArray().then(res => {
+				return res.map(x => x._id);
+			});
+	//todo: race condition where file is posted after this db call, causing file to be deleted that was just posted
+	//maybe this is just dumb and i should lock the database temporarily for this?
+			await Files.db.removeMany({
+				'count': {
+					'$lte': 0
+				}
+			});
+			await Promise.all(files.map(async filename => {
+				return Promise.all([
+					remove(`${uploadDirectory}img/${filename}`),
+					remove(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`)
+				])
+			}));
+			console.log('Deleted unused files:', files);
+		} catch (e) {
+			console.error(e);
+		}
+	}, msTime.minute*5);
 
 })();

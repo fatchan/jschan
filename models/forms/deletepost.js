@@ -4,6 +4,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, { remove } = require('fs-extra')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
+	, Files = require(__dirname+'/../../db/files.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitize = require('sanitize-html')
@@ -60,7 +61,10 @@ module.exports = async (posts, board) => {
 		return acc;
 	}, { postFiles: [], postBacklinks: [], postMongoIds: [] });
 
-//TODO: file ref counting decrement, once i implement counting in make post
+	if (postFiles.length > 0) {
+		const fileNames = postFiles.map(x => x.filename);
+        await Files.decrement(fileNames);
+	}
 
 	//use this to not do unnecessary actions for posts where the thread is being deleted
 	const deleteThreadMap = {};
@@ -74,7 +78,7 @@ module.exports = async (posts, board) => {
 	}
 
 	const bulkWrites = [];
-	const backlinkRebuilds = new Set(); //im obsessed with sets because of no duplicates :^)
+	const backlinkRebuilds = new Set();
 	for (let j = 0; j < allPosts.length; j++) {
 		const post = allPosts[j];
 		backlinkRebuilds.delete(post._id); //make sure we dont try and remarkup this post since its getting deleted.
@@ -87,7 +91,7 @@ module.exports = async (posts, board) => {
 				}
 			}
 
-			//remove backlinks to this post from anything it quoted
+			//remove dead backlinks to this post
 			if (post.quotes.length > 0) {
 				bulkWrites.push({
 					'updateMany': {
