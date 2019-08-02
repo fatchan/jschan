@@ -15,6 +15,7 @@ const express  = require('express')
 	, globalManage = require(__dirname+'/../models/pages/globalmanage.js')
 	, changePassword = require(__dirname+'/../models/pages/changepassword.js')
 	, login = require(__dirname+'/../models/pages/login.js')
+	, create = require(__dirname+'/../models/pages/create.js')
 	, board = require(__dirname+'/../models/pages/board.js')
 	, catalog = require(__dirname+'/../models/pages/catalog.js')
 	, banners = require(__dirname+'/../models/pages/banners.js')
@@ -26,8 +27,26 @@ const express  = require('express')
 //homepage with board list
 router.get('/index.html', home);
 
+// board page/recents
+router.get('/:board/:page(1[0-9]*|[2-9]*|index).html', Boards.exists, paramConverter, board);
+
+// thread view page
+router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, Posts.exists, thread);
+
+// board catalog page
+router.get('/:board/catalog.html', Boards.exists, catalog);
+
+// random board banner
+router.get('/randombanner', randombanner);
+
+// get captcha image and cookie
+router.get('/captcha', captcha);
+
 //login page
 router.get('/login.html', login);
+
+//login page
+router.get('/create.html', isLoggedIn, csrf, create);
 
 //registration page
 router.get('/register.html', register);
@@ -47,12 +66,6 @@ router.get('/logout', (req, res, next) => {
 
 });
 
-// get captcha image and cookie
-router.get('/captcha', captcha);
-
-// random board banner
-router.get('/randombanner', randombanner);
-
 //public board banners page
 router.get('/:board/banners.html', Boards.exists, banners);
 
@@ -61,15 +74,6 @@ router.get('/:board/manage.html', Boards.exists, isLoggedIn, hasPerms(3), csrf, 
 
 //global manage page
 router.get('/globalmanage.html', isLoggedIn, hasPerms(1), csrf, globalManage);
-
-// board page/recents
-router.get('/:board/:page(1[0-9]*|[2-9]*|index).html', Boards.exists, paramConverter, board);
-
-// thread view page
-router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, Posts.exists, thread);
-
-// board catalog page
-router.get('/:board/catalog.html', Boards.exists, catalog);
 
 module.exports = router;
 

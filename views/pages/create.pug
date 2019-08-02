@@ -1,0 +1,26 @@
+extends ../layout.pug
+
+block head
+	title Create Board
+
+block content
+	h1.board-title Create Board
+	section.form-wrapper.flex-center.mv-10
+		form.form-post(action='/forms/create' method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			section.row
+				.label URI e.g. /uri/
+				input(type='text', name='uri', maxlength='50' required)
+			section.row
+				.label Name
+				input(type='text', name='name', maxlength='50' required)
+			section.row
+				.label Description
+				input(type='text', name='description', maxlength='50' required)
+			section.row
+				.label Captcha
+				span.col
+					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
+					input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' pattern=".{6}" required title='6 characters')
+			input(type='submit', value='submit')
+

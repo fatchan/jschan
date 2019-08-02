@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners']) //only these can be arrays, since express bodyparser will output arrays
-	, trimFields = ['filters', 'announcement', 'description', 'message', 'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
+	, trimFields = ['uri', 'filters', 'announcement', 'description', 'message', 'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
 	, numberFields = ['captcha_mode', 'captcha_trigger', 'captcha_trigger_mode', 'reply_limit', 'max_files', 'thread_limit', 'thread', 'min_message_length'] //convert these to numbers before they hit our routes
 	, banDurationRegex = /^(?<year>[\d]+y)?(?<month>[\d]+m)?(?<week>[\d]+w)?(?<day>[\d]+d)?(?<hour>[\d]+h)?$/
 	, msTime = require(__dirname+'/mstime.js')

@@ -41,6 +41,7 @@ const express  = require('express')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
 	, changeBoardSettings = require(__dirname+'/../models/forms/changeboardsettings.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
+	, createBoard = require(__dirname+'/../models/forms/create.js')
 	, checkPermsMiddleware = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, checkPerms = require(__dirname+'/../helpers/checks/hasperms.js')
 	, spamCheck = require(__dirname+'/../helpers/checks/spamcheck.js')
@@ -141,6 +142,45 @@ router.post('/changepassword', verifyCaptcha, async (req, res, next) => {
 
 });
 
+//create board
+router.post('/create', csrf, verifyCaptcha, (req, res, next) => {
+
+	const errors = [];
+
+	//check exist
+	if (!req.body.uri || req.body.uri.length <= 0) {
+		errors.push('Missing URI');
+	}
+	if (!req.body.name || req.body.name.length <= 0) {
+		errors.push('Missing name');
+	}
+	if (!req.body.description || req.body.description.length <= 0) {
+		errors.push('Missing description');
+	}
+
+	//check exist
+	if (req.body.uri && req.body.uri.length > 50) {
+		errors.push('URI must be 50 characters or less');
+	}
+	if (req.body.name && req.body.name.length > 50) {
+		errors.push('Name must be 50 characters or less');
+	}
+	if (req.body.description && req.body.description.length > 50) {
+		errors.push('Description must be 50 characters or less');
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': '/create.html'
+		})
+	}
+
+	createBoard(req, res, next);
+
+});
+
 //register account
 router.post('/register', verifyCaptcha, (req, res, next) => {
 
@@ -182,6 +222,7 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 	registerAccount(req, res, next);
 
 });
+
 
 // make new post
 router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConverter, verifyCaptcha, async (req, res, next) => {
