@@ -112,9 +112,6 @@ module.exports = async (req, res, next) => {
 			let extension = path.extname(file.name) || file.name.substring(file.name.indexOf('.'));
 			const filename = file.sha256 + extension;
 
-			await Files.increment([filename]);
-//TODO: reduce increments for failed file uploads, potentially just add it to the deleteTempFiles handler
-
 			//get metadata
 			let processedFile = {
 					hash: file.sha256,
@@ -192,6 +189,9 @@ module.exports = async (req, res, next) => {
 
 		}
 	}
+
+	await Files.increment(files.map(file => file.filename));
+
 	// because express middleware is autistic i need to do this
 	deleteTempFiles(req).catch(e => console.error);
 

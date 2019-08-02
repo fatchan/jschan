@@ -45,6 +45,7 @@ async function deleteCaptchas() {
 		}
 	}, msTime.minute*5); //rebuild homepage for pph updates
 
+	//could make this use a db changefeed
 	setInterval(async () => {
 		try {
 			await deleteCaptchas();
@@ -55,6 +56,7 @@ async function deleteCaptchas() {
 
 	setInterval(async () => {
 		try {
+//todo: would need to lock the DB or at least disable posting very shortly for this pruning
 			const files = await Files.db.find({
 				'count': {
 					'$lte': 0
@@ -64,8 +66,6 @@ async function deleteCaptchas() {
 			}).toArray().then(res => {
 				return res.map(x => x._id);
 			});
-	//todo: race condition where file is posted after this db call, causing file to be deleted that was just posted
-	//maybe this is just dumb and i should lock the database temporarily for this?
 			await Files.db.removeMany({
 				'count': {
 					'$lte': 0
