@@ -1,10 +1,60 @@
 extends ../layout.pug
+include ../mixins/post.pug
 
 block head
 	title Frequently Asked Questions
 
 block content
 	h1.board-title FAQ
+	.table-container.flex-center.mv-10
+		table.table-body
+			tr.table-head
+				th Name formatting
+			tr.table-row
+				td.post-message
+					p When posting, you can format the name field to include a name, tripcode and capcode, or any combination of the three. These three components are explained below.
+
+					b Format
+					p Names entered go in the format Name[##Tripcode][## Capcode]. [] indicate optional components. Tripcodes and capcodes may not contain "##" and the space between the "##" in capcode is significant.
+					p Valid examples: 
+					ol
+						li John Doe
+						li John Doe##TripcodePassword
+						li John Doe## Board Owner
+						li John Doe##TripcodePassword## Board Owner
+					p For example, number 5 would look like so in a post:
+						-
+							const examplePost = {
+								"date" : new Date("2019-08-02T09:48:44.180Z"),
+								"name" : "John Doe",
+								"board" : "example",
+								"tripcode" : "!!X8NXmAS44=",
+								"capcode" : "##Board Owner",
+								"message" : "Hello, world!",
+								"nomarkup" : "Hello, world!",
+								"thread" : 1,
+								"password" : null,
+								"email" : "",
+								"spoiler" : false,
+								"banmessage" : null,
+								"files" : [ ],
+								"reports" : [ ],
+								"globalreports" : [ ],
+								"quotes" : [ ],
+								"backlinks" : [ ],
+								"postId" : 123
+							}	
+						+post(examplePost)
+
+					b Name
+					p The name is simply what name you want to be shown alongside your post. Other users can post with the same name so there is nothing preventing impersonation. This is not related to your username (for registered users).
+
+					b Tripcode
+					p A tripcode is a password of sorts, which users can provide in the tripcode component of their name. This tripcode is used in conjunction with a server-known secret to generate the unique* tripcode portion of the name. Users can use the same tripcode, however with a long, secure, unique tripcode, it can be used as a form of identity between posts as it is unlikely that another user will find a different tripcode that generates the same output. It is important that you keep tripcodes secret if you use them for some form of identity. A compromised tripcode can be used for impersonation and cannot be revoked in any way.
+
+					b Capcode
+					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. The capcoded string will be prefixed with the users role on the board staff can make an authoritative post.
+
 	.table-container.flex-center.mv-10
 		table.table-body
 			tr.table-head
