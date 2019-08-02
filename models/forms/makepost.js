@@ -235,9 +235,27 @@ module.exports = async (req, res, next) => {
 				tripcode = `!!${(await getTripCode(groups.tripcode))}`;
 			}
 			//capcode
-			if (groups.capcode && permLevel < 4) {
-				// TODO: add proper code for different capcodes
-				capcode = `## ${groups.capcode}`;
+			if (permLevel < 4 && groups.capcode) {
+				let type = '';
+				switch (permLevel) {
+					case 3://board mod
+						type = 'Board Mod';
+						break;
+					case 2://board owner
+						type = 'Board Owner';
+						break;
+					case 1://global staff
+						type = 'Global Staff';
+						break;
+					case 0://admin
+						type = 'Admin';
+						break;
+				}
+				if (type.toLowerCase() !== groups.capcode.toLowerCase()) {
+					capcode = `##${type} ${groups.capcode}`;
+				} else {
+					capcode = `##${type}`;
+				}
 			}
 		}
 	}
