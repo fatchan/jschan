@@ -159,8 +159,13 @@ router.post('/create', csrf, verifyCaptcha, (req, res, next) => {
 	}
 
 	//check exist
-	if (req.body.uri && req.body.uri.length > 50) {
-		errors.push('URI must be 50 characters or less');
+	if (req.body.uri) {
+		if (req.body.uri.length > 50) {
+			errors.push('URI must be 50 characters or less');
+		}
+		if (!req.body.uri.match(/^[a-zA-Z0-9]+$/)) {
+			errors.push('URI must contain a-z 0-9 only');
+		}
 	}
 	if (req.body.name && req.body.name.length > 50) {
 		errors.push('Name must be 50 characters or less');

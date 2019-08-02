@@ -10,7 +10,7 @@ block content
 			input(type='hidden' name='_csrf' value=csrf)
 			section.row
 				.label URI e.g. /uri/
-				input(type='text', name='uri', maxlength='50' required)
+				input(type='text', name='uri', maxlength='50' pattern='[a-zA-Z0-9]+' required title='alphanumeric only')
 			section.row
 				.label Name
 				input(type='text', name='name', maxlength='50' required)
