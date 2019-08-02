@@ -1,5 +1,5 @@
 nav.navbar#top
 	a.nav-item(href='/') Home
 	a.nav-item(href=`/${board ? board._id+'/' : 'global'}manage.html`) Manage
-	//a.nav-item(href='/logout') Logout
-	//a.nav-item.right(href=`/login.html${board ? '?goto=/'+board._id : ''}`) Login
+	a.nav-item(href='/create.html') Create
+	a.nav-item.right(href='/logout') Logout
