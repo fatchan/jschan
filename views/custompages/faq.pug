@@ -6,27 +6,50 @@ block head
 
 block content
 	h1.board-title FAQ
-	.table-container.flex-center.mv-10
+	.table-container.flex-center
 		table.table-body
 			tr.table-head
-				th Name formatting
+				th Frequently Asked Questions 
 			tr.table-row
 				td.post-message
-					p When posting, you can format the name field to include a name, tripcode and capcode, or any combination of the three. These three components are explained below.
+					b General (under construction)
+					ul.mv-0
+						li What is an imageboard?
+						li What are the rules?
+					b Making posts (under construction)
+					ul.mv-0
+						li: a(href='#name-formatting') How do I use the name field when making a post?
+						li: a(href='#post-styling') What kind of styling options are available when making a post?
+					b Board ownership (under construction)
+					ul.mv-0
+						li How do I make my own board?
+						li How do I assign moderators?
+
+	.anchor#name-formatting
+	.table-container.flex-center
+		table.table-body
+			tr.table-head
+				th: a(href='#name-formatting') Name formatting
+			tr.table-row
+				td.post-message
+					p When posting, you can format the name field to include a name, tripcode , capcode, any combination of the three including leaving the field completely blank. Instead of a blank name,  "Anonymous" is used, however this depends on board-specific configuration. The optional components are explained below.
 
 					b Format
-					p Names entered go in the format Name[##Tripcode][## Capcode]. [] indicate optional components. Tripcodes and capcodes may not contain "##" and the space between the "##" in capcode is significant.
+					p 
+						| Names should be formatted as 
+						span.mono [Name][##Tripcode][## Capcode]
+						|  where [ ] indicate optional components. Tripcodes and capcodes may not contain "##" and the whitespace before capcodes is significant.
 					p Valid examples: 
-					ol
-						li John Doe
-						li John Doe##TripcodePassword
-						li John Doe## Board Owner
-						li John Doe##TripcodePassword## Board Owner
+					ol.mv-0
+						li Name
+						li Name##tripcode
+						li Name## Board Owner
+						li Name##tripcode## Board Owner
 					p For example, number 5 would look like so in a post:
 						-
 							const examplePost = {
 								"date" : new Date("2019-08-02T09:48:44.180Z"),
-								"name" : "John Doe",
+								"name" : "Name",
 								"board" : "example",
 								"tripcode" : "!!X8NXmAS44=",
 								"capcode" : "##Board Owner",
@@ -45,6 +68,7 @@ block content
 								"postId" : 123
 							}	
 						+post(examplePost)
+					p The name appears in the top left, followed by the tripcode with a !! prefix, then the capcode with a ## prefix. The colours may vary between themes but are generally distinct from eachother
 
 					b Name
 					p The name is simply what name you want to be shown alongside your post. Other users can post with the same name so there is nothing preventing impersonation. This is not related to your username (for registered users).
@@ -55,10 +79,11 @@ block content
 					b Capcode
 					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. The capcoded string will be prefixed with the users role on the board staff can make an authoritative post.
 
-	.table-container.flex-center.mv-10
+	.anchor#post-styling
+	.table-container.flex-center
 		table.table-body
 			tr.table-head
-				th Post styling
+				th: a(href='#post-styling') Post styling
 			tr.table-row
 				td.post-message
 					p When posting, you can use certain characters to style your post with bold, italics, code blocks, quotes, etc. The formatting is as follows:
