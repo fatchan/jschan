@@ -52,7 +52,9 @@ module.exports = async (req, res, next) => {
 			raw: req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
 			markdown: markdownAnnouncement || oldSettings.announcement.markdown
 		},
-		filters: req.body.filters !== null ? req.body.filters.split('\n').filter(n => n) /*prevents empty*/ : oldSettings.filters
+		filters: req.body.filters !== null ? req.body.filters.split('\n').filter(n => n) /*prevents empty*/ : oldSettings.filters,
+		filterMode: typeof req.body.filter_mode === 'number' && req.body.filter_mode !== oldSettings.filterMode ? req.body.filter_mode : oldSettings.filterMode,
+		filterBanDuration: typeof req.body.ban_duration === 'number' && req.body.ban_duration !== oldSettings.filterBanDuration ? req.body.ban_duration : oldSettings.filterBanDuration
 	};
 
 	//settings changed in the db

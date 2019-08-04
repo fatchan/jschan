@@ -9,7 +9,7 @@ block content
 		form.form-post(action='/forms/register' method='POST')
 			section.row
 				.label Username
-				input(type='text', name='username', maxlength='50' required)
+				input(type='text', name='username', maxlength='50' pattern='[a-zA-Z0-9]+' required title='alphanumeric only')
 			section.row
 				.label Password
 				input(type='password', name='password', maxlength='100' required)

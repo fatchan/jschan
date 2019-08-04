@@ -43,7 +43,7 @@ module.exports = async (req, res, next) => {
 			'userPostUnlink': true,
 			'threadLimit': 200,
 			'replyLimit': 500,
-			'maxFiles': 0,
+			'maxFiles': 3,
 			'forceOPSubject': false,
 			'forceOPMessage': true,
 			'forceOPFile': false,

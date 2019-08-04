@@ -73,6 +73,7 @@ async function wipe() {
 					'markdown':null
 				},
 				'filters':[]
+				'filterMode': 0,
 			}
 		})
 		//add indexes - should profiled and changed at some point if necessary

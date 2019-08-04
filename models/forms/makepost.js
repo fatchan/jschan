@@ -8,6 +8,7 @@ const path = require('path')
 	, Posts = require(__dirname+'/../../db/posts.js')
 	, Boards = require(__dirname+'/../../db/boards.js')
 	, Files = require(__dirname+'/../../db/files.js')
+	, Bans = require(__dirname+'/../../db/bans.js')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
@@ -42,7 +43,7 @@ module.exports = async (req, res, next) => {
 	let salt = null;
 	let thread = null;
 	const permLevel = permsCheck(req, res);
-	const { filters, maxFiles, forceAnon, replyLimit, threadLimit, ids, userPostSpoiler, defaultName, captchaTrigger, captchaTriggerMode, captchaMode } = res.locals.board.settings;
+	const { filters, filterBanDuration, filterMode, maxFiles, forceAnon, replyLimit, threadLimit, ids, userPostSpoiler, defaultName, captchaTrigger, captchaTriggerMode, captchaMode } = res.locals.board.settings;
 	if (req.body.thread) {
 		thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		if (!thread || thread.thread != null) {
@@ -81,15 +82,35 @@ module.exports = async (req, res, next) => {
 		});
 	}
 	//filters
-	if (filters && filters.length > 0) {
-		const containsFilter = filters.some(filter => { return req.body.message.includes(filter) });
-		if (containsFilter) {
+	if (permLevel >= 4 && filterMode > 0 && filters && filters.length > 0) {
+		const allContents = req.body.name+req.body.message+req.body.subject+req.body.email;
+		const containsFilter = filters.some(filter => { return allContents.includes(filter) });
+		if (containsFilter === true) {
 			await deleteTempFiles(req).catch(e => console.error);
-			return res.status(400).render('message', { //is this a 400?
-				'title': 'Bad request',
-				'message': `Your message was blocked by a filter.`,
-				'redirect': redirect
-			});
+			if (filterMode === 1) {
+				return res.status(400).render('message', {
+					'title': 'Bad request',
+					'message': 'Your post was blocked by a word filter',
+					'redirect': redirect
+				});
+			} else if (filterMode === 2) {
+				const banDate = new Date();
+				const banExpiry = new Date(filterBanDuration + banDate.getTime());
+				const ban = {
+					'ip': res.locals.ip,
+					'reason': 'post word filter auto ban',
+					'board': res.locals.board._id,
+					'post': null,
+					'issuer': 'system', //what should i call this
+					'date': banDate,
+					'expireAt': banExpiry
+				};
+ 				await Bans.insertOne(ban);
+				const bans = await Bans.find(res.locals.ip, res.locals.board._id);
+				return res.status(403).render('ban', {
+					bans: bans
+				});
+			}
 		}
 	}
 	let files = [];

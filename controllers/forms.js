@@ -9,6 +9,7 @@ const express  = require('express')
 	, { remove } = require('fs-extra')
 	, upload = require('express-fileupload')
 	, path = require('path')
+	, alphaNumericRegex = /^[a-zA-Z0-9]+$/
 	, postFiles = upload({
 		createParentPath: true,
 		safeFileNames: /[^\w-]+/g,
@@ -170,12 +171,12 @@ router.post('/create', csrf, isLoggedIn, verifyCaptcha, (req, res, next) => {
 		errors.push('Missing description');
 	}
 
-	//check exist
+	//other validation
 	if (req.body.uri) {
 		if (req.body.uri.length > 50) {
 			errors.push('URI must be 50 characters or less');
 		}
-		if (!req.body.uri.match(/^[a-zA-Z0-9]+$/)) {
+		if (alphaNumericRegex.test(req.body.uri) !== true) {
 			errors.push('URI must contain a-z 0-9 only');
 		}
 	}
@@ -214,9 +215,14 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 		errors.push('Missing password confirmation');
 	}
 
-	//check too long
-	if (req.body.username && req.body.username.length > 50) {
-		errors.push('Username must be 50 characters or less');
+	//check
+	if (req.body.username) {
+		if (req.body.username.length > 50) {
+            errors.push('Username must be 50 characters or less');
+        }
+        if (alphaNumericRegex.test(req.body.username) !== true) {
+            errors.push('Username must contain a-z 0-9 only');
+        }
 	}
 	if (req.body.password && req.body.password.length > 100) {
 		errors.push('Password must be 100 characters or less');
@@ -360,6 +366,12 @@ router.post('/board/:board/settings', csrf, Boards.exists, isLoggedIn, checkPerm
 	}
 	if (typeof req.body.captcha_trigger_mode === 'number' && (req.body.captcha_trigger_mode < 0 || req.body.captcha_trigger_mode > 2)) {
 		errors.push('Invalid captcha trigger mode.')
+	}
+	if (typeof req.body.filter_mode === 'number' && (req.body.filter_mode < 0 || req.body.filter_mode > 2)) {
+		errors.push('Invalid filter mode.');
+	}
+	if (typeof req.body.ban_duration === 'number' && req.body.ban_duration <= 0) {
+		errors.push('Invalid filter auto ban duration.')
 	}
 
 	if (errors.length > 0) {

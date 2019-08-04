@@ -108,6 +108,9 @@ pre {
 .mv-10 {
 	margin: 10px 0;
 }
+.mv-0 {
+	margin: 0 auto;
+}
 .mb-10 {
 	margin-bottom: 10px;
 }

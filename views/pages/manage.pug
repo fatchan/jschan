@@ -86,6 +86,15 @@ block content
 			section.row
 				.label Filters
 				textarea(name='filters' placeholder='newline separated') #{board.settings.filters.join('\n')}
+			section.row
+				.label Filter Mode
+				select(name='filter_mode' checked=board.settings.filterMode)
+					option(value='0', selected=board.settings.filterMode === 0) Do nothing
+					option(value='1', selected=board.settings.filterMode === 1) Block post
+					option(value='2', selected=board.settings.filterMode === 2) Auto ban
+			section.row
+				.label Filter Auto Ban Duration
+				input(type='text' name='ban_duration' placeholder='e.g. 1w' value=board.settings.filterBanDuration)
 			input(type='submit', value='save settings')
 	hr(size=1)
 	h4.no-m-p Add Banners:
