@@ -19,6 +19,10 @@ block content
 				.label Board Description
 				input(type='text' name='description' value=board.settings.description)
 			section.row
+				.label Board Locked
+				label.postform-style.ph-5
+					input(type='checkbox', name='locked', value='true' checked=board.settings.locked)
+			section.row
 				.label IDs
 				label.postform-style.ph-5
 					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)
@@ -33,14 +37,15 @@ block content
 					option(value='1', selected=board.settings.captchaMode === 1) Captcha for new thread
 					option(value='2', selected=board.settings.captchaMode === 2) Captcha for all posts
 			section.row
-				.label Captcha Trigger Threshold
-				input(type='number', name='captcha_trigger', value=board.settings.captchaTrigger)
+				.label TPH Trigger Threshold
+				input(type='number', name='tph_trigger', value=board.settings.tphTrigger)
 			section.row
-				.label Captcha Trigger Mode
-				select(name='captcha_trigger_mode')
-					option(value='0', selected=board.settings.captchaTriggerMode === 0) Do nothing
-					option(value='1', selected=board.settings.captchaTriggerMode === 1) Enable for new thread
-					option(value='2', selected=board.settings.captchaTriggerMode === 2) Enable for all posts
+				.label TPH Trigger Action
+				select(name='tph_trigger_action')
+					option(value='0', selected=board.settings.tphTriggerAction === 0) Do nothing
+					option(value='1', selected=board.settings.tphTriggerAction === 1) Enable captcha for new thread
+					option(value='2', selected=board.settings.tphTriggerAction === 2) Enable captcha for all posts
+					option(value='3', selected=board.settings.tphTriggerAction === 3) Lock Board
 			section.row
 				.label Post Deletion
 				label.postform-style.ph-5

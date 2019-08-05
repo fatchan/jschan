@@ -33,9 +33,10 @@ module.exports = async (req, res, next) => {
 		'settings': {
 			name,
 			description,
+			'locked': true,
 			'captchaMode': 0,
-			'captchaTrigger': 0,
-			'captchaTriggerMode': 0,
+			'tphTrigger': 0,
+			'tphTriggerAction': 0,
 			'forceAnon': false,
 			'ids': false,
 			'userPostDelete': true,

@@ -43,7 +43,19 @@ module.exports = async (req, res, next) => {
 	let salt = null;
 	let thread = null;
 	const permLevel = permsCheck(req, res);
-	const { filters, filterBanDuration, filterMode, maxFiles, forceAnon, replyLimit, threadLimit, ids, userPostSpoiler, defaultName, captchaTrigger, captchaTriggerMode, captchaMode } = res.locals.board.settings;
+	const { filters, filterBanDuration, filterMode,
+			maxFiles, forceAnon, replyLimit,
+			threadLimit, ids, userPostSpoiler,
+			defaultName, tphTrigger, tphTriggerAction,
+			captchaMode, locked } = res.locals.board.settings;
+	if (locked === true) {
+		await deleteTempFiles(req).catch(e => console.error);
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'message': 'Board is locked.',
+			'redirect': redirect
+		});
+	}
 	if (req.body.thread) {
 		thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		if (!thread || thread.thread != null) {
@@ -333,8 +345,9 @@ module.exports = async (req, res, next) => {
 	const postId = await Posts.insertOne(res.locals.board, data, thread);
 
 	if (!data.thread //if this is a new thread
-		&& captchaTriggerMode > 0 //and the triger mode is not nothing
-		&& captchaMode < captchaTriggerMode) { //and the current captcha mode is less than the trigger mode
+		&& tphTriggerAction > 0 //and the triger mode is not nothing
+		&& ((tphTriggerAction < 3 && captchaMode < tphTriggerAction) //and captcha mode less than captcha trigger
+			|| (tphTriggerAction === 3 && locked !== true))) { //and not locked with lock trigger
 		const pastHourMongoId = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000));
 		//count threads in past hour
 		const tph = await Posts.db.countDocuments({
@@ -345,17 +358,23 @@ module.exports = async (req, res, next) => {
 			'board': res.locals.board._id
 		});
 		//if its above the trigger
-		if (tph > captchaTrigger) {
+		if (tph > tphTrigger) {
 			//update in memory for other stuff done e.g. rebuilds
-			res.locals.board.settings.captchaMode = captchaTriggerMode;
+			const update = {
+				'$set': {}
+			};
+			if (tphTriggerAction < 3) {
+				res.locals.board.settings.captchaMode = tphTriggerAction;
+				update['$set']['settings.captchaMode'] = tphTriggerAction;
+			}
+			if (tphTriggerAction === 3) {
+				res.locals.board.settings.locked = true;
+				update['$set']['settings.locked'] = true;
+			}
 			//set it in the db
 			await Boards.db.updateOne({
 				'_id': res.locals.board._id,
-			}, {
-				'$set': {
-					'settings.captchaMode': captchaTriggerMode
-				}
-			});
+			}, update);
 			//remove the html (since pages will need captcha in postform now)
 			await remove(`${uploadDirectory}html/${req.params.board}/`);
 		}
