@@ -5,6 +5,7 @@ const express  = require('express')
 	, { enableUserBoards } = require(__dirname+'/../configs/main.json')
 	, Boards = require(__dirname+'/../db/boards.js')
 	, Posts = require(__dirname+'/../db/posts.js')
+	, Bans = require(__dirname+'/../db/bans.js')
 	, Mongo = require(__dirname+'/../db/db.js')
 	, { remove } = require('fs-extra')
 	, upload = require('express-fileupload')
@@ -36,6 +37,7 @@ const express  = require('express')
 	})
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/makepost.js')
+	, deletePosts = require(__dirname+'/../models/forms/deletepost.js')
 	, deleteTempFiles = require(__dirname+'/../helpers/files/deletetempfiles.js')
 	, uploadBanners = require(__dirname+'/../models/forms/uploadbanners.js')
 	, deleteBanners = require(__dirname+'/../models/forms/deletebanners.js')
@@ -53,6 +55,7 @@ const express  = require('express')
 	, verifyCaptcha = require(__dirname+'/../helpers/captcha/captchaverify.js')
 	, actionHandler = require(__dirname+'/../models/forms/actionhandler.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
+	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js')
 	, actionChecker = require(__dirname+'/../helpers/checks/actionchecker.js');
 
 
@@ -624,6 +627,48 @@ router.post('/board/:board/unban', csrf, Boards.exists, banCheck, isLoggedIn, ch
 		'title': 'Success',
 		'messages': messages,
 		'redirect': `/${req.params.board}/manage.html`
+	});
+
+});
+
+//delete board
+router.post('/board/:board/deleteboard', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(2), async (req, res, next) => {
+
+	const errors = [];
+
+	if (!req.body.confirm) {
+		errors.push('Missing confirmation');
+	}
+	if (!req.body.uri | req.body.uri !== req.params.board) {
+		errors.push('URI does not match')
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'errors': errors,
+			'redirect': `/${req.params.board}/manage.html`
+		});
+	}
+
+	try {
+//todo: move this to separate model file
+		// could be slow, might also wanna use projection to just get the files and other info necessary for deleteposts model
+		await Boards.deleteOne(res.locals.board._id);
+		const allPosts = await Posts.allBoardPosts(res.locals.board._id);
+		if (allPosts.length > 0) {
+			await deletePosts(allPosts, res.locals.board._id, true);
+		}
+		await Bans.deleteBoard(res.locals.board._id);
+		await remove(`${uploadDirectory}html/${req.params.board}/`)
+	} catch (err) {
+		return next(err);
+	}
+
+	return res.render('message', {
+		'title': 'Success',
+		'message': 'Board deleted',
+		'redirect': '/'
 	});
 
 });

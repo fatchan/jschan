@@ -16,21 +16,21 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 		}
 	}
 
-module.exports = async (posts, board) => {
+module.exports = async (posts, board, all=false) => {
 
 	//filter to threads
 	const threads = posts.filter(x => x.thread == null);
 
-	//delete the html for threads
-	const deleteHTML = []
-	for (let i = 0; i < threads.length; i++) {
-		deleteHTML.push(remove(`${uploadDirectory}html/${threads[i].board}/thread/${threads[i].postId}.html`));
+	if (threads.length > 0) {
+		//delete the html for threads
+		await Promise.all(threads.map(thread => {
+			remove(`${uploadDirectory}html/${threads.board}/thread/${threads.postId}.html`)
+		}));
 	}
-	await Promise.all(deleteHTML);
 
 	//get posts from all threads
 	let threadPosts = []
-	if (threads.length > 0) {
+	if (all === false && threads.length > 0) {
 		if (board) {
 			//if this is board-specific, we can use a single query
 			const threadPostIds = threads.map(thread => thread.postId);
@@ -66,81 +66,83 @@ module.exports = async (posts, board) => {
         await Files.decrement(fileNames);
 	}
 
-	//use this to not do unnecessary actions for posts where the thread is being deleted
-	const deleteThreadMap = {};
-	for (let i = 0; i < threads.length; i++) {
-		const thread = threads[i];
-		//if exists, add to set, else make the set
-		if (!deleteThreadMap[thread.board]) {
-			 deleteThreadMap[thread.board] = new Set();
-		}
-		deleteThreadMap[thread.board].add(thread.postId);
-	}
-
 	const bulkWrites = [];
-	const backlinkRebuilds = new Set();
-	for (let j = 0; j < allPosts.length; j++) {
-		const post = allPosts[j];
-		backlinkRebuilds.delete(post._id); //make sure we dont try and remarkup this post since its getting deleted.
-		if (post.thread != null && !deleteThreadMap[post.board] || !deleteThreadMap[post.board].has(post.thread)) {
-			//get backlinks for posts to remarkup
-			for (let i = 0; i < post.backlinks.length; i++) {
-				const backlink = post.backlinks[i];
-				if (!backlinkRebuilds.has(backlink._id)) {
-					backlinkRebuilds.add(backlink._id);
-				}
+	if (all === false) { //no need to rebuild quotes when deleting all posts for a board
+		const deleteThreadMap = {};
+		for (let i = 0; i < threads.length; i++) {
+			const thread = threads[i];
+			//if exists, add to set, else make the set
+			if (!deleteThreadMap[thread.board]) {
+				 deleteThreadMap[thread.board] = new Set();
 			}
+			deleteThreadMap[thread.board].add(thread.postId);
+		}
 
-			//remove dead backlinks to this post
-			if (post.quotes.length > 0) {
-				bulkWrites.push({
-					'updateMany': {
-						'filter': {
-							'_id': {
-								'$in': post.quotes.map(q => q._id)
-							}
-						},
-						'update': {
-							'$pull': {
-								'backlinks': {
-									'postId': post.postId
+		const backlinkRebuilds = new Set();
+		for (let j = 0; j < allPosts.length; j++) {
+			const post = allPosts[j];
+			backlinkRebuilds.delete(post._id); //make sure we dont try and remarkup this post since its getting deleted.
+			if (post.thread != null && !deleteThreadMap[post.board] || !deleteThreadMap[post.board].has(post.thread)) {
+				//get backlinks for posts to remarkup
+				for (let i = 0; i < post.backlinks.length; i++) {
+					const backlink = post.backlinks[i];
+					if (!backlinkRebuilds.has(backlink._id)) {
+						backlinkRebuilds.add(backlink._id);
+					}
+				}
+
+				//remove dead backlinks to this post
+				if (post.quotes.length > 0) {
+					bulkWrites.push({
+						'updateMany': {
+							'filter': {
+								'_id': {
+									'$in': post.quotes.map(q => q._id)
+								}
+							},
+							'update': {
+								'$pull': {
+									'backlinks': {
+										'postId': post.postId
+									}
 								}
 							}
 						}
-					}
-				});
+					});
+				}
 			}
 		}
-
 	}
 
 	//deleting before remarkup so quotes are accurate
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 
-	//get posts that quoted deleted posts so we can remarkup them
-	if (backlinkRebuilds.size > 0) {
-		const remarkupPosts = await Posts.globalGetPosts([...backlinkRebuilds]);
-		await Promise.all(remarkupPosts.map(async post => { //doing these all at once
-			if (post.nomarkup && post.nomarkup.length > 0) { //is this check even necessary? how would it have a quote with no message
-				//redo the markup
-				let message = simpleMarkdown(post.nomarkup);
-				const { quotedMessage, threadQuotes } = await linkQuotes(post.board, post.nomarkup, post.thread);
-				message = sanitize(quotedMessage, sanitizeOptions);
-				bulkWrites.push({
-					'updateOne': {
-		                'filter': {
-		                    '_id': post._id
-		                },
-		                'update': {
-		                    '$set': {
-		                        'quotes': threadQuotes,
-								'message': message
-		                    }
-		                }
-		            }
-		        });
-			}
-		}));
+	if (all === false) {
+		//get posts that quoted deleted posts so we can remarkup them
+		if (backlinkRebuilds.size > 0) {
+			const remarkupPosts = await Posts.globalGetPosts([...backlinkRebuilds]);
+			await Promise.all(remarkupPosts.map(async post => { //doing these all at once
+				if (post.nomarkup && post.nomarkup.length > 0) { //is this check even necessary? how would it have a quote with no message
+					//redo the markup
+					let message = simpleMarkdown(post.nomarkup);
+					const { quotedMessage, threadQuotes } = await linkQuotes(post.board, post.nomarkup, post.thread);
+					message = sanitize(quotedMessage, sanitizeOptions);
+					bulkWrites.push({
+						'updateOne': {
+		                	'filter': {
+		                    	'_id': post._id
+		                	},
+		                	'update': {
+		                    	'$set': {
+		                        	'quotes': threadQuotes,
+									'message': message
+		                    	}
+		                	}
+		            	}
+		        	});
+				}
+			}));
+		}
 	}
 
 	//bulkwrite it all

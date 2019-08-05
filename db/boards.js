@@ -19,6 +19,10 @@ module.exports = {
 		return db.collection('boards').insertOne(data);
 	},
 
+	deleteOne: (board) => {
+		return db.collection('boards').deleteOne({ '_id': board });
+	},
+
 	deleteAll: (board) => {
 		return db.collection('boards').deleteMany({});
 	},

@@ -53,7 +53,7 @@ async function wipe() {
 				'name': 'test',
 				'description': 'testing board',
 				'captchaMode': 0,
-				'locked': true,
+				'locked': false,
 				'tphTrigger': 10,
 				'tphTriggerAction': 2,
 				'forceAnon': true,
@@ -73,7 +73,7 @@ async function wipe() {
 					'raw':null,
 					'markdown':null
 				},
-				'filters':[]
+				'filters':[],
 				'filterMode': 0,
 			}
 		})
@@ -119,15 +119,17 @@ function images() {
 		.pipe(gulp.dest(paths.images.dest));
 }
 
-//TODO: pages here that users should edit built and output by pug e.g. homepage, FAQ, contact, privacy policy, tos, etc
-async function html() {
-	await del([ 'static/html/*' ]); //these will be now build-on-load
+function html() {
+	return del([ 'static/html/*' ]); //these will be now build-on-load
+}
+
+function custompages() {
 	return gulp.src(paths.pug.src)
 		.pipe(pug())
 		.pipe(gulp.dest(paths.pug.dest));
 }
 
-const build = gulp.parallel(css, images, html);
+const build = gulp.parallel(css, images, html, custompages);
 const reset = gulp.series(wipe, build)
 
 module.exports = {
@@ -135,5 +137,6 @@ module.exports = {
 	css,
 	images,
 	reset,
+	custompages,
 	default: build,
 };

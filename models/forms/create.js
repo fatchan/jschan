@@ -33,7 +33,7 @@ module.exports = async (req, res, next) => {
 		'settings': {
 			name,
 			description,
-			'locked': true,
+			'locked': false,
 			'captchaMode': 0,
 			'tphTrigger': 0,
 			'tphTriggerAction': 0,

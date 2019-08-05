@@ -228,6 +228,12 @@ module.exports = {
 
 	},
 
+	allBoardPosts: (board) => {
+		return db.find({
+			'board': board
+		}).toArray();
+	},
+
 	//takes array "ids" of post ids
 	getPosts: (board, ids, admin) => {
 

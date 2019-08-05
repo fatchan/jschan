@@ -358,7 +358,7 @@ module.exports = async (req, res, next) => {
 			'board': res.locals.board._id
 		});
 		//if its above the trigger
-		if (tph > tphTrigger) {
+		if (tph >= tphTrigger) {
 			//update in memory for other stuff done e.g. rebuilds
 			const update = {
 				'$set': {}

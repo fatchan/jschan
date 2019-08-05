@@ -51,6 +51,12 @@ module.exports = {
 		})
 	},
 
+	deleteBoard: (board) => {
+		return db.deleteMany({
+			'board': board
+		});
+	},
+
 	insertOne: (ban) => {
 		return db.insertOne(ban);
 	},
