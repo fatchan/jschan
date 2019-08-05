@@ -330,7 +330,7 @@ router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConve
 });
 
 //board settings
-router.post('/board/:board/settings', csrf, Boards.exists, isLoggedIn, checkPermsMiddleware(2), paramConverter, async (req, res, next) => {
+router.post('/board/:board/settings', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(2), paramConverter, async (req, res, next) => {
 
 	const errors = [];
 
@@ -361,11 +361,11 @@ router.post('/board/:board/settings', csrf, Boards.exists, isLoggedIn, checkPerm
 	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {
 		errors.push('Invalid captcha mode.');
 	}
-	if (typeof req.body.captcha_trigger === 'number' && (req.body.captcha_trigger < 0 || req.body.captcha_trigger > 10000)) {
-		errors.push('Invalid captcha trigger threshold.');
+	if (typeof req.body.tph_trigger === 'number' && (req.body.tph_trigger < 0 || req.body.tph_trigger > 10000)) {
+		errors.push('Invalid tph trigger threshold.');
 	}
-	if (typeof req.body.captcha_trigger_mode === 'number' && (req.body.captcha_trigger_mode < 0 || req.body.captcha_trigger_mode > 2)) {
-		errors.push('Invalid captcha trigger mode.')
+	if (typeof req.body.tph_trigger_action === 'number' && (req.body.tph_trigger_action < 0 || req.body.tph_trigger_action > 3)) {
+		errors.push('Invalid tph trigger action.')
 	}
 	if (typeof req.body.filter_mode === 'number' && (req.body.filter_mode < 0 || req.body.filter_mode > 2)) {
 		errors.push('Invalid filter mode.');
@@ -391,7 +391,7 @@ router.post('/board/:board/settings', csrf, Boards.exists, isLoggedIn, checkPerm
 });
 
 //upload banners
-router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, isLoggedIn, checkPermsMiddleware(2), paramConverter, async (req, res, next) => {
+router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(2), paramConverter, async (req, res, next) => {
 
 	if (req.files && req.files.file) {
 		if (Array.isArray(req.files.file)) {
@@ -430,7 +430,7 @@ router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, isLogg
 });
 
 //delete banners
-router.post('/board/:board/deletebanners', csrf, Boards.exists, isLoggedIn, checkPermsMiddleware(2), paramConverter, async (req, res, next) => {
+router.post('/board/:board/deletebanners', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(2), paramConverter, async (req, res, next) => {
 
 	const errors = [];
 
@@ -467,7 +467,7 @@ router.post('/board/:board/deletebanners', csrf, Boards.exists, isLoggedIn, chec
 
 //actions for a specific board
 router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, verifyCaptcha, boardActionController); //Captcha on regular actions
-router.post('/board/:board/modactions', csrf, Boards.exists, isLoggedIn, checkPermsMiddleware(3), paramConverter, boardActionController); //CSRF for mod actions
+router.post('/board/:board/modactions', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(3), paramConverter, boardActionController); //CSRF for mod actions
 async function boardActionController(req, res, next) {
 
 	const errors = [];
@@ -596,7 +596,7 @@ async function globalActionController(req, res, next) {
 }
 
 //unban
-router.post('/board/:board/unban', csrf, Boards.exists, isLoggedIn, checkPermsMiddleware(3), paramConverter, async (req, res, next) => {
+router.post('/board/:board/unban', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(3), paramConverter, async (req, res, next) => {
 
 	//keep this for later in case i add other options to unbans
 	const errors = [];
