@@ -24,7 +24,7 @@ module.exports = async (posts, board, all=false) => {
 	if (threads.length > 0) {
 		//delete the html for threads
 		await Promise.all(threads.map(thread => {
-			remove(`${uploadDirectory}html/${threads.board}/thread/${threads.postId}.html`)
+			remove(`${uploadDirectory}html/${thread.board}/thread/${thread.postId}.html`)
 		}));
 	}
 
@@ -62,11 +62,12 @@ module.exports = async (posts, board, all=false) => {
 	}, { postFiles: [], postBacklinks: [], postMongoIds: [] });
 
 	if (postFiles.length > 0) {
-		const fileNames = postFiles.map(x => x.filename);
+		const fileNames = [...new Set(postFiles.map(x => x.filename))];
         await Files.decrement(fileNames);
 	}
 
 	const bulkWrites = [];
+	const backlinkRebuilds = new Set();
 	if (all === false) { //no need to rebuild quotes when deleting all posts for a board
 		const deleteThreadMap = {};
 		for (let i = 0; i < threads.length; i++) {
@@ -77,8 +78,6 @@ module.exports = async (posts, board, all=false) => {
 			}
 			deleteThreadMap[thread.board].add(thread.postId);
 		}
-
-		const backlinkRebuilds = new Set();
 		for (let j = 0; j < allPosts.length; j++) {
 			const post = allPosts[j];
 			backlinkRebuilds.delete(post._id); //make sure we dont try and remarkup this post since its getting deleted.

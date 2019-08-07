@@ -14,6 +14,7 @@ module.exports = async (posts, unlinkOnly) => {
 			fileNames = fileNames.concat(post.files.map(x => x.filename));
 		}
 	}
+	fileNames = [...new Set(fileNames)];
 
 	if (fileNames.length == 0) {
 		return {

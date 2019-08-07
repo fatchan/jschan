@@ -21,7 +21,6 @@ const path = require('path')
 		}
 	}
 	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?:## (?<capcode>[^\s#]+))?$/
-	, permsCheck = require(__dirname+'/../../helpers/checks/hasperms.js')
 	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
 	, videoUpload = require(__dirname+'/../../helpers/files/videoupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
@@ -42,7 +41,6 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const permLevel = permsCheck(req, res);
 	const { filters, filterBanDuration, filterMode,
 			maxFiles, forceAnon, replyLimit,
 			threadLimit, ids, userPostSpoiler,
@@ -68,7 +66,7 @@ module.exports = async (req, res, next) => {
 		}
 		salt = thread.salt;
 		redirect += `thread/${req.body.thread}.html`
-		if (thread.locked && permLevel >= 4) {
+		if (thread.locked && res.locals.permLevel >= 4) {
 			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
@@ -94,7 +92,7 @@ module.exports = async (req, res, next) => {
 		});
 	}
 	//filters
-	if (permLevel >= 4 && filterMode > 0 && filters && filters.length > 0) {
+	if (res.locals.permLevel >= 4 && filterMode > 0 && filters && filters.length > 0) {
 		const allContents = req.body.name+req.body.message+req.body.subject+req.body.email;
 		const containsFilter = filters.some(filter => { return allContents.includes(filter) });
 		if (containsFilter === true) {
@@ -219,7 +217,7 @@ module.exports = async (req, res, next) => {
 				processedFile.geometryString = processedFile.geometryString[0];
 			}
 			files.push(processedFile);
-			await Files.increment(file);
+			await Files.increment(processedFile);
 		}
 	}
 	// because express middleware is autistic i need to do this
@@ -242,8 +240,8 @@ module.exports = async (req, res, next) => {
 
 	//forceanon hide reply subjects so cant be used as name for replies
 	//forceanon only allow sage email
-	let subject = (permLevel < 4 || !forceAnon || !req.body.thread) ? req.body.subject : null;
-	let email = (permLevel < 4 || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
+	let subject = (res.locals.permLevel < 4 || !forceAnon || !req.body.thread) ? req.body.subject : null;
+	let email = (res.locals.permLevel < 4 || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
 
 	//spoiler files only if board settings allow
 	const spoiler = userPostSpoiler && req.body.spoiler ? true : false;
@@ -251,7 +249,7 @@ module.exports = async (req, res, next) => {
 	let name = defaultName;
 	let tripcode = null;
 	let capcode = null;
-	if ((permLevel < 4 || !forceAnon) && req.body.name && req.body.name.length > 0) {
+	if ((res.locals.permLevel < 4 || !forceAnon) && req.body.name && req.body.name.length > 0) {
 		// get matches with named groups for name, trip and capcode in 1 regex
 		const matches = req.body.name.match(nameRegex);
 		if (matches && matches.groups) {
@@ -265,9 +263,9 @@ module.exports = async (req, res, next) => {
 				tripcode = `!!${(await getTripCode(groups.tripcode))}`;
 			}
 			//capcode
-			if (permLevel < 4 && groups.capcode) {
+			if (res.locals.permLevel < 4 && groups.capcode) {
 				let type = '';
-				switch (permLevel) {
+				switch (res.locals.permLevel) {
 					case 3://board mod
 						type = 'Board Mod';
 						break;
