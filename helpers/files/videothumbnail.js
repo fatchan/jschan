@@ -10,7 +10,7 @@ module.exports = (filename, geometry) => {
 			return resolve();
 		})
 		.screenshots({
-			timestamps: [0],
+			timestamps: ['1%'],//1% should remedy black first frames or fade-ins
 			count: 1,
 			filename: `thumb-${filename.split('.')[0]}.jpg`,
 			folder: `${uploadDirectory}img/`,
