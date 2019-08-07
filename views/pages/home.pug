@@ -19,7 +19,7 @@ block content
 						| and what is said becomes more important than whoever says it.
 					p 
 						| Choose a board below and join the discussion!
-	.table-container.flex-center.mv-10
+	.table-container.flex-center.mv-10.text-center
 		table
 			tr
 				th Board
@@ -34,6 +34,14 @@ block content
 					td #{board.settings.description}
 					td #{board.pph}
 					td #{board.sequence_value-1}
+	.table-container.flex-center.mv-10.text-center
+		table
+			tr
+				th Unique Files
+				th Total Files Size
+			tr
+				td #{fileStats.count}
+				td #{fileStats.totalSizeString}
 	.table-container.flex-center.mv-10
 		table
 			tr

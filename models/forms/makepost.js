@@ -219,12 +219,9 @@ module.exports = async (req, res, next) => {
 				processedFile.geometryString = processedFile.geometryString[0];
 			}
 			files.push(processedFile);
-
+			await Files.increment(file);
 		}
 	}
-
-	await Files.increment(files.map(file => file.filename));
-
 	// because express middleware is autistic i need to do this
 	deleteTempFiles(req).catch(e => console.error);
 

@@ -3,7 +3,9 @@
 const Mongo = require(__dirname+'/../db/db.js')
 	, msTime = require(__dirname+'/mstime.js')
 	, Posts = require(__dirname+'/../db/posts.js')
+	, Files = require(__dirname+'/../db/files.js')
 	, Boards = require(__dirname+'/../db/boards.js')
+	, formatSize = require(__dirname+'/files/formatsize.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, render = require(__dirname+'/render.js');
 
@@ -93,7 +95,9 @@ console.log('multi building board pages', `${board._id}/ ${startpage === 1 ? 'in
 
 	buildHomepage: async () => {
 console.log('building homepage /index.html');
+		//getting boards
 		const boards = await Boards.find();
+		//geting PPH for each board
 		const pastHour = Math.floor((Date.now() - msTime.hour)/1000);
 		const pastHourObjectId = Mongo.ObjectId.createFromTime(pastHour);
 		const pph = await Posts.db.aggregate([
@@ -120,8 +124,27 @@ console.log('building homepage /index.html');
 			const board = boards[i];
 			board.pph = pph[board._id] || 0;
 		}
+		//getting file stats
+		const fileStats = await Files.db.aggregate([
+			{
+				'$group': {
+					'_id': null,
+					//could add other interesting mongo aggregate stuff here like averages
+					'count': { '$sum': 1 },
+					'size': { '$sum': '$size' }
+				}
+			}
+		]).toArray().then(res => {
+			const stats = res[0];
+			return {
+				count: stats.count,
+				totalSize: stats.size,
+				totalSizeString: formatSize(stats.size)
+			}
+		});
 		return render('index.html', 'home.pug', {
 			boards,
+			fileStats,
 		});
 	},
 

@@ -8,14 +8,15 @@ module.exports = {
 
 	db,
 
-	increment: (fileNames) => {
-		return db.updateMany({
-			'_id': {
-				'$in': fileNames
-			}
+	increment: (file) => {
+		return db.updateOne({
+			'_id': file.filename
 		}, {
 			'$inc': {
 				'count': 1
+			},
+			'$setOnInsert': {
+				'size': file.size
 			}
 		}, {
 			'upsert': true
@@ -32,7 +33,7 @@ module.exports = {
 				'count': -1
 			}
 		}, {
-			'upsert': true //maybe not necessary
+			'upsert': true //probably not necessary
 		});
 	},
 

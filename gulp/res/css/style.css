@@ -92,7 +92,9 @@ pre {
     padding: 2px;
     font-family: monospace;
 }
-
+.text-center {
+	text-align: center;
+}
 .ml-1 {
 	margin-left: 1px;
 }
@@ -284,7 +286,7 @@ table {
 
 th {
 	background: var(--label-color);
-	text-align: left;
+	/*text-align: left;*/
 }
 
 td, th {
