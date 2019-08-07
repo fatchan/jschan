@@ -12,17 +12,12 @@ const Mongo = require(__dirname+'/../db/db.js')
 module.exports = {
 
 	buildBanners: async(board) => {
-		const buildName = `Building: ${board._id}/banners.html`;
-		console.time(buildName);
 		await render(`${board._id}/banners.html`, 'banners.pug', {
 			board: board,
 		});
-		console.timeEnd(buildName);
 	},
 
 	buildCatalog: async (board) => {
-		const buildName = `Building: ${board._id}/catalog.html`;
-		console.time(buildName);
 		if (!board._id) {
 			board = await Boards.findOne(board);
 		}
@@ -31,30 +26,23 @@ module.exports = {
 			board,
 			threads,
 		});
-		console.timeEnd(buildName);
 	},
 
 	buildThread: async (threadId, board) => {
-		const buildName = `Building: ${board._id || board}/thread/${threadId}.html`;
-		console.time(buildName);
 		if (!board._id) {
 			board = await Boards.findOne(board);
 		}
 		const thread = await Posts.getThread(board._id, threadId)
 		if (!thread) {
-			console.timeEnd(buildName, 'deleted OP')
 			return; //this thread may have been an OP that was deleted
 		}
 		await render(`${board._id}/thread/${threadId}.html`, 'thread.pug', {
 			board,
 			thread,
 		});
-		console.timeEnd(buildName);
 	},
 
 	buildBoard: async (board, page, maxPage=null) => {
-		const buildName = `Building: ${board._id || board}/${page === 1 ? 'index' : page}.html`;
-		console.time(buildName);
 		const threads = await Posts.getRecent(board._id, page);
 		if (maxPage == null) {
 			maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
@@ -66,13 +54,10 @@ module.exports = {
 			maxPage,
 			page,
 		});
-		console.timeEnd(buildName);
 	},
 
 	//building multiple pages (for rebuilds)
 	buildBoardMultiple: async (board, startpage=1, endpage) => {
-		const buildName = 'multi page build';
-		console.time(buildName);
 		const maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
 		if (endpage === 0) {
 			//deleted only/all posts, so only 1 page will remain
@@ -83,7 +68,6 @@ module.exports = {
 		}
 		const difference = endpage-startpage + 1; //+1 because for single pagemust be > 0
 		const threads = await Posts.getRecent(board._id, startpage, difference*10);
-		console.timeLog(buildName, `${board._id}/ ${startpage === 1 ? 'index' : startpage} -> ${endpage === 1 ? 'index' : endpage} .html`);
 		const buildArray = [];
 		for (let i = startpage; i <= endpage; i++) {
 			let spliceStart = (i-1)*10;
@@ -100,12 +84,9 @@ module.exports = {
 			);
 		}
 		await Promise.all(buildArray);
-		console.timeEnd(buildName);
 	},
 
 	buildHomepage: async () => {
-		const buildName = `Building: index.html`;
-		console.time(buildName);
 		//getting boards
 		const boards = await Boards.find();
 		//geting PPH for each board
@@ -157,7 +138,6 @@ module.exports = {
 			boards,
 			fileStats,
 		});
-		console.timeEnd(buildName);
 	},
 
 	buildChangePassword: () => {

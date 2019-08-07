@@ -46,8 +46,8 @@ const express  = require('express')
 	, changeBoardSettings = require(__dirname+'/../models/forms/changeboardsettings.js')
 	, registerAccount = require(__dirname+'/../models/forms/register.js')
 	, createBoard = require(__dirname+'/../models/forms/create.js')
-	, checkPermsMiddleware = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
-	, checkPerms = require(__dirname+'/../helpers/checks/hasperms.js')
+	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
+	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, spamCheck = require(__dirname+'/../helpers/checks/spamcheck.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, banCheck = require(__dirname+'/../helpers/checks/bancheck.js')
@@ -149,10 +149,9 @@ router.post('/changepassword', verifyCaptcha, async (req, res, next) => {
 });
 
 //create board
-router.post('/create', csrf, isLoggedIn, verifyCaptcha, (req, res, next) => {
+router.post('/create', csrf, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), (req, res, next) => {
 
-	res.locals.authLevel = checkPerms(req, res);
-	if (enableUserBoards === false && res.locals.authLevel !== 0) {
+	if (enableUserBoards === false && res.locals.permLevel !== 0) {
 		//only board admin can create boards when user board creation disabled
 		return res.status(400).render('message', {
 			'title': 'Bad request',
@@ -251,7 +250,7 @@ router.post('/register', verifyCaptcha, (req, res, next) => {
 
 
 // make new post
-router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConverter, verifyCaptcha, async (req, res, next) => {
+router.post('/board/:board/post', Boards.exists, calcPerms, banCheck, postFiles, paramConverter, verifyCaptcha, async (req, res, next) => {
 
 	if (req.files && req.files.file) {
 		if (Array.isArray(req.files.file)) {
@@ -333,7 +332,7 @@ router.post('/board/:board/post', Boards.exists, banCheck, postFiles, paramConve
 });
 
 //board settings
-router.post('/board/:board/settings', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(2), paramConverter, async (req, res, next) => {
+router.post('/board/:board/settings', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, async (req, res, next) => {
 
 	const errors = [];
 
@@ -394,7 +393,7 @@ router.post('/board/:board/settings', csrf, Boards.exists, banCheck, isLoggedIn,
 });
 
 //upload banners
-router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(2), paramConverter, async (req, res, next) => {
+router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, async (req, res, next) => {
 
 	if (req.files && req.files.file) {
 		if (Array.isArray(req.files.file)) {
@@ -433,7 +432,7 @@ router.post('/board/:board/addbanners', bannerFiles, csrf, Boards.exists, banChe
 });
 
 //delete banners
-router.post('/board/:board/deletebanners', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(2), paramConverter, async (req, res, next) => {
+router.post('/board/:board/deletebanners', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, async (req, res, next) => {
 
 	const errors = [];
 
@@ -469,8 +468,8 @@ router.post('/board/:board/deletebanners', csrf, Boards.exists, banCheck, isLogg
 });
 
 //actions for a specific board
-router.post('/board/:board/actions', Boards.exists, banCheck, paramConverter, verifyCaptcha, boardActionController); //Captcha on regular actions
-router.post('/board/:board/modactions', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(3), paramConverter, boardActionController); //CSRF for mod actions
+router.post('/board/:board/actions', Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, boardActionController); //Captcha on regular actions
+router.post('/board/:board/modactions', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, boardActionController); //CSRF for mod actions
 async function boardActionController(req, res, next) {
 
 	const errors = [];
@@ -488,9 +487,8 @@ async function boardActionController(req, res, next) {
 	}
 
 	//check if they have permission to perform the actions
-	res.locals.authLevel = checkPerms(req, res);
-	if (res.locals.authLevel >= 4) {
-		if (res.locals.authLevel > res.locals.actions.authRequired) {
+	if (res.locals.permLevel >= 4) {
+		if (res.locals.permLevel > res.locals.actions.authRequired) {
 			errors.push('No permission');
 		}
 		if (req.body.delete && !res.locals.board.settings.userPostDelete) {
@@ -545,7 +543,7 @@ async function boardActionController(req, res, next) {
 }
 
 //global actions (global manage page)
-router.post('/global/actions', csrf, isLoggedIn, checkPermsMiddleware(1), paramConverter, globalActionController);
+router.post('/global/actions', csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController);
 async function globalActionController(req, res, next) {
 
 	const errors = [];
@@ -599,7 +597,7 @@ async function globalActionController(req, res, next) {
 }
 
 //unban
-router.post('/board/:board/unban', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(3), paramConverter, async (req, res, next) => {
+router.post('/board/:board/unban', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, async (req, res, next) => {
 
 	//keep this for later in case i add other options to unbans
 	const errors = [];
@@ -632,7 +630,7 @@ router.post('/board/:board/unban', csrf, Boards.exists, banCheck, isLoggedIn, ch
 });
 
 //delete board
-router.post('/board/:board/deleteboard', csrf, Boards.exists, banCheck, isLoggedIn, checkPermsMiddleware(2), async (req, res, next) => {
+router.post('/board/:board/deleteboard', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), async (req, res, next) => {
 
 	const errors = [];
 
@@ -673,7 +671,7 @@ router.post('/board/:board/deleteboard', csrf, Boards.exists, banCheck, isLogged
 
 });
 
-router.post('/global/unban', csrf, isLoggedIn, checkPermsMiddleware(1), paramConverter, async(req, res, next) => {
+router.post('/global/unban', csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, async(req, res, next) => {
 
 	const errors = [];
 

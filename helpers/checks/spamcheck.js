@@ -3,11 +3,10 @@
 const Mongo = require(__dirname+'/../../db/db.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
 	, msTime = require(__dirname+'/../mstime.js')
-	, hasPerms = require(__dirname+'/hasperms.js')
 
 module.exports = async (req, res) => {
 
-	if (hasPerms(req, res) <= 1) { //global staff bypass spam check
+	if (res.locals.permLevel <= 1) { //global staff bypass spam check
 		return false;
 	}
 
