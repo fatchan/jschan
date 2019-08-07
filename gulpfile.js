@@ -119,7 +119,7 @@ function images() {
 		.pipe(gulp.dest(paths.images.dest));
 }
 
-function html() {
+function deletehtml() {
 	return del([ 'static/html/*' ]); //these will be now build-on-load
 }
 
@@ -129,8 +129,9 @@ function custompages() {
 		.pipe(gulp.dest(paths.pug.dest));
 }
 
-const build = gulp.parallel(css, images, html, custompages);
+const build = gulp.parallel(css, images, deletehtml, custompages);
 const reset = gulp.series(wipe, build)
+const html = gulp.series(deletehtml, custompages)
 
 module.exports = {
 	html,
