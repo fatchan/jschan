@@ -7,6 +7,14 @@ const Mongo = require(__dirname+'/db.js')
 
 module.exports = {
 
+	count: (usernames) => {
+		return db.countDocuments({
+			'_id': {
+				'$in': usernames
+			}
+		});
+	},
+
 	findOne: (username) => {
 		return db.findOne({ '_id': username });
 	},

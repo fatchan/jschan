@@ -19,6 +19,9 @@ block content
 				.label Board Description
 				input(type='text' name='description' value=board.settings.description)
 			section.row
+				.label Moderators
+				textarea(name='moderators' placeholder='newline separated') #{board.settings.moderators.join('\n')}
+			section.row
 				.label Board Locked
 				label.postform-style.ph-5
 					input(type='checkbox', name='locked', value='true' checked=board.settings.locked)

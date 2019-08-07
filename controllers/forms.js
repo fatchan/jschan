@@ -639,7 +639,7 @@ router.post('/board/:board/deleteboard', csrf, Boards.exists, banCheck, isLogged
 	if (!req.body.confirm) {
 		errors.push('Missing confirmation');
 	}
-	if (!req.body.uri | req.body.uri !== req.params.board) {
+	if (!req.body.uri || req.body.uri !== req.params.board) {
 		errors.push('URI does not match')
 	}
 

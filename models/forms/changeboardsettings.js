@@ -2,6 +2,7 @@
 
 const Boards = require(__dirname+'/../../db/boards.js')
 	, Posts = require(__dirname+'/../../db/posts.js')
+	, Accounts = require(__dirname+'/../../db/accounts.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { buildHomepage, buildCatalog, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
 	, { remove } = require('fs-extra')
@@ -23,15 +24,28 @@ module.exports = async (req, res, next) => {
 
 	let markdownAnnouncement;
 	if (req.body.announcement !== oldSettings.announcement.raw) {
+		//remarkup the announcement if it changes
 		const styled = simpleMarkdown(req.body.announcement);
 		const quoted = (await linkQuotes(req.params.board, styled, null)).quotedMessage;
 		const sanitized = sanitize(quoted, sanitizeOptions);
 		markdownAnnouncement = sanitized;
 	}
 
+	let moderators = req.body.moderators !== null ? req.body.moderators.split('\n').filter(n => n) : oldSettings.moderators
+	if (moderators !== oldSettings.moderators) {
+		//make sure moderators actually have existing accounts
+		if (moderators.length > 0) {
+			const validCount = await Accounts.count(moderators);
+			if (validCount !== moderators.length) {
+				moderators = oldSettings.moderators;
+			}
+		}
+	}
+
 	const newSettings = {
 		name: req.body.name && req.body.name.trim().length > 0 ? req.body.name : oldSettings.name,
 		description: req.body.description && req.body.description.trim().length > 0 ? req.body.description : oldSettings.description,
+		moderators,
 		locked: req.body.locked ? true : false,
 		ids: req.body.ids ? true : false,
 		forceAnon: req.body.force_anon ? true : false,

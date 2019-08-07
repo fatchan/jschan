@@ -46,12 +46,12 @@ async function wipe() {
 		Boards.insertOne({
 			'_id': 'test',
 			'owner': '',
-			'moderators': [],
 			'banners': [],
 			'sequence_value': 1,
 			'settings': {
 				'name': 'test',
 				'description': 'testing board',
+				'moderators': [],
 				'captchaMode': 0,
 				'locked': false,
 				'tphTrigger': 10,

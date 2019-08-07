@@ -27,12 +27,12 @@ module.exports = async (req, res, next) => {
 	const newBoard = {
 		'_id': uri,
 		'owner': req.session.user.username,
-		'moderators': [],
 		'banners': [],
 		'sequence_value': 1,
 		'settings': {
 			name,
 			description,
+			'moderators': [],
 			'locked': false,
 			'captchaMode': 0,
 			'tphTrigger': 0,
