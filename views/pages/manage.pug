@@ -19,20 +19,82 @@ block content
 				.label Board Description
 				input(type='text' name='description' value=board.settings.description)
 			section.row
+				.label Announcement
+				textarea(name='announcement' placeholder='supports post styling') #{board.settings.announcement.raw}
+			section.row
+				.label Anon Name
+				input(type='text' name='default_name' value=board.settings.defaultName)
+			section.row
+				.label Max Files
+				input(type='number' name='max_files' value=board.settings.maxFiles)
+			section.row
+				.label IDs
+				label.postform-style.ph-5
+					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)
+			section.row
+				.label User Post Deletion
+				label.postform-style.ph-5
+					input(type='checkbox', name='user_post_delete', value='true' checked=board.settings.userPostDelete)
+			section.row
+				.label User File Spoilering
+				label.postform-style.ph-5
+					input(type='checkbox', name='user_post_spoiler', value='true' checked=board.settings.userPostSpoiler)
+			section.row
+				.label User File Unlinking
+				label.postform-style.ph-5
+					input(type='checkbox', name='user_post_unlink', value='true' checked=board.settings.userPostUnlink)
+			section.row
+				.label Force Anon
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
+			section.row
+				.label Force Thread Subject
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_thread_subject', value='true' checked=board.settings.forceThreadSubject)
+			section.row
+				.label Force Thread Message
+					.required *
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_thread_message', value='true' checked=board.settings.forceThreadMessage)
+			section.row
+				.label Force Thread File
+					.required *
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_thread_file', value='true' checked=board.settings.forceThreadFile)
+			section.row
+				.label Force Reply Message
+					.required *
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_reply_message', value='true' checked=board.settings.forceReplyMessage)
+			section.row
+				.label Force Reply File
+					.required *
+				label.postform-style.ph-5
+					input(type='checkbox', name='force_reply_file', value='true' checked=board.settings.forceReplyFile)
+			.row
+				.label
+					.required *
+					| All posts still require either a message or file(s)
+			section.row
+				.label Min Thread Message Length
+				input(type='number' name='min_thread_message_length' value=board.settings.minThreadMessageLength placeholder='0-4000')
+			section.row
+				.label Min Reply Message Length
+				input(type='number' name='min_reply_message_length' value=board.settings.minReplyMessageLength placeholder='0-4000')
+			section.row
+				.label Thread Limit
+				input(type='number' name='thread_limit' value=board.settings.threadLimit)
+			section.row
+				.label Reply Limit
+				input(type='number' name='reply_limit' value=board.settings.replyLimit)
+			br
+			section.row
 				.label Moderators
 				textarea(name='moderators' placeholder='newline separated') #{board.settings.moderators.join('\n')}
 			section.row
 				.label Board Locked
 				label.postform-style.ph-5
 					input(type='checkbox', name='locked', value='true' checked=board.settings.locked)
-			section.row
-				.label IDs
-				label.postform-style.ph-5
-					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)
-			section.row
-				.label Force Anon
-				label.postform-style.ph-5
-					input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
 			section.row
 				.label Captcha Mode
 				select(name='captcha_mode' checked=board.settings.captchaMode)
@@ -49,48 +111,6 @@ block content
 					option(value='1', selected=board.settings.tphTriggerAction === 1) Enable captcha for new thread
 					option(value='2', selected=board.settings.tphTriggerAction === 2) Enable captcha for all posts
 					option(value='3', selected=board.settings.tphTriggerAction === 3) Lock Board
-			section.row
-				.label Post Deletion
-				label.postform-style.ph-5
-					input(type='checkbox', name='user_post_delete', value='true' checked=board.settings.userPostDelete)
-			section.row
-				.label File Spoilers
-				label.postform-style.ph-5
-					input(type='checkbox', name='user_post_spoiler', value='true' checked=board.settings.userPostSpoiler)
-			section.row
-				.label File Unlinking
-				label.postform-style.ph-5
-					input(type='checkbox', name='user_post_unlink', value='true' checked=board.settings.userPostUnlink)
-			section.row
-				.label Force OP Message
-				label.postform-style.ph-5
-					input(type='checkbox', name='force_op_message', value='true' checked=board.settings.forceOPMessage)
-			section.row
-				.label Force OP Subject
-				label.postform-style.ph-5
-					input(type='checkbox', name='force_op_subject', value='true' checked=board.settings.forceOPSubject)
-			section.row
-				.label Force OP File
-				label.postform-style.ph-5
-					input(type='checkbox', name='force_op_file', value='true' checked=board.settings.forceOPFile)
-			section.row
-				.label Anon Name
-				input(type='text' name='default_name' value=board.settings.defaultName)
-			section.row
-				.label Min Message Length
-				input(type='number' name='min_message_length' value=board.settings.minMessageLength)
-			section.row
-				.label Thread Limit
-				input(type='number' name='thread_limit' value=board.settings.threadLimit)
-			section.row
-				.label Reply Limit
-				input(type='number' name='reply_limit' value=board.settings.replyLimit)
-			section.row
-				.label Max Files
-				input(type='number' name='max_files' value=board.settings.maxFiles)
-			section.row
-				.label Announcement
-				textarea(name='announcement' placeholder='supports post styling') #{board.settings.announcement.raw}
 			section.row
 				.label Filters
 				textarea(name='filters' placeholder='newline separated') #{board.settings.filters.join('\n')}

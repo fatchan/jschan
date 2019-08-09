@@ -2,8 +2,10 @@
 
 const Mongo = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners']) //only these can be arrays, since express bodyparser will output arrays
-	, trimFields = ['uri', 'moderators', 'filters', 'announcement', 'description', 'message', 'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
-	, numberFields = ['filter_mode', 'captcha_mode', 'tph_trigger', 'tph_trigger_action', 'reply_limit', 'max_files', 'thread_limit', 'thread', 'min_message_length'] //convert these to numbers before they hit our routes
+	, trimFields = ['uri', 'moderators', 'filters', 'announcement', 'description', 'message',
+		'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
+	, numberFields = ['filter_mode', 'captcha_mode', 'tph_trigger', 'tph_trigger_action', 'reply_limit',
+		'max_files', 'thread_limit', 'thread', 'min_thread_message_length', 'min_reply_message_length'] //convert these to numbers before they hit our routes
 	, banDurationRegex = /^(?<year>[\d]+y)?(?<month>[\d]+m)?(?<week>[\d]+w)?(?<day>[\d]+d)?(?<hour>[\d]+h)?$/
 	, msTime = require(__dirname+'/mstime.js')
 
@@ -28,11 +30,7 @@ module.exports = (req, res, next) => {
 	for (let i = 0; i < trimFields.length; i++) {
 		const field = trimFields[i];
 		if (req.body[field]) {
-			/*
-				we only trimEnd() because:
-				- trailing whitespace doesnt matter, but leading can affect how a post appears
-				- if it is all whitespace, trimEnd will get it all anyway
-			*/
+			//trimEnd() because trailing whitespace doesnt affect how a post appear and if it is all whitespace, trimEnd will get it all anyway
 			req.body[field] = req.body[field].trimEnd();
 		}
 	}

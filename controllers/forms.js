@@ -264,28 +264,38 @@ router.post('/board/:board/post', Boards.exists, calcPerms, banCheck, postFiles,
 
 	const errors = [];
 
-	// even if force file and message are off, the psot must contain one of either.
+	// even if force file and message are off, the post must contain one of either.
 	if (!req.body.message && res.locals.numFiles === 0) {
-		errors.push('Must provide a message or file');
+		errors.push('Posts must include a message or file');
 	}
 
-	// ensure OP has file, subject and message acording to board settings
-	if (!req.body.thread && res.locals.board.settings.forceOPSubject && (!req.body.subject || req.body.subject.length === 0)) {
-		errors.push('Threads must include a subject');
+	// check file, subject and message enforcement according to board settings
+	if (!req.body.subject || req.body.subject.length === 0) {
+		if (!req.body.thread && res.locals.board.settings.forceThreadSubject) {
+			errors.push('Threads must include a subject');
+		} //no option to force op subject, seems useless
 	}
-	if (!req.body.thread && (res.locals.board.settings.forceOPFile && res.locals.board.settings.maxFiles !== 0) && res.locals.numFiles === 0) {
-		errors.push('Threads must include a file');
+	if (res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0) {
+		if (!req.body.thread && res.locals.board.settings.forceThreadFile) {
+			errors.push('Threads must include a file');
+		} else if (res.locals.board.settings.forceReplyFile) {
+			errors.push('Posts must include a file');
+		}
 	}
-	if (!req.body.thread && res.locals.board.settings.forceOPMessage && (!req.body.message || req.body.message.length === 0)) {
-		errors.push('Threads must include a message');
+	if (!req.body.message || req.body.message.length === 0) {
+		if (!req.body.thread && res.locals.board.settings.forceThreadMessage) {
+			errors.push('Threads must include a message');
+		} else if (res.locals.board.settings.forceReplyMessage) {
+			errors.push('Posts must include a message');
+		}
 	}
-
-	// make sure, min message length <= message length < max length (4k)
 	if (req.body.message) {
 		if (req.body.message.length > 4000) {
 			errors.push('Message must be 4000 characters or less');
-		} else if (req.body.message.length < res.locals.board.settings.minMessageLength) {
-			errors.push(`Message must be at least ${res.locals.board.settings.minMessageLength} characters long`);
+		} else if (!req.body.thread && req.body.message.length < res.locals.board.settings.minThreadMessageLength) {
+			errors.push(`Thread messages must be at least ${res.locals.board.settings.minMessageLength} characters long`);
+		} else if (req.body.thread && req.body.message.length < res.locals.board.settings.minReplyMessageLength) {
+			errors.push(`Reply messages must be at least ${res.locals.board.settings.minMessageLength} characters long`);
 		}
 	}
 
@@ -357,8 +367,11 @@ router.post('/board/:board/settings', csrf, Boards.exists, calcPerms, banCheck, 
 	if (typeof req.body.max_files === 'number' && (req.body.max_files < 0 || req.body.max_files > 3)) {
 		errors.push('Max files must be 0-3');
 	}
-	if (typeof req.body.min_message_length === 'number' && (req.body.min_message_length < 0 || req.body.min_message_length > 4000)) {
-		errors.push('Min message length must be 0-4000. 0 is disabled.');
+	if (typeof req.body.min_thread_message_length === 'number' && (req.body.min_thread_message_length < 0 || req.body.min_thread_message_length > 4000)) {
+		errors.push('Min thread message length must be 0-4000. 0 is disabled.');
+	}
+	if (typeof req.body.min_reply_message_length === 'number' && (req.body.min_reply_message_length < 0 || req.body.min_reply_message_length > 4000)) {
+		errors.push('Min reply message length must be 0-4000. 0 is disabled.');
 	}
 	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {
 		errors.push('Invalid captcha mode.');
@@ -487,10 +500,10 @@ async function boardActionController(req, res, next) {
 	}
 
 	//check if they have permission to perform the actions
+	if (res.locals.permLevel > res.locals.actions.authRequired) {
+		errors.push('No permission');
+	}
 	if (res.locals.permLevel >= 4) {
-		if (res.locals.permLevel > res.locals.actions.authRequired) {
-			errors.push('No permission');
-		}
 		if (req.body.delete && !res.locals.board.settings.userPostDelete) {
 			errors.push('Post deletion is disabled on this board');
 		}

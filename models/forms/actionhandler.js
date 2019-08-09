@@ -33,8 +33,7 @@ module.exports = async (req, res, next) => {
 			const inputPasswordHash = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
 			const inputPasswordBuffer = Buffer.from(inputPasswordHash);
 			passwordPosts = res.locals.posts.filter(post => {
-				//length comparison could reveal the length, but not contents, and is better than comparing and hashing for empty password (most posts)
-				if (post.password != null && post.password.length === req.body.password) {
+				if (post.password != null) {
 					const postBuffer = Buffer.from(post.password);
 					if (timingSafeEqual(inputBuffer, postBuffer) === true) {
 						passwordPostMongoIds.push(Mongo.ObjectId(post._id));
