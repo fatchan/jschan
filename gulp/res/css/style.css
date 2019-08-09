@@ -88,9 +88,9 @@ pre {
 }
 
 .code, .mono {
-    background: var(--transparent-darken);
-    padding: 2px;
-    font-family: monospace;
+		background: var(--transparent-darken);
+		padding: 2px;
+		font-family: monospace;
 }
 .text-center {
 	text-align: center;
@@ -240,6 +240,17 @@ p {
 	border-color: var(--report-outline-color)!important;
 	border-width: 1px 0;
 	border-style: solid none;
+}
+
+.dice::before {
+	background-image: url(/img/dice.svg);
+	background-repeat: no-repeat;
+	background-size: contain;
+	content: "      ";
+}
+
+.dice {
+	color: red;
 }
 
 .title, .required {

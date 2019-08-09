@@ -1,17 +1,18 @@
 'use strict';
 
-const greentextRegex = /^>([^>].+)/gm
-	, pinktextRegex = /^<([^<].+)/gm
-	, boldRegex = /""(.+?)""/gm
-	, titleRegex = /==(.+?)==/gm
-	, monoRegex = /`(.+?)`/gm
+const greentextRegex = /^&gt;((?!&gt;).+)/gm
+	, pinktextRegex = /^&lt;(.+)/gm
+	, boldRegex = /&#39;&#39;(.+?)&#39;&#39;/gm
+	, titleRegex = /&#x3D;&#x3D;(.+?)&#x3D;&#x3D;/gm
+	, monoRegex = /&#x60;(.+?)&#x60;/gm
 	, underlineRegex = /__(.+?)__/gm
 	, strikethroughRegex = /~~(.+?)~~/gm
 	, italicRegex = /\*\*(.+?)\*\*/gm
 	, spoilerRegex = /\|\|(.+?)\|\|/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
-	, linkRegex = /https?\:\/\/[^\s<>\[\]{}|\\^]+/g
-	, codeRegex = /```([\s\S]+?)```/gm;
+	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
+	, codeRegex = /&#x60;&#x60;&#x60;([\s\S]+?)&#x60;&#x60;&#x60;/gm
+	, diceRegex = /##(?<numdice>\d+)d(?<numsides>\d+)(?:(?<operator>[+-])(?<modifier>\d+))?/gmi
 
 module.exports = (text) => {
 
@@ -75,6 +76,39 @@ module.exports = (text) => {
         return `<span class='detected'>${detected}</span>`;
     });
 
+	//detected
+	text = text.replace(diceRegex, (match, numdice, numsides, operator, modifier) => {
+		numdice = parseInt(numdice);
+		if (numdice > 100) {
+			numdice = 100;
+		} else if (numdice <= 0) {
+			numdice =1;
+		}
+		numsides = parseInt(numsides);
+		if (numsides > 100) {
+			numsides = 100;
+		} else if (numsides <= 0) {
+			numsides = 1;
+		}
+		let sum = 0;
+		for (let i = 0; i < numdice; i++) {
+			const roll = Math.floor(Math.random() * numsides)+1;
+			sum += roll;
+		}
+		if (modifier && operator) {
+			modifier = parseInt(modifier);
+			//do i need to make sure it doesnt go negative or maybe give absolute value?
+			if (operator === '+') {
+				sum += modifier;
+			} else {
+				sum -= modifier;
+			}
+		}
+		return `\n<span class='dice'>(${match}) Rolled ${numdice} dice with ${numsides} sides${modifier ? ' and modifier '+operator+modifier : '' } = ${sum}</span>\n`
+    });
+
+
 	return text;
 
 }
+

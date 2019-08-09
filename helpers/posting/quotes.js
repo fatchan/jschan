@@ -2,8 +2,8 @@
 
 const Posts = require(__dirname+'/../../db/posts.js')
 	, Boards = require(__dirname+'/../../db/boards.js')
-	, quoteRegex = />>\d+/g
-	, crossQuoteRegex = />>>\/\w+(?:\/\d*)?/gm;
+	, quoteRegex = /&gt;&gt;(?<quotenum>\d+)/g
+	, crossQuoteRegex = /&gt;&gt;&gt;&#x2F;(?<board>\w+)(?:&#x2F;(?<quotenum>\d*))?/gm;
 
 module.exports = async (board, text, thread) => {
 
@@ -19,7 +19,7 @@ module.exports = async (board, text, thread) => {
 	const boardQueryIns = []
 	const crossQuoteMap = {};
 	if (quotes) {
-		const quoteIds = [...new Set(quotes.map(q => +q.substring(2)))]; //only uniques
+		const quoteIds = [...new Set(quotes.map(q => { return Number(q.substring(8)) }))];
 		postQueryOrs.push({
 			'board': board,
 			'postId': {
@@ -30,7 +30,7 @@ module.exports = async (board, text, thread) => {
 
 	if (crossQuotes) {
 		for (let i = 0; i < crossQuotes.length; i++) {
-			const crossQuote = crossQuotes[i].split('/');
+			const crossQuote = crossQuotes[i].split('&#x2F;');
 			const crossQuoteBoard = crossQuote[1];
 			const crossQuotePostId = +crossQuote[2];
 			if (crossQuoteBoard === board) {
@@ -91,8 +91,7 @@ module.exports = async (board, text, thread) => {
 	//then replace the quotes with only ones that exist
 	const threadQuotes = new Set();
 	if (quotes && Object.keys(postThreadIdMap).length > 0) {
-		text = text.replace(quoteRegex, (match) => {
-			const quotenum = +match.substring(2);
+		text = text.replace(quoteRegex, (match, quotenum) => {
 			if (postThreadIdMap[board] && postThreadIdMap[board][quotenum]) {
 				if (!threadQuotes.has(postThreadIdMap[board][quotenum]) && postThreadIdMap[board][quotenum].thread === thread) {
 					threadQuotes.add(postThreadIdMap[board][quotenum]);
@@ -103,10 +102,7 @@ module.exports = async (board, text, thread) => {
 		});
 	}
 	if (crossQuotes) {
-		text = text.replace(crossQuoteRegex, (match) => {
-			const quote = match.split('/');
-			const quoteboard = quote[1];
-			const quotenum = +quote[2];
+		text = text.replace(crossQuoteRegex, (match, quoteboard, quotenum) => {
 			if (postThreadIdMap[quoteboard]) {
 				if (!isNaN(quotenum) && quotenum > 0 && postThreadIdMap[quoteboard][quotenum]) {
 					return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum].thread}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;

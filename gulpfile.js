@@ -66,10 +66,10 @@ async function wipe() {
 				'maxFiles': 0,
 				'forceReplyMessage':false,
 				'forceReplyFile':false,
-				'forceThreadMessage'false,
+				'forceThreadMessage':false,
 				'forceThreadFile':false,
-				'forceThreadSubject'false,
-				'minThreadMessageLength':0',
+				'forceThreadSubject':false,
+				'minThreadMessageLength':0,
 				'minReplyMessageLength':0,
 				'defaultName': 'Anonymous',
 				'announcement': {

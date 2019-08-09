@@ -9,14 +9,9 @@ const Boards = require(__dirname+'/../../db/boards.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
-	, sanitize = require('sanitize-html')
-	, sanitizeOptions = {
-		allowedTags: [ 'span', 'a', 'em', 'strong', 'small' ],
-		allowedAttributes: {
-			'a': [ 'href', 'class', 'referrerpolicy', 'target' ],
-			'span': [ 'class' ]
-		}
-	};
+	, escape = require(__dirname+'/../../helpers/posting/escape.js')
+	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
+	, sanitize = require('sanitize-html');
 
 module.exports = async (req, res, next) => {
 
@@ -25,9 +20,10 @@ module.exports = async (req, res, next) => {
 	let markdownAnnouncement;
 	if (req.body.announcement !== oldSettings.announcement.raw) {
 		//remarkup the announcement if it changes
-		const styled = simpleMarkdown(req.body.announcement);
+		const escaped = escape(req.body.announcement);
+		const styled = simpleMarkdown(escaped);
 		const quoted = (await linkQuotes(req.params.board, styled, null)).quotedMessage;
-		const sanitized = sanitize(quoted, sanitizeOptions);
+		const sanitized = sanitize(quoted, sanitizeOptions.after);
 		markdownAnnouncement = sanitized;
 	}
 
