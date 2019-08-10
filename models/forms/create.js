@@ -29,6 +29,7 @@ module.exports = async (req, res, next) => {
 		'owner': req.session.user.username,
 		'banners': [],
 		'sequence_value': 1,
+		'pph': 0,
 		'settings': {
 			name,
 			description,

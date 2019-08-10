@@ -12,23 +12,31 @@ const Mongo = require(__dirname+'/../db/db.js')
 module.exports = {
 
 	buildBanners: async(board) => {
-		await render(`${board._id}/banners.html`, 'banners.pug', {
+		const label = `${board._id}/banners.html`;
+		console.time(label);
+		await render(label, 'banners.pug', {
 			board: board,
 		});
+		console.timeEnd(label);
 	},
 
 	buildCatalog: async (board) => {
+		const label = `${board._id || board}/catalog.html`;
+		console.time(label);
 		if (!board._id) {
 			board = await Boards.findOne(board);
 		}
 		const threads = await Posts.getCatalog(board._id);
-		await render(`${board._id}/catalog.html`, 'catalog.pug', {
+		await render(label, 'catalog.pug', {
 			board,
 			threads,
 		});
+		console.timeEnd(label);
 	},
 
 	buildThread: async (threadId, board) => {
+		const label = `${board._id || board}/thread/${threadId}.html`;
+		console.time(label);
 		if (!board._id) {
 			board = await Boards.findOne(board);
 		}
@@ -36,28 +44,34 @@ module.exports = {
 		if (!thread) {
 			return; //this thread may have been an OP that was deleted
 		}
-		await render(`${board._id}/thread/${threadId}.html`, 'thread.pug', {
+		await render(label, 'thread.pug', {
 			board,
 			thread,
 		});
+		console.timeEnd(label);
 	},
 
 	buildBoard: async (board, page, maxPage=null) => {
+		const label = `${board._id}/${page === 1 ? 'index' : page}.html`;
+		console.time(label);
 		const threads = await Posts.getRecent(board._id, page);
 		if (maxPage == null) {
 			maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
 		}
 
-		await render(`${board._id}/${page === 1 ? 'index' : page}.html`, 'board.pug', {
+		await render(label, 'board.pug', {
 			board,
 			threads,
 			maxPage,
 			page,
 		});
+		console.timeEnd(label);
 	},
 
 	//building multiple pages (for rebuilds)
 	buildBoardMultiple: async (board, startpage=1, endpage) => {
+		const label = 'multiple';
+		console.time(label);
 		const maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
 		if (endpage === 0) {
 			//deleted only/all posts, so only 1 page will remain
@@ -68,6 +82,7 @@ module.exports = {
 		}
 		const difference = endpage-startpage + 1; //+1 because for single pagemust be > 0
 		const threads = await Posts.getRecent(board._id, startpage, difference*10);
+		console.timeLog(label, `${board._id}/${startpage === 1 ? 'index' : startpage}.html => ${board._id}/${endpage === 1 ? 'index' : endpage}.html`)
 		const buildArray = [];
 		for (let i = startpage; i <= endpage; i++) {
 			let spliceStart = (i-1)*10;
@@ -84,19 +99,18 @@ module.exports = {
 			);
 		}
 		await Promise.all(buildArray);
+		console.timeEnd(label);
 	},
 
 	buildHomepage: async () => {
-		//getting boards
-		const boards = await Boards.find();
-		//geting PPH for each board
-		const pastHour = Math.floor((Date.now() - msTime.hour)/1000);
-		const pastHourObjectId = Mongo.ObjectId.createFromTime(pastHour);
-		const pph = await Posts.db.aggregate([
+		const label = '/index.html';
+		console.time(label);
+		const pastDay = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.day)/1000));
+		const datas = await Posts.db.aggregate([
 			{
 				'$match': {
 					'_id': {
-						'$gt': pastHourObjectId
+						'$gt': pastDay
 					}
 				}
 			},
@@ -104,26 +118,77 @@ module.exports = {
 				'$group': {
 					'_id': '$board',
 					'pph': { '$sum': 1 },
+					'ips': { '$addToSet': '$ip' }
 				}
 			},
-		]).toArray().then(res => {
-			return res.reduce((acc, item) => {
-				acc[item._id] = item.pph;
-				return acc;
-			}, {});
-		});
-		for (let i = 0; i < boards.length; i++) {
-			const board = boards[i];
-			board.pph = pph[board._id] || 0;
+			{
+				'$project': {
+					'_id': 1,
+					'pph': {
+						'$floor': { //simple way, 24h average floored
+							'$divide': ['$pph', 24]
+						}
+					},
+					'ips': {
+						'$size': '$ips'
+					}
+				}
+			},
+		]).toArray();
+		const bulkWrites = [];
+		const updatedBoards = [];
+		for (let i = 0; i < datas.length; i++) {
+			const data = datas[i];
+			updatedBoards.push(data._id);
+			//boards with pph get pph set
+			bulkWrites.push({
+				'updateOne': {
+					'filter': {
+						'_id': data._id
+					},
+					'update': {
+						'$set': {
+							'pph': data.pph,
+							'ips': data.ips
+						}
+					}
+				}
+			})
 		}
-		//getting file stats
+		//boards with no pph get set to 0
+		bulkWrites.push({
+			'updateMany': {
+				'filter': {
+					'_id': {
+						'$nin': updatedBoards
+					}
+				},
+				'update': {
+					'$set': {
+						'pph': 0,
+						'ips': 0
+					}
+				}
+			}
+		});
+		await Boards.db.bulkWrite(bulkWrites);
+		//getting boards now that pph is set
+		const boards = await Boards.db.find({}).sort({
+			'ips': -1,
+			'pph': -1,
+			'sequence_value': -1,
+		}).limit(20).toArray(); //limit 20 homepage
+		//might move filestats to an $out or $merge in schedules file
 		const fileStats = await Files.db.aggregate([
 			{
 				'$group': {
 					'_id': null,
-					//could add other interesting mongo aggregate stuff here like averages
-					'count': { '$sum': 1 },
-					'size': { '$sum': '$size' }
+					'count': {
+						'$sum': 1
+					},
+					'size': {
+						'$sum': '$size'
+					}
 				}
 			}
 		]).toArray().then(res => {
@@ -138,6 +203,7 @@ module.exports = {
 			boards,
 			fileStats,
 		});
+		console.timeEnd(label);
 	},
 
 	buildChangePassword: () => {

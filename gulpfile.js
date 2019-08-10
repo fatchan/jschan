@@ -48,6 +48,7 @@ async function wipe() {
 			'owner': '',
 			'banners': [],
 			'sequence_value': 1,
+			'pph': 0,
 			'settings': {
 				'name': 'test',
 				'description': 'testing board',
@@ -81,6 +82,7 @@ async function wipe() {
 			}
 		})
 		//add indexes - should profiled and changed at some point if necessary
+		, Boards.db.createIndex({ips: 1, pph:1, sequence_value:1})
 		, Bans.db.dropIndexes()
 		, Captchas.captcha.dropIndexes()
 		, Captchas.ratelimit.dropIndexes()

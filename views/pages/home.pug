@@ -23,16 +23,16 @@ block content
 		table
 			tr
 				th Board
-				th Title
 				th Description
-				th Posts/h
+				th(title='Average posts per hour over the past 24, rounded down') Posts/h
+				th(title='Unique IPs that have posted in the past 24h') Active Users
 				th Total Posts
 			each board in boards
 				tr
-					td: a(href=`/${board._id}/`) /#{board._id}/
-					td #{board.settings.name}
+					td: a(href=`/${board._id}/`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}
+					td #{board.ips}
 					td #{board.sequence_value-1}
 	.table-container.flex-center.mv-10.text-center
 		table
