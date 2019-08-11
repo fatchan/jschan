@@ -1,4 +1,7 @@
-- const isThread = thread != null
+- const isThread = thread != null;
+- const subjectRequired = (!isThread && board.settings.forceThreadSubject);
+- const messageRequired = (!isThread && board.settings.forceThreadMessage) || (isThread && board.settings.forceReplyMessage);
+- const fileRequired = (!isThread && board.settings.forceThreadFile) || (isThread && board.settings.forceReplyFile);
 section.form-wrapper.flex-center
 	form.form-post#postform(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
@@ -9,9 +12,9 @@ section.form-wrapper.flex-center
 				a.close.postform-style(href='#!') X
 			section.row
 				.label Subject
-					if !isThread && board.settings.forceOPSubject
+					if subjectRequired
 						.required *
-				input(type='text', name='subject', autocomplete='off' maxlength='50' required=!isThread && board.settings.forceOPSubject)
+				input(type='text', name='subject', autocomplete='off' maxlength='50' required=subjectRequired)
 			section.row
 				.label Email
 				input(type='text', name='email', autocomplete='off' maxlength='50')
@@ -22,23 +25,22 @@ section.form-wrapper.flex-center
 					input(type='checkbox', name='email', value='sage')
 					| Sage
 				a.close.postform-style(href='#!') X
-			if !isThread
-				section.row
-					.label Subject
-						if board.settings.forceOPSubject
-							.required *
-					input(type='text', name='subject', autocomplete='off' maxlength='50' required=board.settings.forceOPSubject)
+			section.row
+				.label Subject
+					if subjectRequired
+						.required *
+					input(type='text', name='subject', autocomplete='off' maxlength='50' required=subjectRequired)
 		section.row
 			.label Message
-				if !isThread && board.settings.forceOPMessage
+				if messageRequired
 					.required *
-			textarea(name='message', rows='5', autocomplete='off' maxlength='4000' required=!isThread && board.settings.forceOPMessage)
+			textarea(name='message', rows='5', autocomplete='off' maxlength='4000' required=messageRequired)
 		if board.settings.maxFiles > 0
 			section.row
 				.label Files
-					if !isThread && board.settings.forceOPFile
+					if fileRequired
 						.required *
-				input(type='file', name='file' multiple required=!isThread && board.settings.forceOPFile)
+				input(type='file', name='file' multiple required=fileRequired)
 				if board.settings.userPostSpoiler
 					label.postform-style.ph-5.ml-1
 						input(type='checkbox', name='spoiler', value='true')

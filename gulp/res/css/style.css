@@ -1,3 +1,4 @@
+/*
 :root {
 	--background-top: #d6daf0;
 	--background-rest: #eef2ff;
@@ -22,8 +23,37 @@
 	--input-borders: #a9a9a9;
 	--input-color: #000;
 	--input-background: white;
+	--dice-color: darkorange;
+	--title-color: #d70000;
 }
-
+*/
+:root {
+--background-top: #1d1f21;
+--background-rest: #1d1f21;
+--post-color: #282a2e;
+--post-outline-color: #282a2e;
+--label-color: #282a2e;
+--box-border-color: #111;
+--transparent-darken: #00000010;
+--highlighted-post-color: #1d1d21;
+--highlighted-post-outline-color: #111;
+--report-color: #fca;
+--report-outline-color: #c97;
+--board-title: #c5c8c6;
+--hr: #282a2e;
+--font-color: #c5c8c6;
+--name-color: #c5c8c6;
+--capcode-color: #f00;
+--subject-color: #b294bb;
+--link-color: #5f89ac;
+--post-link-color: #5f89ac;
+--link-hover: #81a2be;
+--input-borders: #111;
+--input-color: #c5c8c6;
+--input-background: #282a2e;
+--dice-color: darkorange;
+--title-color: #d70000;
+}
 html {
 	scroll-behavior: smooth;
 }
@@ -38,6 +68,10 @@ body {
 	flex-direction: column;
 	min-height: 100vh;
 	margin: 0;
+}
+
+main {
+	margin: 38px 0 0 0;
 }
 
 .row {
@@ -67,6 +101,15 @@ pre {
 	margin: 1em 2em;
 	white-space: pre-wrap;
 	overflow-wrap: break-word;
+}
+
+.navbar {
+	background: var(--post-color);
+	border-bottom: 1px solid var(--box-border-color);
+	position: fixed;
+	width: 100%;
+	z-index: 1;
+	top: 0;
 }
 
 .replies {
@@ -213,14 +256,6 @@ p {
 	background: black!important; /*for detected coloring*/
 }
 
-.mode {
-	margin-top: 1px;
-	background-color: red;
-	color: white;
-	font-weight: bold;
-	text-align: center;
-}
-
 .banmessage {
 	color: red;
 	font-weight: bold;
@@ -246,16 +281,23 @@ p {
 	background-image: url(/img/dice.svg);
 	background-repeat: no-repeat;
 	background-size: contain;
-	content: "      ";
+	content: "    ";
 }
 
 .dice {
-	color: red;
+	color: var(--dice-color);
 }
 
 .title, .required {
-	color: maroon;
 	font-weight: bold;
+}
+
+.required {
+	color: maroon;
+}
+
+.title {
+	color: var(--title-color);
 }
 
 #bottom {
@@ -282,10 +324,6 @@ a .post-name:hover, a:hover {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-}
-
-.thread .anchor:first-child {
-	margin-top: -10px;
 }
 
 table {
@@ -317,7 +355,6 @@ td, th {
 	right: 5px;
 	position: fixed;
 	z-index: 1;
-	padding: 5px;
 }
 
 .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile {
@@ -510,8 +547,8 @@ textarea {
 }
 
 .anchor {
-	height: 10px;
-	margin-top: -5px;
+	height: 50px;
+	margin-top: -45px;
 }
 
 .post-container.op {
