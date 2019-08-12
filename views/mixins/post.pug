@@ -10,18 +10,7 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 					input.post-check(type='checkbox', name='checkedposts[]' value=post.postId)
 				|	
 				if !post.thread
-					if post.sticky 
-						img(src='/img/sticky.svg' height='12' title='Sticky')
-						| 
-					if post.saged 
-						img(src='/img/saged.svg' height='12' title='Bumplocked')
-						| 
-					if post.locked 
-						img(src='/img/locked.svg' height='12' title='Locked')
-						| 
-					if post.cyclic 
-						img(src='/img/cyclic.svg' height='13' title='Cyclic')
-						| 
+					include ../includes/postmods.pug
 				if post.subject
 					span.post-subject #{post.subject}
 					| 
@@ -65,11 +54,9 @@ mixin post(post, truncate, manage=false, globalmanage=false)
 									if post.spoiler
 										img.file-thumb(src='/img/spoiler.png' width='128' height='128')
 									else if file.hasThumb
-										object.file-thumb(data=`/img/thumb-${file.filename.split('.')[0]}.jpg`)
-											img(src='/img/deleted.png')
+										img.file-thumb(src=`/img/thumb-${file.filename.split('.')[0]}.jpg` height=file.geometry.thumbheight width=file.geometry.thumbwidth)
 									else
-										object.file-thumb(data=`/img/${file.filename}`)
-											img(src='/img/deleted.png')
+										img.file-thumb(src=`/img/${file.filename}` height=file.geometry.height width=file.geometry.width)
 			if post.message
 				if truncate
 					-
