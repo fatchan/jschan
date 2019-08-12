@@ -5,9 +5,6 @@ const express  = require('express')
 	, { enableUserBoards } = require(__dirname+'/../configs/main.json')
 	, Boards = require(__dirname+'/../db/boards.js')
 	, Posts = require(__dirname+'/../db/posts.js')
-	, Bans = require(__dirname+'/../db/bans.js')
-	, Mongo = require(__dirname+'/../db/db.js')
-	, { remove } = require('fs-extra')
 	, upload = require('express-fileupload')
 	, path = require('path')
 	, alphaNumericRegex = /^[a-zA-Z0-9]+$/
@@ -37,10 +34,10 @@ const express  = require('express')
 	})
 	, removeBans = require(__dirname+'/../models/forms/removebans.js')
 	, makePost = require(__dirname+'/../models/forms/makepost.js')
-	, deletePosts = require(__dirname+'/../models/forms/deletepost.js')
 	, deleteTempFiles = require(__dirname+'/../helpers/files/deletetempfiles.js')
 	, uploadBanners = require(__dirname+'/../models/forms/uploadbanners.js')
 	, deleteBanners = require(__dirname+'/../models/forms/deletebanners.js')
+	, deleteBoard = require(__dirname+'/../models/forms/deleteboard.js')
 	, loginAccount = require(__dirname+'/../models/forms/login.js')
 	, changePassword = require(__dirname+'/../models/forms/changepassword.js')
 	, changeBoardSettings = require(__dirname+'/../models/forms/changeboardsettings.js')
@@ -610,7 +607,9 @@ async function globalActionController(req, res, next) {
 }
 
 //unban
-router.post('/board/:board/unban', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, async (req, res, next) => {
+router.post('/global/unban', csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, removeBansController);
+router.post('/board/:board/unban', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, removeBansController);
+async function removeBansController(req, res, next) {
 
 	//keep this for later in case i add other options to unbans
 	const errors = [];
@@ -619,59 +618,67 @@ router.post('/board/:board/unban', csrf, Boards.exists, calcPerms, banCheck, isL
 		errors.push('Must select 1-10 bans')
 	}
 
+	const redirect = req.params.board ? `/${req.params.board}/manage.html` : '/globalmanage.html';
+
 	if (errors.length > 0) {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage.html`
+			redirect
 		});
 	}
 
-	const messages = [];
+	let amount = 0;
 	try {
-		messages.push((await removeBans(req, res, next)));
+		amount = await removeBans(req, res, next);
 	} catch (err) {
 		return next(err);
 	}
 
 	return res.render('message', {
 		'title': 'Success',
-		'messages': messages,
-		'redirect': `/${req.params.board}/manage.html`
+		'message': `Removed ${amount} bans`,
+		redirect
 	});
 
-});
+}
 
 //delete board
-router.post('/board/:board/deleteboard', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), async (req, res, next) => {
+router.post('/board/:board/deleteboard', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController);
+router.post('/global/deleteboard', csrf, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController);
+async function deleteBoardController(req, res, next) {
 
 	const errors = [];
 
 	if (!req.body.confirm) {
 		errors.push('Missing confirmation');
 	}
-	if (!req.body.uri || req.body.uri !== req.params.board) {
-		errors.push('URI does not match')
+	if (!req.body.uri) {
+		errors.push('Missing URI');
+	}
+	if (alphaNumericRegex.test(req.body.uri) !== true) {
+		errors.push('URI must contain a-z 0-9 only');
+	} else {
+		//no need to check these if the board name is completely invalid
+		if (req.params.board != null && req.params.board !== req.body.uri) {
+			//board manage page to not be able to delete other boards;
+			errors.push('URI does not match current board');
+		} else if (!(await Boards.findOne(req.body.uri))) {
+			//global must chech exist because it skips Boards.exists middleware
+			errors.push(`Board /${req.body.uri}/ does not exist`);
+		}
 	}
 
 	if (errors.length > 0) {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage.html`
+			'redirect': req.params.board ? `/${req.params.board}/manage.html` : '/globalmanage.html'
 		});
 	}
 
 	try {
-//todo: move this to separate model file
-		// could be slow, might also wanna use projection to just get the files and other info necessary for deleteposts model
-		await Boards.deleteOne(res.locals.board._id);
-		const allPosts = await Posts.allBoardPosts(res.locals.board._id);
-		if (allPosts.length > 0) {
-			await deletePosts(allPosts, res.locals.board._id, true);
-		}
-		await Bans.deleteBoard(res.locals.board._id);
-		await remove(`${uploadDirectory}html/${req.params.board}/`)
+		await deleteBoard(req.body.uri);
 	} catch (err) {
 		return next(err);
 	}
@@ -679,41 +686,10 @@ router.post('/board/:board/deleteboard', csrf, Boards.exists, calcPerms, banChec
 	return res.render('message', {
 		'title': 'Success',
 		'message': 'Board deleted',
-		'redirect': '/'
+		'redirect': req.params.board ? '/' : '/globalmanage.html'
 	});
 
-});
-
-router.post('/global/unban', csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, async(req, res, next) => {
-
-	const errors = [];
-
-	if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
-		errors.push('Must select 1-10 bans')
-	}
-
-	if (errors.length > 0) {
-		return res.status(400).render('message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': `/globalmanage.html`
-		});
-	}
-
-	const messages = [];
-	try {
-		messages.push((await removeBans(req, res, next)));
-	} catch (err) {
-		return next(err);
-	}
-
-	return res.render('message', {
-		'title': 'Success',
-		'messages': messages,
-		'redirect': `/globalmanage.html`
-	});
-
-});
+}
 
 router.post('/newcaptcha', async(req, res, next) => {
 

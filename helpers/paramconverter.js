@@ -1,6 +1,6 @@
 'use strict';
 
-const Mongo = require(__dirname+'/../db/db.js')
+const { ObjectId } = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners']) //only these can be arrays, since express bodyparser will output arrays
 	, trimFields = ['uri', 'moderators', 'filters', 'announcement', 'description', 'message',
 		'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
@@ -47,12 +47,17 @@ module.exports = (req, res, next) => {
 		}
 	}
 
-	//convert checked post ids to mongoid/number
+	//convert checked reports to number
 	if (req.body.checkedposts) {
 		req.body.checkedposts = req.body.checkedposts.map(Number);
 	}
+	//convert checked global reports to mongoid
 	if (req.body.globalcheckedposts) {
-		req.body.globalcheckedposts = req.body.globalcheckedposts.map(Mongo.ObjectId)
+		req.body.globalcheckedposts = req.body.globalcheckedposts.map(ObjectId)
+	}
+	//convert checked bans to mongoid
+	if (req.body.checkedbans) {
+		req.body.checkedbans = req.body.checkedbans.map(ObjectId)
 	}
 
 	//ban duration convert to ban time in ms

@@ -1,13 +1,9 @@
 'use strict';
 
-const Bans = require(__dirname+'/../../db/bans.js')
-	, { ObjectId } = require('mongodb');
+const Bans = require(__dirname+'/../../db/bans.js');
 
 module.exports = async (req, res, next) => {
 
-	const banIds = req.body.checkedbans.map(ObjectId);
-	const removedBans = await Bans.removeMany(req.params.board, banIds).then(result => result.deletedCount);
-
-	return `Removed ${removedBans} bans`;
+	return Bans.removeMany(req.params.board, banIds).then(result => result.deletedCount);
 
 }

@@ -7,7 +7,20 @@ block head
 
 block content
 	h1.board-title Global Management
-	h4.no-m-p Reports:
+	hr(size=1)
+	h4.no-m-p Delete board:
+	section.form-wrapper.flexleft.mv-10
+		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			section.row
+				.label I'm sure
+				label.postform-style.ph-5
+					input(type='checkbox', name='confirm', value='true' required)
+			section.row
+				.label Board URI
+				input(type='text' name='uri' required)
+			input(type='submit', value='submit')
+	h4.no-m-p Global Reports:
 	.mv-10
 		form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
@@ -21,7 +34,7 @@ block content
 					hr(size=1)
 				include ../includes/actionfooter_globalmanage.pug
 				hr(size=1)
-	h4.no-m-p Bans:
+	h4.no-m-p Global Bans:
 	form(action=`/forms/global/unban` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if bans.length === 0
