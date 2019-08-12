@@ -198,6 +198,17 @@ module.exports = async (req, res, next) => {
 					throw new Error(`invalid file mime type: ${mainType}`); //throw so goes to error handler before next'ing
 			}
 
+			if (processedFile.hasThumb === true) {
+				const ratio = processedFile.geometry.width/processedFile.geometry.height;
+				if (ratio >= 1) {
+					processedFile.geometry.thumbwidth = 128;
+					processedFile.geometry.thumbheight = Math.ceil(128/ratio);
+				} else {
+					processedFile.geometry.thumbwidth = Math.ceil(128*ratio);
+					processedFile.geometry.thumbheight = 128;
+				}
+			}
+
 			//delete the temp file
 			await remove(file.tempFilePath);
 
