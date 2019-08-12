@@ -31,7 +31,7 @@
 --background-top: #1d1f21;
 --background-rest: #1d1f21;
 --post-color: #282a2e;
---post-outline-color: #282a2e;
+--post-outline-color: #111;
 --label-color: #282a2e;
 --box-border-color: #111;
 --transparent-darken: #00000010;
@@ -277,13 +277,6 @@ p {
 	border-style: solid none;
 }
 
-.dice::before {
-	background-image: url(/img/dice.svg);
-	background-repeat: no-repeat;
-	background-size: contain;
-	content: "    ";
-}
-
 .dice {
 	color: var(--dice-color);
 }
@@ -317,7 +310,7 @@ p {
 }
 
 a .post-name:hover, a:hover {
-	color: var(--link-hover);
+	color: var(--link-hover)!important;
 }
 
 .thread, .action-wrapper, .form-wrapper, .table-container {
@@ -359,7 +352,7 @@ td, th {
 
 .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile {
 	background: var(--post-color);
-	border-width: 0 1px 1px 0;
+	border-width: 1px;/*0 1px 1px 0;*/
 	border-style: solid;
 	border-color: var(--post-outline-color);
 }
@@ -484,6 +477,7 @@ a, input, summary {
 }
 
 .file-thumb {
+	object-fit: contain;
 	max-width: 128px;
 	max-height: 128px;
 }
@@ -558,7 +552,7 @@ textarea {
 }
 
 .post-subject {
-	color: var(--subject-color);
+	color: var(--subject-color)!important;
 	font-weight: bold;
 }
 
