@@ -37,6 +37,7 @@ async function deleteCaptchas() {
 
 	console.log('Starting schedules');
 
+await buildHomepage();
 	setInterval(async () => {
 		try {
 			await buildHomepage();

@@ -105,40 +105,60 @@ module.exports = {
 	buildHomepage: async () => {
 		const label = '/index.html';
 		console.time(label);
-		const pastDay = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.day)/1000));
-		const datas = await Posts.db.aggregate([
-			{
-				'$match': {
-					'_id': {
-						'$gt': pastDay
-					}
-				}
-			},
-			{
-				'$group': {
-					'_id': '$board',
-					'pph': { '$sum': 1 },
-					'ips': { '$addToSet': '$ip' }
-				}
-			},
-			{
-				'$project': {
-					'_id': 1,
-					'pph': {
-						'$floor': { //simple way, 24h average floored
-							'$divide': ['$pph', 24]
+		const [ activeUsers, postsPerHour ] = await Promise.all([
+			Posts.db.aggregate([
+				{
+					'$match': {
+						'_id': {
+							'$gt': Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.day*3)/1000))
 						}
-					},
-					'ips': {
-						'$size': '$ips'
+					}
+				},
+				{
+					'$group': {
+						'_id': '$board',
+						'ips': {
+							'$addToSet': '$ip'
+						}
+					}
+				},
+				{
+					'$project': {
+						'ips': {
+							'$size': '$ips'
+						}
 					}
 				}
-			},
-		]).toArray();
+			]).toArray(),
+			Posts.db.aggregate([
+				{
+					'$match': {
+						'_id': {
+							'$gt': Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000))
+						}
+					}
+				},
+				{
+					'$group': {
+						'_id': '$board',
+						'pph': {
+							'$sum': 1
+						}
+					}
+				}
+			]).toArray()
+		]);
+		for (let i = 0; i < activeUsers.length; i++) {
+			const userboard = activeUsers[i];
+			const pphboard = postsPerHour.find(b => b._id === userboard._id);
+			if (pphboard != null) {
+				userboard.pph = pphboard.pph;
+			}
+		}
 		const bulkWrites = [];
 		const updatedBoards = [];
-		for (let i = 0; i < datas.length; i++) {
-			const data = datas[i];
+		for (let i = 0; i < activeUsers.length; i++) {
+			const data = activeUsers[i];
 			updatedBoards.push(data._id);
 			//boards with pph get pph set
 			bulkWrites.push({
@@ -148,7 +168,7 @@ module.exports = {
 					},
 					'update': {
 						'$set': {
-							'pph': data.pph,
+							'pph': data.pph != null ? data.pph : 0,
 							'ips': data.ips
 						}
 					}
