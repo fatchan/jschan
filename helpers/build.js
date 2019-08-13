@@ -5,6 +5,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, Posts = require(__dirname+'/../db/posts.js')
 	, Files = require(__dirname+'/../db/files.js')
 	, Boards = require(__dirname+'/../db/boards.js')
+	, News = require(__dirname+'/../db/news.js')
 	, formatSize = require(__dirname+'/files/formatsize.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, render = require(__dirname+'/render.js');
@@ -99,6 +100,16 @@ module.exports = {
 			);
 		}
 		await Promise.all(buildArray);
+		console.timeEnd(label);
+	},
+
+	buildNews: async () => {
+		const label = '/news.html';
+		console.time(label);
+		const news = await News.find();
+		await render('news.html', 'news.pug', {
+			news
+		});
 		console.timeEnd(label);
 	},
 

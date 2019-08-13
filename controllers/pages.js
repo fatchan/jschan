@@ -21,6 +21,7 @@ const express  = require('express')
 	, catalog = require(__dirname+'/../models/pages/catalog.js')
 	, banners = require(__dirname+'/../models/pages/banners.js')
 	, randombanner = require(__dirname+'/../models/pages/randombanner.js')
+	, news = require(__dirname+'/../models/pages/news.js')
 	, captchaPage = require(__dirname+'/../models/pages/captchapage.js')
 	, captcha = require(__dirname+'/../models/pages/captcha.js')
 	, thread = require(__dirname+'/../models/pages/thread.js');
@@ -51,6 +52,9 @@ router.get('/create.html', isLoggedIn, csrf, create);
 
 //registration page
 router.get('/register.html', register);
+
+//news page
+router.get('/news.html', news);
 
 //captcha page
 router.get('/captcha.html', captchaPage);

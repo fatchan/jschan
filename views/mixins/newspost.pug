@@ -1,0 +1,16 @@
+mixin newspost(post, globalmanage=false)
+	.table-container.flex-center.mv-5
+		.anchor(id=post._id)
+		table.table-body
+			tr.table-head
+				th
+					if globalmanage === true
+						input.left.post-check(type='checkbox', name='checkednews[]' value=post._id)  
+					a.left(href=`#${post._id}`) #{post.title}
+					p.right.no-m-p #{post.date.toLocaleString()}
+			tr.table-row
+				td
+					if globalmanage === true
+						p.no-m-p #{`${post.message.raw.substring(0,50)}...`}
+					else
+						pre.post-message.no-m-p !{post.message.markdown}

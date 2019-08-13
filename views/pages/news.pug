@@ -1,0 +1,12 @@
+extends ../layout.pug
+include ../mixins/newspost.pug
+
+block head
+	title News
+
+block content
+	h1.board-title News
+	if news.length === 0
+		p.text-center No news.	
+	each post in news
+		+newspost(post)

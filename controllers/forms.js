@@ -35,6 +35,8 @@ const express  = require('express')
 	, removeBansController = require(__dirname+'/forms/removebans.js')
 	, globalActionController = require(__dirname+'/forms/globalactions.js')
 	, actionController = require(__dirname+'/forms/actions.js')
+	, addNewsController = require(__dirname+'/forms/addnews.js')
+	, deleteNewsController = require(__dirname+'/forms/deletenews.js')
 	, uploadBannersController = require(__dirname+'/forms/uploadbanners.js')
 	, deleteBannersController = require(__dirname+'/forms/deletebanners.js')
 	, boardSettingsController = require(__dirname+'/forms/boardsettings.js')
@@ -78,6 +80,10 @@ router.post('/board/:board/deletebanners', csrf, Boards.exists, calcPerms, banCh
 //unbans
 router.post('/global/unban', csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, removeBansController);
 router.post('/board/:board/unban', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, removeBansController);
+
+//news
+router.post('/global/addnews', csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController);
+router.post('/global/deletenews', csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController);
 
 //delete board
 router.post('/board/:board/deleteboard', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController);

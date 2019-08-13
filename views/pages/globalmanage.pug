@@ -1,6 +1,7 @@
 extends ../layout.pug
 include ../mixins/post.pug
 include ../mixins/ban.pug
+include ../mixins/newspost.pug
 
 block head
 	title Manage
@@ -8,6 +9,29 @@ block head
 block content
 	h1.board-title Global Management
 	hr(size=1)
+	h4.no-m-p Add News:
+	section.form-wrapper.flexleft.mv-10
+		form.form-post(action=`/forms/global/addnews`, enctype='application/x-www-form-urlencoded', method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			section.row
+				.label Title
+				input(type='text' name='title' required)
+			section.row
+				.label Message
+				textarea(name='message' placeholder='supports post styling' required)
+			input(type='submit', value='submit')
+	hr(size=1)
+	if news.length > 0
+		h4.no-m-p Delete News:
+		section.form-wrapper.flexleft.mv-10
+			form.form-post(action=`/forms/global/deletenews`, enctype='application/x-www-form-urlencoded', method='POST')
+				input(type='hidden' name='_csrf' value=csrf)
+				each post in news
+					+newspost(post, true)
+				if news.length === 1
+					.anchor
+				input(type='submit', value='delete')
+		hr(size=1)
 	h4.no-m-p Delete board:
 	section.form-wrapper.flexleft.mv-10
 		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')

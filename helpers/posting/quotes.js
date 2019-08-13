@@ -18,7 +18,7 @@ module.exports = async (board, text, thread) => {
 	const postQueryOrs = []
 	const boardQueryIns = []
 	const crossQuoteMap = {};
-	if (quotes) {
+	if (quotes && board) {
 		const quoteIds = [...new Set(quotes.map(q => { return Number(q.substring(8)) }))];
 		postQueryOrs.push({
 			'board': board,

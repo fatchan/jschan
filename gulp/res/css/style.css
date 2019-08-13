@@ -153,6 +153,9 @@ pre {
 .mv-10 {
 	margin: 10px 0;
 }
+.mv-5 {
+	margin: 5px 0;
+}
 .mv-0 {
 	margin: 0 auto;
 }
@@ -326,9 +329,8 @@ table {
 	width: 600px;
 }
 
-th {
+.table-head, th {
 	background: var(--label-color);
-	/*text-align: left;*/
 }
 
 td, th {
