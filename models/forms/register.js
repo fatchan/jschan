@@ -8,12 +8,7 @@ module.exports = async (req, res, next) => {
 	const username = req.body.username.toLowerCase();
 	const password = req.body.password;
 
-	let account;
-	try {
-		account = await Accounts.findOne(username);
-	} catch (err) {
-		return next(err);
-	}
+	const account = await Accounts.findOne(username);
 
 	// if the account exists reject
 	if (account != null) {
@@ -25,12 +20,8 @@ module.exports = async (req, res, next) => {
 	}
 
 	// add account to db. password is hashed in db model func for easier tests
-	try {
-		await Accounts.insertOne(username, password, 4);
-	} catch (err) {
-		return next(err);
-	}
+	await Accounts.insertOne(username, password, 4);
 
-	return res.redirect('/login.html')
+	return res.redirect('/login.html');
 
 }

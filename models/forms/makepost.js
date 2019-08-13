@@ -27,10 +27,22 @@ const path = require('path')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, msTime = require(__dirname+'/../../helpers/mstime.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
+	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
 	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
+
+	//spam/flood check
+    const flood = await spamCheck(req, res);
+    if (flood) {
+        deleteTempFiles(req).catch(e => console.error);
+        return res.status(429).render('message', {
+            'title': 'Flood detected',
+            'message': 'Please wait before making another post, or a post similar to another user',
+            'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
+        });
+    }
 
 	// check if this is responding to an existing thread
 	let redirect = `/${req.params.board}/`

@@ -7,12 +7,7 @@ module.exports = async (req, res, next) => {
 	const { name, description } = req.body
 		, uri = req.body.uri.toLowerCase();
 
-	let board;
-	try {
-		board = await Boards.findOne(uri);
-	} catch (err) {
-		return next(err);
-	}
+	const board = await Boards.findOne(uri);
 
 	// if board exists reject
 	if (board != null) {
@@ -62,11 +57,7 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	try {
-		await Boards.insertOne(newBoard);
-	} catch (err) {
-		return next(err);
-	}
+	await Boards.insertOne(newBoard);
 
 	return res.redirect(`/${uri}/index.html`);
 

@@ -11,12 +11,7 @@ module.exports = async (req, res, next) => {
 	const failRedirect = `/login.html${goto ? '?goto='+goto : ''}`
 
 	//fetch an account
-	let account;
-	try {
-		account = await Accounts.findOne(username);
-	} catch (err) {
-		return next(err);
-	}
+	const account = await Accounts.findOne(username);
 
 	//if the account doesnt exist, reject
 	if (!account) {
@@ -28,12 +23,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	// bcrypt compare input to saved hash
-	let passwordMatch;
-	try {
-		passwordMatch = await bcrypt.compare(password, account.passwordHash);
-	} catch (err) {
-		return next(err);
-	}
+	const passwordMatch = await bcrypt.compare(password, account.passwordHash);
 
 	//if hashes matched
 	if (passwordMatch === true) {
