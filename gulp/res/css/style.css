@@ -518,6 +518,9 @@ textarea {
 .board-banner {
 	margin: 10px;
 	max-width: 100%;
+	border: 1px solid var(--post-outline-color);
+	width: 300px;
+	height: 100px;
 }
 
 .board-description {
@@ -643,6 +646,7 @@ input[type=number] {
 
 input[type="submit"] {
 	min-height: 30px;
+	cursor: pointer;
 }
 
 input[type="file"] {

@@ -14,20 +14,19 @@ block content
 					p
 						| This is an anonymous imageboard, a type of discussion board where users share images and text about various topics. 
 					p
-						| The primary difference to traditional forums is that anybody can make a post without the need to register an account or provide 
-						| any personal information. This lowers the barrier to entry and allows users to remain anonymous. This is especially important 
-						| when discussing topics that could have consequences if the posters identity was revealed, for example political persecution.
+						| The primary difference between anonymous imageboards and traditional forums is that anybody can make a post without registering 
+						| an account or providing any personal information. This lowers the barrier to entry, protects user identities and focuses on what is said, rather than who says it. 
 					p 
-						| Choose a board below to join the discussion, or 
-						a(href='/create.html') create your own
+						| Choose a topic below to join the discussion, or 
+						a(href='/create.html') create your own board
 						| .
 	.table-container.flex-center.mv-10.text-center
 		table
 			tr
 				th Board
 				th Description
-				th(title='Average posts per hour over the past 24, rounded down') Posts/h
-				th(title='Unique IPs that have posted in the past 24h') Active Users
+				th(title='Posts in the last hour') Posts/h
+				th(title='Unique IPs that have posted in the last 72h') Active Users
 				th Total Posts
 			each board in boards
 				tr
