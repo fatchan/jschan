@@ -1,7 +1,7 @@
 'use strict';
 
 const actions = [
-	{name:'unlink_file', global:true, auth:3, passwords:true, build:true},
+	{name:'unlink_file', global:true, auth:4, passwords:true, build:true},
 	{name:'delete_file', global:true, auth:1, passwords:false, build:true},
 	{name:'spoiler', global:true, auth:4, passwords:true, build:true},
 	{name:'delete', global:true, auth:4, passwords:true, build:true},

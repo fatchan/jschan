@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
 		} catch (err) {
 			return next(err);
 		}
-		if (board != null) {
+		if (!board) {
 			//global must check exists because the route skips Boards.exists middleware
 			errors.push(`Board /${req.body.uri}/ does not exist`);
 		}
