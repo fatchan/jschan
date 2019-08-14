@@ -1,6 +1,8 @@
 'use strict';
 
-const createBoard = require(__dirname+'/../../models/forms/create.js');
+const createBoard = require(__dirname+'/../../models/forms/create.js')
+	, { enableUserBoards } = require(__dirname+'/../../configs/main.json')
+	, boardUriRegex = require(__dirname+'/../../helpers/checks/boarduriregex.js')
 
 module.exports = async (req, res, next) => {
 
@@ -31,7 +33,7 @@ module.exports = async (req, res, next) => {
 		if (req.body.uri.length > 50) {
 			errors.push('URI must be 50 characters or less');
 		}
-		if (alphaNumericRegex.test(req.body.uri) !== true) {
+		if (boardUriRegex.test(req.body.uri) !== true) {
 			errors.push('URI must contain a-z 0-9 only');
 		}
 	}

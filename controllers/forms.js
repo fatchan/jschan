@@ -2,9 +2,7 @@
 
 const express  = require('express')
 	, router = express.Router()
-	, { enableUserBoards } = require(__dirname+'/../configs/main.json')
 	, Boards = require(__dirname+'/../db/boards.js')
-	, Posts = require(__dirname+'/../db/posts.js')
 	, upload = require('express-fileupload')
 	, postFiles = upload({
 		createParentPath: true,
