@@ -2,6 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
+	, msTime = require(__dirname+'/../helpers/mstime.js')
 	, db = Mongo.client.db('jschan').collection('posts')
 
 module.exports = {
@@ -392,6 +393,76 @@ module.exports = {
 		}
 
 		return oldThreads.concat(early404Threads);
+	},
+
+	activeUsers: () => {
+		return db.aggregate([
+			{
+				'$match': {
+					'_id': {
+						'$gt': Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.day*3)/1000))
+					}
+				}
+			},
+			{
+				'$facet': {
+					'boardActiveUsers': [
+						{
+							'$group': {
+								'_id': '$board',
+								'ips': {
+									'$addToSet': '$ip'
+								}
+							}
+						},
+						{
+							'$project': {
+								'ips': {
+									'$size': '$ips'
+								}
+							}
+						}
+					],
+					'totalActiveUsers': [
+						{
+							'$group': {
+								'_id': null,
+								'ips': {
+									'$addToSet': '$ip'
+								}
+							}
+						},
+						{
+							'$project': {
+								'ips': {
+									'$size': '$ips'
+								}
+							}
+						}
+					],
+				}
+			}
+		]).toArray().then(res => res[0]);
+	},
+
+	postsPerHour: () => {
+		return db.aggregate([
+			{
+				'$match': {
+					'_id': {
+						'$gt': Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000))
+					}
+				}
+			},
+			{
+				'$group': {
+					'_id': '$board',
+					'pph': {
+						'$sum': 1
+					}
+				}
+			}
+		]).toArray();
 	},
 
 	deleteMany: (ids) => {

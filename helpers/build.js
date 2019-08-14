@@ -6,8 +6,6 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, Files = require(__dirname+'/../db/files.js')
 	, Boards = require(__dirname+'/../db/boards.js')
 	, News = require(__dirname+'/../db/news.js')
-	, formatSize = require(__dirname+'/files/formatsize.js')
-	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, render = require(__dirname+'/render.js');
 
 module.exports = {
@@ -117,50 +115,11 @@ module.exports = {
 		const label = '/index.html';
 		console.time(label);
 		const [ activeUsers, postsPerHour ] = await Promise.all([
-			Posts.db.aggregate([
-				{
-					'$match': {
-						'_id': {
-							'$gt': Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.day*3)/1000))
-						}
-					}
-				},
-				{
-					'$group': {
-						'_id': '$board',
-						'ips': {
-							'$addToSet': '$ip'
-						}
-					}
-				},
-				{
-					'$project': {
-						'ips': {
-							'$size': '$ips'
-						}
-					}
-				}
-			]).toArray(),
-			Posts.db.aggregate([
-				{
-					'$match': {
-						'_id': {
-							'$gt': Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000))
-						}
-					}
-				},
-				{
-					'$group': {
-						'_id': '$board',
-						'pph': {
-							'$sum': 1
-						}
-					}
-				}
-			]).toArray()
+			Posts.activeUsers(),
+			Posts.postsPerHour()
 		]);
-		for (let i = 0; i < activeUsers.length; i++) {
-			const userboard = activeUsers[i];
+		for (let i = 0; i < activeUsers.boardActiveUsers.length; i++) {
+			const userboard = activeUsers.boardActiveUsers[i];
 			const pphboard = postsPerHour.find(b => b._id === userboard._id);
 			if (pphboard != null) {
 				userboard.pph = pphboard.pph;
@@ -168,8 +127,8 @@ module.exports = {
 		}
 		const bulkWrites = [];
 		const updatedBoards = [];
-		for (let i = 0; i < activeUsers.length; i++) {
-			const data = activeUsers[i];
+		for (let i = 0; i < activeUsers.boardActiveUsers.length; i++) {
+			const data = activeUsers.boardActiveUsers[i];
 			updatedBoards.push(data._id);
 			//boards with pph get pph set
 			bulkWrites.push({
@@ -202,35 +161,16 @@ module.exports = {
 				}
 			}
 		});
+		const totalActiveUsers = activeUsers.totalActiveUsers[0].ips;
 		await Boards.db.bulkWrite(bulkWrites);
-		//getting boards now that pph is set
-		const boards = await Boards.db.find({}).sort({
-			'ips': -1,
-			'pph': -1,
-			'sequence_value': -1,
-		}).limit(20).toArray(); //limit 20 homepage
-		//might move filestats to an $out or $merge in schedules file
-		const fileStats = await Files.db.aggregate([
-			{
-				'$group': {
-					'_id': null,
-					'count': {
-						'$sum': 1
-					},
-					'size': {
-						'$sum': '$size'
-					}
-				}
-			}
-		]).toArray().then(res => {
-			const stats = res[0];
-			return {
-				count: stats.count,
-				totalSize: stats.size,
-				totalSizeString: formatSize(stats.size)
-			}
-		});
+		const [ totalPosts, boards, fileStats ] = await Promise.all([
+			Boards.totalPosts(), //overall total posts ever made
+			Boards.frontPageSortLimit(), //boards sorted by users, pph, total posts
+			Files.activeContent() //size of all files
+		]);
 		await render('index.html', 'home.pug', {
+			totalPosts: totalPosts,
+			totalActiveUsers,
 			boards,
 			fileStats,
 		});

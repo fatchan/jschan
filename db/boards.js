@@ -1,34 +1,34 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, db = Mongo.client.db('jschan');
+	, db = Mongo.client.db('jschan').collection('boards');
 
 module.exports = {
 
-	db: db.collection('boards'),
+	db,
 
 	findOne: (name) => {
-		return db.collection('boards').findOne({ '_id': name });
+		return db.findOne({ '_id': name });
 	},
 
 	find: () => {
-		return db.collection('boards').find({}).toArray();
+		return db.find({}).toArray();
 	},
 
 	insertOne: (data) => {
-		return db.collection('boards').insertOne(data);
+		return db.insertOne(data);
 	},
 
 	deleteOne: (board) => {
-		return db.collection('boards').deleteOne({ '_id': board });
+		return db.deleteOne({ '_id': board });
 	},
 
 	deleteAll: (board) => {
-		return db.collection('boards').deleteMany({});
+		return db.deleteMany({});
 	},
 
 	removeBanners: (board, filenames) => {
-		return db.collection('boards').updateOne(
+		return db.updateOne(
 			{
 				'_id': board,
 			}, {
@@ -40,7 +40,7 @@ module.exports = {
 	},
 
 	addBanners: (board, filenames) => {
-		return db.collection('boards').updateOne(
+		return db.updateOne(
 			{
 				'_id': board,
 			}, {
@@ -51,6 +51,27 @@ module.exports = {
 				}
 			}
 		);
+	},
+
+	frontPageSortLimit: () => {
+		return db.find({}).sort({
+			'ips': -1,
+			'pph': -1,
+			'sequence_value': -1,
+  		}).limit(20).toArray();
+	},
+
+	totalPosts: () => {
+		return db.aggregate([
+			{
+				'$group': {
+					'_id': null,
+					'total': {
+						'$sum': '$sequence_value'
+					}
+				}
+			}
+		]).toArray().then(res => res[0].total);
 	},
 
 	exists: async (req, res, next) => {
@@ -66,7 +87,7 @@ module.exports = {
 
 	getNextId: async (board) => {
 
-		const increment = await db.collection('boards').findOneAndUpdate(
+		const increment = await db.findOneAndUpdate(
 			{
 				'_id': board
 			},

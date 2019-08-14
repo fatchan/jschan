@@ -2,6 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
+	, formatSize = require(__dirname+'/../helpers/files/formatsize.js')
 	, db = Mongo.client.db('jschan').collection('files')
 
 module.exports = {
@@ -34,6 +35,29 @@ module.exports = {
 			}
 		}, {
 			'upsert': true //probably not necessary
+		});
+	},
+
+	activeContent: () => {
+		return db.aggregate([
+			{
+				'$group': {
+					'_id': null,
+					'count': {
+						'$sum': 1
+					},
+					'size': {
+						'$sum': '$size'
+					}
+				}
+			}
+		]).toArray().then(res => {
+			const stats = res[0];
+			return {
+				count: stats.count,
+				totalSize: stats.size,
+				totalSizeString: formatSize(stats.size)
+			}
 		});
 	},
 
