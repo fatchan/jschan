@@ -34,6 +34,7 @@ module.exports = async (req, res, next) => {
 			'tphTrigger': 0,
 			'tphTriggerAction': 0,
 			'forceAnon': false,
+			'early404': true,
 			'ids': false,
 			'userPostDelete': true,
 			'userPostSpoiler': true,

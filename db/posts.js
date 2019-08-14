@@ -380,13 +380,16 @@ module.exports = {
 			'bumped': -1
 		}).skip(board.settings.threadLimit).toArray();
 
-		const early404Threads = await db.find({
-			'thread': null,
-			'board': board._id,
-			'replyposts': {
-				'$lte': 5 //less than 5 replies
-			}
-		}).skip(30).toArray() //after page 3
+		let early404Threads = [];
+		if (board.settings.early404 === true) {
+			early404Threads = await db.find({
+				'thread': null,
+				'board': board._id,
+				'replyposts': {
+					'$lt': 5
+				}
+			}).skip(Math.floor(board.settings.threadLimit/3)).toArray();
+		}
 
 		return oldThreads.concat(early404Threads);
 	},

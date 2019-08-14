@@ -28,6 +28,10 @@ block content
 				.label Max Files
 				input(type='number' name='max_files' value=board.settings.maxFiles)
 			section.row
+				.label Early 404
+				label.postform-style.ph-5
+					input(type='checkbox', name='early404', value='true' checked=board.settings.early404)
+			section.row
 				.label IDs
 				label.postform-style.ph-5
 					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)

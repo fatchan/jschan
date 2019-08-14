@@ -58,6 +58,7 @@ async function wipe() {
 				'tphTrigger': 10,
 				'tphTriggerAction': 2,
 				'forceAnon': true,
+				'early404': true,
 				'ids': false,
 				'userPostDelete': true,
 				'userPostSpoiler': true,
