@@ -6,46 +6,63 @@ block head
 
 block content
 	h1.board-title FAQ
-	.table-container.flex-center
-		table.table-body
-			tr.table-head
+	include ../includes/stickynav.pug
+	.table-container.flex-center.mv-5
+		.anchor
+		table
+			tr
 				th Frequently Asked Questions 
-			tr.table-row
+			tr
 				td.post-message
-					b General (under construction)
+					b General
 					ul.mv-0
-						li What is an imageboard?
-						li What are the rules?
-					b Making posts (under construction)
+						li: a(href='#whats-an-imageboard') What is an imageboard?
+						li: a(href='/rules.html') What are the rules?
+					b Making posts
 					ul.mv-0
-						li: a(href='#name-formatting') How do I use the name field when making a post?
+						//li: a(href='#how-to-post') How do I make a post?
+						li: a(href='#name-formatting') How do names, tripcodes and capcodes work?
 						li: a(href='#post-styling') What kind of styling options are available when making a post?
-					b Board ownership (under construction)
+					b Boards, users & permissions
 					ul.mv-0
-						li How do I make my own board?
-						li How do I assign moderators?
-
-	.anchor#name-formatting
-	.table-container.flex-center
-		table.table-body
-			tr.table-head
+						li: a(href='#make-a-board') How do I make my own board?
+						li: a(href='#staff-and-permissions') How do staff, users and permissions work?
+	.table-container.flex-center.mv-5
+		.anchor#whats-an-imageboard
+		table
+			tr
+				th: a(href='#whats-an-imageboard') What is an imageboard?
+			tr
+				td
+					p
+						| An imageboard is a type of discussion board where users share images and text about various topics. 
+					p
+						| The primary difference between imageboards and traditional forums is that anybody can make a post without registering 
+						| an account or providing any personal information. This lowers the barrier to entry, protects user identities and focuses on what is said, rather than who says it. 
+	.table-container.flex-center.mv-5
+		.anchor#name-formatting
+		table
+			tr
 				th: a(href='#name-formatting') Name formatting
-			tr.table-row
+			tr
 				td.post-message
 					p When posting, you can format the name field to include a name, tripcode , capcode, any combination of the three including leaving the field completely blank. Instead of a blank name,  "Anonymous" is used, however this depends on board-specific configuration. The optional components are explained below.
 
 					b Format
 					p 
-						| Names should be formatted as 
-						span.mono [Name][##Tripcode][## Capcode]
-						|  where [ ] indicate optional components. Tripcodes and capcodes may not contain "##" and the whitespace before capcodes is significant.
+						| Names should be input like: 
+						input(spellcheck='false' type='text' value='Name##Tripcode## Capcode')
+						| . Tripcode and capcode are optional components. Tripcodes and capcodes may not contain "##" and the whitespace before capcodes is significant.
 					p Valid examples: 
 					ol.mv-0
 						li Name
 						li Name##tripcode
 						li Name## Board Owner
 						li Name##tripcode## Board Owner
-					p For example, number 5 would look like so in a post:
+						li ##tripcode## Board Owner
+						li ##tripcode
+						li ## Board owner
+					p From the examples, you can see that all components can be used in combination or independently. In a post number 4 would look like:
 						-
 							const examplePost = {
 								"date" : new Date("2019-08-02T09:48:44.180Z"),
@@ -68,89 +85,87 @@ block content
 								"postId" : 123
 							}	
 						+post(examplePost)
-					p The name appears in the top left, followed by the tripcode with a !! prefix, then the capcode with a ## prefix. The colours may vary between themes but are generally distinct from eachother
+					p The name appears bold in the top left, followed by the tripcode in regular weight with a !! prefix, then the capcode in a different color, bold and with a ## prefix. The colours may vary between themes but are generally distinct from eachother
 
 					b Name
 					p The name is simply what name you want to be shown alongside your post. Other users can post with the same name so there is nothing preventing impersonation. This is not related to your username (for registered users).
 
 					b Tripcode
-					p A tripcode is a password of sorts, which users can provide in the tripcode component of their name. This tripcode is used in conjunction with a server-known secret to generate the unique* tripcode portion of the name. Users can use the same tripcode, however with a long, secure, unique tripcode, it can be used as a form of identity between posts as it is unlikely that another user will find a different tripcode that generates the same output. It is important that you keep tripcodes secret if you use them for some form of identity. A compromised tripcode can be used for impersonation and cannot be revoked in any way.
+					p A tripcode is a password of sorts, which users can provide in the tripcode component of their name. This tripcode is used in conjunction with a server-known secret to generate a unique* tripcode portion of the name. Long, unique tripcodes can be used as a form of identity. It is important that you keep tripcodes secret if you use them for some form of identity. A compromised tripcode can be used for impersonation and cannot be revoked in any way.
 
 					b Capcode
-					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. The capcoded string will be prefixed with the users role so board staff can make an authoritative post.
+					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. The capcoded string will be prefixed with the users role so board staff can make an authoritative post and prove their staff status.
 
-	.anchor#post-styling
-	.table-container.flex-center
-		table.table-body
-			tr.table-head
+	.table-container.flex-center.mv-5
+		.anchor#post-styling
+		table
+			tr
 				th: a(href='#post-styling') Post styling
-			tr.table-row
+			tr
 				td.post-message
 					p When posting, you can use certain characters to style your post with bold, italics, code blocks, quotes, etc. The formatting is as follows:
-
-					b Greentext
 					div &gt;greentext  &rarr;  
 						span.greentext &gt;greentext
-					br
-
-					b Pinktext
 					div &lt;pinktext  &rarr;  
 						span.pinktext &lt;pinktext
-					br
-
-					b Title
 					div ==title==  &rarr;  
 						span.title title
-					br
-
-
-					b Bold
 					div ""bold""  &rarr;  
 						strong bold
-					br
-
-					b Underline
 					div __underline__  &rarr;  
 						span.underline underline
-					br
-
-					b Strikethrough
 					div ~~strikethrough~~  &rarr;  
 						span.strikethrough strikethrough
-					br
-
-					b Italic
 					div **italic**  &rarr;  
 						em italic
-					br
-
-					b Detected
 					div (((detected)))  &rarr;  
 						span.detected (((detected)))
-					br
-
-					b Code Block
 					pre.no-m-p
 						| ```
-						| var foo = 'bar';
+						| code block
 						| ```
-					span.code var foo = 'bar';
-					br
-
-					b Inline monospace
-					div `monospace`  &rarr;  
-						span.mono monospace
-					br
-
-					b Hyperlinking
+					span.code code block
+					div `inline monospace`  &rarr;  
+						span.mono inline monospace
+					b Hyperlinks
 					div https://example.com  &rarr;  #[a(href='https://example.com') https://example.com]
-					br
-
 					b Quotes
 					div &gt;&gt;123  &rarr;  #[a(class="quote" href="#!") &gt;&gt;123]
-					br
-
 					b Cross Board Quotes
 					div &gt;&gt;&gt;/b/  &rarr;  #[a(class="quote" href="#!") &gt;&gt;&gt;/b/]
 					div &gt;&gt;&gt;/b/123  &rarr;  #[a(class="quote" href="#!") &gt;&gt;&gt;/b/123]
 					br
+	.table-container.flex-center.mv-5
+		.anchor#make-a-board
+		table
+			tr
+				th: a(href='#make-a-board') How do I make my own board?
+			tr
+				td
+					p
+						a(href='/register.html') Register
+						|  an account, then 
+						a(href='/create.html') create a board
+						|. Please avoid making excessive amounts of boards, duplicate or boards similar to an existing one unless you expect that many users will migrate to the new board for whatever reason e.g. tyrannical moderation.
+	.table-container.flex-center.mv-5
+		.anchor#staff-and-permissions
+		table
+			tr
+				th: a(href='#staff-and-permissions') How do staff, users and permissions work?
+			tr
+				td
+					p
+						| There are 5 levels of permissions on the site:
+						ol(start='0')
+							li Admin: All permissions
+							li Global staff: All permissions excluding news updates
+							li Board owner: Permissions to settings, reports, banners and bans and some post actions
+							li Board moderator: Permissions to reports, bans and some post actions
+							li Regular user: Permissions to some post actions
+						| Post actions refers to reporting, deleting, stickying, etc. More details on these permissions:
+						ol(start='0')
+							li Admin: All actions
+							li Global staff: All below, plus delete files, delete-by-ip-global and global ban
+							li Board owner: Same as board moderator
+							li Board moderator: All below, plus ban, delete-by-ip, sticky/sage/lock/cycle
+							li Regular user: Reports, and post spoiler/delete/unlink if the board has them enabled

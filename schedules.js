@@ -81,6 +81,6 @@ async function deleteCaptchas() {
 		} catch (e) {
 			console.error(e);
 		}
-	}, msTime.minute*5);
+	}, msTime.day);
 
 })();
