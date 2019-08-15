@@ -36,8 +36,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "wipe": "node wipe.js && rm -rf static/img/* && rm -rf static/banner/* && rm -rf static/html/* && gulp"
+    "start": "pm2-runtime start ecosystem.config.js --env production",
   },
   "author": "",
   "license": "ISC"

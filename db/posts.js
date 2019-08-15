@@ -389,7 +389,7 @@ module.exports = {
 				'replyposts': {
 					'$lt': 5
 				}
-			}).skip(Math.floor(board.settings.threadLimit/3)).toArray();
+			}).skip(Math.ceil(board.settings.threadLimit/3)).toArray();
 		}
 
 		return oldThreads.concat(early404Threads);
