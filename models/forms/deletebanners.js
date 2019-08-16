@@ -2,7 +2,7 @@
 
 const { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, Boards = require(__dirname+'/../../db/boards.js')
+	, { Boards } = require(__dirname+'/../../db/')
 	, { buildBanners } = require(__dirname+'/../../helpers/build.js')
 
 module.exports = async (req, res, next) => {

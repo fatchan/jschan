@@ -1,8 +1,6 @@
 'use strict';
 
-const Boards = require(__dirname+'/../../db/boards.js')
-	, Posts = require(__dirname+'/../../db/posts.js')
-	, Bans = require(__dirname+'/../../db/bans.js')
+const { Boards, Posts, Bans } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { remove } = require('fs-extra');

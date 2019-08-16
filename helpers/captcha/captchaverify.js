@@ -1,7 +1,8 @@
 'use strict';
 
 const Captchas = require(__dirname+'/../../db/captchas.js')
-	, Mongo = require(__dirname+'/../../db/db.js')
+	, Ratelimits = require(__dirname+'/../../db/ratelimits.js')
+	, { ObjectId } = require(__dirname+'/../../db/db.js')
 	, remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js');
 
@@ -37,7 +38,7 @@ module.exports = async (req, res, next) => {
 	// try to get the captcha from the DB
 	let captcha;
 	try {
-		const captchaMongoId = Mongo.ObjectId(captchaId);
+		const captchaMongoId = ObjectId(captchaId);
 		captcha = await Captchas.findOneAndDelete(captchaMongoId, input);
 	} catch (err) {
 		return next(err);
@@ -54,7 +55,7 @@ module.exports = async (req, res, next) => {
 	//it was correct, so delete the file, the cookie and reset their quota
 	res.clearCookie('captchaid');
 	await Promise.all([
-		Captchas.resetQuota(res.locals.ip),
+		Ratelimits.resetQuota(res.locals.ip),
 		remove(`${uploadDirectory}captcha/${captchaId}.jpg`)
 	]);
 

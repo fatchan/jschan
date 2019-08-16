@@ -1,15 +1,11 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, db = Mongo.client.db('jschan')
-	, captcha = db.collection('captcha')
-	, ratelimit = db.collection('ratelimit')
+	, db = Mongo.client.db('jschan').collection('captcha');
 
 module.exports = {
 
-	captcha,
-
-	ratelimit,
+	db,
 
 	findOne: (id) => {
 		return captcha.findOne({ '_id': id });
@@ -29,34 +25,8 @@ module.exports = {
 		});
 	},
 
-	resetQuota: (ip) => {
-		return ratelimit.deleteOne({ '_id': ip });
-	},
-
-	incrmentQuota: (ip) => {
-		return ratelimit.findOneAndUpdate(
-            {
-                '_id': ip
-            },
-            {
-                '$inc': {
-                    'sequence_value': 1
-                },
-				'$setOnInsert': {
-					'expireAt': new Date()
-				}
-            },
-            {
-				'upsert': true
-            }
-        ).then(r => { return r.value ? r.value.sequence_value : 0 });
-	},
-
 	deleteAll: () => {
-		return Promise.all([
-			captcha.deleteMany({}),
-			ratelimit.deleteMany({})
-		]);
+		return captcha.deleteMany({});
 	},
 
 }

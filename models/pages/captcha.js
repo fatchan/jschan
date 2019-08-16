@@ -1,15 +1,15 @@
 'use strict';
 
-const Captchas = require(__dirname+'/../../db/captchas.js')
+const { Captchas, Ratelimits } = require(__dirname+'/../../db/ratelimits.js')
 	, generateCaptcha = require(__dirname+'/../../helpers/captcha/captchagenerate.js');
 
 module.exports = async (req, res, next) => {
 
 	let captchaId;
 	try {
-		const ratelimit = await Captchas.incrmentQuota(res.locals.ip);
-		if (ratelimit > 12) { // 12 per minute = 1 per 5 seconds within a minute (with burst)
-			return res.status(429).redirect(`/img/ratelimit.png`);
+		const ratelimit = await Ratelimits.incrmentQuota(res.locals.ip, 10);
+		if (ratelimit > 100) {
+			return res.status(429).redirect('/img/ratelimit.png');
 		}
 		const text = Math.random().toString(36).substr(2,6);
 		captchaId = await Captchas.insertOne(text).then(r => r.insertedId); //get id of document as filename and captchaid
