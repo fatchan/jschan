@@ -1,8 +1,6 @@
 'use strict';
 
-const Boards = require(__dirname+'/../../db/boards.js')
-	, Posts = require(__dirname+'/../../db/posts.js')
-	, Accounts = require(__dirname+'/../../db/accounts.js')
+const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { buildHomepage, buildCatalog, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
 	, { remove } = require('fs-extra')

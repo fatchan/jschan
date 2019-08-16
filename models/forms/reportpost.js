@@ -1,6 +1,6 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db/posts.js');
+const { Posts } = require(__dirname+'/../../db/');
 
 module.exports = (req, res, posts) => {
 

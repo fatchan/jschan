@@ -1,7 +1,7 @@
 'use strict';
 
 const { remove } = require('fs-extra')
-	, Files = require(__dirname+'/../../db/files.js')
+	, { Files } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 
 module.exports = async (posts, unlinkOnly) => {

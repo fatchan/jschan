@@ -1,7 +1,6 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db/posts.js')
-	, Boards = require(__dirname+'/../../db/boards.js')
+const { Posts, Boards } = require(__dirname+'/../../db/')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, banPoster = require(__dirname+'/banposter.js')
 	, deletePosts = require(__dirname+'/deletepost.js')

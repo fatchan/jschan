@@ -7,7 +7,7 @@ const path = require('path')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
-	, Boards = require(__dirname+'/../../db/boards.js')
+	, { Boards } = require(__dirname+'/../../db/')
 	, { buildBanners } = require(__dirname+'/../../helpers/build.js')
 
 module.exports = async (req, res, next) => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const News = require(__dirname+'/../../db/news.js')
+const { News } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { buildNews } = require(__dirname+'/../../helpers/build.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
