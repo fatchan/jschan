@@ -20,10 +20,11 @@
     "gm": "github:fatchan/gm",
     "lodash": "^4.17.15",
     "lodash.mergewith": "^4.6.2",
-    "mongodb": "^3.2.7",
+    "mongodb": "^3.3.0",
     "path": "^0.12.7",
     "pug": "^2.0.4",
-    "sanitize-html": "^1.20.1"
+    "sanitize-html": "^1.20.1",
+    "saslprep": "^1.0.3"
   },
   "devDependencies": {
     "del": "^4.1.1",
@@ -36,7 +37,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2-runtime start ecosystem.config.js --env production",
+    "start": "pm2 start ecosystem.config.js --env production"
   },
   "author": "",
   "license": "ISC"

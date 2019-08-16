@@ -9,7 +9,10 @@ module.exports = {
 		if (module.exports.client) {
 			throw new Error('Mongo already connected');
 		}
-		module.exports.client = await MongoClient.connect(configs.dbURL, { useNewUrlParser: true });
+		module.exports.client = await MongoClient.connect(configs.dbURL, {
+			useNewUrlParser: true,
+			useUnifiedTopology: true
+		});
 	},
 
 	ObjectId,
