@@ -2,10 +2,8 @@
 
 const Mongo = require(__dirname+'/../db/db.js')
 	, msTime = require(__dirname+'/mstime.js')
-	, Posts = require(__dirname+'/../db/posts.js')
-	, Files = require(__dirname+'/../db/files.js')
-	, Boards = require(__dirname+'/../db/boards.js')
-	, News = require(__dirname+'/../db/news.js')
+	, dateArray = require(__dirname+'/datearray.js')
+	, { Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, render = require(__dirname+'/render.js');
 
 module.exports = {
@@ -107,6 +105,55 @@ module.exports = {
 		const news = await News.find();
 		await render('news.html', 'news.pug', {
 			news
+		});
+		console.timeEnd(label);
+	},
+
+	buildModLog: async (board, startDate, endDate, logs=null) => {
+		if (!startDate || !endDate) {
+			startDate = new Date(); //this is being built by action handler so will always be current date
+			endDate = new Date(startDate.getTime());
+			startDate.setHours(0,0,0,0);
+			endDate.setHours(23,59,59,999);
+		}
+		const day = ('0'+startDate.getDate()).slice(-2);
+		const month = ('0'+(startDate.getMonth()+1)).slice(-2);
+		const year = startDate.getFullYear();
+		const label = `/${board._id}/logs/${month}-${day}-${year}.html`;
+		console.time(label);
+		if (!logs) {
+			logs = await Modlogs.findBetweenDate(board, startDate, endDate);
+		}
+		await render(label, 'modlog.pug', {
+			board,
+			logs,
+			startDate,
+			endDate
+		});
+		console.timeEnd(label);
+	},
+
+	buildModLogList: async (board, dates) => {
+		const label = `/${board._id}/logs.html`;
+		console.time(label);
+		if (!dates) {
+			let firstLog, lastLog;
+			[ firstLog, lastLog ] = await Promise.all([
+				Modlogs.getFirst(),
+				Modlogs.getLast()
+			]);
+		    if (firstLog.length > 0 && lastLog.length > 0) {
+	    	    const firstLogDate = firstLog[0].date;
+    	    	firstLogDate.setHours(1,0,0,0);
+		        const lastLogDate = lastLog[0].date;
+		        dates = dateArray(firstLogDate, lastLogDate);
+		    } else {
+				dates = []
+			}
+		}
+		await render(label, 'modloglist.pug', {
+			board,
+			dates
 		});
 		console.timeEnd(label);
 	},

@@ -92,6 +92,14 @@ module.exports = (req, res, next) => {
 	if (req.params.id) {
 		req.params.id = +req.params.id;
 	}
+	//moglog date
+	if (req.params.date) {
+		const dateString = req.params.date.replace(/-/g, '/');
+		const date = new Date(dateString);
+		if (date !== 'Invalid Date') {
+			res.locals.date = date;
+		}
+	}
 	//board page
 	if (req.params.page) {
 		req.params.page = req.params.page === 'index' ? 'index' : +req.params.page;

@@ -9,8 +9,6 @@
 	--transparent-darken: #00000010;
 	--highlighted-post-color: #d6bad0;
 	--highlighted-post-outline-color: #ba9dbf;
-	--report-color: #fca;
-	--report-outline-color: #c97;
 	--board-title: #af0a0f;
 	--hr: lightgray;
 	--font-color: black;
@@ -37,8 +35,6 @@
 --transparent-darken: #00000010;
 --highlighted-post-color: #ff000010;
 --highlighted-post-outline-color: #111;
---report-color: #fca;
---report-outline-color: #c97;
 --board-title: #c5c8c6;
 --hr: #282a2e;
 --font-color: #c5c8c6;
@@ -275,8 +271,8 @@ p {
 
 .reports {
 	margin-top: 5px;
-	background: var(--report-color) !important;
-	border-color: var(--report-outline-color)!important;
+	background: var(--highlighted-post-color) !important;
+	border-color: var(--highlighted-post-outline-color)!important;
 	border-width: 1px 0;
 	border-style: solid none;
 }
