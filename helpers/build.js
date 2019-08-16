@@ -139,8 +139,8 @@ module.exports = {
 		if (!dates) {
 			let firstLog, lastLog;
 			[ firstLog, lastLog ] = await Promise.all([
-				Modlogs.getFirst(),
-				Modlogs.getLast()
+				Modlogs.getFirst(board),
+				Modlogs.getLast(board)
 			]);
 		    if (firstLog.length > 0 && lastLog.length > 0) {
 	    	    const firstLogDate = firstLog[0].date;

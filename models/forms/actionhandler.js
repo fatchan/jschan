@@ -34,7 +34,7 @@ module.exports = async (req, res, next) => {
 			passwordPosts = res.locals.posts.filter(post => {
 				if (post.password != null) {
 					const postBuffer = Buffer.from(post.password);
-					if (timingSafeEqual(inputBuffer, postBuffer) === true) {
+					if (timingSafeEqual(inputPasswordBuffer, postBuffer) === true) {
 						passwordPostMongoIds.push(Mongo.ObjectId(post._id));
 						return true;
 					}
