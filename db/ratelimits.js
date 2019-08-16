@@ -13,21 +13,21 @@ module.exports = {
 
 	incrmentQuota: (ip, amount) => {
 		return db.findOneAndUpdate(
-            {
-                '_id': ip
-            },
-            {
-                '$inc': {
-                    'sequence_value': amount
-                },
+			{
+				'_id': ip
+			},
+			{
+				'$inc': {
+					'sequence_value': amount
+				},
 				'$setOnInsert': {
 					'expireAt': new Date()
 				}
-            },
-            {
+			},
+			{
 				'upsert': true
-            }
-        ).then(r => { return r.value ? r.value.sequence_value : 0 });
+			}
+		).then(r => { return r.value ? r.value.sequence_value : 0 });
 	},
 
 	deleteAll: () => {
