@@ -1,6 +1,6 @@
 'use strict';
 
-const { Captchas, Ratelimits } = require(__dirname+'/../../db/ratelimits.js')
+const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 	, generateCaptcha = require(__dirname+'/../../helpers/captcha/captchagenerate.js');
 
 module.exports = async (req, res, next) => {

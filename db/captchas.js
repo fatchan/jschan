@@ -8,25 +8,25 @@ module.exports = {
 	db,
 
 	findOne: (id) => {
-		return captcha.findOne({ '_id': id });
+		return db.findOne({ '_id': id });
 	},
 
 	insertOne: (text) => {
-		return captcha.insertOne({
+		return db.insertOne({
 			'text': text,
 			'expireAt': new Date()
 		});
 	},
 
 	findOneAndDelete: (id, text) => {
-		return captcha.findOneAndDelete({
+		return db.findOneAndDelete({
 			'_id': id,
 			'text': text
 		});
 	},
 
 	deleteAll: () => {
-		return captcha.deleteMany({});
+		return db.deleteMany({});
 	},
 
 }
