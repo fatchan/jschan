@@ -13,6 +13,8 @@ block content
 		a(href=`/${board._id}/catalog.html`) [Catalog]
 		|  
 		a.bold(href=`/${board._id}/banners.html`) [Banners]
+		|  
+		a(href=`/${board._id}/logs.html`) [Logs]
 	hr(size=1)
 	section.catalog
 		if board.banners.length > 0
@@ -28,3 +30,6 @@ block content
 		a(href=`/${board._id}/catalog.html`) [Catalog]
 		|  
 		a.bold(href=`/${board._id}/banners.html`) [Banners]
+		|  
+		a(href=`/${board._id}/logs.html`) [Logs]
+		include ../includes/commonnav.pug

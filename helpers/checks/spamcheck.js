@@ -1,7 +1,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/../../db/db.js')
-	, Posts = require(__dirname+'/../../db/posts.js')
+	, { Posts } = require(__dirname+'/../../db/')
 	, msTime = require(__dirname+'/../mstime.js')
 
 module.exports = async (req, res) => {

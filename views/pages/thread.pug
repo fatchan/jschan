@@ -28,6 +28,8 @@ block content
 		a(href=`/${board._id}/catalog.html`) [Catalog]
 		|  
 		a(href=`/${board._id}/banners.html`) [Banners]
+		|  
+		a(href=`/${board._id}/logs.html`) [Logs]
 	hr(size=1)
 	form(action=`/forms/board/${board._id}/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		section.thread
@@ -37,8 +39,10 @@ block content
 		hr(size=1)
 		nav.pages
 			a(href=`/${board._id}/index.html`) [Index]
-			| 
-			a(href=`/${board._id}/catalog.html`) [Catalog]		
+			|  
+			a(href=`/${board._id}/catalog.html`) [Catalog]
 			|  
 			a(href=`/${board._id}/banners.html`) [Banners]
+			|  
+			a(href=`/${board._id}/logs.html`) [Logs]
 		include ../includes/actionfooter.pug

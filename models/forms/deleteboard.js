@@ -1,6 +1,6 @@
 'use strict';
 
-const { Boards, Posts, Bans } = require(__dirname+'/../../db/')
+const { Boards, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { remove } = require('fs-extra');
@@ -15,11 +15,10 @@ module.exports = async (uri) => {
 		//delete posts and decrement images
 		await deletePosts(allPosts, uri, true);
 	}
-	//bans for the board are pointless now
-	await Bans.deleteBoard(uri);
-	//remove all pages for the board
-	await remove(`${uploadDirectory}html/${uri}/`)
-
-//todo: maybe put some of this in parallel
+	await Promise.all([
+		Modlogs.deleteBoard(uri), //bans for the board
+		Bans.deleteBoard(uri), //bans for the board
+		remove(`${uploadDirectory}html/${uri}/`) //html
+	]);
 
 }
