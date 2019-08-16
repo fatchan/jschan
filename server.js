@@ -14,7 +14,7 @@ const express = require('express')
 	, configs = require(__dirname+'/configs/main.json')
 	, refererRegex = new RegExp(configs.refererRegex)
 	, Mongo = require(__dirname+'/db/db.js')
-	, { createHash, randomBytes } = require('crypto');
+	, { createHash } = require('crypto');
 
 (async () => {
 

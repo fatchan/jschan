@@ -27,12 +27,14 @@ async function wipe() {
 		, Posts = require(__dirname+'/db/posts.js')
 		, Bans = require(__dirname+'/db/bans.js')
 		, Captchas = require(__dirname+'/db/captchas.js')
+		, Ratelimits = require(__dirname+'/db/ratelimits.js')
 		, Accounts = require(__dirname+'/db/accounts.js')
 		, Files = require(__dirname+'/db/files.js');
 
 	//wipe db shit
 	await Promise.all([
 		Captchas.deleteAll(),
+		Ratelimits.deleteAll(),
 		Accounts.deleteAll(),
 		Posts.deleteAll(),
 		Boards.deleteAll(),
@@ -85,13 +87,13 @@ async function wipe() {
 		//add indexes - should profiled and changed at some point if necessary
 		, Boards.db.createIndex({ips: 1, pph:1, sequence_value:1})
 		, Bans.db.dropIndexes()
-		, Captchas.captcha.dropIndexes()
-		, Captchas.ratelimit.dropIndexes()
+		, Captchas.db.dropIndexes()
+		, Ratelimits.db.dropIndexes()
 		, Posts.db.dropIndexes()
 		, Files.db.createIndex({ 'count': 1 })
 		, Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
-		, Captchas.captcha.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
-		, Captchas.ratelimit.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 60 }) //per minute captcha ratelimit
+		, Captchas.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
+		, Ratelimits.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 60 }) //per minute captcha ratelimit
 		, Posts.db.createIndex({ 'postId': 1,'board': 1,})
 		, Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
 		, Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
