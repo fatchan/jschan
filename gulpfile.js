@@ -3,6 +3,7 @@
 const gulp = require('gulp')
 	, less = require('gulp-less')
 	, cleanCSS = require('gulp-clean-css')
+	, uglify = require('gulp-uglify-es').default
 	, del = require('del')
 	, pug = require('gulp-pug')
 	, paths = {
@@ -13,6 +14,10 @@ const gulp = require('gulp')
 		images: {
 			src: 'gulp/res/img/*',
 			dest: 'static/img/'
+		},
+		scripts: {
+			src: 'gulp/res/js/*.js',
+			dest: 'static/js/'
 		},
 		pug: {
 			src: 'views/custompages/*.pug',
@@ -137,7 +142,13 @@ function custompages() {
 		.pipe(gulp.dest(paths.pug.dest));
 }
 
-const build = gulp.parallel(css, images, deletehtml, custompages);
+function scripts() {
+	return gulp.src(paths.scripts.src)
+		.pipe(uglify())
+		.pipe(gulp.dest(paths.scripts.dest));
+}
+
+const build = gulp.parallel(css, scripts, images, deletehtml, custompages);
 const reset = gulp.series(wipe, build)
 const html = gulp.series(deletehtml, custompages)
 
@@ -147,5 +158,6 @@ module.exports = {
 	images,
 	reset,
 	custompages,
+	scripts,
 	default: build,
 };

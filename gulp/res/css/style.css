@@ -6,7 +6,7 @@
 	--post-outline-color: #B7C5D9;
 	--label-color: #98E;
 	--box-border-color: #000;
-	--transparent-darken: #00000010;
+	--darken: #00000010;
 	--highlighted-post-color: #d6bad0;
 	--highlighted-post-outline-color: #ba9dbf;
 	--board-title: #af0a0f;
@@ -32,7 +32,7 @@
 --post-outline-color: #111;
 --label-color: #282a2e;
 --box-border-color: #111;
---transparent-darken: #00000010;
+--darken: #00000010;
 --highlighted-post-color: #ff000010;
 --highlighted-post-outline-color: #111;
 --board-title: #c5c8c6;
@@ -118,7 +118,7 @@ pre {
 	text-align: left;
 	border-width: 1px 1px 1px 10px;
 	border-style: solid;
-	border-color: var(--transparent-darken);
+	border-color: var(--darken);
 	display: block;
 	margin: 0.5em 0;
 	display: flex;
@@ -127,7 +127,7 @@ pre {
 }
 
 .code, .mono {
-		background: var(--transparent-darken);
+		background: var(--darken);
 		padding: 2px;
 		font-family: monospace;
 }
@@ -470,9 +470,18 @@ a, input, summary {
 	font-size: x-small;
 }
 
+.post-file-src * {
+	max-width: 100%;
+}
+
 .post-file-src {
 	justify-content: center;
 	display: flex;
+}
+
+.expanded {
+	max-width: unset!important;
+	max-height: unset!important;
 }
 
 .file-thumb {
@@ -658,11 +667,9 @@ input[type="file"] {
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
 	position: fixed;
-	top: 5px;
+	top: 43px;
 	right: 5px;
 	background-color: var(--post-color);
-	border: 1px solid var(--post-outline-color);
-	padding: 5px;
 	z-index: 1;
 	box-sizing: border-box;
 }
