@@ -4,30 +4,9 @@ process
 	.on('uncaughtException', console.error)
 	.on('unhandledRejection', console.error);
 
-const { stat, remove, readdir } = require('fs-extra')
-	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
-	, msTime = require(__dirname+'/helpers/mstime.js')
-	, Mongo = require(__dirname+'/db/db.js')
-
-async function deleteCaptchas() {
-	const files = await readdir(`${uploadDirectory}captcha/`);
-	if (files.length > 0) {
-		files.forEach(async (file) => {
-			try {
-				const filePath = `${uploadDirectory}captcha/${file}`;
-				const stats = await stat(filePath);
-				const now = Date.now();
-				const expiry = new Date(stats.ctime).getTime() + msTime.minute*5;
-				if (now > expiry) {
-					await remove(filePath);
-					console.log(`Deleted expired captcha ${filePath}`)
-				}
-			} catch (e) {
-				console.error(e);
-			}
-		});
-	}
-}
+const msTime = require(__dirname+'/helpers/mstime.js')
+	, deleteCaptchas = require(__dirname+'/helpers/captcha/deletecaptchas.js')
+	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {
 
@@ -37,7 +16,6 @@ async function deleteCaptchas() {
 
 	console.log('Starting schedules');
 
-			await buildHomepage();
 	setInterval(async () => {
 		try {
 			await buildHomepage();
@@ -46,7 +24,6 @@ async function deleteCaptchas() {
 		}
 	}, msTime.minute*5); //rebuild homepage for pph updates
 
-	//could make this use a db changefeed
 	setInterval(async () => {
 		try {
 			await deleteCaptchas();

@@ -1,8 +1,6 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db/posts.js')
-	, Bans = require(__dirname+'/../../db/bans.js')
-	, News = require(__dirname+'/../../db/news.js');
+const { Bans, News, Posts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
