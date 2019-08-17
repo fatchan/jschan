@@ -1,6 +1,6 @@
 'use strict';
 
-const Boards = require(__dirname+'/../../db/boards.js')
+const { Boards } = require(__dirname+'/../../db/')
 	, deleteBoard = require(__dirname+'/../../models/forms/deleteboard.js')
 	, boardUriRegex = require(__dirname+'/../../helpers/checks/boarduriregex.js')
 

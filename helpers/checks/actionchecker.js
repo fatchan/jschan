@@ -13,40 +13,40 @@ const actions = [
 	{name:'global_report', global:true, auth:4, passwords:false, build:false},
 	{name:'delete_ip_board', global:true, auth:3, passwords:false, build:true},
 	{name:'delete_ip_global', global:true, auth:1, passwords:false, build:true},
-	{name:'dismiss', global:false, auth:3, passwords:false, build:false},
-	{name:'global_dismiss', global:true, auth:1, passwords:false, build:false},
+	{name:'dismiss', global:false, auth:3, passwords:false, build:true},
+	{name:'global_dismiss', global:true, auth:1, passwords:false, build:true},
 	{name:'ban', global:false, auth:3, passwords:false, build:true},
 	{name:'global_ban', global:true, auth:1, passwords:false, build:true},
 ];
 
 module.exports = (req, res) => {
 
-	let anyGlobal = 0
+	let numGlobal = 0
 		, authRequired = 4
-		, anyPasswords = 0
-		, anyBuild = 0
-		, anyValid = 0;
+		, numPasswords = 0
+		, numBuild = 0
+		, validActions = [];
 
 	for (let i = 0; i < actions.length; i++) {
 		const action = actions[i];
 		const bodyHasAction = req.body[action.name];
 		if (bodyHasAction) {
-			anyValid++;
+			validActions.push(action.name);
 			if (action.global) {
-				anyGlobal++;
+				numGlobal++;
 			}
 			if (action.auth && action.auth < authRequired) {
 				authRequired = action.auth;
 			}
 			if (action.passwords) {
-				anyPasswords++;
+				numPasswords++;
 			}
 			if (action.build) {
-				anyBuild++
+				numBuild++
 			}
 		}
 	}
 
-	return { anyGlobal, authRequired, anyValid, anyPasswords, anyBuild };
+	return { numGlobal, authRequired, validActions, numPasswords, numBuild };
 
 }

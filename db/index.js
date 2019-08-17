@@ -9,6 +9,7 @@ module.exports = {
 	Captchas: require(__dirname+'/captchas.js'),
 	Files: require(__dirname+'/files.js'),
 	News: require(__dirname+'/news.js'),
-	Ratelimits: require(__dirname+'/ratelimits.js')
+	Ratelimits: require(__dirname+'/ratelimits.js'),
+	Modlogs: require(__dirname+'/modlogs.js'),
 
 }

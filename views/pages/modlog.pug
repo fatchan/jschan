@@ -1,0 +1,40 @@
+extends ../layout.pug
+
+block head
+	title Logs for #{startDate.toDateString()}
+
+block content
+	include ../includes/logheader.pug
+	br
+	include ../includes/stickynav.pug
+	nav.pages
+		a(href=`/${board._id}/index.html`) [Index]
+		|  
+		a(href=`/${board._id}/catalog.html`) [Catalog]
+		|  
+		a(href=`/${board._id}/banners.html`) [Banners]
+		|  
+		a.bold(href=`/${board._id}/logs.html`) [Logs]
+	hr(size=1)
+	.table-container.flex-center.mv-10.text-center
+		table
+				tr
+					th Date
+						th User
+					th Actions
+					th Post IDs
+				for log in logs
+					tr
+						td #{log.date.toLocaleString()}
+						td #{log.user}
+						td #{log.actions}
+						td #{log.postIds}
+	hr(size=1)
+	nav.pages
+		a(href=`/${board._id}/index.html`) [Index]
+		|  
+		a(href=`/${board._id}/catalog.html`) [Catalog]
+		|  
+		a(href=`/${board._id}/banners.html`) [Banners]
+		|  
+		a.bold(href=`/${board._id}/logs.html`) [Logs]

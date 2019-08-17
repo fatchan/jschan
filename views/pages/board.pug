@@ -13,9 +13,12 @@ block content
 	include ../includes/stickynav.pug
 	nav.pages
 		include ../includes/pages.pug
+		|  
 		a(href=`/${board._id}/catalog.html`) [Catalog]
 		|  
 		a(href=`/${board._id}/banners.html`) [Banners]
+		|  
+		a(href=`/${board._id}/logs.html`) [Logs]
 	hr(size=1)
 	form(action='/forms/board/'+board._id+'/actions' method='POST' enctype='application/x-www-form-urlencoded')
 		if threads.length === 0
@@ -29,7 +32,10 @@ block content
 			hr(size=1)
 		nav.pages
 			include ../includes/pages.pug
+			|  
 			a(href=`/${board._id}/catalog.html`) [Catalog]
 			|  
 			a(href=`/${board._id}/banners.html`) [Banners]
+			|  
+			a(href=`/${board._id}/logs.html`) [Logs]
 		include ../includes/actionfooter.pug

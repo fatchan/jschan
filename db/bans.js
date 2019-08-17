@@ -48,7 +48,7 @@ module.exports = {
 			'_id': {
 				'$in': ids
 			}
-		})
+		});
 	},
 
 	deleteBoard: (board) => {

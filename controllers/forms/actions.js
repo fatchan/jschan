@@ -1,6 +1,6 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../db/posts.js')
+const { Posts } = require(__dirname+'/../../db/')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
 	, actionChecker = require(__dirname+'/../../helpers/checks/actionchecker.js');
 
@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
 	res.locals.actions = actionChecker(req);
 
 	//make sure they selected at least 1 action
-	if (!res.locals.actions.anyValid) {
+	if (res.locals.actions.validActions.length === 0) {
 		errors.push('No actions selected');
 	}
 

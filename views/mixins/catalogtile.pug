@@ -3,7 +3,7 @@ mixin catalogtile(board, post, index)
 		- const postURL = `/${board._id}/thread/${post.postId}.html#${post.postId}`
 		header.post-info
 			include ../includes/postmods.pug
-			a.no-decoration.post-subject(href=postURL) #{post.subject || '#'+post.postId}
+			a.no-decoration.post-subject(href=postURL) #{post.subject || 'No subject'} #{'#'+post.postId}
 			|  - 
 			span(title='Replies') R: #{post.replyposts}
 			|  / 

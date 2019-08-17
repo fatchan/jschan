@@ -1,0 +1,40 @@
+extends ../layout.pug
+
+block head
+	title Log list for /#{board._id}/
+
+block content
+	include ../includes/logheader.pug
+	br
+	include ../includes/stickynav.pug
+	nav.pages
+		a(href=`/${board._id}/index.html`) [Index]
+		|  
+		a(href=`/${board._id}/catalog.html`) [Catalog]
+		|  
+		a(href=`/${board._id}/banners.html`) [Banners]
+		|  
+		a.bold(href=`/${board._id}/logs.html`) [Logs]
+	hr(size=1)
+	if dates.length === 0
+		p No Logs.
+	else
+		.table-container.flex-center.mv-10.text-center
+			table
+				for date in dates
+					tr
+						-
+							const day = ('0'+date.getDate()).slice(-2);
+							const month = ('0'+(date.getMonth()+1)).slice(-2);
+							const year = date.getFullYear();
+							const logName = `${month}-${day}-${year}`;
+						td: a(href=`logs/${logName}.html`) #{logName}
+	hr(size=1)
+	nav.pages
+		a(href=`/${board._id}/index.html`) [Index]
+		|  
+		a(href=`/${board._id}/catalog.html`) [Catalog]
+		|  
+		a(href=`/${board._id}/banners.html`) [Banners]
+		|  
+		a.bold(href=`/${board._id}/logs.html`) [Logs]

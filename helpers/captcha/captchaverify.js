@@ -1,7 +1,6 @@
 'use strict';
 
-const Captchas = require(__dirname+'/../../db/captchas.js')
-	, Ratelimits = require(__dirname+'/../../db/ratelimits.js')
+const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 	, { ObjectId } = require(__dirname+'/../../db/db.js')
 	, remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js');

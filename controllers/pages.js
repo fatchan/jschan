@@ -24,7 +24,9 @@ const express  = require('express')
 	, news = require(__dirname+'/../models/pages/news.js')
 	, captchaPage = require(__dirname+'/../models/pages/captchapage.js')
 	, captcha = require(__dirname+'/../models/pages/captcha.js')
-	, thread = require(__dirname+'/../models/pages/thread.js');
+	, thread = require(__dirname+'/../models/pages/thread.js')
+	, modlog = require(__dirname+'/../models/pages/modlog.js')
+	, modloglist = require(__dirname+'/../models/pages/modloglist.js');
 
 //homepage with board list
 router.get('/index.html', home);
@@ -37,6 +39,10 @@ router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, Posts
 
 // board catalog page
 router.get('/:board/catalog.html', Boards.exists, catalog);
+
+// modlogs
+router.get('/:board/logs.html', Boards.exists, modloglist);
+router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog);
 
 // random board banner
 router.get('/randombanner', randombanner);

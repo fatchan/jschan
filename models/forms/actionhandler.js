@@ -1,6 +1,6 @@
 'use strict';
 
-const { Posts, Boards } = require(__dirname+'/../../db/')
+const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, banPoster = require(__dirname+'/banposter.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
@@ -16,7 +16,7 @@ const { Posts, Boards } = require(__dirname+'/../../db/')
 	, dismissGlobalReports = require(__dirname+'/dismissglobalreport.js')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, { buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
+	, { buildModLog, buildModLogList, buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
 	, { createHash, timingSafeEqual } = require('crypto');
 
@@ -26,7 +26,7 @@ module.exports = async (req, res, next) => {
 	const postMongoIds = res.locals.posts.map(post => Mongo.ObjectId(post._id));
 	let passwordPostMongoIds = [];
 	let passwordPosts = [];
-	if (res.locals.authLevel >= 4 && res.locals.actions.anyPasswords) {
+	if (res.locals.permLevel >= 4 && res.locals.actions.numPasswords > 0) {
 		if (req.body.password && req.body.password.length > 0) {
 			//hash their input and make it a buffer
 			const inputPasswordHash = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
@@ -34,7 +34,7 @@ module.exports = async (req, res, next) => {
 			passwordPosts = res.locals.posts.filter(post => {
 				if (post.password != null) {
 					const postBuffer = Buffer.from(post.password);
-					if (timingSafeEqual(inputBuffer, postBuffer) === true) {
+					if (timingSafeEqual(inputPasswordBuffer, postBuffer) === true) {
 						passwordPostMongoIds.push(Mongo.ObjectId(post._id));
 						return true;
 					}
@@ -83,20 +83,16 @@ module.exports = async (req, res, next) => {
 	}
 
 	const messages = [];
+	const modlogActions = []
 	const combinedQuery = {};
 	const passwordCombinedQuery = {};
 	let aggregateNeeded = false;
 	try {
 		// if getting global banned, board ban doesnt matter
-		if (req.body.global_ban) {
+		if (req.body.ban || req.body.global_ban) {
 			const { message, action, query } = await banPoster(req, res, next);
 			if (action) {
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
-			}
-			messages.push(message);
-		} else if (req.body.ban) {
-			const { message, action, query } = await banPoster(req, res, next);
-			if (action) {
+				modlogActions.push(req.body.ban || req.body.global_ban);
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
 			messages.push(message);
@@ -122,6 +118,7 @@ module.exports = async (req, res, next) => {
 			const { action, message } = await deletePosts(passwordPosts, req.body.delete_ip_global ? null : req.params.board);
 			messages.push(message);
 			if (action) {
+				modlogActions.push(req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global);
 				aggregateNeeded = true;
 			}
 		} else {
@@ -129,6 +126,7 @@ module.exports = async (req, res, next) => {
 			if (req.body.unlink_file || req.body.delete_file) {
 				const { message, action, query } = await deletePostsFiles(passwordPosts, req.body.unlink_file);
 				if (action) {
+					modlogActions.push(req.body.unlink_file || req.body.delete_file);
 					aggregateNeeded = true;
 					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
 				}
@@ -136,6 +134,7 @@ module.exports = async (req, res, next) => {
 			} else if (req.body.spoiler) {
 				const { message, action, query } = spoilerPosts(passwordPosts);
 				if (action) {
+					modlogActions.push(req.body.spoiler);
 					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
 				}
 				messages.push(message);
@@ -144,6 +143,7 @@ module.exports = async (req, res, next) => {
 			if (req.body.sage) {
 				const { message, action, query } = sagePosts(res.locals.posts);
 				if (action) {
+					modlogActions.push(req.body.sage);
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
@@ -151,22 +151,25 @@ module.exports = async (req, res, next) => {
 			if (req.body.lock) {
 				const { message, action, query } = lockPosts(res.locals.posts);
 				if (action) {
+					modlogActions.push(req.body.lock);
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-                }
+				}
 				messages.push(message);
 			}
 			if (req.body.sticky) {
 				const { message, action, query } = stickyPosts(res.locals.posts);
 				if (action) {
+					modlogActions.push(req.body.sticky);
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-                }
+				}
 				messages.push(message);
 			}
 			if (req.body.cyclic) {
 				const { message, action, query } = cyclePosts(res.locals.posts);
 				if (action) {
+					modlogActions.push(req.body.cyclic);
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-                }
+				}
 				messages.push(message);
 			}
 			// cannot report and dismiss at same time
@@ -174,13 +177,14 @@ module.exports = async (req, res, next) => {
 				const { message, action, query } = reportPosts(req, res, res.locals.posts);
 				if (action) {
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-                }
+				}
 				messages.push(message);
 			} else if (req.body.dismiss) {
 				const { message, action, query } = dismissReports(res.locals.posts);
 				if (action) {
+					modlogActions.push(req.body.dismiss);
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-                }
+				}
 				messages.push(message);
 			}
 			// cannot report and dismiss at same time
@@ -193,15 +197,15 @@ module.exports = async (req, res, next) => {
 			} else if (req.body.global_dismiss) {
 				const { message, action, query } = dismissGlobalReports(res.locals.posts);
 				if (action) {
+					modlogActions.push(req.body.global_dismiss);
 					combinedQuery[action] = { ...combinedQuery[action], ...query}
-                }
+				}
 				messages.push(message);
 			}
 		}
-//console.log(require('util').inspect(combinedQuery, {depth: null}))
-		const bulkWrites = [];
+		const actionBulkWrites = [];
 		if (Object.keys(combinedQuery).length > 0) {
-			bulkWrites.push({
+			actionBulkWrites.push({
 				'updateMany': {
 					'filter': {
 						'_id': {
@@ -213,7 +217,7 @@ module.exports = async (req, res, next) => {
 			});
 		}
 		if (Object.keys(passwordCombinedQuery).length > 0) {
-			bulkWrites.push({
+			actionBulkWrites.push({
 				'updateMany': {
 					'filter': {
 						'_id': {
@@ -224,14 +228,48 @@ module.exports = async (req, res, next) => {
 				}
 			});
 		}
-
 		//execute actions now
-		if (bulkWrites.length > 0) {
-			await Posts.db.bulkWrite(bulkWrites);
+		if (actionBulkWrites.length > 0) {
+			await Posts.db.bulkWrite(actionBulkWrites);
 		}
 
 		//if there are actions that can cause some rebuilding
-		if (res.locals.actions.anyBuild > 0) {
+		if (res.locals.actions.numBuild > 0) {
+
+			//modlog
+			if (modlogActions.length > 0) {
+				const modlog = {};
+				const logDate = new Date(); //all events current date
+				for (let i = 0; i < passwordPosts.length; i++) {
+					const post = passwordPosts[i];
+					if (!modlog[post.board]) {
+						//per board actions, all actions combined to one event
+						const logUser = res.locals.permLevel < 4 ? req.session.user.username : 'Unregistered User'
+						modlog[post.board] = {
+							postIds: [],
+							actions: modlogActions,
+							date: logDate,
+							user: logUser
+						};
+					}
+					//push each post id
+					modlog[post.board].postIds.push(post.postId);
+				}
+				const modlogDocuments = [];
+				for (let i = 0; i < threadBoards.length; i++) {
+					const boardName = threadBoards[i];
+					const boardLog = modlog[boardName];
+					//make it into documents for the db
+					modlogDocuments.push({
+						...boardLog,
+						'board': boardName
+					});
+				}
+				if (modlogDocuments.length > 0) {
+					//insert the modlog docs
+					await Modlogs.insertMany(modlogDocuments);
+				}
+			}
 
 			//recalculate replies and image counts
 			if (aggregateNeeded) {
@@ -262,6 +300,7 @@ module.exports = async (req, res, next) => {
 					}
 				})
 			}
+
 
 			//fetch threads per board that we only checked posts for
 			let threadsEachBoard = await Posts.db.find({
@@ -302,9 +341,10 @@ module.exports = async (req, res, next) => {
 			for (let i = 0; i < boardNames.length; i++) {
 				const boardName = boardNames[i];
 				const bounds = threadBounds[boardName];
+				const board = buildBoards[boardName];
 				//rebuild impacted threads
 				for (let j = 0; j < boardThreadMap[boardName].threads.length; j++) {
-					parallelPromises.push(buildThread(boardThreadMap[boardName].threads[j], buildBoards[boardName]));
+					parallelPromises.push(buildThread(boardThreadMap[boardName].threads[j], board));
 				}
 				//refersh any pages affected
 				const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
@@ -318,7 +358,7 @@ module.exports = async (req, res, next) => {
 							parallelPromises.push(remove(`${uploadDirectory}html/${boardName}/${k}.html`));
 						}
 					}
-					parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, afterPages));
+					parallelPromises.push(buildBoardMultiple(board, 1, afterPages));
 				} else {
 					//number of pages did not change, only possibly building existing pages
 					const threadPageOldest = await Posts.getThreadPage(boardName, bounds.oldest);
@@ -326,18 +366,18 @@ module.exports = async (req, res, next) => {
 					if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
 						if (!boardThreadMap[boardName].directThreads) {
 							//onyl deleting posts from threads, so thread order wont change, thus we dont delete all pages after
-							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
+							parallelPromises.push(buildBoardMultiple(board, threadPageNewest, threadPageOldest));
 						} else {
 							//deleting threads, so we delete all pages after
-							parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, afterPages));
+							parallelPromises.push(buildBoardMultiple(board, threadPageNewest, afterPages));
 						}
 					} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
 						//rebuild current and newer pages
-						parallelPromises.push(buildBoardMultiple(buildBoards[boardName], 1, threadPageOldest));
+						parallelPromises.push(buildBoardMultiple(board, 1, threadPageOldest));
 					} else if (req.body.lock || req.body.sage || req.body.cyclic || req.body.unlink_file) {
-						parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
+						parallelPromises.push(buildBoardMultiple(board, threadPageNewest, threadPageOldest));
 					} else if (req.body.spoiler || req.body.ban || req.body.global_ban) {
-						parallelPromises.push(buildBoardMultiple(buildBoards[boardName], threadPageNewest, threadPageOldest));
+						parallelPromises.push(buildBoardMultiple(board, threadPageNewest, threadPageOldest));
 						if (!boardThreadMap[boardName].directThreads) {
 							catalogRebuild = false;
 							//these actions dont affect the catalog tile since not on an OP and dont change reply/image counts
@@ -346,7 +386,13 @@ module.exports = async (req, res, next) => {
 				}
 				if (catalogRebuild) {
 					//the actions will affect the catalog, so we better rebuild it
-					parallelPromises.push(buildCatalog(buildBoards[boardName]));
+					parallelPromises.push(buildCatalog(board));
+				}
+				if (modlogActions.length > 0) {
+					//modlog had something added
+					parallelPromises.push(buildModLog(board));
+					parallelPromises.push(buildModLogList(board));
+//todo: build loglist on a schedule. not necessary to build every time modlog changes, only daily/end of day
 				}
 			}
 			await Promise.all(parallelPromises);
