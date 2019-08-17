@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
 	res.locals.actions = actionChecker(req);
 
 	//make sure they selected at least 1 action
-	if (!res.locals.actions.validActions || res.locals.actions.validActions.length === 0) {
+	if (res.locals.actions.validActions.length === 0) {
 		errors.push('No actions selected');
 	}
 

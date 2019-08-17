@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
 	res.locals.actions = actionChecker(req);
 
 	//make sure they have any global actions, and that they only selected global actions
-	if (!res.locals.actions.anyGlobal || res.locals.actions.validActions.length > res.locals.actions.anyGlobal) {
+	if (es.locals.actions.numGlobal === 0 || res.locals.actions.validActions.length > res.locals.actions.numGlobal) {
 		errors.push('Invalid actions selected');
 	}
 

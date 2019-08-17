@@ -21,10 +21,10 @@ const actions = [
 
 module.exports = (req, res) => {
 
-	let anyGlobal = 0
+	let numGlobal = 0
 		, authRequired = 4
-		, anyPasswords = 0
-		, anyBuild = 0
+		, numPasswords = 0
+		, numBuild = 0
 		, validActions = [];
 
 	for (let i = 0; i < actions.length; i++) {
@@ -33,20 +33,20 @@ module.exports = (req, res) => {
 		if (bodyHasAction) {
 			validActions.push(action.name);
 			if (action.global) {
-				anyGlobal++;
+				numGlobal++;
 			}
 			if (action.auth && action.auth < authRequired) {
 				authRequired = action.auth;
 			}
 			if (action.passwords) {
-				anyPasswords++;
+				numPasswords++;
 			}
 			if (action.build) {
-				anyBuild++
+				numBuild++
 			}
 		}
 	}
 
-	return { anyGlobal, authRequired, validActions, anyPasswords, anyBuild };
+	return { numGlobal, authRequired, validActions, numPasswords, numBuild };
 
 }

@@ -6,8 +6,6 @@ const { Posts, Modlogs } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-console.log(req.path, res.locals.date)
-
 	if (!res.locals.date) {
 		return next();
 	}

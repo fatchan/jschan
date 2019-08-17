@@ -109,7 +109,7 @@ module.exports = {
 		console.timeEnd(label);
 	},
 
-	buildModLog: async (board, startDate, endDate, logs=null) => {
+	buildModLog: async (board, startDate, endDate, logs) => {
 		if (!startDate || !endDate) {
 			startDate = new Date(); //this is being built by action handler so will always be current date
 			endDate = new Date(startDate.getTime());
@@ -133,23 +133,19 @@ module.exports = {
 		console.timeEnd(label);
 	},
 
-	buildModLogList: async (board, dates) => {
+	buildModLogList: async (board) => {
 		const label = `/${board._id}/logs.html`;
 		console.time(label);
-		if (!dates) {
-			let firstLog, lastLog;
-			[ firstLog, lastLog ] = await Promise.all([
-				Modlogs.getFirst(board),
-				Modlogs.getLast(board)
-			]);
-		    if (firstLog.length > 0 && lastLog.length > 0) {
-	    	    const firstLogDate = firstLog[0].date;
-    	    	firstLogDate.setHours(1,0,0,0);
-		        const lastLogDate = lastLog[0].date;
-		        dates = dateArray(firstLogDate, lastLogDate);
-		    } else {
-				dates = []
-			}
+		let dates = []
+		const [ firstLog, lastLog ] = await Promise.all([
+			Modlogs.getFirst(board),
+			Modlogs.getLast(board)
+		]);
+	    if (firstLog.length > 0 && lastLog.length > 0) {
+    	    const firstLogDate = firstLog[0].date;
+   	    	firstLogDate.setHours(1,0,0,0);
+	        const lastLogDate = lastLog[0].date;
+	        dates = dateArray(firstLogDate, lastLogDate);
 		}
 		await render(label, 'modloglist.pug', {
 			board,

@@ -26,7 +26,7 @@ module.exports = async (req, res, next) => {
 	const postMongoIds = res.locals.posts.map(post => Mongo.ObjectId(post._id));
 	let passwordPostMongoIds = [];
 	let passwordPosts = [];
-	if (res.locals.permLevel >= 4 && res.locals.actions.anyPasswords) {
+	if (res.locals.permLevel >= 4 && res.locals.actions.numPasswords > 0) {
 		if (req.body.password && req.body.password.length > 0) {
 			//hash their input and make it a buffer
 			const inputPasswordHash = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
@@ -234,7 +234,7 @@ module.exports = async (req, res, next) => {
 		}
 
 		//if there are actions that can cause some rebuilding
-		if (res.locals.actions.anyBuild > 0) {
+		if (res.locals.actions.numBuild > 0) {
 
 			//modlog
 			if (modlogActions.length > 0) {
