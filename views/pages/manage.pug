@@ -120,7 +120,7 @@ block content
 					option(value='3', selected=board.settings.tphTriggerAction === 3) Lock Board
 			section.row
 				.label Filters
-				textarea(name='filters' placeholder='newline separated, max 100') #{board.settings.filters.join('\n')}
+				textarea(name='filters' placeholder='newline separated, max 50') #{board.settings.filters.join('\n')}
 			section.row
 				.label Filter Mode
 				select(name='filter_mode' checked=board.settings.filterMode)
