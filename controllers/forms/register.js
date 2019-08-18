@@ -1,5 +1,8 @@
 'use strict';
 
+const alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
+	, registerAccount = require(__dirname+'/../../models/forms/register.js');
+
 module.exports = async (req, res, next) => {
 
 	const errors = [];
