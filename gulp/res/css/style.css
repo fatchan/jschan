@@ -440,7 +440,7 @@ td, th {
 	align-items: start;
 }
 
-a, input, summary {
+a, video, img, input, summary {
 	outline: 0;
 }
 

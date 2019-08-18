@@ -2,6 +2,7 @@ extends ../layout.pug
 include ../mixins/post.pug
 
 block head
+	script(src='/js/expand.js')
 	title /#{board._id}/ - #{thread.subject||thread.postId}
 	meta(property='og:site_name', value=meta.siteName)
 	meta(property='og:title', content=thread.subject)
