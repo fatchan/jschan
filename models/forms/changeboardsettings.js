@@ -25,7 +25,7 @@ module.exports = async (req, res, next) => {
 		markdownAnnouncement = sanitized;
 	}
 
-	let moderators = req.body.moderators !== null ? req.body.moderators.split('\n').filter(n => n) : oldSettings.moderators
+	let moderators = req.body.moderators != null ? req.body.moderators.split('\n').filter(n => n).slice(0,10) : oldSettings.moderators
 	if (moderators !== oldSettings.moderators) {
 		//make sure moderators actually have existing accounts
 		if (moderators.length > 0) {
@@ -65,7 +65,8 @@ module.exports = async (req, res, next) => {
 			raw: req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
 			markdown: markdownAnnouncement || oldSettings.announcement.markdown
 		},
-		filters: req.body.filters !== null ? req.body.filters.split('\n').filter(n => n) /*prevents empty*/ : oldSettings.filters,
+		tags: req.body.tags !== null ? req.body.tags.split('\n').filter(n => n).slice(0,10) : oldSettings.tags,
+		filters: req.body.filters !== null ? req.body.filters.split('\n').filter(n => n).slice(0,50) : oldSettings.filters,
 		filterMode: typeof req.body.filter_mode === 'number' && req.body.filter_mode !== oldSettings.filterMode ? req.body.filter_mode : oldSettings.filterMode,
 		filterBanDuration: typeof req.body.ban_duration === 'number' && req.body.ban_duration !== oldSettings.filterBanDuration ? req.body.ban_duration : oldSettings.filterBanDuration
 	};

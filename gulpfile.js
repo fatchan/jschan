@@ -59,6 +59,7 @@ async function wipe() {
 			'settings': {
 				'name': 'test',
 				'description': 'testing board',
+				'tags': [],
 				'moderators': [],
 				'captchaMode': 0,
 				'locked': false,

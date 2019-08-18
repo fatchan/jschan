@@ -5,9 +5,9 @@ const { Boards } = require(__dirname+'/../../db/');
 module.exports = async (req, res, next) => {
 
 	const { name, description } = req.body
-		, uri = req.body.uri.toLowerCase();
-
-	const board = await Boards.findOne(uri);
+		, uri = req.body.uri.toLowerCase()
+		, tags = req.body.tags.split('\n')
+		, board = await Boards.findOne(uri);
 
 	// if board exists reject
 	if (board != null) {
@@ -28,6 +28,7 @@ module.exports = async (req, res, next) => {
 		'settings': {
 			name,
 			description,
+			tags,
 			'moderators': [],
 			'locked': false,
 			'captchaMode': 0,
