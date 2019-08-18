@@ -2,7 +2,7 @@
 
 const { Boards } = require(__dirname+'/../../db/')
 	, deleteBoard = require(__dirname+'/../../models/forms/deleteboard.js')
-	, boardUriRegex = require(__dirname+'/../../helpers/checks/boarduriregex.js')
+	, alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
 
 module.exports = async (req, res, next) => {
 
@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
 	if (!req.body.uri) {
 		errors.push('Missing URI');
 	}
-	if (boardUriRegex.test(req.body.uri) !== true) {
+	if (alphaNumericRegex.test(req.body.uri) !== true) {
 		errors.push('URI must contain a-z 0-9 only');
 	} else {
 		//no need to check these if the board name is completely invalid
