@@ -38,6 +38,7 @@ const express  = require('express')
 	, uploadBannersController = require(__dirname+'/forms/uploadbanners.js')
 	, deleteBannersController = require(__dirname+'/forms/deletebanners.js')
 	, boardSettingsController = require(__dirname+'/forms/boardsettings.js')
+	, transferController = require(__dirname+'/forms/transfer.js')
 	, loginController = require(__dirname+'/forms/login.js')
 	, registerController = require(__dirname+'/forms/register.js')
 	, changePasswordController = require(__dirname+'/forms/changepassword.js')
@@ -69,6 +70,7 @@ router.post('/board/:board/modactions', csrf, Boards.exists, calcPerms, banCheck
 router.post('/global/actions', csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page version (muilti-board, uses mongoids
 
 // board settings
+router.post('/board/:board/transfer', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);
 router.post('/board/:board/settings', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
 
 //add/remove banners

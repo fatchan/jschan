@@ -11,6 +11,16 @@ module.exports = {
 		return db.findOne({ '_id': name });
 	},
 
+	setOwner: (board, username) => {
+		return db.updateOne({
+			'_id': board
+		}, {
+			'$set': {
+				'owner': username
+			}
+		});
+	},
+
 	find: () => {
 		return db.find({}).toArray();
 	},
