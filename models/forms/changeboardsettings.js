@@ -66,7 +66,7 @@ module.exports = async (req, res, next) => {
 			markdown: markdownAnnouncement || oldSettings.announcement.markdown
 		},
 		tags: req.body.tags !== null ? req.body.tags.split('\n').filter(n => n).slice(0,10) : oldSettings.tags,
-		filters: req.body.filters !== null ? req.body.filters.split('\n').filter(n => n).slice(0,10) : oldSettings.filters,
+		filters: req.body.filters !== null ? req.body.filters.split('\n').filter(n => n).slice(0,50) : oldSettings.filters,
 		filterMode: typeof req.body.filter_mode === 'number' && req.body.filter_mode !== oldSettings.filterMode ? req.body.filter_mode : oldSettings.filterMode,
 		filterBanDuration: typeof req.body.ban_duration === 'number' && req.body.ban_duration !== oldSettings.filterBanDuration ? req.body.ban_duration : oldSettings.filterBanDuration
 	};
