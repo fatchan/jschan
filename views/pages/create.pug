@@ -18,6 +18,9 @@ block content
 				.label Description
 				input(type='text', name='description', maxlength='50' required)
 			section.row
+				.label Tags
+				textarea(name='tags' placeholder='newline separated, max 10')
+			section.row
 				.label Captcha
 				span.col
 					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')

@@ -19,6 +19,9 @@ block content
 				.label Board Description
 				input(type='text' name='description' value=board.settings.description)
 			section.row
+				.label Tags
+				textarea(name='tags' placeholder='newline separated, max 10') #{board.settings.tags.join('\n')}
+			section.row
 				.label Announcement
 				textarea(name='announcement' placeholder='supports post styling') #{board.settings.announcement.raw}
 			section.row
@@ -94,7 +97,7 @@ block content
 			br
 			section.row
 				.label Moderators
-				textarea(name='moderators' placeholder='newline separated') #{board.settings.moderators.join('\n')}
+				textarea(name='moderators' placeholder='newline separated, max 10') #{board.settings.moderators.join('\n')}
 			section.row
 				.label Board Locked
 				label.postform-style.ph-5
@@ -117,7 +120,7 @@ block content
 					option(value='3', selected=board.settings.tphTriggerAction === 3) Lock Board
 			section.row
 				.label Filters
-				textarea(name='filters' placeholder='newline separated') #{board.settings.filters.join('\n')}
+				textarea(name='filters' placeholder='newline separated, max 100') #{board.settings.filters.join('\n')}
 			section.row
 				.label Filter Mode
 				select(name='filter_mode' checked=board.settings.filterMode)

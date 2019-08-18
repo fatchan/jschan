@@ -12,6 +12,15 @@ module.exports = async (req, res, next) => {
 	if (req.body.announcements && (req.body.announcements.length < 1 || req.body.announcements.length > 2000)) {
 		errors.push('Board announcements must be 1-2000 characters');
 	}
+	if (req.body.tags && req.body.tags.length > 2000) {
+		errors.push('Tags length must be less than 2000 characters');
+	}
+	if (req.body.filters && req.body.filters.length > 2000) {
+		errors.push('Filters length must be less than 2000 characters');
+	}
+	if (req.body.moderators && req.body.moderators.length > 500) {
+		errors.push('Moderators length must be less than 500 characters');
+	}
 	if (req.body.name && (req.body.name.length < 1 || req.body.name.length > 50)) {
 		errors.push('Board name must be 1-50 characters');
 	}

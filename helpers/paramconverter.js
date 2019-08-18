@@ -2,7 +2,7 @@
 
 const { ObjectId } = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkednews', 'checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners']) //only these can be arrays, since express bodyparser will output arrays
-	, trimFields = ['uri', 'moderators', 'filters', 'announcement', 'description', 'message',
+	, trimFields = ['tags', 'uri', 'moderators', 'filters', 'announcement', 'description', 'message',
 		'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason'] //trim if we dont want filed with whitespace
 	, numberFields = ['filter_mode', 'captcha_mode', 'tph_trigger', 'tph_trigger_action', 'reply_limit',
 		'max_files', 'thread_limit', 'thread', 'min_thread_message_length', 'min_reply_message_length'] //convert these to numbers before they hit our routes
