@@ -8,13 +8,13 @@ block head
 block content
 	include ../includes/boardheader.pug
 	br
-	h4.no-m-p Transfer ownership#{board.owner ? ' (Current owner: '+board.owner+')' : ''}:
+	h4.no-m-p Transfer ownership:
 	section.form-wrapper.flexleft.mv-10
 		form.form-post(action=`/forms/board/${board._id}/transfer`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			section.row
 				.label New owner username
-				input(type='text' name='username' required)
+				input(type='text' name='username' placeholder=board.owner required)
 			input(type='submit', value='submit')
 	hr(size=1)
 	h4.no-m-p Delete board:
