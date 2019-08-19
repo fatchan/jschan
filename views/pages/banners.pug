@@ -16,12 +16,12 @@ block content
 		|  
 		a(href=`/${board._id}/logs.html`) [Logs]
 	hr(size=1)
-	section.catalog
-		if board.banners.length > 0
+	if board.banners.length > 0
+		section.catalog
 			each banner in board.banners
 				img.board-banner(src=`/banner/${board._id}/${banner}` width='300' height='100')
-		else
-			p Board has no custom banners.
+	else
+		p Board has no custom banners.
 	include ../includes/stickynav.pug
 	hr(size=1)
 	nav.pages

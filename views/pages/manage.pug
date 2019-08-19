@@ -9,7 +9,7 @@ block content
 	include ../includes/boardheader.pug
 	br
 	h4.no-m-p Transfer ownership:
-	section.form-wrapper.flexleft.mv-10
+	section.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/transfer`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			section.row
@@ -18,7 +18,7 @@ block content
 			input(type='submit', value='submit')
 	hr(size=1)
 	h4.no-m-p Delete board:
-	section.form-wrapper.flexleft.mv-10
+	section.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			section.row
@@ -31,7 +31,7 @@ block content
 			input(type='submit', value='submit')
 	hr(size=1)
 	h4.no-m-p Settings:
-	section.form-wrapper.flexleft.mv-10
+	section.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
 			section.row
@@ -155,7 +155,7 @@ block content
 			input(type='submit', value='save settings')
 	hr(size=1)
 	h4.no-m-p Add Banners:
-	section.form-wrapper.flexleft.mv-10
+	section.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			section.row
@@ -166,7 +166,7 @@ block content
 	hr(size=1)
 	if board.banners.length > 0
 		h4.no-m-p Delete Banners:
-		section.form-wrapper.flexleft.mv-10
+		section.form-wrapper.flexleft.mt-10
 			form.form-post(action=`/forms/board/${board._id}/deletebanners`, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
 				each banner in board.banners
@@ -176,19 +176,18 @@ block content
 				input(type='submit', value='delete')
 		hr(size=1)
 	h4.no-m-p Reports:
-	.mv-10
-		form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
-			input(type='hidden' name='_csrf' value=csrf)
-			if reports.length === 0
-				p No reports.
+	form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
+		input(type='hidden' name='_csrf' value=csrf)
+		if reports.length === 0
+			p No reports.
+			hr(size=1)
+		else
+			for report in reports
+				section.thread
+					+post(report, false, true)
 				hr(size=1)
-			else
-				for report in reports
-					section.thread
-						+post(report, false, true)
-					hr(size=1)
-				include ../includes/actionfooter_manage.pug
-				hr(size=1)
+			include ../includes/actionfooter_manage.pug
+			hr(size=1)
 	h4.no-m-p Bans:
 	form(action=`/forms/board/${board._id}/unban` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)

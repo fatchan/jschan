@@ -19,8 +19,7 @@ block content
 			section.row
 				.label Captcha
 				span.col
-					iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
-					input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' pattern=".{6}" required title='6 characters')
+					include ../includes/captcha.pug
 			input(type='submit', value='Register')
 		p: a(href='/login.html') Login
 		p: a(href='/changepassword.html') Change Password

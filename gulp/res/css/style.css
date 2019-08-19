@@ -448,15 +448,20 @@ a, video, img, input, summary {
 	overflow: hidden;
 }
 
+.post-file:nth-child(1) {
+	margin-left: 4px;
+}
+
 .post-file {
-	display: inline-flex;
+	display: flex;
 	flex-direction: column;
-	margin: 0 4px;
 	padding: 2px 0;
+	margin-right: 10px;
+	align-items: center;
 }
 
 .post-file-info:hover {
-	word-break: break-all;
+	/*word-break: break-all;*/
 }
 
 .post-file-info {
@@ -495,7 +500,7 @@ input:invalid, textarea:invalid {
 }
 
 textarea {
-	min-width: 250px;
+	/*min-width: 250px;*/
 }
 
 .no-resize {

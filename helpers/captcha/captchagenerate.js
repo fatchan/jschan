@@ -20,8 +20,8 @@ module.exports = (text, captchaId) => {
 				{x:destx,y:desty} //dest
 			]);
 		}
-		const x = gm(width,height, '#fff')
-		.fill('#000')
+		const x = gm(width,height, '#282a2e')
+		.fill('#c5c8c6')
 		.fontSize(65)
 		let lastx = 7;
 		for (let i = 0; i <6; i++) {

@@ -59,6 +59,5 @@ details.toggle-label
 			| Toggle Cycle
 	.actions
 		h4.no-m-p Captcha:
-		iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
-		input#captcha(type='text', name='captcha', autocomplete='off' placeholder='captcha text' pattern=".{6}" required title='6 characters')
+		include ./captcha.pug
 	input(type='submit', value='submit')

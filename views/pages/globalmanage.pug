@@ -10,7 +10,7 @@ block content
 	h1.board-title Global Management
 	hr(size=1)
 	h4.no-m-p Add News:
-	section.form-wrapper.flexleft.mv-10
+	section.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/global/addnews`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			section.row
@@ -23,7 +23,7 @@ block content
 	hr(size=1)
 	if news.length > 0
 		h4.no-m-p Delete News:
-		section.form-wrapper.flexleft.mv-10
+		section.form-wrapper.flexleft.mt-10
 			form.form-post(action=`/forms/global/deletenews`, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
 				each post in news
@@ -33,7 +33,7 @@ block content
 				input(type='submit', value='delete')
 		hr(size=1)
 	h4.no-m-p Delete board:
-	section.form-wrapper.flexleft.mv-10
+	section.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			section.row
@@ -45,19 +45,18 @@ block content
 				input(type='text' name='uri' required)
 			input(type='submit', value='submit')
 	h4.no-m-p Global Reports:
-	.mv-10
-		form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
-			input(type='hidden' name='_csrf' value=csrf)
-			if reports.length === 0
-				p No reports.
+	form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
+		input(type='hidden' name='_csrf' value=csrf)
+		if reports.length === 0
+			p No reports.
+			hr(size=1)
+		else
+			for report in reports
+				section.thread
+					+post(report, false, false, true)
 				hr(size=1)
-			else
-				for report in reports
-					section.thread
-						+post(report, false, false, true)
-					hr(size=1)
-				include ../includes/actionfooter_globalmanage.pug
-				hr(size=1)
+			include ../includes/actionfooter_globalmanage.pug
+			hr(size=1)
 	h4.no-m-p Global Bans:
 	form(action=`/forms/global/unban` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
