@@ -5,9 +5,7 @@ const appealBans = require(__dirname+'/../../models/forms/appeal.js')
 
 module.exports = async (req, res, next) => {
 
-	//keep this for later in case i add other options to unbans
 	const errors = [];
-
 	if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
 		errors.push('Must select 1-10 bans');
 	}
