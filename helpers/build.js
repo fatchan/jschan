@@ -145,7 +145,7 @@ module.exports = {
 			const firstLogDate = firstLog[0].date;
    			firstLogDate.setHours(1,0,0,0);
 			const lastLogDate = lastLog[0].date;
-			dates = dateArray(firstLogDate, lastLogDate);
+			dates = dateArray(firstLogDate, lastLogDate).reverse();
 		}
 		await render(label, 'modloglist.pug', {
 			board,

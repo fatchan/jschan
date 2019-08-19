@@ -8,13 +8,13 @@ module.exports = {
 	getFirst: (board) => {
 		return db.find({
 			'board': board._id
-		}).sort({_id:-1}).limit(1).toArray();
+		}).sort({_id:1}).limit(1).toArray();
 	},
 
 	getLast: (board) => {
 		return db.find({
 			'board': board._id
-		}).sort({_id:1}).limit(1).toArray();
+		}).sort({_id:-1}).limit(1).toArray();
 	},
 
 	findBetweenDate: (board, start, end) => {
