@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const type = this.previousSibling.lastChild.innerText.replace(/[\(\)]/g, '').split(', ')[0].trim();
 		const thumbElement = fileLink.firstChild;
 		let expandedElement = thumbElement.nextSibling;
-		if (!expandedElement) {
+		if (!expandedElement && thumbElement.style.opacity !== '0.5') {
 			fileLink.style.minWidth = fileLink.offsetWidth+'px';
 			fileLink.style.minHeight = fileLink.offsetHeight+'px';
 			let source;
@@ -64,7 +64,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					break; //uh oh
 			}
 			source.src = fileSrc;
-		} else {
+		} else if (expandedElement) {
 			toggle(thumbElement, expandedElement);
 		}
 		return false;
