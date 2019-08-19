@@ -22,25 +22,22 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	//get the ids
-	const postMongoIds = res.locals.posts.map(post => Mongo.ObjectId(post._id));
-	let passwordPostMongoIds = [];
-	let passwordPosts = [];
+	//if user isnt staff, and they put an action that requires password, e.g. delete/spoiler, then filter posts to only matching password
 	if (res.locals.permLevel >= 4 && res.locals.actions.numPasswords > 0) {
+		const passwordPosts = [];
 		if (req.body.password && req.body.password.length > 0) {
 			//hash their input and make it a buffer
 			const inputPasswordHash = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
 			const inputPasswordBuffer = Buffer.from(inputPasswordHash);
 			passwordPosts = res.locals.posts.filter(post => {
-				if (post.password != null) {
+				if (post.password != null) { //null password doesnt matter for timing attack, it cant be deleted by non-staff
 					const postBuffer = Buffer.from(post.password);
-					if (timingSafeEqual(inputPasswordBuffer, postBuffer) === true) {
-						passwordPostMongoIds.push(Mongo.ObjectId(post._id));
-						return true;
-					}
+					//returns true and passes filter if passwod matched. constant time compare
+					return timingSafeEqual(inputPasswordBuffer, postBuffer);
 				}
 			});
 		}
+		//no posts matched password, reject
 		if (passwordPosts.length === 0) {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
@@ -48,9 +45,7 @@ module.exports = async (req, res, next) => {
 				'redirect': `/${req.params.board ? req.params.board+'/' : 'globalmanage.html'}`
 			});
 		}
-	} else {
-		passwordPosts = res.locals.posts;
-		passwordPostMongoIds = postMongoIds;
+		res.locals.posts = passwordPosts
 	}
 
 	//get a map of boards to threads affected
@@ -85,7 +80,6 @@ module.exports = async (req, res, next) => {
 	const messages = [];
 	const modlogActions = []
 	const combinedQuery = {};
-	const passwordCombinedQuery = {};
 	let aggregateNeeded = false;
 	try {
 		// if getting global banned, board ban doesnt matter
@@ -115,7 +109,7 @@ module.exports = async (req, res, next) => {
 				const { message } = await deletePostsFiles(res.locals.posts, false); //delete files, not just unlink
 				messages.push(message);
 			}
-			const { action, message } = await deletePosts(passwordPosts, req.body.delete_ip_global ? null : req.params.board);
+			const { action, message } = await deletePosts(res.locals.posts, req.body.delete_ip_global ? null : req.params.board);
 			messages.push(message);
 			if (action) {
 				modlogActions.push(req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global);
@@ -124,18 +118,18 @@ module.exports = async (req, res, next) => {
 		} else {
 			// if it was getting deleted, we cant do any of these
 			if (req.body.unlink_file || req.body.delete_file) {
-				const { message, action, query } = await deletePostsFiles(passwordPosts, req.body.unlink_file);
+				const { message, action, query } = await deletePostsFiles(res.locals.posts, req.body.unlink_file);
 				if (action) {
 					modlogActions.push(req.body.unlink_file || req.body.delete_file);
 					aggregateNeeded = true;
-					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
 			} else if (req.body.spoiler) {
-				const { message, action, query } = spoilerPosts(passwordPosts);
+				const { message, action, query } = spoilerPosts(res.locals.posts);
 				if (action) {
 					modlogActions.push(req.body.spoiler);
-					passwordCombinedQuery[action] = { ...passwordCombinedQuery[action], ...query}
+					combinedQuery[action] = { ...combinedQuery[action], ...query}
 				}
 				messages.push(message);
 			}
@@ -203,34 +197,12 @@ module.exports = async (req, res, next) => {
 				messages.push(message);
 			}
 		}
-		const actionBulkWrites = [];
 		if (Object.keys(combinedQuery).length > 0) {
-			actionBulkWrites.push({
-				'updateMany': {
-					'filter': {
-						'_id': {
-							'$in': postMongoIds
-						}
-					},
-					'update': combinedQuery
+			await Posts.db.updateMany({
+				'_id': {
+					'$in': res.locals.posts.map(p => Mongo.ObjectId(p._id))
 				}
-			});
-		}
-		if (Object.keys(passwordCombinedQuery).length > 0) {
-			actionBulkWrites.push({
-				'updateMany': {
-					'filter': {
-						'_id': {
-							'$in': passwordPostMongoIds
-						}
-					},
-					'update': passwordCombinedQuery
-				}
-			});
-		}
-		//execute actions now
-		if (actionBulkWrites.length > 0) {
-			await Posts.db.bulkWrite(actionBulkWrites);
+			}, combinedQuery);
 		}
 
 		//if there are actions that can cause some rebuilding
@@ -240,8 +212,8 @@ module.exports = async (req, res, next) => {
 			if (modlogActions.length > 0) {
 				const modlog = {};
 				const logDate = new Date(); //all events current date
-				for (let i = 0; i < passwordPosts.length; i++) {
-					const post = passwordPosts[i];
+				for (let i = 0; i < res.locals.posts.length; i++) {
+					const post = res.locals.posts[i];
 					if (!modlog[post.board]) {
 						//per board actions, all actions combined to one event
 						const logUser = res.locals.permLevel < 4 ? req.session.user.username : 'Unregistered User'
