@@ -17,29 +17,31 @@ module.exports = {
 		}).toArray();
 	},
 
-	findMany: (board, ids) => {
-		return db.find({
+	appeal: (ip, ids, appeal) => {
+		return db.updateMany({
 			'_id': {
 				'$in': ids
 			},
-			'board': board
-		}).toArray();
-	},
-
-	getAllBans: () => {
-		return db.find({}).toArray();
+			'ip': ip,
+			'allowAppeal': true,
+            'appeal': null
+		}, {
+			'$set': {
+				'appeal': appeal,
+			}
+		});
 	},
 
 	getGlobalBans: () => {
 		return db.find({
 			'board': null
-		}).toArray();
+		}).sort({ _id: -1 }).toArray();
 	},
 
 	getBoardBans: (board) => {
 		return db.find({
 			'board': board,
-		}).toArray();
+		}).sort({ _id: -1 }).toArray();
 	},
 
 	removeMany: (board, ids) => {

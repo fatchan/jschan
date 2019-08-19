@@ -45,6 +45,11 @@ module.exports = async (posts, unlinkOnly) => {
 		}));
 		return {
 			message:`Deleted ${fileNames.length} file(s) from server`,
+			//NOTE: only deletes from selected posts. other posts with same image will 404
+			action:'$set',
+			query: {
+				'files': []
+			}
 		};
 	}
 

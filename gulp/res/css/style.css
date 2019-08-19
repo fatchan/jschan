@@ -149,6 +149,9 @@ pre {
 .mv-10 {
 	margin: 10px 0;
 }
+.mt-10 {
+	margin-top: 10px;
+}
 .mv-5 {
 	margin: 5px 0;
 }
@@ -434,7 +437,7 @@ td, th {
 
 .post-files {
 	float: left;
-	margin-right: 10px;
+	margin-right: 1.5em;
 	display: flex;
 	flex-flow: row wrap;
 	align-items: start;
