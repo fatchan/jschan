@@ -60,7 +60,7 @@ router.post('/register', verifyCaptcha, registerController);
 router.post('/changepassword', verifyCaptcha, changePasswordController);
 
 // create board
-router.post('/create', csrf, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
+router.post('/create', isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
 
 // make new post
 router.post('/board/:board/post', Boards.exists, calcPerms, banCheck, postFiles, paramConverter, verifyCaptcha, makePostController);

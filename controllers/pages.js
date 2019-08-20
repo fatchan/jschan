@@ -54,7 +54,7 @@ router.get('/captcha', captcha);
 router.get('/login.html', login);
 
 //login page
-router.get('/create.html', isLoggedIn, csrf, create);
+router.get('/create.html', isLoggedIn, create);
 
 //registration page
 router.get('/register.html', register);

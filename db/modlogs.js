@@ -55,7 +55,7 @@ module.exports = {
 					}
 				}
 			}
-		]).toArray().then(res => res[0].dates);
+		]).toArray().then(res => res[0] ? res[0].dates : []);
 	},
 
 	findBetweenDate: (board, start, end) => {
