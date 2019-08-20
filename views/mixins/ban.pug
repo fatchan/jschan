@@ -1,8 +1,8 @@
 include ./post.pug
 
-mixin ban(ban, modpage)
+mixin ban(ban, banpage)
 	.ban
-		if modpage
+		if !banpage || (ban.appeal == null && ban.allowAppeal === true)
 			input.post-check(type='checkbox', name='checkedbans[]' value=ban._id)
 		span 
 			| Banned 
@@ -18,5 +18,9 @@ mixin ban(ban, modpage)
 		if ban.post
 			span Banned for the following post:
 			section.thread
-				+post(ban.post, false)
-	
+				+post(ban.post, false, false, false, true)
+		if ban.appeal != null
+			div Submitted appeal:
+			textarea(disabled='true') #{ban.appeal}
+		if !ban.allowAppeal
+			div This ban was issued as non-appealable.

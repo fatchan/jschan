@@ -37,6 +37,24 @@ module.exports = {
 					}
 				}
 			},
+			{
+				'$unwind': '$dates'
+			},
+            {
+                '$sort': {
+                    'dates.year': -1,
+                    'dates.month': -1,
+                    'dates.day': -1
+                }
+            },
+			{
+				'$group': {
+					'_id': null,
+					'dates': {
+						'$push': '$dates'
+					}
+				}
+			}
 		]).toArray().then(res => res[0].dates);
 	},
 

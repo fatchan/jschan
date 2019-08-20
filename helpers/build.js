@@ -135,8 +135,7 @@ module.exports = {
 	buildModLogList: async (board) => {
 		const label = `/${board._id}/logs.html`;
 		console.time(label);
-		const dates = (await Modlogs.getDates(board)).reverse();
-console.log(dates)
+		const dates = await Modlogs.getDates(board);
 		await render(label, 'modloglist.pug', {
 			board,
 			dates

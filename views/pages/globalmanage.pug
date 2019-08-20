@@ -57,7 +57,7 @@ block content
 				hr(size=1)
 			include ../includes/actionfooter_globalmanage.pug
 			hr(size=1)
-	h4.no-m-p Global Bans:
+	h4.no-m-p Global Bans & Appeals:
 	form(action=`/forms/global/unban` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if bans.length === 0
@@ -66,7 +66,7 @@ block content
 		else
 			for ban in bans
 				section.thread
-					+ban(ban, true)
+					+ban(ban)
 				hr(size=1)
 			section.action-wrapper
 				input(type='submit', value='unban')

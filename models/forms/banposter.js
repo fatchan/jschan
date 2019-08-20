@@ -8,6 +8,7 @@ module.exports = async (req, res, next) => {
 	const banExpiry = new Date(req.body.ban_duration ? banDate.getTime() + req.body.ban_duration : 8640000000000000); //perm if none or malformed input
 	const banReason = req.body.ban_reason || 'No reason specified';
 	const banBoard = req.body.global_ban ? null : req.params.board;
+	const allowAppeal = req.body.no_appeal ? false : true;
 
 	const bans = res.locals.posts.map(post => {
 		return {
@@ -17,7 +18,9 @@ module.exports = async (req, res, next) => {
 			'post': req.body.preserve_post ? post : null,
 			'issuer': req.session.user.username,
 			'date': banDate,
-			'expireAt': banExpiry
+			'expireAt': banExpiry,
+			allowAppeal,
+			'appeal': null
 		}
 	});
 
