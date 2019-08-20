@@ -7,7 +7,6 @@ block content
 	h1.board-title Create Board
 	section.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/create' method='POST')
-			input(type='hidden' name='_csrf' value=csrf)
 			section.row
 				.label URI e.g. /uri/
 				input(type='text', name='uri', maxlength='50' pattern='[a-zA-Z0-9]+' required title='alphanumeric only')

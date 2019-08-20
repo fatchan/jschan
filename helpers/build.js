@@ -218,6 +218,10 @@ console.log(dates)
 		return render('register.html', 'register.pug');
 	},
 
+	buildCreate: () => {
+		return render('create.html', 'create.pug');
+	},
+
 	buildCaptcha: () => {
 		return render('captcha.html', 'captcha.pug');
 	},
