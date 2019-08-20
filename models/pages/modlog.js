@@ -1,8 +1,7 @@
 'use strict';
 
-const { Posts, Modlogs } = require(__dirname+'/../../db/')
-	, { buildModLog } = require(__dirname+'/../../helpers/build.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js');
+const { Modlogs } = require(__dirname+'/../../db/')
+	, { buildModLog } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
 
@@ -14,16 +13,17 @@ module.exports = async (req, res, next) => {
     const endDate = new Date(startDate.valueOf());
     startDate.setHours(0,0,0,0);
     endDate.setHours(23,59,59,999);
+	let html;
 	try {
 		const logs = await Modlogs.findBetweenDate(res.locals.board, startDate, endDate);
 		if (!logs || logs.length === 0) {
 			return next();
 		}
-		await buildModLog(res.locals.board, startDate, endDate, logs);
+		html = await buildModLog(res.locals.board, startDate, endDate, logs);
 	} catch (err) {
 		return next(err);
 	}
 
-	return res.sendFile(`${uploadDirectory}html${req.path}`);
+	return res.send(html);
 
 }

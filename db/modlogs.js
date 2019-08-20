@@ -7,55 +7,51 @@ module.exports = {
 
 	getDates: (board) => {
 		return db.aggregate([
-			{
-				'$match': {
-					'board': board._id
-				}
-			},
-			{
-				'$project': {
-					'year': {
-						'$year': '$_id'
-					},
-					'month': {
-						'$month': '$_id'
-					},
-					'day': {
-						'$dayOfMonth': '$_id'
-					}
-				}
-			},
-			{
-				'$group': {
-					'_id': null,
-					'dates': {
-						'$addToSet': {
-							'year': '$year',
-							'month': '$month',
-							'day': '$day',
-						}
-					}
-				}
-			},
-			{
-				'$unwind': '$dates'
-			},
             {
-                '$sort': {
-                    'dates.year': -1,
-                    'dates.month': -1,
-                    'dates.day': -1
+                '$match': {
+                    'board': board._id
+                }
+            },
+            {
+                '$project': {
+                    'year': {
+                        '$year': '$date'
+                    },
+                    'month': {
+                        '$month': '$date'
+                    },
+                    'day': {
+                        '$dayOfMonth': '$date'
+                    }
+                }
+            },
+            {
+                '$group': {
+                    '_id': {
+		                'year': '$year',
+		                'month': '$month',
+		                'day': '$day',
+					},
+                    'count': {
+						'$sum': 1
+					}
                 }
             },
 			{
-				'$group': {
-					'_id': null,
-					'dates': {
-						'$push': '$dates'
-					}
+                '$project': {
+					'_id': 0,
+					'date': '$_id',
+					'count': '$count'
 				}
-			}
-		]).toArray().then(res => res[0] ? res[0].dates : []);
+			},
+            {
+                '$sort': {
+                    'date.year': -1,
+                    'date.month': -1,
+                    'date.day': -1
+                }
+			},
+		]).toArray();
 	},
 
 	findBetweenDate: (board, start, end) => {

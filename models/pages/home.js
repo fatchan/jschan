@@ -1,16 +1,16 @@
 'use strict';
 
-const { buildHomepage } = require(__dirname+'/../../helpers/build.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js');
+const { buildHomepage } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
 
+	let html;
 	try {
-		await buildHomepage();
+		html = await buildHomepage();
 	} catch (err) {
 		return next(err);
 	}
 
-	return res.sendFile(`${uploadDirectory}html/index.html`);
+	return res.send(html);
 
 }

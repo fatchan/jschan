@@ -9,5 +9,6 @@ const { cacheTemplates, meta }= require(__dirname+'/../configs/main.json')
 
 module.exports = async (htmlName, templateName, options) => {
 	const html = pug.renderFile(`${templateDirectory}${templateName}`, { ...options, cache: cacheTemplates, meta });
-	return outputFile(`${uploadDirectory}html/${htmlName}`, html);
+	await outputFile(`${uploadDirectory}html/${htmlName}`, html);
+	return html;
 };

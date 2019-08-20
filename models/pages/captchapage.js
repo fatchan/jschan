@@ -1,16 +1,16 @@
 'use strict';
 
-const { buildCaptcha } = require(__dirname+'/../../helpers/build.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js');
+const { buildCaptcha } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
 
+	let html;
 	try {
-		await buildCaptcha();
+		html = await buildCaptcha();
 	} catch (err) {
 		return next(err);
 	}
 
-	return res.sendFile(`${uploadDirectory}html/captcha.html`);
+	return res.send(html);
 
 }

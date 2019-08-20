@@ -10,10 +10,11 @@ module.exports = {
 	buildBanners: async(board) => {
 		const label = `${board._id}/banners.html`;
 		console.time(label);
-		await render(label, 'banners.pug', {
+		const html = render(label, 'banners.pug', {
 			board: board,
 		});
 		console.timeEnd(label);
+		return html;
 	},
 
 	buildCatalog: async (board) => {
@@ -23,11 +24,12 @@ module.exports = {
 			board = await Boards.findOne(board);
 		}
 		const threads = await Posts.getCatalog(board._id);
-		await render(label, 'catalog.pug', {
+		const html = render(label, 'catalog.pug', {
 			board,
 			threads,
 		});
 		console.timeEnd(label);
+		return html;
 	},
 
 	buildThread: async (threadId, board) => {
@@ -40,11 +42,12 @@ module.exports = {
 		if (!thread) {
 			return; //this thread may have been an OP that was deleted
 		}
-		await render(label, 'thread.pug', {
+		const html = render(label, 'thread.pug', {
 			board,
 			thread,
 		});
 		console.timeEnd(label);
+		return html;
 	},
 
 	buildBoard: async (board, page, maxPage=null) => {
@@ -55,13 +58,14 @@ module.exports = {
 			maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
 		}
 
-		await render(label, 'board.pug', {
+		const html = render(label, 'board.pug', {
 			board,
 			threads,
 			maxPage,
 			page,
 		});
 		console.timeEnd(label);
+		return html;
 	},
 
 	//building multiple pages (for rebuilds)
@@ -102,10 +106,11 @@ module.exports = {
 		const label = '/news.html';
 		console.time(label);
 		const news = await News.find();
-		await render('news.html', 'news.pug', {
+		const html = render('news.html', 'news.pug', {
 			news
 		});
 		console.timeEnd(label);
+		return html;
 	},
 
 	buildModLog: async (board, startDate, endDate, logs) => {
@@ -123,24 +128,26 @@ module.exports = {
 		if (!logs) {
 			logs = await Modlogs.findBetweenDate(board, startDate, endDate);
 		}
-		await render(label, 'modlog.pug', {
+		const html = render(label, 'modlog.pug', {
 			board,
 			logs,
 			startDate,
 			endDate
 		});
 		console.timeEnd(label);
+		return html;
 	},
 
 	buildModLogList: async (board) => {
 		const label = `/${board._id}/logs.html`;
 		console.time(label);
 		const dates = await Modlogs.getDates(board);
-		await render(label, 'modloglist.pug', {
+		const html = render(label, 'modloglist.pug', {
 			board,
 			dates
 		});
 		console.timeEnd(label);
+		return html;
 	},
 
 	buildHomepage: async () => {
@@ -200,13 +207,14 @@ module.exports = {
 			Boards.frontPageSortLimit(), //boards sorted by users, pph, total posts
 			Files.activeContent() //size of all files
 		]);
-		await render('index.html', 'home.pug', {
+		const html = render('index.html', 'home.pug', {
 			totalPosts: totalPosts,
 			totalActiveUsers,
 			boards,
 			fileStats,
 		});
 		console.timeEnd(label);
+		return html;
 	},
 
 	buildChangePassword: () => {
