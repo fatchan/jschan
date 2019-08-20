@@ -6,11 +6,28 @@ block head
 
 block content
 	h1.board-title Banned!
-	.table-container.flex-center.mv-10
-		table.table-body
-			tr.table-head
-				th Bans currently in place against your IP:
-			for ban in bans
-				tr.table-row
-					td
-						+ban(ban)
+	form.form-post(action=`/forms/appeal`, enctype='application/x-www-form-urlencoded', method='POST')
+		.table-container.flex-center.mv-10
+			table
+				tr
+					th Bans currently in place against your IP:
+				if bans.length > 0
+					for ban in bans
+						tr
+							td
+								+ban(ban, true)
+				if allowAppeal === true
+					tr
+						td
+							h4.no-m-p Appeal bans:
+								section.form-wrapper.flexleft.mt-10
+									input(type='hidden' name='_csrf' value=csrf)
+									section.row
+										.label Message
+										textarea(name='message' required)
+									section.row
+										.label Captcha
+										span.col
+											iframe.captcha(src='/captcha.html' width=200 height=110 scrolling='no')
+											input(type='text', name='captcha', autocomplete='off' placeholder='captcha text' pattern=".{6}" required title='6 characters')
+									input(type='submit', value='submit')

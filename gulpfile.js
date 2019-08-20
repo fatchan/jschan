@@ -97,6 +97,7 @@ async function wipe() {
 		, Ratelimits.db.dropIndexes()
 		, Posts.db.dropIndexes()
 		, Files.db.createIndex({ 'count': 1 })
+		, Bans.db.createIndex({ 'ip': 1 , 'board': 1 })
 		, Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
 		, Captchas.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
 		, Ratelimits.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 60 }) //per minute captcha ratelimit
