@@ -27,6 +27,9 @@ module.exports = async (req, res, next) => {
 	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
 		errors.push('Ban reason must be 50 characters or less');
 	}
+	if (req.body.log_message && req.body.log_message.length > 50) {
+		errors.push('Modlog must be 50 characters or less');
+	}
 
 	//return the errors
 	if (errors.length > 0) {

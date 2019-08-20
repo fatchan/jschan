@@ -36,7 +36,7 @@ module.exports = async (posts, board, all=false) => {
 			threadPosts = await Posts.getMultipleThreadPosts(board, threadPostIds);
 		} else {
 			//otherwise we fetch posts from threads on different boards separarely
-//TODO: use and $or/$in query so this can be tackled in a single db query
+//TODO: use big board:$or/postid:$in query so this can be tackled in a single db query
 			await Promise.all(threads.map(async thread => {
 				//for each thread, fetch all posts from the matching board and thread matching the threads postId
 				const currentThreadPosts = await Posts.getThreadPosts(thread.board, thread.postId);

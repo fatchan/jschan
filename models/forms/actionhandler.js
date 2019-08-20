@@ -212,6 +212,7 @@ module.exports = async (req, res, next) => {
 			if (modlogActions.length > 0) {
 				const modlog = {};
 				const logDate = new Date(); //all events current date
+				const message = req.body.log_message || null;
 				for (let i = 0; i < res.locals.posts.length; i++) {
 					const post = res.locals.posts[i];
 					if (!modlog[post.board]) {
@@ -221,7 +222,8 @@ module.exports = async (req, res, next) => {
 							postIds: [],
 							actions: modlogActions,
 							date: logDate,
-							user: logUser
+							user: logUser,
+							message: message,
 						};
 					}
 					//push each post id

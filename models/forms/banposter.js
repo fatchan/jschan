@@ -26,12 +26,16 @@ module.exports = async (req, res, next) => {
 
 	const numBans = await Bans.insertMany(bans).then(result => result.insertedCount);
 
-	return {
+	const query = {
         message: `Added ${numBans} bans`,
-        action:'$set',
-        query: {
-            'banmessage': req.body.ban_reason || null
-        }
-    };
+	};
+	if (req.body.ban_reason) {
+		query['action'] = '$set';
+		query['query'] = {
+			'banmessage': req.body.ban_reason
+		};
+	}
+
+	return query;
 
 }
