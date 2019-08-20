@@ -24,9 +24,9 @@ block content
 				for date in dates
 					tr
 						-
-							const day = ('0'+date.getDate()).slice(-2);
-							const month = ('0'+(date.getMonth()+1)).slice(-2);
-							const year = date.getFullYear();
+							const day = ('0'+date.day).slice(-2);
+							const month = ('0'+date.month).slice(-2);
+							const year = date.year;
 							const logName = `${month}-${day}-${year}`;
 						td: a(href=`logs/${logName}.html`) #{logName}
 	hr(size=1)

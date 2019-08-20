@@ -1,8 +1,6 @@
 'use strict';
 
-const { Posts, Modlogs } = require(__dirname+'/../../db/')
-	, { buildModLogList } = require(__dirname+'/../../helpers/build.js')
-	, dateArray = require(__dirname+'/../../helpers/datearray.js')
+const { buildModLogList } = require(__dirname+'/../../helpers/build.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {

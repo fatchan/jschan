@@ -5,16 +5,39 @@ const Mongo = require(__dirname+'/db.js')
 
 module.exports = {
 
-	getFirst: (board) => {
-		return db.find({
-			'board': board._id
-		}).sort({_id:1}).limit(1).toArray();
-	},
-
-	getLast: (board) => {
-		return db.find({
-			'board': board._id
-		}).sort({_id:-1}).limit(1).toArray();
+	getDates: (board) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'board': board._id
+				}
+			},
+			{
+				'$project': {
+					'year': {
+						'$year': '$_id'
+					},
+					'month': {
+						'$month': '$_id'
+					},
+					'day': {
+						'$dayOfMonth': '$_id'
+					}
+				}
+			},
+			{
+				'$group': {
+					'_id': null,
+					'dates': {
+						'$addToSet': {
+							'year': '$year',
+							'month': '$month',
+							'day': '$day',
+						}
+					}
+				}
+			},
+		]).toArray().then(res => res[0].dates);
 	},
 
 	findBetweenDate: (board, start, end) => {

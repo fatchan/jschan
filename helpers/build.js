@@ -2,7 +2,6 @@
 
 const Mongo = require(__dirname+'/../db/db.js')
 	, msTime = require(__dirname+'/mstime.js')
-	, dateArray = require(__dirname+'/datearray.js')
 	, { Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, render = require(__dirname+'/render.js');
 
@@ -136,17 +135,8 @@ module.exports = {
 	buildModLogList: async (board) => {
 		const label = `/${board._id}/logs.html`;
 		console.time(label);
-		let dates = []
-		const [ firstLog, lastLog ] = await Promise.all([
-			Modlogs.getFirst(board),
-			Modlogs.getLast(board)
-		]);
-		if (firstLog.length > 0 && lastLog.length > 0) {
-			const firstLogDate = firstLog[0].date;
-   			firstLogDate.setHours(1,0,0,0);
-			const lastLogDate = lastLog[0].date;
-			dates = dateArray(firstLogDate, lastLogDate).reverse();
-		}
+		const dates = (await Modlogs.getDates(board)).reverse();
+console.log(dates)
 		await render(label, 'modloglist.pug', {
 			board,
 			dates
