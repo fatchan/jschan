@@ -387,12 +387,8 @@ td, th {
 	cursor: pointer;
 }
 
-#postform:target ~ .toggle-summary {
-	display: none;
-}
-
-#postform:target ~ .toggle-hidden {
-	height: 37px;
+#postform:target + .toggle-summary {
+	visibility: hidden;
 }
 
 .toggle-label {
