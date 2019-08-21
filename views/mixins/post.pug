@@ -32,11 +32,12 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				if post.userId
 					span.user-id(style=`background: #${post.userId}`) #{post.userId}
 					| 
-			span: a.no-decoration(href=`${postURL}#${post.postId}`) No.
-			span: a.no-decoration(href=`${postURL}#postform`) #{post.postId}
-			if !post.thread
-				|  
-				span: a(href=`/${post.board}/thread/${post.thread || post.postId}.html#postform`) [Reply]
+			span.post-links
+				a.no-decoration(href=`${postURL}#${post.postId}`) No.
+				a.no-decoration(href=`${postURL}#postform`) #{post.postId}
+				if !post.thread
+					|  
+					span: a(href=`/${post.board}/thread/${post.thread || post.postId}.html#postform`) [Reply]
 		.post-data
 			if post.files.length > 0
 				.post-files
