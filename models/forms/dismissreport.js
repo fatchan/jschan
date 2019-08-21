@@ -1,10 +1,11 @@
 'use strict';
 
-module.exports = (posts) => {
+module.exports = (req, res) => {
 
-	const filteredposts = posts.filter(post => {
-		return post.reports.length > 0
-	})
+	const filteredposts = res.locals.posts.filter(post => {
+		return (req.body.global_dismiss && post.globalreports.length > 0)
+			|| (req.body.dismiss && post.reports.length > 0)
+	});
 
 	if (filteredposts.length === 0) {
 		return {
@@ -12,12 +13,13 @@ module.exports = (posts) => {
 		}
 	}
 
-	return {
+	const ret = {
 		message: 'Dismissed reports',
 		action: '$set',
-		query: {
-			'reports': []
-		}
+		query: {}
 	};
+	ret.query[`${req.body.global_dismiss ? 'global' : ''}reports`] = [];
+
+	return ret;
 
 }

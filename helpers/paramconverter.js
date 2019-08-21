@@ -1,7 +1,7 @@
 'use strict';
 
 const { ObjectId } = require(__dirname+'/../db/db.js')
-	, allowedArrays = new Set(['checkednews', 'checkedposts', 'globalcheckedposts', 'checkedbans', 'checkedbanners']) //only these can be arrays, since express bodyparser will output arrays
+	, allowedArrays = new Set(['checkednews', 'checkedposts', 'globalcheckedposts', 'checkedreports', 'checkedbans', 'checkedbanners']) //only these can be arrays, since express bodyparser will output arrays
 	, trimFields = ['tags', 'uri', 'moderators', 'filters', 'announcement', 'description', 'message',
 		'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message'] //trim if we dont want filed with whitespace
 	, numberFields = ['filter_mode', 'captcha_mode', 'tph_trigger', 'tph_trigger_action', 'reply_limit',
@@ -62,6 +62,12 @@ module.exports = (req, res, next) => {
 	if (req.body.checkedbans) {
 		req.body.checkedbans = req.body.checkedbans.map(ObjectId)
 	}
+/*
+	//convert checked reports to mongoid
+	if (req.body.checkedreports) {
+		req.body.checkedreports = req.body.checkedreports.map(ObjectId)
+	}
+*/
 
 	//ban duration convert to ban time in ms
 	if (req.body.ban_duration) {

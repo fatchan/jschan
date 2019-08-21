@@ -1,24 +1,32 @@
 'use strict';
 
-const { Posts } = require(__dirname+'/../../db/');
+const { ObjectId } = require(__dirname+'/../../db/db.js');
 
-module.exports = (req, res, posts) => {
+module.exports = (req, res) => {
 
 	const report = {
+		'id': ObjectId(),
 		'reason': req.body.report_reason,
 		'date': new Date(),
 		'ip': res.locals.ip
 	}
 
-	return {
-		message: `Reported ${posts.length} post(s)`,
+	const ret = {
+		message: `Reported ${res.locals.posts.length} post(s)`,
 		action: '$push',
-		query: {
-			'reports': {
-				'$each': [report],
-				'$slice': -5 //limit number of  reports
-			}
-		}
+		query: {}
 	};
+	const query = {
+		'$each': [report],
+		'$slice': -5 //limit number of  reports
+	}
+	if (req.body.global_report) {
+		ret.query['globalreports'] = query;
+	}
+	if (req.body.report) {
+		ret.query['reports'] = query;
+	}
+
+	return ret;
 
 }

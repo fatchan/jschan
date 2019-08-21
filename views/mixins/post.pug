@@ -1,3 +1,4 @@
+include ./report.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 	.anchor(id=post.postId)
 	article(class=`post-container ${post.thread ? '' : 'op'}`)
@@ -26,7 +27,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				if post.capcode
 					span.post-capcode #{post.capcode}
 					| 
-				time(datetime=post.date.toISOString()) #{post.date.toLocaleString()}
+				time.post-date(datetime=post.date.toISOString()) #{post.date.toLocaleString()}
 				| 
 				if post.userId
 					span.user-id(style=`background: #${post.userId}`) #{post.userId}
@@ -92,14 +93,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`) &gt;&gt;#{backlink.postId}
 						|  
 	if manage === true
-		each report in post.reports
-			.reports.post-container
-				span Date: #{report.date.toLocaleString()}
-				| 
-				span Reason: #{report.reason}
+		each r in post.reports
+			+report(r)
 	if globalmanage === true
-		each report in post.globalreports
-			.reports.post-container
-				span Date: #{report.date.toLocaleString()}
-				| 
-				span Reason: #{report.reason}
+		each r in post.globalreports
+			+report(r)

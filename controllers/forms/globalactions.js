@@ -13,6 +13,17 @@ module.exports = async (req, res, next) => {
 		errors.push('Must select 1-10 posts')
 	}
 
+	//checked reports
+	if (req.body.checkedreports) {
+		if (!req.body.global_report_ban) {
+			errors.push('Must select a report action if checked reports');
+		}
+		if (req.body.checkedreports.length > 50) {
+			//50 because checked posts is max 10 and 5 reports max per post
+			errors.push('Cannot check more than 50 reports');
+		}
+	}
+
 	res.locals.actions = actionChecker(req);
 
 	//make sure they have any global actions, and that they only selected global actions
