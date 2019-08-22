@@ -433,7 +433,7 @@ td, th {
 
 .post-files {
 	float: left;
-	margin-right: 1.5em;
+	margin: 0 .5em .5em .5em;
 	display: flex;
 	flex-flow: row wrap;
 	align-items: start;
@@ -447,15 +447,10 @@ a, video, img, input, summary {
 	overflow: hidden;
 }
 
-.post-file:nth-child(1) {
-	margin-left: 4px;
-}
-
 .post-file {
 	display: flex;
 	flex-direction: column;
-	padding: 2px 0;
-	margin-right: 10px;
+	padding: .5em .5em 0 0;
 	align-items: center;
 }
 
@@ -476,6 +471,10 @@ a, video, img, input, summary {
 
 .post-file-src * {
 	max-width: 100%;
+}
+
+video, img {
+    max-height: 90vw;
 }
 
 .post-file-src {
@@ -589,10 +588,6 @@ textarea {
 	padding: 5px;
 	padding-left: 3px;
 	display:block;
-}
-
-.post-info a {
-	
 }
 
 .post-container.op .post-info {
@@ -726,6 +721,10 @@ input[type="file"] {
 
 hr {
 	color: var(--hr);
+}
+
+hr + .thread {
+	margin-top: -5px;
 }
 
 @media only screen and (max-width: 600px) {

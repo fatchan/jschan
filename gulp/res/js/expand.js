@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	var thumbs = document.getElementsByClassName('post-file-src');
 
 	var toggle = function(thumb, exp) {
-		const close = exp.nextSibling;
+		const close = exp.previousSibling.innerText === 'Close video' ? exp.previousSibling : null;
 		if (thumb.style.display === 'none') {
 			thumb.style.display = '';
 			exp.style.display = 'none';
@@ -26,9 +26,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		e.preventDefault();
 		const fileLink = this.firstChild;
 		const fileSrc = fileLink.href;
-		const type = this.previousSibling.lastChild.innerText.replace(/[\(\)]/g, '').split(', ')[0].trim();
+		const type = this.dataset.type;
 		const thumbElement = fileLink.firstChild;
-		let expandedElement = thumbElement.nextSibling;
+		const next = thumbElement.nextSibling;
+		let expandedElement;
+		if (next) {
+			if (next.innerText === 'Close video') {
+				expandedElement = next.nextSibling;
+			} else {
+				expandedElement = next;
+			}
+		}
 		if (!expandedElement && thumbElement.style.opacity !== '0.5') {
 			fileLink.style.minWidth = fileLink.offsetWidth+'px';
 			fileLink.style.minHeight = fileLink.offsetHeight+'px';
@@ -57,7 +65,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					source = document.createElement('source');
 					expandedElement.appendChild(source);
 					fileLink.appendChild(expandedElement);
-					fileLink.appendChild(close);
+					fileLink.insertBefore(close, expandedElement);
 					toggle(thumbElement, expandedElement);
 					break;
 				deault:
