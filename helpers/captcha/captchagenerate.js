@@ -20,8 +20,8 @@ module.exports = (text, captchaId) => {
 				{x:destx,y:desty} //dest
 			]);
 		}
-		const x = gm(width,height, '#282a2e')
-		.fill('#c5c8c6')
+		const x = gm(width,height, '#333333')
+		.fill('#bbbbbb')
 		.fontSize(65)
 		let lastx = 7;
 		for (let i = 0; i <6; i++) {
@@ -29,8 +29,8 @@ module.exports = (text, captchaId) => {
 			switch (text[i]) {
 				case 'w':
 				case 'm':
-						lastx += 45;
-						break;
+					lastx += 45;
+					break;
 				case 'i':
 				case 'f':
 				case 'l':
@@ -46,7 +46,7 @@ module.exports = (text, captchaId) => {
 		//.drawText(5, 60, text)
 		x.drawRectangle(5, recy, 195, recy+4)
 		.distort(distorts, 'Shepards')
-		//.quality(30)
+		//.quality(10)
 		.write(`./static/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);

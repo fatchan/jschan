@@ -244,7 +244,7 @@ module.exports = async (req, res, next) => {
 			//insert the modlog docs
 			await Modlogs.insertMany(modlogDocuments);
 			for (let i = 0; i < threadBoards.length; i++) {
-				const board = buildsBoards[threadBoards[i]];
+				const board = buildBoards[threadBoards[i]];
 				parallelPromises.push(buildModLog(board));
 				parallelPromises.push(buildModLogList(board));
 			}
