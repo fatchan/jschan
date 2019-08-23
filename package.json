@@ -11,6 +11,7 @@
     "convert-svg-to-png": "^0.5.0",
     "cookie-parser": "^1.4.4",
     "csurf": "^1.10.0",
+    "del": "^4.1.1",
     "express": "^4.17.1",
     "express-fileupload": "github:fatchan/express-fileupload",
     "express-session": "^1.16.2",
@@ -18,25 +19,24 @@
     "fs": "0.0.1-security",
     "fs-extra": "^7.0.1",
     "gm": "github:fatchan/gm",
-    "lodash": "^4.17.15",
-    "lodash.mergewith": "^4.6.2",
-    "mongodb": "^3.3.0",
-    "path": "^0.12.7",
-    "pug": "^2.0.4",
-    "sanitize-html": "^1.20.1",
-    "saslprep": "^1.0.3"
-  },
-  "devDependencies": {
-    "del": "^4.1.1",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-less": "^4.0.1",
     "gulp-pug": "^4.0.1",
-    "gulp-uglify-es": "^1.0.4"
+    "gulp-uglify-es": "^1.0.4",
+    "lodash": "^4.17.15",
+    "lodash.mergewith": "^4.6.2",
+    "mongodb": "^3.3.0",
+    "path": "^0.12.7",
+    "pm2": "^3.5.1",
+    "pug": "^2.0.4",
+    "sanitize-html": "^1.20.1",
+    "saslprep": "^1.0.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "npm i -g pm2 gulp",
     "start": "pm2 start ecosystem.config.js --env production"
   },
   "author": "",
