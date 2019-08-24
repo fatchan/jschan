@@ -510,7 +510,7 @@ a, video, img, input, summary {
 }
 
 video, img {
-    max-height: 90vw;
+    max-height: 90vh;
 }
 
 .post-file-src {
