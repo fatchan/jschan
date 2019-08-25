@@ -43,6 +43,7 @@ block content
 				th Active Content
 			tr
 				td #{totalPosts}
+				- const totalActiveUsers = activeUsers.totalActiveUsers.length > 0 ? activeUsers.totalActiveUsers[0].ips : 0;
 				td #{totalActiveUsers}
 				td #{fileStats.totalSizeString}
 	.table-container.flex-center.mv-10

@@ -200,8 +200,9 @@ module.exports = {
 				}
 			}
 		});
-		const totalActiveUsers = activeUsers.totalActiveUsers[0].ips;
-		await Boards.db.bulkWrite(bulkWrites);
+		if (bulkWrites.length > 0) {
+			await Boards.db.bulkWrite(bulkWrites);
+		}
 		const [ totalPosts, boards, fileStats ] = await Promise.all([
 			Boards.totalPosts(), //overall total posts ever made
 			Boards.frontPageSortLimit(), //boards sorted by users, pph, total posts
@@ -209,7 +210,7 @@ module.exports = {
 		]);
 		const html = render('index.html', 'home.pug', {
 			totalPosts: totalPosts,
-			totalActiveUsers,
+			activeUsers,
 			boards,
 			fileStats,
 		});

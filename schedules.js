@@ -16,6 +16,7 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 
 	console.log('Starting schedules');
 
+await buildHomepage();
 	setInterval(async () => {
 		try {
 			await buildHomepage();
