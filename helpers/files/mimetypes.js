@@ -10,6 +10,7 @@ const imageMimeTypes = new Set([
 const animatedImageMimeTypes = new Set([
 	'image/gif',
 	'image/webp',
+	'image/apng',
 ]);
 
 const videoMimeTypes = new Set([
@@ -20,6 +21,8 @@ const videoMimeTypes = new Set([
 
 module.exports = (mimetype, options) => {
 
-	return (options.video && videoMimeTypes.has(mimetype)) || (options.image && imageMimeTypes.has(mimetype) || options.animatedImage && animatedImageMimeTypes.has(mimetype));
+	return (options.video && videoMimeTypes.has(mimetype)) ||
+			(options.image && imageMimeTypes.has(mimetype)) ||
+			(options.animatedImage && animatedImageMimeTypes.has(mimetype));
 
 };

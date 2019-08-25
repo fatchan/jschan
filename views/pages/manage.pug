@@ -54,6 +54,18 @@ block content
 				.label Max Files
 				input(type='number' name='max_files' value=board.settings.maxFiles)
 			section.row
+				.label Allow Video Files
+				label.postform-style.ph-5
+					input(type='checkbox', name='files_allow_video', value='true' checked=board.settings.allowedFileTypes.video)
+			section.row
+				.label Allow Image Files
+				label.postform-style.ph-5
+					input(type='checkbox', name='files_allow_image', value='true' checked=board.settings.allowedFileTypes.image)
+			section.row
+				.label Allow Animated Image Files
+				label.postform-style.ph-5
+					input(type='checkbox', name='files_allow_animated_image', value='true' checked=board.settings.allowedFileTypes.animatedImage)
+			section.row
 				.label Early 404
 				label.postform-style.ph-5
 					input(type='checkbox', name='early404', value='true' checked=board.settings.early404)
@@ -83,28 +95,20 @@ block content
 					input(type='checkbox', name='force_thread_subject', value='true' checked=board.settings.forceThreadSubject)
 			section.row
 				.label Force Thread Message
-					.required *
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_thread_message', value='true' checked=board.settings.forceThreadMessage)
 			section.row
 				.label Force Thread File
-					.required *
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_thread_file', value='true' checked=board.settings.forceThreadFile)
 			section.row
 				.label Force Reply Message
-					.required *
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_reply_message', value='true' checked=board.settings.forceReplyMessage)
 			section.row
 				.label Force Reply File
-					.required *
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_reply_file', value='true' checked=board.settings.forceReplyFile)
-			.row
-				.label
-					.required *
-					| All posts still require either a message or file
 			section.row
 				.label Min Thread Message Length
 				input(type='number' name='min_thread_message_length' value=board.settings.minThreadMessageLength placeholder='0-4000')

@@ -22,6 +22,7 @@ const path = require('path')
 	, videoIdentify = require(__dirname+'/../../helpers/files/videoidentify.js')
 	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
+	, fixGifs = require(__dirname+'/../../helpers/files/fixgifs.js')
 	, msTime = require(__dirname+'/../../helpers/mstime.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
@@ -49,7 +50,7 @@ module.exports = async (req, res, next) => {
 			maxFiles, forceAnon, replyLimit,
 			threadLimit, ids, userPostSpoiler,
 			defaultName, tphTrigger, tphTriggerAction,
-			captchaMode, locked } = res.locals.board.settings;
+			captchaMode, locked, allowedFileTypes } = res.locals.board.settings;
 	if (locked === true) {
 		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
@@ -132,11 +133,11 @@ module.exports = async (req, res, next) => {
 	if (res.locals.numFiles > 0) {
 		// check all mime types befoer we try saving anything
 		for (let i = 0; i < res.locals.numFiles; i++) {
-			if (!fileCheckMimeType(req.files.file[i].mimetype, {animatedImage: true, image: true, video: true})) {
+			if (!fileCheckMimeType(req.files.file[i].mimetype, allowedFileTypes)) {
 				await deleteTempFiles(req).catch(e => console.error);
 				return res.status(400).render('message', {
 					'title': 'Bad request',
-					'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
+					'message': `Mime type ${req.files.file[i].mimetype} for "${req.files.file[i].name}" not allowed.`,
 					'redirect': redirect
 				});
 			}
@@ -153,6 +154,7 @@ module.exports = async (req, res, next) => {
 					filename: filename,
 					originalFilename: file.name,
 					mimetype: file.mimetype,
+					maintype: file.mimetype.split('/')[0],
 					size: file.size,
 			};
 
@@ -161,8 +163,7 @@ module.exports = async (req, res, next) => {
 			const existsThumb = await pathExists(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`);
 
 			//handle video/image ffmpeg or graphicsmagick
-			const mainType = file.mimetype.split('/')[0];
-			switch (mainType) {
+			switch (processedFile.maintype) {
 				case 'image':
 					const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
 					processedFile.geometry = imageData.size // object with width and height pixels
@@ -177,6 +178,7 @@ module.exports = async (req, res, next) => {
 					if (!existsThumb && processedFile.hasThumb) {
 						await imageThumbnail(filename);
 					}
+					processedFile = fixGifs(processedFile);
 					break;
 				case 'video':
 					//video metadata
@@ -204,7 +206,7 @@ module.exports = async (req, res, next) => {
 					}
 					break;
 				default:
-					throw new Error(`invalid file mime type: ${mainType}`); //throw so goes to error handler before next'ing
+					throw new Error(`invalid file mime type: ${processedFile}`); //throw so goes to error handler before next'ing
 			}
 
 			if (processedFile.hasThumb === true) {
@@ -221,16 +223,6 @@ module.exports = async (req, res, next) => {
 			//delete the temp file
 			await remove(file.tempFilePath);
 
-			//handle gifs with multiple geometry and size
-			if (Array.isArray(processedFile.geometry)) {
-				processedFile.geometry = processedFile.geometry[0];
-			}
-			if (Array.isArray(processedFile.sizeString)) {
-				processedFile.sizeString = processedFile.sizeString[0];
-			}
-			if (Array.isArray(processedFile.geometryString)) {
-				processedFile.geometryString = processedFile.geometryString[0];
-			}
 			files.push(processedFile);
 			await Files.increment(processedFile);
 		}

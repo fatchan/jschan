@@ -51,11 +51,18 @@ module.exports = async (req, res, next) => {
 			'minThreadMessageLength': 0,
 			'minReplyMessageLength': 0,
 			'defaultName': 'Anonymous',
+			'filters': [],
+			'filterMode': 0,
+			'filterBanDuration': 0,
 			'announcement': {
 				'raw':null,
 				'markdown':null
 			},
-			'filters':[]
+			'allowedFileTypes': {
+				'animatedImage': true,
+				'image': true,
+				'video': true,
+			}
 		}
 	}
 
