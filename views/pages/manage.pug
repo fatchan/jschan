@@ -181,14 +181,13 @@ block content
 		input(type='hidden' name='_csrf' value=csrf)
 		if reports.length === 0
 			p No reports.
-			hr(size=1)
 		else
 			for report in reports
 				section.thread
 					+post(report, false, true)
 				hr(size=1)
 			include ../includes/actionfooter_manage.pug
-			hr(size=1)
+	hr(size=1)
 	h4.no-m-p Bans & Appeals:
 	form(action=`/forms/board/${board._id}/unban` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)

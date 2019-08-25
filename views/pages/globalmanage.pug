@@ -45,19 +45,19 @@ block content
 				.label Board URI
 				input(type='text' name='uri' required)
 			input(type='submit', value='submit')
+	hr(size=1)
 	h4.no-m-p Global Reports:
 	form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if reports.length === 0
 			p No reports.
-			hr(size=1)
 		else
 			for report in reports
 				section.thread
 					+post(report, false, false, true)
 				hr(size=1)
 			include ../includes/actionfooter_globalmanage.pug
-			hr(size=1)
+	hr(size=1)
 	h4.no-m-p Global Bans & Appeals:
 	form(action=`/forms/global/unban` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
