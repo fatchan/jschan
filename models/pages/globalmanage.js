@@ -1,15 +1,16 @@
 'use strict';
 
-const { Bans, News, Posts } = require(__dirname+'/../../db/')
+const { Bans, News, Posts, Accounts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	let reports, bans, news;
+	let reports, bans, news, accounts;
 	try {
-		[ reports, bans, news ] = await Promise.all([
+		[ reports, bans, news, accounts ] = await Promise.all([
 			Posts.getGlobalReports(),
 			Bans.getGlobalBans(),
-			News.find()
+			News.find(),
+			Accounts.find(),
 		]);
 	} catch (err) {
 		return next(err)
@@ -21,6 +22,7 @@ module.exports = async (req, res, next) => {
 		reports,
 		bans,
 		news,
+		accounts,
 	});
 
 }

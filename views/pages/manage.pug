@@ -121,7 +121,6 @@ block content
 			section.row
 				.label Reply Limit
 				input(type='number' name='reply_limit' value=board.settings.replyLimit)
-			br
 			section.row
 				.label Moderators
 				textarea(name='moderators' placeholder='newline separated, max 10') #{board.settings.moderators.join('\n')}

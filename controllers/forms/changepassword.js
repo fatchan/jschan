@@ -1,5 +1,7 @@
 'use strict';
 
+const changePassword = require(__dirname+'/../../models/forms/changepassword.js');
+
 module.exports = async (req, res, next) => {
 
 	const errors = [];

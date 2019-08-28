@@ -31,58 +31,58 @@
 /*yotsuba b*/
 /*
 :root {
-    --background-top: #d6daf0;
-    --background-rest: #eef2ff;
-    --post-color: #D6DAF0;
-    --post-outline-color: #B7C5D9;
-    --label-color: #98E;
-    --box-border-color: #000;
-    --darken: #00000010;
-    --highlighted-post-color: #d6bad0;
-    --highlighted-post-outline-color: #ba9dbf;
-    --board-title: #af0a0f;
-    --hr: lightgray;
-    --font-color: black;
-    --name-color: #117743;
-    --capcode-color: #f00;
-    --subject-color: #0F0C5D;
-    --link-color: #34345C;
-    --post-link-color: #d00;
-    --link-hover: #d00;
-    --input-borders: #a9a9a9;
-    --input-color: #000;
-    --input-background: white;
-    --dice-color: darkorange;
-    --title-color: #d70000;
+	--background-top: #d6daf0;
+	--background-rest: #eef2ff;
+	--post-color: #D6DAF0;
+	--post-outline-color: #B7C5D9;
+	--label-color: #98E;
+	--box-border-color: #000;
+	--darken: #00000010;
+	--highlighted-post-color: #d6bad0;
+	--highlighted-post-outline-color: #ba9dbf;
+	--board-title: #af0a0f;
+	--hr: lightgray;
+	--font-color: black;
+	--name-color: #117743;
+	--capcode-color: #f00;
+	--subject-color: #0F0C5D;
+	--link-color: #34345C;
+	--post-link-color: #d00;
+	--link-hover: #d00;
+	--input-borders: #a9a9a9;
+	--input-color: #000;
+	--input-background: white;
+	--dice-color: darkorange;
+	--title-color: #d70000;
 	--greentext-color: green;
 }
 */
 
 /*lainchan*/
 :root {
-    --background-top: #1E1E1E;
-    --background-rest: #1E1E1E;
-    --post-color: #333333;
-    --post-outline-color: #555555;
-    --label-color: #333333;
-    --box-border-color: #666666;
-    --darken: #00000050;
-    --highlighted-post-color: #32DD7220;
-    --highlighted-post-outline-color: #32DD7250;
-    --board-title: #32DD72;
-    --hr: #333333;
-    --font-color: #bbbbbb;
-    --name-color: #32DD72;
-    --capcode-color: #f00;
-    --subject-color: #b294bb;
-    --link-color: #fff;
-    --post-link-color: #fff;
-    --link-hover: #32DD72;
-    --input-borders: #666666;
-    --input-color: #CCCCCC;
-    --input-background: #333333;
-    --dice-color: darkorange;
-    --title-color: #d70000;
+	--background-top: #1E1E1E;
+	--background-rest: #1E1E1E;
+	--post-color: #333333;
+	--post-outline-color: #555555;
+	--label-color: #333333;
+	--box-border-color: #666666;
+	--darken: #00000050;
+	--highlighted-post-color: #32DD7220;
+	--highlighted-post-outline-color: #32DD7250;
+	--board-title: #32DD72;
+	--hr: #333333;
+	--font-color: #bbbbbb;
+	--name-color: #32DD72;
+	--capcode-color: #f00;
+	--subject-color: #b294bb;
+	--link-color: #fff;
+	--post-link-color: #fff;
+	--link-hover: #32DD72;
+	--input-borders: #666666;
+	--input-color: #CCCCCC;
+	--input-background: #333333;
+	--dice-color: darkorange;
+	--title-color: #d70000;
 	--greentext-color: #B8D962;
 }
 
@@ -510,7 +510,7 @@ a, video, img, input, summary {
 }
 
 video, img {
-    max-height: 90vh;
+		max-height: 90vh;
 }
 
 .post-file-src {
@@ -761,6 +761,20 @@ hr {
 
 hr + .thread {
 	margin-top: -5px;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+.loader {
+	border: 8px solid #00000010;
+	border-radius: 50%;
+	border-bottom: 8px solid #00000090;
+	width: 32px;
+	height: 32px;
+	animation: spin 2s linear infinite;
 }
 
 @media only screen and (max-width: 600px) {

@@ -39,18 +39,37 @@ module.exports = {
             '$set': {
                 'passwordHash': passwordHash
             }
-        })
+        });
 	},
 
-	promoteUser: (username, newlevel) => {
+	find: (skip=0, limit=0) => {
+		//skip and limit incase pagination is ever needed, can be added and maybe move to separate page on globalmanage
+		return db.find({}, {
+			'projection': {
+				'passwordHash': 0
+			}
+		}).skip(skip).limit(limit).toArray();
+	},
+
+	deleteMany: (usernames) => {
+		return db.deleteMany({
+			'_id': {
+				'$in': usernames
+			}
+		});
+	},
+
+	setLevel: (usernames, level) => {
 		//increase users auth level
-		return db.updateOne({
-			'_id': username
+		return db.updateMany({
+			'_id': {
+				'$in': usernames
+			}
 		}, {
 			'$set': {
-				'authLevel': newlevel
+				'authLevel': level
 			}
-		})
+		});
 	},
 
 	deleteAll: () => {

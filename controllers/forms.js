@@ -43,6 +43,7 @@ const express  = require('express')
 	, loginController = require(__dirname+'/forms/login.js')
 	, registerController = require(__dirname+'/forms/register.js')
 	, changePasswordController = require(__dirname+'/forms/changepassword.js')
+	, editAccountsController = require(__dirname+'/forms/editaccounts.js')
 	, createBoardController = require(__dirname+'/forms/create.js')
 	, makePostController = require(__dirname+'/forms/makepost.js')
 	//middlewarechecks
@@ -87,6 +88,9 @@ router.post('/board/:board/unban', csrf, Boards.exists, calcPerms, banCheck, isL
 //news
 router.post('/global/addnews', csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController);
 router.post('/global/deletenews', csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController);
+
+//news
+router.post('/global/editaccounts', csrf, calcPerms, isLoggedIn, hasPerms(0), editAccountsController);
 
 //delete board
 router.post('/board/:board/deleteboard', csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController);
