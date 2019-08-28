@@ -14,6 +14,7 @@ const express = require('express')
 	, configs = require(__dirname+'/configs/main.json')
 	, refererRegex = new RegExp(configs.refererRegex)
 	, Mongo = require(__dirname+'/db/db.js')
+	, Mutex = require(__dirname+'/mutex.js')
 	, { createHash } = require('crypto');
 
 (async () => {
@@ -23,6 +24,10 @@ const express = require('express')
 	// let db connect
 	console.log('connecting to db');
 	await Mongo.connect();
+	const { Accounts } = require(__dirname+'/db/');
+
+	console.log('connecting to live mutex');
+	await Mutex.connect();
 
 	// disable useless express header
 	app.disable('x-powered-by');
@@ -37,7 +42,10 @@ const express = require('express')
 	// session store
 	app.use(session({
 		secret: configs.sessionSecret,
-		store: new MongoStore({ db: Mongo.client.db('sessions') }),
+		store: new MongoStore({
+			db: Mongo.client.db('sessions'),
+			stringify: false
+		}),
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
@@ -50,11 +58,19 @@ const express = require('express')
 	//trust proxy for nginx
 	app.set('trust proxy', 1);
 
-	//referer header check
-	app.use((req, res, next) => {
+	//todo: refactor some of these middleware
+	app.use(async (req, res, next) => {
 		const ip = req.headers['x-real-ip'] || req.connection.remoteAddress
 		const ipHash = createHash('sha256').update(configs.ipHashSecret + ip).digest('base64');
 		res.locals.ip = ipHash;
+		if (req.session && req.session.authenticated === true) {
+			// keeping session updated incase user updated on global manage
+			const account = await Accounts.findOne(req.session.user.username);
+			req.session.user = {
+				'username': account._id,
+				'authLevel': account.authLevel
+			};
+		}
 		if (req.method !== 'POST') {
 			return next();
 		}
@@ -98,7 +114,7 @@ const express = require('express')
 	// listen
 	const server = app.listen(configs.port, '127.0.0.1', () => {
 
-        console.log(`listening on port ${configs.port}`);
+		console.log(`listening on port ${configs.port}`);
 
 		//let PM2 know that this is ready (for graceful reloads)
 		if (typeof process.send === 'function') { //make sure we are a child process
@@ -106,7 +122,7 @@ const express = require('express')
 			process.send('ready');
 		}
 
-    });
+	});
 
 	process.on('SIGINT', () => {
 

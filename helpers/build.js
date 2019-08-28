@@ -8,18 +8,19 @@ const Mongo = require(__dirname+'/../db/db.js')
 module.exports = {
 
 	buildBanners: async(board) => {
-		const label = `${board._id}/banners.html`;
-		console.time(label);
+		const label = `/${board._id}/banners.html`;
+		const start = process.hrtime();
 		const html = render(label, 'banners.pug', {
 			board: board,
 		});
-		console.timeEnd(label);
+		const end = process.hrtime(start);
+		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
 		return html;
 	},
 
 	buildCatalog: async (board) => {
-		const label = `${board._id || board}/catalog.html`;
-		console.time(label);
+		const label = `/${board._id || board}/catalog.html`;
+		const start = process.hrtime();
 		if (!board._id) {
 			board = await Boards.findOne(board);
 		}
@@ -28,13 +29,14 @@ module.exports = {
 			board,
 			threads,
 		});
-		console.timeEnd(label);
+		const end = process.hrtime(start);
+		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
 		return html;
 	},
 
 	buildThread: async (threadId, board) => {
-		const label = `${board._id || board}/thread/${threadId}.html`;
-		console.time(label);
+		const label = `/${board._id || board}/thread/${threadId}.html`;
+		const start = process.hrtime();
 		if (!board._id) {
 			board = await Boards.findOne(board);
 		}
@@ -46,13 +48,14 @@ module.exports = {
 			board,
 			thread,
 		});
-		console.timeEnd(label);
+		const end = process.hrtime(start);
+		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
 		return html;
 	},
 
 	buildBoard: async (board, page, maxPage=null) => {
-		const label = `${board._id}/${page === 1 ? 'index' : page}.html`;
-		console.time(label);
+		const label = `/${board._id}/${page === 1 ? 'index' : page}.html`;
+		const start = process.hrtime();
 		const threads = await Posts.getRecent(board._id, page);
 		if (maxPage == null) {
 			maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
@@ -64,14 +67,14 @@ module.exports = {
 			maxPage,
 			page,
 		});
-		console.timeEnd(label);
+		const end = process.hrtime(start);
+		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
 		return html;
 	},
 
 	//building multiple pages (for rebuilds)
 	buildBoardMultiple: async (board, startpage=1, endpage) => {
-		const label = 'multiple';
-		console.time(label);
+		const start = process.hrtime();
 		const maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
 		if (endpage === 0) {
 			//deleted only/all posts, so only 1 page will remain
@@ -82,7 +85,7 @@ module.exports = {
 		}
 		const difference = endpage-startpage + 1; //+1 because for single pagemust be > 0
 		const threads = await Posts.getRecent(board._id, startpage, difference*10);
-		console.timeLog(label, `${board._id}/${startpage === 1 ? 'index' : startpage}.html => ${board._id}/${endpage === 1 ? 'index' : endpage}.html`)
+		const label = `/${board._id}/${startpage === 1 ? 'index' : startpage}.html => /${board._id}/${endpage === 1 ? 'index' : endpage}.html`;
 		const buildArray = [];
 		for (let i = startpage; i <= endpage; i++) {
 			let spliceStart = (i-1)*10;
@@ -99,17 +102,19 @@ module.exports = {
 			);
 		}
 		await Promise.all(buildArray);
-		console.timeEnd(label);
+		const end = process.hrtime(start);
+		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
 	},
 
 	buildNews: async () => {
 		const label = '/news.html';
-		console.time(label);
+		const start = process.hrtime();
 		const news = await News.find();
 		const html = render('news.html', 'news.pug', {
 			news
 		});
-		console.timeEnd(label);
+		const end = process.hrtime(start);
+		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
 		return html;
 	},
 
@@ -124,7 +129,7 @@ module.exports = {
 		const month = ('0'+(startDate.getMonth()+1)).slice(-2);
 		const year = startDate.getFullYear();
 		const label = `/${board._id}/logs/${month}-${day}-${year}.html`;
-		console.time(label);
+		const start = process.hrtime();
 		if (!logs) {
 			logs = await Modlogs.findBetweenDate(board, startDate, endDate);
 		}
@@ -134,25 +139,27 @@ module.exports = {
 			startDate,
 			endDate
 		});
-		console.timeEnd(label);
+		const end = process.hrtime(start);
+		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
 		return html;
 	},
 
 	buildModLogList: async (board) => {
 		const label = `/${board._id}/logs.html`;
-		console.time(label);
+		const start = process.hrtime();
 		const dates = await Modlogs.getDates(board);
 		const html = render(label, 'modloglist.pug', {
 			board,
 			dates
 		});
-		console.timeEnd(label);
+		const end = process.hrtime(start);
+		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
 		return html;
 	},
 
 	buildHomepage: async () => {
 		const label = '/index.html';
-		console.time(label);
+		const start = process.hrtime();
 		const [ activeUsers, postsPerHour ] = await Promise.all([
 			Posts.activeUsers(),
 			Posts.postsPerHour()
@@ -214,7 +221,8 @@ module.exports = {
 			boards,
 			fileStats,
 		});
-		console.timeEnd(label);
+		const end = process.hrtime(start);
+		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
 		return html;
 	},
 

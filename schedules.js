@@ -6,17 +6,18 @@ process
 
 const msTime = require(__dirname+'/helpers/mstime.js')
 	, deleteCaptchas = require(__dirname+'/helpers/captcha/deletecaptchas.js')
-	, Mongo = require(__dirname+'/db/db.js');
+	, Mongo = require(__dirname+'/db/db.js')
+	, Mutex = require(__dirname+'/mutex.js');
 
 (async () => {
 
 	await Mongo.connect();
+	await Mutex.connect();
 	const { buildHomepage } = require(__dirname+'/helpers/build.js')
 		, Files = require(__dirname+'/db/files.js');
 
 	console.log('Starting schedules');
 
-await buildHomepage();
 	setInterval(async () => {
 		try {
 			await buildHomepage();
@@ -35,13 +36,16 @@ await buildHomepage();
 
 	setInterval(async () => {
 		try {
-//todo: would need to lock the DB or at least disable posting very shortly for this pruning
-			const files = await Files.db.find({
+//todo: make this not a race condition, but it only happens daily so ¯\_(ツ)_/¯
+			const files = await Files.db.aggregate({
 				'count': {
-					'$lte': 0
+					'$lte': 1
 				}
 			}, {
-				'count': 0
+				'projection': {
+					'count': 0,
+					'size': 0
+				}
 			}).toArray().then(res => {
 				return res.map(x => x._id);
 			});
