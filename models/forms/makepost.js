@@ -348,6 +348,7 @@ module.exports = async (req, res, next) => {
 
 	const postId = await Posts.insertOne(res.locals.board, data, thread);
 
+	let enableCaptcha = false;
 	if (!data.thread //if this is a new thread
 		&& tphTriggerAction > 0 //and the triger mode is not nothing
 		&& ((tphTriggerAction < 3 && captchaMode < tphTriggerAction) //and captcha mode less than captcha trigger
@@ -379,8 +380,7 @@ module.exports = async (req, res, next) => {
 			await Boards.db.updateOne({
 				'_id': res.locals.board._id,
 			}, update);
-			//remove the html (since pages will need captcha in postform now)
-			await remove(`${uploadDirectory}html/${req.params.board}/`);
+			enableCaptcha = true;
 		}
 	}
 
@@ -405,7 +405,20 @@ module.exports = async (req, res, next) => {
 	res.redirect(successRedirect);
 
 	//now add other pages to be built in background
-	if (data.thread) {
+	if (captchaEnabled) {
+		if (res.locals.board.settings.captchaMode == 2) {
+			//only delete threads if all posts require threads, otherwise just build board pages for thread captcha
+			await remove(`${uploadDirectory}html/${req.params.board}/thread/`);
+		}
+		buildQueue.push({
+			'task': 'buildBoardMultiple',
+			'options': {
+				'board': res.locals.board,
+				'startpage': 1,
+				'endpage': Math.ceil(threadLimit/10)
+			}
+		});
+	} else if (data.thread) {
 		//refersh pages
 		const threadPage = await Posts.getThreadPage(req.params.board, thread);
 		if (data.email === 'sage' || thread.sage) {
@@ -428,20 +441,22 @@ module.exports = async (req, res, next) => {
 				}
 			});
 		}
-	} else {
+	} else if (!data.thread) {
 		//new thread, prunes any old threads before rebuilds
 		const prunedThreads = await Posts.pruneThreads(res.locals.board);
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
-		}
-		buildQueue.push({
-			'task': 'buildBoardMultiple',
-			'options': {
-				'board': res.locals.board,
-				'startpage': 1,
-				'endpage': Math.ceil(threadLimit/10)
+			if (!captchaEnabled) {
+				buildQueue.push({
+					'task': 'buildBoardMultiple',
+					'options': {
+						'board': res.locals.board,
+						'startpage': 1,
+						'endpage': Math.ceil(threadLimit/10)
+					}
+				});
 			}
-		});
+		}
 	}
 
 	//always rebuild catalog for post counts and ordering

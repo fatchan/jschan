@@ -89,6 +89,22 @@ module.exports = async (req, res, next) => {
 	//array of promises we might need
 	const promises = [];
 
+	let captchaEnabled = false;
+	if (newSettings.captchaMode > oldSettings.captchaMode) {
+		captchaEnabled = true;
+		if (newSettings.captchaMode == 2) {
+			promises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/`));
+		}
+		buildQueue.push({
+	        'task': 'buildBoardMultiple',
+			'options': {
+				'board': res.locals.board,
+				'startpage': 1,
+				'endpage': newMaxPage
+			}
+		});
+	}
+
 	//do rebuilding and pruning if max number of pages is changed and any threads are pruned
 	const oldMaxPage = Math.ceil(oldSettings.threadLimit/10);
 	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
@@ -102,14 +118,16 @@ module.exports = async (req, res, next) => {
 				promises.push(remove(`${uploadDirectory}html/${req.params.board}/${i}.html`));
 			}
 			//rebuild all board pages for page nav numbers, and catalog
-			buildQueue.push({
-		        'task': 'buildBoardMultiple',
-				'options': {
-					'board': res.locals.board,
-					'startpage': 1,
-					'endpage': newMaxPage
-				}
-			});
+			if (!captchaEnabled) {
+				buildQueue.push({
+			        'task': 'buildBoardMultiple',
+					'options': {
+						'board': res.locals.board,
+						'startpage': 1,
+						'endpage': newMaxPage
+					}
+				});
+			}
 			buildQueue.push({
 		        'task': 'buildCatalog',
 				'options': {
@@ -117,11 +135,6 @@ module.exports = async (req, res, next) => {
 				}
 			});
 		}
-	}
-
-	if (newSettings.captchaMode !== oldSettings.captchaMode) {
-		promises.push(remove(`${uploadDirectory}html/${req.params.board}/`));
-//TODO: dont remove all pages, only remove some and add important pages to build queue here
 	}
 
 	if (promises.length > 0) {
