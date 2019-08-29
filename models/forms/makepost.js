@@ -371,6 +371,7 @@ module.exports = async (req, res, next) => {
 			if (tphTriggerAction < 3) {
 				res.locals.board.settings.captchaMode = tphTriggerAction;
 				update['$set']['settings.captchaMode'] = tphTriggerAction;
+				enableCaptcha = true;
 			}
 			if (tphTriggerAction === 3) {
 				res.locals.board.settings.locked = true;
@@ -380,7 +381,6 @@ module.exports = async (req, res, next) => {
 			await Boards.db.updateOne({
 				'_id': res.locals.board._id,
 			}, update);
-			enableCaptcha = true;
 		}
 	}
 
