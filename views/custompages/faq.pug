@@ -100,41 +100,65 @@ block content
 		.anchor#post-styling
 		table
 			tr
-				th: a(href='#post-styling') Post styling
+				th(colspan=2): a(href='#post-styling') Post styling
 			tr
-				td.post-message
-					p When posting, you can use certain characters to style your post with bold, italics, code blocks, quotes, etc. The formatting is as follows:
-					div &gt;greentext  &rarr;  
-						span.greentext &gt;greentext
-					div &lt;pinktext  &rarr;  
-						span.pinktext &lt;pinktext
-					div ==title==  &rarr;  
-						span.title title
-					div ""bold""  &rarr;  
-						strong bold
-					div __underline__  &rarr;  
-						span.underline underline
-					div ~~strikethrough~~  &rarr;  
-						span.strikethrough strikethrough
-					div **italic**  &rarr;  
-						em italic
-					div (((detected)))  &rarr;  
-						span.detected (((detected)))
-					pre.no-m-p
-						| ```
-						| code block
-						| ```
+				th Input
+				th Output
+			tr
+				td &gt;greentext
+				td
+					span.greentext &gt;greentext
+			tr
+				td &lt;pinktext
+				td
+					span.pinktext &lt;pinktext
+			tr
+				td ==title==
+				td
+					span.title title
+			tr
+				td ""bold""
+				td
+					span.strong bold
+			tr
+				td __underline__
+				td
+					span.underline underline
+			tr
+				td ~~strikethrough~~
+				td
+					span.strikethrough strikethrough
+			tr
+				td **italic**
+				td
+					span.em italic
+			tr
+				td (((detected)))
+				td
+					span.detected (((detected)))
+			tr
+				td
+					| ```
+					| code block
+					| ```
+				td
 					span.code code block
-					div `inline monospace`  &rarr;  
-						span.mono inline monospace
-					b Hyperlinks
-					div https://example.com  &rarr;  #[a(href='#!') https://example.com]
-					b Quotes
-					div &gt;&gt;123  &rarr;  #[a(class="quote" href="#!") &gt;&gt;123]
-					b Cross Board Quotes
-					div &gt;&gt;&gt;/b/  &rarr;  #[a(class="quote" href="#!") &gt;&gt;&gt;/b/]
-					div &gt;&gt;&gt;/b/123  &rarr;  #[a(class="quote" href="#!") &gt;&gt;&gt;/b/123]
-					br
+			tr
+				td `inline monospace`
+				td
+					span.mono inline monospace
+			tr
+				td https://example.com
+				td: a(href='#!') https://example.com
+			tr
+				td &gt;&gt;123
+				td: a(class="quote" href="#!") &gt;&gt;123
+			tr
+				td &gt;&gt;&gt;/b/
+				td: a(class="quote" href="#!") &gt;&gt;&gt;/b/
+			tr
+				td &gt;&gt;&gt;/b/123
+				td: a(class="quote" href="#!") &gt;&gt;&gt;/b/123
 	.table-container.flex-center.mv-5
 		.anchor#make-a-board
 		table
