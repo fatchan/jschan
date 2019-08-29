@@ -9,6 +9,7 @@ const express  = require('express')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, isLoggedIn = require(__dirname+'/../helpers/checks/isloggedin.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
+	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	//page models
 	, home = require(__dirname+'/../models/pages/home.js')
@@ -55,7 +56,7 @@ router.get('/captcha', captcha);
 router.get('/login.html', login);
 
 //login page
-router.get('/create.html', isLoggedIn, create);
+router.get('/create.html', sessionRefresh, isLoggedIn, create);
 
 //registration page
 router.get('/register.html', register);
@@ -82,10 +83,10 @@ router.get('/logout', (req, res, next) => {
 router.get('/:board/banners.html', Boards.exists, banners);
 
 //board manage page
-router.get('/:board/manage.html', isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manage);
+router.get('/:board/manage.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manage);
 
 //global manage page
-router.get('/globalmanage.html', isLoggedIn, calcPerms, hasPerms(1), csrf, globalManage);
+router.get('/globalmanage.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManage);
 
 module.exports = router;
 

@@ -60,7 +60,6 @@ const express = require('express')
 	//self explanatory middlewares
 	app.use(ipHash);
 	app.use(referrerCheck);
-	app.use(require(__dirname+'/helpers/sessionrefresh.js')); //because mongo not conencted, requiring here
 
 	// use pug view engine
 	app.set('view engine', 'pug');
