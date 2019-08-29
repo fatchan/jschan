@@ -4,6 +4,7 @@ const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db/boards.js')
 	, Posts = require(__dirname+'/../db/posts.js')
+	//middlewares
 	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, isLoggedIn = require(__dirname+'/../helpers/checks/isloggedin.js')

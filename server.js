@@ -12,30 +12,29 @@ const express = require('express')
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
-	, refererRegex = new RegExp(configs.refererRegex)
+	, ipHash = require(__dirname+'/helpers/iphash.js')
+	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, Mongo = require(__dirname+'/db/db.js')
-	, Mutex = require(__dirname+'/mutex.js')
-	, { createHash } = require('crypto');
+	, Mutex = require(__dirname+'/mutex.js');
 
 (async () => {
 
-	console.log('Starting in mode:', process.env.NODE_ENV);
+	console.log('STARTING IN MODE:', process.env.NODE_ENV);
 
-	// let db connect
-	console.log('connecting to db');
+	//connect to mongodb
+	console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
-	const { Accounts } = require(__dirname+'/db/');
-
-	console.log('connecting to live mutex');
+	console.log('CONNECTED TO MONGODB');
+	//use live mutex for locking, will switch to redis later
+	console.log('CONNECTING TO LMX');
 	await Mutex.connect();
+	console.log('CONNECTED TO LMX');
 
 	// disable useless express header
 	app.disable('x-powered-by');
-
 	// parse forms
 	app.use(bodyParser.urlencoded({extended: true}));
 	app.use(bodyParser.json());
-
 	//parse cookies
 	app.use(cookieParser());
 
@@ -58,30 +57,10 @@ const express = require('express')
 	//trust proxy for nginx
 	app.set('trust proxy', 1);
 
-	//todo: refactor some of these middleware
-	app.use(async (req, res, next) => {
-		const ip = req.headers['x-real-ip'] || req.connection.remoteAddress
-		const ipHash = createHash('sha256').update(configs.ipHashSecret + ip).digest('base64');
-		res.locals.ip = ipHash;
-		if (req.session && req.session.authenticated === true) {
-			// keeping session updated incase user updated on global manage
-			const account = await Accounts.findOne(req.session.user.username);
-			req.session.user = {
-				'username': account._id,
-				'authLevel': account.authLevel
-			};
-		}
-		if (req.method !== 'POST') {
-			return next();
-		}
-		if (configs.refererCheck === true && (!req.headers.referer || !req.headers.referer.match(refererRegex))) {
-			return res.status(403).render('message', {
-				'title': 'Forbidden',
-				'message': 'Invalid or missing "Referer" header. Are you posting from the correct URL?'
-			});
-		}
-		next();
-	})
+	//self explanatory middlewares
+	app.use(ipHash);
+	app.use(referrerCheck);
+	app.use(require(__dirname+'/helpers/sessionrefresh.js')); //because mongo not conencted, requiring here
 
 	// use pug view engine
 	app.set('view engine', 'pug');
@@ -111,41 +90,35 @@ const express = require('express')
 		});
 	})
 
-	// listen
+	//listen
 	const server = app.listen(configs.port, '127.0.0.1', () => {
-
 		console.log(`listening on port ${configs.port}`);
-
-		//let PM2 know that this is ready (for graceful reloads)
-		if (typeof process.send === 'function') { //make sure we are a child process
+		//let PM2 know that this is ready for graceful reloads and to serialise startup
+		if (typeof process.send === 'function') {
+			//make sure we are a child process of PM2 i.e. not in dev
 			console.info('sending ready signal to PM2');
 			process.send('ready');
 		}
-
 	});
 
+	//listen for sigint from PM2
 	process.on('SIGINT', () => {
-
-		console.info('SIGINT signal received');
-
+		console.info('SIGINT SIGNAL RECEIVED');
 		// Stops the server from accepting new connections and finishes existing connections.
 		server.close((err) => {
-
 			// if error, log and exit with error (1 code)
-			console.info('closing http server');
+			console.info('CLOSING SERVER');
 			if (err) {
 				console.error(err);
 				process.exit(1);
 			}
-
 			// close database connection
-			console.info('closing db connection');
+			console.info('DISCONNECTING MONGODB');
 			Mongo.client.close();
-
+			console.info('DISCONNECTED MONGODB');
 			// now close without error
 			process.exit(0);
-
-		})
-	})
+		});
+	});
 
 })();

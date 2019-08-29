@@ -3,6 +3,14 @@
 const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db/boards.js')
+	//middlewares
+	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
+	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
+	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
+	, banCheck = require(__dirname+'/../helpers/checks/bancheck.js')
+	, isLoggedIn = require(__dirname+'/../helpers/checks/isloggedin.js')
+	, verifyCaptcha = require(__dirname+'/../helpers/captcha/captchaverify.js')
+	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	, upload = require('express-fileupload')
 	, postFiles = upload({
 		createParentPath: true,
@@ -10,7 +18,7 @@ const express  = require('express')
 		preserveExtension: 4,
 		limits: {
 			fileSize: 10 * 1024 * 1024,
-			files: 3
+			files: 3 //todo: add configs for these values
 		},
 		abortOnLimit: true,
 		useTempFiles: true,
@@ -46,14 +54,6 @@ const express  = require('express')
 	, editAccountsController = require(__dirname+'/forms/editaccounts.js')
 	, createBoardController = require(__dirname+'/forms/create.js')
 	, makePostController = require(__dirname+'/forms/makepost.js')
-	//middlewarechecks
-	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
-	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
-	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
-	, banCheck = require(__dirname+'/../helpers/checks/bancheck.js')
-	, isLoggedIn = require(__dirname+'/../helpers/checks/isloggedin.js')
-	, verifyCaptcha = require(__dirname+'/../helpers/captcha/captchaverify.js')
-	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 
 //accounts
 router.post('/login', loginController);
