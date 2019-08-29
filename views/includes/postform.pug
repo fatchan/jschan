@@ -34,7 +34,7 @@ section.form-wrapper.flex-center
 			.label Message
 				if messageRequired
 					.required *
-			textarea(name='message', rows='5', autocomplete='off' maxlength='4000' required=messageRequired)
+			textarea#message(name='message', rows='5', autocomplete='off' maxlength='4000' required=messageRequired)
 		if board.settings.maxFiles > 0
 			section.row
 				.label Files

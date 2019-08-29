@@ -2,6 +2,7 @@
 
 const gulp = require('gulp')
 	, less = require('gulp-less')
+	, concat = require('gulp-concat')
 	, cleanCSS = require('gulp-clean-css')
 	, uglify = require('gulp-uglify-es').default
 	, del = require('del')
@@ -154,6 +155,7 @@ function custompages() {
 
 function scripts() {
 	return gulp.src(paths.scripts.src)
+		.pipe(concat('all.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 }
