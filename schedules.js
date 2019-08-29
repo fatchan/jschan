@@ -18,12 +18,12 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 
 	console.log('Starting schedules');
 
-//	setInterval(async () => {
+	setInterval(async () => {
 		buildQueue.push({
 			'task': 'buildHomepage',
 			'options': {}
 		})
-//	}, msTime.minute*5); //rebuild homepage for pph updates
+	}, msTime.minute*5); //rebuild homepage for pph updates
 
 	setInterval(async () => {
 		try {

@@ -89,6 +89,11 @@ module.exports = async (req, res, next) => {
 	//array of promises we might need
 	const promises = [];
 
+	//pages in new vs old settings
+	const oldMaxPage = Math.ceil(oldSettings.threadLimit/10);
+	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
+
+	//add stuff to queue or remotve threads if captcha enabled (since need to add captcha to post form)
 	let captchaEnabled = false;
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
 		captchaEnabled = true;
@@ -106,8 +111,6 @@ module.exports = async (req, res, next) => {
 	}
 
 	//do rebuilding and pruning if max number of pages is changed and any threads are pruned
-	const oldMaxPage = Math.ceil(oldSettings.threadLimit/10);
-	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
 	if (newMaxPage < oldMaxPage) {
 		//prune old threads
 		const prunedThreads = await Posts.pruneThreads(res.locals.board);

@@ -405,7 +405,7 @@ module.exports = async (req, res, next) => {
 	res.redirect(successRedirect);
 
 	//now add other pages to be built in background
-	if (captchaEnabled) {
+	if (enableCaptcha) {
 		if (res.locals.board.settings.captchaMode == 2) {
 			//only delete threads if all posts require threads, otherwise just build board pages for thread captcha
 			await remove(`${uploadDirectory}html/${req.params.board}/thread/`);
@@ -446,7 +446,7 @@ module.exports = async (req, res, next) => {
 		const prunedThreads = await Posts.pruneThreads(res.locals.board);
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
-			if (!captchaEnabled) {
+			if (!enableCaptcha) {
 				buildQueue.push({
 					'task': 'buildBoardMultiple',
 					'options': {
