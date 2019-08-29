@@ -12,7 +12,11 @@ module.exports = async (req, res, next) => {
 		if (page > maxPage) {
 			return next();
 		}
-		html = await buildBoard(res.locals.board, page, maxPage);
+		html = await buildBoard({
+			board: res.locals.board,
+			page,
+			maxPage
+		});
 	} catch (err) {
 		return next(err);
 	}

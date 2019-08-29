@@ -16,9 +16,23 @@ module.exports = {
 			NODE_ENV: 'production'
 		}
 	}, {
+		name: 'build-worker',
+		script: 'worker.js',
+		instances: 1, //could increase if building is getting backed up
+		autorestart: true,
+		watch: false,
+		max_memory_restart: '1G',
+		log_date_format: 'YYYY-MM-DD HH:mm:ss.SSS',
+		env: {
+			NODE_ENV: 'development'
+		},
+		env_production: {
+			NODE_ENV: 'production'
+		}
+	}, {
 		name: 'chan',
 		script: 'server.js',
-		instances: 0, //0 = number of cpu cores
+		instances: 0, // 0 = number of cpu cores
 		autorestart: true,
 		watch: false,
 		max_memory_restart: '1G',

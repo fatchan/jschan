@@ -40,9 +40,10 @@ Please note:
 ##### Requirements
 - Linux (most likely could work elsewhere, but why?)
 - Node.js (to run the app)
+- MongoDB (database, duh)
+- Redis (queues, and eventually for caching and mutex/locking)
 - Nginx (handle https, serve static content and html)
 - Certbot/letsencrypt (for https cert)
-- MongoDB (database, duh)
 - Imagemagick (thumbnailing images)
 - Ffmpeg (thumbnailing videos)
 - Bcrypt (account password hashes)
@@ -54,6 +55,8 @@ $ sudo apt-get install bcrypt nginx ffmpeg imagemagick
 ```
 
 [Install](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian) and [configure auth for mongodb](https://medium.com/mongoaudit/how-to-enable-authentication-on-mongodb-b9e8a924efac). This is to avoid out of date verisons in debian repos.
+
+[Install and configure](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-debian-9) Redis.
 
 Install nodejs. You can use [node version manager](https://github.com/nvm-sh/nvm) (nvm) to help with this.
 Once you have nvm, install the LTS version of nodejs (currently 10.x).

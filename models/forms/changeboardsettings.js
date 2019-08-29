@@ -2,7 +2,7 @@
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, { buildHomepage, buildCatalog, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
+	, buildQueue = require(__dirname+'/../../queue.js')
 	, { remove } = require('fs-extra')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
@@ -101,15 +101,27 @@ module.exports = async (req, res, next) => {
 			for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
 				promises.push(remove(`${uploadDirectory}html/${req.params.board}/${i}.html`));
 			}
-			//rebuild valid board pages for page numbers, and catalog for prunedthreads
-			promises.push(buildBoardMultiple(res.locals.board, 1, newMaxPage));
-			promises.push(buildCatalog(res.locals.board));
+			//rebuild all board pages for page nav numbers, and catalog
+			buildQueue.push({
+		        'task': 'buildBoardMultiple',
+				'options': {
+					'board': res.locals.board,
+					'startpage': 1,
+					'endpage': newMaxPage
+				}
+			});
+			buildQueue.push({
+		        'task': 'buildCatalog',
+				'options': {
+					'board': res.locals.board,
+				}
+			});
 		}
 	}
 
 	if (newSettings.captchaMode !== oldSettings.captchaMode) {
-		//TODO: only remove necessary pages here
 		promises.push(remove(`${uploadDirectory}html/${req.params.board}/`));
+//TODO: dont remove all pages, only remove some and add important pages to build queue here
 	}
 
 	if (promises.length > 0) {

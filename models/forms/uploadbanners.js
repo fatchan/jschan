@@ -8,7 +8,7 @@ const path = require('path')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, { Boards } = require(__dirname+'/../../db/')
-	, { buildBanners } = require(__dirname+'/../../helpers/build.js')
+	, buildQueue = require(__dirname+'/../../queue.js');
 
 module.exports = async (req, res, next) => {
 
@@ -79,8 +79,15 @@ module.exports = async (req, res, next) => {
 	//add banners to board in memory
 	res.locals.board.banners = res.locals.board.banners.concat(filenames);
 
-	// rebuild the public banners page
-	await buildBanners(res.locals.board);
+	if (filenames.length > 0) {
+		//add public banners page to build queue
+		buildQueue.push({
+	        'task': 'buildBanners',
+			'options': {
+				'board': res.locals.board,
+			}
+		});
+	}
 
 	return res.render('message', {
 		'title': 'Success',

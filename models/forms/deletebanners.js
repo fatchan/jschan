@@ -3,7 +3,7 @@
 const { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { Boards } = require(__dirname+'/../../db/')
-	, { buildBanners } = require(__dirname+'/../../helpers/build.js')
+	, buildQueue = require(__dirname+'/../../queue.js');
 
 module.exports = async (req, res, next) => {
 
@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
 	}));
 
 	//remove from db
-	await Boards.removeBanners(req.params.board, req.body.checkedbanners);
+	const amount = await Boards.removeBanners(req.params.board, req.body.checkedbanners);
 
 	//update res locals banners in memory
 	res.locals.board.banners = res.locals.board.banners.filter(banner => {
@@ -23,7 +23,12 @@ module.exports = async (req, res, next) => {
 	});
 
 	//rebuild public banners page
-	await buildBanners(res.locals.board);
+	buildQueue.push({
+        'task': 'buildBanners',
+		'options': {
+			'board': res.locals.board,
+		}
+	});
 
 	return res.render('message', {
 		'title': 'Success',

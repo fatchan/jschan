@@ -2,7 +2,7 @@
 
 const { News } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, { buildNews } = require(__dirname+'/../../helpers/build.js')
+	, buildQueue = require(__dirname+'/../../queue.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
 	, escape = require(__dirname+'/../../helpers/posting/escape.js')
@@ -27,7 +27,10 @@ module.exports = async (req, res, next) => {
 
 	await News.insertOne(post);
 
-	await buildNews();
+	buildQueue.push({
+		'task': 'buildNews',
+		'options': {}
+	});
 
 	return res.render('message', {
 		'title': 'Success',

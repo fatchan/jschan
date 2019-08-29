@@ -5,6 +5,7 @@
 	"tripcodeSecret": "long random string",
 	"ipHashSecret": "long random string",
 	"postPasswordSecret": "long random string",
+	"redisPassword": "long random string",
 	"cacheTemplates": true,
 	"refererCheck": false,
 	"refererRegex": "^https?:\\/\\/(?:www\\.)?domain\\.com\\/",

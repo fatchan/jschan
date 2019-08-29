@@ -7,24 +7,23 @@ process
 const msTime = require(__dirname+'/helpers/mstime.js')
 	, deleteCaptchas = require(__dirname+'/helpers/captcha/deletecaptchas.js')
 	, Mongo = require(__dirname+'/db/db.js')
-	, Mutex = require(__dirname+'/mutex.js');
+	, Mutex = require(__dirname+'/mutex.js')
+	, buildQueue = require(__dirname+'/queue.js');
 
 (async () => {
 
 	await Mongo.connect();
 	await Mutex.connect();
-	const { buildHomepage } = require(__dirname+'/helpers/build.js')
-		, Files = require(__dirname+'/db/files.js');
+	const Files = require(__dirname+'/db/files.js');
 
 	console.log('Starting schedules');
 
-	setInterval(async () => {
-		try {
-			await buildHomepage();
-		} catch (e) {
-			console.error(e);
-		}
-	}, msTime.minute*5); //rebuild homepage for pph updates
+//	setInterval(async () => {
+		buildQueue.push({
+			'task': 'buildHomepage',
+			'options': {}
+		})
+//	}, msTime.minute*5); //rebuild homepage for pph updates
 
 	setInterval(async () => {
 		try {

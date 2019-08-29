@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
 
 	let html;
 	try {
-		html = await buildModLogList(res.locals.board);
+		html = await buildModLogList({ board: res.locals.board });
 	} catch (err) {
 		return next(err);
 	}

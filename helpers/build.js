@@ -3,98 +3,95 @@
 const Mongo = require(__dirname+'/../db/db.js')
 	, msTime = require(__dirname+'/mstime.js')
 	, { Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
-	, render = require(__dirname+'/render.js');
+	, render = require(__dirname+'/render.js')
+	, timeDiffString = (label, end) => `${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`;
 
 module.exports = {
 
-	buildBanners: async(board) => {
-		const label = `/${board._id}/banners.html`;
+	buildBanners: async (options) => {
+		const label = `/${options.board._id}/banners.html`;
 		const start = process.hrtime();
-		const html = render(label, 'banners.pug', {
-			board: board,
-		});
+		const html = render(label, 'banners.pug', options);
 		const end = process.hrtime(start);
-		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
+		console.log(timeDiffString(label, end));
 		return html;
 	},
 
-	buildCatalog: async (board) => {
-		const label = `/${board._id || board}/catalog.html`;
+	buildCatalog: async (options) => {
+		const label = `/${options.board._id || options.board}/catalog.html`;
 		const start = process.hrtime();
-		if (!board._id) {
-			board = await Boards.findOne(board);
+		if (!options.board._id) {
+			options.board = await Boards.findOne(options.board);
 		}
-		const threads = await Posts.getCatalog(board._id);
+		const threads = await Posts.getCatalog(options.board._id);
 		const html = render(label, 'catalog.pug', {
-			board,
+			...options,
 			threads,
 		});
 		const end = process.hrtime(start);
-		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
+		console.log(timeDiffString(label, end));
 		return html;
 	},
 
-	buildThread: async (threadId, board) => {
-		const label = `/${board._id || board}/thread/${threadId}.html`;
+	buildThread: async (options) => {
+		const label = `/${options.board._id || options.board}/thread/${options.threadId}.html`;
 		const start = process.hrtime();
-		if (!board._id) {
-			board = await Boards.findOne(board);
+		if (!options.board._id) {
+			options.board = await Boards.findOne(options.board);
 		}
-		const thread = await Posts.getThread(board._id, threadId)
+		const thread = await Posts.getThread(options.board._id, options.threadId);
 		if (!thread) {
 			return; //this thread may have been an OP that was deleted
 		}
 		const html = render(label, 'thread.pug', {
-			board,
+			...options,
 			thread,
 		});
 		const end = process.hrtime(start);
-		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
+		console.log(timeDiffString(label, end));
 		return html;
 	},
 
-	buildBoard: async (board, page, maxPage=null) => {
-		const label = `/${board._id}/${page === 1 ? 'index' : page}.html`;
+	buildBoard: async (options) => {
+		const label = `/${options.board._id}/${options.page === 1 ? 'index' : options.page}.html`;
 		const start = process.hrtime();
-		const threads = await Posts.getRecent(board._id, page);
-		if (maxPage == null) {
-			maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
+		const threads = await Posts.getRecent(options.board._id, options.page);
+		if (!options.maxPage) {
+			options.maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
 		}
 
 		const html = render(label, 'board.pug', {
-			board,
+			...options,
 			threads,
-			maxPage,
-			page,
 		});
 		const end = process.hrtime(start);
-		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
+		console.log(timeDiffString(label, end));
 		return html;
 	},
 
 	//building multiple pages (for rebuilds)
-	buildBoardMultiple: async (board, startpage=1, endpage) => {
+	buildBoardMultiple: async (options) => {
 		const start = process.hrtime();
-		const maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
-		if (endpage === 0) {
+		const maxPage = Math.min(Math.ceil((await Posts.getPages(options.board._id)) / 10), Math.ceil(options.board.settings.threadLimit/10));
+		if (options.endpage === 0) {
 			//deleted only/all posts, so only 1 page will remain
-			endpage = 1;
-		} else if (maxPage < endpage) {
+			options.endpage = 1;
+		} else if (maxPage < options.endpage) {
 			//else just build up to the max page if it is greater than input page number
-			endpage = maxPage
+			options.endpage = maxPage
 		}
-		const difference = endpage-startpage + 1; //+1 because for single pagemust be > 0
-		const threads = await Posts.getRecent(board._id, startpage, difference*10);
-		const label = `/${board._id}/${startpage === 1 ? 'index' : startpage}.html => /${board._id}/${endpage === 1 ? 'index' : endpage}.html`;
+		const difference = options.endpage-options.startpage + 1; //+1 because for single pagemust be > 0
+		const threads = await Posts.getRecent(options.board._id, options.startpage, difference*10);
+		const label = `/${options.board._id}/${options.startpage === 1 ? 'index' : options.startpage}.html => /${options.board._id}/${options.endpage === 1 ? 'index' : options.endpage}.html`;
 		const buildArray = [];
-		for (let i = startpage; i <= endpage; i++) {
+		for (let i = options.startpage; i <= options.endpage; i++) {
 			let spliceStart = (i-1)*10;
 			if (spliceStart > 0) {
 				spliceStart = spliceStart - 1;
 			}
 			buildArray.push(
-				render(`${board._id}/${i === 1 ? 'index' : i}.html`, 'board.pug', {
-					board,
+				render(`${options.board._id}/${i === 1 ? 'index' : i}.html`, 'board.pug', {
+					board: options.board,
 					threads: threads.splice(0,10),
 					maxPage,
 					page: i,
@@ -103,7 +100,7 @@ module.exports = {
 		}
 		await Promise.all(buildArray);
 		const end = process.hrtime(start);
-		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
+		console.log(timeDiffString(label, end));
 	},
 
 	buildNews: async () => {
@@ -114,46 +111,43 @@ module.exports = {
 			news
 		});
 		const end = process.hrtime(start);
-		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
+		console.log(timeDiffString(label, end));
 		return html;
 	},
 
-	buildModLog: async (board, startDate, endDate, logs) => {
-		if (!startDate || !endDate) {
-			startDate = new Date(); //this is being built by action handler so will always be current date
-			endDate = new Date(startDate.getTime());
-			startDate.setHours(0,0,0,0);
-			endDate.setHours(23,59,59,999);
+	buildModLog: async (options) => {
+		if (!options.startDate || !options.endDate) {
+			options.startDate = new Date(); //this is being built by action handler so will always be current date
+			options.endDate = new Date(options.startDate.getTime());
+			options.startDate.setHours(0,0,0,0);
+			options.endDate.setHours(23,59,59,999);
 		}
-		const day = ('0'+startDate.getDate()).slice(-2);
-		const month = ('0'+(startDate.getMonth()+1)).slice(-2);
-		const year = startDate.getFullYear();
-		const label = `/${board._id}/logs/${month}-${day}-${year}.html`;
+		const day = ('0'+options.startDate.getDate()).slice(-2);
+		const month = ('0'+(options.startDate.getMonth()+1)).slice(-2);
+		const year = options.startDate.getFullYear();
+		const label = `/${options.board._id}/logs/${month}-${day}-${year}.html`;
 		const start = process.hrtime();
-		if (!logs) {
-			logs = await Modlogs.findBetweenDate(board, startDate, endDate);
+		if (!options.logs) {
+			options.logs = await Modlogs.findBetweenDate(options.board, options.startDate, options.endDate);
 		}
 		const html = render(label, 'modlog.pug', {
-			board,
-			logs,
-			startDate,
-			endDate
+			...options
 		});
 		const end = process.hrtime(start);
-		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
+		console.log(timeDiffString(label, end));
 		return html;
 	},
 
-	buildModLogList: async (board) => {
-		const label = `/${board._id}/logs.html`;
+	buildModLogList: async (options) => {
+		const label = `/${options.board._id}/logs.html`;
 		const start = process.hrtime();
-		const dates = await Modlogs.getDates(board);
+		const dates = await Modlogs.getDates(options.board);
 		const html = render(label, 'modloglist.pug', {
-			board,
+			board: options.board,
 			dates
 		});
 		const end = process.hrtime(start);
-		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
+		console.log(timeDiffString(label, end));
 		return html;
 	},
 
@@ -222,7 +216,7 @@ module.exports = {
 			fileStats,
 		});
 		const end = process.hrtime(start);
-		console.log(`${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`);
+		console.log(timeDiffString(label, end));
 		return html;
 	},
 

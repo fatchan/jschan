@@ -27,20 +27,21 @@ const path = require('path')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
-	, { buildCatalog, buildThread, buildBoard, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js');
+	, buildQueue = require(__dirname+'/../../queue.js')
+	, { buildThread } = require(__dirname+'/../../helpers/build.js');
 
 module.exports = async (req, res, next) => {
 
 	//spam/flood check
-    const flood = await spamCheck(req, res);
-    if (flood) {
-        deleteTempFiles(req).catch(e => console.error);
-        return res.status(429).render('message', {
-            'title': 'Flood detected',
-            'message': 'Please wait before making another post, or a post similar to another user',
-            'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
-        });
-    }
+	const flood = await spamCheck(req, res);
+	if (flood) {
+		deleteTempFiles(req).catch(e => console.error);
+		return res.status(429).render('message', {
+			'title': 'Flood detected',
+			'message': 'Please wait before making another post, or a post similar to another user',
+			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
+		});
+	}
 
 	// check if this is responding to an existing thread
 	let redirect = `/${req.params.board}/`
@@ -395,23 +396,37 @@ module.exports = async (req, res, next) => {
 	}
 
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
-	console.log(`NEW POST -> ${successRedirect}`);
 
 	//build just the thread they need to see first and send them immediately
-	await buildThread(data.thread || postId, res.locals.board);
+	await buildThread({
+		'threadId': data.thread || postId,
+		'board': res.locals.board
+	});
 	res.redirect(successRedirect);
 
-	//now rebuild other pages
-	const parallelPromises = [];
+	//now add other pages to be built in background
 	if (data.thread) {
 		//refersh pages
 		const threadPage = await Posts.getThreadPage(req.params.board, thread);
 		if (data.email === 'sage' || thread.sage) {
 			//refresh the page that the thread is on
-			parallelPromises.push(buildBoard(res.locals.board, threadPage));
+			buildQueue.push({
+				'task': 'buildBoard',
+				'options': {
+					'board': res.locals.board,
+					'page': threadPage
+				}
+			});
 		} else {
 			//if not saged, it will bump so we should refresh any pages above it as well
-			parallelPromises.push(buildBoardMultiple(res.locals.board, 1, threadPage));
+			buildQueue.push({
+				'task': 'buildBoardMultiple',
+				'options': {
+					'board': res.locals.board,
+					'startpage': 1,
+					'endpage': threadPage
+				}
+			});
 		}
 	} else {
 		//new thread, prunes any old threads before rebuilds
@@ -419,13 +434,22 @@ module.exports = async (req, res, next) => {
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
 		}
-		parallelPromises.push(buildBoardMultiple(res.locals.board, 1, Math.ceil(threadLimit/10)));
+		buildQueue.push({
+			'task': 'buildBoardMultiple',
+			'options': {
+				'board': res.locals.board,
+				'startpage': 1,
+				'endpage': Math.ceil(threadLimit/10)
+			}
+		});
 	}
 
 	//always rebuild catalog for post counts and ordering
-	parallelPromises.push(buildCatalog(res.locals.board));
-
-	//finish building other pages
-	await Promise.all(parallelPromises);
+	buildQueue.push({
+		'task': 'buildCatalog',
+		'options': {
+			'board': res.locals.board,
+		}
+	});
 
 }

@@ -14,7 +14,7 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, dismissReports = require(__dirname+'/dismissreport.js')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, { buildModLog, buildModLogList, buildCatalog, buildThread, buildBoardMultiple } = require(__dirname+'/../../helpers/build.js')
+	, buildQueue = require(__dirname+'/../../queue.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
 	, { createHash, timingSafeEqual } = require('crypto');
 
@@ -245,8 +245,18 @@ module.exports = async (req, res, next) => {
 			await Modlogs.insertMany(modlogDocuments);
 			for (let i = 0; i < threadBoards.length; i++) {
 				const board = buildBoards[threadBoards[i]];
-				parallelPromises.push(buildModLog(board));
-				parallelPromises.push(buildModLogList(board));
+				buildQueue.push({
+					'task': 'buildModLog',
+					'options': {
+						'board': res.locals.board,
+					}
+				});
+				buildQueue.push({
+					'task': 'buildModLogList',
+					'options': {
+						'board': res.locals.board,
+					}
+				});
 			}
 		}
 	}
@@ -315,7 +325,13 @@ module.exports = async (req, res, next) => {
 			const board = buildBoards[boardName];
 			//rebuild impacted threads
 			for (let j = 0; j < boardThreadMap[boardName].threads.length; j++) {
-				parallelPromises.push(buildThread(boardThreadMap[boardName].threads[j], board));
+				buildQueue.push({
+					'task': 'buildThread',
+					'options': {
+						'threadId': boardThreadMap[boardName].threads[j],
+						'board': board,
+					}
+				});
 			}
 			//refersh any pages affected
 			const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
@@ -329,26 +345,68 @@ module.exports = async (req, res, next) => {
 						parallelPromises.push(remove(`${uploadDirectory}html/${boardName}/${k}.html`));
 					}
 				}
-				parallelPromises.push(buildBoardMultiple(board, 1, afterPages));
+				buildQueue.push({
+					'task': 'buildBoardMultiple',
+					'options': {
+						'board': board,
+						'startpage': 1,
+						'endpage': afterPages,
+					}
+				});
 			} else {
 				//number of pages did not change, only possibly building existing pages
 				const threadPageOldest = await Posts.getThreadPage(boardName, bounds.oldest);
 				const threadPageNewest = bounds.oldest.postId === bounds.newest.postId ? threadPageOldest : await Posts.getThreadPage(boardName, bounds.newest);
 				if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
 					if (!boardThreadMap[boardName].directThreads) {
-						//onyl deleting posts from threads, so thread order wont change, thus we dont delete all pages after
-						parallelPromises.push(buildBoardMultiple(board, threadPageNewest, threadPageOldest));
+						//only deleting posts from threads, so thread order wont change, thus we dont delete all pages after
+						buildQueue.push({
+							'task': 'buildBoardMultiple',
+							'options': {
+								'board': board,
+								'startpage': threadPageNewest,
+								'endpage': threadPageOldest,
+							}
+						});
 					} else {
 						//deleting threads, so we delete all pages after
-						parallelPromises.push(buildBoardMultiple(board, threadPageNewest, afterPages));
+						buildQueue.push({
+							'task': 'buildBoardMultiple',
+							'options': {
+								'board': board,
+								'startpage': threadPageNewest,
+								'endpage': afterPages,
+							}
+						});
 					}
 				} else if (req.body.sticky) { //else if -- if deleting, other actions are not executed/irrelevant
 					//rebuild current and newer pages
-					parallelPromises.push(buildBoardMultiple(board, 1, threadPageOldest));
+					buildQueue.push({
+						'task': 'buildBoardMultiple',
+						'options': {
+							'board': board,
+							'startpage': 1,
+							'endpage': threadPageOldest,
+						}
+					});
 				} else if (req.body.lock || req.body.sage || req.body.cyclic || req.body.unlink_file) {
-					parallelPromises.push(buildBoardMultiple(board, threadPageNewest, threadPageOldest));
+					buildQueue.push({
+						'task': 'buildBoardMultiple',
+						'options': {
+							'board': board,
+							'startpage': threadPageNewest,
+							'endpage': threadPageOldest,
+						}
+					});
 				} else if (req.body.spoiler || req.body.ban || req.body.global_ban) {
-					parallelPromises.push(buildBoardMultiple(board, threadPageNewest, threadPageOldest));
+					buildQueue.push({
+						'task': 'buildBoardMultiple',
+						'options': {
+							'board': board,
+							'startpage': threadPageNewest,
+							'endpage': afterPages,
+						}
+					});
 					if (!boardThreadMap[boardName].directThreads) {
 						catalogRebuild = false;
 						//these actions dont affect the catalog tile since not on an OP and dont change reply/image counts
@@ -357,12 +415,18 @@ module.exports = async (req, res, next) => {
 			}
 			if (catalogRebuild) {
 				//the actions will affect the catalog, so we better rebuild it
-				parallelPromises.push(buildCatalog(board));
+				buildQueue.push({
+					'task': 'buildCatalog',
+					'options': {
+						'board': board,
+					}
+				});
 			}
 		}
 	}
 
 	if (parallelPromises.length > 0) {
+		//since queue changes, this just removing old html files
 		await Promise.all(parallelPromises);
 	}
 

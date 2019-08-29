@@ -19,7 +19,12 @@ module.exports = async (req, res, next) => {
 		if (!logs || logs.length === 0) {
 			return next();
 		}
-		html = await buildModLog(res.locals.board, startDate, endDate, logs);
+		html = await buildModLog({
+			board: res.locals.board,
+			startDate,
+			endDate,
+			logs
+		});
 	} catch (err) {
 		return next(err);
 	}
