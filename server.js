@@ -24,15 +24,20 @@ const express = require('express')
 	//connect to mongodb
 	console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
-	console.log('CONNECTED TO MONGODB');
+
 	//use live mutex for locking, will switch to redis later
 	console.log('CONNECTING TO LMX');
 	await Mutex.connect();
-	console.log('CONNECTED TO LMX');
+
+	//redis for queue, and in future for caching, so moving the client instance here.
+	console.log('CONNECTING TO REDIS');
+	//need an instance of redis client to disconnect cleanly on server close
+	const { redisClient } = require(__dirname+'/redis.js');
+	//connecting is not async, so just requiring it here so logging is correct order
 
 	// disable useless express header
 	app.disable('x-powered-by');
-	// parse forms
+	// parse forms (is json required?)
 	app.use(bodyParser.urlencoded({extended: true}));
 	app.use(bodyParser.json());
 	//parse cookies
@@ -43,7 +48,7 @@ const express = require('express')
 		secret: configs.sessionSecret,
 		store: new MongoStore({
 			db: Mongo.client.db('sessions'),
-			stringify: false
+			stringify: false //keep sessions as object in db
 		}),
 		resave: false,
 		saveUninitialized: false,
@@ -114,7 +119,9 @@ const express = require('express')
 			// close database connection
 			console.info('DISCONNECTING MONGODB');
 			Mongo.client.close();
-			console.info('DISCONNECTED MONGODB');
+			//close redis connection
+			console.log('DISCONNECTING REDIS')
+			redisClient.quit();
 			// now close without error
 			process.exit(0);
 		});

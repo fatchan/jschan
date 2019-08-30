@@ -6,7 +6,8 @@ process
 
 const RedisSMQ = require('rsmq')
 	, configs = require(__dirname+'/configs/main.json')
-	, rsmq = new RedisSMQ({ host: '127.0.0.1', port: 6379, ns: 'rsmq', password: configs.redisPassword })
+	, { redisClient } = require(__dirname+'/redis.js')
+	, rsmq = new RedisSMQ({ ns: 'rsmq', client: redisClient })
 	, queuename = 'generate'
 	, Mongo = require(__dirname+'/db/db.js')
 	, Mutex = require(__dirname+'/mutex.js');

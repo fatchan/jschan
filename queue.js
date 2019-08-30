@@ -1,6 +1,6 @@
 const RedisSMQ = require('rsmq')
-	, configs = require(__dirname+'/configs/main.json')
-	, rsmq = new RedisSMQ({ host: '127.0.0.1', port: 6379, ns: 'rsmq', password: configs.redisPassword })
+	, { redisClient } = require(__dirname+'/redis.js')
+	, rsmq = new RedisSMQ({ ns: 'rsmq', client: redisClient })
 	, queuename = 'generate'
 
 rsmq.createQueue({ qname: queuename }, (err) => {
@@ -17,16 +17,3 @@ module.exports.push = (data) => {
 		//message enqueued successfully
 	});
 }
-
-/*
-//was testing
-setInterval(() => {
-	const data = {
-		task: 'buildCatalog',
-		options: {
-			'board': 'b'
-		}
-	}
-	module.exports.push(data);
-}, 500);
-*/

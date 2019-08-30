@@ -5,7 +5,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	var quote = function(e) {
 		const quoteNum = this.textContent.replace('[Reply]', '').split(' ')[0].trim();
-		const messageBox = document.getElementById('message')
+		const messageBox = document.getElementById('message');
 		messageBox.value += `>>${quoteNum}\n`;
 		messageBox.scrollTop = messageBox.scrollHeight;
 	};
