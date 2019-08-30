@@ -29,11 +29,9 @@ const express = require('express')
 	console.log('CONNECTING TO LMX');
 	await Mutex.connect();
 
-	//redis for queue, and in future for caching, so moving the client instance here.
+	//connect to redis
 	console.log('CONNECTING TO REDIS');
-	//need an instance of redis client to disconnect cleanly on server close
 	const { redisClient } = require(__dirname+'/redis.js');
-	//connecting is not async, so just requiring it here so logging is correct order
 
 	// disable useless express header
 	app.disable('x-powered-by');

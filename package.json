@@ -7,6 +7,7 @@
     "@tohru/gm": "git+https://github.com/fatchan/gm.git",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
+    "bull": "^3.10.0",
     "connect-mongo": "^2.0.3",
     "convert-svg-to-png": "^0.5.0",
     "cookie-parser": "^1.4.4",
@@ -33,7 +34,6 @@
     "path": "^0.12.7",
     "pm2": "^3.5.1",
     "pug": "^2.0.4",
-    "rsmq": "^0.11.0",
     "sanitize-html": "^1.20.1",
     "saslprep": "^1.0.3"
   },

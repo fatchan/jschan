@@ -6,7 +6,7 @@ const Redis = require('ioredis')
 
 module.exports = {
 
-	redisClient, //the redis client instance (So we can share with queues elsewhere)
+	redisClient,
 
 //cache not used yet, but will need to JSON stringify things that are objects e.g. boards, threads 
 	get: async (key) => {

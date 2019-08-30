@@ -1,11 +1,15 @@
 {
 	"dbURL": "mongodb://username:password@host:port",
+	"redis": {
+		"host": "127.0.0.1",
+		"port": "6379",
+		"password": "long random string"
+	},
 	"port": 7000,
 	"sessionSecret": "long random string",
 	"tripcodeSecret": "long random string",
 	"ipHashSecret": "long random string",
 	"postPasswordSecret": "long random string",
-	"redisPassword": "long random string",
 	"cacheTemplates": true,
 	"refererCheck": false,
 	"refererRegex": "^https?:\\/\\/(?:www\\.)?domain\\.com\\/",
