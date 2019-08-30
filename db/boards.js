@@ -18,7 +18,7 @@ module.exports = {
 			if (board) {
 				cache.set(cacheKey, board);
 			} else {
-				cache.set(cacheKey, 'no_exist');
+				cache.set(cacheKey, 'no_exist', 'ex', 3600); //1 hour expiry just so it doesnt grow indefinitely
 			}
 		}
 		return board;
