@@ -238,12 +238,12 @@ object {
 
 .catalog-tile {
 	padding: 5px;
-	margin: 2px;
+	margin: 5px;
 	text-align: center;
 	max-height: 300px;
 	width: 250px;
 	overflow: hidden;
-	border: 2px solid var(--post-outline-color);
+	border: 1px solid var(--post-outline-color);
 	box-sizing: border-box;
 }
 
@@ -592,7 +592,7 @@ textarea {
 
 .anchor {
 	height: 50px;
-	margin-top: -45px;
+	margin-top: -40px;
 }
 
 .post-container.op {
@@ -760,7 +760,7 @@ hr {
 }
 
 hr + .thread {
-	margin-top: -5px;
+	margin-top: -10px;
 }
 
 @keyframes spin {
@@ -821,12 +821,12 @@ hr + .thread {
 
 	.catalog-tile {
 		width: 50%;
-		margin: 0 0 2px 0;
+		margin: 0 0 10px 0;
 	}
 
 	.catalog-tile:nth-child(odd) {
-		margin-right: 2px;
-		width: calc(50% - 2px);
+		margin-right: 10px;
+		width: calc(50% - 10px);
 	}
 
 	table {
