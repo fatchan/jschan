@@ -1,7 +1,7 @@
 'use strict';
 
 const uploadDirectory = require(__dirname+'/uploadDirectory.js')
-	, gm = require('@tohru/gm');
+	, gm = require('gm');
 
 module.exports = (file, filename, folder) => {
 

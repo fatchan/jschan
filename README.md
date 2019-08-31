@@ -21,16 +21,16 @@ Demo site running at https://fatpeople.lol
 - [x] Customise homepage, faq, rules or add custom pages
 
 ## Todo
-- [ ] Post moving/thread merging
-- [ ] Flags. Geographic and custom uploaded
-- [ ] IP range bans
-- [ ] IP notes/records/ban history of some sort
-- [ ] JSON api
-- [ ] Configuration editor
-- [ ] Overboard/multiboard/meta boards
-- [ ] Boards search page
-- [ ] User created board custom pages
-- [ ] File URL uploads
+- Post moving/thread merging
+- Geographic and custom uploaded flags
+- IP range bans
+- IP notes/records/ban history of some sort
+- JSON api
+- Configuration editor
+- Overboard/multiboard/meta boards
+- Boards search page
+- User created board custom pages
+- File URL uploads
 
 ## Setup
 Please note:
@@ -38,10 +38,10 @@ Please note:
 - For debian.
 
 ##### Requirements
-- Linux (most likely could work elsewhere, but why?)
+- Linux
 - Node.js (to run the app)
 - MongoDB (database, duh)
-- Redis (queues, and eventually for caching and mutex/locking)
+- Redis (sessions, queue, locks and caching)
 - Nginx (handle https, serve static content and html)
 - Certbot/letsencrypt (for https cert)
 - Imagemagick (thumbnailing images)

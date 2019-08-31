@@ -6,7 +6,7 @@ process
 
 const express = require('express')
 	, session = require('express-session')
-	, MongoStore = require('connect-mongo')(session)
+	, redisStore = require('connect-redis')(session)
 	, path = require('path')
 	, app = express()
 	, bodyParser = require('body-parser')
@@ -14,22 +14,17 @@ const express = require('express')
 	, configs = require(__dirname+'/configs/main.json')
 	, ipHash = require(__dirname+'/helpers/iphash.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
-	, Mongo = require(__dirname+'/db/db.js')
-	, Mutex = require(__dirname+'/mutex.js');
+	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {
 
 	console.log('STARTING IN MODE:', process.env.NODE_ENV);
 
-	//connect to mongodb
+	// connect to mongodb
 	console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
 
-	//use live mutex for locking, will switch to redis later
-	console.log('CONNECTING TO LMX');
-	await Mutex.connect();
-
-	//connect to redis
+	// connect to redis
 	console.log('CONNECTING TO REDIS');
 	const { redisClient } = require(__dirname+'/redis.js');
 
@@ -38,15 +33,14 @@ const express = require('express')
 	// parse forms (is json required?)
 	app.use(bodyParser.urlencoded({extended: true}));
 	app.use(bodyParser.json());
-	//parse cookies
+	// parse cookies
 	app.use(cookieParser());
 
 	// session store
 	app.use(session({
 		secret: configs.sessionSecret,
-		store: new MongoStore({
-			db: Mongo.client.db('sessions'),
-			stringify: false //keep sessions as object in db
+		store: new redisStore({
+			client: redisClient,
 		}),
 		resave: false,
 		saveUninitialized: false,

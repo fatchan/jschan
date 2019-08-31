@@ -6,13 +6,12 @@ process
 
 const Queue = require('bull')
 	, configs = require(__dirname+'/configs/main.json')
-	, Mongo = require(__dirname+'/db/db.js')
-	, Mutex = require(__dirname+'/mutex.js');
+	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {
 
+	console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
-	await Mutex.connect();
 
 	const buildTasks = require(__dirname+'/helpers/build.js')
 		, generateQueue = new Queue('generate', { 'redis': configs.redis });

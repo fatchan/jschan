@@ -1,21 +1,6 @@
 module.exports = {
 	// Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
 	apps : [{
-		name: 'lock-broker',
-		script: 'node_modules/live-mutex/dist/lm-start-server.js',
-		args: '--use-uds',
-		instances: 1,
-		autorestart: true,
-		watch: false,
-		max_memory_restart: '1G',
-		log_date_format: 'YYYY-MM-DD HH:mm:ss.SSS',
-		env: {
-			NODE_ENV: 'development'
-		},
-		env_production: {
-			NODE_ENV: 'production'
-		}
-	}, {
 		name: 'build-worker',
 		script: 'worker.js',
 		instances: 1, //could increase if building is getting backed up

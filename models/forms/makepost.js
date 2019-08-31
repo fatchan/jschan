@@ -446,16 +446,16 @@ module.exports = async (req, res, next) => {
 		const prunedThreads = await Posts.pruneThreads(res.locals.board);
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
-			if (!enableCaptcha) {
-				buildQueue.push({
-					'task': 'buildBoardMultiple',
-					'options': {
-						'board': res.locals.board,
-						'startpage': 1,
-						'endpage': Math.ceil(threadLimit/10)
-					}
-				});
-			}
+		}
+		if (!enableCaptcha) {
+			buildQueue.push({
+				'task': 'buildBoardMultiple',
+				'options': {
+					'board': res.locals.board,
+					'startpage': 1,
+					'endpage': Math.ceil(threadLimit/10)
+				}
+			});
 		}
 	}
 

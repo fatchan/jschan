@@ -1,4 +1,4 @@
-const gm = require('@tohru/gm')
+const gm = require('gm')
 	, configs = require(__dirname+'/../../configs/main.json')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 

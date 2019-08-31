@@ -7,31 +7,34 @@ process
 const msTime = require(__dirname+'/helpers/mstime.js')
 	, deleteCaptchas = require(__dirname+'/helpers/captcha/deletecaptchas.js')
 	, Mongo = require(__dirname+'/db/db.js')
-	, Mutex = require(__dirname+'/mutex.js')
 	, buildQueue = require(__dirname+'/queue.js');
 
 (async () => {
 
+	console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
-	await Mutex.connect();
 	const Files = require(__dirname+'/db/files.js');
 
-	console.log('Starting schedules');
+	console.log('STARTING SCHEDULES');
 
-	setInterval(async () => {
-		buildQueue.push({
-			'task': 'buildHomepage',
-			'options': {}
-		})
-	}, msTime.minute*5); //rebuild homepage for pph updates
+	//add 5 minute repeatable job to queue (queue will prevent duplicate)
+	buildQueue.push({
+		'task': 'buildHomepage',
+		'options': {}
+	}, {
+		'repeat': {
+			'cron': '*/5 * * * *'
+		}
+	});
 
+	//delete files for expired captchas
 	setInterval(async () => {
 		try {
 			await deleteCaptchas();
 		} catch (e) {
 			console.error(e);
 		}
-	}, msTime.minute*5); //delete files for expired captchas
+	}, msTime.minute*5);
 
 	setInterval(async () => {
 		try {
