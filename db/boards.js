@@ -9,19 +9,30 @@ module.exports = {
 	db,
 
 	findOne: async (name) => {
-		const cacheKey = `board_${name}`;
-		let board = await cache.get(cacheKey);
+		let board = await cache.get(`board_${name}`);
 		if (board && board !== 'no_exist') {
 			return board;
 		} else {
 			board = await db.findOne({ '_id': name });
 			if (board) {
-				cache.set(cacheKey, board);
+				cache.set(`board_${name}`, board);
+				cache.sadd(`banners_${name}`, board.banners);
 			} else {
-				cache.set(cacheKey, 'no_exist', 'ex', 3600); //1 hour expiry just so it doesnt grow indefinitely
+				cache.set(`board_${name}`, 'no_exist', 'ex', 3600); //1 hour expiry just so it doesnt grow indefinitely
 			}
 		}
 		return board;
+	},
+
+	randomBanner: async (name) => {
+		let banner = await cache.srand(`banners_${name}`);
+		if (!banner) {
+			const board = await module.exports.findOne(name);
+			if (board) {
+				banner = board.banners[Math.floor(Math.random()*board.banners.length)];
+			}
+		}
+		return banner;
 	},
 
 	setOwner: (board, username) => {
@@ -46,15 +57,21 @@ module.exports = {
 
 	deleteOne: (board) => {
 		cache.del(`board_${board}`);
+		cache.del(`banners_${board}`);
 		return db.deleteOne({ '_id': board });
 	},
 
 	deleteAll: (board) => {
+		/*
+			no clearing redis cache here, will leave that up to gulpfile, since this happens in the
+			wipe script, it would delete redis cache for everything, not just boards
+		*/
 		return db.deleteMany({});
 	},
 
 	removeBanners: (board, filenames) => {
 		cache.del(`board_${board}`);
+		cache.del(`banners_${board}`);
 		return db.updateOne(
 			{
 				'_id': board,
@@ -68,6 +85,7 @@ module.exports = {
 
 	addBanners: (board, filenames) => {
 		cache.del(`board_${board}`);
+		cache.del(`banners_${board}`);
 		return db.updateOne(
 			{
 				'_id': board,
@@ -112,7 +130,6 @@ module.exports = {
 	},
 
 	getNextId: async (board) => {
-		//cache.del(`board_${board}`); //dont need to clear cache for this? only time this value is used, its fetched from db.
 		const increment = await db.findOneAndUpdate(
 			{
 				'_id': board

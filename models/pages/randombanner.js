@@ -1,6 +1,6 @@
 'use strict';
 
-const Boards = require(__dirname+'/../../db/boards.js');
+const Boards = require(__dirname+'/../../db/boards.js')
 
 module.exports = async (req, res, next) => {
 
@@ -8,27 +8,18 @@ module.exports = async (req, res, next) => {
 		return next();
 	}
 
-	//agregate to get single random item from banners array
-	const board = await Boards.db.aggregate([
-		{
-			'$match': {
-				'_id': req.query.board
-			}
-		},
-		{
-			'$unwind': '$banners'
-		},
-		{
-			'$sample': {
-				'size' : 1
-			}
-		}
-	]).toArray().then(res => res[0]);
-
-	if (board && board.banners != null) {
-		return res.redirect(`/banner/${req.query.board}/${board.banners}`);
+	let banner;
+	try {
+		banner = await Boards.randomBanner(req.query.board);
+	} catch (err) {
+		return next(err);
 	}
 
-	return res.redirect('/img/defaultbanner.png');
+	if (!banner) {
+		//non existing boards will show default banner, but it doesnt really matter.
+		return res.redirect('/img/defaultbanner.png');
+	}
+
+	return res.redirect(`/banner/${req.query.board}/${banner}`);
 
 }
