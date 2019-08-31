@@ -13,19 +13,27 @@ module.exports = async (req, res, next) => {
 
 	if (req.body.ban || req.body.global_ban) {
 		const banBoard = req.body.global_ban ? null : req.params.board;
-		res.locals.posts.forEach(post => {
+		const ipPosts = res.locals.posts.reduce((acc, post) => {
+			if (!acc[post.ip]) {
+				acc[post.ip] = [];
+			}
+			acc[post.ip].push(post);
+			return acc;
+		}, {});
+		for (let ip in ipPosts) {
+			const thisIpPosts = ipPosts[ip];
 			bans.push({
-				'ip': post.ip,
+				ip,
 				'reason': banReason,
 				'board': banBoard,
-				'post': req.body.preserve_post ? post : null,
+				'posts': req.body.preserve_post ? thisIpPosts : null,
 				'issuer': req.session.user.username,
 				'date': banDate,
 				'expireAt': banExpiry,
 				allowAppeal,
 				'appeal': null
 			});
-		});
+		}
 	}
 	if (req.body.report_ban || req.body.global_report_ban){
 		const banBoard = req.body.global_report_ban ? null : req.params.board;
@@ -47,19 +55,19 @@ module.exports = async (req, res, next) => {
 				});
 				ips = ips.concat(matches);
 			}
-			ips.forEach(ip => {
+			[...new Set(ips)].forEach(ip => {
 				bans.push({
 					'ip': ip,
 					'reason': banReason,
 					'board': banBoard,
-					'post': null,
+					'posts': null,
 					'issuer': req.session.user.username,
 					'date': banDate,
 					'expireAt': banExpiry,
 					allowAppeal,
 					'appeal': null
 				});
-			})
+			});
 		});
 	}
 
@@ -69,7 +77,7 @@ module.exports = async (req, res, next) => {
         message: `Added ${numBans} bans`,
 	};
 
-	if ((req.body.ban || req.body.global_ban ) && ban_reason) {
+	if ((req.body.ban || req.body.global_ban ) && req.body.ban_reason) {
 		query['action'] = '$set';
 		query['query'] = {
 			'banmessage': req.body.ban_reason

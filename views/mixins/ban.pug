@@ -15,10 +15,11 @@ mixin ban(ban, banpage)
 		div Issued against: ...#{ban.ip.slice(-10)}
 		div Banned: #{ban.date.toLocaleString()}
 		div Expires: #{ban.expireAt.toLocaleString()}
-		if ban.post
-			span Banned for the following post:
+		if ban.posts && ban.posts.length > 0
+			span Banned for the following post#{ban.posts.length > 1 ? 's' : ''}:
 			section.thread
-				+post(ban.post, false, false, false, true)
+				each p in ban.posts
+					+post(p, false, false, false, true)
 		if ban.appeal != null
 			div Submitted appeal:
 			textarea(disabled='true') #{ban.appeal}
