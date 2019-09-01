@@ -20,8 +20,8 @@ module.exports = (text, captchaId) => {
 				{x:destx,y:desty} //dest
 			]);
 		}
-		const x = gm(width,height, '#333333')
-		.fill('#bbbbbb')
+		const x = gm(width,height,'#ffffff')
+		.fill('#000000')
 		.fontSize(65)
 		let lastx = 7;
 		for (let i = 0; i <6; i++) {
@@ -32,8 +32,10 @@ module.exports = (text, captchaId) => {
 					lastx += 45;
 					break;
 				case 'i':
-				case 'f':
 				case 'l':
+					lastx += 10;
+					break;
+				case 'f':
 				case 'j':
 				case 't':
 					lastx += 15;

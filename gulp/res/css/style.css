@@ -647,6 +647,11 @@ input[type="file"] {
 	align-items: center;
 }
 
+iframe.captcha {
+	/*dumb hack cos of noscript wrapping in unstyleable span*/
+	margin-bottom: -2px;
+}
+
 .captcha {
 	border: 1px solid var(--input-borders);
 	background: white;
@@ -654,6 +659,7 @@ input[type="file"] {
 	width: 100%;
 	box-sizing: border-box;
 	object-fit: contain;
+	overflow: hidden;
 }
 
 .label {

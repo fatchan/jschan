@@ -1,6 +1,7 @@
 'use strict';
 
 const gulp = require('gulp')
+	, configs = require(__dirname+'/configs/main.json')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
 	, cleanCSS = require('gulp-clean-css')
@@ -9,7 +10,7 @@ const gulp = require('gulp')
 	, pug = require('gulp-pug')
 	, paths = {
 		styles: {
-			src: 'gulp/res/css/*/*',
+			src: 'gulp/res/css/**/*',
 			dest: 'static/css/'
 		},
 		images: {
@@ -149,13 +150,20 @@ function deletehtml() {
 
 function custompages() {
 	return gulp.src(paths.pug.src)
-		.pipe(pug())
+		.pipe(pug({
+			locals: {
+				defaultTheme: configs.defaultTheme
+			}
+		}))
 		.pipe(gulp.dest(paths.pug.dest));
 }
 
 function scripts() {
-	return gulp.src(paths.scripts.src)
+	gulp.src(paths.scripts.src)
 		.pipe(concat('all.js'))
+		.pipe(uglify())
+		.pipe(gulp.dest(paths.scripts.dest));
+	return gulp.src(paths.scripts.src)
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 }

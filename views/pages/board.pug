@@ -3,7 +3,7 @@ include ../mixins/post.pug
 
 block head
 	script(src='/js/all.js')
-	title /#{board._id}/ - #{board.settings.description} - page #{page}
+	title /#{board._id}/ - #{board.settings.name} - page #{page}
 
 block content
 	include ../includes/boardheader.pug

@@ -5,4 +5,7 @@ if board && board.settings.theme
 	link(rel='stylesheet' href=`/css/themes/${board.settings.theme}.css`)
 else
 	link(rel='stylesheet' href=`/css/themes/${defaultTheme}.css`)
+noscript
+	style
+		| .jsonly { display: none }
 link(rel='shortcut icon' href='/favicon.ico' type='image/x-icon')
