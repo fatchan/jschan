@@ -61,6 +61,8 @@ const express = require('express')
 	// use pug view engine
 	app.set('view engine', 'pug');
 	app.set('views', path.join(__dirname, 'views/pages'));
+	//default theme in views with settings.defaultTheme
+	app.locals.defaultTheme = configs.defaultTheme;
 	if (configs.cacheTemplates === true) {
 		app.enable('view cache');
 	}

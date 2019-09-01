@@ -13,6 +13,7 @@
 	"cacheTemplates": true,
 	"refererCheck": false,
 	"refererRegex": "^https?:\\/\\/(?:www\\.)?domain\\.com\\/",
+	"defaultTheme": "lain",
 	"meta": {
 		"siteName": "site name",
 		"url": "https://domain.com"

@@ -1,0 +1,27 @@
+/*tomorrow*/
+:root {
+	--background-top: #1d1f21;
+	--background-rest: #1d1f21;
+	--post-color: #282a2e;
+	--post-outline-color: #111;
+	--label-color: #282a2e;
+	--box-border-color: #111;
+	--darken: #00000010;
+	--highlighted-post-color: #ff000010;
+	--highlighted-post-outline-color: #111;
+	--board-title: #c5c8c6;
+	--hr: #282a2e;
+	--font-color: #c5c8c6;
+	--name-color: #c5c8c6;
+	--capcode-color: #f00;
+	--subject-color: #b294bb;
+	--link-color: #5f89ac;
+	--post-link-color: #5f89ac;
+	--link-hover: #81a2be;
+	--input-borders: #111;
+	--input-color: #c5c8c6;
+	--input-background: #282a2e;
+	--dice-color: darkorange;
+	--title-color: #d70000;
+	--greentext-color: green;
+}

@@ -1,6 +1,7 @@
 'use strict';
 
-const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js');
+const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
+	, themes = require(__dirname+'/../../helpers/themes.js');
 
 module.exports = async (req, res, next) => {
 
@@ -49,13 +50,16 @@ module.exports = async (req, res, next) => {
 		errors.push('Invalid tph trigger threshold.');
 	}
 	if (typeof req.body.tph_trigger_action === 'number' && (req.body.tph_trigger_action < 0 || req.body.tph_trigger_action > 3)) {
-		errors.push('Invalid tph trigger action.')
+		errors.push('Invalid tph trigger action.');
 	}
 	if (typeof req.body.filter_mode === 'number' && (req.body.filter_mode < 0 || req.body.filter_mode > 2)) {
 		errors.push('Invalid filter mode.');
 	}
 	if (typeof req.body.ban_duration === 'number' && req.body.ban_duration <= 0) {
-		errors.push('Invalid filter auto ban duration.')
+		errors.push('Invalid filter auto ban duration.');
+	}
+	if (req.body.theme && !themes.includes(req.body.theme)) {
+		errors.push('Invalid theme');
 	}
 
 	if (errors.length > 0) {
@@ -63,7 +67,7 @@ module.exports = async (req, res, next) => {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': `/${req.params.board}/manage.html`
-		})
+		});
 	}
 
 	try {

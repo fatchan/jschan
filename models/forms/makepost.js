@@ -379,9 +379,7 @@ module.exports = async (req, res, next) => {
 				update['$set']['settings.locked'] = true;
 			}
 			//set it in the db
-			await Boards.db.updateOne({
-				'_id': res.locals.board._id,
-			}, update);
+			await Boards.updateOne(res.locals.board._id, update);
 		}
 	}
 

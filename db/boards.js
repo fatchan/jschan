@@ -63,6 +63,13 @@ module.exports = {
 		return db.deleteOne({ '_id': board });
 	},
 
+	updateOne: (board, update) => {
+		cache.del(`board_${board}`);
+		return db.updateOne({
+			'_id': board
+		}, update);
+	},
+
 	deleteAll: (board) => {
 		/*
 			no clearing redis cache here, will leave that up to gulpfile, since this happens in the

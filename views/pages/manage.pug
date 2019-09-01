@@ -129,8 +129,13 @@ block content
 				label.postform-style.ph-5
 					input(type='checkbox', name='locked', value='true' checked=board.settings.locked)
 			section.row
+				.label Theme
+				select(name='theme')
+					each theme in themes
+						option(value=theme selected=board.settings.theme === theme) #{theme}
+			section.row
 				.label Captcha Mode
-				select(name='captcha_mode' checked=board.settings.captchaMode)
+				select(name='captcha_mode')
 					option(value='0', selected=board.settings.captchaMode === 0) No Captcha
 					option(value='1', selected=board.settings.captchaMode === 1) Captcha for new thread
 					option(value='2', selected=board.settings.captchaMode === 2) Captcha for all posts
@@ -149,7 +154,7 @@ block content
 				textarea(name='filters' placeholder='newline separated, max 50') #{board.settings.filters.join('\n')}
 			section.row
 				.label Filter Mode
-				select(name='filter_mode' checked=board.settings.filterMode)
+				select(name='filter_mode')
 					option(value='0', selected=board.settings.filterMode === 0) Do nothing
 					option(value='1', selected=board.settings.filterMode === 1) Block post
 					option(value='2', selected=board.settings.filterMode === 2) Auto ban

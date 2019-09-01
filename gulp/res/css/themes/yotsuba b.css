@@ -1,0 +1,27 @@
+/*yotsuba b*/
+:root {
+	--background-top: #d6daf0;
+	--background-rest: #eef2ff;
+	--post-color: #D6DAF0;
+	--post-outline-color: #B7C5D9;
+	--label-color: #98E;
+	--box-border-color: #000;
+	--darken: #00000010;
+	--highlighted-post-color: #d6bad0;
+	--highlighted-post-outline-color: #ba9dbf;
+	--board-title: #af0a0f;
+	--hr: lightgray;
+	--font-color: black;
+	--name-color: #117743;
+	--capcode-color: #f00;
+	--subject-color: #0F0C5D;
+	--link-color: #34345C;
+	--post-link-color: #d00;
+	--link-hover: #d00;
+	--input-borders: #a9a9a9;
+	--input-color: #000;
+	--input-background: white;
+	--dice-color: darkorange;
+	--title-color: #d70000;
+	--greentext-color: green;
+}

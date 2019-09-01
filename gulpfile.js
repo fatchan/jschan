@@ -9,7 +9,7 @@ const gulp = require('gulp')
 	, pug = require('gulp-pug')
 	, paths = {
 		styles: {
-			src: 'gulp/res/css/*.css',
+			src: 'gulp/res/css/*/*',
 			dest: 'static/css/'
 		},
 		images: {
