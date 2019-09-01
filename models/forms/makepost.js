@@ -147,21 +147,23 @@ module.exports = async (req, res, next) => {
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			const file = req.files.file[i];
 			let extension = path.extname(file.name) || file.name.substring(file.name.indexOf('.'));
-			const filename = file.sha256 + extension;
+			file.filename = file.sha256 + extension;
 
 			//get metadata
 			let processedFile = {
 					hash: file.sha256,
-					filename: filename,
+					filename: file.filename,
 					originalFilename: file.name,
 					mimetype: file.mimetype,
 					maintype: file.mimetype.split('/')[0],
 					size: file.size,
 			};
 
+			await Files.increment(processedFile);
+
 			//check if already exists
-			const existsFull = await pathExists(`${uploadDirectory}img/${filename}`);
-			const existsThumb = await pathExists(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`);
+			const existsFull = await pathExists(`${uploadDirectory}img/${processedFile.filename}`);
+			const existsThumb = await pathExists(`${uploadDirectory}img/thumb-${processedFile.hash}.jpg`);
 
 			//handle video/image ffmpeg or graphicsmagick
 			switch (processedFile.maintype) {
@@ -174,10 +176,10 @@ module.exports = async (req, res, next) => {
 						&& processedFile.geometry.height <= 128
 						&& processedFile.geometry.width <= 128);
 					if (!existsFull) {
-						await imageUpload(file, filename, 'img');
+						await imageUpload(file, processedFile.filename, 'img');
 					}
 					if (!existsThumb && processedFile.hasThumb) {
-						await imageThumbnail(filename);
+						await imageThumbnail(processedFile.filename);
 					}
 					processedFile = fixGifs(processedFile);
 					break;
@@ -200,10 +202,10 @@ module.exports = async (req, res, next) => {
 					processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string
 					processedFile.hasThumb = true;
 					if (!existsFull) {
-						await videoUpload(file, filename, 'img');
+						await videoUpload(file, processedFile.filename, 'img');
 					}
 					if (!existsThumb) {
-						await videoThumbnail(filename, processedFile.geometry);
+						await videoThumbnail(processedFile.filename, processedFile.geometry);
 					}
 					break;
 				default:
@@ -225,7 +227,6 @@ module.exports = async (req, res, next) => {
 			await remove(file.tempFilePath);
 
 			files.push(processedFile);
-			await Files.increment(processedFile);
 		}
 	}
 	// because express middleware is autistic i need to do this

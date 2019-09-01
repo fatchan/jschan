@@ -1,7 +1,8 @@
 'use strict';
 
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
-	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js');
+	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
+	, { Files } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
 
@@ -79,6 +80,7 @@ module.exports = async (req, res, next) => {
 		await makePost(req, res, next);
 	} catch (err) {
 		await deleteTempFiles(req).catch(e => console.error);
+		await Files.decrement(req.files.file.filter(x => x.filename != null).map(x => x.filename)).catch(e => console.error);
 		return next(err);
 	}
 
