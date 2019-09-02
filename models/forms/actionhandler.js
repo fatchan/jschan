@@ -343,6 +343,7 @@ module.exports = async (req, res, next) => {
 					for (let k = beforePages[boardName]; k > afterPages; k--) {
 						//deleting html for pages that no longer should exist
 						parallelPromises.push(remove(`${uploadDirectory}html/${boardName}/${k}.html`));
+						parallelPromises.push(remove(`${uploadDirectory}json/${boardName}/${k}.json`));
 					}
 				}
 				buildQueue.push({

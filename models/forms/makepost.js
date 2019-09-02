@@ -407,7 +407,7 @@ module.exports = async (req, res, next) => {
 	if (enableCaptcha) {
 		if (res.locals.board.settings.captchaMode == 2) {
 			//only delete threads if all posts require threads, otherwise just build board pages for thread captcha
-			await remove(`${uploadDirectory}html/${req.params.board}/thread/`);
+			await remove(`${uploadDirectory}html/${req.params.board}/thread/`); //not deleting json cos it doesnt need to be
 		}
 		buildQueue.push({
 			'task': 'buildBoardMultiple',

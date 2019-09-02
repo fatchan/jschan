@@ -117,9 +117,10 @@ module.exports = async (req, res, next) => {
 		const prunedThreads = await Posts.pruneThreads(res.locals.board);
 		if (prunedThreads.length > 0) {
 			await deletePosts(prunedThreads, req.params.board);
-			//remove board page html for pages > newMaxPage
+			//remove board page html/json for pages > newMaxPage
 			for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
 				promises.push(remove(`${uploadDirectory}html/${req.params.board}/${i}.html`));
+				promises.push(remove(`${uploadDirectory}json/${req.params.board}/${i}.json`));
 			}
 			//rebuild all board pages for page nav numbers, and catalog
 			if (!captchaEnabled) {

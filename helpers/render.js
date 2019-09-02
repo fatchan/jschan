@@ -8,10 +8,15 @@ const { defaultTheme, cacheTemplates, meta }= require(__dirname+'/../configs/mai
 	, redlock = require(__dirname+'/../redlock.js')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
 
-module.exports = async (htmlName, templateName, options) => {
+module.exports = async (htmlName, templateName, options, json=null) => {
 	const html = pug.renderFile(`${templateDirectory}${templateName}`, { ...options, cache: cacheTemplates, meta, defaultTheme });
 	const lock = await redlock.lock(`locks:${htmlName}`, 3000); //what is a reasonable ttl?
-	await outputFile(`${uploadDirectory}html/${htmlName}`, html);
+	const htmlPromise = outputFile(`${uploadDirectory}html/${htmlName}`, html);
+	let jsonPromise;
+	if (json !== null) {
+		jsonPromise = outputFile(`${uploadDirectory}json/${json.name}`, JSON.stringify(json.data));
+	}
+	await Promise.all([htmlPromise, jsonPromise]);
 	await lock.unlock();
 	return html;
 };

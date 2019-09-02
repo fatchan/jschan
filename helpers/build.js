@@ -11,7 +11,10 @@ module.exports = {
 	buildBanners: async (options) => {
 		const label = `/${options.board._id}/banners.html`;
 		const start = process.hrtime();
-		const html = render(label, 'banners.pug', options);
+		const html = render(label, 'banners.pug', options, {
+			'name': `/${options.board._id}/banners.json`,
+			'data': options.board.banners
+		});
 		const end = process.hrtime(start);
 		console.log(timeDiffString(label, end));
 		return html;
@@ -27,7 +30,10 @@ module.exports = {
 		const html = render(label, 'catalog.pug', {
 			...options,
 			threads,
-		});
+		}, {
+            'name': `/${options.board._id}/catalog.json`,
+            'data': threads
+        });
 		const end = process.hrtime(start);
 		console.log(timeDiffString(label, end));
 		return html;
@@ -46,7 +52,10 @@ module.exports = {
 		const html = render(label, 'thread.pug', {
 			...options,
 			thread,
-		});
+		}, {
+            'name': `/${options.board._id}/thread/${options.threadId}.json`,
+            'data': thread
+        });
 		const end = process.hrtime(start);
 		console.log(timeDiffString(label, end));
 		return html;
@@ -57,12 +66,14 @@ module.exports = {
 		const start = process.hrtime();
 		const threads = await Posts.getRecent(options.board._id, options.page);
 		if (!options.maxPage) {
-			options.maxPage = Math.min(Math.ceil((await Posts.getPages(board._id)) / 10), Math.ceil(board.settings.threadLimit/10));
+			options.maxPage = Math.min(Math.ceil((await Posts.getPages(options.board._id)) / 10), Math.ceil(options.board.settings.threadLimit/10));
 		}
-
 		const html = render(label, 'board.pug', {
 			...options,
 			threads,
+		}, {
+			'name': `/${options.board._id}/${options.page === 1 ? 'index' : options.page}.json`,
+			'data': threads
 		});
 		const end = process.hrtime(start);
 		console.log(timeDiffString(label, end));
@@ -89,13 +100,17 @@ module.exports = {
 			if (spliceStart > 0) {
 				spliceStart = spliceStart - 1;
 			}
+			const pageThreads = threads.splice(0,10);
 			buildArray.push(
 				render(`${options.board._id}/${i === 1 ? 'index' : i}.html`, 'board.pug', {
 					board: options.board,
-					threads: threads.splice(0,10),
+					threads: pageThreads,
 					maxPage,
 					page: i,
-				})
+				}, {
+		            'name': `/${options.board._id}/${i === 1 ? 'index' : i}.json`,
+		            'data': pageThreads
+		        })
 			);
 		}
 		await Promise.all(buildArray);

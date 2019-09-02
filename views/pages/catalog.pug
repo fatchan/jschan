@@ -19,9 +19,10 @@ block content
 	hr(size=1)
 	if threads.length === 0
 		p No posts.
-	section.catalog
-		for thread, i in threads
-			+catalogtile(board, thread, i+1)
+	else 
+		section.catalog
+			for thread, i in threads
+				+catalogtile(board, thread, i+1)
 	hr(size=1)
 	nav.pages
 		a(href=`/${board._id}/index.html`) [Index]

@@ -49,7 +49,7 @@ pre {
 
 .navbar {
 	background: var(--post-color);
-	border-bottom: 1px solid var(--box-border-color);
+	border-bottom: 1px solid var(--post-outline-color);
 	position: fixed;
 	width: 100%;
 	z-index: 1;
