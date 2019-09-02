@@ -11,10 +11,10 @@ block head
 	if thread.files.length > 0
 		if thread.spoiler
 			meta(property='og:image', content='/img/spoiler.png')
-		else if thread.files[0].hasThumb
-			meta(property='og:image', content='/img/thumb-'+thread.files[0].filename.split('.')[0]+'.jpg')
+		else if thread.files[0].hasThumb === true
+			meta(property='og:image', content=`/img/thumb-${thread.files[0].hash}.jpg`)
 		else
-			meta(property='og:image', content='/img/'+thread.files[0].filename)
+			meta(property='og:image', content=`/img/${thread.files[0].filename}`)
 
 block content
 	include ../includes/boardheader.pug

@@ -3,15 +3,14 @@
 const { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js')
 
-module.exports = (fileNames) => {
+module.exports = (files) => {
 
-	//delete all the psot files and thumbs using the filenames
-	return Promise.all(fileNames.map(async filename => {
-		//dont question it.
+	//delete all the files and thumbs
+	return Promise.all(files.map(async file => {
 		return Promise.all([
-			remove(`${uploadDirectory}img/${filename}`),
-			remove(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`)
-		]).catch(e => console.error) //ignore for now
+			remove(`${uploadDirectory}img/${file.filename}`),
+			remove(`${uploadDirectory}img/thumb-${file.hash}.jpg`)
+		]).catch(e => console.error)
 	}));
 
 }

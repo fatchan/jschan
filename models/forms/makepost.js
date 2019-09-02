@@ -155,7 +155,6 @@ module.exports = async (req, res, next) => {
 					filename: file.filename,
 					originalFilename: file.name,
 					mimetype: file.mimetype,
-					maintype: file.mimetype.split('/')[0],
 					size: file.size,
 			};
 
@@ -166,7 +165,7 @@ module.exports = async (req, res, next) => {
 			const existsThumb = await pathExists(`${uploadDirectory}img/thumb-${processedFile.hash}.jpg`);
 
 			//handle video/image ffmpeg or graphicsmagick
-			switch (processedFile.maintype) {
+			switch (processedFile.mimetype.split('/')[0]) {
 				case 'image':
 					const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
 					processedFile.geometry = imageData.size // object with width and height pixels
@@ -179,7 +178,7 @@ module.exports = async (req, res, next) => {
 						await imageUpload(file, processedFile.filename, 'img');
 					}
 					if (!existsThumb && processedFile.hasThumb) {
-						await imageThumbnail(processedFile.filename);
+						await imageThumbnail(processedFile);
 					}
 					processedFile = fixGifs(processedFile);
 					break;
@@ -205,7 +204,7 @@ module.exports = async (req, res, next) => {
 						await videoUpload(file, processedFile.filename, 'img');
 					}
 					if (!existsThumb) {
-						await videoThumbnail(processedFile.filename, processedFile.geometry);
+						await videoThumbnail(processedFile, processedFile.geometry);
 					}
 					break;
 				default:
