@@ -14,6 +14,7 @@ Demo site running at https://fatpeople.lol
 - [x] Multiple files per post
 - [x] Optional user created boards ala infinity
 - [x] Captcha and basic antispam
+- [x] read-only JSON api
 - [x] Multi-select posts for reports, bans, post deletions, etc
 - [x] Public board modlogs
 - [x] Homepage boards sorted by active users, pph, total posts descending
@@ -25,7 +26,6 @@ Demo site running at https://fatpeople.lol
 - Geographic and custom uploaded flags
 - IP range bans
 - IP notes/records/ban history of some sort
-- JSON api
 - Configuration editor
 - Overboard/multiboard/meta boards
 - Boards search page
