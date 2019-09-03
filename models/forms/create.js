@@ -54,6 +54,7 @@ module.exports = async (req, res, next) => {
 			'filters': [],
 			'filterMode': 0,
 			'filterBanDuration': 0,
+			'theme': 'lain',
 			'announcement': {
 				'raw':null,
 				'markdown':null
