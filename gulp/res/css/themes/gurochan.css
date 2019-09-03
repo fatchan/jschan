@@ -1,0 +1,28 @@
+/*gurochan*/
+:root {
+	--background-top: #EDDAD2;
+	--background-rest: #EDDAD2;
+	--post-color: #D9AF9E;
+	--post-outline-color: #CA927B;
+	--label-color: #E6CBC0;
+	--box-border-color: #CA927B;
+	--darken: #00000050;
+	--highlighted-post-color: #EEDACB;
+	--highlighted-post-outline-color: #CA927B;
+	--board-title: #FF6600;
+	--hr: #CA927B;
+	--font-color: #000;
+	--name-color: #000;
+	--capcode-color: #f00;
+	--subject-color: #004A99;
+	--link-color: #34345C;
+	--post-link-color: #34345C;
+	--link-hover: #34345C;
+	--input-borders: #CA927B;
+	--input-color: #000;
+	--input-background: #E6CBC0;
+	--dice-color: darkorange;
+	--title-color: #d70000;
+	--greentext-color: #789922;
+}
+

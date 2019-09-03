@@ -1,0 +1,27 @@
+/*sushi*/
+:root {
+	--background-top: #2e99cc70;
+	--background-rest: #D2FFEE;
+	--post-color: #B6DDDE;
+	--post-outline-color: #8FCCCD;
+	--label-color: #B6DDDE;
+	--box-border-color: #8FCCCD;
+	--darken: #00000010;
+	--highlighted-post-color: #a9d8ff;
+	--highlighted-post-outline-color: #a9d8ff;
+	--board-title: #800000;
+	--hr: #B7D9C5;
+	--font-color: black;
+	--name-color: #117743;
+	--capcode-color: #f00;
+	--subject-color: #117743;
+	--link-color: #d00;
+	--post-link-color: #d00;
+	--link-hover: #d00;
+	--input-borders: #a9a9a9;
+	--input-color: #000;
+	--input-background: white;
+	--dice-color: darkorange;
+	--title-color: #d70000;
+	--greentext-color: #789922;
+}
