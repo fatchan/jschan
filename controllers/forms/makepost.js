@@ -80,7 +80,9 @@ module.exports = async (req, res, next) => {
 		await makePost(req, res, next);
 	} catch (err) {
 		await deleteTempFiles(req).catch(e => console.error);
-		await Files.decrement(req.files.file.filter(x => x.filename != null).map(x => x.filename)).catch(e => console.error);
+		if (res.locals.numFiles > 0) {
+			await Files.decrement(req.files.file.filter(x => x.filename != null).map(x => x.filename)).catch(e => console.error);
+		}
 		return next(err);
 	}
 
