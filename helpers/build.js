@@ -31,9 +31,9 @@ module.exports = {
 			...options,
 			threads,
 		}, {
-            'name': `/${options.board._id}/catalog.json`,
-            'data': threads
-        });
+			'name': `/${options.board._id}/catalog.json`,
+			'data': threads
+		});
 		const end = process.hrtime(start);
 		console.log(timeDiffString(label, end));
 		return html;
@@ -53,9 +53,9 @@ module.exports = {
 			...options,
 			thread,
 		}, {
-            'name': `/${options.board._id}/thread/${options.threadId}.json`,
-            'data': thread
-        });
+			'name': `/${options.board._id}/thread/${options.threadId}.json`,
+			'data': thread
+		});
 		const end = process.hrtime(start);
 		console.log(timeDiffString(label, end));
 		return html;
@@ -108,9 +108,9 @@ module.exports = {
 					maxPage,
 					page: i,
 				}, {
-		            'name': `/${options.board._id}/${i === 1 ? 'index' : i}.json`,
-		            'data': pageThreads
-		        })
+					'name': `/${options.board._id}/${i === 1 ? 'index' : i}.json`,
+					'data': pageThreads
+				})
 			);
 		}
 		await Promise.all(buildArray);

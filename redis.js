@@ -9,10 +9,8 @@ module.exports = {
 	redisClient: client,
 
 	//get a value with key
-	get: async (key) => {
-		return client.get(key).then(res => {
-			return JSON.parse(res);
-		});
+	get: (key) => {
+		return client.get(key).then(res => { return JSON.parse(res) });
 	},
 
 	//set a value on key

@@ -116,7 +116,7 @@ module.exports = async (req, res, next) => {
 					'ip': res.locals.ip,
 					'reason': 'post word filter auto ban',
 					'board': res.locals.board._id,
-					'post': null,
+					'posts': null,
 					'issuer': 'system', //what should i call this
 					'date': banDate,
 					'expireAt': banExpiry
