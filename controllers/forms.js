@@ -3,6 +3,7 @@
 const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db/boards.js')
+	, { globalLimits } = require(__dirname+'/../configs/main.json')
 	//middlewares
 	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
@@ -19,7 +20,7 @@ const express  = require('express')
 		preserveExtension: 4,
 		limits: {
 			fileSize: 10 * 1024 * 1024,
-			files: 3 //todo: add configs for these values
+			files: globalLimits.postFiles.max
 		},
 		abortOnLimit: true,
 		useTempFiles: true,
@@ -31,7 +32,11 @@ const express  = require('express')
 		preserveExtension: 3,
 		limits: {
 			fileSize: 10 * 1024 * 1024,
-			files: 10
+			/*
+				currently not possible to limit each file to files/fileSize with express-filesupload/busboy.
+				will need to do separately in banner upload model if desired.
+			*/
+			files: globalLimits.bannerFiles.max
 		},
 		abortOnLimit: true,
 		useTempFiles: true,

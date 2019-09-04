@@ -2,6 +2,7 @@
 
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
+	, { globalLimits } = require(__dirname+'/../../configs/main.json')
 	, { Files } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
@@ -29,7 +30,7 @@ module.exports = async (req, res, next) => {
 			errors.push('Threads must include a subject');
 		} //no option to force op subject, seems useless
 	}
-	if (res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0) {
+	if (globalLimits.postFiles.max !== 0 && res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0) {
 		if (!req.body.thread && res.locals.board.settings.forceThreadFile) {
 			errors.push('Threads must include a file');
 		} else if (res.locals.board.settings.forceReplyFile) {
@@ -44,8 +45,8 @@ module.exports = async (req, res, next) => {
 		}
 	}
 	if (req.body.message) {
-		if (req.body.message.length > 4000) {
-			errors.push('Message must be 4000 characters or less');
+		if (req.body.message.length > globalLimits.messageLength.max) {
+			errors.push(`Message must be ${globalLimits.messageLength.max} characters or less`);
 		} else if (!req.body.thread && req.body.message.length < res.locals.board.settings.minThreadMessageLength) {
 			errors.push(`Thread messages must be at least ${res.locals.board.settings.minMessageLength} characters long`);
 		} else if (req.body.thread && req.body.message.length < res.locals.board.settings.minReplyMessageLength) {

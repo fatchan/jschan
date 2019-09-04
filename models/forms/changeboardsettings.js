@@ -43,6 +43,7 @@ module.exports = async (req, res, next) => {
 		'locked': req.body.locked ? true : false,
 		'early404': req.body.early404 ? true : false,
 		'ids': req.body.ids ? true : false,
+		'flags': req.body.flags ? true : false,
 		'forceAnon': req.body.force_anon ? true : false,
 		'userPostDelete': req.body.user_post_delete ? true : false,
 		'userPostSpoiler': req.body.user_post_spoiler ? true : false,

@@ -7,7 +7,7 @@ mixin newspost(post, globalmanage=false)
 					if globalmanage === true
 						input.left.post-check(type='checkbox', name='checkednews[]' value=post._id)  
 					a.left(href=`#${post._id}`) #{post.title}
-					p.right.no-m-p #{post.date.toLocaleString()}
+					p.right.no-m-p #{post.date.toLocaleString(undefined, {hour12:false})}
 			tr.table-row
 				td
 					if globalmanage === true

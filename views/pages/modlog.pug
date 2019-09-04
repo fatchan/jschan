@@ -26,7 +26,7 @@ block content
 					th Log Message
 				for log in logs
 					tr
-						td #{log.date.toLocaleString()}
+						td #{log.date.toLocaleString(undefined, {hour12:false})}
 						td #{log.user}
 						td #{log.actions}
 						td #{log.postIds}

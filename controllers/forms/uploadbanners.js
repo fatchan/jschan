@@ -1,7 +1,8 @@
 'use strict';
 
 const uploadBanners = require(__dirname+'/../../models/forms/uploadbanners.js')
-	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js');
+	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
+	, { globalLimits } = require(__dirname+'/../../configs/main.json');
 
 module.exports = async (req, res, next) => {
 
@@ -18,8 +19,9 @@ module.exports = async (req, res, next) => {
 
 	if (res.locals.numFiles === 0) {
 		errors.push('Must provide a file');
-	}
-	if (res.locals.board.banners.length+res.locals.numFiles > 100) {
+	} else if (res.locals.numFiles > globalLimits.bannerFiles.max) {
+		errors.push(`Exceeded max banner uploads in one request of ${globalLimits.bannerFiles.max}`)
+	} else if (res.locals.board.banners.length+res.locals.numFiles > 100) {
 		errors.push('Number of uploads would exceed 100 banner limit');
 	}
 

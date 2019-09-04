@@ -61,11 +61,14 @@ const express = require('express')
 	// use pug view engine
 	app.set('view engine', 'pug');
 	app.set('views', path.join(__dirname, 'views/pages'));
-	//default theme in views with settings.defaultTheme
-	app.locals.defaultTheme = configs.defaultTheme;
+	//cache loaded templates
 	if (configs.cacheTemplates === true) {
 		app.enable('view cache');
 	}
+
+	//default settings
+	app.locals.defaultTheme = configs.boardDefaults.theme;
+	app.locals.globalLimits = configs.globalLimits;
 
 	// routes
 	app.use('/forms', require(__dirname+'/controllers/forms.js'));

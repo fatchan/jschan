@@ -63,39 +63,7 @@ async function wipe() {
 				'description': 'testing board',
 				'tags': [],
 				'moderators': [],
-				'captchaMode': 0,
-				'locked': false,
-				'tphTrigger': 10,
-				'tphTriggerAction': 2,
-				'forceAnon': true,
-				'early404': true,
-				'ids': false,
-				'userPostDelete': true,
-				'userPostSpoiler': true,
-				'userPostUnlink': true,
-				'threadLimit': 200,
-				'replyLimit': 500,
-				'maxFiles': 0,
-				'forceReplyMessage':false,
-				'forceReplyFile':false,
-				'forceThreadMessage':false,
-				'forceThreadFile':false,
-				'forceThreadSubject':false,
-				'minThreadMessageLength':0,
-				'minReplyMessageLength':0,
-				'defaultName': 'Anonymous',
-				'filters':[],
-				'filterMode': 0,
-				'filterBanDuration': 0,
-				'announcement': {
-					'raw':null,
-					'markdown':null
-				},
-				'allowedFileTypes': {
-					'animatedImage': true,
-					'image': true,
-					'video': true,
-				}
+				...configs.boardDefaults
 			}
 		})
 		//add indexes - should profiled and changed at some point if necessary
@@ -152,7 +120,7 @@ function custompages() {
 	return gulp.src(paths.pug.src)
 		.pipe(pug({
 			locals: {
-				defaultTheme: configs.defaultTheme
+				defaultTheme: configs.boardDefaults.theme
 			}
 		}))
 		.pipe(gulp.dest(paths.pug.dest));

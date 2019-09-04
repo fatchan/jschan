@@ -1,7 +1,8 @@
 'use strict';
 
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
-	, themes = require(__dirname+'/../../helpers/themes.js');
+	, themes = require(__dirname+'/../../helpers/themes.js')
+	, { globalLimits } = require(__dirname+'/../../configs/main.json');
 
 module.exports = async (req, res, next) => {
 
@@ -28,20 +29,20 @@ module.exports = async (req, res, next) => {
 	if (req.body.default_name && (req.body.default_name.length < 1 || req.body.default_name.length > 50)) {
 		errors.push('Anon name must be 1-50 characters');
 	}
-	if (typeof req.body.reply_limit === 'number' && (req.body.reply_limit < 1 || req.body.reply_limit > 1000)) {
-		errors.push('Reply Limit must be from 1-1000');
+	if (typeof req.body.reply_limit === 'number' && (req.body.reply_limit < globalLimits.replyLimit.min || req.body.reply_limit > globalLimits.replyLimit.max)) {
+		errors.push(`Reply Limit must be ${globalLimits.replyLimit.min}-${globalLimits.replyLimit.max}`);
 	}
-	if (typeof req.body.thread_limit === 'number' && (req.body.thread_limit < 10 || req.body.thread_limit > 250)) {
-		errors.push('Threads Limit must be 10-250');
+	if (typeof req.body.thread_limit === 'number' && (req.body.thread_limit < globalLimits.threadLimit.min || req.body.thread_limit > globalLimits.threadLimit.max)) {
+		errors.push(`Threads Limit must be ${globalLimits.threadLimit.min}-${globalLimits.threadLimit.max}`);
 	}
-	if (typeof req.body.max_files === 'number' && (req.body.max_files < 0 || req.body.max_files > 3)) {
-		errors.push('Max files must be 0-3');
+	if (typeof req.body.max_files === 'number' && (req.body.max_files < 0 || req.body.max_files > globalLimits.postFiles.max)) {
+		errors.push(`Max files must be 0-${globalLimits.postFiles.max}`);
 	}
-	if (typeof req.body.min_thread_message_length === 'number' && (req.body.min_thread_message_length < 0 || req.body.min_thread_message_length > 4000)) {
-		errors.push('Min thread message length must be 0-4000. 0 is disabled.');
+	if (typeof req.body.min_thread_message_length === 'number' && (req.body.min_thread_message_length < 0 || req.body.min_thread_message_length > globalLimits.messageLength.max)) {
+		errors.push(`Min thread message length must be 0-${globalLimits.messageLength.max}. 0 is disabled.`);
 	}
-	if (typeof req.body.min_reply_message_length === 'number' && (req.body.min_reply_message_length < 0 || req.body.min_reply_message_length > 4000)) {
-		errors.push('Min reply message length must be 0-4000. 0 is disabled.');
+	if (typeof req.body.min_reply_message_length === 'number' && (req.body.min_reply_message_length < 0 || req.body.min_reply_message_length > globalLimits.messageLength.max)) {
+		errors.push(`Min reply message length must be 0-${globalLimits.messageLength.max}. 0 is disabled.`);
 	}
 	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {
 		errors.push('Invalid captcha mode.');

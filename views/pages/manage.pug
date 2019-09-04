@@ -52,7 +52,7 @@ block content
 				input(type='text' name='default_name' value=board.settings.defaultName)
 			section.row
 				.label Max Files
-				input(type='number' name='max_files' value=board.settings.maxFiles)
+				input(type='number' name='max_files' value=board.settings.maxFiles max=globalLimits.postFiles.max)
 			section.row
 				.label Allow Video Files
 				label.postform-style.ph-5
@@ -73,6 +73,10 @@ block content
 				.label IDs
 				label.postform-style.ph-5
 					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)
+			section.row
+				.label Geo Flags
+				label.postform-style.ph-5
+					input(type='checkbox', name='flags', value='true' checked=board.settings.flags)
 			section.row
 				.label User Post Deletion
 				label.postform-style.ph-5
@@ -111,16 +115,16 @@ block content
 					input(type='checkbox', name='force_reply_file', value='true' checked=board.settings.forceReplyFile)
 			section.row
 				.label Min Thread Message Length
-				input(type='number' name='min_thread_message_length' value=board.settings.minThreadMessageLength placeholder='0-4000')
+				input(type='number' name='min_thread_message_length' value=board.settings.minThreadMessageLength max=globalLimits.messageLength.max)
 			section.row
 				.label Min Reply Message Length
-				input(type='number' name='min_reply_message_length' value=board.settings.minReplyMessageLength placeholder='0-4000')
+				input(type='number' name='min_reply_message_length' value=board.settings.minReplyMessageLength max=globalLimits.messageLength.max)
 			section.row
 				.label Thread Limit
-				input(type='number' name='thread_limit' value=board.settings.threadLimit)
+				input(type='number' name='thread_limit' value=board.settings.threadLimit min=globalLimits.threadLimit.min max=globalLimits.threadLimit.max)
 			section.row
 				.label Reply Limit
-				input(type='number' name='reply_limit' value=board.settings.replyLimit)
+				input(type='number' name='reply_limit' value=board.settings.replyLimit min=globalLimits.replyLimit.min max=globalLimits.replyLimit.max)
 			section.row
 				.label Moderators
 				textarea(name='moderators' placeholder='newline separated, max 10') #{board.settings.moderators.join('\n')}

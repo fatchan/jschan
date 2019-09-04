@@ -1,6 +1,7 @@
 'use strict';
 
-const { Boards } = require(__dirname+'/../../db/');
+const { Boards } = require(__dirname+'/../../db/')
+	, { boardDefaults } = require(__dirname+'/../../configs/main.json');
 
 module.exports = async (req, res, next) => {
 
@@ -30,40 +31,7 @@ module.exports = async (req, res, next) => {
 			description,
 			tags,
 			'moderators': [],
-			'locked': false,
-			'captchaMode': 0,
-			'tphTrigger': 10,
-			'tphTriggerAction': 1,
-			'forceAnon': false,
-			'early404': true,
-			'ids': false,
-			'userPostDelete': true,
-			'userPostSpoiler': true,
-			'userPostUnlink': true,
-			'threadLimit': 200,
-			'replyLimit': 500,
-			'maxFiles': 3,
-			'forceReplyMessage': false,
-			'forceReplyFile': false,
-			'forceThreadMessage': false,
-			'forceThreadFile': false,
-			'forceThreadSubject': false,
-			'minThreadMessageLength': 0,
-			'minReplyMessageLength': 0,
-			'defaultName': 'Anonymous',
-			'filters': [],
-			'filterMode': 0,
-			'filterBanDuration': 0,
-			'theme': 'lain',
-			'announcement': {
-				'raw':null,
-				'markdown':null
-			},
-			'allowedFileTypes': {
-				'animatedImage': true,
-				'image': true,
-				'video': true,
-			}
+			...boardDefaults
 		}
 	}
 

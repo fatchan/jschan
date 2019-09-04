@@ -13,7 +13,7 @@ mixin ban(ban, banpage)
 		| for: #{ban.reason}
 		div Issued by: #{ban.issuer}
 		div Issued against: ...#{ban.ip.slice(-10)}
-		div Banned: #{ban.date.toLocaleString()}
+		div Banned: #{ban.date.toLocaleString(undefined, {hour12:false})}
 		div Expires: #{ban.expireAt.toLocaleString()}
 		if ban.posts && ban.posts.length > 0
 			span Banned for the following post#{ban.posts.length > 1 ? 's' : ''}:

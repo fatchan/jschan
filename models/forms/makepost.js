@@ -51,7 +51,7 @@ module.exports = async (req, res, next) => {
 			maxFiles, forceAnon, replyLimit,
 			threadLimit, ids, userPostSpoiler,
 			defaultName, tphTrigger, tphTriggerAction,
-			captchaMode, locked, allowedFileTypes } = res.locals.board.settings;
+			captchaMode, locked, allowedFileTypes, flags } = res.locals.board.settings;
 	if (locked === true) {
 		await deleteTempFiles(req).catch(e => console.error);
 		return res.status(400).render('message', {
@@ -240,7 +240,13 @@ module.exports = async (req, res, next) => {
 		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip).digest('hex');
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
-
+	let country = null;
+	if (flags === true) {
+		country = {
+			'code': req.headers['x-country-code'],
+			'name': req.headers['x-country-name']
+		}
+	}
 	let password = null;
 	if (req.body.password) {
 		password = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
@@ -312,6 +318,7 @@ module.exports = async (req, res, next) => {
 	const data = {
 		'date': new Date(),
 		name,
+		country,
 		'board': req.params.board,
 		tripcode,
 		capcode,

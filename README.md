@@ -7,28 +7,25 @@ Demo site running at https://fatpeople.lol
 ## Goals
 - Oldschool imageboard look
 - Works on TOR with javascript disabled (maybe the name is a bit ironic)
-- Take advantage of modern html5/css features for some usability perks
+- Leverage nginx to serve static files and handle GeoIP lookups
 
 ## Features
-- [x] Classic post styling e.g. greentext, spoilers, quotes
+- [x] Post styling (markdown-esque)
+- [x] Quote linking and replies
 - [x] Multiple files per post
-- [x] Optional user created boards ala infinity
+- [x] User created boards ala infinity
 - [x] Captcha and basic antispam
-- [x] read-only JSON api
-- [x] Multi-select posts for reports, bans, post deletions, etc
-- [x] Public board modlogs
-- [x] Homepage boards sorted by active users, pph, total posts descending
-- [x] Management page with reports, bans, banners, board settings and news
-- [x] Customise homepage, faq, rules or add custom pages
+- [x] Read-only JSON api
+- [x] Public modlogs
+- [x] Multi-select posts for moderation actions/reports
+- [x] Fully functional for users with javascript disabled
 
 ## Todo
-- Post moving/thread merging
-- Geographic and custom uploaded flags
-- IP range bans
-- IP notes/records/ban history of some sort
+- Staff post editing/moving/thread merging
+- IP range bans + IP ban history
 - Configuration editor
 - Overboard/multiboard/meta boards
-- Boards search page
+- Boards list and search page
 - User created board custom pages
 - File URL uploads
 
@@ -42,7 +39,7 @@ Please note:
 - Node.js (to run the app)
 - MongoDB (database, duh)
 - Redis (sessions, queue, locks and caching)
-- Nginx (handle https, serve static content and html)
+- Nginx (handle https, serve static content, GeoIP lookup)
 - Certbot/letsencrypt (for https cert)
 - Imagemagick (thumbnailing images)
 - Ffmpeg (thumbnailing videos)
