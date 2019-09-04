@@ -498,7 +498,7 @@ textarea {
 	max-width: 100%;
 }
 
-.anchor:target + .post-container {
+.anchor:target + .post-container, .post-container.highlighted {
 	background-color: var(--highlighted-post-color) !important;
 	border-color: var(--highlighted-post-outline-color) !important;
 }
