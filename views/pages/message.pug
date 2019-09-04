@@ -1,6 +1,7 @@
 extends ../layout.pug
 
 block head
+	script(src='/js/theme.js')
 	title #{title}
 	if redirect
 		meta(http-equiv="refresh" content=`3;url=${redirect}`)

@@ -14,6 +14,7 @@ const express = require('express')
 	, configs = require(__dirname+'/configs/main.json')
 	, ipHash = require(__dirname+'/helpers/iphash.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
+	, themes = require(__dirname+'/helpers/themes.js')
 	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {
@@ -68,7 +69,8 @@ const express = require('express')
 
 	//default settings
 	app.locals.defaultTheme = configs.boardDefaults.theme;
-	app.locals.globalLimits = configs.globalLimits;
+	app.locals.globalLimits = configs.globalLimits
+	app.locals.themes = themes;
 
 	// routes
 	app.use('/forms', require(__dirname+'/controllers/forms.js'));

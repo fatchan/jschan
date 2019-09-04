@@ -2,7 +2,6 @@
 
 const Posts = require(__dirname+'/../../db/posts.js')
 	, Bans = require(__dirname+'/../../db/bans.js')
-	, themes = require(__dirname+'/../../helpers/themes.js');
 
 module.exports = async (req, res, next) => {
 
@@ -20,7 +19,6 @@ module.exports = async (req, res, next) => {
 		csrf: req.csrfToken(),
 		reports,
 		bans,
-		themes,
 	});
 
 }

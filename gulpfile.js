@@ -2,6 +2,7 @@
 
 const gulp = require('gulp')
 	, configs = require(__dirname+'/configs/main.json')
+	, themes = require(__dirname+'/helpers/themes.js')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
 	, cleanCSS = require('gulp-clean-css')
@@ -120,6 +121,7 @@ function custompages() {
 	return gulp.src(paths.pug.src)
 		.pipe(pug({
 			locals: {
+				themes,
 				defaultTheme: configs.boardDefaults.theme
 			}
 		}))

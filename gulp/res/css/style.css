@@ -615,11 +615,14 @@ input[type="file"] {
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
 	position: fixed;
-	top: 43px;
+	top: 38px;
 	right: 5px;
 	background-color: var(--post-color);
-	z-index: 1;
+	z-index: 2;
 	box-sizing: border-box;
+	padding: 5px;
+	border: 1px solid var(--post-outline-color);
+	border-top: none;
 }
 
 #postform:target {

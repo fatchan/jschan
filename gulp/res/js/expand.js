@@ -1,4 +1,3 @@
-//this is so normies dont complain about multiple tabs until i make something nicer
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	var thumbs = document.getElementsByClassName('post-file-src');
