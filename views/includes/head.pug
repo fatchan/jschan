@@ -1,10 +1,8 @@
 meta(charset='utf-8')
 meta(name='viewport', content='width=device-width, initial-scale=1')
 link(rel='stylesheet' href='/css/style.css')
-if board && board.settings.theme
-	link#theme(rel='stylesheet' href=`/css/themes/${board.settings.theme}.css`)
-else
-	link#theme(rel='stylesheet' href=`/css/themes/${defaultTheme}.css`)
+- const theme = board ? board.settings.theme : defaultTheme;
+link#theme(rel='stylesheet' data-theme=theme href=`/css/themes/${theme}.css`)
 noscript
 	style
 		| .jsonly { display: none }

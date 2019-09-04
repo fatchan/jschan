@@ -6,6 +6,4 @@ small.footer#bottom
 	|  - 
 	a(href='https://github.com/fatchan/jschan/') source code
 	|  -  
-	select.jsonly#theme-changer(name='theme')
-		each theme in themes
-			option(value=theme) #{theme}
+	include ./themeswitcher.pug
