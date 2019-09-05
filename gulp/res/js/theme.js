@@ -4,16 +4,32 @@ function changeTheme(e) {
 		theme = 'default';
 	}
 	localStorage.setItem('theme', theme);
-	var themeLink = document.getElementById('theme');
-	//if somebody makes a theme file named "default", it wont work. so just dont.
+	var custom = document.getElementById('customtheme');
 	if (theme === 'default') {
-		var defaultTheme = themeLink.dataset.theme;
-		var defaultHref = '/css/themes/'+defaultTheme+'.css';
-		if (themeLink.href !== defaultHref) {
-			themeLink.href = '/css/themes/'+defaultTheme+'.css';
-		}
+		if (custom) {
+            custom.remove();
+        }
 	} else {
-		themeLink.href = '/css/themes/'+theme+'.css';
+		var path = '/css/themes/'+theme+'.css';
+		var css = localStorage.getItem(path);
+		if (!custom) {
+            custom = document.createElement('style');
+            custom.id = 'customtheme';
+            document.head.appendChild(custom);
+        }
+		if (css) {
+			custom.innerHTML = css;
+		}
+		var tempLink = document.createElement('link');
+		tempLink.rel = 'stylesheet';
+		tempLink.onload = function() {
+			css = tempLink.sheet.rules[0].cssText;
+			localStorage.setItem(path, css);
+			custom.innerHTML = css;
+			tempLink.remove();
+		}
+		tempLink.href = path;
+		document.head.appendChild(tempLink);
 	}
 }
 
