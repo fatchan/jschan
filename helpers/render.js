@@ -1,6 +1,6 @@
 'use strict';
 
-const { globalLimits, boardDefaults, cacheTemplates, meta }= require(__dirname+'/../configs/main.json')
+const { globalLimits, boardDefaults, cacheTemplates, meta } = require(__dirname+'/../configs/main.json')
 	, { outputFile } = require('fs-extra')
 	, pug = require('pug')
 	, path = require('path')
