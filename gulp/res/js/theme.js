@@ -8,43 +8,43 @@ function changeTheme(e) {
 	//add theme setting to localstorage
 	localStorage.setItem('theme', theme);
 	//check for theme style tag
-	var custom = document.getElementById('customtheme');
+	var tempLink = document.getElementById('customtheme');
 	if (theme === 'default') {
-		if (custom) {
+		if (tempLink) {
 			//remove theme style tag if we switching to default
-			custom.remove();
+			tempLink.remove();
 		}
 	} else {
 		//path of the theme css
 		var path = '/css/themes/'+theme+'.css';
 		//get the raw css from localstorage
 		var css = localStorage.getItem(path);
-		if (!custom) {
+		if (!tempLink) {
 			//create the style tag if it doesnt exist
-			custom = document.createElement('style');
-			custom.id = 'customtheme';
-			document.head.appendChild(custom);
+			tempLink = document.createElement('style');
+			document.head.appendChild(tempLink);
 		}
 		if (css) {
 			//if we have the css in localstorage, set it (prevents FOUC)
-			custom.innerHTML = css;
+			tempLink.innerHTML = css;
 		}
 		//then createa new link rel=stylesheet, and load the css 
-		var tempLink = document.createElement('link');
-		tempLink.rel = 'stylesheet';
-		tempLink.onload = function() {
+		var themeLink = document.createElement('link');
+		themeLink.rel = 'stylesheet';
+		themeLink.id = 'customtheme';
+		themeLink.onload = function() {
 			css = '';
-            for(var i = 0; i < tempLink.sheet.rules.length; i++) {
-                css += tempLink.sheet.rules[i].cssText;
+            for(var i = 0; i < themeLink.sheet.rules.length; i++) {
+                css += themeLink.sheet.rules[i].cssText;
             }
 			//update our localstorage with latest version
 			localStorage.setItem(path, css);
-			custom.innerHTML = css;
+			tempLink.innerHTML = css;
 			//immediately remove it since we dont need it
-			custom.remove();
+			tempLink.remove();
 		}
-		tempLink.href = path;
-		document.head.appendChild(tempLink);
+		themeLink.href = path;
+		document.head.appendChild(themeLink);
 	}
 }
 
