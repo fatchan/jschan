@@ -8,9 +8,9 @@ module.exports = {
 	},
 
 	after: {
-		allowedTags: [ 'span', 'a', 'em', 'strong', 'img'],
+		allowedTags: [ 'span', 'a', 'em', 'strong', 'img', 'small'],
 		allowedAttributes: {
-			'a': [ 'href', 'class', 'referrerpolicy', 'target' ],
+			'a': [ 'href', 'rel', 'class', 'referrerpolicy', 'target' ],
 			'span': [ 'class' ],
 			'img': ['src', 'height', 'width']
 		}

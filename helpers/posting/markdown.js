@@ -29,7 +29,7 @@ module.exports = (text) => {
 
 	//links
 	text = text.replace(linkRegex, (match) => {
-		return `<a referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>`;
+		return `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>`;
 	});
 
 	//bold
