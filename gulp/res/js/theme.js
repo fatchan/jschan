@@ -34,8 +34,9 @@ function changeTheme(e) {
 		themeLink.id = 'customtheme';
 		themeLink.onload = function() {
 			css = '';
-            for(var i = 0; i < themeLink.sheet.rules.length; i++) {
-                css += themeLink.sheet.rules[i].cssText;
+			var rulesName = themeLink.sheet.rules != null ? 'rules' : 'cssRules'; //browser compatibility shit
+            for(var i = 0; i < themeLink.sheet[rulesName].length; i++) {
+                css += themeLink.sheet[rulesName][i].cssText;
             }
 			//update our localstorage with latest version
 			localStorage.setItem(path, css);
