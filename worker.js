@@ -16,9 +16,12 @@ const Queue = require('bull')
 	const buildTasks = require(__dirname+'/helpers/build.js')
 		, generateQueue = new Queue('generate', { 'redis': configs.redis });
 
-	generateQueue.process(async (job, done) => {
-		await buildTasks[job.data.task](job.data.options);
-		done();
+	generateQueue
+		.on('error', console.error)
+		.on('failed', console.warn);
+
+	generateQueue.process(async job => {
+		return buildTasks[job.data.task](job.data.options);
 	});
 
 })();
