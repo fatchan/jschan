@@ -210,6 +210,19 @@ p {
 	background: black!important; /*for detected coloring*/
 }
 
+.banposts .thread {
+	display: none;
+	text-align: left;
+}
+
+.banposts:hover .thread {
+	display: block;
+	position: fixed;
+	z-index: 1;
+	left:0;
+	right:0;
+}
+
 .banmessage {
 	color: red;
 	font-weight: bold;
@@ -500,7 +513,7 @@ textarea {
 	text-align: left;
 }
 
-.post-container, .ban {
+.post-container {
 	box-sizing: border-box;
 	padding: .5em;
 	max-width: 100%;

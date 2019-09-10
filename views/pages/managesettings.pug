@@ -17,7 +17,7 @@ block content
 	section.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/transfer`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
-			section.row
+			.row
 				.label New owner username
 				input(type='text' name='username' placeholder=board.owner required)
 			input(type='submit', value='submit')
@@ -26,11 +26,11 @@ block content
 	section.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
-			section.row
+			.row
 				.label I'm sure
 				label.postform-style.ph-5
 					input(type='checkbox', name='confirm', value='true' required)
-			section.row
+			.row
 				.label Board URI
 				input(type='text' name='uri' required)
 			input(type='submit', value='submit')
@@ -39,138 +39,138 @@ block content
 	section.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
-			section.row
+			.row
 				.label Board name
 				input(type='text' name='name' value=board.settings.name)
-			section.row
+			.row
 				.label Board Description
 				input(type='text' name='description' value=board.settings.description)
-			section.row
+			.row
 				.label Tags
 				textarea(name='tags' placeholder='newline separated, max 10') #{board.settings.tags.join('\n')}
-			section.row
+			.row
 				.label Announcement
 				textarea(name='announcement' placeholder='supports post styling') #{board.settings.announcement.raw}
-			section.row
+			.row
 				.label Anon Name
 				input(type='text' name='default_name' value=board.settings.defaultName)
-			section.row
+			.row
 				.label Max Files
 				input(type='number' name='max_files' value=board.settings.maxFiles max=globalLimits.postFiles.max)
-			section.row
+			.row
 				.label Allow Video Files
 				label.postform-style.ph-5
 					input(type='checkbox', name='files_allow_video', value='true' checked=board.settings.allowedFileTypes.video)
-			section.row
+			.row
 				.label Allow Image Files
 				label.postform-style.ph-5
 					input(type='checkbox', name='files_allow_image', value='true' checked=board.settings.allowedFileTypes.image)
-			section.row
+			.row
 				.label Allow Animated Image Files
 				label.postform-style.ph-5
 					input(type='checkbox', name='files_allow_animated_image', value='true' checked=board.settings.allowedFileTypes.animatedImage)
-			section.row
+			.row
 				.label Early 404
 				label.postform-style.ph-5
 					input(type='checkbox', name='early404', value='true' checked=board.settings.early404)
-			section.row
+			.row
 				.label IDs
 				label.postform-style.ph-5
 					input(type='checkbox', name='ids', value='true' checked=board.settings.ids)
-			section.row
+			.row
 				.label Geo Flags
 				label.postform-style.ph-5
 					input(type='checkbox', name='flags', value='true' checked=board.settings.flags)
-			section.row
+			.row
 				.label User Post Deletion
 				label.postform-style.ph-5
 					input(type='checkbox', name='user_post_delete', value='true' checked=board.settings.userPostDelete)
-			section.row
+			.row
 				.label User File Spoilering
 				label.postform-style.ph-5
 					input(type='checkbox', name='user_post_spoiler', value='true' checked=board.settings.userPostSpoiler)
-			section.row
+			.row
 				.label User File Unlinking
 				label.postform-style.ph-5
 					input(type='checkbox', name='user_post_unlink', value='true' checked=board.settings.userPostUnlink)
-			section.row
+			.row
 				.label Force Anon
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
-			section.row
+			.row
 				.label Force Thread Subject
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_thread_subject', value='true' checked=board.settings.forceThreadSubject)
-			section.row
+			.row
 				.label Force Thread Message
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_thread_message', value='true' checked=board.settings.forceThreadMessage)
-			section.row
+			.row
 				.label Force Thread File
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_thread_file', value='true' checked=board.settings.forceThreadFile)
-			section.row
+			.row
 				.label Force Reply Message
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_reply_message', value='true' checked=board.settings.forceReplyMessage)
-			section.row
+			.row
 				.label Force Reply File
 				label.postform-style.ph-5
 					input(type='checkbox', name='force_reply_file', value='true' checked=board.settings.forceReplyFile)
-			section.row
+			.row
 				.label Min Thread Message Length
 				input(type='number' name='min_thread_message_length' value=board.settings.minThreadMessageLength max=globalLimits.messageLength.max)
-			section.row
+			.row
 				.label Min Reply Message Length
 				input(type='number' name='min_reply_message_length' value=board.settings.minReplyMessageLength max=globalLimits.messageLength.max)
-			section.row
+			.row
 				.label Thread Limit
 				input(type='number' name='thread_limit' value=board.settings.threadLimit min=globalLimits.threadLimit.min max=globalLimits.threadLimit.max)
-			section.row
+			.row
 				.label Reply Limit
 				input(type='number' name='reply_limit' value=board.settings.replyLimit min=globalLimits.replyLimit.min max=globalLimits.replyLimit.max)
-			section.row
+			.row
 				.label Moderators
 				textarea(name='moderators' placeholder='newline separated, max 10') #{board.settings.moderators.join('\n')}
-			section.row
+			.row
 				.label Board Locked
 				label.postform-style.ph-5
 					input(type='checkbox', name='locked', value='true' checked=board.settings.locked)
-			section.row
+			.row
 				.label Unlisted
 				label.postform-style.ph-5
 					input(type='checkbox', name='unlisted', value='true' checked=board.settings.unlisted)
-			section.row
+			.row
 				.label Theme
 				select(name='theme')
 					each theme in themes
 						option(value=theme selected=board.settings.theme === theme) #{theme}
-			section.row
+			.row
 				.label Captcha Mode
 				select(name='captcha_mode')
 					option(value='0', selected=board.settings.captchaMode === 0) No Captcha
 					option(value='1', selected=board.settings.captchaMode === 1) Captcha for new thread
 					option(value='2', selected=board.settings.captchaMode === 2) Captcha for all posts
-			section.row
+			.row
 				.label TPH Trigger Threshold
 				input(type='number', name='tph_trigger', value=board.settings.tphTrigger)
-			section.row
+			.row
 				.label TPH Trigger Action
 				select(name='tph_trigger_action')
 					option(value='0', selected=board.settings.tphTriggerAction === 0) Do nothing
 					option(value='1', selected=board.settings.tphTriggerAction === 1) Enable captcha for new thread
 					option(value='2', selected=board.settings.tphTriggerAction === 2) Enable captcha for all posts
 					option(value='3', selected=board.settings.tphTriggerAction === 3) Lock Board
-			section.row
+			.row
 				.label Filters
 				textarea(name='filters' placeholder='newline separated, max 50') #{board.settings.filters.join('\n')}
-			section.row
+			.row
 				.label Filter Mode
 				select(name='filter_mode')
 					option(value='0', selected=board.settings.filterMode === 0) Do nothing
 					option(value='1', selected=board.settings.filterMode === 1) Block post
 					option(value='2', selected=board.settings.filterMode === 2) Auto ban
-			section.row
+			.row
 				.label Filter Auto Ban Duration
 				input(type='text' name='ban_duration' placeholder='e.g. 1w' value=board.settings.filterBanDuration)
 			input(type='submit', value='save settings')

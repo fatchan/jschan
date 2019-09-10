@@ -87,11 +87,9 @@ block content
 		input(type='hidden' name='_csrf' value=csrf)
 		if bans.length === 0
 			p No bans.
-			hr(size=1)
 		else
-			for ban in bans
-				section.thread
+			include ../includes/bantable.pug
+				for ban in bans
 					+ban(ban)
-				hr(size=1)
 			section.action-wrapper
-				input(type='submit', value='unban')
+			input(type='submit', value='unban')
