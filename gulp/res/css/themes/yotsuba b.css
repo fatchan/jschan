@@ -1,5 +1,7 @@
 /*yotsuba b*/
 :root {
+	--alt-label-color: #98E;
+	--alt-font-color: black;
 	--background-top: #d6daf0;
 	--background-rest: #eef2ff;
 	--navbar-color: #D6DAF0;

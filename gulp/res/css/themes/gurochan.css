@@ -1,5 +1,7 @@
 /*gurochan*/
 :root {
+	--alt-label-color: #e6cbc0;
+	--alt-font-color: #000;
 	--background-top: #EDDAD2;
 	--background-rest: #EDDAD2;
 	--navbar-color: #D9AF9E;

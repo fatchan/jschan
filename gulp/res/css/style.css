@@ -280,8 +280,13 @@ table {
 	width: 600px;
 }
 
-.table-head, th {
+th {
 	background: var(--label-color);
+}
+
+.alt {
+	background: var(--alt-label-color, --label-color);
+	color: var(--alt-font-color, --font-color)
 }
 
 td, th {
@@ -705,6 +710,11 @@ hr + .thread {
 
 @media only screen and (max-width: 600px) {
 
+	table#boardtable td:nth-child(3), table#boardtable th:nth-child(3),
+	table#boardtable td:nth-child(4), table#boardtable th:nth-child(4) {
+		display: none;
+	}
+
 	.close {
 		width: 30px;
 	}
@@ -764,7 +774,6 @@ hr + .thread {
 	}
 
 }
-
 
 /*
 https://github.com/vichan-devel/vichan/blob/master/static/flags/flags.css

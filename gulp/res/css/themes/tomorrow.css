@@ -1,5 +1,7 @@
 /*tomorrow*/
 :root {
+	--alt-label-color: #282a2e;
+	--alt-font-color: #c5c8c6;
 	--background-top: #1d1f21;
 	--background-rest: #1d1f21;
 	--navbar-color: #282a2e;

@@ -2,14 +2,14 @@ extends ../layout.pug
 
 block head
 	script(src='/js/theme.js')
-	title Imageboard
+	title #{meta.siteName}
 
 block content
-	h1.board-title Fatchan
+	h1.board-title #{meta.siteName}
 	.table-container.flex-center.mv-10
 		table
 			tr
-				th Welcome
+				th.alt Welcome
 			tr
 				td
 					p
@@ -22,7 +22,7 @@ block content
 						a(href='/create.html') create your own board
 						| .
 	.table-container.flex-center.mv-10.text-center
-		table
+		table#boardtable
 			tr
 				th Board
 				th Description

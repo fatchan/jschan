@@ -1,5 +1,7 @@
 /*rei-zero*/
 :root {
+	--alt-label-color: #29373e;
+	--alt-font-color: #d6d6d6;
 	--background-top: #000E1C;
 	--background-rest: #000E1C;
 	--navbar-color: #29373E;

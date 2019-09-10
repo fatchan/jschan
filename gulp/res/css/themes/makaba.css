@@ -1,5 +1,7 @@
 /*makaba*/
 :root {
+	--alt-label-color: #f5f5f5;
+	--alt-font-color: #333;
 	--background-top: #EEE;
 	--background-rest: #EEE;
 	--navbar-color: #DDD;
