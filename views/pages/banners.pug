@@ -1,11 +1,12 @@
 extends ../layout.pug
+include ../mixins/boardheader.pug
 
 block head
 	script(src='/js/theme.js')
 	title /#{board._id}/ - Banners
 
 block content
-	include ../includes/bannersheader.pug
+	+boardheader('Banners')
 	br
 	include ../includes/stickynav.pug
 	nav.pages

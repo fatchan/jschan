@@ -1,12 +1,13 @@
 extends ../layout.pug
 include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
 
 block head
 	script(src='/js/all.js')
 	title /#{board._id}/ - Manage
 
 block content
-	include ../includes/boardheader.pug
+	+boardheader('Manage')
 	br
 	+managenav('main')
 	hr(size=1)

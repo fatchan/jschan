@@ -1,11 +1,12 @@
 extends ../layout.pug
+include ../mixins/boardheader.pug
 
 block head
 	script(src='/js/theme.js')
 	title /#{board._id}/ - Logs for #{startDate.toDateString()}
 
 block content
-	include ../includes/logheader.pug
+	+boardheader('Logs')
 	br
 	include ../includes/stickynav.pug
 	nav.pages

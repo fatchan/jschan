@@ -1,12 +1,13 @@
 extends ../layout.pug
 include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
 
 block head
 	script(src='/js/theme.js')
 	title /#{board._id}/ - Manage Banners
 
 block content
-	include ../includes/boardheader.pug
+	+boardheader('Banners')
 	br
 	+managenav('banners')
 	hr(size=1)

@@ -1,6 +1,7 @@
 extends ../layout.pug
 include ../mixins/ban.pug
 include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
 
 block head
 	script(src='/js/theme.js')
@@ -9,7 +10,7 @@ block head
 	title /#{board._id}/ - Manage Bans & Appeals
 
 block content
-	include ../includes/boardheader.pug
+	+boardheader('Bans')
 	br
 	+managenav('bans')
 	hr(size=1)

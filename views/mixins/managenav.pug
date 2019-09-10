@@ -1,7 +1,5 @@
 mixin managenav(selected)
 	nav.pages
-		a(href=`/${board._id}/index.html`) [Index]
-		|  
 		a(href=`/${board._id}/manage/reports.html` class=(selected === 'reports' ? 'bold' : '')) [Reports]
 		|  
 		a(href=`/${board._id}/manage/bans.html` class=(selected === 'bans' ? 'bold' : '')) [Bans]

@@ -1,0 +1,10 @@
+mixin boardheader(pagename)
+	section.board-header
+		img.board-banner(src=`/randombanner?board=${board._id}` width='300' height='100')
+		br
+		if pagename
+			h1.board-title #{pagename}(#[a.no-decoration(href=`/${board._id}/index.html`) /#{board._id}/])
+		else
+			a.no-decoration(href=`/${board._id}/index.html`)
+				h1.board-title /#{board._id}/ - #{board.settings.name}
+		h4.board-description #{board.settings.description}
