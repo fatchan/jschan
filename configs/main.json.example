@@ -40,6 +40,7 @@
 	"boardDefaults": {
 		"theme": "lain",
 		"locked": false,
+		"unlisted": false,
 		"captchaMode": 0,
 		"tphTrigger": 0,
 		"tphTriggerAction": 0,
