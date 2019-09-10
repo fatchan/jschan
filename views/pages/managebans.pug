@@ -1,0 +1,28 @@
+extends ../layout.pug
+include ../mixins/ban.pug
+include ../mixins/managenav.pug
+
+block head
+	script(src='/js/theme.js')
+	script(src='/js/expand.js')
+	script(src='/js/hover.js')
+	title /#{board._id}/ - Manage Bans & Appeals
+
+block content
+	include ../includes/boardheader.pug
+	br
+	+managenav('bans')
+	hr(size=1)
+	h4.no-m-p Bans & Appeals:
+	form(action=`/forms/board/${board._id}/unban` method='POST' enctype='application/x-www-form-urlencoded')
+		input(type='hidden' name='_csrf' value=csrf)
+		if bans.length === 0
+			p No bans.
+		else
+			for ban in bans
+				section.thread
+					+ban(ban)
+				hr(size=1)
+			section.action-wrapper
+				input(type='submit', value='unban')
+

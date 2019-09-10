@@ -2,8 +2,8 @@
 
 module.exports = async (req, res, next) => {
 
-	res.render('manage', {
-		//csrf: req.csrfToken(),
+	res.render('managesettings', {
+		csrf: req.csrfToken(),
 	});
 
 }

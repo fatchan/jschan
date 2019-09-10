@@ -151,7 +151,7 @@ module.exports = async (req, res, next) => {
 	return res.render('message', {
 		'title': 'Success',
 		'message': 'Updated settings.',
-		'redirect': `/${req.params.board}/manage.html`
+		'redirect': `/${req.params.board}/manage/settings.html`
 	});
 
 }

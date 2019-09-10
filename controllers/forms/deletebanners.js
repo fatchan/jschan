@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage.html`
+			'redirect': `/${req.params.board}/manage/banners.html`
 		})
 	}
 
@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
 			return res.status(400).render('message', {
 				'title': 'Bad request',
 				'message': 'Invalid banners selected',
-				'redirect': `/${req.params.board}/manage.html`
+				'redirect': `/${req.params.board}/manage/banners.html`
 			})
 		}
 	}

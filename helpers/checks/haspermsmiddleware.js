@@ -9,10 +9,10 @@ module.exports = (requiredLevel) => {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
 				'message': 'No Permission',
-				'redirect': '/'
+				'redirect': req.headers.referer || '/'
 			});
 		}
 		next();
-	})
+	});
 
 }

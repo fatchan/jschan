@@ -15,6 +15,7 @@ const express  = require('express')
 	, home = require(__dirname+'/../models/pages/home.js')
 	, register = require(__dirname+'/../models/pages/register.js')
 	, manage = require(__dirname+'/../models/pages/manage.js')
+	, { managereports, managebanners, managesettings, managebans } = require(__dirname+'/../models/pages/manage/') //todo: refactor more into categories like this
 	, globalManage = require(__dirname+'/../models/pages/globalmanage.js')
 	, changePassword = require(__dirname+'/../models/pages/changepassword.js')
 	, login = require(__dirname+'/../models/pages/login.js')
@@ -82,11 +83,15 @@ router.get('/logout', (req, res, next) => {
 //public board banners page
 router.get('/:board/banners.html', Boards.exists, banners);
 
-//board manage page
-router.get('/:board/manage.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manage);
+//board manage pages
+router.get('/:board/manage/reports.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, managereports);
+router.get('/:board/manage/bans.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, managebans);
+router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, managesettings);
+router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, managebanners);
 
 //global manage page
 router.get('/globalmanage.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManage);
+//todo: separate pages for global rports, bans, user management and news jsut like per-board manage pages
 
 module.exports = router;
 

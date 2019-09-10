@@ -1,0 +1,32 @@
+extends ../layout.pug
+include ../mixins/managenav.pug
+
+block head
+	script(src='/js/theme.js')
+	title /#{board._id}/ - Manage Banners
+
+block content
+	include ../includes/boardheader.pug
+	br
+	+managenav('banners')
+	hr(size=1)
+	h4.no-m-p Add Banners:
+	section.form-wrapper.flexleft.mt-10
+		form.form-post(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			section.row
+				.label Upload
+					.required *
+				input#file(type='file', name='file' multiple required)
+			input(type='submit', value='submit')
+	if board.banners.length > 0
+		hr(size=1)
+		h4.no-m-p Delete Banners:
+		section.form-wrapper.flexleft.mt-10
+			form.form-post(action=`/forms/board/${board._id}/deletebanners`, enctype='application/x-www-form-urlencoded', method='POST')
+				input(type='hidden' name='_csrf' value=csrf)
+				each banner in board.banners
+					label.banner-check
+						input(type='checkbox' name='checkedbanners[]' value=banner)
+						img.board-banner(src=`/banner/${board._id}/${banner}` width='300' height='100')
+				input(type='submit', value='delete')

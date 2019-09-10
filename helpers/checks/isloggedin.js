@@ -2,7 +2,6 @@
 
 module.exports = async (req, res, next) => {
 	if (req.session.authenticated === true) {
-		
 		return next();
 	}
 	const board = req.params ? req.params.board : null;

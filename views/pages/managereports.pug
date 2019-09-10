@@ -1,0 +1,25 @@
+extends ../layout.pug
+include ../mixins/post.pug
+include ../mixins/ban.pug
+include ../mixins/managenav.pug
+
+block head
+	script(src='/js/all.js')
+	title /#{board._id}/ - Manage
+
+block content
+	include ../includes/boardheader.pug
+	br
+	+managenav('reports')
+	hr(size=1)
+	h4.no-m-p Reports:
+	form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
+		input(type='hidden' name='_csrf' value=csrf)
+		if reports.length === 0
+			p No reports.
+		else
+			for report in reports
+				section.thread
+					+post(report, false, true)
+				hr(size=1)
+			include ../includes/actionfooter_manage.pug

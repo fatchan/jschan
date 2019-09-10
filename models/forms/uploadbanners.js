@@ -12,7 +12,7 @@ const path = require('path')
 
 module.exports = async (req, res, next) => {
 
-	const redirect = `/${req.params.board}/manage.html`
+	const redirect = `/${req.params.board}/manage/banners.html`
 
 	// check all mime types before we try saving anything
 	for (let i = 0; i < res.locals.numFiles; i++) {
