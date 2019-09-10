@@ -133,6 +133,10 @@ block content
 				label.postform-style.ph-5
 					input(type='checkbox', name='locked', value='true' checked=board.settings.locked)
 			section.row
+				.label Unlisted
+				label.postform-style.ph-5
+					input(type='checkbox', name='unlisted', value='true' checked=board.settings.unlisted)
+			section.row
 				.label Theme
 				select(name='theme')
 					each theme in themes

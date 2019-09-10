@@ -40,6 +40,7 @@ module.exports = async (req, res, next) => {
 		moderators,
 		'name': req.body.name && req.body.name.trim().length > 0 ? req.body.name : oldSettings.name,
 		'description': req.body.description && req.body.description.trim().length > 0 ? req.body.description : oldSettings.description,
+		'unlisted': req.body.unlisted ? true : false,
 		'locked': req.body.locked ? true : false,
 		'early404': req.body.early404 ? true : false,
 		'ids': req.body.ids ? true : false,
