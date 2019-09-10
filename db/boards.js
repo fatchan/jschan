@@ -110,7 +110,9 @@ module.exports = {
 
 	frontPageSortLimit: () => {
 		return db.find({
-			'settings.unlisted': false
+			'settings.unlisted': {
+				'$ne': true
+			}
 		}).sort({
 			'ips': -1,
 			'pph': -1,
