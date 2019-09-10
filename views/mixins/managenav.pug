@@ -1,9 +1,10 @@
-mixin managenav(selected)
+mixin managenav(selectedDL)
 	nav.pages
 		a(href=`/${board._id}/manage/reports.html` class=(selected === 'reports' ? 'bold' : '')) [Reports]
 		|  
 		a(href=`/${board._id}/manage/bans.html` class=(selected === 'bans' ? 'bold' : '')) [Bans]
 		|  
-		a(href=`/${board._id}/manage/settings.html` class=(selected === 'settings' ? 'bold' : '')) [Settings]
-		|  
-		a(href=`/${board._id}/manage/banners.html` class=(selected === 'banners' ? 'bold' : '')) [Banners]
+		if permLevel < 3
+			a(href=`/${board._id}/manage/settings.html` class=(selected === 'settings' ? 'bold' : '')) [Settings]
+			|  
+			a(href=`/${board._id}/manage/banners.html` class=(selected === 'banners' ? 'bold' : '')) [Banners]

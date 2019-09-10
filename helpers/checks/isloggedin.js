@@ -5,5 +5,5 @@ module.exports = async (req, res, next) => {
 		return next();
 	}
 	const board = req.params ? req.params.board : null;
-	res.redirect(`/login.html${board ? '?goto=/'+board+'/manage.html' : ''}`);
+	res.redirect(`/login.html${board ? '?goto=/'+board+'/manage/reports.html' : ''}`);
 }
