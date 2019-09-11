@@ -35,7 +35,7 @@ module.exports = async (req, res, next) => {
 	return res.render('message', {
 		'title': 'Success',
 		'message': 'Added newspost',
-		'redirect': '/globalmanage.html'
+		'redirect': '/globalmanage/news.html'
 	});
 
 }

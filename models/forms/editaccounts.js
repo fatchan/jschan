@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
 	return res.render('message', {
         'title': 'Success',
         'message': `${req.body.delete_account ? 'Deleted' : 'Edited'} ${amount} accounts`,
-        'redirect': '/globalmanage.html'
+        'redirect': '/globalmanage/accounts.html'
     });
 
 }

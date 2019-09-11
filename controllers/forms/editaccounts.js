@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': '/globalmanage.html'
+			'redirect': '/globalmanage/accounts.html'
 		})
 	}
 

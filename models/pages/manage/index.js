@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-	managereports: require(__dirname+'/reports.js'),
-	managesettings: require(__dirname+'/settings.js'),
-	managebans: require(__dirname+'/bans.js'),
-	managebanners: require(__dirname+'/banners.js'),
+	manageReports: require(__dirname+'/reports.js'),
+	manageSettings: require(__dirname+'/settings.js'),
+	manageBans: require(__dirname+'/bans.js'),
+	manageBanners: require(__dirname+'/banners.js'),
 }

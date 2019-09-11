@@ -1,0 +1,35 @@
+extends ../layout.pug
+include ../mixins/globalmanagenav.pug
+
+block head
+	script(src='/js/all.js')
+	title Manage
+
+block content
+	h1.board-title Global Management
+	br
+	+globalmanagenav('accounts')
+	hr(size=1)
+	h4.no-m-p Accounts:
+	section.form-wrapper.flexleft.mt-10
+		form.form-post(action=`/forms/global/editaccounts` method='POST' enctype='application/x-www-form-urlencoded')
+			input(type='hidden' name='_csrf' value=csrf)
+			.table-container.flex-left.mv-10
+				table
+					tr
+						th
+						th Username
+						th Auth Level
+					for account in accounts
+						tr
+							td: input(type='checkbox', name='checkedaccounts[]' value=account._id)
+							td #{account._id}
+							td #{account.authLevel}
+			section.row
+				.label Delete Accounts
+				label.postform-style.ph-5
+					input(type='checkbox', name='delete_account', value='true')
+			section.row
+				.label Set Auth Level
+				input(type='number' name='auth_level')
+			input(type='submit', value='apply')

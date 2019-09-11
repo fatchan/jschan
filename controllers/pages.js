@@ -14,9 +14,8 @@ const express  = require('express')
 	//page models
 	, home = require(__dirname+'/../models/pages/home.js')
 	, register = require(__dirname+'/../models/pages/register.js')
-	, manage = require(__dirname+'/../models/pages/manage.js')
-	, { managereports, managebanners, managesettings, managebans } = require(__dirname+'/../models/pages/manage/') //todo: refactor more into categories like this
-	, globalManage = require(__dirname+'/../models/pages/globalmanage.js')
+	, { manageReports, manageBanners, manageSettings, manageBans } = require(__dirname+'/../models/pages/manage/')
+	, { globalManageReports, globalManageBans, globalManageBoards, globalManageAccounts, globalManageNews } = require(__dirname+'/../models/pages/globalmanage/')
 	, changePassword = require(__dirname+'/../models/pages/changepassword.js')
 	, login = require(__dirname+'/../models/pages/login.js')
 	, create = require(__dirname+'/../models/pages/create.js')
@@ -84,14 +83,17 @@ router.get('/logout', (req, res, next) => {
 router.get('/:board/banners.html', Boards.exists, banners);
 
 //board manage pages
-router.get('/:board/manage/reports.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, managereports);
-router.get('/:board/manage/bans.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, managebans);
-router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, managesettings);
-router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, managebanners);
+router.get('/:board/manage/reports.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageReports);
+router.get('/:board/manage/bans.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageBans);
+router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
+router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
 
-//global manage page
-router.get('/globalmanage.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManage);
-//todo: separate pages for global rports, bans, user management and news jsut like per-board manage pages
+//global manage pages
+router.get('/globalmanage/reports.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
+router.get('/globalmanage/bans.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBans);
+router.get('/globalmanage/news.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageNews);
+router.get('/globalmanage/accounts.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageAccounts);
+router.get('/globalmanage/boards.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBoards);
 
 module.exports = router;
 

@@ -1,0 +1,13 @@
+mixin globalmanagenav(selected)
+	nav.pages
+		a(href=`/globalmanage/reports.html` class=(selected === 'reports' ? 'bold' : '')) [Reports]
+		|  
+		a(href=`/globalmanage/bans.html` class=(selected === 'bans' ? 'bold' : '')) [Bans]
+		|  
+		a(href=`/globalmanage/boards.html` class=(selected === 'boards' ? 'bold' : '')) [Boards]
+		if permLevel === 0
+			|  
+			a(href=`/globalmanage/accounts.html` class=(selected === 'accounts' ? 'bold' : '')) [Accounts]
+			|  
+			a(href=`/globalmanage/news.html` class=(selected === 'news' ? 'bold' : '')) [News]
+

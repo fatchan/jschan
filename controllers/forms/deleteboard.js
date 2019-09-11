@@ -38,7 +38,7 @@ module.exports = async (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': req.params.board ? `/${req.params.board}/manage.html` : '/globalmanage.html'
+			'redirect': req.params.board ? `/${req.params.board}/manage/settings.html` : '/globalmanage/boards.html'
 		});
 	}
 
@@ -51,7 +51,7 @@ module.exports = async (req, res, next) => {
 	return res.render('message', {
 		'title': 'Success',
 		'message': 'Board deleted',
-		'redirect': req.params.board ? '/' : '/globalmanage.html'
+		'redirect': req.params.board ? '/' : '/globalmanage/boards.html'
 	});
 
 }

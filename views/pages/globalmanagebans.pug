@@ -1,0 +1,24 @@
+extends ../layout.pug
+include ../mixins/ban.pug
+include ../mixins/globalmanagenav.pug
+
+block head
+	script(src='/js/all.js')
+	title Manage
+
+block content
+	h1.board-title Global Management
+	br
+	+globalmanagenav('bans')
+	hr(size=1)
+	h4.no-m-p Global Bans & Appeals:
+	form(action=`/forms/global/unban` method='POST' enctype='application/x-www-form-urlencoded')
+		input(type='hidden' name='_csrf' value=csrf)
+		if bans.length === 0
+			p No bans.
+		else
+			include ../includes/bantable.pug
+				for ban in bans
+					+ban(ban)
+			section.action-wrapper
+			input(type='submit', value='unban')

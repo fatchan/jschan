@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
 		errors.push('Must select 1-10 bans')
 	}
 
-	const redirect = req.params.board ? `/${req.params.board}/manage/bans.html` : '/globalmanage.html';
+	const redirect = req.params.board ? `/${req.params.board}/manage/bans.html` : '/globalmanage/bans.html';
 
 	if (errors.length > 0) {
 		return res.status(400).render('message', {
