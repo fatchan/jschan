@@ -123,6 +123,13 @@ module.exports = {
 	totalPosts: () => {
 		return db.aggregate([
 			{
+				'$match': {
+					'settings.unlisted': {
+						'$ne': true
+					}
+				}
+			},
+			{
 				'$group': {
 					'_id': null,
 					'total': {
