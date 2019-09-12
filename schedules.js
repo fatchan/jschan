@@ -5,16 +5,14 @@ process
 	.on('unhandledRejection', console.error);
 
 const msTime = require(__dirname+'/helpers/mstime.js')
-	, deleteCaptchas = require(__dirname+'/helpers/captcha/deletecaptchas.js')
 	, Mongo = require(__dirname+'/db/db.js')
+	, { enableWebring } = require(__dirname+'/configs/main.json')
 	, buildQueue = require(__dirname+'/queue.js');
 
 (async () => {
 
 	console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
-	const Files = require(__dirname+'/db/files.js');
-
 	console.log('STARTING SCHEDULES');
 
 	//add 5 minute repeatable job to queue (queue will prevent duplicate)
@@ -28,6 +26,8 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 	});
 
 	//delete files for expired captchas
+	const deleteCaptchas = require(__dirname+'/helpers/captcha/deletecaptchas.js');
+	deleteCaptchas().catch(e => console.error);
 	setInterval(async () => {
 		try {
 			await deleteCaptchas();
@@ -36,33 +36,25 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 		}
 	}, msTime.minute*5);
 
+	//update webring
+	if (enableWebring) {
+		const updateWebring = require(__dirname+'/webring.js');
+		updateWebring().catch(e => console.error);
+		setInterval(async () => {
+			try {
+				await updateWebring();
+			} catch (e) {
+				console.error(e);
+			}
+		}, msTime.hour);
+	}
+
+	//file pruning
+	const pruneFiles = require(__dirname+'/helpers/files/prune.js');
+	pruneFiles().catch(e => console.error);
 	setInterval(async () => {
 		try {
-//todo: make this not a race condition, but it only happens daily so ¯\_(ツ)_/¯
-			const files = await Files.db.aggregate({
-				'count': {
-					'$lte': 1
-				}
-			}, {
-				'projection': {
-					'count': 0,
-					'size': 0
-				}
-			}).toArray().then(res => {
-				return res.map(x => x._id);
-			});
-			await Files.db.removeMany({
-				'count': {
-					'$lte': 0
-				}
-			});
-			await Promise.all(files.map(async filename => {
-				return Promise.all([
-					remove(`${uploadDirectory}img/${filename}`),
-					remove(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`)
-				])
-			}));
-			console.log('Deleted unused files:', files);
+			await pruneFiles();
 		} catch (e) {
 			console.error(e);
 		}

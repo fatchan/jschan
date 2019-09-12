@@ -1,7 +1,9 @@
 'use strict';
 
 const Mongo = require(__dirname+'/../db/db.js')
+	, cache = require(__dirname+'/../redis.js')
 	, msTime = require(__dirname+'/mstime.js')
+	, { enableWebring } = require(__dirname+'/../configs/main.json')
 	, { Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, render = require(__dirname+'/render.js')
 	, timeDiffString = (label, end) => `${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`;
@@ -219,15 +221,17 @@ module.exports = {
 		if (bulkWrites.length > 0) {
 			await Boards.db.bulkWrite(bulkWrites);
 		}
-		const [ totalPosts, boards, fileStats ] = await Promise.all([
+		const [ totalPosts, boards, webringBoards, fileStats ] = await Promise.all([
 			Boards.totalPosts(), //overall total posts ever made
-			Boards.frontPageSortLimit(), //boards sorted by users, pph, total posts
+			Boards.boardSort(0, 20), //top 20 boards sorted by users, pph, total posts
+			enableWebring ? cache.get('webring:boards') : null,
 			Files.activeContent() //size of all files
 		]);
 		const html = render('index.html', 'home.pug', {
 			totalPosts: totalPosts,
 			activeUsers,
 			boards,
+			webringBoards,
 			fileStats,
 		});
 		const end = process.hrtime(start);

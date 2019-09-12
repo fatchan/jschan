@@ -15,7 +15,6 @@ module.exports = async () => {
 				const expiry = new Date(stats.ctime).getTime() + msTime.minute*5;
 				if (now > expiry) {
 					await remove(filePath);
-					console.log(`Deleted expired captcha ${filePath}`)
 				}
 			} catch (e) {
 				console.error(e);

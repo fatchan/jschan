@@ -21,32 +21,33 @@ block content
 						| Choose a topic below to join the discussion, or 
 						a(href='/create.html') create your own board
 						| .
-	.table-container.flex-center.mv-10.text-center
-		table#boardtable
-			tr
-				th Board
-				th Description
-				th(title='Posts in the last hour') Posts/h
-				th(title='Unique IPs that have posted in the last 72h') Active Users
-				th Total Posts
-			each board in boards
+	if boards && boards.length > 0
+		.table-container.flex-center.mv-10.text-center
+			table.boardtable
 				tr
-					td: a(href=`/${board._id}/`) /#{board._id}/ - #{board.settings.name}
-					td #{board.settings.description}
-					td #{board.pph}
-					td #{board.ips}
-					td #{board.sequence_value-1}
-	.table-container.flex-center.mv-10.text-center
-		table
-			tr
-				th Total Posts
-				th Active Users
-				th Active Content
-			tr
-				td #{totalPosts}
-				- const totalActiveUsers = activeUsers.totalActiveUsers.length > 0 ? activeUsers.totalActiveUsers[0].ips : 0;
-				td #{totalActiveUsers}
-				td #{fileStats.totalSizeString}
+					th Board
+					th Description
+					th(title='Posts in the last hour') Posts/h
+					th(title='Unique IPs that have posted in the last 72h') Active Users
+					th Total Posts
+				each board in boards
+					tr
+						td: a(href=`/${board._id}/`) /#{board._id}/ - #{board.settings.name}
+						td #{board.settings.description}
+						td #{board.pph}
+						td #{board.ips}
+						td #{board.sequence_value-1}
+		.table-container.flex-center.mv-10.text-center
+			table
+				tr
+					th Total Posts
+					th Active Users
+					th Active Content
+				tr
+					td #{totalPosts}
+					- const totalActiveUsers = activeUsers.totalActiveUsers.length > 0 ? activeUsers.totalActiveUsers[0].ips : 0;
+					td #{totalActiveUsers}
+					td #{fileStats.totalSizeString}
 	.table-container.flex-center.mv-10
 		table
 			tr
@@ -57,3 +58,22 @@ block content
 						| The source code for this site is available 
 						a(href='https://github.com/fatchan/jschan/') here
 						|  (and in the footer of each page) and is licensed under the Affero General Public License v3.
+	if webringBoards && webringBoards.length > 0
+		.table-container.flex-center.mv-10.text-center
+			div.scrolltable
+				table.boardtable.webringtable
+					tr
+						th Board
+						th Description
+						th(title='Posts in the last hour') Posts/h
+						th(title='Unique IPs that have posted in the last 72h') Active Users
+						th Total Posts
+					each board in webringBoards
+						tr
+							td: a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
+							td #{board.subtitle || '-'}
+							td #{board.postsPerHour || '-'}
+							td #{board.uniqueUsers || '-'}
+							td #{board.totalPosts || '-'}
+			p
+				small: a(href='https://gitlab.com/alogware/LynxChanAddon-Webring') webring?

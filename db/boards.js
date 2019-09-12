@@ -108,16 +108,25 @@ module.exports = {
 		);
 	},
 
-	frontPageSortLimit: () => {
+	boardSort: (skip=0, limit=20) => {
 		return db.find({
 			'settings.unlisted': {
 				'$ne': true
+			}
+		}, {
+			'projection': {
+				'_id': 1,
+				'sequence_value': 1,
+				'pph': 1,
+				'ips': 1,
+				'settings.description': 1,
+				'settings.name': 1,
 			}
 		}).sort({
 			'ips': -1,
 			'pph': -1,
 			'sequence_value': -1,
-  		}).limit(20).toArray();
+  		}).skip(skip).limit(limit).toArray();
 	},
 
 	totalPosts: () => {

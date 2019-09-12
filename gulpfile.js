@@ -57,8 +57,9 @@ async function wipe() {
 			'_id': 'test',
 			'owner': '',
 			'banners': [],
-			'sequence_value': 1,
 			'pph': 0,
+			'ips': 0,
+			'sequence_value': 1,
 			'settings': {
 				'name': 'test',
 				'description': 'testing board',
@@ -92,6 +93,7 @@ async function wipe() {
 	//delete all the static files
 	return Promise.all([
 		del([ 'static/html/*' ]),
+		del([ 'static/json/*' ]),
 		del([ 'static/banner/*' ]),
 		del([ 'static/captcha/*' ]),
 		del([ 'static/img/*' ]),
@@ -114,7 +116,10 @@ function images() {
 }
 
 function deletehtml() {
-	return del([ 'static/html/*' ]); //these will be now build-on-load
+	return Promise.all([
+		del([ 'static/html/*' ]),
+		del([ 'static/json/*' ])
+	]);
 }
 
 function custompages() {

@@ -707,24 +707,30 @@ hr + .thread {
 	margin-top: -5px;
 }
 
-@keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+.webringtable th {
+	position: sticky; top: 0;
 }
 
-.loader {
-	border: 8px solid #00000010;
-	border-radius: 50%;
-	border-bottom: 8px solid #00000090;
-	width: 32px;
-	height: 32px;
-	animation: spin 2s linear infinite;
+.boardtable.webringtable {
+    border: none;
+}
+
+.scrolltable {
+	max-height: 160px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border: 1px solid var(--box-border-color);
+}
+
+table.boardtable td:nth-child(3),table.boardtable td:nth-child(4),table.boardtable td:nth-child(5),
+table.boardtable th:nth-child(3),table.boardtable th:nth-child(4),table.boardtable th:nth-child(5) {
+	min-width: 80px;
 }
 
 @media only screen and (max-width: 600px) {
 
-	table#boardtable td:nth-child(3), table#boardtable th:nth-child(3),
-	table#boardtable td:nth-child(4), table#boardtable th:nth-child(4) {
+	table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
+	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4) {
 		display: none;
 	}
 

@@ -26,6 +26,7 @@ module.exports = async (req, res, next) => {
 		'banners': [],
 		'sequence_value': 1,
 		'pph': 0,
+		'ips': 0,
 		'settings': {
 			name,
 			description,
