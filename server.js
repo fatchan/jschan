@@ -15,7 +15,8 @@ const express = require('express')
 	, ipHash = require(__dirname+'/helpers/iphash.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, themes = require(__dirname+'/helpers/themes.js')
-	, Mongo = require(__dirname+'/db/db.js');
+	, Mongo = require(__dirname+'/db/db.js')
+	, CachePugTemplates = require('cache-pug-templates');
 
 (async () => {
 
@@ -60,8 +61,9 @@ const express = require('express')
 	app.use(referrerCheck);
 
 	// use pug view engine
+	const views = path.join(__dirname, 'views/pages');
 	app.set('view engine', 'pug');
-	app.set('views', path.join(__dirname, 'views/pages'));
+	app.set('views', views);
 	//cache loaded templates
 	if (configs.cacheTemplates === true) {
 		app.enable('view cache');
@@ -95,6 +97,7 @@ const express = require('express')
 
 	//listen
 	const server = app.listen(configs.port, '127.0.0.1', () => {
+		new CachePugTemplates({ app, views }).start();
 		console.log(`listening on port ${configs.port}`);
 		//let PM2 know that this is ready for graceful reloads and to serialise startup
 		if (typeof process.send === 'function') {
