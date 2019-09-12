@@ -93,7 +93,7 @@ module.exports = {
 		}
 		const difference = options.endpage-options.startpage + 1; //+1 because for single pagemust be > 0
 		const threads = await Posts.getRecent(options.board._id, options.startpage, difference*10);
-		const label = `/${options.board._id}/${options.startpage === 1 ? 'index' : options.startpage}${options.endpage === options.startpage ? '' : options.endpage === 1 ? 'index' : options.endpage}.html`;
+		const label = `/${options.board._id}/${options.startpage === 1 ? 'index' : options.startpage}${options.endpage === options.startpage ? '' : '->'+(options.endpage === 1 ? 'index' : options.endpage)}.html`;
 		const buildArray = [];
 		for (let i = options.startpage; i <= options.endpage; i++) {
 			let spliceStart = (i-1)*10;

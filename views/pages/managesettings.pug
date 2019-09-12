@@ -50,7 +50,7 @@ block content
 				textarea(name='tags' placeholder='newline separated, max 10') #{board.settings.tags.join('\n')}
 			.row
 				.label Announcement
-				textarea(name='announcement' placeholder='supports post styling') #{board.settings.announcement.raw}
+				textarea(name='announcement' rows='5' placeholder='supports post styling') #{board.settings.announcement.raw}
 			.row
 				.label Anon Name
 				input(type='text' name='default_name' value=board.settings.defaultName)
