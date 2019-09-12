@@ -1,8 +1,8 @@
 'use strict';
 
-const Files = require(__dirname+'/../../db/files.js')
+const Files = require(__dirname+'/../db/files.js')
 	, { remove } = require('fs-extra')
-	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
+	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js');
 
 module.exports = async() => {
 	//todo: make this not a race condition, but it only happens daily so ¯\_(ツ)_/¯

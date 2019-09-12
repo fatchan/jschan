@@ -1,8 +1,8 @@
 'use strict';
 
 const { stat, remove, readdir } = require('fs-extra')
-    , uploadDirectory = require(__dirname+'/../files/uploadDirectory.js')
-    , msTime = require(__dirname+'/../mstime.js')
+    , uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js')
+    , msTime = require(__dirname+'/../helpers/mstime.js')
 
 module.exports = async () => {
 	const files = await readdir(`${uploadDirectory}captcha/`);

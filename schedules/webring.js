@@ -1,18 +1,18 @@
 'use strict';
 
 const fetch = require('node-fetch')
-	, { meta } = require(__dirname+'/configs/main.json')
-	, { following, blacklist } = require(__dirname+'/configs/webring.json')
-	, { Boards } = require(__dirname+'/db/')
+	, { meta } = require(__dirname+'/../configs/main.json')
+	, { following, blacklist } = require(__dirname+'/../configs/webring.json')
+	, { Boards } = require(__dirname+'/../db/')
 	, { outputFile } = require('fs-extra')
-	, cache = require(__dirname+'/redis.js')
-	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js');
+	, cache = require(__dirname+'/../redis.js')
+	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js');
 
 module.exports = async () => {
 	//fetch stuff from others
 	const fetchWebring = [...new Set((await cache.get('webring:sites') || []).concat(following))]
 	let rings = await Promise.all(fetchWebring.map(url => {
-		return fetch(url).then(res => res.json());
+		return fetch(url).then(res => res.json()).catch(e => console.error);
 	}));
 	let found = [];
 	let webringBoards = [];

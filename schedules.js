@@ -26,7 +26,7 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 	});
 
 	//delete files for expired captchas
-	const deleteCaptchas = require(__dirname+'/helpers/captcha/deletecaptchas.js');
+	const deleteCaptchas = require(__dirname+'/schedules/deletecaptchas.js');
 	deleteCaptchas().catch(e => console.error);
 	setInterval(async () => {
 		try {
@@ -38,7 +38,7 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 
 	//update webring
 	if (enableWebring) {
-		const updateWebring = require(__dirname+'/webring.js');
+		const updateWebring = require(__dirname+'/schedules/webring.js');
 		updateWebring().catch(e => console.error);
 		setInterval(async () => {
 			try {
@@ -50,7 +50,7 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 	}
 
 	//file pruning
-	const pruneFiles = require(__dirname+'/helpers/files/prune.js');
+	const pruneFiles = require(__dirname+'/schedules/prune.js');
 	pruneFiles().catch(e => console.error);
 	setInterval(async () => {
 		try {
