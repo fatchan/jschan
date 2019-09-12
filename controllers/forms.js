@@ -60,53 +60,44 @@ const express  = require('express')
 	, editAccountsController = require(__dirname+'/forms/editaccounts.js')
 	, createBoardController = require(__dirname+'/forms/create.js')
 	, makePostController = require(__dirname+'/forms/makepost.js')
+	, newcaptcha = require(__dirname+'/../models/forms/newcaptcha.js')
+
+//make new post
+router.post('/board/:board/post', sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles, paramConverter, verifyCaptcha, makePostController);
+
+//post actions
+router.post('/board/:board/actions', sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //public, with captcha
+router.post('/board/:board/modactions', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, actionController); //board manage page
+router.post('/global/actions', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page
+
+//board management forms
+router.post('/board/:board/transfer', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);
+router.post('/board/:board/settings', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
+router.post('/board/:board/addbanners', sessionRefresh, bannerFiles, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, uploadBannersController); //add banners
+router.post('/board/:board/deletebanners', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
+router.post('/board/:board/unban', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, removeBansController); //remove bans
+router.post('/board/:board/deleteboard', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController); //delete board
+
+//global management forms
+router.post('/global/unban', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, removeBansController); //remove bans
+router.post('/global/addnews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
+router.post('/global/deletenews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news
+router.post('/global/editaccounts', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), editAccountsController); //account editing
+router.post('/global/deleteboard', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board
 
 //accounts
 router.post('/login', loginController);
 router.post('/register', verifyCaptcha, registerController);
 router.post('/changepassword', verifyCaptcha, changePasswordController);
 
-// create board
+//appeal ban
+router.post('/appeal', sessionRefresh, paramConverter, verifyCaptcha, appealController);
+
+//create board
 router.post('/create', sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
 
-// make new post
-router.post('/board/:board/post', sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles, paramConverter, verifyCaptcha, makePostController);
-
-// post actions for a specific board e.g. reports
-router.post('/board/:board/actions', sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //Captcha on regular actions
-router.post('/board/:board/modactions', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, actionController); //CSRF for mod actions
-router.post('/global/actions', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page version (muilti-board, uses mongoids
-
-// board settings
-router.post('/board/:board/transfer', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);
-router.post('/board/:board/settings', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
-
-//add/remove banners
-router.post('/board/:board/addbanners', sessionRefresh, bannerFiles, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, uploadBannersController);
-router.post('/board/:board/deletebanners', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController);
-
-//appeals
-router.post('/appeal', sessionRefresh, paramConverter, verifyCaptcha, appealController);
-//unbans
-router.post('/global/unban', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, removeBansController);
-router.post('/board/:board/unban', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, removeBansController);
-
-//news
-router.post('/global/addnews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController);
-router.post('/global/deletenews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController);
-
-//news
-router.post('/global/editaccounts', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), editAccountsController);
-
-//delete board
-router.post('/board/:board/deleteboard', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController);
-router.post('/global/deleteboard', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController);
-
-router.post('/newcaptcha', async(req, res, next) => {
-	//does this really need a separate file? probs not
-	res.clearCookie('captchaid');
-	return res.redirect('/captcha.html');
-});
+//removes captcha cookie, for refreshing for noscript users
+router.post('/newcaptcha', newcaptcha);
 
 module.exports = router;
 

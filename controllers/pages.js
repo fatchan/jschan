@@ -18,6 +18,7 @@ const express  = require('express')
 	, { globalManageReports, globalManageBans, globalManageBoards, globalManageAccounts, globalManageNews } = require(__dirname+'/../models/pages/globalmanage/')
 	, changePassword = require(__dirname+'/../models/pages/changepassword.js')
 	, login = require(__dirname+'/../models/pages/login.js')
+	, logout = require(__dirname+'/../models/pages/logout.js')
 	, create = require(__dirname+'/../models/pages/create.js')
 	, board = require(__dirname+'/../models/pages/board.js')
 	, catalog = require(__dirname+'/../models/pages/catalog.js')
@@ -30,57 +31,21 @@ const express  = require('express')
 	, modlog = require(__dirname+'/../models/pages/modlog.js')
 	, modloglist = require(__dirname+'/../models/pages/modloglist.js');
 
-//homepage with board list
+//homepage
 router.get('/index.html', home);
-
-// board page/recents
-router.get('/:board/:page(1[0-9]*|[2-9]*|index).html', Boards.exists, paramConverter, board);
-
-// thread view page
-router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, Posts.exists, thread);
-
-// board catalog page
-router.get('/:board/catalog.html', Boards.exists, catalog);
-
-// modlogs
-router.get('/:board/logs.html', Boards.exists, modloglist);
-router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog);
-
-// random board banner
-router.get('/randombanner', randombanner);
-
-// get captcha image and cookie
-router.get('/captcha', captcha);
-
-//login page
-router.get('/login.html', login);
-
-//login page
-router.get('/create.html', sessionRefresh, isLoggedIn, create);
-
-//registration page
-router.get('/register.html', register);
 
 //news page
 router.get('/news.html', news);
 
-//captcha page
-router.get('/captcha.html', captchaPage);
-
-//change password page
-router.get('/changepassword.html', changePassword);
-
-//logout
-router.get('/logout', (req, res, next) => {
-
-	//remove session
-	req.session.destroy();
-	return res.redirect('/');
-
-});
-
-//public board banners page
-router.get('/:board/banners.html', Boards.exists, banners);
+//board pages
+router.get('/:board/:page(1[0-9]*|[2-9]*|index).html', Boards.exists, paramConverter, board); //index
+router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, Posts.exists, thread); //thread view
+router.get('/:board/catalog.html', Boards.exists, catalog); //catalog
+router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
+router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
+router.get('/:board/banners.html', Boards.exists, banners); //banners
+router.get('/create.html', sessionRefresh, isLoggedIn, create); //create new board
+router.get('/randombanner', randombanner); //random banner
 
 //board manage pages
 router.get('/:board/manage/reports.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageReports);
@@ -94,6 +59,16 @@ router.get('/globalmanage/bans.html', sessionRefresh, isLoggedIn, calcPerms, has
 router.get('/globalmanage/news.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageNews);
 router.get('/globalmanage/accounts.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageAccounts);
 router.get('/globalmanage/boards.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBoards);
+
+//captcha
+router.get('/captcha', captcha); //get captcha image and cookie
+router.get('/captcha.html', captchaPage); //iframed for noscript users
+
+//accounts
+router.get('/login.html', login);
+router.get('/register.html', register);
+router.get('/changepassword.html', changePassword);
+router.get('/logout', logout);
 
 module.exports = router;
 
