@@ -1,0 +1,10 @@
+{
+	"following": [
+		"https://vch.moe/webring.json"
+	],
+	"blacklist": [
+		"spacechan.xyz",
+		"bunkerchan.xyz",
+		"16chan.xyz"
+	]
+}

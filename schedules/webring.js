@@ -19,6 +19,9 @@ module.exports = async () => {
 	for (let i = 0; i < rings.length; i++) {
 		//this could really use some validation/sanity checking
 		const ring = rings[i];
+		if (!ring || !ring.name) {
+			return;
+		}
 		if (ring.following && ring.following.length > 0) {
 			found = found.concat(ring.following);
 		}

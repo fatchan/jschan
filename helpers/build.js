@@ -227,11 +227,15 @@ module.exports = {
 			enableWebring ? cache.get('webring:boards') : null,
 			Files.activeContent() //size of all files
 		]);
+		var sorted
+		if (webringBoards) {
+			sorted = webringBoards.sort((a, b) => { return b.uniqueUsers - a.uniqueUsers })
+		}
 		const html = render('index.html', 'home.pug', {
 			totalPosts: totalPosts,
 			activeUsers,
 			boards,
-			webringBoards,
+			webringBoards: sorted,
 			fileStats,
 		});
 		const end = process.hrtime(start);
