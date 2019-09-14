@@ -320,7 +320,7 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		await Stats.updateOne(board._id, data.ip);
+		await Stats.updateOne(board._id, data.ip, data.thread == null);
 
 		//add backlinks to the posts this post quotes
 		if (data.thread && data.quotes.length > 0) {

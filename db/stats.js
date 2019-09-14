@@ -6,13 +6,14 @@ const Mongo = require(__dirname+'/db.js')
 
 module.exports = {
 
-	updateOne: (board, ip) => {
+	updateOne: (board, ip, thread) => {
 		return db.updateOne({
 			'board': board,
 			'hour': new Date().getHours()
 		}, {
 			'$inc': {
-				'pph': 1
+				'pph': 1,
+				'tph': thread ? 1 : 0
 			},
 			'$addToSet': {
 				'ips': ip
@@ -20,6 +21,19 @@ module.exports = {
 		}, {
 			'upsert': true
 		});
+	},
+
+	getHourPosts: (board) => {
+		return db.findOne({
+			'board': board,
+			'hour': new Date().getHours()
+		}, {
+			'projection': {
+				'_id': 0,
+				'pph': 1,
+				'tph': 1
+			}
+		})
 	},
 
 	updateBoards: () => {
@@ -44,9 +58,11 @@ module.exports = {
 		]).toArray();
 	},
 
+	//reset IP list for previous hour
 	resetIps: () => {
+		const hour = new Date();
 		return db.updateMany({
-			'hour': new Date().getHours()
+			'hour': hour.setHours(hour.getHours()-1)
 		}, {
 			'$set': {
 				'ips': []
@@ -54,10 +70,13 @@ module.exports = {
 		});
 	},
 
+	//reset all hours.
+//TODO: implement a $facet with 2 groups in updateBoards so I can keep pph across hours
 	resetPph: () => {
 		return db.updateMany({}, {
 			'$set': {
-				'pph': 0
+				'pph': 0,
+				'tph': 0
 			}
 		});
 	},

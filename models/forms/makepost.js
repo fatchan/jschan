@@ -5,7 +5,7 @@ const path = require('path')
 	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
-	, { Posts, Boards, Files, Bans } = require(__dirname+'/../../db/')
+	, { Stats, Posts, Boards, Files, Bans } = require(__dirname+'/../../db/')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, escape = require(__dirname+'/../../helpers/posting/escape.js')
@@ -362,15 +362,9 @@ module.exports = async (req, res, next) => {
 			|| (tphTriggerAction === 3 && locked !== true))) { //and not locked with lock trigger
 		const pastHourMongoId = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000));
 		//count threads in past hour
-		const tph = await Posts.db.countDocuments({
-			'_id': {
-				'$gt': pastHourMongoId
-			},
-			'thread': null,
-			'board': res.locals.board._id
-		});
+		const hourPosts = await Stats.getHourPosts(res.locals.board._id);
 		//if its above the trigger
-		if (tph >= tphTrigger) {
+		if (hourPosts && hourPosts.tph && hourPosts.tph >= tphTrigger) { //TODO: add an option to check pph OR tph, not just tph
 			//update in memory for other stuff done e.g. rebuilds
 			const update = {
 				'$set': {}

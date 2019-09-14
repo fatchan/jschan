@@ -8,10 +8,8 @@ module.exports = {
 
 	queue: generateQueue,
 
-	push: (data) => {
-		generateQueue.add(data, {
-			'removeOnComplete': true,
-		});
+	push: (data, options) => {
+		generateQueue.add(data, options);
 	}
 
 }

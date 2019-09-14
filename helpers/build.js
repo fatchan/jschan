@@ -4,7 +4,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, cache = require(__dirname+'/../redis.js')
 	, msTime = require(__dirname+'/mstime.js')
 	, { enableWebring } = require(__dirname+'/../configs/main.json')
-	, { Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
+	, { Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, render = require(__dirname+'/render.js')
 	, timeDiffString = (label, end) => `${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`;
 
@@ -177,7 +177,7 @@ module.exports = {
 			enableWebring ? cache.get('webring:boards') : null, //webring boards if enabled
 			Files.activeContent() //size ans number of files
 		]);
-		if (webringBoards) { //sort webring boards
+		if (enableWebring && webringBoards) { //sort webring boards
 			webringBoards = webringBoards.sort((a, b) => { return b.uniqueUsers - a.uniqueUsers });
 		}
 		const html = render('index.html', 'home.pug', {
@@ -189,6 +189,17 @@ module.exports = {
 		const end = process.hrtime(start);
 		console.log(timeDiffString(label, end));
 		return html;
+	},
+
+//TODO: move this elsewhere
+	updateStats: async () => {
+		const label = 'Hourly stats rollover';
+        const start = process.hrtime();
+		await Stats.updateBoards();
+		await Stats.resetPph();
+		await Stats.resetIps();
+		const end = process.hrtime(start);
+        console.log(timeDiffString(label, end));
 	},
 
 	buildChangePassword: () => {
