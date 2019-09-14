@@ -6,5 +6,6 @@ module.exports = { //times in milliseconds
 	'week': 604800000,
 	'day': 86400000,
 	'hour': 3600000,
-	'minute': 60000
+	'minute': 60000,
+	'nextHour': () => { return 3600000 - new Date().getTime() % 3600000 }
 };

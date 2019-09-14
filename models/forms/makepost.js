@@ -415,12 +415,13 @@ module.exports = async (req, res, next) => {
 			//only delete threads if all posts require threads, otherwise just build board pages for thread captcha
 			await remove(`${uploadDirectory}html/${req.params.board}/thread/`); //not deleting json cos it doesnt need to be
 		}
+		const endPage = Math.ceil(threadLimit/10);
 		buildQueue.push({
 			'task': 'buildBoardMultiple',
 			'options': {
 				'board': res.locals.board,
 				'startpage': 1,
-				'endpage': Math.ceil(threadLimit/10)
+				'endpage': endPage
 			}
 		});
 	} else if (data.thread) {
@@ -453,12 +454,13 @@ module.exports = async (req, res, next) => {
 			await deletePosts(prunedThreads, req.params.board);
 		}
 		if (!enableCaptcha) {
+			const endPage = Math.ceil(threadLimit/10);
 			buildQueue.push({
 				'task': 'buildBoardMultiple',
 				'options': {
 					'board': res.locals.board,
 					'startpage': 1,
-					'endpage': Math.ceil(threadLimit/10)
+					'endpage': endPage
 				}
 			});
 		}
@@ -466,6 +468,7 @@ module.exports = async (req, res, next) => {
 
 	//always rebuild catalog for post counts and ordering
 	buildQueue.push({
+		'id': `${req.params.board}:catalog`,
 		'task': 'buildCatalog',
 		'options': {
 			'board': res.locals.board,

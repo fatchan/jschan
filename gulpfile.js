@@ -37,7 +37,8 @@ async function wipe() {
 		, Captchas = require(__dirname+'/db/captchas.js')
 		, Ratelimits = require(__dirname+'/db/ratelimits.js')
 		, Accounts = require(__dirname+'/db/accounts.js')
-		, Files = require(__dirname+'/db/files.js');
+		, Files = require(__dirname+'/db/files.js')
+		, Stats = require(__dirname+'/db/stats.js');
 
 	//wipe db shit
 	await Promise.all([
@@ -47,7 +48,8 @@ async function wipe() {
 		Posts.deleteAll(),
 		Boards.deleteAll(),
 		Bans.deleteAll(),
-		Files.deleteAll()
+		Files.deleteAll(),
+		Stats.deleteAll()
 	]);
 
 	//add boards
@@ -69,6 +71,7 @@ async function wipe() {
 			}
 		})
 		//add indexes - should profiled and changed at some point if necessary
+		, Stats.db.createIndex({board:1, hour:1})
 		, Boards.db.createIndex({ips: 1, pph:1, sequence_value:1})
 		, Bans.db.dropIndexes()
 		, Captchas.db.dropIndexes()

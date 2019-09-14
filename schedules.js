@@ -6,24 +6,13 @@ process
 
 const msTime = require(__dirname+'/helpers/mstime.js')
 	, Mongo = require(__dirname+'/db/db.js')
-	, { enableWebring } = require(__dirname+'/configs/main.json')
-	, buildQueue = require(__dirname+'/queue.js');
+	, { enableWebring } = require(__dirname+'/configs/main.json');
 
 (async () => {
 
 	console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
 	console.log('STARTING SCHEDULES');
-
-	//add 5 minute repeatable job to queue (queue will prevent duplicate)
-	buildQueue.push({
-		'task': 'buildHomepage',
-		'options': {}
-	}, {
-		'repeat': {
-			'cron': '*/5 * * * *'
-		}
-	});
 
 	//delete files for expired captchas
 	const deleteCaptchas = require(__dirname+'/schedules/deletecaptchas.js');
@@ -46,8 +35,23 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 			} catch (e) {
 				console.error(e);
 			}
-		}, msTime.hour);
+		}, msTime.day);
 	}
+
+	//update board stats
+	const { Stats } = require(__dirname+'/db/');
+	await Stats.updateBoards().catch(e => console.error);
+	setTimeout(() => {
+		setInterval(async () => {
+			try {
+				await Stats.updateBoards();
+				await Stats.resetPph();
+	            await Stats.resetIps();
+			} catch (e) {
+				console.error(e);
+			}
+		}, msTime.hour);
+	}, msTime.nextHour()); //wait until start of hour
 
 	//file pruning
 	const pruneFiles = require(__dirname+'/schedules/prune.js');

@@ -248,13 +248,13 @@ module.exports = async (req, res, next) => {
 				buildQueue.push({
 					'task': 'buildModLog',
 					'options': {
-						'board': res.locals.board,
+						'board': board,
 					}
 				});
 				buildQueue.push({
 					'task': 'buildModLogList',
 					'options': {
-						'board': res.locals.board,
+						'board': board,
 					}
 				});
 			}

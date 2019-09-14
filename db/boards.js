@@ -71,10 +71,6 @@ module.exports = {
 	},
 
 	deleteAll: (board) => {
-		/*
-			no clearing redis cache here, will leave that up to gulpfile, since this happens in the
-			wipe script, it would delete redis cache for everything, not just boards
-		*/
 		return db.deleteMany({});
 	},
 
@@ -129,17 +125,23 @@ module.exports = {
   		}).skip(skip).limit(limit).toArray();
 	},
 
-	totalPosts: () => {
+	totalStats: () => {
 		return db.aggregate([
 			{
 				'$group': {
 					'_id': null,
-					'total': {
+					'posts': {
 						'$sum': '$sequence_value'
+					},
+					'ips': {
+						'$sum': '$ips'
+					},
+					'pph': {
+						'$sum': '$pph'
 					}
 				}
 			}
-		]).toArray().then(res => res[0].total);
+		]).toArray().then(res => res[0]);
 	},
 
 	exists: async (req, res, next) => {
@@ -151,7 +153,7 @@ module.exports = {
 		next();
 	},
 
-	getNextId: async (board) => {
+	getNextId: async (board, ip) => {
 		const increment = await db.findOneAndUpdate(
 			{
 				'_id': board

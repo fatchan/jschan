@@ -171,71 +171,19 @@ module.exports = {
 	buildHomepage: async () => {
 		const label = '/index.html';
 		const start = process.hrtime();
-		const [ activeUsers, postsPerHour ] = await Promise.all([
-			Posts.activeUsers(),
-			Posts.postsPerHour()
-		]);
-		for (let i = 0; i < activeUsers.boardActiveUsers.length; i++) {
-			const userboard = activeUsers.boardActiveUsers[i];
-			const pphboard = postsPerHour.find(b => b._id === userboard._id);
-			if (pphboard != null) {
-				userboard.pph = pphboard.pph;
-			}
-		}
-		const bulkWrites = [];
-		const updatedBoards = [];
-		for (let i = 0; i < activeUsers.boardActiveUsers.length; i++) {
-			const data = activeUsers.boardActiveUsers[i];
-			updatedBoards.push(data._id);
-			//boards with pph get pph set
-			bulkWrites.push({
-				'updateOne': {
-					'filter': {
-						'_id': data._id
-					},
-					'update': {
-						'$set': {
-							'pph': data.pph != null ? data.pph : 0,
-							'ips': data.ips
-						}
-					}
-				}
-			})
-		}
-		//boards with no pph get set to 0
-		bulkWrites.push({
-			'updateMany': {
-				'filter': {
-					'_id': {
-						'$nin': updatedBoards
-					}
-				},
-				'update': {
-					'$set': {
-						'pph': 0,
-						'ips': 0
-					}
-				}
-			}
-		});
-		if (bulkWrites.length > 0) {
-			await Boards.db.bulkWrite(bulkWrites);
-		}
-		const [ totalPosts, boards, webringBoards, fileStats ] = await Promise.all([
-			Boards.totalPosts(), //overall total posts ever made
+		let [ totalStats, boards, webringBoards, fileStats ] = await Promise.all([
+			Boards.totalStats(), //overall total posts ever made
 			Boards.boardSort(0, 20), //top 20 boards sorted by users, pph, total posts
-			enableWebring ? cache.get('webring:boards') : null,
-			Files.activeContent() //size of all files
+			enableWebring ? cache.get('webring:boards') : null, //webring boards if enabled
+			Files.activeContent() //size ans number of files
 		]);
-		var sorted
-		if (webringBoards) {
-			sorted = webringBoards.sort((a, b) => { return b.uniqueUsers - a.uniqueUsers })
+		if (webringBoards) { //sort webring boards
+			webringBoards = webringBoards.sort((a, b) => { return b.uniqueUsers - a.uniqueUsers });
 		}
 		const html = render('index.html', 'home.pug', {
-			totalPosts: totalPosts,
-			activeUsers,
+			totalStats,
 			boards,
-			webringBoards: sorted,
+			webringBoards,
 			fileStats,
 		});
 		const end = process.hrtime(start);

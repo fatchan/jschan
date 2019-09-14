@@ -1,6 +1,6 @@
 'use strict';
 
-const { Boards, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
+const { Boards, Stats, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { remove } = require('fs-extra');
@@ -18,6 +18,7 @@ module.exports = async (uri) => {
 	await Promise.all([
 		Modlogs.deleteBoard(uri), //bans for the board
 		Bans.deleteBoard(uri), //bans for the board
+		Stats.deleteBoard(uri), //bans for the board
 		remove(`${uploadDirectory}html/${uri}/`), //html
 		remove(`${uploadDirectory}json/${uri}/`) //json
 	]);

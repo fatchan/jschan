@@ -4,6 +4,7 @@ module.exports = {
 
 	Posts: require(__dirname+'/posts.js'),
 	Boards: require(__dirname+'/boards.js'),
+	Stats: require(__dirname+'/stats.js'),
 	Accounts: require(__dirname+'/accounts.js'),
 	Bans: require(__dirname+'/bans.js'),
 	Captchas: require(__dirname+'/captchas.js'),

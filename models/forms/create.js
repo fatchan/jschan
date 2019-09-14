@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
 
 	const { name, description } = req.body
 		, uri = req.body.uri.toLowerCase()
-		, tags = req.body.tags.split('\n')
+		, tags = req.body.tags.split('\n').filter(n => n)
 		, board = await Boards.findOne(uri);
 
 	// if board exists reject

@@ -27,8 +27,8 @@ block content
 				tr
 					th Board
 					th Description
-					th(title='Posts in the last hour') Posts/h
-					th(title='Unique IPs that have posted in the last 72h') Active Users
+					th(style='cursor:help' title='Posts in the last hour') PPH
+					th(style='cursor:help' title='Unique IPs that have posted in the last 24h') Active Users
 					th Total Posts
 				each board in boards
 					tr
@@ -41,12 +41,13 @@ block content
 			table
 				tr
 					th Total Posts
+					th Total PPH
 					th Active Users
 					th Active Content
 				tr
-					td #{totalPosts}
-					- const totalActiveUsers = activeUsers.totalActiveUsers.length > 0 ? activeUsers.totalActiveUsers[0].ips : 0;
-					td #{totalActiveUsers}
+					td #{totalStats.posts}
+					td #{totalStats.pph}
+					td #{totalStats.ips}
 					td #{fileStats.totalSizeString}
 	.table-container.flex-center.mv-10
 		table
@@ -65,8 +66,8 @@ block content
 					tr
 						th Board
 						th Description
-						th(title='Posts in the last hour') Posts/h
-						th(title='Unique IPs that have posted in the last 72h') Active Users
+						th(style='cursor:help' title='Posts in the last hour') PPH
+						th(style='cursor:help' title='Unique IPs that have posted in the last 24h') Active Users
 						th Total Posts
 					each board in webringBoards
 						tr
