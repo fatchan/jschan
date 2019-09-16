@@ -347,7 +347,7 @@ module.exports = async (req, res, next) => {
 			//NOTE: these are numbers because we XOR them for toggling in action handler
 			'sticky': Mongo.NumberInt(0),
 			'locked': Mongo.NumberInt(0),
-			'saged': Mongo.NumberInt(0),
+			'bumplocked': Mongo.NumberInt(0),
 			'cyclic': Mongo.NumberInt(0),
 			'salt': salt
 		});
@@ -421,7 +421,7 @@ module.exports = async (req, res, next) => {
 	} else if (data.thread) {
 		//refersh pages
 		const threadPage = await Posts.getThreadPage(req.params.board, thread);
-		if (data.email === 'sage' || thread.sage) {
+		if (data.email === 'sage' || thread.bumplocked) {
 			//refresh the page that the thread is on
 			buildQueue.push({
 				'task': 'buildBoard',

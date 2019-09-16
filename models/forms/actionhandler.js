@@ -6,7 +6,7 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spoilerPosts = require(__dirname+'/spoilerpost.js')
 	, stickyPosts = require(__dirname+'/stickyposts.js')
-	, sagePosts = require(__dirname+'/sageposts.js')
+	, bumplockPosts = require(__dirname+'/bumplockposts.js')
 	, lockPosts = require(__dirname+'/lockposts.js')
 	, cyclePosts = require(__dirname+'/cycleposts.js')
 	, deletePostsFiles = require(__dirname+'/deletepostsfiles.js')
@@ -82,11 +82,15 @@ module.exports = async (req, res, next) => {
 	// if getting global banned, board ban doesnt matter
 	if (req.body.ban || req.body.global_ban || req.body.report_ban || req.body.global_report_ban) {
 		const { message, action, query } = await banPoster(req, res, next);
-		if (req.body.ban || req.body.global_ban) {
-			modlogActions.push(req.body.ban || req.body.global_ban);
+		if (req.body.ban) {
+			modlogActions.push('Ban');
+		} else if (req.body.global_ban) {
+			modlogActions.push('Global Ban');
 		}
-		if (req.body.report_ban || req.body.global_report_ban) {
-			modlogActions.push(req.body.report_ban || req.body.global_report_ban);
+		if (req.body.report_ban) {
+			modlogActions.push('Ban reporter');
+		} else if (req.body.global_report_ban) {
+			modlogActions.push('Global ban reporter');
 		}
 		if (action) {
 			combinedQuery[action] = { ...combinedQuery[action], ...query}
@@ -114,7 +118,13 @@ module.exports = async (req, res, next) => {
 		const { action, message } = await deletePosts(res.locals.posts, req.body.delete_ip_global ? null : req.params.board);
 		messages.push(message);
 		if (action) {
-			modlogActions.push(req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global);
+			if (req.body.delete) {
+				modlogActions.push('Delete');
+			} else if (req.body.delete_ip_board) {
+				modlogActions.push('Delete by IP');
+			} else if (req.body.delete_ip_global) {
+				modlogActions.push('Global delete by IP');
+			}
 			aggregateNeeded = true;
 		}
 	} else {
@@ -122,7 +132,11 @@ module.exports = async (req, res, next) => {
 		if (req.body.unlink_file || req.body.delete_file) {
 			const { message, action, query } = await deletePostsFiles(res.locals.posts, req.body.unlink_file);
 			if (action) {
-				modlogActions.push(req.body.unlink_file || req.body.delete_file);
+				if (req.body.unlink_file) {
+					modlogActions.push('Unlink files');
+				} else if () {
+					modlogActions.push('Delete files');
+				}
 				aggregateNeeded = true;
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
@@ -130,16 +144,16 @@ module.exports = async (req, res, next) => {
 		} else if (req.body.spoiler) {
 			const { message, action, query } = spoilerPosts(res.locals.posts);
 			if (action) {
-				modlogActions.push(req.body.spoiler);
+				modlogActions.push('Spoiler files');
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
 			messages.push(message);
 		}
-		//lock, sticky, sage, cyclic
-		if (req.body.sage) {
-			const { message, action, query } = sagePosts(res.locals.posts);
+		//lock, sticky, bumplock, cyclic
+		if (req.body.bumplock) {
+			const { message, action, query } = bumplockPosts(res.locals.posts);
 			if (action) {
-				modlogActions.push(req.body.sage);
+				modlogActions.push('Bumplock');
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
 			messages.push(message);
@@ -147,7 +161,7 @@ module.exports = async (req, res, next) => {
 		if (req.body.lock) {
 			const { message, action, query } = lockPosts(res.locals.posts);
 			if (action) {
-				modlogActions.push(req.body.lock);
+				modlogActions.push('Lock');
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
 			messages.push(message);
@@ -155,7 +169,7 @@ module.exports = async (req, res, next) => {
 		if (req.body.sticky) {
 			const { message, action, query } = stickyPosts(res.locals.posts);
 			if (action) {
-				modlogActions.push(req.body.sticky);
+				modlogActions.push('Sticky');
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
 			messages.push(message);
@@ -163,7 +177,7 @@ module.exports = async (req, res, next) => {
 		if (req.body.cyclic) {
 			const { message, action, query } = cyclePosts(res.locals.posts);
 			if (action) {
-				modlogActions.push(req.body.cyclic);
+				modlogActions.push('Cycle');
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
 			messages.push(message);
@@ -172,14 +186,18 @@ module.exports = async (req, res, next) => {
 		if (req.body.report || req.body.global_report) {
 			const { message, action, query } = reportPosts(req, res);
 			if (action) {
-				//no modlog for making reports
+				//no modlog entry for making reports
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
 			messages.push(message);
 		} else if (req.body.dismiss || req.body.global_dismiss) {
 			const { message, action, query } = dismissReports(req, res);
 			if (action) {
-				modlogActions.push(req.body.dismiss || req.body.global_dismiss);
+				if (req.body.dismiss) {
+					modlogActions.push('Dismiss reports');
+				} else if (req.body.global_dismiss) {
+					modlogActions.push('Dismiss global reports');
+				}
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
 			}
 			messages.push(message);
@@ -390,7 +408,7 @@ module.exports = async (req, res, next) => {
 							'endpage': threadPageOldest,
 						}
 					});
-				} else if (req.body.lock || req.body.sage || req.body.cyclic || req.body.unlink_file) {
+				} else if (req.body.lock || req.body.bumplock || req.body.cyclic || req.body.unlink_file) {
 					buildQueue.push({
 						'task': 'buildBoardMultiple',
 						'options': {

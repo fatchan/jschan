@@ -9,7 +9,6 @@ const express = require('express')
 	, redisStore = require('connect-redis')(session)
 	, path = require('path')
 	, app = express()
-	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
 	, ipHash = require(__dirname+'/helpers/iphash.js')
@@ -32,9 +31,8 @@ const express = require('express')
 
 	// disable useless express header
 	app.disable('x-powered-by');
-	// parse forms (is json required?)
-	app.use(bodyParser.urlencoded({extended: true}));
-	app.use(bodyParser.json());
+	// parse forms
+	app.use(express.urlencoded({extended: true}));
 	// parse cookies
 	app.use(cookieParser());
 

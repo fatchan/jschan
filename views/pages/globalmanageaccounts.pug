@@ -22,7 +22,7 @@ block content
 						th Auth Level
 					for account in accounts
 						tr
-							td: input(type='checkbox', name='checkedaccounts[]' value=account._id)
+							td: input(type='checkbox', name='checkedaccounts' value=account._id)
 							td #{account._id}
 							td #{account.authLevel}
 			section.row

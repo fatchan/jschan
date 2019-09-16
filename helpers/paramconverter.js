@@ -1,13 +1,14 @@
 'use strict';
 
 const { ObjectId } = require(__dirname+'/../db/db.js')
-	, allowedArrays = new Set(['checkednews', 'checkedposts', 'globalcheckedposts', 'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts']) //only these can be arrays, since express bodyparser will output arrays
+	, allowedArrays = new Set(['checkednews', 'checkedposts', 'globalcheckedposts',
+		'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts']) //only these should be arrays, since express bodyparser can output arrays
 	, trimFields = ['tags', 'uri', 'moderators', 'filters', 'announcement', 'description', 'message',
 		'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message'] //trim if we dont want filed with whitespace
 	, numberFields = ['filter_mode', 'captcha_mode', 'tph_trigger', 'tph_trigger_action', 'reply_limit',
 		'max_files', 'thread_limit', 'thread', 'min_thread_message_length', 'min_reply_message_length', 'auth_level'] //convert these to numbers before they hit our routes
 	, banDurationRegex = /^(?<year>[\d]+y)?(?<month>[\d]+m)?(?<week>[\d]+w)?(?<day>[\d]+d)?(?<hour>[\d]+h)?$/
-	, msTime = require(__dirname+'/mstime.js')
+	, msTime = require(__dirname+'/mstime.js');
 
 module.exports = (req, res, next) => {
 

@@ -1,6 +1,6 @@
 mixin report(r)
 	.reports.post-container
-		input.post-check(type='checkbox', name='checkedreports[]' value=r.id)
+		input.post-check(type='checkbox', name='checkedreports' value=r.id)
 		|	
 		span Date: #{r.date.toLocaleString()}
 		|  

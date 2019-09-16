@@ -300,8 +300,8 @@ module.exports = {
 					'replyfiles': data.files.length
 				}
 			}
-			//if post email is not sage, and thread not saged, set bump date
-			if (data.email !== 'sage' && !thread.saged) {
+			//if post email is not sage, and thread not bumplocked, set bump date
+			if (data.email !== 'sage' && !thread.bumplocked) {
 				query['$set'] = {
 					'bumped': Date.now()
 				}

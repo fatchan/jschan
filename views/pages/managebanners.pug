@@ -28,6 +28,6 @@ block content
 				input(type='hidden' name='_csrf' value=csrf)
 				each banner in board.banners
 					label.banner-check
-						input(type='checkbox' name='checkedbanners[]' value=banner)
+						input(type='checkbox' name='checkedbanners' value=banner)
 						img.board-banner(src=`/banner/${board._id}/${banner}` width='300' height='100')
 				input(type='submit', value='delete')
