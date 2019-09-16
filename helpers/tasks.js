@@ -191,7 +191,6 @@ module.exports = {
 		return html;
 	},
 
-//TODO: move this elsewhere
 	updateStats: async () => {
 		const label = 'Hourly stats rollover';
         const start = process.hrtime();
@@ -199,6 +198,7 @@ module.exports = {
 		await Stats.resetStats();
 		const end = process.hrtime(start);
         console.log(timeDiffString(label, end));
+		module.exports.buildHomepage();
 	},
 
 	buildChangePassword: () => {

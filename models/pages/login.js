@@ -1,6 +1,6 @@
 'use strict';
 
-const { buildLogin } = require(__dirname+'/../../helpers/build.js')
+const { buildLogin } = require(__dirname+'/../../helpers/tasks.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {

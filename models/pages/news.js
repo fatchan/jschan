@@ -1,6 +1,6 @@
 'use strict';
 
-const { buildNews } = require(__dirname+'/../../helpers/build.js');
+const { buildNews } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
 

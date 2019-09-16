@@ -13,7 +13,7 @@ const Queue = require('bull')
 	console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
 
-	const buildTasks = require(__dirname+'/helpers/build.js')
+	const buildTasks = require(__dirname+'/helpers/tasks.js')
 		, generateQueue = new Queue('generate', { 'redis': configs.redis });
 
 	generateQueue

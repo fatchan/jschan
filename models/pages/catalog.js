@@ -1,6 +1,6 @@
 'use strict';
 
-const { buildCatalog } = require(__dirname+'/../../helpers/build.js');
+const { buildCatalog } = require(__dirname+'/../../helpers/tasksd.js');
 
 module.exports = async (req, res, next) => {
 

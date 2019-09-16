@@ -31,14 +31,6 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 	//update board stats and homepage
 	const taskQueue = require(__dirname+'/queue.js');
 	taskQueue.push({
-		'task': 'buildHomepage',
-		'options': {}
-	}, {
-		'repeat': {
-			'cron': '*/10 * * * *'
-		}
-	});
-	taskQueue.push({
 		'task': 'updateStats',
 		'options': {}
 	}, {

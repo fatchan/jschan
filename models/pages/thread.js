@@ -1,6 +1,6 @@
 'use strict';
 
-const { buildThread } = require(__dirname+'/../../helpers/build.js');
+const { buildThread } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
 

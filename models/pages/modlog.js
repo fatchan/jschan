@@ -1,7 +1,7 @@
 'use strict';
 
 const { Modlogs } = require(__dirname+'/../../db/')
-	, { buildModLog } = require(__dirname+'/../../helpers/build.js');
+	, { buildModLog } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
 
