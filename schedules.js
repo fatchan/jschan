@@ -43,7 +43,7 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 		'options': {}
 	}, {
         'repeat': {
-            'cron': '1 * * * *'
+            'cron': '0 * * * *'
         }
     });
 

@@ -196,8 +196,7 @@ module.exports = {
 		const label = 'Hourly stats rollover';
         const start = process.hrtime();
 		await Stats.updateBoards();
-		await Stats.resetPph();
-		await Stats.resetIps();
+		await Stats.resetStats();
 		const end = process.hrtime(start);
         console.log(timeDiffString(label, end));
 	},

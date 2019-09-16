@@ -134,7 +134,7 @@ module.exports = async (req, res, next) => {
 			if (action) {
 				if (req.body.unlink_file) {
 					modlogActions.push('Unlink files');
-				} else if () {
+				} else if (req.body.delete_file) {
 					modlogActions.push('Delete files');
 				}
 				aggregateNeeded = true;

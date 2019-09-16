@@ -37,48 +37,57 @@ module.exports = {
 	},
 
 	updateBoards: () => {
+//todo: figure out how to get single result set and $group $facets so I can fix this and improve resetStats
 		return db.aggregate([
 			{
+				'$unwind': {
+					'path': '$ips',
+					'preserveNullAndEmptyArrays': true
+					//provides empty array instead of null so that $project stage $size will work and
+					//update dead boards back to 0 ips
+				}
+			}, {
 				'$group': {
 					'_id': '$board',
-					'ips': {
-						'$sum': {
-							'$size': '$ips'
-						}
-					},
 					'pph': {
 						'$sum': '$pph'
+					},
+					'ips': {
+						'$addToSet': '$ips'
 					}
+				}
+			}, {
+				'$project': {
+					'ips': {
+						'$size': '$ips'
+					},
+					'pph': 1
 				}
 			}, {
 				'$merge': {
 					'into': 'boards'
 				}
 			}
-		]).toArray();
+		]);
 	},
 
-	//reset IP list for previous hour
-	resetIps: () => {
-		const hour = new Date();
-		return db.updateMany({
-			'hour': hour.setHours(hour.getHours()-1)
-		}, {
-			'$set': {
-				'ips': []
-			}
-		});
-	},
-
-	//reset all hours.
-//TODO: implement a $facet with 2 groups in updateBoards so I can keep pph across hours
-	resetPph: () => {
-		return db.updateMany({}, {
-			'$set': {
-				'pph': 0,
-				'tph': 0
-			}
-		});
+	//reset stats, used at start of each hour
+	resetStats: () => {
+		return Promise.all([
+			db.updateMany({
+				'hour': new Date().getHours()
+			}, {
+				'$set': {
+					'ips': [],
+				}
+			}),
+			db.updateMany({}, {
+				'$set': {
+					'pph': 0,
+					'tph': 0
+				}
+			}),
+		]);
 	},
 
 	deleteBoard: (board) => {
