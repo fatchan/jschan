@@ -15,7 +15,7 @@ const express  = require('express')
 	, home = require(__dirname+'/../models/pages/home.js')
 	, register = require(__dirname+'/../models/pages/register.js')
 	, { manageReports, manageBanners, manageSettings, manageBans } = require(__dirname+'/../models/pages/manage/')
-	, { globalManageReports, globalManageBans, globalManageBoards, globalManageAccounts, globalManageNews } = require(__dirname+'/../models/pages/globalmanage/')
+	, { globalManageReports, globalManageBans, globalManageRecent, globalManageAccounts, globalManageNews } = require(__dirname+'/../models/pages/globalmanage/')
 	, changePassword = require(__dirname+'/../models/pages/changepassword.js')
 	, login = require(__dirname+'/../models/pages/login.js')
 	, logout = require(__dirname+'/../models/pages/logout.js')
@@ -58,7 +58,7 @@ router.get('/globalmanage/reports.html', sessionRefresh, isLoggedIn, calcPerms, 
 router.get('/globalmanage/bans.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBans);
 router.get('/globalmanage/news.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageNews);
 router.get('/globalmanage/accounts.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageAccounts);
-router.get('/globalmanage/boards.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBoards);
+router.get('/globalmanage/recent.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageRecent);
 
 //captcha
 router.get('/captcha', captcha); //get captcha image and cookie

@@ -4,7 +4,7 @@ mixin globalmanagenav(selected)
 		|  
 		a(href=`/globalmanage/bans.html` class=(selected === 'bans' ? 'bold' : '')) [Bans]
 		|  
-		a(href=`/globalmanage/boards.html` class=(selected === 'boards' ? 'bold' : '')) [Boards]
+		a(href=`/globalmanage/recent.html` class=(selected === 'recent' ? 'bold' : '')) [Recent]
 		if permLevel === 0
 			|  
 			a(href=`/globalmanage/accounts.html` class=(selected === 'accounts' ? 'bold' : '')) [Accounts]

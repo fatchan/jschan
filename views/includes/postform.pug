@@ -55,5 +55,5 @@ section.form-wrapper.flex-center
 					.required *
 				.col
 					include ./captcha.pug
-		input(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)
+		input#submitpost(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)
 	a.toggle-summary(href='#postform') Open Postform

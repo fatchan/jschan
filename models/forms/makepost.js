@@ -28,7 +28,7 @@ const path = require('path')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
 	, buildQueue = require(__dirname+'/../../queue.js')
-	, { buildThread } = require(__dirname+'/../../helpers/build.js');
+	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
 
