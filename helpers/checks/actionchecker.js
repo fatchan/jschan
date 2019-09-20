@@ -17,8 +17,8 @@ const actions = [
 	{name:'global_dismiss', global:true, auth:1, passwords:false, build:false},
 	{name:'report_ban', global:false, auth:3, passwords:false, build:false},
 	{name:'global_report_ban', global:true, auth:1, passwords:false, build:false},
-	{name:'ban', global:false, auth:3, passwords:false, build:true},
-	{name:'global_ban', global:true, auth:1, passwords:false, build:true},
+	{name:'ban', global:false, auth:3, passwords:false, build:false},//will build if there is a ban message
+	{name:'global_ban', global:true, auth:1, passwords:false, build:false},//will build if there is a ban message
 ];
 
 module.exports = (req, res) => {
