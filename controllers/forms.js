@@ -16,10 +16,10 @@ const express  = require('express')
 	, upload = require('express-fileupload')
 	, postFiles = upload({
 		createParentPath: true,
-		safeFileNames: /[^\w-]+/g,
+		safeFileNames: /[^\w\s-]+/g,
 		preserveExtension: 4,
 		limits: {
-			fileSize: 10 * 1024 * 1024,
+			fileSize: globalLimits.postFilesSize.max,
 			files: globalLimits.postFiles.max
 		},
 		abortOnLimit: true,
@@ -28,14 +28,10 @@ const express  = require('express')
 	})
 	, bannerFiles = upload({
 		createParentPath: true,
-		safeFileNames: /[^\w-]+/g,
+		safeFileNames: /[^\w\s-]+/g,
 		preserveExtension: 3,
 		limits: {
-			fileSize: 10 * 1024 * 1024,
-			/*
-				currently not possible to limit each file to files/fileSize with express-filesupload/busboy.
-				will need to do separately in banner upload model if desired.
-			*/
+			fileSize: globalLimits.bannerFilesSize.max,
 			files: globalLimits.bannerFiles.max
 		},
 		abortOnLimit: true,

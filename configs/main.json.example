@@ -30,8 +30,14 @@
 		"postFiles": {
 			"max": 3
 		},
+		"postFilesSize": {
+			"max": 10485760
+		},
 		"bannerFiles": {
 			"max": 10
+		},
+		"bannerFilesSize": {
+			"max": 10485760
 		},
 		"messageLength": {
 			"max": 4000
