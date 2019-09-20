@@ -8,7 +8,8 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 	, numberFields = ['filter_mode', 'captcha_mode', 'tph_trigger', 'tph_trigger_action', 'reply_limit',
 		'max_files', 'thread_limit', 'thread', 'min_thread_message_length', 'min_reply_message_length', 'auth_level'] //convert these to numbers before they hit our routes
 	, banDurationRegex = /^(?<year>[\d]+y)?(?<month>[\d]+m)?(?<week>[\d]+w)?(?<day>[\d]+d)?(?<hour>[\d]+h)?$/
-	, msTime = require(__dirname+'/mstime.js');
+	, msTime = require(__dirname+'/mstime.js')
+	, makeArrayIfSingle = (obj) => !Array.isArray(obj) ? [obj] : obj;
 
 module.exports = (req, res, next) => {
 
@@ -25,6 +26,8 @@ module.exports = (req, res, next) => {
 				'title': 'Bad request',
 				'message': 'Malformed input'
 			});
+		} else if (allowedArrays.has(key) && !Array.isArray(val)) {
+			req.body[key] = makeArrayIfSingle(req.body[key]); //convert to arrays with single item for simpler case batch handling later
 		}
 	}
 
