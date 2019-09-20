@@ -17,6 +17,18 @@ module.exports = {
 		}).toArray();
 	},
 
+	markSeen: (ids) => {
+		return db.updateMany({
+			'_id': {
+				'$in': ids
+			}
+		}, {
+			'$set': {
+				'seen': true,
+			}
+		});
+	},
+
 	appeal: (ip, ids, appeal) => {
 		return db.updateMany({
 			'_id': {
@@ -24,7 +36,7 @@ module.exports = {
 			},
 			'ip': ip,
 			'allowAppeal': true,
-            'appeal': null
+			'appeal': null
 		}, {
 			'$set': {
 				'appeal': appeal,

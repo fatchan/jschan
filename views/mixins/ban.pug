@@ -23,6 +23,11 @@ mixin ban(ban, banpage)
 			else
 				Posts not shown
 		td
+			if ban.seen
+				| &#10003;
+			else 
+				| &#10799;
+		td
 			if ban.allowAppeal
 				| &#10003;
 			else 

@@ -31,7 +31,8 @@ module.exports = async (req, res, next) => {
 				'date': banDate,
 				'expireAt': banExpiry,
 				allowAppeal,
-				'appeal': null
+				'appeal': null,
+				'seen': false,
 			});
 		}
 	}
@@ -65,7 +66,8 @@ module.exports = async (req, res, next) => {
 					'date': banDate,
 					'expireAt': banExpiry,
 					allowAppeal,
-					'appeal': null
+					'appeal': null,
+					'seen': false
 				});
 			});
 		});
@@ -78,6 +80,7 @@ module.exports = async (req, res, next) => {
 	};
 
 	if ((req.body.ban || req.body.global_ban ) && req.body.ban_reason) {
+		res.locals.actions.numBuild++;//there was a ban reason, so we may need to rebuild some pages, since banning is usually not a building action
 		query['action'] = '$set';
 		query['query'] = {
 			'banmessage': req.body.ban_reason

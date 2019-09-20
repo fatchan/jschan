@@ -119,10 +119,12 @@ module.exports = async (req, res, next) => {
 					'posts': null,
 					'issuer': 'system', //what should i call this
 					'date': banDate,
-					'expireAt': banExpiry
+					'expireAt': banExpiry,
+					'allowAppeal': true, //should i make this configurable if appealable?
+					'seen': false
 				};
  				await Bans.insertOne(ban);
-				const bans = await Bans.find(res.locals.ip, res.locals.board._id);
+				const bans = await Bans.find(res.locals.ip, res.locals.board._id); //need to query db so it has _id field for unban checkmark
 				return res.status(403).render('ban', {
 					bans: bans
 				});
