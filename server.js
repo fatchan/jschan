@@ -9,12 +9,14 @@ const express = require('express')
 	, redisStore = require('connect-redis')(session)
 	, path = require('path')
 	, app = express()
+	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
 	, ipHash = require(__dirname+'/helpers/iphash.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, themes = require(__dirname+'/helpers/themes.js')
 	, Mongo = require(__dirname+'/db/db.js')
+	, Socketio = require(__dirname+'/socketio.js')
 	, CachePugTemplates = require('cache-pug-templates');
 
 (async () => {
@@ -28,6 +30,10 @@ const express = require('express')
 	// connect to redis
 	console.log('CONNECTING TO REDIS');
 	const { redisClient } = require(__dirname+'/redis.js');
+
+	// connect socketio
+	console.log('CONNECTING TO SOCKETIO');
+	Socketio.connect(server);
 
 	// disable useless express header
 	app.disable('x-powered-by');
@@ -94,7 +100,7 @@ const express = require('express')
 	})
 
 	//listen
-	const server = app.listen(configs.port, '127.0.0.1', () => {
+	server.listen(configs.port, '127.0.0.1', () => {
 		new CachePugTemplates({ app, views }).start();
 		console.log(`listening on port ${configs.port}`);
 		//let PM2 know that this is ready for graceful reloads and to serialise startup

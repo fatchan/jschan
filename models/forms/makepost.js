@@ -5,6 +5,7 @@ const path = require('path')
 	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
+	, Socketio = require(__dirname+'/../../socketio.js')
 	, { Stats, Posts, Boards, Files, Bans } = require(__dirname+'/../../db/')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
@@ -404,6 +405,35 @@ module.exports = async (req, res, next) => {
 		'board': res.locals.board
 	});
 	res.redirect(successRedirect);
+	const projectedPost = {
+        'date': data.date,
+        'name': data.name,
+        'country': data.country,
+        'board': req.params.board,
+        'tripcode': data.tripcode,
+        'capcode': data.capcode,
+        'subject': data.subject,
+        'message': data.message,
+        'nomarkup': data.nomarkup,
+        'thread': data.thread,
+		'postId': postId,
+        'email': data.email,
+        'spoiler': data.spoiler,
+        'banmessage': null,
+        'userId': data.userId,
+        'files': data.files,
+        'reports': [],
+        'globalreports': [],
+        'quotes': data.quotes,
+        'backlinks': [],
+        'replyposts': 0,
+        'replyfiles': 0,
+        'sticky': data.sticky,
+        'locked': data.locked,
+        'bumplocked': data.bumplocked,
+        'cyclic': data.cyclic,
+    }
+	Socketio.emitRoom(`${res.locals.board._id}-${data.thread || postId}`, 'newPost', projectedPost);
 
 	//now add other pages to be built in background
 	if (enableCaptcha) {

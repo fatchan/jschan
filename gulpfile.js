@@ -139,11 +139,15 @@ function custompages() {
 
 function scripts() {
 	//function for templating a post from data i.e. from API used to build posts on site with scripts that match templates
+	const fs = require('fs');
 	const compiledFunction = pug.compileFileClient('views/includes/post.pug', { compileDebug: false, debug: false, name: 'post' });
-	require('fs').writeFileSync('gulp/res/js/post.js', compiledFunction);
+	fs.writeFileSync('gulp/res/js/post.js', compiledFunction);
+	try {
+		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
+	} catch (e) {}
 	gulp.src(paths.scripts.src)
 		.pipe(concat('all.js'))
-//		.pipe(uglify())
+		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src(paths.scripts.src)
 		.pipe(uglify())

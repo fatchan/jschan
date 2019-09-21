@@ -7,65 +7,47 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		if (posts.length === 0) {
 			return; //url matches, but on a 404 page
 		}
-		const jsonPath = window.location.pathname.replace(/\.html$/, '.json');
+		const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
+		const room = `${roomParts[1]}-${roomParts[3]}`;
 		const thread = document.querySelector('.thread');
-		let lastPostId = posts[posts.length - 1].id;
-		const maxDelay = 120000;
-		let delay = 5000;
-		async function fetchNewPosts() {
-			let json;
-			try {
-				json = await fetch(jsonPath).then(res => res.json());
-			} catch (e) {
-				//post might have 404'd or something else broke
-				delay = maxDelay;
-				return console.error(e);
-			}
-			if (json && json.replies && json.replies.length > 0) {
-				const newPosts = json.replies.filter(r => r.postId > lastPostId); //filter to only newer posts
-				if (newPosts.length > 0) {
-					delay = 5000;
-				} else {
-//					delay = Math.min(maxDelay, delay*2);
+		const socket = io({ transports: ['websocket'] });
+		socket.on('connect', function() {
+			console.log('joined room', room);
+			socket.emit('room', room);
+		});
+        socket.on('newPost', function(data) {
+			console.log('got new post');
+			const postData = data;
+			//create a new post
+			const postHtml = post({post: postData});
+			//add it to the end of the thread
+			thread.insertAdjacentHTML('beforeend', postHtml);
+			for (let j = 0; j < postData.quotes.length; j++) {
+				const quoteData = postData.quotes[j];
+				//add backlink to quoted posts
+				const quotedPost = document.getElementById(quoteData.postId).nextSibling;
+				let replies = quotedPost.querySelector('.replies');
+				if (!replies) {
+					const quotedPostData = quotedPost.querySelector('.post-data');
+					const newRepliesDiv = document.createElement('div');
+					newRepliesDiv.textContent = 'Replies: ';
+					['replies', 'mt-5', 'ml-5'].forEach(c => {
+						newRepliesDiv.classList.add(c);
+					});
+					quotedPostData.appendChild(newRepliesDiv);
+					replies = newRepliesDiv;
 				}
-				for (let i = 0; i < newPosts.length; i++) {
-					const postData = newPosts[i];
-					lastPostId = postData.postId;
-					//create a new post
-					const postHtml = post({post: postData});
-					//add it to the end of the thread
-					thread.insertAdjacentHTML('beforeend', postHtml);
-					for (let j = 0; j < postData.quotes.length; j++) {
-						const quoteData = postData.quotes[j];
-						//get the post, not the anchor (which has the id)
-						const quotedPost = document.getElementById(quoteData.postId).nextSibling;
-						//get the posts data from the json (which has the updated backlinks)
-						const quotedPostData = json.replies.find(r => r.postId == quoteData.postId);
-						//make a new post out of it temporarily
-						const tempPostHtml = post({post: quotedPostData});
-						const template = document.createElement('template');
-						template.innerHTML = tempPostHtml;
-						const tempPost = template.content.firstChild.nextSibling;
-						const newReplies = tempPost.querySelector('.replies');
-						//add them to the post
-						const repliesParent = quotedPost.querySelector('.post-data');
-						const existingReplies = quotedPost.querySelector('.replies');
-						if (existingReplies) {
-							existingReplies.remove();
-						}
-						repliesParent.appendChild(newReplies);
-					}
-					const newPost = document.getElementById(postData.postId).nextSibling;//nextsiblign to not get anchor
-					const newPostEvent = new CustomEvent('addPost', {detail:newPost});
-					//dispatch the ervent so quote click handlers, image expand, etc can be added in separate scripts by listening to the event
-					window.dispatchEvent(newPostEvent);
-				}
-			} else {
-//				delay = Math.min(maxDelay, delay*2);
+				const newReply = document.createElement('a');
+				newReply.href = `${window.location.pathname}#${postData.postId}`;
+				newReply.textContent = `>>${postData.postId} `;
+				newReply.classList.add('quote');
+				replies.appendChild(newReply);
 			}
-			setTimeout(fetchNewPosts, delay);
-		}
-		setTimeout(fetchNewPosts, delay);
+			const newPost = document.getElementById(postData.postId).nextSibling;
+			const newPostEvent = new CustomEvent('addPost', {detail:newPost});
+			//dispatch the ervent so quote click handlers, image expand, etc can be added in separate scripts by listening to the event
+			window.dispatchEvent(newPostEvent);
+        });
 	}
 
 });

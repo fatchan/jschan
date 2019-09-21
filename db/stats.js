@@ -38,37 +38,33 @@ module.exports = {
 
 	updateBoards: () => {
 //todo: figure out how to get single result set and $group $facets so I can fix this and improve resetStats
-		return db.aggregate([
-			{
-				'$unwind': {
-					'path': '$ips',
-					'preserveNullAndEmptyArrays': true
-					//provides empty array instead of null so that $project stage $size will work and
-					//update dead boards back to 0 ips
-				}
-			}, {
-				'$group': {
-					'_id': '$board',
-					'pph': {
-						'$sum': '$pph'
-					},
-					'ips': {
-						'$addToSet': '$ips'
-					}
-				}
-			}, {
-				'$project': {
-					'ips': {
-						'$size': '$ips'
-					},
-					'pph': 1
-				}
-			}, {
-				'$merge': {
-					'into': 'boards'
-				}
-			}
-		]);
+		return db.aggregate([{
+		    '$unwind': {
+		        'path': '$ips',
+		        'preserveNullAndEmptyArrays': true
+		    }
+		}, {
+		    '$group': {
+		        '_id': '$board',
+		        'pph': {
+		            '$sum': '$pph'
+		        },
+		        'ips': {
+		            '$addToSet': '$ips'
+		        }
+		    }
+		}, {
+		    '$project': {
+		        'ips': {
+		            '$size': '$ips'
+		        },
+		        'pph': 1
+		    }
+		}, {
+		    '$merge': {
+		        'into': 'boards'
+		    }
+		}]).toArray();
 	},
 
 	//reset stats, used at start of each hour
