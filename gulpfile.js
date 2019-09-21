@@ -8,7 +8,8 @@ const gulp = require('gulp')
 	, cleanCSS = require('gulp-clean-css')
 	, uglify = require('gulp-uglify-es').default
 	, del = require('del')
-	, pug = require('gulp-pug')
+	, pug = require('pug')
+	, gulppug = require('gulp-pug')
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/**/*',
@@ -127,7 +128,7 @@ function deletehtml() {
 
 function custompages() {
 	return gulp.src(paths.pug.src)
-		.pipe(pug({
+		.pipe(gulppug({
 			locals: {
 				themes,
 				defaultTheme: configs.boardDefaults.theme
@@ -137,6 +138,9 @@ function custompages() {
 }
 
 function scripts() {
+	//function for templating a post from data i.e. from API used to build posts on site with scripts that match templates
+	const compiledFunction = pug.compileFileClient('views/includes/post.pug', { compileDebug: false, debug: false, name: 'post' });
+	require('fs').writeFileSync('gulp/res/js/post.js', compiledFunction);
 	gulp.src(paths.scripts.src)
 		.pipe(concat('all.js'))
 		.pipe(uglify())
