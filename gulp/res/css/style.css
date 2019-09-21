@@ -425,7 +425,7 @@ a, video, img, input, summary {
 }
 
 .post-file-info:hover {
-	/*word-break: break-all;*/
+	word-break: break-all;
 }
 
 .post-file-info {

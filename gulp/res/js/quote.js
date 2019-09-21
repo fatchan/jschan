@@ -1,15 +1,19 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	var links = document.getElementsByClassName('post-quoters');
+	const links = document.getElementsByClassName('post-quoters');
+	const messageBox = document.getElementById('message');
 
-	var quote = function(e) {
-		const quoteNum = this.textContent.replace('[Reply]', '').split(' ')[0].trim();
-		const messageBox = document.getElementById('message');
-		messageBox.value += `>>${quoteNum}\n`;
+	const addQuote = function(number) {
+		messageBox.value += `>>${number}\n`;
 		messageBox.scrollTop = messageBox.scrollHeight;
+	}
+
+	const quote = function(e) {
+		const quoteNum = this.textContent.replace('[Reply]', '').split(' ')[0].trim();
+		addQuote(quoteNum);
 	};
 
-	for (var i = 0; i < links.length; i++) {
+	for (let i = 0; i < links.length; i++) {
 		links[i].addEventListener('click', quote, false);
 	}
 

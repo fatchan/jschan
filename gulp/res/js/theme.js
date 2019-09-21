@@ -1,6 +1,6 @@
 function changeTheme(e) {
 	//is this the initial load, or an event from changing theme dropdown
-	var theme = e ? this.value : localStorage.getItem('theme');
+	let theme = e ? this.value : localStorage.getItem('theme');
 	//first visit, set theme to default
 	if (!theme) {
 		theme = 'default';
@@ -8,7 +8,7 @@ function changeTheme(e) {
 	//add theme setting to localstorage
 	localStorage.setItem('theme', theme);
 	//check for theme style tag
-	var tempLink = document.getElementById('customtheme');
+	let tempLink = document.getElementById('customtheme');
 	if (theme === 'default') {
 		if (tempLink) {
 			//remove theme style tag if we switching to default
@@ -16,9 +16,9 @@ function changeTheme(e) {
 		}
 	} else {
 		//path of the theme css
-		var path = '/css/themes/'+theme+'.css';
+		const path = '/css/themes/'+theme+'.css';
 		//get the raw css from localstorage
-		var css = localStorage.getItem(path);
+		let css = localStorage.getItem(path);
 		if (!tempLink) {
 			//create the style tag if it doesnt exist
 			tempLink = document.createElement('style');
@@ -29,13 +29,13 @@ function changeTheme(e) {
 			tempLink.innerHTML = css;
 		}
 		//then createa new link rel=stylesheet, and load the css 
-		var themeLink = document.createElement('link');
+		const themeLink = document.createElement('link');
 		themeLink.rel = 'stylesheet';
 		themeLink.id = 'customtheme';
 		themeLink.onload = function() {
 			css = '';
-			var rulesName = themeLink.sheet.rules != null ? 'rules' : 'cssRules'; //browser compatibility shit
-            for(var i = 0; i < themeLink.sheet[rulesName].length; i++) {
+			const rulesName = themeLink.sheet.rules != null ? 'rules' : 'cssRules'; //browser compatibility shit
+            for(let i = 0; i < themeLink.sheet[rulesName].length; i++) {
                 css += themeLink.sheet[rulesName][i].cssText;
             }
 			//update our localstorage with latest version
@@ -53,7 +53,7 @@ changeTheme();
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	var themePicker = document.getElementById('theme-changer');
+	const themePicker = document.getElementById('theme-changer');
 	themePicker.value = localStorage.getItem('theme')
 
 	themePicker.addEventListener('change', changeTheme, false);

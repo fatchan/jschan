@@ -1,12 +1,13 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	var thumbs = document.getElementsByClassName('post-file-src');
+	const thumbs = document.getElementsByClassName('post-file-src');
 
-	var toggle = function(thumb, exp) {
+	const toggle = function(thumb, exp, fn) {
 		const close = exp.previousSibling.innerText === 'Close video' ? exp.previousSibling : null;
 		if (thumb.style.display === 'none') {
 			thumb.style.display = '';
 			exp.style.display = 'none';
+			fn.style.maxWidth = '';
 			if (close) {
 				close.style.display = 'none';
 				exp.pause();
@@ -14,6 +15,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		} else {
 			thumb.style.display = 'none';
 			exp.style.display = '';
+			fn.style.maxWidth = exp.offsetWidth+'px';
 			if (close) {
 				close.style.display = '';
 				exp.play();
@@ -21,12 +23,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 
-	var expand = function(e) {
+	const expand = function(e) {
 		e.preventDefault();
 		const fileLink = this.firstChild;
 		const fileSrc = fileLink.href;
 		const type = this.dataset.type;
 		const thumbElement = fileLink.firstChild;
+		const fileName = this.previousSibling;
 		const next = thumbElement.nextSibling;
 		let expandedElement;
 		if (next) {
@@ -48,7 +51,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					source.onload = function() {
 						thumbElement.style.opacity = '1';
 						fileLink.appendChild(expandedElement);
-						toggle(thumbElement, expandedElement);
+						toggle(thumbElement, expandedElement, fileName);
 					}
 					break;
 				case 'video':
@@ -58,26 +61,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					close.addEventListener('click', function(e) {
 						e.preventDefault();
 						e.stopPropagation();
-						toggle(thumbElement, expandedElement);
+						toggle(thumbElement, expandedElement, fileName);
 					}, true);
 					expandedElement.controls = 'true';
 					source = document.createElement('source');
 					expandedElement.appendChild(source);
 					fileLink.appendChild(expandedElement);
 					fileLink.insertBefore(close, expandedElement);
-					toggle(thumbElement, expandedElement);
+					toggle(thumbElement, expandedElement, fileName);
 					break;
 				deault:
 					break; //uh oh
 			}
 			source.src = fileSrc;
 		} else if (expandedElement) {
-			toggle(thumbElement, expandedElement);
+			toggle(thumbElement, expandedElement, fileName);
 		}
 		return false;
 	};
 
-	for (var i = 0; i < thumbs.length; i++) {
+	for (let i = 0; i < thumbs.length; i++) {
 		thumbs[i].addEventListener('click', expand, false);
 	}
 

@@ -1,8 +1,8 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	var captchaFields = document.getElementsByClassName('captchafield');
+	const captchaFields = document.getElementsByClassName('captchafield');
 
-	var refreshCaptcha = function(e) {
+	const refreshCaptcha = function(e) {
 		if (this.refreshing) {
 			return;
 		}
@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		xhr.send(null);
 	}
 
-	var loadCaptcha = function(e) {
+	const loadCaptcha = function(e) {
 		const captchaDiv = this.previousSibling;
 		const captchaImg = document.createElement('img');
 		const field = this;
@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	};
 
-	for (var i = 0; i < captchaFields.length; i++) {
+	for (let i = 0; i < captchaFields.length; i++) {
 		captchaFields[i].placeholder = 'click to load';
 		captchaFields[i].addEventListener('click', loadCaptcha, { once: true });
 	}
