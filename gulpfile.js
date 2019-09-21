@@ -143,7 +143,7 @@ function scripts() {
 	require('fs').writeFileSync('gulp/res/js/post.js', compiledFunction);
 	gulp.src(paths.scripts.src)
 		.pipe(concat('all.js'))
-		.pipe(uglify())
+//		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src(paths.scripts.src)
 		.pipe(uglify())

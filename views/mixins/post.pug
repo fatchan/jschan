@@ -30,7 +30,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				if post.capcode
 					span.post-capcode #{post.capcode}
 					| 
-				time.post-date(datetime=post.date.toISOString()) #{post.date.toLocaleString(undefined, {hour12:false})}
+				- const postDate = new Date(post.date)
+				time.post-date(datetime=postDate.toISOString()) #{postDate.toLocaleString(undefined, {hour12:false})}
 				| 
 				if post.userId
 					span.user-id(style=`background: #${post.userId}`) #{post.userId}

@@ -35,9 +35,9 @@ function changeTheme(e) {
 		themeLink.onload = function() {
 			css = '';
 			const rulesName = themeLink.sheet.rules != null ? 'rules' : 'cssRules'; //browser compatibility shit
-            for(let i = 0; i < themeLink.sheet[rulesName].length; i++) {
-                css += themeLink.sheet[rulesName][i].cssText;
-            }
+			for(let i = 0; i < themeLink.sheet[rulesName].length; i++) {
+				css += themeLink.sheet[rulesName][i].cssText;
+			}
 			//update our localstorage with latest version
 			localStorage.setItem(path, css);
 			tempLink.innerHTML = css;

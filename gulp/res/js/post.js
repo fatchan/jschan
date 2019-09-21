@@ -5,7 +5,7 @@ function pug_classes_object(r){var a="",n="";for(var o in r)o&&r[o]&&pug_has_own
 function pug_escape(e){var a=""+e,t=pug_match_html.exec(a);if(!t)return e;var r,c,n,s="";for(r=t.index,c=0;r<a.length;r++){switch(a.charCodeAt(r)){case 34:n="&quot;";break;case 38:n="&amp;";break;case 60:n="&lt;";break;case 62:n="&gt;";break;default:continue}c!==r&&(s+=a.substring(c,r)),c=r+1,s+=n}return c!==r?s+a.substring(c,r):s}
 var pug_has_own_property=Object.prototype.hasOwnProperty;
 var pug_match_html=/["&<>]/;
-function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function post(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (post) {pug_mixins["report"] = pug_interp = function(r){
+function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function post(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Date, post) {pug_mixins["report"] = pug_interp = function(r){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv class=\"reports post-container\"\u003E\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"checkedreports\""+pug_attr("value", r.id, true, false)) + "\u002F\u003E\t\u003Cspan\u003EDate: " + (pug_escape(null == (pug_interp = r.date.toLocaleString()) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E \u003Cspan\u003EReason: " + (pug_escape(null == (pug_interp = r.reason) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E";
 };
@@ -55,7 +55,8 @@ pug_html = pug_html + "\u003Cspan class=\"post-tripcode\"\u003E" + (pug_escape(n
 if (post.capcode) {
 pug_html = pug_html + "\u003Cspan class=\"post-capcode\"\u003E" + (pug_escape(null == (pug_interp = post.capcode) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E ";
 }
-pug_html = pug_html + "\u003Ctime" + (" class=\"post-date\""+pug_attr("datetime", post.date.toISOString(), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.date.toLocaleString(undefined, {hour12:false})) ? "" : pug_interp)) + "\u003C\u002Ftime\u003E ";
+const postDate = new Date(post.date)
+pug_html = pug_html + "\u003Ctime" + (" class=\"post-date\""+pug_attr("datetime", postDate.toISOString(), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = postDate.toLocaleString(undefined, {hour12:false})) ? "" : pug_interp)) + "\u003C\u002Ftime\u003E ";
 if (post.userId) {
 pug_html = pug_html + "\u003Cspan" + (" class=\"user-id\""+pug_attr("style", pug_style(`background: #${post.userId}`), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.userId) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E ";
 }
@@ -238,4 +239,4 @@ pug_mixins["report"](r);
 
 }
 };
-pug_mixins["post"](post);}.call(this,"post" in locals_for_with?locals_for_with.post:typeof post!=="undefined"?post:undefined));;return pug_html;}
+pug_mixins["post"](post);}.call(this,"Date" in locals_for_with?locals_for_with.Date:typeof Date!=="undefined"?Date:undefined,"post" in locals_for_with?locals_for_with.post:typeof post!=="undefined"?post:undefined));;return pug_html;}

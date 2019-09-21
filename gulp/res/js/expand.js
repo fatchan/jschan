@@ -84,4 +84,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		thumbs[i].addEventListener('click', expand, false);
 	}
 
+	window.addEventListener('addPost', function(e) {
+		const post = e.detail;
+		const newthumbs = post.getElementsByClassName('post-file-src');
+		for (let i = 0; i < newthumbs.length; i++) {
+			newthumbs[i].addEventListener('click', expand, false);
+		}
+	});
+
 });

@@ -20,4 +20,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		quotes[i].addEventListener('mouseout', toggleHighlightPost, false);
 	}
 
+	window.addEventListener('addPost', function(e) {
+		const post = e.detail;
+		//const newquotes = post.getElementsByClassName('quote');
+		const newquotes = document.getElementsByClassName('quote'); //to get backlinks from replying posts. just an easy way. could make more efficient and only do necessary ones later.
+		for (let i = 0; i < newquotes.length; i++) {
+			newquotes[i].removeEventListener('mouseover', toggleHighlightPost);
+			newquotes[i].removeEventListener('mouseout', toggleHighlightPost);
+			newquotes[i].addEventListener('mouseover', toggleHighlightPost, false);
+			newquotes[i].addEventListener('mouseout', toggleHighlightPost, false);
+		}
+	});
+
+
 });

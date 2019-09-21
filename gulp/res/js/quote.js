@@ -17,4 +17,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		links[i].addEventListener('click', quote, false);
 	}
 
+	window.addEventListener('addPost', function(e) {
+		const post = e.detail;
+		const newlinks = post.getElementsByClassName('post-quoters');
+		for (let i = 0; i < newlinks.length; i++) {
+			newlinks[i].addEventListener('click', quote, false);
+		}
+	});
+
 });
