@@ -1,6 +1,7 @@
 'use strict';
 
 const gulp = require('gulp')
+	, fs = require('fs')
 	, configs = require(__dirname+'/configs/main.json')
 	, themes = require(__dirname+'/helpers/themes.js')
 	, less = require('gulp-less')
@@ -20,11 +21,11 @@ const gulp = require('gulp')
 			dest: 'static/img/'
 		},
 		scripts: {
-			src: 'gulp/res/js/*.js',
+			src: 'gulp/res/js',
 			dest: 'static/js/'
 		},
 		pug: {
-			src: 'views/custompages/*.pug',
+			src: 'views/',
 			dest: 'static/html/'
 		}
 	};
@@ -127,7 +128,7 @@ function deletehtml() {
 }
 
 function custompages() {
-	return gulp.src(paths.pug.src)
+	return gulp.src([`${paths.pug.src}/custompages/*.pug`, `${paths.pug.src}/pages/404.pug`])
 		.pipe(gulppug({
 			locals: {
 				themes,
@@ -138,18 +139,17 @@ function custompages() {
 }
 
 function scripts() {
-	//function for templating a post from data i.e. from API used to build posts on site with scripts that match templates
-	const fs = require('fs');
-	const compiledFunction = pug.compileFileClient('views/includes/post.pug', { compileDebug: false, debug: false, name: 'post' });
-	fs.writeFileSync('gulp/res/js/post.js', compiledFunction);
 	try {
+		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
-	} catch (e) {}
-	gulp.src(paths.scripts.src)
+	} catch (e) {
+		//already exists, ignore error
+	}
+	gulp.src(`${paths.scripts.src}/*.js`)
 		.pipe(concat('all.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
-	return gulp.src(paths.scripts.src)
+	return gulp.src(`${paths.scripts.src}/*.js`)
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 }

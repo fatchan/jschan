@@ -1,0 +1,144 @@
+upstream chan {
+	server localhost:7000;
+}
+
+server {
+
+	server_name domain.com www.domain.com;
+
+	error_page 404 = /path/to/jschan/static/html/404.html;
+
+	if ($request_uri ~ ^/(?!captcha|randombanner|forms|logout|socket\.io)) {
+		rewrite ^([^.\?]*[^/])$ $1/ redirect;
+		rewrite ^(.+)/$ $1/index.html redirect;
+	}
+
+	location = /robots.txt {
+		access_log off;
+		add_header Content-Type text/plain;
+		return 200 "User-agent: *\nDisallow:\n";
+	}
+
+	location = /favicon.ico {
+		access_log off;
+		expires max;
+		add_header Cache-Control "public";
+		root /path/to/jschan/static/img;
+		try_files $uri =404;
+	}
+
+	location = / {
+		return 302 https://$host/index.html;
+	}
+
+	location /captcha {
+		access_log off;
+		root /path/to/jschan/static/captcha;
+		if ($cookie_captchaid) {
+			return 302 https://$host/captcha/$cookie_captchaid.jpg;
+		}
+		try_files /$cookie_captchaid.jpg @backend;
+	}
+
+	location / {
+		proxy_buffering off;
+		proxy_pass http://chan$request_uri;
+		proxy_http_version 1.1;
+
+		#websocket
+		proxy_set_header Host $host;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection 'upgrade';
+		proxy_cache_bypass $http_upgrade;
+
+		proxy_set_header X-Forwarded-Proto https;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Country-Code $geoip_country_code;
+		proxy_set_header X-Country-Name $geoip_country_name;
+	}
+
+	location @backend {
+		proxy_buffering off;
+		proxy_pass http://chan$request_uri;
+		proxy_http_version 1.1;
+		proxy_set_header X-Forwarded-Proto https;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Country-Code $geoip_country_code;
+		proxy_set_header X-Country-Name $geoip_city_country_name;
+		proxy_set_header Connection '';
+		proxy_set_header Host $host;
+	}
+
+	# HTML
+	location ~* \.html$ {
+		expires 0;
+		add_header Cache-Control "public";
+		root /path/to/jschan/static/html;
+		try_files $uri @backend;
+	}
+
+	# JSON
+	location ~* \.json$ {
+		expires 0;
+		add_header Cache-Control "public";
+		root /path/to/jschan/static/json;
+		try_files $uri =404;
+		#json doesnt hit backend if it doesnt exist yet.
+	}
+
+	# CSS
+	location ~* \.css$ {
+		access_log off;
+		expires 1d;
+		add_header Cache-Control "public";
+		root /path/to/jschan/static;
+		try_files $uri =404;
+	}
+
+	# Scripts
+	location ~* \.js$ {
+		expires 1d;
+		access_log off;
+		root /path/to/jschan/static;
+		add_header Cache-Control "public";
+		try_files $uri =404;
+	}
+
+	# Images
+	location ~* \.(png|jpg|jpeg|gif|mp4|webm|mov|svg)$ {
+		access_log off;
+		expires max;
+		add_header Cache-Control "public";
+		root /path/to/jschan/static;
+		try_files $uri =404;
+	}
+
+	listen 443 ssl http2; # managed by Certbot
+	listen [::]:443 ssl http2; # managed by Certbot
+	ssl_certificate /etc/letsencrypt/live/domain.com/fullchain.pem; # managed by Certbot
+	ssl_certificate_key /etc/letsencrypt/live/domain.com/privkey.pem; # managed by Certbot
+	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+
+server {
+
+	listen 80;
+	listen [::]:80;
+	server_name domain.com www.domain.com;
+
+	if ($host = www.domain.com) {
+		return 301 https://$host$request_uri;
+	} # managed by Certbot
+
+	if ($host = domain.com) {
+		return 301 https://$host$request_uri;
+	} # managed by Certbot
+
+	return 444; # managed by Certbot
+
+}
