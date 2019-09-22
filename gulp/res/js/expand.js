@@ -46,10 +46,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			switch(type) {
 				case 'image':
 					thumbElement.style.opacity = '0.5';
+					thumbElement.style.cursor = 'wait'
 					expandedElement = document.createElement('img');
 					source = expandedElement;
 					source.onload = function() {
-						thumbElement.style.opacity = '1';
+						thumbElement.style.opacity = '';
+						thumbElement.style.cursor = '';
 						fileLink.appendChild(expandedElement);
 						toggle(thumbElement, expandedElement, fileName);
 					}

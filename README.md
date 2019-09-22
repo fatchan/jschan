@@ -5,25 +5,25 @@ Still in development, so beware if attempting to run a public instance.
 Demo site running at https://fatpeople.lol
 
 ## Goals
-- Oldschool imageboard look
-- Works on TOR with javascript disabled (maybe the name is a bit ironic)
-- Leverage nginx to serve static files and handle GeoIP lookups
+- Oldschool imageboard look, with some modern touches
+- Support users that have javascript disabled (TOR users, or the security conscious)
+- Leverage nginx to serve static files, do GeoIP lookups and various other things
 
 ## Features
-- [x] Post styling (markdown-esque)
-- [x] Quote linking and replies
-- [x] Multiple files per post
 - [x] User created boards ala infinity
 - [x] Captcha and basic antispam
 - [x] Read-only JSON api
 - [x] Public modlogs
 - [x] Multi-select posts for moderation actions/reports
-- [x] Fully functional for users with javascript disabled
+- [x] Post styling & quote linking
+- [x] Backlinks shown without javascript
+- [x] Multiple files per post
+- [x] Thread view posts added live through websocket
 
 ## Todo
-- Staff post editing/moving/thread merging
-- IP range bans + IP ban history
-- Configuration editor
+- Finish moderation tools (post editing, moving/thread merging, file hash bans, range bans, ban history)
+- Configuration editor on the site without touching config files
+- Global settings page for filters, etc
 - Overboard/multiboard/meta boards
 - Boards list and search page
 - User created board custom pages
@@ -32,13 +32,13 @@ Demo site running at https://fatpeople.lol
 ## Setup
 Please note:
 - These are not step-by-step or complete instructions.
-- For debian.
+- For debian(-like)
 
 ##### Requirements
 - Linux
 - Node.js (to run the app)
 - MongoDB (database, duh)
-- Redis (sessions, queue, locks and caching)
+- Redis (sessions, build task queue, locks, caching, websocket data)
 - Nginx (handle https, serve static content, GeoIP lookup)
 - Certbot/letsencrypt (for https cert)
 - Imagemagick (thumbnailing images)
@@ -67,11 +67,8 @@ Now clone the repo, browse to the folder and set some things up.
 ```bash
 # in repo directory
 $ nano configs/main.json #edit config with appropriate data
-$ npm i
-$ npm i -g gulp pm2
-$ gulp
-$ npm run-script setup
-$ npm run-script start #this will start the backend
-$ pm2 list #list running apps
+$ npm run-script setup #install dependencies, pm2, gulp and run gulp tasks
+$ npm run-script start #start all the backend processes
+$ pm2 list #list running pm2 processes
 $ pm2 logs #see logs
 ```
