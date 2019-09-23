@@ -32,7 +32,7 @@ const express = require('express')
 	const { redisClient } = require(__dirname+'/redis.js');
 
 	// connect socketio
-	console.log('CONNECTING TO SOCKETIO');
+	console.log('STARTING WEBSOCKET');
 	Socketio.connect(server);
 
 	// disable useless express header
@@ -102,28 +102,28 @@ const express = require('express')
 	//listen
 	server.listen(configs.port, '127.0.0.1', () => {
 		new CachePugTemplates({ app, views }).start();
-		console.log(`listening on port ${configs.port}`);
+		console.log(`LISTENING ON :${configs.port}`);
 		//let PM2 know that this is ready for graceful reloads and to serialise startup
 		if (typeof process.send === 'function') {
 			//make sure we are a child process of PM2 i.e. not in dev
-			console.info('sending ready signal to PM2');
+			console.log('SENT READY SIGNAL TO PM2');
 			process.send('ready');
 		}
 	});
 
 	//listen for sigint from PM2
 	process.on('SIGINT', () => {
-		console.info('SIGINT SIGNAL RECEIVED');
+		console.log('SIGINT SIGNAL RECEIVED');
 		// Stops the server from accepting new connections and finishes existing connections.
 		server.close((err) => {
 			// if error, log and exit with error (1 code)
-			console.info('CLOSING SERVER');
+			console.log('CLOSING SERVER');
 			if (err) {
 				console.error(err);
 				process.exit(1);
 			}
 			// close database connection
-			console.info('DISCONNECTING MONGODB');
+			console.log('DISCONNECTING MONGODB');
 			Mongo.client.close();
 			//close redis connection
 			console.log('DISCONNECTING REDIS')

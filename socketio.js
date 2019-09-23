@@ -17,6 +17,7 @@ module.exports = {
 	startRooms: () => {
 		module.exports.io.on('connection', socket => {
 			socket.on('room', room => {
+//TODO: add some validation here that rooms exist or AT LEAST a regex for valid thread rooms
 				socket.join(room);
 			});
 		});

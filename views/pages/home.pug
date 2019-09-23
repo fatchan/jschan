@@ -27,19 +27,22 @@ block content
 				tr
 					th Board
 					th Description
-					th(style='cursor:help' title='Posts in the last hour') PPH
-					th(style='cursor:help' title='Unique IPs that have posted in the last 24h') Active Users
+					th.help(title='Posts in the last hour') PPH
+					th.help(title='Unique posters in the last 24h') Active Users
 					th Total Posts
 				each board in boards
 					tr
-						td: a(href=`/${board._id}/`) /#{board._id}/ - #{board.settings.name}
+						td 
+							if board.settings.sfw
+								span.help(title='Safe for work') &#128188; 
+							a(href=`/${board._id}/`) /#{board._id}/ - #{board.settings.name}
 						td #{board.settings.description}
 						td #{board.pph}
 						td #{board.ips}
 						td #{board.sequence_value-1}
 		.table-container.flex-center.mv-10.text-center
 			table
-				tr(style='cursor:help' title='Stats include hidden boards')
+				tr.help(title='Total stats including unlisted boards')
 					th Total Posts
 					th Total PPH
 					th Active Users
@@ -66,12 +69,15 @@ block content
 					tr
 						th Board
 						th Description
-						th(style='cursor:help' title='Posts in the last hour') PPH
-						th(style='cursor:help' title='Unique IPs that have posted in the last 24h') Active Users
+						th.help(title='Posts in the last hour') PPH
+						th.help(title='Unique posters in the last 24h') Active Users
 						th Total Posts
 					each board in webringBoards
 						tr
-							td: a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
+							td
+								if !board.nsfw
+									span.help(title='Safe for work') &#128188; 
+								a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
 							td #{board.subtitle || '-'}
 							td #{board.postsPerHour || '-'}
 							td #{board.uniqueUsers || '-'}

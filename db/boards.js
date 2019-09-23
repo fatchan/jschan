@@ -115,6 +115,7 @@ module.exports = {
 				'sequence_value': 1,
 				'pph': 1,
 				'ips': 1,
+				'settings.sfw': 1,
 				'settings.description': 1,
 				'settings.name': 1,
 			}

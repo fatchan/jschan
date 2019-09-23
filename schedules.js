@@ -16,16 +16,18 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 
 	//delete files for expired captchas
 	const deleteCaptchas = require(__dirname+'/schedules/deletecaptchas.js');
-	setInterval(async () => {
-		await deleteCaptchas().catch(e => console.error);
+	deleteCaptchas().catch(e => console.error);
+	setInterval(() => {
+		deleteCaptchas().catch(e => console.error);
 	}, msTime.minute*5);
 
 	//update webring
 	if (enableWebring) {
 		const updateWebring = require(__dirname+'/schedules/webring.js');
-		setInterval(async () => {
-			await updateWebring().catch(e => console.error);
-		}, msTime.day);
+		updateWebring().catch(e => console.error);
+		setInterval(() => {
+			updateWebring().catch(e => console.error);
+		}, msTime.hour);
 	}
 
 	//update board stats and homepage
@@ -41,8 +43,9 @@ const msTime = require(__dirname+'/helpers/mstime.js')
 
 	//file pruning
 	const pruneFiles = require(__dirname+'/schedules/prune.js');
-	setInterval(async () => {
-		await pruneFiles().catch(e => console.error);
+	pruneFiles().catch(e => console.error);
+	setInterval(() => {
+		pruneFiles().catch(e => console.error);
 	}, msTime.day);
 
 })();

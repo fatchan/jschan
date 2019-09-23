@@ -356,6 +356,10 @@ td, th {
 	cursor: pointer;
 }
 
+.help {
+	cursor: help;
+}
+
 #postform:target + .toggle-summary {
 	visibility: hidden;
 }
