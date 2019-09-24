@@ -8,7 +8,7 @@ const actions = [
 	{name:'lock', global:false, auth:3, passwords:false, build:true},
 	{name:'sticky', global:false, auth:3, passwords:false, build:true},
 	{name:'cyclic', global:false, auth:3, passwords:false, build:true},
-	{name:'sage', global:false, auth:3, passwords:false, build:true},
+	{name:'bumplock', global:false, auth:3, passwords:false, build:true},
 	{name:'report', global:false, auth:4, passwords:false, build:false},
 	{name:'global_report', global:true, auth:4, passwords:false, build:false},
 	{name:'delete_ip_board', global:true, auth:3, passwords:false, build:true},

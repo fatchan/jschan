@@ -10,15 +10,15 @@ module.exports = (posts) => {
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'No thread(s) to sage',
+			message: 'No thread(s) to bumplock',
 		};
 	}
 
 	return {
-		message: `Toggled Permasage for ${filteredposts.length} thread(s)`,
+		message: `Toggled bumplock for ${filteredposts.length} thread(s)`,
 		action: '$bit',
 		query: {
-			'saged': {
+			'bumplocked': {
 				'xor': NumberInt(1)
 			},
 		}
