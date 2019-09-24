@@ -37,7 +37,7 @@ module.exports = {
 	},
 
 	updateBoards: () => {
-//todo: figure out how to get single result set and $group $facets so I can fix this and improve resetStats
+//todo: improve this query
 		return db.aggregate([{
 		    '$unwind': {
 		        'path': '$ips',
@@ -47,7 +47,7 @@ module.exports = {
 		    '$group': {
 		        '_id': '$board',
 		        'pph': {
-		            '$sum': '$pph'
+		            '$last': '$pph'
 		        },
 		        'ips': {
 		            '$addToSet': '$ips'

@@ -405,35 +405,38 @@ module.exports = async (req, res, next) => {
 		'board': res.locals.board
 	});
 	res.redirect(successRedirect);
-	const projectedPost = {
-        'date': data.date,
-        'name': data.name,
-        'country': data.country,
-        'board': req.params.board,
-        'tripcode': data.tripcode,
-        'capcode': data.capcode,
-        'subject': data.subject,
-        'message': data.message,
-        'nomarkup': data.nomarkup,
-        'thread': data.thread,
-		'postId': postId,
-        'email': data.email,
-        'spoiler': data.spoiler,
-        'banmessage': null,
-        'userId': data.userId,
-        'files': data.files,
-        'reports': [],
-        'globalreports': [],
-        'quotes': data.quotes,
-        'backlinks': [],
-        'replyposts': 0,
-        'replyfiles': 0,
-        'sticky': data.sticky,
-        'locked': data.locked,
-        'bumplocked': data.bumplocked,
-        'cyclic': data.cyclic,
-    }
-	Socketio.emitRoom(`${res.locals.board._id}-${data.thread || postId}`, 'newPost', projectedPost);
+	if (data.thread) {
+		//only emit for replies
+		const projectedPost = {
+        	'date': data.date,
+        	'name': data.name,
+        	'country': data.country,
+        	'board': req.params.board,
+        	'tripcode': data.tripcode,
+        	'capcode': data.capcode,
+        	'subject': data.subject,
+        	'message': data.message,
+        	'nomarkup': data.nomarkup,
+        	'thread': data.thread,
+			'postId': postId,
+        	'email': data.email,
+        	'spoiler': data.spoiler,
+        	'banmessage': null,
+        	'userId': data.userId,
+        	'files': data.files,
+        	'reports': [],
+        	'globalreports': [],
+        	'quotes': data.quotes,
+        	'backlinks': [],
+        	'replyposts': 0,
+        	'replyfiles': 0,
+        	'sticky': data.sticky,
+        	'locked': data.locked,
+        	'bumplocked': data.bumplocked,
+        	'cyclic': data.cyclic,
+    	}
+		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
+	}
 
 	//now add other pages to be built in background
 	if (enableCaptcha) {
