@@ -71,7 +71,7 @@ module.exports = async (req, res, next) => {
 		'theme': req.body.theme ? req.body.theme : oldSettings.theme,
 		'announcement': {
 			'raw': req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
-			'markdown': markdownAnnouncement || oldSettings.announcement.markdown
+			'markdown': markdownAnnouncement
 		},
 		'allowedFileTypes': {
 			'animatedImage': req.body.files_allow_animated_image ? true : false,
