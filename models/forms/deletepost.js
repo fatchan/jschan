@@ -62,7 +62,7 @@ module.exports = async (posts, board, all=false) => {
 	}, { postFiles: [], postBacklinks: [], postMongoIds: [] });
 
 	if (postFiles.length > 0) {
-		const fileNames = [...new Set(postFiles.map(x => x.filename))];
+		const fileNames = postFiles.map(x => x.filename)//[...new Set(postFiles.map(x => x.filename))];
         await Files.decrement(fileNames);
 	}
 

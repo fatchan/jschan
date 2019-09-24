@@ -6,9 +6,9 @@ const Files = require(__dirname+'/../db/files.js')
 
 module.exports = async() => {
 	//todo: make this not a race condition, but it only happens daily so ¯\_(ツ)_/¯
-	const files = await Files.db.aggregate({
+	const files = await Files.db.find({
 		'count': {
-			'$lte': 1
+			'$lt': 1
 		}
 	}, {
 		'projection': {

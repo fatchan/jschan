@@ -16,9 +16,9 @@ module.exports = async (uri) => {
 		await deletePosts(allPosts, uri, true);
 	}
 	await Promise.all([
-		Modlogs.deleteBoard(uri), //bans for the board
+		Modlogs.deleteBoard(uri), //modlogs for the board
 		Bans.deleteBoard(uri), //bans for the board
-		Stats.deleteBoard(uri), //bans for the board
+		Stats.deleteBoard(uri), //stats for the board
 		remove(`${uploadDirectory}html/${uri}/`), //html
 		remove(`${uploadDirectory}json/${uri}/`) //json
 	]);
