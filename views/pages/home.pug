@@ -28,8 +28,8 @@ block content
 					th Board
 					th Description
 					th.help(title='Posts in the last hour') PPH
-					th.help(title='Unique posters in the last 24h') Active Users
-					th Total Posts
+					th.help(title='Unique posters in the last 24h') Users
+					th Posts
 				each board in boards
 					tr
 						td 
@@ -45,7 +45,7 @@ block content
 				tr.help(title='Total stats including unlisted boards')
 					th Total Posts
 					th Total PPH
-					th Active Users
+					th Total Users
 					th Active Content
 				tr
 					td #{totalStats.posts}
@@ -71,8 +71,8 @@ block content
 						th Board
 						th Description
 						th.help(title='Posts in the last hour') PPH
-						th.help(title='Unique posters in the last 24h') Active Users
-						th Total Posts
+						th.help(title='Unique posters in the last 24h') Users
+						th.pr-20 Posts
 					each board in webringBoards
 						tr
 							td
@@ -82,6 +82,6 @@ block content
 							td #{board.subtitle || '-'}
 							td #{board.postsPerHour || '-'}
 							td #{board.uniqueUsers || '-'}
-							td #{board.totalPosts || '-'}
+							td.pr-20 #{board.totalPosts || '-'}
 			p
 				small: a(href='https://gitlab.com/alogware/LynxChanAddon-Webring') webring?

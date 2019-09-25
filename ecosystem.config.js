@@ -3,7 +3,11 @@ module.exports = {
 	apps : [{
 		name: 'build-worker',
 		script: 'worker.js',
-		instances: 1, //could increase if building is getting backed up
+		instances: 1,
+		/*
+			increase instances if building is getting backed up,
+			best to keep at numCPUs-1 to prevent server choke under high load though.
+		*/
 		autorestart: true,
 		watch: false,
 		max_memory_restart: '1G',
@@ -32,7 +36,7 @@ module.exports = {
 		}
 	}, {
 		name: 'schedules',
-		script: 'schedules.js',
+		script: 'schedules/index.js',
 		instances: 1,
 		autorestart: true,
 		watch: false,
