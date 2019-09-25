@@ -1,0 +1,11 @@
+img {
+	width:200px;
+	height:80px;
+	margin:0 auto;
+}
+input {
+	position:fixed;
+	left:-1px;
+	bottom:-1px;
+	opacity:0.9;
+}

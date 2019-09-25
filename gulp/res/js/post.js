@@ -58,7 +58,7 @@ pug_html = pug_html + "\u003Cspan class=\"post-capcode\"\u003E" + (pug_escape(nu
 const postDate = new Date(post.date)
 pug_html = pug_html + "\u003Ctime" + (" class=\"post-date\""+pug_attr("datetime", postDate.toISOString(), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = postDate.toLocaleString(undefined, {hour12:false})) ? "" : pug_interp)) + "\u003C\u002Ftime\u003E ";
 if (post.userId) {
-pug_html = pug_html + "\u003Cspan" + (" class=\"user-id\""+pug_attr("style", pug_style(`background: #${post.userId}`), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.userId) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E ";
+pug_html = pug_html + "\u003Cspan" + (" class=\"user-id\""+pug_attr("style", pug_style(`background-color: #${post.userId}`), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.userId) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E ";
 }
 pug_html = pug_html + "\u003C\u002Flabel\u003E\u003Cspan class=\"post-links\"\u003E\u003Ca" + (" class=\"no-decoration\""+pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003ENo.\u003C\u002Fa\u003E\u003Cspan class=\"post-quoters\"\u003E\u003Ca" + (" class=\"no-decoration\""+pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (!post.thread) {

@@ -5,8 +5,15 @@ upstream chan {
 server {
 
 	server_name domain.com www.domain.com;
+	server_tokens off;
+	error_page 404 = /home/tom/jschan/static/html/404.html;
 
-	error_page 404 = /path/to/jschan/static/html/404.html;
+	add_header Cache-Control "public";
+	add_header Content-Security-Policy "Content-Security-Policy: default-src 'none'; img-src 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'";
+	add_header Referrer-Policy "same-origin";
+	add_header X-Frame-Options "sameorigin";
+	add_header X-Content-Type-Options "nosniff";
+	add_header X-XSS-Protection "1; mode=block";
 
 	if ($request_uri ~ ^/(?!captcha|randombanner|forms|logout|socket\.io)) {
 		rewrite ^([^.\?]*[^/])$ $1/ redirect;
@@ -22,7 +29,6 @@ server {
 	location = /favicon.ico {
 		access_log off;
 		expires max;
-		add_header Cache-Control "public";
 		root /path/to/jschan/static/img;
 		try_files $uri =404;
 	}
@@ -74,7 +80,6 @@ server {
 	# HTML
 	location ~* \.html$ {
 		expires 0;
-		add_header Cache-Control "public";
 		root /path/to/jschan/static/html;
 		try_files $uri @backend;
 	}
@@ -82,7 +87,6 @@ server {
 	# JSON
 	location ~* \.json$ {
 		expires 0;
-		add_header Cache-Control "public";
 		root /path/to/jschan/static/json;
 		try_files $uri =404;
 		#json doesnt hit backend if it doesnt exist yet.
@@ -92,7 +96,6 @@ server {
 	location ~* \.css$ {
 		access_log off;
 		expires 1d;
-		add_header Cache-Control "public";
 		root /path/to/jschan/static;
 		try_files $uri =404;
 	}
@@ -102,7 +105,6 @@ server {
 		expires 1d;
 		access_log off;
 		root /path/to/jschan/static;
-		add_header Cache-Control "public";
 		try_files $uri =404;
 	}
 
@@ -110,7 +112,6 @@ server {
 	location ~* \.(png|jpg|jpeg|gif|mp4|webm|mov|svg)$ {
 		access_log off;
 		expires max;
-		add_header Cache-Control "public";
 		root /path/to/jschan/static;
 		try_files $uri =404;
 	}

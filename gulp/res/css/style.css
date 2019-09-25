@@ -82,6 +82,9 @@ pre {
 .text-center {
 	text-align: center;
 }
+.fw {
+	width: 100%;
+}
 .pr-20 {
 	padding-right: 20px;
 }
@@ -197,6 +200,10 @@ p {
 .detected {
 	background: #FAF8F8;
 	color: #3060A8;
+}
+
+.horscroll {
+	overflow-x:auto;
 }
 
 .spoiler {
@@ -397,6 +404,7 @@ td, th {
 
 .user-id {
 	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+	background: attr(data-user-id);
 	color: white;
 	padding: 0px 2px;
 	border: 1px solid rgba(0, 0, 0, 0.4);
@@ -737,7 +745,7 @@ table.boardtable th:nth-child(3),table.boardtable th:nth-child(4),table.boardtab
 @media only screen and (max-width: 600px) {
 
 	table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
-	table.boardtable td:nth-child(5), table.boardtable th:nth-child(5) {
+	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4) {
 		display: none;
 	}
 

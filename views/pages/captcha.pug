@@ -2,7 +2,8 @@ doctype html
 html
 	head
 		link(rel='stylesheet', href='/css/style.css')
-	body(style='margin:0;padding:0;')
-		img(src='/captcha', style='width:200px;height:80px;margin:0 auto;')
+		link(rel='stylesheet', href='/css/nscaptcha.css')
+	body.no-m-p
+		img(src='/captcha')
 		form(action='/forms/newcaptcha', method='POST')
-			input(style='position:fixed;left:-1px;bottom:-1px;opacity:0.9;' type='submit' value='🗘')
+			input(type='submit' value='🗘')
