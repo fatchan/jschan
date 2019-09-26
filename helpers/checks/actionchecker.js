@@ -11,6 +11,7 @@ const actions = [
 	{name:'bumplock', global:false, auth:3, passwords:false, build:true},
 	{name:'report', global:false, auth:4, passwords:false, build:false},
 	{name:'global_report', global:true, auth:4, passwords:false, build:false},
+	{name:'move', global:false, auth:3, passwords:false, build:true},
 	{name:'delete_ip_board', global:true, auth:3, passwords:false, build:true},
 	{name:'delete_ip_global', global:true, auth:1, passwords:false, build:true},
 	{name:'dismiss', global:false, auth:3, passwords:false, build:false},

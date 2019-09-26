@@ -51,6 +51,11 @@ details.toggle-label
 		label
 			input(type='text', name='log_message', placeholder='modlog message' autocomplete='off')
 		label
+			input.post-check(type='checkbox', name='move' value='1')
+			| Move
+		label
+			input(type='number', name='move_to_thread', placeholder='destination thread No.' autocomplete='off')
+		label
 			input.post-check(type='checkbox', name='sticky' value='1')
 			| Toggle Sticky
 		label

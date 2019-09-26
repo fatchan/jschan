@@ -7,13 +7,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitize = require('sanitize-html')
-	, sanitizeOptions = {
-		allowedTags: [ 'span', 'a', 'em', 'strong', 'small' ],
-		allowedAttributes: {
-			'a': [ 'href', 'class' ],
-			'span': [ 'class' ]
-		}
-	}
+	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
 
 module.exports = async (posts, board, all=false) => {
 
@@ -125,7 +119,7 @@ module.exports = async (posts, board, all=false) => {
 					//redo the markup
 					let message = simpleMarkdown(post.nomarkup);
 					const { quotedMessage, threadQuotes } = await linkQuotes(post.board, post.nomarkup, post.thread);
-					message = sanitize(quotedMessage, sanitizeOptions);
+					message = sanitize(quotedMessage, sanitizeOptions.after);
 					bulkWrites.push({
 						'updateOne': {
 		                	'filter': {

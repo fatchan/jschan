@@ -12,6 +12,7 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, deletePostsFiles = require(__dirname+'/deletepostsfiles.js')
 	, reportPosts = require(__dirname+'/reportpost.js')
 	, dismissReports = require(__dirname+'/dismissreport.js')
+	, movePosts = require(__dirname+'/moveposts.js')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
@@ -52,18 +53,16 @@ module.exports = async (req, res, next) => {
 		const post = res.locals.posts[i];
 		if (!boardThreadMap[post.board]) {
 			boardThreadMap[post.board] = {
-				'directThreads': false,
+				'directThreads': new Set(),
 				'threads': new Set()
 			};
 		}
 		if (!post.thread) {
 			//a thread was directly selected on this board, not just posts. so we handle deletes differently
-			boardThreadMap[post.board].directThreads = true;
+			boardThreadMap[post.board].directThreads.add(post.postId);
 		}
 		const threadId = post.thread || post.postId;
-		if (!boardThreadMap[post.board].threads.has(threadId)) {
-			boardThreadMap[post.board].threads.add(threadId);
-		}
+		boardThreadMap[post.board].threads.add(threadId);
 	}
 
 	const beforePages = {};
@@ -202,6 +201,23 @@ module.exports = async (req, res, next) => {
 			}
 			messages.push(message);
 		}
+		if (req.body.move) {
+			if (boardThreadMap[req.params.board].directThreads.size > 0) {
+				const threadIds = [...boardThreadMap[req.params.board].directThreads];
+				const fetchMovePosts = await Posts.db.find({
+		            'board': req.params.board,
+					'thread': {
+		                '$in': threadIds
+					}
+		        }).toArray();
+	            res.locals.posts = res.locals.posts.concat(fetchMovePosts);
+			}
+			const { message, action } = await movePosts(req, res);
+			if (action) {
+				modlogActions.push('Moved');
+			}
+			messages.push(message);
+		}
 	}
 	if (Object.keys(combinedQuery).length > 0) {
 		await Posts.db.updateMany({
@@ -303,7 +319,8 @@ module.exports = async (req, res, next) => {
 		for (let i = 0; i < threadBoards.length; i++) {
 			const threadBoard = threadBoards[i];
 			//convert this to an array while we are here
-			boardThreadMap[threadBoard].threads = [...boardThreadMap[threadBoard].threads]
+			boardThreadMap[threadBoard].threads = [...boardThreadMap[threadBoard].threads];
+			boardThreadMap[threadBoard].directThreads = [...boardThreadMap[threadBoard].directThreads];
 			queryOrs.push({
 				'board': threadBoard,
 				'postId': {
@@ -342,6 +359,15 @@ module.exports = async (req, res, next) => {
 			const bounds = threadBounds[boardName];
 			const board = buildBoards[boardName];
 			//rebuild impacted threads
+			if (req.body.move) {
+				buildQueue.push({
+                    'task': 'buildThread',
+                    'options': {
+                        'threadId': req.body.move_to_thread,
+                        'board': board,
+                    }
+                });
+			}
 			for (let j = 0; j < boardThreadMap[boardName].threads.length; j++) {
 				buildQueue.push({
 					'task': 'buildThread',
@@ -354,10 +380,10 @@ module.exports = async (req, res, next) => {
 			//refersh any pages affected
 			const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
 			let catalogRebuild = true;
-			if (beforePages[boardName] && beforePages[boardName] !== afterPages) {
-				//amount of pages changed, rebuild all pages and delete  any further pages (if pages amount decreased)
+			if ((beforePages[boardName] && beforePages[boardName] !== afterPages)
+				|| req.body.move) { //handle moves here since dates would change and not work in old/new page calculations
 				if (afterPages < beforePages[boardName]) {
-					//amount of pages decreased
+					//amount of pages changed, rebuild all pages and delete  any further pages (if pages amount decreased)
 					for (let k = beforePages[boardName]; k > afterPages; k--) {
 						//deleting html for pages that no longer should exist
 						parallelPromises.push(remove(`${uploadDirectory}html/${boardName}/${k}.html`));
@@ -377,7 +403,7 @@ module.exports = async (req, res, next) => {
 				const threadPageOldest = await Posts.getThreadPage(boardName, bounds.oldest);
 				const threadPageNewest = bounds.oldest.postId === bounds.newest.postId ? threadPageOldest : await Posts.getThreadPage(boardName, bounds.newest);
 				if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
-					if (!boardThreadMap[boardName].directThreads) {
+					if (boardThreadMap[boardName].directThreads.length === 0) {
 						//only deleting posts from threads, so thread order wont change, thus we dont delete all pages after
 						buildQueue.push({
 							'task': 'buildBoardMultiple',
@@ -426,7 +452,7 @@ module.exports = async (req, res, next) => {
 							'endpage': afterPages,
 						}
 					});
-					if (!boardThreadMap[boardName].directThreads) {
+					if (boardThreadMap[boardName].directThreads.length === 0) {
 						catalogRebuild = false;
 						//these actions dont affect the catalog tile since not on an OP and dont change reply/image counts
 					}

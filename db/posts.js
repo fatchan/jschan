@@ -131,7 +131,7 @@ module.exports = {
 
 	getThread: async (board, id) => {
 		// get thread post and potential replies concurrently
-		const data = await Promise.all([
+		const [thread, replies] = await Promise.all([
 			db.findOne({
 				'postId': id,
 				'board': board,
@@ -148,9 +148,8 @@ module.exports = {
 			module.exports.getThreadPosts(board, id)
 		])
 		// attach the replies to the thread post
-		const thread = data[0];
-		if (thread) {
-			thread.replies = data[1];
+		if (thread && replies) {
+			thread.replies = replies;
 		}
 		return thread;
 	},
@@ -417,8 +416,33 @@ module.exports = {
 		return db.deleteMany();
 	},
 
+	move: (ids, dest) => {
+console.log(ids, dest)
+		return db.updateMany({
+			'_id': {
+				'$in': ids
+			}
+		}, {
+			'$set': {
+				'thread': dest
+			}
+		});
+	},
+
+	threadExists: (board, thread) => {
+		return db.findOne({
+			'postId': thread,
+			'board': board,
+			'thread': null,
+		}, {
+			'projection': {
+				'_id': 1
+			}
+		});
+	},
+
 	exists: async (req, res, next) => {
-		const thread = await module.exports.getThread(req.params.board, req.params.id);
+		const thread = await module.exports.threadExists(req.params.board, req.params.id);
 		if (!thread) {
 			return res.status(404).render('404');
 		}
