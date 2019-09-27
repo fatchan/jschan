@@ -87,7 +87,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	window.addEventListener('addPost', function(e) {
-		const post = e.detail;
+		const post = e.detail.post;
 		const newthumbs = post.getElementsByClassName('post-file-src');
 		for (let i = 0; i < newthumbs.length; i++) {
 			newthumbs[i].addEventListener('click', expand, false);

@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	window.addEventListener('addPost', function(e) {
-		const post = e.detail;
+		const post = e.detail.post;
 		const newlinks = post.getElementsByClassName('post-quoters');
 		for (let i = 0; i < newlinks.length; i++) {
 			newlinks[i].addEventListener('click', quote, false);

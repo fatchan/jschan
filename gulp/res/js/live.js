@@ -44,7 +44,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				replies.appendChild(newReply);
 			}
 			const newPost = document.getElementById(postData.postId).nextSibling;
-			const newPostEvent = new CustomEvent('addPost', {detail:newPost});
+			const newPostEvent = new CustomEvent('addPost', {
+				detail: {
+					post: newPost,
+					postId: postData.postId
+				}
+			});
 			//dispatch the ervent so quote click handlers, image expand, etc can be added in separate scripts by listening to the event
 			window.dispatchEvent(newPostEvent);
         });

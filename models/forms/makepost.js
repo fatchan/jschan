@@ -407,7 +407,12 @@ module.exports = async (req, res, next) => {
 		'threadId': data.thread || postId,
 		'board': res.locals.board
 	});
-	res.redirect(successRedirect);
+	if (req.headers['x-using-xhr'] != null && data.thread) {
+		//if this is a reply, and sent with xhr just respond with postId so we can highlight and live insert
+		res.json({ 'postId': postId });
+	} else {
+		res.redirect(successRedirect);
+	}
 	if (data.thread) {
 		//only emit for replies
 		const projectedPost = {

@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	let focused = false;
+	let focused = document.hasFocus();
 	let unread = [];
 	const originalTitle = document.title;
 
@@ -41,9 +41,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	window.onblur = focusChange;
 	window.addEventListener('scroll', updateVisible);
 
-
 	window.addEventListener('addPost', function(e) {
-		const post = e.detail;
+		const post = e.detail.post;
 		//if browsing another tab or the post is out of scroll view
 		if (!focused || !isVisible(post)) {
 			post.classList.add('highlighted');
@@ -51,6 +50,5 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			updateTitle();
 		}
 	});
-
 
 });

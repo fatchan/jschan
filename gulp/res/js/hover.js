@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	window.addEventListener('addPost', function(e) {
-		const post = e.detail;
+		const post = e.detail.post;
 		//const newquotes = post.getElementsByClassName('quote');
 		const newquotes = document.getElementsByClassName('quote'); //to get backlinks from replying posts. just an easy way. could make more efficient and only do necessary ones later.
 		for (let i = 0; i < newquotes.length; i++) {
