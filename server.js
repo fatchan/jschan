@@ -115,7 +115,7 @@ const express = require('express')
 	process.on('SIGINT', () => {
 		console.log('SIGINT SIGNAL RECEIVED');
 		// Stops the server from accepting new connections and finishes existing connections.
-		server.close((err) => {
+		Socketio.io.close((err) => {
 			// if error, log and exit with error (1 code)
 			console.log('CLOSING SERVER');
 			if (err) {
