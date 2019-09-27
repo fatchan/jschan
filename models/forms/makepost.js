@@ -308,12 +308,14 @@ module.exports = async (req, res, next) => {
 	//simple markdown and sanitize
 	let message = req.body.message;
 	let quotes = [];
+	let crossquotes = [];
 	if (message && message.length > 0) {
 		message = escape(message);
 		message = simpleMarkdown(message);
-		const { quotedMessage, threadQuotes } = await linkQuotes(req.params.board, message, req.body.thread || null);
+		const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(req.params.board, message, req.body.thread || null);
 		message = quotedMessage;
 		quotes = threadQuotes;
+		crossquotes = crossQuotes;
 		message = sanitize(message, sanitizeOptions.after);
 	}
 
@@ -339,6 +341,7 @@ module.exports = async (req, res, next) => {
 		'reports': [],
 		'globalreports': [],
 		quotes, //posts this post replies to
+		crossquotes, //quotes to other threads in same board
 		'backlinks': [], //posts replying to this post
 	}
 

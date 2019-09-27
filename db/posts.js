@@ -417,7 +417,6 @@ module.exports = {
 	},
 
 	move: (ids, dest) => {
-console.log(ids, dest)
 		return db.updateMany({
 			'_id': {
 				'$in': ids
@@ -425,6 +424,15 @@ console.log(ids, dest)
 		}, {
 			'$set': {
 				'thread': dest
+			},
+			'$unset': {
+				'replyposts': '',
+				'replyfiles': '',
+				'sticky': '',
+				'locked': '',
+				'bumplocked': '',
+				'cyclic': '',
+				'salt': ''
 			}
 		});
 	},

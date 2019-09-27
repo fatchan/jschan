@@ -126,8 +126,25 @@ module.exports = async (req, res, next) => {
 			}
 			aggregateNeeded = true;
 		}
+	} else if (req.body.move) {
+		if (boardThreadMap[req.params.board].directThreads.size > 0) {
+			const threadIds = [...boardThreadMap[req.params.board].directThreads];
+			const fetchMovePosts = await Posts.db.find({
+		        'board': req.params.board,
+				'thread': {
+		            '$in': threadIds
+				}
+		    }).toArray();
+	        res.locals.posts = res.locals.posts.concat(fetchMovePosts);
+		}
+		const { message, action } = await movePosts(req, res);
+		if (action) {
+			modlogActions.push('Moved');
+			aggregateNeeded = true;
+		}
+		messages.push(message);
 	} else {
-		// if it was getting deleted, we cant do any of these
+		// if it was getting deleted/moved, dont do these actions
 		if (req.body.unlink_file || req.body.delete_file) {
 			const { message, action, query } = await deletePostsFiles(res.locals.posts, req.body.unlink_file);
 			if (action) {
@@ -198,23 +215,6 @@ module.exports = async (req, res, next) => {
 					modlogActions.push('Dismiss global reports');
 				}
 				combinedQuery[action] = { ...combinedQuery[action], ...query}
-			}
-			messages.push(message);
-		}
-		if (req.body.move) {
-			if (boardThreadMap[req.params.board].directThreads.size > 0) {
-				const threadIds = [...boardThreadMap[req.params.board].directThreads];
-				const fetchMovePosts = await Posts.db.find({
-		            'board': req.params.board,
-					'thread': {
-		                '$in': threadIds
-					}
-		        }).toArray();
-	            res.locals.posts = res.locals.posts.concat(fetchMovePosts);
-			}
-			const { message, action } = await movePosts(req, res);
-			if (action) {
-				modlogActions.push('Moved');
 			}
 			messages.push(message);
 		}
@@ -380,8 +380,7 @@ module.exports = async (req, res, next) => {
 			//refersh any pages affected
 			const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
 			let catalogRebuild = true;
-			if ((beforePages[boardName] && beforePages[boardName] !== afterPages)
-				|| req.body.move) { //handle moves here since dates would change and not work in old/new page calculations
+			if ((beforePages[boardName] && beforePages[boardName] !== afterPages) || req.body.move) { //handle moves here since dates would change and not work in old/new page calculations
 				if (afterPages < beforePages[boardName]) {
 					//amount of pages changed, rebuild all pages and delete  any further pages (if pages amount decreased)
 					for (let k = beforePages[boardName]; k > afterPages; k--) {

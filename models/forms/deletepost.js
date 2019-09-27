@@ -5,6 +5,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts, Files } = require(__dirname+'/../../db/')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
+	, escape = require(__dirname+'/../../helpers/posting/escape.js')
 	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
@@ -78,12 +79,8 @@ module.exports = async (posts, board, all=false) => {
 			if (post.thread != null && !deleteThreadMap[post.board] || !deleteThreadMap[post.board].has(post.thread)) {
 				//get backlinks for posts to remarkup
 				for (let i = 0; i < post.backlinks.length; i++) {
-					const backlink = post.backlinks[i];
-					if (!backlinkRebuilds.has(backlink._id)) {
-						backlinkRebuilds.add(backlink._id);
-					}
+					backlinkRebuilds.add(post.backlinks[i]._id);
 				}
-
 				//remove dead backlinks to this post
 				if (post.quotes.length > 0) {
 					bulkWrites.push({
@@ -117,8 +114,8 @@ module.exports = async (posts, board, all=false) => {
 			await Promise.all(remarkupPosts.map(async post => { //doing these all at once
 				if (post.nomarkup && post.nomarkup.length > 0) { //is this check even necessary? how would it have a quote with no message
 					//redo the markup
-					let message = simpleMarkdown(post.nomarkup);
-					const { quotedMessage, threadQuotes } = await linkQuotes(post.board, post.nomarkup, post.thread);
+					let message = simpleMarkdown(escape(post.nomarkup));
+					const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(post.board, message, post.thread);
 					message = sanitize(quotedMessage, sanitizeOptions.after);
 					bulkWrites.push({
 						'updateOne': {
@@ -128,6 +125,7 @@ module.exports = async (posts, board, all=false) => {
 		                	'update': {
 		                    	'$set': {
 		                        	'quotes': threadQuotes,
+									'crossquotes': crossQuotes,
 									'message': message
 		                    	}
 		                	}
