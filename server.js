@@ -17,6 +17,7 @@ const express = require('express')
 	, themes = require(__dirname+'/helpers/themes.js')
 	, Mongo = require(__dirname+'/db/db.js')
 	, Socketio = require(__dirname+'/socketio.js')
+	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
 	, CachePugTemplates = require('cache-pug-templates');
 
 (async () => {
@@ -93,8 +94,9 @@ const express = require('express')
 			return res.status(403).send('Invalid CSRF token');
 		}
 		console.error(err.stack);
-		return res.status(500).render('message', {
+		return dynamicResponse(req, res, 500, 'message', {
 			'title': 'Internal Server Error',
+			'error': 'Internal Server Error', //what to put here?
 			'redirect': req.headers.referer || '/'
 		});
 	})

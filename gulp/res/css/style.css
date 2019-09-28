@@ -244,6 +244,7 @@ p {
 	font-weight: bolder;
 	margin-left: auto;
 	width: 25px;
+	cursor: pointer;
 }
 
 .reports {
@@ -331,11 +332,42 @@ td, th {
 	z-index: 1;
 }
 
-.post-container, .stickynav, .pages, .toggle-summary, .catalog-tile {
+.post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal {
 	background: var(--post-color);
 	border-width: 1px;/*0 1px 1px 0;*/
 	border-style: solid;
 	border-color: var(--post-outline-color);
+}
+
+.nomarks {
+	list-style: none;
+	margin: 5px;
+	padding: 0;
+}
+
+.modal-bg {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	background-color: #00000070;
+	z-index: 3;
+}
+
+.modal {
+	display: flex;
+	flex-direction: column;
+    max-width: calc(100% - 10px);
+    max-height: calc(100% - 50px);
+    position: fixed;
+    top: 38px;
+    background-color: var(--post-color);
+    z-index: 4;
+    box-sizing: border-box;
+    padding: 5px;
+    border: 1px solid var(--post-outline-color);
+	align-self: center;
 }
 
 .actions {

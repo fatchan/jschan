@@ -85,7 +85,7 @@ module.exports = {
 	//building multiple pages (for rebuilds)
 	buildBoardMultiple: async (options) => {
 		const start = process.hrtime();
-		const maxPage = Math.min(Math.ceil((await Posts.getPages(options.board._id)) / 10), Math.ceil(options.board.settings.threadLimit/10));
+		const maxPage = Math.min(Math.ceil((await Posts.getPages(options.board._id)) / 10), Math.ceil(options.board.settings.threadLimit/10)) || 1;
 		if (options.endpage === 0) {
 			//deleted only/all posts, so only 1 page will remain
 			options.endpage = 1;

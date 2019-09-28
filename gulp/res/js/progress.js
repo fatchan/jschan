@@ -22,25 +22,41 @@ window.addEventListener('DOMContentLoaded', () => {
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState === 4) {
 				submit.disabled = false;
+				let json;
+				if (xhr.responseText) {
+					try {
+						json = JSON.parse(xhr.responseText);
+					} catch (e) {
+						//wasnt json response
+					}
+				}
 				if (xhr.status == 200) {
 					//successful post
 					if (!isThread && xhr.responseURL) {
 						window.location = xhr.responseURL;
-					} else if (xhr.responseText) {
-						const json = JSON.parse(xhr.responseText);
+					} else if (json) {
 						window.myPostId = json.postId;
 						window.location.hash = json.postId;
 					}
+					form.reset(); //reset form on success
 				} else {
-					if (xhr.responseText) {
-						//some error/failed post, wrong captcha, etc
+					//not 200 status, so some error/failed post, wrong captcha, etc
+					if (json) {
+						//show modal when possible
+						const modalHtml = modal(json);
+						document.body.insertAdjacentHTML('afterbegin', modalHtml);
+						document.getElementById('modalclose').onclick = () => {
+							document.getElementsByClassName('modal')[0].remove();
+							document.getElementsByClassName('modal-bg')[0].remove();
+						}
+					} else {
+						//for bans, show
+						window.history.pushState(null, null, xhr.responseURL);
 						document.open('text/html', true);
 						document.write(xhr.responseText);
 						document.close();
-						window.history.pushState(null, null, xhr.responseURL);
 					}
 				}
-				form.reset();
 				submit.value = 'New Reply';
 			}
 		}

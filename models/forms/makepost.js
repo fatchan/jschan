@@ -29,6 +29,7 @@ const path = require('path')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
 	, buildQueue = require(__dirname+'/../../queue.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
@@ -37,7 +38,7 @@ module.exports = async (req, res, next) => {
 	const flood = await spamCheck(req, res);
 	if (flood) {
 		deleteTempFiles(req).catch(e => console.error);
-		return res.status(429).render('message', {
+		return dynamicResponse(req, res, 429, 'message', {
 			'title': 'Flood detected',
 			'message': 'Please wait before making another post, or a post similar to another user',
 			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
@@ -55,7 +56,7 @@ module.exports = async (req, res, next) => {
 			captchaMode, locked, allowedFileTypes, flags } = res.locals.board.settings;
 	if (locked === true) {
 		await deleteTempFiles(req).catch(e => console.error);
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'message': 'Board is locked.',
 			'redirect': redirect
@@ -65,7 +66,7 @@ module.exports = async (req, res, next) => {
 		thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		if (!thread || thread.thread != null) {
 			await deleteTempFiles(req).catch(e => console.error);
-			return res.status(400).render('message', {
+			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': 'Thread does not exist.',
 				'redirect': redirect
@@ -75,7 +76,7 @@ module.exports = async (req, res, next) => {
 		redirect += `thread/${req.body.thread}.html`
 		if (thread.locked && res.locals.permLevel >= 4) {
 			await deleteTempFiles(req).catch(e => console.error);
-			return res.status(400).render('message', {
+			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': 'Thread Locked',
 				'redirect': redirect
@@ -83,7 +84,7 @@ module.exports = async (req, res, next) => {
 		}
 		if (thread.replyposts >= replyLimit && !thread.cyclic) { //reply limit
 			await deleteTempFiles(req).catch(e => console.error);
-			return res.status(400).render('message', {
+			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': 'Thread reached reply limit',
 				'redirect': redirect
@@ -92,7 +93,7 @@ module.exports = async (req, res, next) => {
 	}
 	if (res.locals.numFiles > maxFiles) {
 		await deleteTempFiles(req).catch(e => console.error);
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'message': `Too many files. Max files per post is ${maxFiles}.`,
 			'redirect': redirect
@@ -105,7 +106,7 @@ module.exports = async (req, res, next) => {
 		if (containsFilter === true) {
 			await deleteTempFiles(req).catch(e => console.error);
 			if (filterMode === 1) {
-				return res.status(400).render('message', {
+				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
 					'message': 'Your post was blocked by a word filter',
 					'redirect': redirect
@@ -139,7 +140,7 @@ module.exports = async (req, res, next) => {
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			if (!fileCheckMimeType(req.files.file[i].mimetype, allowedFileTypes)) {
 				await deleteTempFiles(req).catch(e => console.error);
-				return res.status(400).render('message', {
+				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
 					'message': `Mime type ${req.files.file[i].mimetype} for "${req.files.file[i].name}" not allowed.`,
 					'redirect': redirect
@@ -191,7 +192,7 @@ module.exports = async (req, res, next) => {
 					videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
 					if (videoData.streams.length <= 0) {
 						await deleteTempFiles(req).catch(e => console.error);
-						return res.status(400).render('message', {
+						return dynamicResponse(req, res, 400, 'message', {
 							'title': 'Bad request',
 							'message': 'Audio only file not supported (yet)',
 							'redirect': redirect

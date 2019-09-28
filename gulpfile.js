@@ -141,13 +141,14 @@ function custompages() {
 function scripts() {
 	try {
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
+		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
 		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
 	} catch (e) {
 		//already exists, ignore error
 	}
 	gulp.src(`${paths.scripts.src}/*.js`)
 		.pipe(concat('all.js'))
-		.pipe(uglify())
+//		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src(`${paths.scripts.src}/*.js`)
 		.pipe(uglify())

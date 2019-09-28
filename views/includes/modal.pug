@@ -1,0 +1,17 @@
+.modal-bg
+.modal
+	.row
+		p.bold #{title}
+		a.close.postform-style#modalclose X
+	.row
+		ul.nomarks
+			if message
+				li #{message}
+			else if error
+				li #{error}
+			else if messages
+				each msg in messages
+					li #{msg}
+			else if errors
+				each err in errors
+					li #{err}

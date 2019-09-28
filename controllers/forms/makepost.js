@@ -2,6 +2,7 @@
 
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { globalLimits } = require(__dirname+'/../../configs/main.json')
 	, { Files } = require(__dirname+'/../../db/');
 
@@ -70,7 +71,7 @@ module.exports = async (req, res, next) => {
 
 	if (errors.length > 0) {
 		await deleteTempFiles(req).catch(e => console.error);
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`

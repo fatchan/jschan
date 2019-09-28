@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
 			if (globalBans.length > 0 || (res.locals.permLevel >= 4 && globalBans.length !== bans.length)) {
 				//board staff bypass bans on their own board, but not global bans
 				const allowAppeal = bans.filter(ban => ban.allowAppeal === true && ban.appeal === null).length > 0;
-				const unseenBans = bans.filter(b => !b.seen).map(b._id);
+				const unseenBans = bans.filter(b => !b.seen).map(b => b._id);
 				await Bans.markSeen(unseenBans); //mark bans as seen
 				return res.status(403).render('ban', {
 					bans: bans,
