@@ -13,7 +13,7 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
 	, codeRegex = /&#x60;&#x60;&#x60;([\s\S]+?)&#x60;&#x60;&#x60;/gm
 	, diceRegex = /##(?<numdice>\d+)d(?<numsides>\d+)(?:(?<operator>[+-])(?<modifier>\d+))?/gmi
-	, diceRoll = require(__dirname+'/diceroll.js')
+	, diceRoll = require(__dirname+'/diceroll.js');
 
 module.exports = (text) => {
 
@@ -64,7 +64,8 @@ module.exports = (text) => {
 
 	//code
 	text = text.replace(codeRegex, (match, code) => {
-        return `<span class='code'>${code.replace(/^\s*\n/, '')}</span>`;
+		const trimFix = code.replace(/^\s*\n/, ''); //remove extra whitespace/newline at start
+        return `<span class='code'>${trimFix}</span>`;
     });
 
 	//inline monospace

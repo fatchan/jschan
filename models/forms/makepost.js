@@ -403,47 +403,53 @@ module.exports = async (req, res, next) => {
 
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
 
-	//build just the thread they need to see first and send them immediately
-	await buildThread({
+	const buildOptions = {
 		'threadId': data.thread || postId,
 		'board': res.locals.board
-	});
+	};
 	if (req.headers['x-using-xhr'] != null && data.thread) {
 		//if this is a reply, and sent with xhr just respond with postId so we can highlight and live insert
 		res.json({ 'postId': postId });
+		buildQueue.push({
+			'task': 'buildThread',
+			'options': buildOptions
+		});
 	} else {
+		//build just the thread they need to see immediately for regular form posts/noscript users
+		await buildThread(buildOptions);
 		res.redirect(successRedirect);
 	}
+
 	if (data.thread) {
-		//only emit for replies
+		//only emit for replies and with some omissions
 		const projectedPost = {
-        	'date': data.date,
-        	'name': data.name,
-        	'country': data.country,
-        	'board': req.params.board,
-        	'tripcode': data.tripcode,
-        	'capcode': data.capcode,
-        	'subject': data.subject,
-        	'message': data.message,
-        	'nomarkup': data.nomarkup,
-        	'thread': data.thread,
+			'date': data.date,
+			'name': data.name,
+			'country': data.country,
+			'board': req.params.board,
+			'tripcode': data.tripcode,
+			'capcode': data.capcode,
+			'subject': data.subject,
+			'message': data.message,
+			'nomarkup': data.nomarkup,
+			'thread': data.thread,
 			'postId': postId,
-        	'email': data.email,
-        	'spoiler': data.spoiler,
-        	'banmessage': null,
-        	'userId': data.userId,
-        	'files': data.files,
-        	'reports': [],
-        	'globalreports': [],
-        	'quotes': data.quotes,
-        	'backlinks': [],
-        	'replyposts': 0,
-        	'replyfiles': 0,
-        	'sticky': data.sticky,
-        	'locked': data.locked,
-        	'bumplocked': data.bumplocked,
-        	'cyclic': data.cyclic,
-    	}
+			'email': data.email,
+			'spoiler': data.spoiler,
+			'banmessage': null,
+			'userId': data.userId,
+			'files': data.files,
+			'reports': [],
+			'globalreports': [],
+			'quotes': data.quotes,
+			'backlinks': [],
+			'replyposts': 0,
+			'replyfiles': 0,
+			'sticky': data.sticky,
+			'locked': data.locked,
+			'bumplocked': data.bumplocked,
+			'cyclic': data.cyclic,
+		}
 		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
 	}
 
