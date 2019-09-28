@@ -39,11 +39,15 @@ window.addEventListener('DOMContentLoaded', () => {
 						window.location.hash = json.postId;
 					}
 					form.reset(); //reset form on success
+					if (form.getElementsByTagName('img').length > 0) {
+						//TODO: refresh captcha here
+					}
 				} else {
 					//not 200 status, so some error/failed post, wrong captcha, etc
 					if (json) {
+						console.log(json);
 						//show modal when possible
-						const modalHtml = modal(json);
+						const modalHtml = modal({ modal: json });
 						document.body.insertAdjacentHTML('afterbegin', modalHtml);
 						document.getElementById('modalclose').onclick = () => {
 							document.getElementsByClassName('modal')[0].remove();

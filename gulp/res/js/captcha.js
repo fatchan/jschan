@@ -1,3 +1,4 @@
+
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	const captchaFields = document.getElementsByClassName('captchafield');
@@ -16,7 +17,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 		xhr.open('GET', '/captcha', true);
 		xhr.send(null);
-	}
+	};
 
 	const loadCaptcha = function(e) {
 		const captchaDiv = this.previousSibling;

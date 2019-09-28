@@ -21,7 +21,7 @@ module.exports = async (req, res, next) => {
 	const errors = [];
 
 	// even if force file and message are off, the post must contain one of either.
-	if (!req.body.message && res.locals.numFiles === 0) {
+	if ((!req.body.message || req.body.message.length === 0) && res.locals.numFiles === 0) {
 		errors.push('Posts must include a message or file');
 	}
 

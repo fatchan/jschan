@@ -1,0 +1,19 @@
+mixin modal(data)
+	.modal-bg
+	.modal
+		.row
+			p.bold #{data.title}
+			a.close.postform-style#modalclose X
+		.row
+			ul.nomarks
+				if data.message
+					li #{data.message}
+				if data.error
+					li #{data.error}
+				if messages
+					each msg in data.messages
+						li #{msg}
+				if errors
+					each error in data.errors
+						li #{error}
+	

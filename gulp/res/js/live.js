@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			console.log('got new post');
 			const postData = data;
 			//create a new post
-			const postHtml = post({post: postData});
+			const postHtml = post({ post: postData });
 			//add it to the end of the thread
 			thread.insertAdjacentHTML('beforeend', postHtml);
 			for (let j = 0; j < postData.quotes.length; j++) {
