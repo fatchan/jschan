@@ -9,8 +9,16 @@ module.exports = {
 	db,
 
 	find: (ip, board) => {
+		let ipQuery;
+		if (typeof ip === 'object') { //object with hash and ranges in bancheck
+			ipQuery = {
+				'$in': Object.values(ip)
+			}
+		} else {
+			ipQuery = ip;
+		}
 		return db.find({
-			'ip': ip,
+			'ip': ipQuery,
 			'board': {
 				'$in': [board, null]
 			}

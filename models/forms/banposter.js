@@ -7,23 +7,29 @@ module.exports = async (req, res, next) => {
 	const banDate = new Date();
 	const banExpiry = new Date(req.body.ban_duration ? banDate.getTime() + req.body.ban_duration : 8640000000000000); //perm if none or malformed input
 	const banReason = req.body.ban_reason || 'No reason specified';
-	const allowAppeal = req.body.no_appeal ? false : true;
+	const allowAppeal = (req.body.no_appeal || !req.body.ban_q || !req.body.ban_h) ? false : true; //dont allow appeals for range bans
 
 	const bans = [];
 
 	if (req.body.ban || req.body.global_ban) {
 		const banBoard = req.body.global_ban ? null : req.params.board;
 		const ipPosts = res.locals.posts.reduce((acc, post) => {
-			if (!acc[post.ip]) {
-				acc[post.ip] = [];
+			if (!acc[post.ip.hash]) {
+				acc[post.ip.hash] = [];
 			}
-			acc[post.ip].push(post);
+			acc[post.ip.hash].push(post);
 			return acc;
 		}, {});
 		for (let ip in ipPosts) {
 			const thisIpPosts = ipPosts[ip];
+			let banIp = ip;
+			if (req.body.ban_h) {
+				banIp = thisIpPosts[0].ip.hrange;
+			} else if (req.body.ban_q) {
+				banIp = thisIpPosts[0].ip.qrange;
+			}
 			bans.push({
-				ip,
+				'ip': banIp,
 				'reason': banReason,
 				'board': banBoard,
 				'posts': req.body.preserve_post ? thisIpPosts : null,

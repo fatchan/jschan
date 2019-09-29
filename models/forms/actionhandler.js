@@ -98,7 +98,7 @@ module.exports = async (req, res, next) => {
 	}
 	if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
 		if (req.body.delete_ip_board || req.body.delete_ip_global) {
-			const deletePostIps = res.locals.posts.map(x => x.ip);
+			const deletePostIps = res.locals.posts.map(x => x.ip.hash);
 			let query = {
 				'ip': {
 					'$in': deletePostIps

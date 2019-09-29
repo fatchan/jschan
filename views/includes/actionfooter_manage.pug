@@ -3,42 +3,47 @@ details.toggle-label
 	.actions 
 		h4.no-m-p Actions:
 		label
-			input.post-check(type='checkbox', name='delete' value='Delete post')
+			input.post-check(type='checkbox', name='delete' value='1')
 			| Delete Posts
 		label
-			input.post-check(type='checkbox', name='delete_file' value='Delete files')
+			input.post-check(type='checkbox', name='delete_file' value='1')
 			| Delete Files
 		label
-			input.post-check(type='checkbox', name='spoiler' value='Spoiler files')
+			input.post-check(type='checkbox', name='spoiler' value='1')
 			| Spoiler Files
 		label
-			input.post-check(type='checkbox', name='global_report' value='Global report')
+			input.post-check(type='checkbox', name='global_report' value='1')
 			| Global Report
 		label
 			input#report(type='text', name='report_reason', placeholder='report reason' autocomplete='off')
 		label
-			input.post-check(type='checkbox', name='delete_ip_board' value='Delete posts by IP')
+			input.post-check(type='checkbox', name='delete_ip_board' value='1')
 			| Delete from IP on board
 		label
-			input.post-check(type='checkbox', name='delete_ip_global' value='Delete posts by IP global')
+			input.post-check(type='checkbox', name='delete_ip_global' value='1')
 			| Delete from IP globally
 		label
-			input.post-check(type='checkbox', name='dismiss' value='Dismiss reports')
+			input.post-check(type='checkbox', name='dismiss' value='1')
 			| Dismiss Reports
 		label
-			input.post-check(type='checkbox', name='report_ban' value='Ban reporters')
+			input.post-check(type='checkbox', name='report_ban' value='1')
 			| Ban Reporters
 		label
-			input.post-check(type='checkbox', name='ban' value='Ban')
+			input.post-check(type='checkbox', name='ban' value='1')
 			| Ban Poster
 		label
-			input.post-check(type='checkbox', name='global_ban' value='Ban global')
+			input.post-check(type='checkbox', name='global_ban' value='1')
 			| Global Ban Poster
 		label
-			input.post-check(type='checkbox', name='no_appeal' value='Non-appealable')
+			input.post-check(type='checkbox', name='ban_q' value='1')
+			| 1/4  
+			input.post-check(type='checkbox', name='ban_h' value='1')
+			| 1/2 Range
+		label
+			input.post-check(type='checkbox', name='no_appeal' value='1')
 			| Non-appealable Ban
 		label
-			input.post-check(type='checkbox', name='preserve_post' value='Show post in ban')
+			input.post-check(type='checkbox', name='preserve_post' value='1')
 			| Show Post In Ban
 		label
 			input(type='text', name='ban_reason', placeholder='ban reason' autocomplete='off')

@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
 
 	let captchaId;
 	try {
-		const ratelimit = await Ratelimits.incrmentQuota(res.locals.ip, 10);
+		const ratelimit = await Ratelimits.incrmentQuota(res.locals.ip.hash, 10);
 		if (ratelimit > 100) {
 			return res.status(429).redirect('/img/ratelimit.png');
 		}

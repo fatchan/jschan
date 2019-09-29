@@ -3,31 +3,36 @@ details.toggle-label
 	.actions 
 		h4.no-m-p Actions:
 		label
-			input.post-check(type='checkbox', name='delete' value='Delete post')
+			input.post-check(type='checkbox', name='delete' value='1')
 			| Delete Posts
 		label
-			input.post-check(type='checkbox', name='delete_file' value='Delete files')
+			input.post-check(type='checkbox', name='delete_file' value='1')
 			| Delete Files
 		label
-			input.post-check(type='checkbox', name='spoiler' value='Spoiler files')
+			input.post-check(type='checkbox', name='spoiler' value='1')
 			| Spoiler Files
 		label
-			input.post-check(type='checkbox', name='delete_ip_global' value='Delete posts by IP global')
+			input.post-check(type='checkbox', name='delete_ip_global' value='1')
 			| Delete from IP globally
 		label
-			input.post-check(type='checkbox', name='global_dismiss' value='Dismiss global reports')
+			input.post-check(type='checkbox', name='global_dismiss' value='1')
 			| Dismiss Global Reports
 		label
-			input.post-check(type='checkbox', name='global_report_ban' value='Global ban reporters')
+			input.post-check(type='checkbox', name='global_report_ban' value='1')
 			| Global Ban Reporters
 		label
-			input.post-check(type='checkbox', name='global_ban' value='Ban global')
+			input.post-check(type='checkbox', name='global_ban' value='1')
 			| Global Ban Poster
 		label
-			input.post-check(type='checkbox', name='no_appeal' value='Non-appealable')
+			input.post-check(type='checkbox', name='ban_q' value='1')
+			| 1/4  
+			input.post-check(type='checkbox', name='ban_h' value='1')
+			| 1/2 Range
+		label
+			input.post-check(type='checkbox', name='no_appeal' value='1')
 			| Non-appealable Ban
 		label
-			input.post-check(type='checkbox', name='preserve_post' value='Show post in ban')
+			input.post-check(type='checkbox', name='preserve_post' value='1')
 			| Show Post In Ban
 		label
 			input(type='text', name='ban_reason', placeholder='ban reason' autocomplete='off')

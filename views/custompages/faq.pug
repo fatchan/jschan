@@ -19,6 +19,7 @@ block content
 					ul.mv-0
 						li: a(href='#whats-an-imageboard') What is an imageboard?
 						li: a(href='/rules.html') What are the rules?
+						li: a(href='#site-operation') How do you run the site?
 					b Making posts
 					ul.mv-0
 						//li: a(href='#how-to-post') How do I make a post?
@@ -198,3 +199,24 @@ block content
 							li Board owner: Same as board moderator
 							li Board moderator: All below, plus ban, delete-by-ip, sticky/sage/lock/cycle
 							li Regular user: Reports, and post spoiler/delete/unlink if the board has them enabled
+	.table-container.flex-center.mv-5
+		.anchor#site-operation
+		table
+			tr
+				th: a(href='#site-operation') How is the site run?
+			tr
+				td
+					b Who owns the site?
+					p An Australian guy called Tom. You can check the check the jschan repo for my discord and dig up more about me if you are curious. I also run some other projects including a large discord bot.
+					b Where is the server?
+					p VPS in New York, USA.
+					b Who has access to the server?
+					p Me (Tom) only.
+					b What OS does the server run?
+					p Debian 9 minimal.
+					b How are IP addresses stored?
+					p Jschan stores them hashed and salted, and a substring of this is shown in ban pages and moderation interfaces. Clear IPs are present in Nginx logs and retained for 7 days.
+					b Is the server secure?
+					p Only ports 443 and 80 are open for HTTP(s) and one other port for SSH. Key only login is enabled and root login is disabled. The software is running as an unprivileged users. MongoDB and Redis are configured to listen on local interfaces only and require authentication.
+					b I have an issue/found a vulnerability/need to contact you.
+					p Issues with the software can be posted on the #[a(href='https://github.com/fatchan/jschan/issues') issues page] or if you prefer not to use github, #[a(href='/t/index.html#postform') post on the meta board] with a detailed description of the problem. For private matters or vulnerability reports, please contact me via email tom-69420-me.

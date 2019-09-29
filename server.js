@@ -12,7 +12,7 @@ const express = require('express')
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
 	, configs = require(__dirname+'/configs/main.json')
-	, ipHash = require(__dirname+'/helpers/iphash.js')
+	, processIp = require(__dirname+'/helpers/processip.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, themes = require(__dirname+'/helpers/themes.js')
 	, Mongo = require(__dirname+'/db/db.js')
@@ -62,7 +62,7 @@ const express = require('express')
 	app.set('trust proxy', 1);
 
 	//self explanatory middlewares
-	app.use(ipHash);
+	app.use(processIp);
 	app.use(referrerCheck);
 
 	// use pug view engine

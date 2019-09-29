@@ -8,7 +8,7 @@ module.exports = (req, res) => {
 		'id': ObjectId(),
 		'reason': req.body.report_reason,
 		'date': new Date(),
-		'ip': res.locals.ip
+		'ip': res.locals.ip.hash //just hash for now, no rangeban reporters
 	}
 
 	const ret = {

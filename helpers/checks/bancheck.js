@@ -14,6 +14,7 @@ module.exports = async (req, res, next) => {
 				const allowAppeal = bans.filter(ban => ban.allowAppeal === true && ban.appeal === null).length > 0;
 				const unseenBans = bans.filter(b => !b.seen).map(b => b._id);
 				await Bans.markSeen(unseenBans); //mark bans as seen
+				bans.forEach(ban => ban.seen = true); //mark seen as true in memory for user viewed ban page
 				return res.status(403).render('ban', {
 					bans: bans,
 					allowAppeal
