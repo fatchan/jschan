@@ -18,7 +18,8 @@ Demo site running at https://fatpeople.lol
 - [x] Post styling & quote linking
 - [x] Backlinks shown without javascript
 - [x] Multiple files per post
-- [x] Thread view posts added live through websocket
+- [x] Websocket updates threads live
+- [x] Webring support [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) [infinity](https://gitlab.com/Tenicu/infinityaddon-webring)
 
 ## Todo
 - Finish moderation tools (post editing, moving/thread merging, file hash bans, range bans, ban history)
