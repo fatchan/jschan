@@ -86,12 +86,27 @@ module.exports = async (req, res, next) => {
 	} catch (err) {
 		return next(err);
 	}
+
 	if (!res.locals.posts || res.locals.posts.length === 0) {
 		return res.status(404).render('message', {
 			'title': 'Not found',
 			'error': 'Selected posts not found',
 			'redirect': `/${req.params.board}/`
 		})
+	}
+
+	if (req.body.move) {
+		res.locals.posts = res.locals.posts.filter(p => {
+			//filter to remove any posts already in the thread (or the OP) of move destionation
+			return p.postId !== req.body.move_to_thread && p.thread !== req.body.move_to_thread;
+		});
+		if (res.locals.posts.length === 0) {
+			return res.status(404).render('message', {
+				'title': 'Not found',
+				'error': 'Destionation thread cannot match source thread for move action',
+				'redirect': `/${req.params.board}/`
+			})
+		});
 	}
 
 	try {
