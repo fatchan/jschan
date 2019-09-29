@@ -105,8 +105,8 @@ module.exports = async (req, res, next) => {
 				'title': 'Not found',
 				'error': 'Destionation thread cannot match source thread for move action',
 				'redirect': `/${req.params.board}/`
-			})
-		});
+			});
+		}
 	}
 
 	try {
