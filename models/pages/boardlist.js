@@ -8,7 +8,7 @@ const cache = require(__dirname+'/../../redis.js')
 module.exports = async (req, res, next) => {
 
 	let page;
-	if (req.query.page && !isNaN(parseInt(req.query.page))) {
+	if (req.query.page && Number.isSafeInteger(parseInt(req.query.page))) {
 		page = parseInt(req.query.page) || 1; //or 1 prevent 0 page
 	} else {
 		page = 1;
