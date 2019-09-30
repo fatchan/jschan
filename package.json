@@ -13,7 +13,7 @@
     "csurf": "^1.10.0",
     "del": "^4.1.1",
     "express": "^4.17.1",
-    "express-fileupload": "github:fatchan/express-fileupload",
+    "express-fileupload": "git+https://github.com/fatchan/express-fileupload.git",
     "express-session": "^1.16.2",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
