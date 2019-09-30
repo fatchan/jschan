@@ -31,7 +31,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					span.post-capcode #{post.capcode}
 					| 
 				- const postDate = new Date(post.date)
-				time.post-date(datetime=postDate.toISOString()) #{postDate.toLocaleString(undefined, {hour12:false})}
+				time.post-date(datetime=postDate.toISOString()) #{postDate.toLocaleString("en-US", { hour12:false, timeZone: "America/New_York" })}
 				| 
 				if post.userId
 					span.user-id(style=`background-color: #${post.userId}`) #{post.userId}

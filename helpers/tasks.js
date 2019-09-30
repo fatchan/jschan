@@ -171,19 +171,14 @@ module.exports = {
 	buildHomepage: async () => {
 		const label = '/index.html';
 		const start = process.hrtime();
-		let [ totalStats, boards, webringBoards, fileStats ] = await Promise.all([
+		let [ totalStats, boards, fileStats ] = await Promise.all([
 			Boards.totalStats(), //overall total posts ever made
 			Boards.boardSort(0, 20), //top 20 boards sorted by users, pph, total posts
-			enableWebring ? cache.get('webring:boards') : null, //webring boards if enabled
 			Files.activeContent() //size ans number of files
 		]);
-		if (enableWebring && webringBoards) { //sort webring boards
-			webringBoards = webringBoards.sort((a, b) => { return b.uniqueUsers - a.uniqueUsers });
-		}
 		const html = render('index.html', 'home.pug', {
 			totalStats,
 			boards,
-			webringBoards,
 			fileStats,
 		});
 		const end = process.hrtime(start);

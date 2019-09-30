@@ -48,10 +48,6 @@ module.exports = {
 		});
 	},
 
-	find: () => {
-		return db.find({}).toArray();
-	},
-
 	insertOne: (data) => {
 		cache.del(`board_${data._id}`); //removing cached no_exist
 		return db.insertOne(data);
@@ -104,11 +100,9 @@ module.exports = {
 		);
 	},
 
-	boardSort: (skip=0, limit=20) => {
+	boardSort: (skip=0, limit=50) => {
 		return db.find({
-			'settings.unlisted': {
-				'$ne': true
-			}
+			'settings.unlisted': false,
 		}, {
 			'projection': {
 				'_id': 1,
@@ -124,6 +118,10 @@ module.exports = {
 			'pph': -1,
 			'sequence_value': -1,
   		}).skip(skip).limit(limit).toArray();
+	},
+
+	count: (showUnlisted=false) => {
+		return db.countDocuments(showUnlisted ? {} : { 'settings.unlisted': false });
 	},
 
 	totalStats: () => {

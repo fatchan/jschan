@@ -754,14 +754,6 @@ hr + .thread {
 	margin-top: -5px;
 }
 
-.webringtable th {
-	position: sticky; top: 0;
-}
-
-.boardtable.webringtable {
-    border: none;
-}
-
 .scrolltable {
 	max-height: 160px;
 	overflow-y: auto;

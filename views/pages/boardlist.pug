@@ -1,0 +1,36 @@
+extends ../layout.pug
+
+block head
+	script(src='/js/theme.js')
+	title #{meta.siteName}
+
+block content
+	h1.board-title Board List
+	if boards && boards.length > 0
+		h4.board-description Local Boards
+		include ../includes/boardtable.pug
+			each board in boards
+				tr
+					td 
+						if board.settings.sfw
+							span.help(title='Safe for work') &#128188; 
+						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
+					td #{board.settings.description}
+					td #{board.pph}
+					td #{board.ips}
+					td #{board.sequence_value-1}
+	if webringBoards && webringBoards.length > 0
+		h4.board-description Webring Boards
+		include ../includes/boardtable.pug
+			each board in webringBoards
+				tr
+					td
+						if !board.nsfw
+							span.help(title='Safe for work') &#128188; 
+						a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
+					td #{board.subtitle || '-'}
+					td #{board.postsPerHour || '-'}
+					td #{board.uniqueUsers || '-'}
+					td #{board.totalPosts || '-'}
+	nav.pages.text-center
+		include ../includes/boardlistpages.pug

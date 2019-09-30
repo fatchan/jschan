@@ -110,10 +110,6 @@ module.exports = (req, res, next) => {
 			res.locals.date = date;
 		}
 	}
-	//board page
-	if (req.params.page) {
-		req.params.page = req.params.page === 'index' ? 'index' : +req.params.page;
-	}
 
 	next();
 

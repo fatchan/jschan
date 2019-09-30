@@ -5,7 +5,7 @@ const Posts = require(__dirname+'/../../db/posts.js')
 
 module.exports = async (req, res, next) => {
 
-	const page = req.params.page === 'index' ? 1 : req.params.page;
+	const page = req.params.page === 'index' ? 1 : Number(req.params.page);
 	let html;
 	try {
 		const maxPage = Math.min(Math.ceil((await Posts.getPages(req.params.board)) / 10), Math.ceil(res.locals.board.settings.threadLimit/10)) || 1;

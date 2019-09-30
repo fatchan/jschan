@@ -29,13 +29,17 @@ const express  = require('express')
 	, captcha = require(__dirname+'/../models/pages/captcha.js')
 	, thread = require(__dirname+'/../models/pages/thread.js')
 	, modlog = require(__dirname+'/../models/pages/modlog.js')
-	, modloglist = require(__dirname+'/../models/pages/modloglist.js');
+	, modloglist = require(__dirname+'/../models/pages/modloglist.js')
+	, boardlist = require(__dirname+'/../models/pages/boardlist.js');
 
 //homepage
 router.get('/index.html', home);
 
 //news page
 router.get('/news.html', news);
+
+//board list
+router.get('/boards.html', boardlist);
 
 //board pages
 router.get('/:board/:page(1[0-9]*|[2-9]*|index).html', Boards.exists, paramConverter, board); //index
@@ -52,6 +56,11 @@ router.get('/:board/manage/reports.html', sessionRefresh, isLoggedIn, Boards.exi
 router.get('/:board/manage/bans.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageBans);
 router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
 router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
+/*
+todo: dynamic mod pages with no captcha required for mod forms
+router.get('/:board/manage/:page(1[0-9]*|[2-9]*|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(2), csrf, manageBoard);
+router.get('/:board/manage/thread/:id(\\d+).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(2), csrf, manageThread);
+*/
 
 //global manage pages
 router.get('/globalmanage/reports.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
