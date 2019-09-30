@@ -1,14 +1,11 @@
 'use strict';
 
-const uploadDirectory = require(__dirname+'/uploadDirectory.js')
-	, gm = require('gm');
+const uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (file, filename, folder) => {
 
 	return new Promise((resolve, reject) => {
-		gm(file.tempFilePath)
-		.noProfile()
-		.write(`${uploadDirectory}${folder}/${filename}`, function (err) {
+		file.mv(`${uploadDirectory}${folder}/${filename}`, function (err) {
 			if (err) {
 				return reject(err);
 			}

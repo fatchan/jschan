@@ -440,6 +440,7 @@ td, th {
 	color: white;
 	padding: 0px 2px;
 	border: 1px solid rgba(0, 0, 0, 0.4);
+	border-radius: 1px;
 }
 
 .post-check {
@@ -674,7 +675,7 @@ input[type="submit"] {
 }
 
 input[type="file"] {
-	width: 200px;
+	width: 220px;
 	background: var(--input-background);
 }
 

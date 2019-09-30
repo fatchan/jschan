@@ -42,7 +42,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					a.no-decoration(href=`${postURL}#postform`) #{post.postId}
 					if !post.thread
 						|  
-						span: a(href=`/${post.board}/thread/${post.thread || post.postId}.html#postform`) [Reply]
+						span: a(href=`${postURL}#postform`) [Reply]
 		.post-data
 			if post.files.length > 0
 				.post-files
