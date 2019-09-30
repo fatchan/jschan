@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const field = this;
 		captchaImg.src = '/captcha';
 		captchaImg.onload = function() {
-			field.placeholder = 'captcha text';
+			field.placeholder = 'double click image to refresh';
 			captchaDiv.appendChild(captchaImg);
 			captchaDiv.style.display = '';
 			captchaImg.addEventListener('dblclick', refreshCaptcha, true);
