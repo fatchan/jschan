@@ -1,0 +1,11 @@
+mixin boardnav(selected, showIndex, upLevel)
+	if showIndex
+		|  
+		a(href=`${upLevel ? '../' : ''}index.html` class=(selected === 'index' ? 'bold' : '')) [Index]
+	|  
+	a(href=`${upLevel ? '../' : ''}catalog.html` class=(selected === 'catalog' ? 'bold' : '')) [Catalog]
+	|  
+	a(href=`${upLevel ? '../' : ''}banners.html` class=(selected === 'banners' ? 'bold' : '')) [Banners]
+	|  
+	a(href=`${upLevel ? '../' : ''}logs.html` class=(selected === 'logs' ? 'bold' : '')) [Logs]
+

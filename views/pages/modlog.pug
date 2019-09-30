@@ -1,5 +1,6 @@
 extends ../layout.pug
 include ../mixins/boardheader.pug
+include ../mixins/boardnav.pug
 
 block head
 	script(src='/js/theme.js')
@@ -10,13 +11,7 @@ block content
 	br
 	include ../includes/stickynav.pug
 	nav.pages
-		a(href=`/${board._id}/index.html`) [Index]
-		|  
-		a(href=`/${board._id}/catalog.html`) [Catalog]
-		|  
-		a(href=`/${board._id}/banners.html`) [Banners]
-		|  
-		a.bold(href=`/${board._id}/logs.html`) [Logs]
+		+boardnav('logs', true, true)
 	hr(size=1)
 	.table-container.flex-center.mv-10.text-center
 		table
@@ -35,10 +30,4 @@ block content
 						td #{log.message || '-'}
 	hr(size=1)
 	nav.pages
-		a(href=`/${board._id}/index.html`) [Index]
-		|  
-		a(href=`/${board._id}/catalog.html`) [Catalog]
-		|  
-		a(href=`/${board._id}/banners.html`) [Banners]
-		|  
-		a.bold(href=`/${board._id}/logs.html`) [Logs]
+		+boardnav('logs', true, true)

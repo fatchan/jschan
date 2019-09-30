@@ -1,5 +1,6 @@
 extends ../layout.pug
 include ../mixins/boardheader.pug
+include ../mixins/boardnav.pug
 
 block head
 	script(src='/js/theme.js')
@@ -10,13 +11,7 @@ block content
 	br
 	include ../includes/stickynav.pug
 	nav.pages
-		a(href=`/${board._id}/index.html`) [Index]
-		|  
-		a(href=`/${board._id}/catalog.html`) [Catalog]
-		|  
-		a.bold(href=`/${board._id}/banners.html`) [Banners]
-		|  
-		a(href=`/${board._id}/logs.html`) [Logs]
+		+boardnav('banners', true, false)
 	hr(size=1)
 	if board.banners.length > 0
 		section.catalog
@@ -27,10 +22,4 @@ block content
 	include ../includes/stickynav.pug
 	hr(size=1)
 	nav.pages
-		a(href=`/${board._id}/index.html`) [Index]
-		|  
-		a(href=`/${board._id}/catalog.html`) [Catalog]
-		|  
-		a.bold(href=`/${board._id}/banners.html`) [Banners]
-		|  
-		a(href=`/${board._id}/logs.html`) [Logs]
+		+boardnav('banners', true, false)

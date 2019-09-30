@@ -22,24 +22,17 @@ block content
 						a(href='/create.html') create your own board
 						| .
 	if boards && boards.length > 0
-		.table-container.flex-center.mv-10.text-center
-			table.boardtable
+		include ../includes/boardtable.pug
+			each board in boards
 				tr
-					th Board
-					th Description
-					th.help(title='Posts in the last hour') PPH
-					th.help(title='Unique posters in the last 24h') Users
-					th Posts
-				each board in boards
-					tr
-						td 
-							if board.settings.sfw
-								span.help(title='Safe for work') &#128188; 
-							a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
-						td #{board.settings.description}
-						td #{board.pph}
-						td #{board.ips}
-						td #{board.sequence_value-1}
+					td 
+						if board.settings.sfw
+							span.help(title='Safe for work') &#128188; 
+						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
+					td #{board.settings.description}
+					td #{board.pph}
+					td #{board.ips}
+					td #{board.sequence_value-1}
 		.table-container.flex-center.mv-10.text-center
 			table
 				tr.help(title='Total stats including unlisted boards')
@@ -62,26 +55,3 @@ block content
 						| The source code for this site is available 
 						a(href='https://github.com/fatchan/jschan/') here
 						|  (and in the footer of each page) and is licensed under the Affero General Public License v3.
-	if webringBoards && webringBoards.length > 0
-		.table-container.flex-center.mv-10.text-center
-			p Webring boards:
-			div.scrolltable
-				table.boardtable.webringtable
-					tr
-						th Board
-						th Description
-						th.help(title='Posts in the last hour') PPH
-						th.help(title='Unique posters in the last 24h') Users
-						th.pr-20 Posts
-					each board in webringBoards
-						tr
-							td
-								if !board.nsfw
-									span.help(title='Safe for work') &#128188; 
-								a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
-							td #{board.subtitle || '-'}
-							td #{board.postsPerHour || '-'}
-							td #{board.uniqueUsers || '-'}
-							td.pr-20 #{board.totalPosts || '-'}
-			p
-				small: a(href='https://gitlab.com/alogware/LynxChanAddon-Webring') webring?
