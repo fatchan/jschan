@@ -5,6 +5,15 @@ window.addEventListener('DOMContentLoaded', () => {
 	const form = document.getElementById('postform');
 	const submit = document.getElementById('submitpost');
 
+	const doModal = (data) => {
+		const modalHtml = modal({ modal: data });
+		document.body.insertAdjacentHTML('afterbegin', modalHtml);
+		document.getElementById('modalclose').onclick = () => {
+			document.getElementsByClassName('modal')[0].remove();
+			document.getElementsByClassName('modal-bg')[0].remove();
+		}
+	}
+
 	form.addEventListener('submit', function(event) {
 		event.preventDefault();
 		submit.disabled = true;
@@ -39,23 +48,17 @@ window.addEventListener('DOMContentLoaded', () => {
 						window.location.hash = json.postId;
 					}
 					form.reset(); //reset form on success
-					if (form.getElementsByTagName('img').length > 0) {
-						//TODO: refresh captcha here
+					const captcha = form.getElementsByTagName('img');
+					if (captcha.length > 0) {
+						captcha[0].dispatchEvent(new Event('dblclick'));
 					}
 				} else {
 					//not 200 status, so some error/failed post, wrong captcha, etc
 					if (json) {
-						console.log(json);
-						//show modal when possible
-						const modalHtml = modal({ modal: json });
-						document.body.insertAdjacentHTML('afterbegin', modalHtml);
-						document.getElementById('modalclose').onclick = () => {
-							document.getElementsByClassName('modal')[0].remove();
-							document.getElementsByClassName('modal-bg')[0].remove();
-						}
+						doModal(json);
 					} else {
 						//for bans, show
-						window.history.pushState(null, null, xhr.responseURL);
+						window.history.pushState({}, null, xhr.responseURL);
 						document.open('text/html', true);
 						document.write(xhr.responseText);
 						document.close();
@@ -65,7 +68,10 @@ window.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 		xhr.onerror = function() {
-			submit.value = 'Error';
+			doModal({
+				'title': 'Error',
+				'message': 'Something broke'
+			});
 			submit.disabled = false;
 		}
 		xhr.open(form.getAttribute('method'), form.getAttribute('action'), true);
