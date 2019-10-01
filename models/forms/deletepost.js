@@ -18,8 +18,8 @@ module.exports = async (posts, board, all=false) => {
 	if (threads.length > 0) {
 		//delete the html/json for threads
 		await Promise.all(threads.map(thread => {
-			remove(`${uploadDirectory}html/${thread.board}/thread/${thread.postId}.html`)
-			remove(`${uploadDirectory}json/${thread.board}/thread/${thread.postId}.json`)
+			remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`)
+			remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
 		}));
 	}
 

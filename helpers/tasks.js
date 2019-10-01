@@ -3,7 +3,9 @@
 const Mongo = require(__dirname+'/../db/db.js')
 	, cache = require(__dirname+'/../redis.js')
 	, msTime = require(__dirname+'/mstime.js')
-	, { enableWebring } = require(__dirname+'/../configs/main.json')
+	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
+	, { remove } = require('fs-extra')
+	, { pruneModlogs, enableWebring } = require(__dirname+'/../configs/main.json')
 	, { Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, render = require(__dirname+'/render.js')
 	, timeDiffString = (label, end) => `${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`;
@@ -158,7 +160,27 @@ module.exports = {
 	buildModLogList: async (options) => {
 		const label = `/${options.board._id}/logs.html`;
 		const start = process.hrtime();
-		const dates = await Modlogs.getDates(options.board);
+		let dates = await Modlogs.getDates(options.board);
+		if (pruneModlogs === true) {
+			const pruneLogs = [];
+			const monthAgo = new Date(Date.now()-msTime.month);
+			dates = dates.filter(date => {
+				//filter and make list of older than 1 month
+				//might change it to keep last 30 log days instead of logs within the last 30 days?
+				const { year, month, day } = date.date;
+				if (new Date(year, month-1, day) > monthAgo) {
+					return true;
+				}
+				pruneLogs.push(`${month}-${day}-${year}`);
+				return false;
+			});
+			if (pruneLogs.length > 0) {
+				await Promise.all(pruneLogs.map(log => {
+					remove(`${uploadDirectory}/html/${options.board._id}/logs/${log}.html`)
+				}));
+				await Modlogs.deleteOld(options.board, monthAgo);
+			}
+		}
 		const html = render(label, 'modloglist.pug', {
 			board: options.board,
 			dates
@@ -188,11 +210,11 @@ module.exports = {
 
 	updateStats: async () => {
 		const label = 'Hourly stats rollover';
-        const start = process.hrtime();
+		const start = process.hrtime();
 		await Stats.updateBoards();
 		await Stats.resetStats();
 		const end = process.hrtime(start);
-        console.log(timeDiffString(label, end));
+		console.log(timeDiffString(label, end));
 		module.exports.buildHomepage();
 	},
 

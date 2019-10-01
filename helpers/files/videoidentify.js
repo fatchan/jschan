@@ -5,7 +5,7 @@ const ffmpeg = require('fluent-ffmpeg')
 module.exports = (filename, folder, temp) => {
 
 	return new Promise((resolve, reject) => {
-		ffmpeg.ffprobe(temp === true ? filename : `${uploadDirectory}${folder}/${filename}`, (err, metadata) => {
+		ffmpeg.ffprobe(temp === true ? filename : `${uploadDirectory}/${folder}/${filename}`, (err, metadata) => {
 			if (err) {
 				return reject(err)
 			}

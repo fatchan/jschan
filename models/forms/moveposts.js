@@ -26,8 +26,8 @@ module.exports = async (req, res) => {
 		//threads moved, so their html/json doesnt need to exist anymore
 		await Promise.all(threads.map(thread => {
 			return Promise.all([
-				remove(`${uploadDirectory}html/${thread.board}/thread/${thread.postId}.html`),
-				remove(`${uploadDirectory}json/${thread.board}/thread/${thread.postId}.json`)
+				remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`),
+				remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
 			]);
 		}));
    	}

@@ -11,6 +11,7 @@
 	"ipHashSecret": "long random string",
 	"postPasswordSecret": "long random string",
 	"cacheTemplates": true,
+	"pruneModlogs": true,
 	"enableUserBoards": true,
 	"refererCheck": true,
 	"refererRegex": "^https?:\\/\\/(?:www\\.)?domain\\.com\\/",

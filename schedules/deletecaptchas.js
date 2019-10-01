@@ -1,24 +1,8 @@
 'use strict';
 
-const { stat, remove, readdir } = require('fs-extra')
-    , uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js')
-    , msTime = require(__dirname+'/../helpers/mstime.js')
+const deleteOld = require(__dirname+'/../helpers/files/deleteold.js')
+	, msTime = require(__dirname+'/../helpers/mstime.js')
 
-module.exports = async () => {
-	const files = await readdir(`${uploadDirectory}captcha/`);
-	if (files.length > 0) {
-		files.forEach(async (file) => {
-			try {
-				const filePath = `${uploadDirectory}captcha/${file}`;
-				const stats = await stat(filePath);
-				const now = Date.now();
-				const expiry = new Date(stats.ctime).getTime() + msTime.minute*5;
-				if (now > expiry) {
-					await remove(filePath);
-				}
-			} catch (e) {
-				console.error(e);
-			}
-		});
-	}
+module.exports = () => {
+	return deleteOld('captcha', Date.now()-(msTime.minute*5));
 }

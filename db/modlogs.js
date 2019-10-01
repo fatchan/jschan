@@ -68,6 +68,15 @@ module.exports = {
 		}).toArray();
 	},
 
+	deleteOld: (board, date) => {
+		const monthOld = Mongo.ObjectId.createFromTime(Math.floor(date.getTime()/1000));
+		return db.deleteMany({
+			'_id': {
+				'$lt': monthOld
+			}
+		});
+	},
+
 	insertMany: (events) => {
 		return db.insertMany(events);
 	},

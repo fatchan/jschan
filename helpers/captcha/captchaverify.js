@@ -56,7 +56,7 @@ module.exports = async (req, res, next) => {
 	res.clearCookie('captchaid');
 	await Promise.all([
 		Ratelimits.resetQuota(res.locals.ip),
-		remove(`${uploadDirectory}captcha/${captchaId}.jpg`)
+		remove(`${uploadDirectory}/captcha/${captchaId}.jpg`)
 	]);
 
 	return next();

@@ -102,7 +102,7 @@ module.exports = async (req, res, next) => {
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
 		captchaEnabled = true;
 		if (newSettings.captchaMode == 2) {
-			promises.push(remove(`${uploadDirectory}html/${req.params.board}/thread/`));
+			promises.push(remove(`${uploadDirectory}/html/${req.params.board}/thread/`));
 		}
 		buildQueue.push({
 	        'task': 'buildBoardMultiple',
@@ -122,8 +122,8 @@ module.exports = async (req, res, next) => {
 			await deletePosts(prunedThreads, req.params.board);
 			//remove board page html/json for pages > newMaxPage
 			for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
-				promises.push(remove(`${uploadDirectory}html/${req.params.board}/${i}.html`));
-				promises.push(remove(`${uploadDirectory}json/${req.params.board}/${i}.json`));
+				promises.push(remove(`${uploadDirectory}/html/${req.params.board}/${i}.html`));
+				promises.push(remove(`${uploadDirectory}/json/${req.params.board}/${i}.json`));
 			}
 			//rebuild all board pages for page nav numbers, and catalog
 			if (!captchaEnabled) {

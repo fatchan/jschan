@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
 
 	//delete file of all selected banners
 	await Promise.all(req.body.checkedbanners.map(async filename => {
-		remove(`${uploadDirectory}banner/${req.params.board}/${filename}`);
+		remove(`${uploadDirectory}/banner/${req.params.board}/${filename}`);
 	}));
 
 	//remove from db

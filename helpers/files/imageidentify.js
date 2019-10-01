@@ -5,7 +5,7 @@ const gm = require('gm')
 module.exports = (filename, folder, temp) => {
 
 	return new Promise((resolve, reject) => {
-		gm(temp === true ? filename : `${uploadDirectory}${folder}/${filename}`)
+		gm(temp === true ? filename : `${uploadDirectory}/${folder}/${filename}`)
 			.identify(function (err, data) {
 				if (err) {
 					return reject(err);

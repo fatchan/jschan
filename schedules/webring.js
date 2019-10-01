@@ -61,5 +61,5 @@ module.exports = async () => {
 			};
 		}),
 	}
-	await outputFile(`${uploadDirectory}json/webring.json`, JSON.stringify(json));
+	await outputFile(`${uploadDirectory}/json/webring.json`, JSON.stringify(json));
 }

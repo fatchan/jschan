@@ -33,7 +33,7 @@ module.exports = async (req, res, next) => {
 		file.filename = filename;
 
 		//check if already exists
-		const exists = await pathExists(`${uploadDirectory}banner/${req.params.board}/${filename}`);
+		const exists = await pathExists(`${uploadDirectory}/banner/${req.params.board}/${filename}`);
 
 		if (exists) {
 			await remove(file.tempFilePath);
@@ -44,7 +44,7 @@ module.exports = async (req, res, next) => {
 		filenames.push(filename);
 
 		//make directory if doesnt exist
-		await ensureDir(`${uploadDirectory}banner/${req.params.board}/`);
+		await ensureDir(`${uploadDirectory}/banner/${req.params.board}/`);
 
 		//get metadata from tempfile
 		const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);

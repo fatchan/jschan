@@ -165,8 +165,8 @@ module.exports = async (req, res, next) => {
 			await Files.increment(processedFile);
 
 			//check if already exists
-			const existsFull = await pathExists(`${uploadDirectory}img/${processedFile.filename}`);
-			const existsThumb = await pathExists(`${uploadDirectory}img/thumb-${processedFile.hash}.jpg`);
+			const existsFull = await pathExists(`${uploadDirectory}/img/${processedFile.filename}`);
+			const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}.jpg`);
 
 			//handle video/image ffmpeg or graphicsmagick
 			switch (processedFile.mimetype.split('/')[0]) {
@@ -457,7 +457,7 @@ module.exports = async (req, res, next) => {
 	if (enableCaptcha) {
 		if (res.locals.board.settings.captchaMode == 2) {
 			//only delete threads if all posts require threads, otherwise just build board pages for thread captcha
-			await remove(`${uploadDirectory}html/${req.params.board}/thread/`); //not deleting json cos it doesnt need to be
+			await remove(`${uploadDirectory}/html/${req.params.board}/thread/`); //not deleting json cos it doesnt need to be
 		}
 		const endPage = Math.ceil(threadLimit/10);
 		buildQueue.push({

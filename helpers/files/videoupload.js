@@ -5,7 +5,7 @@ const uploadDirectory = require(__dirname+'/uploadDirectory.js');
 module.exports = (file, filename, folder) => {
 
 	return new Promise((resolve, reject) => {
-		file.mv(`${uploadDirectory}${folder}/${filename}`, function (err) {
+		file.mv(`${uploadDirectory}/${folder}/${filename}`, function (err) {
 			if (err) {
 				return reject(err);
 			}

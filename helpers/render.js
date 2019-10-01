@@ -19,10 +19,10 @@ module.exports = async (htmlName, templateName, options, json=null) => {
 		themes
 	});
 	const lock = await redlock.lock(`locks:${htmlName}`, 3000); //what is a reasonable ttl?
-	const htmlPromise = outputFile(`${uploadDirectory}html/${htmlName}`, html);
+	const htmlPromise = outputFile(`${uploadDirectory}/html/${htmlName}`, html);
 	let jsonPromise;
 	if (json !== null) {
-		jsonPromise = outputFile(`${uploadDirectory}json/${json.name}`, JSON.stringify(json.data));
+		jsonPromise = outputFile(`${uploadDirectory}/json/${json.name}`, JSON.stringify(json.data));
 	}
 	await Promise.all([htmlPromise, jsonPromise]);
 	await lock.unlock();

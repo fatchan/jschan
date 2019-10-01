@@ -25,8 +25,8 @@ module.exports = async() => {
 	});
 	await Promise.all(files.map(async filename => {
 		return Promise.all([
-			remove(`${uploadDirectory}img/${filename}`),
-			remove(`${uploadDirectory}img/thumb-${filename.split('.')[0]}.jpg`)
+			remove(`${uploadDirectory}/img/${filename}`),
+			remove(`${uploadDirectory}/img/thumb-${filename.split('.')[0]}.jpg`)
 		])
 	}));
 }

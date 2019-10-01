@@ -19,8 +19,8 @@ module.exports = async (uri) => {
 		Modlogs.deleteBoard(uri), //modlogs for the board
 		Bans.deleteBoard(uri), //bans for the board
 		Stats.deleteBoard(uri), //stats for the board
-		remove(`${uploadDirectory}html/${uri}/`), //html
-		remove(`${uploadDirectory}json/${uri}/`) //json
+		remove(`${uploadDirectory}/html/${uri}/`), //html
+		remove(`${uploadDirectory}/json/${uri}/`) //json
 	]);
 
 }
