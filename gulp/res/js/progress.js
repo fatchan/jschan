@@ -8,10 +8,12 @@ window.addEventListener('DOMContentLoaded', () => {
 	const doModal = (data) => {
 		const modalHtml = modal({ modal: data });
 		document.body.insertAdjacentHTML('afterbegin', modalHtml);
-		document.getElementById('modalclose').onclick = () => {
-			document.getElementsByClassName('modal')[0].remove();
-			document.getElementsByClassName('modal-bg')[0].remove();
-		}
+		document.getElementById('modalclose').onclick = closeModal;
+	}
+
+	const closeModal = () => {
+		document.getElementsByClassName('modal')[0].remove();
+		document.getElementsByClassName('modal-bg')[0].remove();
 	}
 
 	form.addEventListener('submit', function(event) {
