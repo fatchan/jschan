@@ -12,7 +12,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			return; //cross(board) quotes
 		}
 		const post = anchor.nextSibling;
-		post.classList.toggle('highlighted');
+		if (location.hash.substring(1) !== hash) {
+			//dont toggle highlight post if its already highlighted from being the url hash
+			post.classList.toggle('highlighted');
+		}
 	};
 
 	for (let i = 0; i < quotes.length; i++) {
