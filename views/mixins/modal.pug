@@ -10,10 +10,10 @@ mixin modal(data)
 					li #{data.message}
 				if data.error
 					li #{data.error}
-				if messages
+				if data.messages
 					each msg in data.messages
 						li #{msg}
-				if errors
+				if data.errors
 					each error in data.errors
 						li #{error}
 	
