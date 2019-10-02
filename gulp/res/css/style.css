@@ -211,7 +211,7 @@ p {
 	color: black;
 }
 
-.spoiler:hover {
+.spoiler:hover, .spoiler:hover a {
 	color: white;
 }
 
@@ -396,6 +396,10 @@ td, th {
 .toggle-summary {
 	padding: 10px;
 	cursor: pointer;
+}
+
+.sfw {
+	background-color: gray;
 }
 
 .help {

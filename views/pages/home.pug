@@ -27,7 +27,8 @@ block content
 				tr
 					td 
 						if board.settings.sfw
-							span.help(title='Safe for work') &#128188; 
+							span.user-id.sfw SFW
+							|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}
