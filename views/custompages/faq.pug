@@ -185,19 +185,19 @@ block content
 			tr
 				td
 					p
-						| There are 5 levels of permissions on the site:
+						| There are 5 levels of permissions on the site with 0 being the highest level of privilege and 4 the lowest. In this list "Regular user" refers to somebody who is either not logged in or is not owner/mod of the board. For example if a user creates their own board, they do not have the "Board owner" permissions on other boards. Each board can have one owner and multiple moderators. Ownership can be transferred.
 						ol(start='0')
 							li Admin: All permissions
-							li Global staff: All permissions excluding news updates
-							li Board owner: Permissions to settings, reports, banners and bans and some post actions
-							li Board moderator: Permissions to reports, bans and some post actions
-							li Regular user: Permissions to some post actions
+							li Global staff: All permissions on all boards excluding account management and news updates
+							li Board owner: Permissions to board-specific settings, reports, banners and bans and some post actions
+							li Board moderator: Permissions to manage board-specific reports, bans and some post actions
+							li Regular user: Permissions to report/delete/spoiler posts
 						| Post actions refers to reporting, deleting, stickying, etc. More details on these permissions:
 						ol(start='0')
 							li Admin: All actions
-							li Global staff: All below, plus delete files, delete-by-ip-global and global ban
+							li Global staff: All below, delete files, delete-by-ip-global and global ban
 							li Board owner: Same as board moderator
-							li Board moderator: All below, plus ban, delete-by-ip, sticky/sage/lock/cycle
+							li Board moderator: All below, move/merge, ban, delete-by-ip, sticky/sage/lock/cycle
 							li Regular user: Reports, and post spoiler/delete/unlink if the board has them enabled
 	.table-container.flex-center.mv-5
 		.anchor#site-operation
@@ -215,7 +215,7 @@ block content
 					b What OS does the server run?
 					p Debian 9 minimal.
 					b How are IP addresses stored?
-					p Jschan stores them hashed and salted, and a substring of this is shown in ban pages and moderation interfaces. Clear IPs are present in Nginx logs and retained for 7 days.
+					p Jschan stores them hashed with a secret, and a substring of this is shown in ban pages and some moderation interfaces. Clear IPs are present in Nginx logs and retained for 7 days.
 					b Is the server secure?
 					p Only ports 443 and 80 are open for HTTP(s) and one other port for SSH. Key only login is enabled and root login is disabled. The software is running as an unprivileged users. MongoDB and Redis are configured to listen on local interfaces only and require authentication.
 					b I have an issue/found a vulnerability/need to contact you.
