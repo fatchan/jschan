@@ -78,7 +78,7 @@ router.post('/board/:board/deleteboard', sessionRefresh, csrf, Boards.exists, ca
 router.post('/global/unban', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, removeBansController); //remove bans
 router.post('/global/addnews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
 router.post('/global/deletenews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news
-router.post('/global/editaccounts', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), editAccountsController); //account editing
+router.post('/global/editaccounts', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, editAccountsController); //account editing
 router.post('/global/deleteboard', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board
 
 //accounts
