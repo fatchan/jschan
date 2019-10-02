@@ -14,7 +14,7 @@ block head
 		if thread.spoiler
 			meta(property='og:image', content='/img/spoiler.png')
 		else if thread.files[0].hasThumb === true
-			meta(property='og:image', content=`/img/thumb-${thread.files[0].hash}.jpg`)
+			meta(property='og:image', content=`/img/thumb-${thread.files[0].hash}${thread.files[0].thumbextension}`)
 		else
 			meta(property='og:image', content=`/img/${thread.files[0].filename}`)
 

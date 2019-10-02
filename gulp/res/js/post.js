@@ -83,7 +83,7 @@ pug_html = pug_html + "\u003Cimg class=\"file-thumb\" src=\"\u002Fimg\u002Fspoil
 }
 else
 if (file.hasThumb) {
-pug_html = pug_html + "\u003Cimg" + (" class=\"file-thumb\""+pug_attr("src", `/img/thumb-${file.hash}.jpg`, true, false)+pug_attr("height", file.geometry.thumbheight, true, false)+pug_attr("width", file.geometry.thumbwidth, true, false)) + "\u002F\u003E";
+pug_html = pug_html + "\u003Cimg" + (" class=\"file-thumb\""+pug_attr("src", `/img/thumb-${file.hash}${file.thumbextension}`, true, false)+pug_attr("height", file.geometry.thumbheight, true, false)+pug_attr("width", file.geometry.thumbwidth, true, false)) + "\u002F\u003E";
 }
 else {
 pug_html = pug_html + "\u003Cimg" + (" class=\"file-thumb\""+pug_attr("src", `/img/${file.filename}`, true, false)+pug_attr("height", file.geometry.height, true, false)+pug_attr("width", file.geometry.width, true, false)) + "\u002F\u003E";
@@ -105,7 +105,7 @@ pug_html = pug_html + "\u003Cimg class=\"file-thumb\" src=\"\u002Fimg\u002Fspoil
 }
 else
 if (file.hasThumb) {
-pug_html = pug_html + "\u003Cimg" + (" class=\"file-thumb\""+pug_attr("src", `/img/thumb-${file.hash}.jpg`, true, false)+pug_attr("height", file.geometry.thumbheight, true, false)+pug_attr("width", file.geometry.thumbwidth, true, false)) + "\u002F\u003E";
+pug_html = pug_html + "\u003Cimg" + (" class=\"file-thumb\""+pug_attr("src", `/img/thumb-${file.hash}${file.thumbextension}`, true, false)+pug_attr("height", file.geometry.thumbheight, true, false)+pug_attr("width", file.geometry.thumbwidth, true, false)) + "\u002F\u003E";
 }
 else {
 pug_html = pug_html + "\u003Cimg" + (" class=\"file-thumb\""+pug_attr("src", `/img/${file.filename}`, true, false)+pug_attr("height", file.geometry.height, true, false)+pug_attr("width", file.geometry.width, true, false)) + "\u002F\u003E";

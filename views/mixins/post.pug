@@ -61,7 +61,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 									if post.spoiler
 										img.file-thumb(src='/img/spoiler.png' width='128' height='128')
 									else if file.hasThumb
-										img.file-thumb(src=`/img/thumb-${file.hash}.jpg` height=file.geometry.thumbheight width=file.geometry.thumbwidth)
+										img.file-thumb(src=`/img/thumb-${file.hash}${file.thumbextension}` height=file.geometry.thumbheight width=file.geometry.thumbwidth)
 									else
 										img.file-thumb(src=`/img/${file.filename}` height=file.geometry.height width=file.geometry.width)
 			- let truncatedMessage = post.message;

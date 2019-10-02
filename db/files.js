@@ -16,6 +16,9 @@ module.exports = {
 			'$inc': {
 				'count': 1
 			},
+			'$addToSet': {//save list of thumb exts incase config is changed to track old exts
+				'exts': file.thumbextension,
+			},
 			'$setOnInsert': {
 				'size': file.size
 			}

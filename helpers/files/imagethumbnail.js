@@ -5,9 +5,9 @@ const gm = require('gm')
 module.exports = (file) => {
 
 	return new Promise((resolve, reject) => {
-		gm(`${uploadDirectory}/img/${file.filename}`)
+		gm(`${uploadDirectory}/img/${file.filename}[0]`) //0 for first gif frame
 		.resize(128, 128)
-		.write(`${uploadDirectory}/img/thumb-${file.hash}.jpg`, function (err) {
+		.write(`${uploadDirectory}/img/thumb-${file.hash}${configs.thumbExtension}`, function (err) {
 			if (err) {
 				return reject(err);
 			}

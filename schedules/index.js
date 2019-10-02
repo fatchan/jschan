@@ -24,7 +24,7 @@ const msTime = require(__dirname+'/../helpers/mstime.js')
 	//update webring
 	if (enableWebring) {
 		const updateWebring = require(__dirname+'/webring.js');
-		updateWebring().catch(e => console.error);
+//		updateWebring().catch(e => console.error);
 		setInterval(() => {
 			updateWebring().catch(e => console.error);
 		}, msTime.hour);

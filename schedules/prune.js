@@ -15,18 +15,18 @@ module.exports = async() => {
 			'count': 0,
 			'size': 0
 		}
-	}).toArray().then(res => {
-		return res.map(x => x._id);
-	});
+	}).toArray()
 	await Files.db.removeMany({
 		'count': {
 			'$lte': 0
 		}
 	});
-	await Promise.all(files.map(async filename => {
-		return Promise.all([
-			remove(`${uploadDirectory}/img/${filename}`),
-			remove(`${uploadDirectory}/img/thumb-${filename.split('.')[0]}.jpg`)
-		])
+	await Promise.all(files.map(async file => {
+		return Promise.all(
+			[remove(`${uploadDirectory}/img/${file._id}`)]
+			.concat(file.exts.map(ext => {
+				remove(`${uploadDirectory}/img/thumb-${file._id.split('.')[0]}${ext}`)
+			}))
+		)
 	}));
 }

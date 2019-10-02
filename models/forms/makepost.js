@@ -27,7 +27,7 @@ const path = require('path')
 	, msTime = require(__dirname+'/../../helpers/mstime.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
+	, { thumbExtension, postPasswordSecret } = require(__dirname+'/../../configs/main.json')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -160,13 +160,15 @@ module.exports = async (req, res, next) => {
 					originalFilename: file.name,
 					mimetype: file.mimetype,
 					size: file.size,
+					extension,
+					thumbextension: thumbExtension,
 			};
 
 			await Files.increment(processedFile);
 
 			//check if already exists
 			const existsFull = await pathExists(`${uploadDirectory}/img/${processedFile.filename}`);
-			const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}.jpg`);
+			const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 
 			//handle video/image ffmpeg or graphicsmagick
 			switch (processedFile.mimetype.split('/')[0]) {
@@ -199,7 +201,7 @@ module.exports = async (req, res, next) => {
 						});
 					}
 					processedFile.duration = videoData.format.duration;
-					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');
+					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');//break for over 24h video
 					processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string
