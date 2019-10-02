@@ -34,7 +34,7 @@ module.exports = async () => {
 		}
 	}
 	const known = [...new Set(found.concat(fetchWebring))]
-		.filter(site => !blacklist.some(x => site.includes(x)));
+		.filter(site => !blacklist.some(x => site.includes(x)) && !site.includes(meta.url));
 	//add the known sites and boards to cache in redis (so can be used later in other places e.g. board list)
 	cache.set('webring:sites', known);
 	cache.set('webring:boards', webringBoards);

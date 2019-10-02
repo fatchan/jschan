@@ -22,11 +22,11 @@ Demo site running at https://fatpeople.lol
 - [x] Webring support [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) [infinity](https://gitlab.com/Tenicu/infinityaddon-webring)
 
 ## Todo
-- Finish moderation tools (post editing, moving/thread merging, file hash bans, range bans, ban history)
+- Finish moderation tools (post editing, inter and ~~intra board~~ post moving/thread merging, file hash bans, ~~range bans~~, ban history)
 - Configuration editor on the site without touching config files
 - Global settings page for filters, etc
 - Overboard/multiboard/meta boards
-- Boards list and search page
+- ~~Boards list~~ and search page
 - User created board custom pages
 - File URL uploads
 
