@@ -385,7 +385,7 @@ td, th {
 	align-items: flex-start;
 }
 
-.actions label {
+.actions label, .actions div {
 	padding: 2px 0;
 }
 
