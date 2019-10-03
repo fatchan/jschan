@@ -148,7 +148,8 @@ const ompo = post.omittedposts;
 const omfi = post.omittedfiles;
 pug_html = pug_html + (pug_escape(null == (pug_interp = ompo) ? "" : pug_interp)) + " repl" + (pug_escape(null == (pug_interp = ompo > 1 ? 'ies' : 'y') ? "" : pug_interp)) + "\n" + (pug_escape(null == (pug_interp = omfi > 0 ? ` and ${omfi} image${omfi > 1 ? 's' : ''}` : '') ? "" : pug_interp)) + " omitted. \n\u003Ca" + (pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003EView the full thread\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
 }
-if (post.previewbacklinks && post.previewbacklinks.length > 0) {
+if (post.previewbacklinks != null) {
+if (post.previewbacklinks.length > 0) {
 pug_html = pug_html + "\u003Cdiv class=\"replies mt-5 ml-5\"\u003EReplies: ";
 // iterate post.previewbacklinks
 ;(function(){
@@ -173,6 +174,7 @@ const ombls = post.backlinks.length-post.previewbacklinks.length;
 pug_html = pug_html + "+ \u003Ca" + (pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = ombls) ? "" : pug_interp)) + " earlier\u003C\u002Fa\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
+}
 }
 else
 if (post.backlinks && post.backlinks.length > 0) {

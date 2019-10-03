@@ -92,14 +92,15 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					| #{ompo} repl#{ompo > 1 ? 'ies' : 'y'}
 					| #{omfi > 0 ? ` and ${omfi} image${omfi > 1 ? 's' : ''}` : ''} omitted. 
 					| #[a(href=`${postURL}#${post.postId}`) View the full thread]
-			if post.previewbacklinks && post.previewbacklinks.length > 0
-				div.replies.mt-5.ml-5 Replies: 
-					each backlink in post.previewbacklinks
-						a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`) &gt;&gt;#{backlink.postId}
-						|  
-					if post.previewbacklinks.length < post.backlinks.length
-						- const ombls = post.backlinks.length-post.previewbacklinks.length;
-						| + #[a(href=`${postURL}#${post.postId}`) #{ombls} earlier]
+			if post.previewbacklinks != null
+				if post.previewbacklinks.length > 0
+					div.replies.mt-5.ml-5 Replies: 
+						each backlink in post.previewbacklinks
+							a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`) &gt;&gt;#{backlink.postId}
+							|  
+						if post.previewbacklinks.length < post.backlinks.length
+							- const ombls = post.backlinks.length-post.previewbacklinks.length;
+							| + #[a(href=`${postURL}#${post.postId}`) #{ombls} earlier]
 			else if post.backlinks && post.backlinks.length > 0
 				div.replies.mt-5.ml-5 Replies: 
 					each backlink in post.backlinks
