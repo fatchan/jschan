@@ -2,6 +2,7 @@
 
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
 	, themes = require(__dirname+'/../../helpers/themes.js')
+	, { Ratelimits } = require(__dirname+'/../../db/')
 	, { globalLimits } = require(__dirname+'/../../configs/main.json');
 
 module.exports = async (req, res, next) => {
@@ -69,6 +70,17 @@ module.exports = async (req, res, next) => {
 			'errors': errors,
 			'redirect': `/${req.params.board}/manage/settings.html`
 		});
+	}
+
+	if (res.locals.permLevel > 1) { //if not global staff or above
+		const ratelimit = await Ratelimits.incrmentQuota(res.locals.ip.hash, 'settings', 50); //2 changes a minute
+		if (ratelimit > 100) {
+			return res.status(429).render('message', {
+				'title': 'Ratelimited',
+				'error': 'You are changing settings too quickly, please wait a minute and try again',
+				'redirect': `/${req.params.board}/manage/settings.html`
+			});
+		}
 	}
 
 	try {

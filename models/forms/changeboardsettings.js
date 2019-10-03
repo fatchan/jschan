@@ -1,6 +1,6 @@
 'use strict';
 
-const { Ratelimits, Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { remove } = require('fs-extra')
@@ -71,7 +71,7 @@ module.exports = async (req, res, next) => {
 		'theme': req.body.theme ? req.body.theme : oldSettings.theme,
 		'announcement': {
 			'raw': req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
-			'markdown': markdownAnnouncement
+			'markdown': req.body.announcement !== null ? markdownAnnouncement : oldSettings.announcement.markdown
 		},
 		'allowedFileTypes': {
 			'animatedImage': req.body.files_allow_animated_image ? true : false,
@@ -127,16 +127,10 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (newSettings.theme !== oldSettings.theme) {
-		let ratelimit;
-		if (res.locals.permLevel > 1) { //if not global staff or above
-			ratelimit = await Ratelimits.incrmentQuota(res.locals.ip.hash, 'settings', 100);
-		}
-		if (!ratelimit || ratelimit < 100) {
-			rebuildThreads = true;
-			rebuildBoard = true;
-			rebuildCatalog = true;
-			rebuildOther = true;
-		}
+		rebuildThreads = true;
+		rebuildBoard = true;
+		rebuildCatalog = true;
+		rebuildOther = true;
 	}
 
 	if (rebuildThreads) {
