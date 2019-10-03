@@ -1,6 +1,6 @@
 'use strict';
 
-const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+const { Ratelimits, Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { remove } = require('fs-extra')
@@ -97,21 +97,16 @@ module.exports = async (req, res, next) => {
 	const oldMaxPage = Math.ceil(oldSettings.threadLimit/10);
 	const newMaxPage = Math.ceil(newSettings.threadLimit/10);
 
-	//add stuff to queue or remotve threads if captcha enabled (since need to add captcha to post form)
-	let captchaEnabled = false;
+	let rebuildThreads = false
+		, rebuildBoard = false
+		, rebuildCatalog = false
+		, rebuildOther = false;
+
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
-		captchaEnabled = true;
+		rebuildBoard = true;
 		if (newSettings.captchaMode == 2) {
-			promises.push(remove(`${uploadDirectory}/html/${req.params.board}/thread/`));
+			rebuildThreads = true;
 		}
-		buildQueue.push({
-	        'task': 'buildBoardMultiple',
-			'options': {
-				'board': res.locals.board,
-				'startpage': 1,
-				'endpage': newMaxPage
-			}
-		});
 	}
 
 	//do rebuilding and pruning if max number of pages is changed and any threads are pruned
@@ -126,25 +121,62 @@ module.exports = async (req, res, next) => {
 				promises.push(remove(`${uploadDirectory}/json/${req.params.board}/${i}.json`));
 			}
 			//rebuild all board pages for page nav numbers, and catalog
-			if (!captchaEnabled) {
-				buildQueue.push({
-			        'task': 'buildBoardMultiple',
-					'options': {
-						'board': res.locals.board,
-						'startpage': 1,
-						'endpage': newMaxPage
-					}
-				});
-			}
-			buildQueue.push({
-		        'task': 'buildCatalog',
-				'options': {
-					'board': res.locals.board,
-				}
-			});
+			rebuildBoard = true;
+			rebuildCatalog = true;
 		}
 	}
 
+	if (newSettings.theme !== oldSettings.theme) {
+		let ratelimit;
+		if (res.locals.permLevel > 1) { //if not global staff or above
+			ratelimit = await Ratelimits.incrmentQuota(res.locals.ip.hash, 'settings', 100);
+		}
+		if (!ratelimit || ratelimit < 100) {
+			rebuildThreads = true;
+			rebuildBoard = true;
+			rebuildCatalog = true;
+			rebuildOther = true;
+		}
+	}
+
+	if (rebuildThreads) {
+		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/thread/`));
+	}
+	if (rebuildBoard) {
+		buildQueue.push({
+			'task': 'buildBoardMultiple',
+			'options': {
+				'board': res.locals.board,
+				'startpage': 1,
+				'endpage': newMaxPage
+			}
+		});
+	}
+	if (rebuildCatalog) {
+		buildQueue.push({
+			'task': 'buildCatalog',
+			'options': {
+				'board': res.locals.board,
+			}
+		});
+	}
+	if (rebuildOther) {
+		buildQueue.push({
+			'task': 'buildModLogList',
+			'options': {
+				'board': res.locals.board,
+			}
+		});
+		//NOTE does not rebuild individual log pages they are stuck on old theme for now
+		buildQueue.push({
+			'task': 'buildBanners',
+			'options': {
+				'board': res.locals.board,
+			}
+		});
+	}
+
+	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {
 		await Promise.all(promises);
 	}

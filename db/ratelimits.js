@@ -7,14 +7,14 @@ module.exports = {
 
 	db,
 
-	resetQuota: (ip) => {
-		return db.deleteOne({ '_id': ip });
+	resetQuota: (ip, suffix) => {
+		return db.deleteOne({ '_id': `${ip}-suffix` });
 	},
 
-	incrmentQuota: (ip, amount) => {
+	incrmentQuota: (ip, suffix, amount) => {
 		return db.findOneAndUpdate(
 			{
-				'_id': ip
+				'_id': `${ip}-suffix`
 			},
 			{
 				'$inc': {
