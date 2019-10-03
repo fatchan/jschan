@@ -370,6 +370,11 @@ td, th {
 	align-self: center;
 }
 
+details.actions div {
+    display: flex;
+    flex-direction: column;
+}
+
 .actions {
 	text-align: left;
 	max-width: 200px;
