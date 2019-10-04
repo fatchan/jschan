@@ -574,6 +574,7 @@ textarea {
 	box-sizing: border-box;
 	padding: .5em;
 	max-width: 100%;
+	min-width: 25em;
 }
 
 .anchor:target + .post-container, .post-container.highlighted {
@@ -827,6 +828,7 @@ table.boardtable th:nth-child(3),table.boardtable th:nth-child(4),table.boardtab
 	.post-container {
 		box-shadow: none;
 		width: 100%;
+		min-width: unset;
 	}
 
 	.catalog-tile {
