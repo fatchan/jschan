@@ -13,6 +13,7 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
 	, codeRegex = /&#x60;&#x60;&#x60;([\s\S]+?)&#x60;&#x60;&#x60;/gm
 	, diceRegex = /##(?<numdice>\d+)d(?<numsides>\d+)(?:(?<operator>[+-])(?<modifier>\d+))?/gmi
+	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, diceRoll = require(__dirname+'/diceroll.js');
 
 module.exports = (text) => {
