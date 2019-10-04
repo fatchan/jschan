@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#change these
+APP_NAME=""
+MONGO_DATABASE="jschan"
+MONGO_HOST=""
+MONGO_PORT=""
+MONGO_USER=""
+MONGO_PASSWORD=""
+TIMESTAMP=`date +%F-%H%M`
+BACKUPS_DIR="/path/to/$APP_NAME"
+
+#probably dont change these
+DB_BACKUP_NAME="$APP_NAME-$TIMESTAMP.gz"
+FILE_BACKUP_NAME="$APP_NAME-$TIMESTAMP-files.zip"
+DB_ARCHIVE_PATH="$BACKUPS_DIR/$DB_BACKUP_NAME"
+FILE_ARCHIVE_PATH="$BACKUPS_DIR/$FILE_BACKUP_NAME"
+
+#make folder
+mkdir -p $BACKUPS_DIR
+
+#backups files
+zip -r $FILE_ARCHIVE_PATH ./static
+
+#backup db
+mongodump --username $MONGO_USER --password $MONGO_PASSWORD --authenticationDatabase admin --db $MONGO_DATABASE --archive=$ARCHIVE_PATH --gzip
+rm -rf dump
+
+#delete older than 7 days
+sudo find $ARCHIVE_PATH -type f -name "*.gz" -mtime +7 -exec rm -f {} \;
+
+exit 0
