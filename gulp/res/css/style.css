@@ -516,8 +516,8 @@ video, img {
 
 .file-thumb {
 	object-fit: contain;
-	max-width: 128px;
-	max-height: 128px;
+	max-width: 200px;
+	max-height: 200px;
 }
 
 input:invalid, textarea:invalid {
@@ -782,6 +782,11 @@ table.boardtable th:nth-child(3),table.boardtable th:nth-child(4),table.boardtab
 	table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
 	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4) {
 		display: none;
+	}
+
+	.file-thumb {
+		max-width: 128px;
+		max-height: 128px;
 	}
 
 	.post-info{

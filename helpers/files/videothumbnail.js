@@ -1,5 +1,5 @@
 const ffmpeg = require('fluent-ffmpeg')
-	, configs = require(__dirname+'/../../configs/main.json')
+	, { thumbSize } = require(__dirname+'/../../configs/main.json')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (file, geometry) => {
@@ -14,8 +14,8 @@ module.exports = (file, geometry) => {
 			count: 1,
 			filename: `thumb-${file.hash}${file.thumbextension}`,
 			folder: `${uploadDirectory}/img/`,
-			size: geometry.width > geometry.height ? '128x?' : '?x128'
-			//keep aspect ratio, but also making sure taller/wider thumbs dont exceed 128 in either dimension
+			size: geometry.width > geometry.height ? `${thumbSize}x?` : `?x${thumbSize}`
+			//keep aspect ratio, but also making sure taller/wider thumbs dont exceed thumbSize in either dimension
 		});
 	});
 

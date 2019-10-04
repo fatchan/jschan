@@ -27,7 +27,7 @@ const path = require('path')
 	, msTime = require(__dirname+'/../../helpers/mstime.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { thumbExtension, postPasswordSecret } = require(__dirname+'/../../configs/main.json')
+	, { thumbSize, thumbExtension, postPasswordSecret } = require(__dirname+'/../../configs/main.json')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -178,8 +178,8 @@ module.exports = async (req, res, next) => {
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = imageData.Geometry // 123 x 123 string
 					processedFile.hasThumb = !(fileCheckMimeType(file.mimetype, {image: true})
-						&& processedFile.geometry.height <= 128
-						&& processedFile.geometry.width <= 128);
+						&& processedFile.geometry.height <= thumbSize
+						&& processedFile.geometry.width <= thumbSize);
 					if (!existsFull) {
 						await imageUpload(file, processedFile.filename, 'img');
 					}
@@ -220,11 +220,11 @@ module.exports = async (req, res, next) => {
 			if (processedFile.hasThumb === true) {
 				const ratio = processedFile.geometry.width/processedFile.geometry.height;
 				if (ratio >= 1) {
-					processedFile.geometry.thumbwidth = 128;
-					processedFile.geometry.thumbheight = Math.ceil(128/ratio);
+					processedFile.geometry.thumbwidth = thumbSize;
+					processedFile.geometry.thumbheight = Math.ceil(thumbSize/ratio);
 				} else {
-					processedFile.geometry.thumbwidth = Math.ceil(128*ratio);
-					processedFile.geometry.thumbheight = 128;
+					processedFile.geometry.thumbwidth = Math.ceil(thumbSize*ratio);
+					processedFile.geometry.thumbheight = thumbSize;
 				}
 			}
 

@@ -79,7 +79,7 @@ pug_html = pug_html + (", " + (pug_escape(null == (pug_interp = file.durationStr
 }
 pug_html = pug_html + ")\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E\u003Cdiv" + (" class=\"post-file-src\""+pug_attr("data-type", file.mimetype.split('/')[0], true, false)) + "\u003E\u003Ca" + (" target=\"_blank\""+pug_attr("href", `/img/${file.filename}`, true, false)) + "\u003E";
 if (post.spoiler) {
-pug_html = pug_html + "\u003Cimg class=\"file-thumb\" src=\"\u002Fimg\u002Fspoiler.png\" width=\"128\" height=\"128\"\u002F\u003E";
+pug_html = pug_html + "\u003Cimg class=\"file-thumb\" src=\"\u002Fimg\u002Fspoiler.png\" width=\"200\" height=\"200\"\u002F\u003E";
 }
 else
 if (file.hasThumb) {
@@ -101,7 +101,7 @@ pug_html = pug_html + (", " + (pug_escape(null == (pug_interp = file.durationStr
 }
 pug_html = pug_html + ")\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E\u003Cdiv" + (" class=\"post-file-src\""+pug_attr("data-type", file.mimetype.split('/')[0], true, false)) + "\u003E\u003Ca" + (" target=\"_blank\""+pug_attr("href", `/img/${file.filename}`, true, false)) + "\u003E";
 if (post.spoiler) {
-pug_html = pug_html + "\u003Cimg class=\"file-thumb\" src=\"\u002Fimg\u002Fspoiler.png\" width=\"128\" height=\"128\"\u002F\u003E";
+pug_html = pug_html + "\u003Cimg class=\"file-thumb\" src=\"\u002Fimg\u002Fspoiler.png\" width=\"200\" height=\"200\"\u002F\u003E";
 }
 else
 if (file.hasThumb) {

@@ -33,7 +33,8 @@ const gulp = require('gulp')
 async function wipe() {
 	const Mongo = require(__dirname+'/db/db.js');
 	await Mongo.connect();
-	const Boards = require(__dirname+'/db/boards.js')
+	const { Boards, Posts, Captchas, Ratelimits,
+			Accounts, Files, Stats, Modlogs, Bans } = require(__dirname+'/db/')
 		, Posts = require(__dirname+'/db/posts.js')
 		, Bans = require(__dirname+'/db/bans.js')
 		, Captchas = require(__dirname+'/db/captchas.js')
@@ -51,7 +52,8 @@ async function wipe() {
 		Boards.deleteAll(),
 		Bans.deleteAll(),
 		Files.deleteAll(),
-		Stats.deleteAll()
+		Stats.deleteAll(),
+		Modlogs.deleteAll()
 	]);
 
 	//add boards
