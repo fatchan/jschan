@@ -501,12 +501,13 @@ a, video, img, input, summary {
 }
 
 video, img {
-		max-height: 90vh;
+	max-height: 90vh;
 }
 
 .post-file-src {
 	justify-content: center;
 	display: flex;
+	image-orientation: from-image;
 }
 
 .expanded {
