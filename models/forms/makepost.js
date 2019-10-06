@@ -408,14 +408,14 @@ module.exports = async (req, res, next) => {
 			}, 0);
 			//reduce amount counted in post by number of posts deleted
 			await Posts.db.updateOne({
-                'postId': data.thread,
-                'board': board._id
-            }, {
-                '$inc': { //negative increment
-                    'replyposts': -cyclicOverflowPosts.length,
-                    'replyfiles': -fileCount
-                }
-            });
+				'postId': thread.postId,
+				'board': board._id
+			}, {
+				'$inc': { //negative increment
+					'replyposts': -cyclicOverflowPosts.length,
+					'replyfiles': -fileCount
+				}
+			});
 		}
 	}
 
