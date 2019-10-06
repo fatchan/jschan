@@ -401,7 +401,22 @@ module.exports = async (req, res, next) => {
 		}).sort({
 			'postId': -1,
 		}).skip(replyLimit).toArray();
-		await deletePosts(cyclicOverflowPosts, req.params.board);
+		if (cyclicOverflowPosts.length > 0) {
+			await deletePosts(cyclicOverflowPosts, req.params.board);
+			const fileCount = cyclicOverflowPosts.reduce((post, acc) => {
+				return acc + post.files.length;
+			}, 0);
+			//reduce amount counted in post by number of posts deleted
+			await Posts.db.updateOne({
+                'postId': data.thread,
+                'board': board._id
+            }, {
+                '$inc': { //negative increment
+                    'replyposts': -cyclicOverflowPosts.length,
+                    'replyfiles': -fileCount
+                }
+            });
+		}
 	}
 
 	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
