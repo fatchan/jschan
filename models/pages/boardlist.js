@@ -9,7 +9,10 @@ module.exports = async (req, res, next) => {
 
 	let page;
 	if (req.query.page && Number.isSafeInteger(parseInt(req.query.page))) {
-		page = parseInt(req.query.page) || 1; //or 1 prevent 0 page
+		page = parseInt(req.query.page);
+		if (page <= 0) {
+			page = 1;
+		}
 	} else {
 		page = 1;
 	}
