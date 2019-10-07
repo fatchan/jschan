@@ -47,7 +47,7 @@ module.exports = {
 		    '$group': {
 		        '_id': '$board',
 		        'pph': {
-		            '$last': '$pph'
+		            '$max': '$pph' //use max since only one will have a value until we do a multi facet system that can $merge (dunno if even possible)
 		        },
 		        'ips': {
 		            '$addToSet': '$ips'

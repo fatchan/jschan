@@ -156,7 +156,7 @@ module.exports = async (req, res, next) => {
 			//get metadata
 			let processedFile = {
 					hash: file.sha256,
-					filename: file.filename,
+					filename: file.filename, //could probably remove since we have hash and extension
 					originalFilename: file.name,
 					mimetype: file.mimetype,
 					size: file.size,

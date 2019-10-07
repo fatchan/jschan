@@ -11,6 +11,7 @@ const fetch = require('node-fetch')
 module.exports = async () => {
 	//fetch stuff from others
 	const fetchWebring = [...new Set((await cache.get('webring:sites') || []).concat(following))]
+	console.log('updating webring', fetchWebring);
 	let rings = await Promise.all(fetchWebring.map(url => {
 		return fetch(url).then(res => res.json()).catch(e => console.error);
 	}));
@@ -62,4 +63,5 @@ module.exports = async () => {
 		}),
 	}
 	await outputFile(`${uploadDirectory}/json/webring.json`, JSON.stringify(json));
+	console.log('updated webring');
 }
