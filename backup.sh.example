@@ -23,7 +23,7 @@ mkdir -p $BACKUPS_DIR
 zip -r $FILE_ARCHIVE_PATH ./static
 
 #backup db
-mongodump --username $MONGO_USER --password $MONGO_PASSWORD --authenticationDatabase admin --db $MONGO_DATABASE --archive=$ARCHIVE_PATH --gzip
+mongodump --username $MONGO_USER --password $MONGO_PASSWORD --authenticationDatabase admin --db $MONGO_DATABASE --archive=$DB_ARCHIVE_PATH --gzip
 rm -rf dump
 
 #delete older than 7 days
