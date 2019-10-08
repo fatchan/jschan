@@ -8,7 +8,7 @@
     "bcrypt": "^3.0.6",
     "bull": "^3.11.0",
     "cache-pug-templates": "^2.0.1",
-    "connect-redis": "^4.0.2",
+    "connect-redis": "^4.0.3",
     "cookie-parser": "^1.4.4",
     "csurf": "^1.10.0",
     "del": "^4.1.1",
