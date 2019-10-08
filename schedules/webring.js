@@ -6,12 +6,14 @@ const fetch = require('node-fetch')
 	, { Boards } = require(__dirname+'/../db/')
 	, { outputFile } = require('fs-extra')
 	, cache = require(__dirname+'/../redis.js')
-	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js');
+	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js')
+	, timeDiffString = require(__dirname+'/../helpers/timediffstring.js');
 
 module.exports = async () => {
+	const label = `/webring.json`;
+	const start = process.hrtime();
 	//fetch stuff from others
 	const fetchWebring = [...new Set((await cache.get('webring:sites') || []).concat(following))]
-	console.log('updating webring', fetchWebring);
 	let rings = await Promise.all(fetchWebring.map(url => {
 		return fetch(url).then(res => res.json()).catch(e => console.error);
 	}));
@@ -63,5 +65,6 @@ module.exports = async () => {
 		}),
 	}
 	await outputFile(`${uploadDirectory}/json/webring.json`, JSON.stringify(json));
-	console.log('updated webring');
+	const end = process.hrtime(start);
+	console.log(timeDiffString(label, end));
 }

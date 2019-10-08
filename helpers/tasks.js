@@ -8,7 +8,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, { pruneModlogs, enableWebring } = require(__dirname+'/../configs/main.json')
 	, { Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, render = require(__dirname+'/render.js')
-	, timeDiffString = (label, end) => `${label} -> ${end[0] > 0 ? end[0]+'s ' : ''}${(end[1]/1000000).toFixed(2)}ms`;
+	, timeDiffString = require(__dirname+'/timediffstring.js');
 
 module.exports = {
 
