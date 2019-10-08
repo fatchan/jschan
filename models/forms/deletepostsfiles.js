@@ -13,7 +13,8 @@ module.exports = async (posts, unlinkOnly) => {
 			files = files.concat(post.files.map(file => {
 				return {
 					filename: file.filename,
-					hash: file.hash
+					hash: file.hash,
+					thumbextension: file.thumbextension
 				};
 			}));
 		}
