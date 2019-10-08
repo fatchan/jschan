@@ -1,13 +1,14 @@
 'use strict';
 
 const { Bans } = require(__dirname+'/../../db/')
+	, { defaultBanDuration } = require(__dirname+'/../../configs/main.json');
 
 module.exports = async (req, res, next) => {
 
 	const banDate = new Date();
-	const banExpiry = new Date(req.body.ban_duration ? banDate.getTime() + req.body.ban_duration : 8640000000000000); //perm if none or malformed input
-	const banReason = req.body.ban_reason || 'No reason specified';
-	const allowAppeal = (req.body.no_appeal || !req.body.ban_q || !req.body.ban_h) ? false : true; //dont allow appeals for range bans
+	const banExpiry = new Date(req.body.ban_duration ? banDate.getTime() + req.body.ban_duration : defaultBanDuration); //perm if none or malformed input
+	const banReason = req.body.ban_reason || req.body.log_message || 'No reason specified';
+	const allowAppeal = (req.body.no_appeal || req.body.ban_q || req.body.ban_h) ? false : true; //dont allow appeals for range bans
 
 	const bans = [];
 
@@ -42,6 +43,7 @@ module.exports = async (req, res, next) => {
 			});
 		}
 	}
+
 	if (req.body.report_ban || req.body.global_report_ban){
 		const banBoard = req.body.global_report_ban ? null : req.params.board;
 		res.locals.posts.forEach(post => {
