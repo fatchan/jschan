@@ -159,12 +159,15 @@ block content
 				.label TPH Trigger Threshold
 				input(type='number', name='tph_trigger', value=board.settings.tphTrigger)
 			.row
-				.label TPH Trigger Action
-				select(name='tph_trigger_action')
-					option(value='0', selected=board.settings.tphTriggerAction === 0) Do nothing
-					option(value='1', selected=board.settings.tphTriggerAction === 1) Enable captcha for new thread
-					option(value='2', selected=board.settings.tphTriggerAction === 2) Enable captcha for all posts
-					option(value='3', selected=board.settings.tphTriggerAction === 3) Lock Board
+				.label PPH Trigger Threshold
+				input(type='number', name='pph_trigger', value=board.settings.pphTrigger)
+			.row
+				.label TPH/PPH Trigger Action
+				select(name='trigger_action')
+					option(value='0', selected=board.settings.triggerAction === 0) Do nothing
+					option(value='1', selected=board.settings.triggerAction === 1) Enable captcha for new thread
+					option(value='2', selected=board.settings.triggerAction === 2) Enable captcha for all posts
+					option(value='3', selected=board.settings.triggerAction === 3) Lock Board
 			.row
 				.label Filters
 				textarea(name='filters' placeholder='newline separated, max 50') #{board.settings.filters.join('\n')}
@@ -173,7 +176,7 @@ block content
 				select(name='filter_mode')
 					option(value='0', selected=board.settings.filterMode === 0) Do nothing
 					option(value='1', selected=board.settings.filterMode === 1) Block post
-					option(value='2', selected=board.settings.filterMode === 2) Auto ban
+					option(value='2', selected=board.settings.filterMode === 2) Ban
 			.row
 				.label Filter Auto Ban Duration
 				input(type='text' name='ban_duration' placeholder='e.g. 1w' value=board.settings.filterBanDuration)

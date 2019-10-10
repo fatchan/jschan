@@ -52,7 +52,7 @@ module.exports = async (req, res, next) => {
 	const { filters, filterBanDuration, filterMode,
 			maxFiles, forceAnon, replyLimit,
 			threadLimit, ids, userPostSpoiler,
-			defaultName, tphTrigger, tphTriggerAction,
+			defaultName, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, locked, allowedFileTypes, flags } = res.locals.board.settings;
 	if (locked === true) {
 		await deleteTempFiles(req).catch(e => console.error);
@@ -366,25 +366,24 @@ module.exports = async (req, res, next) => {
 	const postId = await Posts.insertOne(res.locals.board, data, thread);
 
 	let enableCaptcha = false;
-	if (!data.thread //if this is a new thread
-		&& tphTriggerAction > 0 //and the triger mode is not nothing
-		&& ((tphTriggerAction < 3 && captchaMode < tphTriggerAction) //and captcha mode less than captcha trigger
-			|| (tphTriggerAction === 3 && locked !== true))) { //and not locked with lock trigger
+	if (triggerAction > 0 //trigger is enabled
+		&& (tphTrigger > 0 || pphTrigger > 0) //and we have a trigger > 0 for threads or posts
+		&& ((triggerAction < 3 && captchaMode < triggerAction) //and captcha mode less than trigger if trigger < 2
+			|| (triggerAction === 3 && locked !== true))) { //or trigger is to lock and board not locked
 		const pastHourMongoId = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000));
 		//count threads in past hour
 		const hourPosts = await Stats.getHourPosts(res.locals.board._id);
 		//if its above the trigger
-		if (hourPosts && hourPosts.tph && hourPosts.tph >= tphTrigger) { //TODO: add an option to check pph OR tph, not just tph
+		if (hourPosts && (hourPosts.tph >= tphTrigger || hourPosts.pph > pphTrigger)) { //TODO: add an option to check pph OR tph, not just tph
 			//update in memory for other stuff done e.g. rebuilds
 			const update = {
 				'$set': {}
 			};
-			if (tphTriggerAction < 3) {
-				res.locals.board.settings.captchaMode = tphTriggerAction;
-				update['$set']['settings.captchaMode'] = tphTriggerAction;
+			if (triggerAction < 3) {
+				res.locals.board.settings.captchaMode = triggerAction;
+				update['$set']['settings.captchaMode'] = triggerAction;
 				enableCaptcha = true;
-			}
-			if (tphTriggerAction === 3) {
+			} else if (triggerAction === 3) {
 				res.locals.board.settings.locked = true;
 				update['$set']['settings.locked'] = true;
 			}
