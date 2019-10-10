@@ -22,9 +22,9 @@ block content
 						li: a(href='#site-operation') How do you run the site?
 					b Making posts
 					ul.mv-0
-						//li: a(href='#how-to-post') How do I make a post?
 						li: a(href='#name-formatting') How do names, tripcodes and capcodes work?
 						li: a(href='#post-styling') What kind of styling options are available when making a post?
+						li: a(href='#moderation') How does moderation work?
 					b Boards, users & permissions
 					ul.mv-0
 						li: a(href='#make-a-board') How do I make my own board?
@@ -97,7 +97,6 @@ block content
 
 					b Capcode
 					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. The capcoded string will be prefixed with the users role so board staff can make an authoritative post and prove their staff status.
-
 	.table-container.flex-center.mv-5
 		.anchor#post-styling
 		table
@@ -166,6 +165,38 @@ block content
 				td &gt;&gt;&gt;/b/123
 				td: a(class="quote" href="#!") &gt;&gt;&gt;/b/123
 	.table-container.flex-center.mv-5
+		.anchor#moderation
+		table
+			tr
+				th: a(href='#moderation') How does moderation work?
+			tr
+				td.post-message
+					b General
+					p
+						| Moderation is very simple. Moderation permissions are different between regular users, board staff (board owner or moderator) and globals (global staff or admin). 
+						| By default, regular users can delete, spoiler or remove the files from their own posts, provided a matching post password is supplied. They can also report or global report posts. 
+						| Board staff have near full power over posts on their board including removing posts, stickying, spoilering, etc. even for other users posts without the need for a password. They also have access to board specific management page.
+						| Global staff have full power over all posts on all boards, can access the board specific management page for any board and additionally have access to the global management page.
+						| More details on the specifics of permission levels is available 
+						a(href='#staff-and-permissions') here
+						| .
+					b Local vs. Global reports
+					p
+						| There exists the concept of "local" and "global" reports. Reporting a post locally will show the post along with reports on the report page for that particular board, and the reports 
+						| may be actioned upon by the board staff. Reporting a post globally will show the post along with reports on the global manage page available only to global staff and may be actioned upon by global staff. 
+						| Global reports should be used to flag posts that violate global rules such as illegal content or spam, in contrast to local reports which are for posts that abide by global rules but break 
+						| board-specific rules (which may be made arbitrarily by board staff). It is also possible to be banned from a board or globally for abuse of the report system.
+					b Batch processing of posts
+					p
+						| Each post has a checkbox in the top left to select it for moderation actions. Multiple posts may be selected to allow batch processing e.g. reporting multiple offending posts in one request. 
+						| The same is present in moderation interfaces. Some actions for example bans (which are based on IP) may also be handled in batches. Selecting multiple posts and using the ban action will 
+						| apply a single ban for each unique IP of the selected posts.
+					b Time format in moderation interfaces
+					p
+						| Some moderation interfaces, for example the ban duration when moderating posts, or the ban duration for post filtering use a shorthand for times/length. This format supports years, months, weeks, days and hours.
+						| An input of "3m" would mean 3 months and "1y2m3w4d5h" would mean 1 year, 2 months, 3 weeks, 4 days and 5 hours. Units of time should be in descending order, so "2w1m" is invalid. 
+						| However you may use "6w" for example to input 6 weeks, and are not required to use "1m2w".
+	.table-container.flex-center.mv-5
 		.anchor#make-a-board
 		table
 			tr
@@ -217,6 +248,8 @@ block content
 					b How are IP addresses stored?
 					p Jschan stores them hashed with a secret, and a substring of this is shown in ban pages and some moderation interfaces. Clear IPs are present in Nginx logs and retained for 7 days.
 					b Is the server secure?
-					p Only ports 443 and 80 are open for HTTP(s) and one other port for SSH. Key only login is enabled and root login is disabled. The software is running as an unprivileged users. MongoDB and Redis are configured to listen on local interfaces only and require authentication.
+					p Only ports 443 and 80 are open for HTTP(s) and one other port for SSH. Key only login is enabled and root login is disabled. The software is running as unprivileged users. MongoDB and Redis are configured to listen on local interfaces only and require authentication.
+					b So it can never be hacked?
+					p I am not so naive to make that promise.
 					b I have an issue/found a vulnerability/need to contact you.
 					p Issues with the software can be posted on the #[a(href='https://github.com/fatchan/jschan/issues') issues page] or if you prefer not to use github, #[a(href='/t/index.html#postform') post on the meta board] with a detailed description of the problem. For private matters or vulnerability reports, please contact me via email tom-69420-me.
