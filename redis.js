@@ -37,4 +37,27 @@ module.exports = {
 		return client.del(key);
 	},
 
+	deletePattern: (pattern) => {
+		return new Promise((resolve, reject) => {
+			const stream = client.scanStream({
+				match: pattern
+			});
+			stream.on('data', (keys) => {
+				if (keys.length > 0) {
+					const pipeline = client.pipeline();
+					for (let i = 0; i < keys.length; i++) {
+						pipeline.del(keys[i]);
+					}
+					pipeline.exec();
+				}
+			});
+			stream.on('end', () => {
+				resolve();
+			});
+			stream.on('error', (err) => {
+				reject(err);
+			});
+		});
+	},
+
 }
