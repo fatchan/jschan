@@ -13,15 +13,15 @@ const Queue = require('bull')
 	console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
 
-	const buildTasks = require(__dirname+'/helpers/tasks.js')
-		, generateQueue = new Queue('generate', { 'redis': configs.redis });
+	const tasks = require(__dirname+'/helpers/tasks.js')
+		, taskQueue = new Queue('task', { 'redis': configs.redis });
 
-	generateQueue
+	taskQueue
 		.on('error', console.error)
 		.on('failed', console.warn);
 
-	generateQueue.process(async job => {
-		return buildTasks[job.data.task](job.data.options);
+	taskQueue.process(async job => {
+		return tasks[job.data.task](job.data.options);
 	});
 
 })();

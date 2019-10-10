@@ -2,14 +2,14 @@
 
 const Queue = require('bull')
 	, configs = require(__dirname+'/configs/main.json')
-	, generateQueue = new Queue('generate', { 'redis': configs.redis });
+	, taskQueue = new Queue('task', { 'redis': configs.redis });
 
 module.exports = {
 
-	queue: generateQueue,
+	queue: taskQueue,
 
 	push: (data, options) => {
-		generateQueue.add(data, options);
+		taskQueue.add(data, options);
 	}
 
 }
