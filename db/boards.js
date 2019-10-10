@@ -15,12 +15,12 @@ module.exports = {
 		} else {
 			board = await db.findOne({ '_id': name });
 			if (board) {
-				cache.set(`board_${name}`, board);
+				cache.set(`board_${name}`, board, 3600);
 				if (board.banners.length > 0) {
 					cache.sadd(`banners_${name}`, board.banners);
 				}
 			} else {
-				cache.set(`board_${name}`, 'no_exist', 'ex', 3600); //1 hour expiry just so it doesnt grow indefinitely
+				cache.set(`board_${name}`, 'no_exist', 600);
 			}
 		}
 		return board;

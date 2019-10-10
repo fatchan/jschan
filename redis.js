@@ -14,8 +14,12 @@ module.exports = {
 	},
 
 	//set a value on key
-	set: (key, value) => {
-		return client.set(key, JSON.stringify(value));
+	set: (key, value, ttl) => {
+		if (ttl) {
+			client.set(key, JSON.stringify(value), 'EX', ttl);
+		} else {
+			client.set(key, JSON.stringify(value));
+		}
 	},
 
 	//add items to a set
