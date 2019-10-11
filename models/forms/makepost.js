@@ -374,7 +374,7 @@ module.exports = async (req, res, next) => {
 		//count threads in past hour
 		const hourPosts = await Stats.getHourPosts(res.locals.board._id);
 		//if its above the trigger
-		if (hourPosts && (hourPosts.tph >= tphTrigger || hourPosts.pph > pphTrigger)) { //TODO: add an option to check pph OR tph, not just tph
+		if (hourPosts && (tphTrigger > 0 && hourPosts.tph >= tphTrigger) || (pphTrigger > 0 && hourPosts.pph > pphTrigger)) { //TODO: add an option to check pph OR tph, not just tph
 			//update in memory for other stuff done e.g. rebuilds
 			const update = {
 				'$set': {}

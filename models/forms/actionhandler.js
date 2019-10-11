@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
 
 	//if user isnt staff, and they put an action that requires password, e.g. delete/spoiler, then filter posts to only matching password
 	if (res.locals.permLevel >= 4 && res.locals.actions.numPasswords > 0) {
-		const passwordPosts = [];
+		let passwordPosts = [];
 		if (req.body.password && req.body.password.length > 0) {
 			//hash their input and make it a buffer
 			const inputPasswordHash = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
