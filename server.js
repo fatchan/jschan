@@ -22,7 +22,9 @@ const express = require('express')
 
 (async () => {
 
-	console.log('STARTING IN MODE:', process.env.NODE_ENV);
+	const env = process.env.NODE_ENV;
+	const production = env === 'production';
+	console.log('STARTING IN MODE:', env);
 
 	// connect to mongodb
 	console.log('CONNECTING TO MONGODB');
@@ -53,7 +55,7 @@ const express = require('express')
 		saveUninitialized: false,
 		cookie: {
 			httpOnly: true,
-			secure: true,
+			secure: production,
 			sameSite: 'strict',
 		}
 	}));
