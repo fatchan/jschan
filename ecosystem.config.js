@@ -15,6 +15,9 @@ module.exports = {
 		env: {
 			NODE_ENV: 'development'
 		},
+		env_development: {
+			NODE_ENV: 'development'
+		}
 		env_production: {
 			NODE_ENV: 'production'
 		}
@@ -43,6 +46,9 @@ module.exports = {
 		max_memory_restart: '1G',
 		log_date_format: 'YYYY-MM-DD HH:mm:ss.SSS',
 		env: {
+			NODE_ENV: 'development'
+		},
+		env_development: {
 			NODE_ENV: 'development'
 		},
 		env_production: {
