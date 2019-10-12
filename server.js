@@ -83,12 +83,12 @@ const express = require('express')
 	app.locals.themes = themes;
 
 	// routes
-	app.use('/forms', require(__dirname+'/controllers/forms.js'));
-	app.use('/', require(__dirname+'/controllers/pages.js'));
 	if (!production) {
 		app.use(express.static(__dirname+'/static'));
 		app.use(express.static(__dirname+'/static/html'));
 	}
+	app.use('/forms', require(__dirname+'/controllers/forms.js'));
+	app.use('/', require(__dirname+'/controllers/pages.js'));
 
 	//404 catchall
 	app.get('*', (req, res) => {
