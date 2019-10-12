@@ -6,6 +6,10 @@ const { enableWebring } = require(__dirname+'/../../configs/main.json')
 
 module.exports = async (req, res, next) => {
 
+	const nopage = { ...req.query };
+	delete nopage.page;
+	const queryString = new URLSearchParams(nopage).toString();
+
 	let page;
 	if (req.query.page && Number.isSafeInteger(parseInt(req.query.page))) {
 		page = parseInt(req.query.page);
@@ -67,6 +71,7 @@ module.exports = async (req, res, next) => {
 		maxPage,
 		sort,
 		search: !Array.isArray(search) ? search : null,
+		queryString,
 	});
 
 }

@@ -6,8 +6,9 @@ block head
 
 block content
 	h1.board-title Board List
-	section.form-wrapper.flexleft.mv-10
+	section.flexcenter.mv-10
 		form.form-post(action=`/boards.html` method='GET')
+			input(type='hidden' value=page)
 			.row
 				.label Name
 				input(type='text' name='search' value=search)
@@ -58,5 +59,5 @@ block content
 					td #{board.postsPerHour || '-'}
 					td #{board.uniqueUsers || '-'}
 					td #{board.totalPosts || '-'}
-	nav.pages.text-center.mt-5
+	nav.pages.text-center.mt-5.mv-0
 		include ../includes/boardlistpages.pug
