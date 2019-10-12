@@ -1,4 +1,5 @@
 const gm = require('gm').subClass({ imageMagick: true })
+	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js')
 	, rr = (min, max) => Math.floor(Math.random() * (max-min + 1) + min)
 	, width = 200
 	, height = 80
@@ -48,8 +49,8 @@ module.exports = (text, captchaId) => {
 		//.drawText(5, 60, text)
 		x.drawRectangle(5, recy, 195, recy+4)
 		.distort(distorts, 'Shepards')
-		//.quality(10)
-		.write(`./static/captcha/${captchaId}.jpg`, (err) => {
+		.quality(30)
+		.write(`${uploadDirectory}/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);
 			}

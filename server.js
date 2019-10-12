@@ -86,6 +86,7 @@ const express = require('express')
 	if (!production) {
 		app.use(express.static(__dirname+'/static'));
 		app.use(express.static(__dirname+'/static/html'));
+		app.use(express.static(__dirname+'/static/json'));
 	}
 	app.use('/forms', require(__dirname+'/controllers/forms.js'));
 	app.use('/', require(__dirname+'/controllers/pages.js'));

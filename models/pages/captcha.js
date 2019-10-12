@@ -6,7 +6,7 @@ const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	if (!production && req.cookies['captchaid'] !== null) {
+	if (!production && req.cookies['captchaid'] != null) {
 		return res.redirect(`/captcha/${req.cookies['captchaid']}.jpg`);
 	}
 
