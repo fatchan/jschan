@@ -2,5 +2,6 @@ node_modules/
 backup.sh
 configs/*.json
 static/*
+gulp/res/js/socket.io.js
 gulp/dist/
 tmp/

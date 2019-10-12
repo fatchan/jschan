@@ -31,7 +31,7 @@ module.exports = {
 	},
 
 	deleteAll: () => {
-		return ratelimit.deleteMany({});
+		return db.deleteMany({});
 	},
 
 }

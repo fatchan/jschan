@@ -7,6 +7,8 @@ const Mongo = require(__dirname+'/db.js')
 
 module.exports = {
 
+	db,
+
 	count: (usernames) => {
 		return db.countDocuments({
 			'_id': {
@@ -22,7 +24,6 @@ module.exports = {
 	insertOne: async (username, password, authLevel) => {
 		// hash the password
 		const passwordHash = await bcrypt.hash(password, 12);
-
 		//add to db
 		return db.insertOne({
 			'_id': username,

@@ -34,14 +34,7 @@ async function wipe() {
 	const Mongo = require(__dirname+'/db/db.js');
 	await Mongo.connect();
 	const { Boards, Posts, Captchas, Ratelimits,
-			Accounts, Files, Stats, Modlogs, Bans } = require(__dirname+'/db/')
-		, Posts = require(__dirname+'/db/posts.js')
-		, Bans = require(__dirname+'/db/bans.js')
-		, Captchas = require(__dirname+'/db/captchas.js')
-		, Ratelimits = require(__dirname+'/db/ratelimits.js')
-		, Accounts = require(__dirname+'/db/accounts.js')
-		, Files = require(__dirname+'/db/files.js')
-		, Stats = require(__dirname+'/db/stats.js');
+		Accounts, Files, Stats, Modlogs, Bans } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
@@ -157,7 +150,7 @@ function scripts() {
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 
-const build = gulp.parallel(css, scripts, images, deletehtml, custompages);
+const build = gulp.parallel(css, scripts, images, gulp.series(deletehtml, custompages));
 const reset = gulp.series(wipe, build)
 const html = gulp.series(deletehtml, custompages)
 

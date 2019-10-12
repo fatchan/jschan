@@ -5,6 +5,8 @@ const Mongo = require(__dirname+'/db.js')
 
 module.exports = {
 
+	db,
+
 	getDates: (board) => {
 		return db.aggregate([
             {

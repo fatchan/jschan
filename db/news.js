@@ -6,6 +6,8 @@ const Mongo = require(__dirname+'/db.js')
 
 module.exports = {
 
+	db,
+
 	find: () => {
 		return db.find({}).sort({
 			'_id': -1

@@ -6,6 +6,8 @@ const Mongo = require(__dirname+'/db.js')
 
 module.exports = {
 
+	db,
+
 	updateOne: (board, ip, thread) => {
 		return db.updateOne({
 			'board': board,

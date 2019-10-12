@@ -56,10 +56,18 @@ module.exports = {
 			}
 		]).toArray().then(res => {
 			const stats = res[0];
-			return {
-				count: stats.count,
-				totalSize: stats.size,
-				totalSizeString: formatSize(stats.size)
+			if (stats) {
+				return {
+					count: stats.count,
+					totalSize: stats.size,
+					totalSizeString: formatSize(stats.size)
+				}
+			} else {
+				return {
+					count: 0,
+					totalSize: 0,
+					totalSizeString: '0B'
+				}
 			}
 		});
 	},
