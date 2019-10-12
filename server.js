@@ -87,6 +87,7 @@ const express = require('express')
 	app.use('/', require(__dirname+'/controllers/pages.js'));
 	if (!production) {
 		app.use(express.static(__dirname+'/static'));
+		app.use(express.static(__dirname+'/static/html'));
 	}
 
 	//404 catchall
