@@ -814,7 +814,7 @@ table.boardtable th:nth-child(3),table.boardtable th:nth-child(4),table.boardtab
 	}
 
 	.form-post {
-		width: calc(100% - 10px)!important;
+		width: 100%;
 	}
 
 	.form-login {

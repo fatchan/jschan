@@ -6,10 +6,31 @@ block head
 
 block content
 	h1.board-title Board List
-	if boards && boards.length > 0
+	section.form-wrapper.flexleft.mv-10
+		form.form-post(action=`/boards.html` method='GET')
+			.row
+				.label Name
+				input(type='text' name='search' value=search)
+			.row
+				.label Users
+				select(name='ips_sort')
+					option(value='-1' selected=sort.ips === -1) Highest to Lowest
+					option(value='1' selected=sort.ips === 1) Lowest to Highest
+			.row
+				.label PPH
+				select(name='pph_sort')
+					option(value='-1' selected=sort.pph === -1) Highest to Lowest
+					option(value='1' selected=sort.pph === 1) Lowest to Highest
+			.row
+				.label Posts
+				select(name='posts_sort')
+					option(value='-1' selected=sort.sequence_value === -1) Highest to Lowest
+					option(value='1' selected=sort.sequence_value === 1) Lowest to Highest
+			input(type='submit', value='Filter')
+	if localBoards && localBoards.length > 0
 		h4.board-description Local Boards
 		include ../includes/boardtable.pug
-			each board in boards
+			each board in localBoards
 				tr
 					td 
 						if board.settings.sfw
@@ -34,5 +55,5 @@ block content
 					td #{board.postsPerHour || '-'}
 					td #{board.uniqueUsers || '-'}
 					td #{board.totalPosts || '-'}
-	nav.pages.text-center
+	nav.pages.text-center.mt-5
 		include ../includes/boardlistpages.pug

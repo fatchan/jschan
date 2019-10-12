@@ -100,10 +100,14 @@ module.exports = {
 		);
 	},
 
-	boardSort: (skip=0, limit=50) => {
-		return db.find({
-			'settings.unlisted': false,
-		}, {
+	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}) => {
+		const addedFilter = {
+			'settings.unlisted': false
+		}
+		if (filter.name) {
+			addedFilter._id = filter.name;
+		}
+		return db.find(addedFilter, {
 			'projection': {
 				'_id': 1,
 				'sequence_value': 1,
@@ -113,11 +117,11 @@ module.exports = {
 				'settings.description': 1,
 				'settings.name': 1,
 			}
-		}).sort({
-			'ips': -1,
-			'pph': -1,
-			'sequence_value': -1,
-  		}).skip(skip).limit(limit).toArray();
+		})
+		.sort(sort)
+		.skip(skip)
+		.limit(limit)
+		.toArray();
 	},
 
 	count: (showUnlisted=false) => {

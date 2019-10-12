@@ -3,7 +3,7 @@
 const fetch = require('node-fetch')
 	, { meta } = require(__dirname+'/../configs/main.json')
 	, { logos, following, blacklist } = require(__dirname+'/../configs/webring.json')
-	, { Boards } = require(__dirname+'/../db/')
+	, { Boards, Webring } = require(__dirname+'/../db/')
 	, { outputFile } = require('fs-extra')
 	, cache = require(__dirname+'/../redis.js')
 	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js')
@@ -38,9 +38,9 @@ module.exports = async () => {
 	}
 	const known = [...new Set(found.concat(fetchWebring))]
 		.filter(site => !blacklist.some(x => site.includes(x)) && !site.includes(meta.url));
-	//add the known sites and boards to cache in redis (so can be used later in other places e.g. board list)
 	cache.set('webring:sites', known);
-	cache.set('webring:boards', webringBoards);
+	await Webring.deleteAll();
+	await Webring.db.insertMany(webringBoards);
 	//now update the webring json with board list and known sites
 	const boards = await Boards.boardSort(0, 0); //does not include unlisted boards
 	const json = {

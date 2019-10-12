@@ -33,7 +33,7 @@ const gulp = require('gulp')
 async function wipe() {
 	const Mongo = require(__dirname+'/db/db.js');
 	await Mongo.connect();
-	const { Boards, Posts, Captchas, Ratelimits,
+	const { Webring, Boards, Posts, Captchas, Ratelimits,
 		Accounts, Files, Stats, Modlogs, Bans } = require(__dirname+'/db/');
 
 	//wipe db shit
@@ -43,6 +43,7 @@ async function wipe() {
 		Accounts.deleteAll(),
 		Posts.deleteAll(),
 		Boards.deleteAll(),
+		Webring.deleteAll(),
 		Bans.deleteAll(),
 		Files.deleteAll(),
 		Stats.deleteAll(),
@@ -69,6 +70,7 @@ async function wipe() {
 		})
 		//add indexes - should profiled and changed at some point if necessary
 		, Stats.db.createIndex({board:1, hour:1})
+		, Webring.db.createIndex({uniqueUsers:1, postsPerHour:1, totalPosts:1})
 		, Boards.db.createIndex({ips: 1, pph:1, sequence_value:1})
 		, Bans.db.dropIndexes()
 		, Captchas.db.dropIndexes()

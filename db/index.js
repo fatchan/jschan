@@ -4,6 +4,7 @@ module.exports = {
 
 	Posts: require(__dirname+'/posts.js'),
 	Boards: require(__dirname+'/boards.js'),
+	Webring: require(__dirname+'/webring.js'),
 	Stats: require(__dirname+'/stats.js'),
 	Accounts: require(__dirname+'/accounts.js'),
 	Bans: require(__dirname+'/bans.js'),
