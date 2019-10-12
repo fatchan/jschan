@@ -85,6 +85,9 @@ const express = require('express')
 	// routes
 	app.use('/forms', require(__dirname+'/controllers/forms.js'));
 	app.use('/', require(__dirname+'/controllers/pages.js'));
+	if (!production) {
+		app.use(express.static(__dirname+'/static'));
+	}
 
 	//404 catchall
 	app.get('*', (req, res) => {

@@ -4,7 +4,7 @@ const { ipHashSecret } = require(__dirname+'/../configs/main.json')
     , { createHash } = require('crypto');
 
 module.exports = (req, res, next) => {
-	const ip = req.headers['x-real-ip']; //need to consider forwarded-for, etc here and in nginx
+	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress; //need to consider forwarded-for, etc here and in nginx
 	const delimiter = ip.includes('.') ? '.' : ':';
 	let split = ip.split(delimiter);
 	res.locals.ip = {
