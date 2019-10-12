@@ -2,7 +2,7 @@
 
 const { enableWebring } = require(__dirname+'/../../configs/main.json')
 	, { Boards, Webring } = require(__dirname+'/../../db/')
-	, limit = 1;
+	, limit = 20;
 
 module.exports = async (req, res, next) => {
 
@@ -26,14 +26,14 @@ module.exports = async (req, res, next) => {
 			'sequence_value': -1,
 		}
 	} else {
-		if (ips_sort) {
-			sort.ips = ips_sort == '1' ? 1 : -1;
+		if (ips_sort && (ips_sort == 1 || ips_sort == -1)) {
+			sort.ips = ips_sort == 1 ? 1 : -1;
 		}
-		if (pph_sort) {
-			sort.pph = pph_sort == '1' ? 1 : -1;
+		if (pph_sort && (pph_sort == 1 || pph_sort == -1)) {
+			sort.pph = pph_sort == 1 ? 1 : -1;
 		}
-		if (posts_sort) {
-			sort.sequence_value = posts_sort == '1' ? 1 : -1;
+		if (posts_sort && (posts_sort == 1 || posts_sort == -1)) {
+			sort.sequence_value = posts_sort == 1 ? 1 : -1;
 		}
 	}
 

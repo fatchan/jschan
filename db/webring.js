@@ -10,14 +10,20 @@ module.exports = {
 	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}) => {
 		const addedFilter = {};
 		if (filter.name) {
-			addedfilter.uri = filter.name;
+			addedFilter.uri = filter.name;
+		}
+		const addedSort = {};
+		if (sort.ips) {
+			addedSort['uniqueUsers'] = sort.ips
+		}
+		if (sort.pph) {
+			addedSort['postsPerHour'] = sort.pph
+		}
+		if (sort.sequence_value) {
+			addedSort['totalPosts'] = sort.sequence_value
 		}
 		return db.find(addedFilter)
-		.sort({
-			'uniqueUsers': sort.ips,
-			'postsPerHour': sort.pph,
-			'totalPosts': sort.sequence_value,
-		})
+		.sort(addedSort)
 		.skip(skip)
 		.limit(limit)
 		.toArray();
@@ -25,7 +31,7 @@ module.exports = {
 
 	count: () => {
 		//no need to countDocuments beacuse we dont filter anything. just use metadata
-		return db.estimateDocumentCount();
+		return db.estimatedDocumentCount();
 	},
 
 	deleteAll: (board) => {

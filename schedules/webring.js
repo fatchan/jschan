@@ -32,7 +32,12 @@ module.exports = async () => {
 			found = found.concat(ring.known);
 		}
 		if (ring.boards && ring.boards.length > 0) {
-			ring.boards.forEach(board => board.siteName = ring.name);
+			ring.boards.forEach(board => {
+				board.siteName = ring.name;
+				board.totalPosts = parseInt(board.totalPosts);
+				board.postsPerHour = parseInt(board.postsPerHour);
+				board.uniqueUsers = parseInt(board.uniqueUsers);
+			});
 			webringBoards = webringBoards.concat(ring.boards);
 		}
 	}
