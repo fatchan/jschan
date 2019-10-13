@@ -9,8 +9,11 @@ module.exports = {
 
 	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}) => {
 		const addedFilter = {};
-		if (filter.name) {
-			addedFilter.uri = filter.name;
+		if (filter.search) {
+			addedFilter['$or'] = [
+				{ uri: filter.search },
+				{ tags: filter.search }
+			]
 		}
 		const addedSort = {};
 		if (sort.ips) {

@@ -104,18 +104,23 @@ module.exports = {
 		const addedFilter = {
 			'settings.unlisted': false
 		}
-		if (filter.name) {
-			addedFilter._id = filter.name;
+		if (filter.search) {
+			addedFilter['$or'] = [
+				{ 'settings.tags': filter.search },
+				{ '_id':  filter.search },
+			];
 		}
 		return db.find(addedFilter, {
 			'projection': {
 				'_id': 1,
+				'lastPost': 1,
 				'sequence_value': 1,
 				'pph': 1,
 				'ips': 1,
 				'settings.sfw': 1,
 				'settings.description': 1,
 				'settings.name': 1,
+				'settings.tags': 1,
 			}
 		})
 		.sort(sort)
@@ -164,6 +169,9 @@ module.exports = {
 			{
 				'$inc': {
 					'sequence_value': 1
+				},
+				'$set': {
+					'lastPost': new Date()
 				}
 			},
 			{

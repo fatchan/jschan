@@ -65,7 +65,9 @@ module.exports = async () => {
 				postsPerHour: b.pph,
 				totalPosts: b.sequence_value-1,
 				uniqueUsers: b.ips,
-				nsfw: !b.settings.sfw
+				nsfw: !b.settings.sfw,
+				tags: b.settings.tags,
+				lastPostTimestamp: b.lastPost,
 			};
 		}),
 	}

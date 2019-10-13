@@ -25,7 +25,7 @@ module.exports = async (req, res, next) => {
 		markdownAnnouncement = sanitized;
 	}
 
-	let moderators = req.body.moderators != null ? req.body.moderators.split('\n').filter(n => n).slice(0,10) : oldSettings.moderators
+	let moderators = req.body.moderators != null ? req.body.moderators.split('\r\n').filter(n => n).slice(0,10) : oldSettings.moderators
 	if (moderators !== oldSettings.moderators) {
 		//make sure moderators actually have existing accounts
 		if (moderators.length > 0) {
@@ -65,8 +65,8 @@ module.exports = async (req, res, next) => {
 		'forceReplyFile': req.body.force_reply_file ? true : false,
 		'forceThreadSubject': req.body.force_thread_subject ? true : false,
 		'defaultName': req.body.default_name && req.body.default_name.trim().length > 0 ? req.body.default_name : oldSettings.defaultName,
-		'tags': req.body.tags !== null ? req.body.tags.split('\n').filter(n => n).slice(0,10) : oldSettings.tags,
-		'filters': req.body.filters !== null ? req.body.filters.split('\n').filter(n => n).slice(0,50) : oldSettings.filters,
+		'tags': req.body.tags !== null ? req.body.tags.split('\r\n').filter(n => n).slice(0,10) : oldSettings.tags,
+		'filters': req.body.filters !== null ? req.body.filters.split('\r\n').filter(n => n).slice(0,50) : oldSettings.filters,
 		'filterMode': typeof req.body.filter_mode === 'number' && req.body.filter_mode !== oldSettings.filterMode ? req.body.filter_mode : oldSettings.filterMode,
 		'filterBanDuration': typeof req.body.ban_duration === 'number' && req.body.ban_duration !== oldSettings.filterBanDuration ? req.body.ban_duration : oldSettings.filterBanDuration,
 		'theme': req.body.theme ? req.body.theme : oldSettings.theme,

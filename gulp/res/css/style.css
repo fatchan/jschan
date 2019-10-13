@@ -34,6 +34,10 @@ main {
 	align-items: center;
 }
 
+.em {
+	font-style: italic;
+}
+
 .strikethrough {
 	text-decoration: line-through;
 }
@@ -215,6 +219,7 @@ p {
 .spoiler {
 	background: black;
 	color: black;
+	cursor: none;
 }
 
 .spoiler:hover, .spoiler:hover a {
@@ -307,7 +312,7 @@ table {
 	background: var(--background-rest);
 	border: 1px solid var(--box-border-color);
 	border-spacing: 0;
-	width: 600px;
+	width: 700px;
 }
 
 th {
@@ -806,10 +811,17 @@ table.boardtable th:nth-child(3),table.boardtable th:nth-child(4),table.boardtab
 	min-width: 50px;
 }
 
+@media only screen and (max-width: 700px) {
+	table {
+		width: 100%;
+	}
+}
+
 @media only screen and (max-width: 600px) {
 
 	table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
-	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4) {
+	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
+	table.boardtable td:nth-child(5), table.boardtable th:nth-child(5) {
 		display: none;
 	}
 

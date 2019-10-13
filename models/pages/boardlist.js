@@ -44,8 +44,7 @@ module.exports = async (req, res, next) => {
 	let filter = {};
 	if (search && !Array.isArray(search)) {
 		filter = {
-			//TODO: add tags searching once (if) the webring adds it
-			'name': search,
+			'search': search,
 		}
 	}
 

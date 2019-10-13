@@ -10,7 +10,7 @@ block content
 		form.form-post(action=`/boards.html` method='GET')
 			input(type='hidden' value=page)
 			.row
-				.label Name
+				.label Search
 				input(type='text' name='search' value=search)
 			.row
 				.label PPH
@@ -28,8 +28,9 @@ block content
 				.label Posts
 				select(name='posts_sort')
 					option(value='') -
-					option(value='-1' selected=sort.sequence_value === -1) Descending
-					option(value='1' selected=sort.sequence_value === 1) Ascending
+						option(value='-1' selected=sort.sequence_value === -1) Descending
+						option(value='1' selected=sort.sequence_value === 1) Ascending
+
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
 		h4.board-description Local Boards
@@ -55,7 +56,7 @@ block content
 							span.user-id.sfw SFW
 							|  
 						a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
-					td #{board.subtitle}
+					td #{board.subtitle || '-'}
 					td #{board.postsPerHour}
 					td #{board.uniqueUsers}
 					td #{board.totalPosts}

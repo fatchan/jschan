@@ -35,7 +35,7 @@ module.exports = (text) => {
 
 	//bold
 	text = text.replace(boldRegex, (match, bold) => {
-		return `<strong>${bold}</strong>`;
+		return `<span class='bold'>${bold}</span>`;
 	});
 
 	//underline
@@ -55,7 +55,7 @@ module.exports = (text) => {
 
 	//italic
 	text = text.replace(italicRegex, (match, italic) => {
-		return `<em>${italic}</em>`;
+		return `<span class='em'>${italic}</span>`;
 	});
 
 	//spoilers
