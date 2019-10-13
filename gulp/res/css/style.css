@@ -338,7 +338,25 @@ td, th {
 	z-index: 1;
 }
 
-.post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal {
+.dot {
+	height: .75em;
+	width: .75em;
+	background-color: orange;
+	border-radius: 50%;
+	animation: pulsate 2s ease;
+	animation-iteration-count: infinite;
+}
+
+@keyframes pulsate {
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+
+.post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, .live {
 	background: var(--post-color);
 	border-width: 1px;/*0 1px 1px 0;*/
 	border-style: solid;
@@ -364,21 +382,21 @@ td, th {
 .modal {
 	display: flex;
 	flex-direction: column;
-    max-width: calc(100% - 10px);
-    max-height: calc(100% - 50px);
-    position: fixed;
-    top: 38px;
-    background-color: var(--post-color);
-    z-index: 4;
-    box-sizing: border-box;
-    padding: 5px;
-    border: 1px solid var(--post-outline-color);
+	max-width: calc(100% - 10px);
+	max-height: calc(100% - 50px);
+	position: fixed;
+	top: 38px;
+	background-color: var(--post-color);
+	z-index: 4;
+	box-sizing: border-box;
+	padding: 5px;
+	border: 1px solid var(--post-outline-color);
 	align-self: center;
 }
 
 details.actions div {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .actions {
@@ -428,7 +446,7 @@ details.actions div {
 	flex-flow: column wrap;
 	width: max-content;
 	width: -moz-max-content;
-	margin-top: 10px;
+	/*margin-top: 10px;*/
 }
 
 .toggle {

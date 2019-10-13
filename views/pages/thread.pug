@@ -34,6 +34,9 @@ block content
 			for post in thread.replies
 				+post(post)
 		hr(size=1)
+		div.jsonly.live#livetext
+			.dot#livecolor
+			| Connecting...
 		nav.pages
 			+boardnav(null, true, true)
 		include ../includes/actionfooter.pug

@@ -55,9 +55,9 @@ block content
 							span.user-id.sfw SFW
 							|  
 						a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
-					td #{board.subtitle || '-'}
-					td #{board.postsPerHour || '-'}
-					td #{board.uniqueUsers || '-'}
-					td #{board.totalPosts || '-'}
+					td #{board.subtitle}
+					td #{board.postsPerHour}
+					td #{board.uniqueUsers}
+					td #{board.totalPosts}
 	nav.pages.text-center.mt-5.mv-0
 		include ../includes/boardlistpages.pug
