@@ -69,21 +69,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const room = `${roomParts[1]}-${roomParts[3]}`;
 		const thread = document.querySelector('.thread');
 		const socket = io({ transports: ['websocket'] }); //no polling
-		const livedot = document.getElementById('livedot');
+		const livecolor = document.getElementById('livecolor');
 		const livetext = document.getElementById('livetext').childNodes[1];
 		socket.on('connect', () => {
 			console.log('joined room', room);
-			livedot.style.color = '#0de600';
+			livecolor.style.backgroundColor = '#0de600';
+			livetext.nodeValue = ` Connected to room ${room}`;
 			socket.emit('room', room);
 		});
 		socket.on('disconnect', () => {
 			console.log('lost connection to room');
-			livedot.style.color = 'orange';
+			livetext.nodeValue = ` Lost connection to room ${room}`;
+			livecolor.style.backgroundColor = 'red';
 		});
 		socket.on('reconnect', () => {
 			console.log('reconnected to room');
-			livedot.style.color = '#0de600';
-			livetext.
 			jsonCatchup();
 		});
 		socket.on('newPost', newPost);

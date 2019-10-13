@@ -131,7 +131,7 @@ pre {
 	padding: 5px 0;
 }
 
-.pages {
+.pages, .live {
 	box-sizing: border-box;
 	padding: 10px;
 	width: max-content;
@@ -345,6 +345,7 @@ td, th {
 	border-radius: 50%;
 	animation: pulsate 2s ease;
 	animation-iteration-count: infinite;
+	display: inline-block;
 }
 
 @keyframes pulsate {
