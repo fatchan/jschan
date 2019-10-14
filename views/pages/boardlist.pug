@@ -13,24 +13,24 @@ block content
 				.label Search
 				input(type='text' name='search' value=search)
 			.row
-				.label PPH
-				select(name='pph_sort')
-					option(value='') -
-					option(value='-1' selected=sort.pph === -1) Descending
-					option(value='1' selected=sort.pph === 1) Ascending
-			.row
-				.label Users
-				select(name='ips_sort')
-					option(value='') -
-					option(value='-1' selected=sort.ips === -1) Descending
-					option(value='1' selected=sort.ips === 1) Ascending
-			.row
-				.label Posts
-				select(name='posts_sort')
-					option(value='') -
+				.col.label 
+					| PPH
+					select(name='pph_sort')
+						option(value='') -
+						option(value='-1' selected=sort.pph === -1) Descending
+						option(value='1' selected=sort.pph === 1) Ascending
+				.col.label
+					| Users
+					select(name='ips_sort')
+						option(value='') -
+						option(value='-1' selected=sort.ips === -1) Descending
+						option(value='1' selected=sort.ips === 1) Ascending
+				.col.label.mr-0
+					| Posts
+					select(name='posts_sort')
+						option(value='') -
 						option(value='-1' selected=sort.sequence_value === -1) Descending
 						option(value='1' selected=sort.sequence_value === 1) Ascending
-
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
 		h4.board-description Local Boards
