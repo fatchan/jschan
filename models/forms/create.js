@@ -27,6 +27,7 @@ module.exports = async (req, res, next) => {
 		'sequence_value': 1,
 		'pph': 0,
 		'ips': 0,
+		'lastPostTimestamp': null,
 		'settings': {
 			name,
 			description,

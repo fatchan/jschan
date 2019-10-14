@@ -67,7 +67,7 @@ module.exports = async () => {
 				uniqueUsers: b.ips,
 				nsfw: !b.settings.sfw,
 				tags: b.settings.tags,
-				lastPostTimestamp: b.lastPost,
+				lastPostTimestamp: b.lastPostTimestamp,
 			};
 		}),
 	}

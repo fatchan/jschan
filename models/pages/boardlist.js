@@ -21,30 +21,18 @@ module.exports = async (req, res, next) => {
 	}
 	const offset = (page-1) * limit;
 
-	let sort = {};
-	const { ips_sort, pph_sort, posts_sort, search } = req.query;
-	if (!(ips_sort || pph_sort || posts_sort)) {
+	let sort;
+	if (req.query.sort && req.query.sort === 'activity') {
 		sort = {
-			'ips': -1,
-			'pph': -1,
-			'sequence_value': -1,
-		}
-	} else {
-		if (ips_sort && (ips_sort == 1 || ips_sort == -1)) {
-			sort.ips = ips_sort == 1 ? 1 : -1;
-		}
-		if (pph_sort && (pph_sort == 1 || pph_sort == -1)) {
-			sort.pph = pph_sort == 1 ? 1 : -1;
-		}
-		if (posts_sort && (posts_sort == 1 || posts_sort == -1)) {
-			sort.sequence_value = posts_sort == 1 ? 1 : -1;
+			'lastPostTimestamp': -1
 		}
 	}
 
 	let filter = {};
-	if (search && !Array.isArray(search)) {
+	const search = !Array.isArray(req.query.search) ? req.query.search : null;
+	if (req.query.search && search) {
 		filter = {
-			'search': search,
+			'search': search
 		}
 	}
 
@@ -68,8 +56,8 @@ module.exports = async (req, res, next) => {
 		webringBoards,
 		page,
 		maxPage,
-		sort,
-		search: !Array.isArray(search) ? search : null,
+		query: req.query,
+		search,
 		queryString,
 	});
 

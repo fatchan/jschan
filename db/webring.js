@@ -15,18 +15,8 @@ module.exports = {
 				{ tags: filter.search }
 			]
 		}
-		const addedSort = {};
-		if (sort.ips) {
-			addedSort['uniqueUsers'] = sort.ips
-		}
-		if (sort.pph) {
-			addedSort['postsPerHour'] = sort.pph
-		}
-		if (sort.sequence_value) {
-			addedSort['totalPosts'] = sort.sequence_value
-		}
 		return db.find(addedFilter)
-		.sort(addedSort)
+		.sort(sort)
 		.skip(skip)
 		.limit(limit)
 		.toArray();

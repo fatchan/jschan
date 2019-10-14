@@ -113,7 +113,7 @@ module.exports = {
 		return db.find(addedFilter, {
 			'projection': {
 				'_id': 1,
-				'lastPost': 1,
+				'lastPostTimestamp': 1,
 				'sequence_value': 1,
 				'pph': 1,
 				'ips': 1,
@@ -171,7 +171,7 @@ module.exports = {
 					'sequence_value': 1
 				},
 				'$set': {
-					'lastPost': new Date()
+					'lastPostTimestamp': new Date()
 				}
 			},
 			{

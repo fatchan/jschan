@@ -59,6 +59,7 @@ async function wipe() {
 			'banners': [],
 			'pph': 0,
 			'ips': 0,
+			'lastPostTimestamp': null,
 			'sequence_value': 1,
 			'settings': {
 				'name': 'test',
@@ -70,8 +71,12 @@ async function wipe() {
 		})
 		//add indexes - should profiled and changed at some point if necessary
 		, Stats.db.createIndex({board:1, hour:1})
-		, Webring.db.createIndex({uniqueUsers:1, postsPerHour:1, totalPosts:1})
 		, Boards.db.createIndex({ips: 1, pph:1, sequence_value:1})
+		, Boards.db.createIndex({'settings.tags':1})
+		, Boards.db.createIndex({lastPostTimestamp:1})
+		, Webring.db.createIndex({uniqueUsers:1, postsPerHour:1, totalPosts:1})
+		, Webring.db.createIndex({tags:1})
+		, Webring.db.createIndex({lastPostTimestamp:1})
 		, Bans.db.dropIndexes()
 		, Captchas.db.dropIndexes()
 		, Ratelimits.db.dropIndexes()
