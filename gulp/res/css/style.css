@@ -21,11 +21,15 @@ main {
 .row {
 	display: flex;
 	flex-direction: row;
+	max-width: 100%;
+	margin-bottom: 1px;
+	overflow: hidden;
 }
 
 .col {
 	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
 }
 
 .flexcenter {
@@ -121,6 +125,9 @@ pre {
 }
 .mv-5 {
 	margin: 5px 0;
+}
+.mr-0 {
+	margin-right: 0px!important;
 }
 .mv-0 {
 	margin: 0 auto;
@@ -344,6 +351,7 @@ td, th {
 }
 
 .dot {
+	margin-right: 7px;
 	height: .75em;
 	width: .75em;
 	background-color: orange;
@@ -740,21 +748,6 @@ input[type="file"] {
 
 #postform:target {
 	display: flex;
-}
-
-.row, .col {
-	display: flex;
-}
-
-.row {
-	margin-bottom: 1px;
-	overflow: hidden;
-	max-width: 100%;
-}
-
-.col {
-	flex-direction: column;
-	flex-grow: 1;
 }
 
 .postform-style {

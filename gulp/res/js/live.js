@@ -71,16 +71,30 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const socket = io({ transports: ['websocket'] }); //no polling
 		const livecolor = document.getElementById('livecolor');
 		const livetext = document.getElementById('livetext').childNodes[1];
+		const updateLive = (message, color) => {
+			livecolor.style.backgroundColor = color;
+			livetext.nodeValue = message;			
+		}
+		
 		socket.on('connect', () => {
 			console.log('joined room', room);
-			livecolor.style.backgroundColor = '#0de600';
-			livetext.nodeValue = ` Connected to room ${room}`;
+			updateLive('Connected for live posts', '#0de600');
 			socket.emit('room', room);
+		});
+		socket.on('pong', (latency) => {
+			if (socket.connected) {
+				updateLive(`Connected for live posts (${latency}ms)`, '#0de600');
+			}
+		});
+		socket.on('reconnect_error', () => {
+			updateLive('Error reconnecting', 'orange');
+		});
+		socket.on('reconnect_attempt', () => {
+			updateLive('Attempting to reconnect...', 'yellow');
 		});
 		socket.on('disconnect', () => {
 			console.log('lost connection to room');
-			livetext.nodeValue = ` Lost connection to room ${room}`;
-			livecolor.style.backgroundColor = 'red';
+			updateLive('Disconnected', 'red');
 		});
 		socket.on('reconnect', () => {
 			console.log('reconnected to room');
