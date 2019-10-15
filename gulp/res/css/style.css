@@ -799,6 +799,10 @@ hr + .thread {
 	border: 1px solid var(--box-border-color);
 }
 
+table.boardtable th:nth-child(6) {
+	min-width: 130px;
+}
+
 @media only screen and (max-width: 700px) {
 	table {
 		width: 100%;
@@ -809,7 +813,8 @@ hr + .thread {
 
 	table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
 	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
-	table.boardtable td:nth-child(5), table.boardtable th:nth-child(5) {
+	table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
+	table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
 		display: none;
 	}
 

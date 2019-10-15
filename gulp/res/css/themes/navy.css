@@ -2,7 +2,7 @@
 :root {
 	--alt-label-color: #1a1e34;
 	--alt-font-color: #bfbfbf;
-	--background-top: #1a1e34;
+	--background-top: #080c19;
 	--background-rest: #080c19;
 	--navbar-color: #1a1e34;
 	--post-color: #1a1e34;
@@ -11,7 +11,7 @@
 	--box-border-color: #2c3a4e;
 	--darken: #ffffff08;
 	--highlighted-post-color: #44283e;
-	--highlighted-post-outline-color: #2c3a4e;
+	--highlighted-post-outline-color: #664e5c;
 	--board-title: #ff858a;
 	--hr: #303030;
 	--font-color: #bfbfbf;
@@ -23,7 +23,7 @@
 	--link-hover: #f65252;
 	--input-borders: #434343;
 	--input-color: #bfbfbf;
-	--input-background: #000;
+	--input-background: #080c19;
 	--dice-color: darkorange;
 	--title-color: #d70000;
 	--greentext-color: green;
