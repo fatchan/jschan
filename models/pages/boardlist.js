@@ -21,11 +21,18 @@ module.exports = async (req, res, next) => {
 	}
 	const offset = (page-1) * limit;
 
-	let sort;
+	const direction = req.query.direction && req.query.direction === '1' ? 1 : -1;
+	let sort
 	if (req.query.sort && req.query.sort === 'activity') {
 		sort = {
-			'lastPostTimestamp': -1
+			'lastPostTimestamp': direction
 		}
+	} else {
+		sort = {
+			'ips': direction,
+			'pph': direction,
+			'sequence_value': direction
+		};
 	}
 
 	let filter = {};

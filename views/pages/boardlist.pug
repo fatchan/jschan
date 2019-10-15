@@ -17,6 +17,11 @@ block content
 				select(name='sort')
 					option(value='default') Users, PPH, Posts
 					option(value='activity' selected=query.sort === 'activity') Activity
+			.row
+				.label Order
+				select(name='direction')
+					option(value='-1') Descending
+					option(value='1' selected=query.direction === '1') Ascending
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
 		h4.board-description Local Boards
