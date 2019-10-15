@@ -12,13 +12,15 @@ const fetch = require('node-fetch')
 module.exports = async () => {
 	const label = `/webring.json`;
 	const start = process.hrtime();
+
 	//fetch stuff from others
 	const fetchWebring = [...new Set((await cache.get('webring:sites') || []).concat(following))]
 	let rings = await Promise.all(fetchWebring.map(url => {
 		return fetch(url).then(res => res.json()).catch(e => console.error);
 	}));
-	let found = [];
-	let webringBoards = [];
+
+	let found = []; //list of found site urls
+	let webringBoards = []; //list of webring boards
 	for (let i = 0; i < rings.length; i++) {
 		//this could really use some validation/sanity checking
 		const ring = rings[i];
@@ -34,6 +36,7 @@ module.exports = async () => {
 		if (ring.boards && ring.boards.length > 0) {
 			ring.boards.forEach(board => {
 				board.siteName = ring.name;
+				//convert to numbers because infinity webring plugin returns strings
 				board.totalPosts = parseInt(board.totalPosts);
 				board.postsPerHour = parseInt(board.postsPerHour);
 				board.uniqueUsers = parseInt(board.uniqueUsers);
@@ -41,13 +44,19 @@ module.exports = async () => {
 			webringBoards = webringBoards.concat(ring.boards);
 		}
 	}
+
+	//get known sites by filtering found and removing blacklist or own site
 	const known = [...new Set(found.concat(fetchWebring))]
 		.filter(site => !blacklist.some(x => site.includes(x)) && !site.includes(meta.url));
+	//add them all to cache for next time
 	cache.set('webring:sites', known);
+
+	//remove and replace webring boards
 	await Webring.deleteAll();
 	await Webring.db.insertMany(webringBoards);
-	//now update the webring json with board list and known sites
-	const boards = await Boards.boardSort(0, 0); //does not include unlisted boards
+
+	//output our own webring json
+	const boards = await Boards.boardSort(0, 0);
 	const json = {
 		name: meta.siteName,
 		url: meta.url,
@@ -57,6 +66,7 @@ module.exports = async () => {
 		blacklist,
 		known,
 		boards: boards.map(b => {
+			//map local boards to webring format
 			return {
 				uri: b._id,
 				title: b.settings.name,
@@ -72,6 +82,7 @@ module.exports = async () => {
 		}),
 	}
 	await outputFile(`${uploadDirectory}/json/webring.json`, JSON.stringify(json));
+
 	const end = process.hrtime(start);
 	console.log(timeDiffString(label, end));
 }
