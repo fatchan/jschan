@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/../db/db.js')
 	, cache = require(__dirname+'/../redis.js')
-	, msTime = require(__dirname+'/mstime.js')
+	, timeUtils = require(__dirname+'/timeutils.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
 	, { pruneModlogs, enableWebring } = require(__dirname+'/../configs/main.json')
@@ -163,7 +163,7 @@ module.exports = {
 		let dates = await Modlogs.getDates(options.board);
 		if (pruneModlogs === true) {
 			const pruneLogs = [];
-			const monthAgo = new Date(Date.now()-msTime.month);
+			const monthAgo = new Date(Date.now()-timeUtils.MONTH);
 			dates = dates.filter(date => {
 				//filter and make list of older than 1 month
 				//might change it to keep last 30 log days instead of logs within the last 30 days?

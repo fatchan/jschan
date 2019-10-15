@@ -7,8 +7,8 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 		'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message'] //trim if we dont want filed with whitespace
 	, numberFields = ['filter_mode', 'captcha_mode', 'tph_trigger', 'pph_trigger', 'trigger_action', 'reply_limit', 'move_to_thread',
 		'max_files', 'thread_limit', 'thread', 'min_thread_message_length', 'min_reply_message_length', 'auth_level'] //convert these to numbers before they hit our routes
-	, banDurationRegex = /^(?<year>[\d]+y)?(?<month>[\d]+m)?(?<week>[\d]+w)?(?<day>[\d]+d)?(?<hour>[\d]+h)?$/
-	, msTime = require(__dirname+'/mstime.js')
+	, banDurationRegex = /^(?<YEAR>[\d]+y)?(?<MONTH>[\d]+m)?(?<WEEK>[\d]+w)?(?<DAY>[\d]+d)?(?<HOUR>[\d]+h)?$/
+	, timeUtils = require(__dirname+'/timeutils.js')
 	, makeArrayIfSingle = (obj) => !Array.isArray(obj) ? [obj] : obj;
 
 module.exports = (req, res, next) => {
@@ -87,9 +87,9 @@ module.exports = (req, res, next) => {
 				}
 				const mult = +groups[key].substring(0,groups[key].length-1); //remove the d, m, y, etc from end of the value
 				if (Number.isSafeInteger(mult) //if the multiplier is safe int
-					&& Number.isSafeInteger(mult*msTime[key]) //and multiplying it is safe int
-					&& Number.isSafeInteger((mult*msTime[key])+banDuration)) { //and adding it to the total is safe
-					banDuration += mult*msTime[key];
+					&& Number.isSafeInteger(mult*timeUtils[key]) //and multiplying it is safe int
+					&& Number.isSafeInteger((mult*timeUtils[key])+banDuration)) { //and adding it to the total is safe
+					banDuration += mult*timeUtils[key];
 				}
 			}
 			req.body.ban_duration = banDuration;

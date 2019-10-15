@@ -4,7 +4,7 @@ process
 	.on('uncaughtException', console.error)
 	.on('unhandledRejection', console.error);
 
-const msTime = require(__dirname+'/../helpers/mstime.js')
+const timeUtils = require(__dirname+'/../helpers/timeutils.js')
 	, Mongo = require(__dirname+'/../db/db.js')
 	, { enableWebring } = require(__dirname+'/../configs/main.json')
 	, doInterval = require(__dirname+'/../helpers/dointerval.js');
@@ -28,16 +28,16 @@ const msTime = require(__dirname+'/../helpers/mstime.js')
 
 	//delete files for expired captchas
 	const deleteCaptchas = require(__dirname+'/deletecaptchas.js');
-	doInterval(deleteCaptchas, msTime.minute*5, true);
+	doInterval(deleteCaptchas, timeUtils.MINUTE*5, true);
 
 	//file pruning
 	const pruneFiles = require(__dirname+'/prune.js');
-	doInterval(pruneFiles, msTime.day, true);
+	doInterval(pruneFiles, timeUtils.DAY, true);
 
 	//update the webring
 	if (enableWebring) {
 		const updateWebring = require(__dirname+'/webring.js');
-		doInterval(updateWebring, msTime.minute*30, true);
+		doInterval(updateWebring, timeUtils.MINUTE*15, true);
 	}
 
 })();

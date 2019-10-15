@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts } = require(__dirname+'/../../db/')
-	, msTime = require(__dirname+'/../mstime.js')
+	, timeUtils = require(__dirname+'/../timeutils.js')
 
 module.exports = async (req, res) => {
 
@@ -11,8 +11,8 @@ module.exports = async (req, res) => {
 	}
 
 	const now = Date.now();
-	const last120id = Mongo.ObjectId.createFromTime(Math.floor((now - (msTime.minute*2))/1000));
-	const last30id = Mongo.ObjectId.createFromTime(Math.floor((now - (msTime.minute*0.5))/1000));
+	const last120id = Mongo.ObjectId.createFromTime(Math.floor((now - (timeUtils.MINUTE*2))/1000));
+	const last30id = Mongo.ObjectId.createFromTime(Math.floor((now - (timeUtils.MINUTE*0.5))/1000));
 	const last15id = Mongo.ObjectId.createFromTime(Math.floor((now - 3000)/1000));
 	const ors = [];
 	const contentOr = [];

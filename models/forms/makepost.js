@@ -24,7 +24,7 @@ const path = require('path')
 	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, fixGifs = require(__dirname+'/../../helpers/files/fixgifs.js')
-	, msTime = require(__dirname+'/../../helpers/mstime.js')
+	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, { thumbSize, thumbExtension, postPasswordSecret } = require(__dirname+'/../../configs/main.json')
@@ -370,7 +370,7 @@ module.exports = async (req, res, next) => {
 		&& (tphTrigger > 0 || pphTrigger > 0) //and we have a trigger > 0 for threads or posts
 		&& ((triggerAction < 3 && captchaMode < triggerAction) //and captcha mode less than trigger if trigger < 2
 			|| (triggerAction === 3 && locked !== true))) { //or trigger is to lock and board not locked
-		const pastHourMongoId = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - msTime.hour)/1000));
+		const pastHourMongoId = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - timeUtils.HOUR)/1000));
 		//count threads in past hour
 		const hourPosts = await Stats.getHourPosts(res.locals.board._id);
 		//if its above the trigger

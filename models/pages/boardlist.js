@@ -2,6 +2,7 @@
 
 const { enableWebring } = require(__dirname+'/../../configs/main.json')
 	, { Boards, Webring } = require(__dirname+'/../../db/')
+	, { relativeString } = require(__dirname+'/../../helpers/timeutils.js')
 	, limit = 20;
 
 module.exports = async (req, res, next) => {
@@ -57,6 +58,22 @@ module.exports = async (req, res, next) => {
 		return next(err);
 	}
 	const maxPage = Math.max(localPages, webringPages);
+
+	const now = new Date();
+	if (localBoards) {
+		for (let i = 0; i < localBoards.length; i++) {
+			if (localBoards[i].lastPostTimestamp) {
+				localBoards[i].lastPostTimestamp = relativeString(now, new Date(localBoards[i].lastPostTimestamp));
+			}
+		}
+	}
+	if (webringBoards) {
+		for (let i = 0; i < webringBoards.length; i++) {
+			if (webringBoards[i].lastPostTimestamp) {
+				webringBoards[i].lastPostTimestamp = relativeString(now, new Date(webringBoards[i].lastPostTimestamp));
+			}
+		}
+	}
 
 	return res.render('boardlist', {
 		localBoards,

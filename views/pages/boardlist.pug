@@ -37,7 +37,7 @@ block content
 					td #{board.pph}
 					td #{board.ips}
 					td #{board.sequence_value-1}
-					td #{board.lastPostTimestamp ? new Date(board.lastPostTimestamp).toLocaleString("en-US", { hour12:false, timeZone: "America/New_York" }) : '-'}
+					td #{board.lastPostTimestamp || '-'}
 	if webringBoards && webringBoards.length > 0
 		h4.board-description Webring Boards
 		include ../includes/webringboardtable.pug
@@ -52,6 +52,6 @@ block content
 					td #{board.postsPerHour}
 					td #{board.uniqueUsers}
 					td #{board.totalPosts}
-					td #{board.lastPostTimestamp ? new Date(board.lastPostTimestamp).toLocaleString("en-US", { hour12:false, timeZone: "America/New_York" }) : '-'}
+					td #{board.lastPostTimestamp || '-'}
 	nav.pages.text-center.mt-5.mv-0
 		include ../includes/boardlistpages.pug

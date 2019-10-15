@@ -1,8 +1,7 @@
 'use strict';
 
 const { stat, remove, readdir } = require('fs-extra')
-    , uploadDirectory = require(__dirname+'/uploadDirectory.js')
-    , msTime = require(__dirname+'/../mstime.js')
+    , uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 //takes directory name and timestamp to delete files older than
 module.exports = async (directory, olderThan) => {

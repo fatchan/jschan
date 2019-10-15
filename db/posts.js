@@ -3,7 +3,6 @@
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
-	, msTime = require(__dirname+'/../helpers/mstime.js')
 	, db = Mongo.client.db('jschan').collection('posts')
 
 module.exports = {

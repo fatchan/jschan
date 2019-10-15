@@ -1,8 +1,8 @@
 'use strict';
 
 const deleteOld = require(__dirname+'/../helpers/files/deleteold.js')
-	, msTime = require(__dirname+'/../helpers/mstime.js')
+	, timeUtils = require(__dirname+'/../helpers/timeutils.js')
 
 module.exports = () => {
-	return deleteOld('captcha', Date.now()-(msTime.minute*5));
+	return deleteOld('captcha', Date.now()-(timeUtils.MINUTE*5));
 }
