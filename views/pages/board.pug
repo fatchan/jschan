@@ -23,7 +23,7 @@ block content
 			p No posts.
 			hr(size=1)
 		for thread in threads
-			section.thread
+			.thread
 				+post(thread, true)
 				for post in thread.replies
 					+post(post, true)

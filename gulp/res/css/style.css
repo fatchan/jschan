@@ -483,7 +483,6 @@ details.actions div {
 
 .user-id {
 	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
-	background: attr(data-user-id);
 	color: white;
 	padding: 0px 2px;
 	border: 1px solid rgba(0, 0, 0, 0.4);
@@ -492,7 +491,7 @@ details.actions div {
 
 .post-check {
 	position: relative;
-	top: 3px;
+	top: 2px;
 	margin: -3px 1px !important;
 }
 
@@ -800,7 +799,11 @@ hr + .thread {
 }
 
 table.boardtable th:nth-child(6) {
-	min-width: 130px;
+	min-width: 100px;
+}
+table.boardtable td:nth-child(6) {
+	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
+	color: white;
 }
 
 @media only screen and (max-width: 700px) {
@@ -838,7 +841,7 @@ table.boardtable th:nth-child(6) {
 		width: 30px;
 	}
 
-	input, .postform-style {
+	input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style {
 		height: 30px;
 		box-sizing: border-box;
 	}
@@ -858,7 +861,7 @@ table.boardtable th:nth-child(6) {
 	.post-check {
 		top: 1px;
 		margin-left: 2px!important;
-		height: 8px;
+		/*height: 8px;*/
 	}
 
 	.pages {

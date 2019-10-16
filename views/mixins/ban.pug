@@ -17,7 +17,7 @@ mixin ban(ban, banpage)
 		td.banposts
 			if ban.posts && ban.posts.length > 0
 				| Hover to view
-				section.thread
+				.thread
 					each p in ban.posts
 						+post(p, false, false, false, true)
 			else

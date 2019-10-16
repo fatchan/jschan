@@ -17,7 +17,7 @@ block content
 	if threads.length === 0
 		p No posts.
 	else 
-		section.catalog
+		.catalog
 			for thread, i in threads
 				+catalogtile(board, thread, i+1)
 	hr(size=1)

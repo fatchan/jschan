@@ -6,7 +6,7 @@ block head
 
 block content
 	h1.board-title Board List
-	section.flexcenter.mv-10
+	.flexcenter.mv-10
 		form.form-post(action=`/boards.html` method='GET')
 			input(type='hidden' value=page)
 			.row
@@ -37,7 +37,10 @@ block content
 					td #{board.pph}
 					td #{board.ips}
 					td #{board.sequence_value-1}
-					td #{board.lastPostTimestamp || '-'}
+					if board.lastPostTimestamp
+						td(style=`background-color: ${board.lastPostTimestamp.color}`) #{board.lastPostTimestamp.text}
+					else
+						td -
 	if webringBoards && webringBoards.length > 0
 		h4.board-description Webring Boards
 		include ../includes/webringboardtable.pug
@@ -52,6 +55,9 @@ block content
 					td #{board.postsPerHour}
 					td #{board.uniqueUsers}
 					td #{board.totalPosts}
-					td #{board.lastPostTimestamp || '-'}
+					if board.lastPostTimestamp
+						td(style=`background-color: ${board.lastPostTimestamp.color}`) #{board.lastPostTimestamp.text}
+					else
+						td -
 	nav.pages.text-center.mt-5.mv-0
 		include ../includes/boardlistpages.pug

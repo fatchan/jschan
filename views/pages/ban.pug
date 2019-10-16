@@ -15,12 +15,12 @@ block content
 				+ban(ban, true)
 		if allowAppeal === true
 			h4.no-m-p Appeal bans:
-				section.form-wrapper.flexleft.mt-10
+				.form-wrapper.flexleft.mt-10
 					input(type='hidden' name='_csrf' value=csrf)
-					section.row
+					.row
 						.label Message
 						textarea(rows='5' name='message' required)
-					section.row
+					.row
 						.label Captcha
 						span.col
 							include ../includes/captcha.pug

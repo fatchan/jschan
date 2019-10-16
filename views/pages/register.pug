@@ -7,18 +7,18 @@ block head
 
 block content
 	h1.board-title Register
-	section.form-wrapper.flex-center.mv-10
+	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/register' method='POST')
-			section.row
+			.row
 				.label Username
 				input(type='text', name='username', maxlength='50' pattern='[a-zA-Z0-9]+' required title='alphanumeric only')
-			section.row
+			.row
 				.label Password
 				input(type='password', name='password', maxlength='100' required)
-			section.row
+			.row
 				.label Confirm Password
 				input(type='password', name='passwordconfirm', maxlength='100' required)
-			section.row
+			.row
 				.label Captcha
 				span.col
 					include ../includes/captcha.pug

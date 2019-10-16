@@ -11,20 +11,20 @@ block content
 	+globalmanagenav('accounts')
 	hr(size=1)
 	h4.no-m-p Delete board:
-	section.form-wrapper.flexleft.mt-10
+	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
-			section.row
+			.row
 				.label I'm sure
 				label.postform-style.ph-5
 					input(type='checkbox', name='confirm', value='true' required)
-			section.row
+			.row
 				.label Board URI
 				input(type='text' name='uri' required)
 			input(type='submit', value='submit')
 	hr(size-1)
 	h4.no-m-p Accounts:
-	section.form-wrapper.flexleft.mt-10
+	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/global/editaccounts` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
 			.table-container.flex-left.mv-10
@@ -38,11 +38,11 @@ block content
 							td: input(type='checkbox', name='checkedaccounts' value=account._id)
 							td #{account._id}
 							td #{account.authLevel}
-			section.row
+			.row
 				.label Delete Accounts
 				label.postform-style.ph-5
 					input(type='checkbox', name='delete_account', value='true')
-			section.row
+			.row
 				.label Set Auth Level
 				input(type='number' name='auth_level')
 			input(type='submit', value='apply')

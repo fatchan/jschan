@@ -1,9 +1,9 @@
 include ./report.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 	.anchor(id=post.postId)
-	article(class=`post-container ${post.thread || ban === true ? '' : 'op'}`)
+	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}`)
 		- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
-		header.post-info
+		.post-info
 			label
 				if globalmanage
 					input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)

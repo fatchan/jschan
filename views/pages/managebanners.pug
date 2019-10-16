@@ -12,10 +12,10 @@ block content
 	+managenav('banners')
 	hr(size=1)
 	h4.no-m-p Add Banners:
-	section.form-wrapper.flexleft.mt-10
+	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
-			section.row
+			.row
 				.label Upload
 					.required *
 				input#file(type='file', name='file' multiple required)
@@ -23,7 +23,7 @@ block content
 	if board.banners.length > 0
 		hr(size=1)
 		h4.no-m-p Delete Banners:
-		section.form-wrapper.flexleft.mt-10
+		.form-wrapper.flexleft.mt-10
 			form.form-post(action=`/forms/board/${board._id}/deletebanners`, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
 				each banner in board.banners

@@ -7,21 +7,21 @@ block head
 
 block content
 	h1.board-title Create Board
-	section.form-wrapper.flex-center.mv-10
+	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/create' method='POST')
-			section.row
+			.row
 				.label URI e.g. /uri/
 				input(type='text', name='uri', maxlength='50' pattern='[a-zA-Z0-9]+' required title='alphanumeric only')
-			section.row
+			.row
 				.label Name
 				input(type='text', name='name', maxlength='50' required)
-			section.row
+			.row
 				.label Description
 				input(type='text', name='description', maxlength='50' required)
-			section.row
+			.row
 				.label Tags
 				textarea(name='tags' placeholder='newline separated, max 10')
-			section.row
+			.row
 				.label Captcha
 				span.col
 					include ../includes/captcha.pug
