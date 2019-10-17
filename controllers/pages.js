@@ -12,25 +12,11 @@ const express  = require('express')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	//page models
-	, home = require(__dirname+'/../models/pages/home.js')
-	, register = require(__dirname+'/../models/pages/register.js')
 	, { manageReports, manageBanners, manageSettings, manageBans } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageReports, globalManageBans, globalManageRecent, globalManageAccounts, globalManageNews } = require(__dirname+'/../models/pages/globalmanage/')
-	, changePassword = require(__dirname+'/../models/pages/changepassword.js')
-	, login = require(__dirname+'/../models/pages/login.js')
-	, logout = require(__dirname+'/../models/pages/logout.js')
-	, create = require(__dirname+'/../models/pages/create.js')
-	, board = require(__dirname+'/../models/pages/board.js')
-	, catalog = require(__dirname+'/../models/pages/catalog.js')
-	, banners = require(__dirname+'/../models/pages/banners.js')
-	, randombanner = require(__dirname+'/../models/pages/randombanner.js')
-	, news = require(__dirname+'/../models/pages/news.js')
-	, captchaPage = require(__dirname+'/../models/pages/captchapage.js')
-	, captcha = require(__dirname+'/../models/pages/captcha.js')
-	, thread = require(__dirname+'/../models/pages/thread.js')
-	, modlog = require(__dirname+'/../models/pages/modlog.js')
-	, modloglist = require(__dirname+'/../models/pages/modloglist.js')
-	, boardlist = require(__dirname+'/../models/pages/boardlist.js');
+	, { changePassword, home, register, login, logout, create,
+		board, catalog, banners, randombanner, news, captchaPage,
+		captcha, thread, modlog, modloglist, boardlist } = require(__dirname+'/../models/pages/');
 
 //homepage
 router.get('/index.html', home);
