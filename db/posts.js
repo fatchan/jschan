@@ -403,6 +403,29 @@ module.exports = {
 		return oldThreads.concat(early404Threads);
 	},
 
+	fixLatest: (boards) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'board': {
+						'$in': boards
+					}
+				}
+			}, {
+				'$group': {
+					'_id': '$board',
+					'lastPostTimestamp': {
+						'$max':'$date'
+					}
+				}
+			}, {
+				'$merge': {
+					'into': 'boards'
+				}
+			}
+		]).toArray();
+	},
+
 	deleteMany: (ids) => {
 		return db.deleteMany({
 			'_id': {

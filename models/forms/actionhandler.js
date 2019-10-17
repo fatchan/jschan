@@ -300,6 +300,8 @@ module.exports = async (req, res, next) => {
 
 		//recalculate replies and image counts
 		if (aggregateNeeded) {
+			//fix latest post timestamps
+			await Posts.fixLatest(threadBoards);
 			const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
 //TODO: do this in a better way.
 			await Promise.all(selectedPosts.map(async (post) => {
