@@ -26,30 +26,29 @@ Demo site running at https://fatpeople.lol
 - Configuration editor on the site without touching config files
 - Global settings page for filters, etc
 - Overboard/multiboard/meta boards
-- ~~Boards list~~ and search page
 - User created board custom pages
 - File URL uploads
 
 ## Setup
-Please note:
-- These are not step-by-step or complete instructions.
-- For debian(-like)
+Please note these instructions are:
+- Are not step-by-step or complete
+- Assume you can read, are comfortable with a command line and have basic problem solving skills (aka google)
 
 ##### Requirements
-- Linux
+- Linux (debian used in this example)
 - Node.js (to run the app)
 - MongoDB (database, duh)
 - Redis (sessions, build task queue, locks, caching, websocket data)
 - Nginx (handle https, serve static content, GeoIP lookup)
 - Certbot/letsencrypt (for https cert)
-- Imagemagick (thumbnailing images)
+- Graphicsmagick+Imagemagick (thumbnailing images, generating captchas)
 - Ffmpeg (thumbnailing videos)
 - Bcrypt (account password hashes)
 
 Install some dependencies. You may need to add some sources.
 ```bash
 $ sudo apt-get update
-$ sudo apt-get install bcrypt nginx ffmpeg imagemagick
+$ sudo apt-get install bcrypt nginx ffmpeg imagemagick graphicsmagick
 ```
 
 [Install](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian) and [configure auth for mongodb](https://medium.com/mongoaudit/how-to-enable-authentication-on-mongodb-b9e8a924efac). This is to avoid out of date verisons in debian repos.
@@ -62,7 +61,8 @@ Once you have nvm, install the LTS version of nodejs (currently 10.x).
 $ nvm install --lts
 ```
 
-Configure nginx. Delete the default nginx config, then modify [the example config](https://gist.github.com/fatchan/87ac56e5556d178ab2213afdf7619dec) and put it in the correct folder. Next, get https with a certificate generated from [letsencrypt](https://wiki.debian.org/LetsEncrypt).
+Configure nginx. Modify the example config included in configs/nginx.example and put it in /etc/nginx/sites-available, then symlink it to /etc/nginx/sites-enabled. Make sure the sites enabled folder is included by the main nginx.conf
+Next, get https with a certificate generated from [letsencrypt](https://wiki.debian.org/LetsEncrypt).
 
 Now clone the repo, browse to the folder and set some things up.
 ```bash
