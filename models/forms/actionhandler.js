@@ -298,52 +298,6 @@ module.exports = async (req, res, next) => {
 	//if there are actions that can cause some rebuilding
 	if (res.locals.actions.numBuild > 0) {
 
-		//recalculate replies and image counts
-		if (aggregateNeeded) {
-			//fix latest post timestamps
-			//await Posts.fixLatest(threadBoards);
-			const selectedPosts = res.locals.posts.filter(p => p.thread !== null);
-			let threadOrs = selectedPosts.map(p => {
-				return {
-					board: p.board,
-					thread: p.thread
-				}
-			});
-			const threadAggregates = await Posts.getThreadAggregates(threadOrs);
-			const bulkWrites = [];
-			for (let i = 0; i < threadAggregates.length; i++) {
-				const ta = threadAggregates[i];
-				threadOrs = threadOrs.filter(t => t.thread !== ta._id.thread && t.board !== ta._id.board);
-				bulkWrites.push({
-					'updateOne': {
-						'filter': {
-							'postId': ta._id.thread,
-							'board': ta._id.board
-						},
-						'update': {
-			  				'$set': {
-								'replyposts': ta.replyposts,
-								'replyfiles': ta.replyfiles,
-								'bumped': ta.bumped
-							}
-						}
-					}
-				});
-			}
-			if (threadOrs.length > 0) {
-				const threadOPOrs = threadOrs.map(t => {
-					return {
-						postId: t.thread,
-						board: t.board
-					};
-				});
-				await Posts.resetThreadAggregates(threadOPOrs);
-			}
-			if (bulkWrites.length > 0) {
-				await Posts.db.bulkWrite(bulkWrites);
-			}
-		}
-
 		//make it into an OR query for the db
 		const queryOrs = [];
 		for (let i = 0; i < threadBoards.length; i++) {
@@ -370,7 +324,7 @@ module.exports = async (req, res, next) => {
 		threadsEachBoard = threadsEachBoard.concat(selectedThreads)
 
 		//get the oldest and newest thread for each board to determine how to delete
-		const threadBounds = threadsEachBoard.reduce((acc, curr) => {
+		let threadBounds = threadsEachBoard.reduce((acc, curr) => {
 			if (!acc[curr.board] || curr.bumped < acc[curr.board].bumped) {
 				acc[curr.board] = { oldest: null, newest: null};
 			}
@@ -382,6 +336,76 @@ module.exports = async (req, res, next) => {
 			}
 			return acc;
 		}, {});
+
+		let datesChanged = false;
+		if (aggregateNeeded) {
+
+			//fix latest post timestamps
+			await Posts.fixLatest(threadBoards);
+
+			//recalculate replies and image counts
+			const selectedPosts = res.locals.posts.filter(p => p.thread !== null);
+			let threadOrs = selectedPosts.map(p => {
+				return {
+					board: p.board,
+					thread: p.thread
+				}
+			});
+			const threadAggregates = await Posts.getThreadAggregates(threadOrs);
+			const bulkWrites = [];
+			for (let i = 0; i < threadAggregates.length; i++) {
+				const threadAggregate = threadAggregates[i];
+				threadOrs = threadOrs.filter(t => t.thread !== threadAggregate._id.thread && t.board !== threadAggregate._id.board);
+				//use results from first aggregate for threads with replies still existing
+				bulkWrites.push({
+					'updateOne': {
+						'filter': {
+							'postId': threadAggregate._id.thread,
+							'board': threadAggregate._id.board
+						},
+						'update': {
+			  				'$set': {
+								'replyposts': threadAggregate.replyposts,
+								'replyfiles': threadAggregate.replyfiles,
+								'bumped': threadAggregate.bumped
+							}
+						}
+					}
+				});
+			}
+			if (threadOrs.length > 0) {
+				const threadOPOrs = threadOrs.map(t => {
+					return {
+						postId: t.thread,
+						board: t.board
+					};
+				});
+				const results = await Posts.resetThreadAggregates(threadOPOrs);
+				if (results.length > 0) {
+					for (let i = 0; i < results.length; i++) {
+						const threadAggregate = results[i];
+						bulkWrites.push({
+							'updateOne': {
+								'filter': {
+									'_id': threadAggregate._id
+								},
+								'update': {
+					  				'$set': {
+										'replyposts': threadAggregate.replyposts,
+										'replyfiles': threadAggregate.replyfiles,
+										'bumped': threadAggregate.bumped
+									}
+								}
+							}
+						});
+					}
+				}
+			}
+			if (bulkWrites.length > 0) {
+				datesChanged = true;
+				await Posts.db.bulkWrite(bulkWrites);
+			}
+		}
 
 		for (let i = 0; i < threadBoards.length; i++) {
 			const boardName = threadBoards[i];
@@ -409,7 +433,7 @@ module.exports = async (req, res, next) => {
 			//refersh any pages affected
 			const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
 			let catalogRebuild = true;
-			if ((beforePages[boardName] && beforePages[boardName] !== afterPages) || req.body.move) { //handle moves here since dates would change and not work in old/new page calculations
+			if ((beforePages[boardName] && beforePages[boardName] !== afterPages) || req.body.move || datesChanged) { //handle moves here since dates would change and not work in old/new page calculations
 				if (afterPages < beforePages[boardName]) {
 					//amount of pages changed, rebuild all pages and delete  any further pages (if pages amount decreased)
 					for (let k = beforePages[boardName]; k > afterPages; k--) {

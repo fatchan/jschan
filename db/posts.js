@@ -98,6 +98,13 @@ module.exports = {
 					'replyfiles': 0,
 					'bumped': '$date'
 				}
+			}, {
+				'$project': {
+					'_id': 1,
+					'replyposts': 1,
+					'replyfiles': 1,
+					'bumped': 1
+				}
 			}
 		]).toArray();
 	},
