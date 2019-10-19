@@ -86,6 +86,22 @@ module.exports = {
 
 	},
 
+	resetThreadAggregates: (ors) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'$or': ors
+				}
+			}, {
+				'$set': {
+					'replyposts': 0,
+					'replyfiles': 0,
+					'bumped': '$date'
+				}
+			}
+		]).toArray();
+	},
+
 	getThreadAggregates: (ors) => {
 		return db.aggregate([
 			{

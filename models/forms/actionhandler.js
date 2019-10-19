@@ -301,23 +301,23 @@ module.exports = async (req, res, next) => {
 		//recalculate replies and image counts
 		if (aggregateNeeded) {
 			//fix latest post timestamps
-			await Posts.fixLatest(threadBoards);
+			//await Posts.fixLatest(threadBoards);
 			const selectedPosts = res.locals.posts.filter(p => p.thread !== null);
-			const threadOrs = selectedPosts.map(p => {
+			let threadOrs = selectedPosts.map(p => {
 				return {
 					board: p.board,
-					thread: b.thread
+					thread: p.thread
 				}
 			});
-//TODO: do this in a better way.
 			const threadAggregates = await Posts.getThreadAggregates(threadOrs);
 			const bulkWrites = [];
 			for (let i = 0; i < threadAggregates.length; i++) {
 				const ta = threadAggregates[i];
+				threadOrs = threadOrs.filter(t => t.thread !== ta._id.thread && t.board !== ta._id.board);
 				bulkWrites.push({
 					'updateOne': {
 						'filter': {
-							'postId': ta._id.thread;
+							'postId': ta._id.thread,
 							'board': ta._id.board
 						},
 						'update': {
@@ -328,9 +328,20 @@ module.exports = async (req, res, next) => {
 							}
 						}
 					}
-				})
+				});
 			}
-			await Posts.db.bulkWrite(bulkWrites);
+			if (threadOrs.length > 0) {
+				const threadOPOrs = threadOrs.map(t => {
+					return {
+						postId: t.thread,
+						board: t.board
+					};
+				});
+				await Posts.resetThreadAggregates(threadOPOrs);
+			}
+			if (bulkWrites.length > 0) {
+				await Posts.db.bulkWrite(bulkWrites);
+			}
 		}
 
 		//make it into an OR query for the db
@@ -347,7 +358,6 @@ module.exports = async (req, res, next) => {
 				}
 			})
 		}
-
 
 		//fetch threads per board that we only checked posts for
 		let threadsEachBoard = await Posts.db.find({
