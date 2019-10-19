@@ -86,39 +86,32 @@ module.exports = {
 
 	},
 
-	getReplyCounts: (board, thread) => {
+	getThreadAggregates: (ors) => {
 		return db.aggregate([
 			{
 				'$match': {
-					'thread': thread,
-					'board': board,
+					'$or': ors
 				}
 			}, {
-				'$group': {
-					'_id': null,
-					'replyposts': {
-						'$sum': 1
+		        '$group': {
+		            '_id': {
+						'thread': '$thread',
+						'board': '$board'
 					},
-					'replyfiles': {
-						'$sum': {
-							'$size': '$files'
-						}
+		            'replyposts': {
+		                '$sum': 1
+		            },
+		            'replyfiles': {
+		                '$sum': {
+		                    '$size': '$files'
+		                }
+					},
+					'bumped': {
+						'$max': '$date'
 					}
-				}
-			}
+		        }
+		    }
 		]).toArray();
-	},
-
-	setReplyCounts: (board, thread, replyposts, replyfiles) => {
-		return db.updateOne({
-			'postId': thread,
-			'board': board
-		}, {
-			'$set': {
-				'replyposts': replyposts,
-				'replyfiles': replyfiles,
-			}
-		})
 	},
 
 	getPages: (board) => {
@@ -308,14 +301,14 @@ module.exports = {
 			//if post email is not sage, and thread not bumplocked, set bump date
 			if (data.email !== 'sage' && !thread.bumplocked) {
 				query['$set'] = {
-					'bumped': Date.now()
+					'bumped': new Date()
 				}
 			}
 			//update the thread
 			await db.updateOne(filter, query);
 		} else {
 			//this is a new thread so just set the bump date
-			data.bumped = Date.now();
+			data.bumped = new Date();
 		}
 
 		//get the postId and add it to the post

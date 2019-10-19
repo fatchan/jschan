@@ -130,12 +130,12 @@ module.exports = async (req, res, next) => {
 		if (boardThreadMap[req.params.board].directThreads.size > 0) {
 			const threadIds = [...boardThreadMap[req.params.board].directThreads];
 			const fetchMovePosts = await Posts.db.find({
-		        'board': req.params.board,
+				'board': req.params.board,
 				'thread': {
-		            '$in': threadIds
+					'$in': threadIds
 				}
-		    }).toArray();
-	        res.locals.posts = res.locals.posts.concat(fetchMovePosts);
+			}).toArray();
+			res.locals.posts = res.locals.posts.concat(fetchMovePosts);
 		}
 		const { message, action } = await movePosts(req, res);
 		if (action) {
@@ -302,18 +302,35 @@ module.exports = async (req, res, next) => {
 		if (aggregateNeeded) {
 			//fix latest post timestamps
 			await Posts.fixLatest(threadBoards);
-			const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
-//TODO: do this in a better way.
-			await Promise.all(selectedPosts.map(async (post) => {
-				const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
-				let replyposts = 0;
-				let replyfiles = 0;
-				if (replyCounts[0]) {
-					replyposts = replyCounts[0].replyposts;
-					replyfiles = replyCounts[0].replyfiles;
+			const selectedPosts = res.locals.posts.filter(p => p.thread !== null);
+			const threadOrs = selectedPosts.map(p => {
+				return {
+					board: p.board,
+					thread: b.thread
 				}
-				Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
-			}));
+			});
+//TODO: do this in a better way.
+			const threadAggregates = await Posts.getThreadAggregates(threadOrs);
+			const bulkWrites = [];
+			for (let i = 0; i < threadAggregates.length; i++) {
+				const ta = threadAggregates[i];
+				bulkWrites.push({
+					'updateOne': {
+						'filter': {
+							'postId': ta._id.thread;
+							'board': ta._id.board
+						},
+						'update': {
+			  				'$set': {
+								'replyposts': ta.replyposts,
+								'replyfiles': ta.replyfiles,
+								'bumped': ta.bumped
+							}
+						}
+					}
+				})
+			}
+			await Posts.db.bulkWrite(bulkWrites);
 		}
 
 		//make it into an OR query for the db
@@ -363,12 +380,12 @@ module.exports = async (req, res, next) => {
 			//rebuild impacted threads
 			if (req.body.move) {
 				buildQueue.push({
-                    'task': 'buildThread',
-                    'options': {
-                        'threadId': req.body.move_to_thread,
-                        'board': board,
-                    }
-                });
+					'task': 'buildThread',
+					'options': {
+						'threadId': req.body.move_to_thread,
+						'board': board,
+					}
+				});
 			}
 			for (let j = 0; j < boardThreadMap[boardName].threads.length; j++) {
 				buildQueue.push({
