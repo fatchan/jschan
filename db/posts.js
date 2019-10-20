@@ -309,7 +309,7 @@ module.exports = {
 			//if post email is not sage, and thread not bumplocked, set bump date
 			if (data.email !== 'sage' && !thread.bumplocked) {
 				query['$set'] = {
-					'bumped': Date.now()
+					'bumped': new Date()
 				}
 			} else {
 				saged = true;
@@ -318,7 +318,7 @@ module.exports = {
 			await db.updateOne(filter, query);
 		} else {
 			//this is a new thread so just set the bump date
-			data.bumped = Date.now();
+			data.bumped = new Date()
 		}
 
 		//get the postId and add it to the post
