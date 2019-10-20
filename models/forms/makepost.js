@@ -10,7 +10,7 @@ const path = require('path')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, escape = require(__dirname+'/../../helpers/posting/escape.js')
-	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
+	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
 	, sanitize = require('sanitize-html')
 	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?:## (?<capcode>[^#]+))?$/
@@ -315,7 +315,7 @@ module.exports = async (req, res, next) => {
 	let crossquotes = [];
 	if (message && message.length > 0) {
 		message = escape(message);
-		message = simpleMarkdown(message);
+		message = markdown(message);
 		const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(req.params.board, message, req.body.thread || null);
 		message = quotedMessage;
 		quotes = threadQuotes;
