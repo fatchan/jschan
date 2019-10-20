@@ -92,6 +92,7 @@ pre {
 		background: var(--darken);
 		padding: 2px;
 		font-family: monospace;
+		max-width: max-content;
 }
 .text-center {
 	text-align: center;

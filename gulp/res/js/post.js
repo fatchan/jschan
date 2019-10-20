@@ -11,9 +11,9 @@ pug_html = pug_html + "\u003Cdiv class=\"reports post-container\"\u003E\u003Cinp
 };
 pug_mixins["post"] = pug_interp = function(post, truncate, manage=false, globalmanage=false, ban=false){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\u003Cdiv" + (" class=\"anchor\""+pug_attr("id", post.postId, true, false)) + "\u003E\u003C\u002Fdiv\u003E\u003Carticle" + (pug_attr("class", pug_classes([`post-container ${post.thread || ban === true ? '' : 'op'}`], [true]), false, false)) + "\u003E";
+pug_html = pug_html + "\u003Cdiv" + (" class=\"anchor\""+pug_attr("id", post.postId, true, false)) + "\u003E\u003C\u002Fdiv\u003E\u003Cdiv" + (pug_attr("class", pug_classes([`post-container ${post.thread || ban === true ? '' : 'op'}`], [true]), false, false)) + "\u003E";
 const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
-pug_html = pug_html + "\u003Cheader class=\"post-info\"\u003E\u003Clabel\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"post-info\"\u003E\u003Clabel\u003E";
 if (globalmanage) {
 pug_html = pug_html + "\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"globalcheckedposts\""+pug_attr("value", post._id, true, false)) + "\u002F\u003E";
 }
@@ -64,7 +64,7 @@ pug_html = pug_html + "\u003C\u002Flabel\u003E\u003Cspan class=\"post-links\"\u0
 if (!post.thread) {
 pug_html = pug_html + " \u003Cspan\u003E\u003Ca" + (pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E[Reply]\u003C\u002Fa\u003E\u003C\u002Fspan\u003E";
 }
-pug_html = pug_html + "\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E\u003C\u002Fheader\u003E\u003Cdiv class=\"post-data\"\u003E";
+pug_html = pug_html + "\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"post-data\"\u003E";
 if (post.files.length > 0) {
 pug_html = pug_html + "\u003Cdiv class=\"post-files\"\u003E";
 // iterate post.files
@@ -199,7 +199,7 @@ pug_html = pug_html + "\u003Ca" + (" class=\"quote\""+pug_attr("href", `/${post.
 
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Farticle\u003E";
+pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 if (manage === true) {
 // iterate post.reports
 ;(function(){
