@@ -24,6 +24,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	const updateVisible = () => {
+		const unreadBefore = unread.length;
 		unread = unread.filter(p => {
 			if (isVisible(p)) {
 				p.classList.remove('highlighted');
@@ -31,7 +32,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			}
 			return true;
 		});
-		updateTitle();
+		if (unreadBefore !== unread.length) {
+			updateTitle();
+		}
 	}
 
 	window.onfocus = () => {
