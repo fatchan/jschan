@@ -161,20 +161,21 @@ module.exports = {
 		next();
 	},
 
-	getNextId: async (board, ip) => {
+	getNextId: async (board, saged) => {
+		const update = {
+			'$inc': {
+				'sequence_value': 1
+			},
+		};
+		if (!saged) {
+			update['$set'] = {
+				'lastPostTimestamp': new Date()
+			};
+		}
 		const increment = await db.findOneAndUpdate(
 			{
 				'_id': board
-			},
-			{
-				'$inc': {
-					'sequence_value': 1
-				},
-				'$set': {
-					'lastPostTimestamp': new Date()
-				}
-			},
-			{
+			}, update, {
 				'projection': {
 					'sequence_value': 1
 				}

@@ -293,6 +293,7 @@ module.exports = {
 	},
 
 	insertOne: async (board, data, thread) => {
+		let saged = false;
 		if (data.thread !== null) {
 			const filter = {
 				'postId': data.thread,
@@ -310,6 +311,8 @@ module.exports = {
 				query['$set'] = {
 					'bumped': Date.now()
 				}
+			} else {
+				saged = true;
 			}
 			//update the thread
 			await db.updateOne(filter, query);
@@ -319,7 +322,7 @@ module.exports = {
 		}
 
 		//get the postId and add it to the post
-		const postId = await Boards.getNextId(board._id);
+		const postId = await Boards.getNextId(board._id, saged);
 		data.postId = postId;
 
 		//insert the post itself
