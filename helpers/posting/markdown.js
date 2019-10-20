@@ -28,11 +28,6 @@ module.exports = (text) => {
 		return `<span class='greentext'>&gt;${greentext}</span>`;
 	});
 
-	//links
-	text = text.replace(linkRegex, (match) => {
-		return `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>`;
-	});
-
 	//bold
 	text = text.replace(boldRegex, (match, bold) => {
 		return `<span class='bold'>${bold}</span>`;
@@ -81,6 +76,11 @@ module.exports = (text) => {
 
 	//dice rolls
 	text = text.replace(diceRegex, diceRoll);
+
+	//links
+	text = text.replace(linkRegex, (match) => {
+		return `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>`;
+	});
 
 	return text;
 
