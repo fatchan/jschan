@@ -24,7 +24,6 @@ module.exports = {
 			//length of 1 means no code chunks
 			return module.exports.processRegularChunk(text);
 		}
-		console.log(chunks)
 		for (let i = 0; i < chunks.length; i++) {
 			//every other chunk will be a code block
 			if (i % 2 === 0) {
