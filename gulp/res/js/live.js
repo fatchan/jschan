@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					quotedPostData.appendChild(newRepliesDiv);
 					replies = newRepliesDiv;
 				}
-				if (new RegExp(`>>${postId}(\s|$)`).test(replies.innerText)) {
+				if (new RegExp(`>>${postData.postId}(\s|$)`).test(replies.innerText)) {
 					//reply link already exists (probably from a late catch up
 					continue;
 				}

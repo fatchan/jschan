@@ -78,7 +78,6 @@ pre {
 
 .code {
 	text-align: left;
-	border-width: 1px 1px 1px 10px;
 	border-style: solid;
 	border-color: var(--darken);
 	display: block;

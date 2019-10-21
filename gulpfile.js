@@ -111,11 +111,11 @@ async function wipe() {
 //update the css file
 function css() {
 	try {
-		fs.symlinkSync(__dirname+'/node_modules/highlight.js/styles/solarized-dark.css', __dirname+'/gulp/res/css/solarized-dark.css', 'file');
+		fs.symlinkSync(__dirname+'/node_modules/highlight.js/styles/sunburst.css', __dirname+'/gulp/res/css/hljs.css', 'file');
 	} catch (e) {
 		//already exists, ignore error
 	}
-	gulp.src(paths.styles.src)
+	return gulp.src(paths.styles.src)
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(paths.styles.dest));

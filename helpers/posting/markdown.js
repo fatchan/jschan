@@ -38,7 +38,7 @@ module.exports = {
 	processCodeChunk: (text) => {
 		const trimFix = text.replace(/^\s*(\r?\n)*|(\r?\n)*$/g, ''); //remove extra whitespace/newlines at ends
 		const { language, relevance, value } = highlightAuto(trimFix);
-		return `<span class='code'>${value}\n<small>language: ${language}, confidence: ${relevance}</small></span>`;
+		return `<span class='code hljs'>${value}\n<small>language: ${language}, confidence: ${relevance}</small></span>`;
 	},
 
 	processRegularChunk: (text) => {
