@@ -83,7 +83,6 @@ pre {
 	border-color: var(--darken);
 	display: block;
 	margin: 0.5em 0;
-	display: flex;
 	overflow-x: auto;
 	white-space: pre;
 }

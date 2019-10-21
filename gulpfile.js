@@ -110,7 +110,12 @@ async function wipe() {
 
 //update the css file
 function css() {
-	return gulp.src(paths.styles.src)
+	try {
+		fs.symlinkSync(__dirname+'/node_modules/highlight.js/styles/solarized-dark.css', __dirname+'/gulp/res/css/solarized-dark.css', 'file');
+	} catch (e) {
+		//already exists, ignore error
+	}
+	gulp.src(paths.styles.src)
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(paths.styles.dest));

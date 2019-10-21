@@ -7,7 +7,6 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, escape = require(__dirname+'/../../helpers/posting/escape.js')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
 	, sanitize = require('sanitize-html');
 
@@ -18,8 +17,7 @@ module.exports = async (req, res, next) => {
 	let markdownAnnouncement;
 	if (req.body.announcement !== oldSettings.announcement.raw) {
 		//remarkup the announcement if it changes
-		const escaped = escape(req.body.announcement);
-		const styled = markdown(escaped);
+		const styled = markdown(req.body.announcement);
 		const quoted = (await linkQuotes(req.params.board, styled, null)).quotedMessage;
 		const sanitized = sanitize(quoted, sanitizeOptions.after);
 		markdownAnnouncement = sanitized;

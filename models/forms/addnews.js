@@ -5,14 +5,12 @@ const { News } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, escape = require(__dirname+'/../../helpers/posting/escape.js')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
 	, sanitize = require('sanitize-html');
 
 module.exports = async (req, res, next) => {
 
-	const escaped = escape(req.body.message);
-	const styled = markdown(escaped);
+	const styled = markdown(req.body.message);
 	const quoted = (await linkQuotes(null, styled, null)).quotedMessage;
 	const sanitized = sanitize(quoted, sanitizeOptions.after);
 

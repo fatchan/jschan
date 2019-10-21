@@ -11,23 +11,22 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, spoilerRegex = /\|\|([\s\S]+?)\|\|/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
 	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
-	, codeRegex = /&#x60;&#x60;&#x60;([\s\S]+?)&#x60;&#x60;&#x60;/gm
+	, codeRegex = /```([\s\S]+?)```/gm
 	, diceRegex = /##(?<numdice>\d+)d(?<numsides>\d+)(?:(?<operator>[+-])(?<modifier>\d+))?/gmi
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
-	, diceRoll = require(__dirname+'/diceroll.js');
+	, diceRoll = require(__dirname+'/diceroll.js')
+	, escape = require(__dirname+'/escape.js')
+	, { highlightAuto } = require('highlight.js');
 
 module.exports = {
 
 	markdown: (text) => {
 		const chunks = text.split(codeRegex);
-		if (chunks.length === 1) {
-			//length of 1 means no code chunks
-			return module.exports.processRegularChunk(text);
-		}
 		for (let i = 0; i < chunks.length; i++) {
 			//every other chunk will be a code block
 			if (i % 2 === 0) {
-				const newlineFix = chunks[i].replace(/^\r?\n/,''); //fix ending newline because of codeblock
+				const escaped = escape(chunks[i]);
+				const newlineFix = escaped.replace(/^\r?\n/,''); //fix ending newline because of codeblock
 				chunks[i] = module.exports.processRegularChunk(newlineFix);
 			} else {
 				chunks[i] = module.exports.processCodeChunk(chunks[i]);
@@ -37,8 +36,9 @@ module.exports = {
 	},
 
 	processCodeChunk: (text) => {
-		const trimFix = text.replace(/^\s*\r?\n/g, ''); //remove extra whitespace/newline at start
-		return `<span class='code'>${trimFix}</span>`;
+		const trimFix = text.replace(/^\s*(\r?\n)*|(\r?\n)*$/g, ''); //remove extra whitespace/newlines at ends
+		const { language, relevance, value } = highlightAuto(trimFix);
+		return `<span class='code'>${value}\n<small>language: ${language}, confidence: ${relevance}</small></span>`;
 	},
 
 	processRegularChunk: (text) => {

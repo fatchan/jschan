@@ -9,7 +9,6 @@ const path = require('path')
 	, { Stats, Posts, Boards, Files, Bans } = require(__dirname+'/../../db/')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
-	, escape = require(__dirname+'/../../helpers/posting/escape.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
 	, sanitize = require('sanitize-html')
@@ -314,7 +313,6 @@ module.exports = async (req, res, next) => {
 	let quotes = [];
 	let crossquotes = [];
 	if (message && message.length > 0) {
-		message = escape(message);
 		message = markdown(message);
 		const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(req.params.board, message, req.body.thread || null);
 		message = quotedMessage;
