@@ -54,7 +54,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const jsonPath = window.location.pathname.replace(/\.html$/, '.json');
 		const jsonCatchup = async () => {
 			console.log('catching up after reconnect');
-			updateLive('Checking for any missed posts...', 'yellow');
+			updateLive('Checking for missed posts...', 'yellow');
 			let json;
 			try {
 				json = await fetch(jsonPath).then(res => res.json());
@@ -69,7 +69,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					}
 				}
 			}
-			updateLive('Connected for live posts', '#0de600');
+			setTimeout(() => {
+				updateLive('Connected for live posts', '#0de600');
+			}, 1000);
 		}
 		const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
 		const room = `${roomParts[1]}-${roomParts[3]}`;
@@ -82,9 +84,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			livetext.nodeValue = message;
 		}
 
+		let firstConnect = true;
 		socket.on('connect', () => {
 			console.log('joined room', room);
-			updateLive('Connected for live posts', '#0de600');
+			if (firstConnect) {
+				updateLive('Connected for live posts', '#0de600');
+				firstConnect = false;
+			}
 			socket.emit('room', room);
 		});
 		socket.on('pong', (latency) => {
