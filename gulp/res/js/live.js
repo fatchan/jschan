@@ -31,6 +31,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					quotedPostData.appendChild(newRepliesDiv);
 					replies = newRepliesDiv;
 				}
+				if (new RegExp(`>>${postId}(\s|$)`).test(replies.innerText)) {
+					//reply link already exists (probably from a late catch up
+					continue;
+				}
 				const newReply = document.createElement('a');
 				newReply.href = `${window.location.pathname}#${postData.postId}`;
 				newReply.textContent = `>>${postData.postId} `;
@@ -50,11 +54,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const jsonPath = window.location.pathname.replace(/\.html$/, '.json');
 		const jsonCatchup = async () => {
 			console.log('catching up after reconnect');
+			updateLive('Checking for any missed posts...', 'yellow');
 			let json;
 			try {
 				json = await fetch(jsonPath).then(res => res.json());
 			} catch (e) {
-				return console.error(e);
+				console.error(e);
 			}
 			if (json && json.replies && json.replies.length > 0) {
 				const newPosts = json.replies.filter(r => r.postId > lastPostId); //filter to only newer posts
@@ -64,6 +69,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					}
 				}
 			}
+			updateLive('Connected for live posts', '#0de600');
 		}
 		const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
 		const room = `${roomParts[1]}-${roomParts[3]}`;
@@ -73,9 +79,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const livetext = document.getElementById('livetext').childNodes[1];
 		const updateLive = (message, color) => {
 			livecolor.style.backgroundColor = color;
-			livetext.nodeValue = message;			
+			livetext.nodeValue = message;
 		}
-		
+
 		socket.on('connect', () => {
 			console.log('joined room', room);
 			updateLive('Connected for live posts', '#0de600');
