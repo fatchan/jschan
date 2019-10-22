@@ -111,7 +111,7 @@ async function wipe() {
 //update the css file
 function css() {
 	try {
-		fs.symlinkSync(__dirname+'/node_modules/highlight.js/styles/sunburst.css', __dirname+'/gulp/res/css/hljs.css', 'file');
+		fs.symlinkSync(__dirname+'/node_modules/highlight.js/styles/ir-black.css', __dirname+'/gulp/res/css/hljs.css', 'file');
 	} catch (e) {
 		//already exists, ignore error
 	}

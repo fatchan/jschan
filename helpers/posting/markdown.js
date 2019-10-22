@@ -16,7 +16,8 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, diceRoll = require(__dirname+'/diceroll.js')
 	, escape = require(__dirname+'/escape.js')
-	, { highlightAuto } = require('highlight.js');
+	, { highlightAuto } = require('highlight.js')
+	, { highlightOptions } = require(__dirname+'/../../configs/main.json');
 
 module.exports = {
 
@@ -37,9 +38,9 @@ module.exports = {
 
 	processCodeChunk: (text) => {
 		const trimFix = text.replace(/^\s*(\r?\n)*|(\r?\n)*$/g, ''); //remove extra whitespace/newlines at ends
-		const { language, relevance, value } = highlightAuto(trimFix);
-		if (relevance >= 5) {
-			return `<span class='code hljs'>${value}\n<small>language: ${language}, confidence: ${relevance}</small></span>`;
+		const { language, relevance, value } = highlightAuto(trimFix, highlightOptions.languageSubset);
+		if (relevance >= highlightOptions.threshold) {
+			return `<span class='code hljs'>${value}\n<small>language: ${language}, relevance: ${relevance}</small></span>`;
 		} else {
 			return `<span class='code'>${escape(trimFix)}</span>`;
 		}

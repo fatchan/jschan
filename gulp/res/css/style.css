@@ -178,7 +178,7 @@ object {
 	padding: 5px;
 	margin: 5px;
 	text-align: center;
-	height: 200px;
+	height: 250px;
 	width: 250px;
 	overflow: hidden;
 	border: 1px solid var(--post-outline-color);
@@ -613,6 +613,15 @@ textarea {
 	padding: .5em;
 	max-width: 100%;
 	min-width: 25em;
+}
+
+.post-container.hidden .post-data {
+	display: none;
+}
+
+.post-container.hidden .post-info {
+	padding-bottom: 0;
+	opacity: 0.5;
 }
 
 .anchor:target + .post-container,
