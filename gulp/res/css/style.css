@@ -615,13 +615,19 @@ textarea {
 	min-width: 25em;
 }
 
+.postmenu {
+	cursor: pointer;
+}
+
 .post-container.hidden .post-data {
 	display: none;
 }
 
 .post-container.hidden .post-info {
-	padding-bottom: 0;
-	opacity: 0.5;
+	margin-bottom: -6px;
+	opacity: .5;
+	border: none;
+	background: none;
 }
 
 .anchor:target + .post-container,

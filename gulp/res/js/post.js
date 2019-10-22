@@ -64,7 +64,7 @@ pug_html = pug_html + "\u003C\u002Flabel\u003E\u003Cspan class=\"post-links\"\u0
 if (!post.thread) {
 pug_html = pug_html + " \u003Cspan\u003E\u003Ca" + (pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E[Reply]\u003C\u002Fa\u003E\u003C\u002Fspan\u003E";
 }
-pug_html = pug_html + "\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"post-data\"\u003E";
+pug_html = pug_html + "\u003C\u002Fspan\u003E\u003Ca class=\"jsonly no-decoration postmenu\"\u003E ▶\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"post-data\"\u003E";
 if (post.files.length > 0) {
 pug_html = pug_html + "\u003Cdiv class=\"post-files\"\u003E";
 // iterate post.files

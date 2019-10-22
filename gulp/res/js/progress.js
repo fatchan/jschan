@@ -5,6 +5,10 @@ window.addEventListener('DOMContentLoaded', () => {
 	const form = document.getElementById('postform');
 	const submit = document.getElementById('submitpost');
 
+	if (!submit || !form) {
+		return; //no postform on this page
+	}
+
 	const doModal = (data) => {
 		const modalHtml = modal({ modal: data });
 		document.body.insertAdjacentHTML('afterbegin', modalHtml);

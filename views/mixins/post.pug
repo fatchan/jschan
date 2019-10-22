@@ -43,6 +43,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					if !post.thread
 						|  
 						span: a(href=`${postURL}#postform`) [Reply]
+				a.jsonly.no-decoration.postmenu
+					|  ▶
 		.post-data
 			if post.files.length > 0
 				.post-files
