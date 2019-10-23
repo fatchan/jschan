@@ -4,6 +4,7 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.client.db('jschan').collection('posts')
+	, { quoteLimit } = require(__dirname+'/../configs.main.json');
 
 module.exports = {
 
@@ -280,7 +281,7 @@ module.exports = {
 				'board': 1,
 				'thread': 1,
 			}
-		}).limit(15).toArray(); //limit 15 quotes for now.
+		}).limit(quoteLimit).toArray();
 	},
 
 	//takes array "ids" of mongo ids to get posts from any board

@@ -16,6 +16,7 @@
 	"thumbExtension": ".png",
 	"thumbSize": 200,
 	"defaultBanDuration": 31536000000,
+	"quoteLimit": 15,
 	"highlightOptions": {
 		"languageSubset": [
 			"javascript",
