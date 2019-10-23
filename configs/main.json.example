@@ -16,6 +16,30 @@
 	"thumbExtension": ".png",
 	"thumbSize": 200,
 	"defaultBanDuration": 31536000000,
+	"highlightOptions": {
+		"languageSubset": [
+			"javascript",
+			"typescript",
+			"java",
+			"kotlin",
+			"php",
+			"c++",
+			"c",
+			"h",
+			"csharp",
+			"bash",
+			"sh",
+			"zsh",
+			"python",
+			"ruby",
+			"css",
+			"html",
+			"json",
+			"golang",
+			"rust"
+		],
+		"threshold": 5
+	},
 	"refererCheck": true,
 	"refererRegex": "^https?:\\/\\/(?:www\\.)?domain\\.com\\/",
 	"meta": {

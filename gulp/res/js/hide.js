@@ -23,34 +23,97 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		localStorage.setItem('hidden', JSON.stringify([...hidden]));
 	}
 
-	for (let id of hidden) {
-		document.getElementById(id).nextSibling.classList.add('hidden');
+	const setHidden = (posts, hide) => {
+        if (posts && posts.length > 0) {
+			for (let i = 0; i < posts.length; i++) {
+				const post = posts[i];
+				if (!post.dataset) {
+					continue;
+				}
+				const menu = post.querySelector('.postmenu');
+				if (menu) {
+					for (let i = 0; i < menu.children.length; i++) {
+						if (hide) {
+							menu.children[i].innerText = 'Un'+menu.children[i].originalText;
+						} else {
+							menu.children[i].innerText = menu.children[i].originalText;
+						}
+					}
+				}
+				const { board, postId, userId } = post.dataset;
+				if (hide) {
+					post.classList.add('hidden');
+				} else {
+					hidden.delete(`${board}-${postId}`);
+					post.classList.remove('hidden');
+				}
+			}
+        }
 	}
 
-	const menus = document.getElementsByClassName('postmenu');
-
-	const toggleHide = function(e) {
-//TODO: make the IDs per-board, get board name as part of string too
+	const changeOption = function(e) {
+		const option = this.value;
 		const postContainer = this.parentElement.parentElement.parentElement;
-		const postId = this.parentElement.firstChild.href.split('#')[1]
-		postContainer.classList.toggle('hidden');
-		if (postContainer.classList.contains('hidden')) {
-			hidden.add(postId);
-		} else {
-			hidden.delete(postId);
+		const { board, postId, userId } = postContainer.dataset;
+		let posts = [postContainer];
+		const hiding = !option.startsWith('Un');
+		if (option.endsWith('ID')) {
+			const idPosts = document.querySelectorAll(`[data-user-id="${userId}"]`);
+			if (idPosts && idPosts.length > 0) {
+				posts = idPosts;
+			}
+			if (hiding) {
+				hidden.add(userId);
+			} else {
+				hidden.delete(userId);
+			}
 		}
+		if (hiding) {
+			hidden.add(`${board}-${postId}`);
+		}
+		this.value = '';
+		setHidden(posts, hiding);
 		saveHiddenStorage();
-	};
+	}
 
-	for (let i = 0; i < menus.length; i++) {
-		menus[i].addEventListener('click', toggleHide, false);
+	for (let menu of document.getElementsByClassName('postmenu')) {
+		menu.value = '';
+		for (let i = 0; i < menu.children.length; i++) {
+			menu.children[i].originalText = menu.children[i].innerText;
+		}
+		menu.addEventListener('change', changeOption, false);
+	}
+
+	for (let elem of hidden) {
+		let posts = [];
+		if (elem.includes('-')) {
+			const [board, postId] = elem.split('-');
+			const post = document.querySelector(`[data-board="${board}"][data-post-id="${postId}"]`);
+			if (post) {
+				posts.push(post);
+			}
+		} else {
+			const idPosts = document.querySelectorAll(`[data-user-id="${elem}"]`);
+			if (idPosts && idPosts.length > 0) {
+				posts = idPosts;
+			}
+		}
+		setHidden(posts, true);
 	}
 
 	window.addEventListener('addPost', function(e) {
 		const post = e.detail.post;
-		const newmenu = post.getElementsByClassName('postmenu');
-		newmenu[0].addEventListener('click', toggleHide, false);
+		const { board, postId, userId } = post.dataset;
+		const hiddenKey = `${board}-${postId}`;
+		if (hidden.has(hiddenKey) || hidden.has(userId)) {
+			post.classList.add('hidden');
+		}		
+		const menu = post.getElementsByClassName('postmenu');
+		for (let i = 0; i < menu.children.length; i++) {
+			menu.children[i].originalText = menu.children[i].innerText;
+		}
+		menu.value = '';
+		menu[0].addEventListener('change', changeOption, false);
 	});
-
 
 });

@@ -39,6 +39,7 @@ module.exports = {
 	processCodeChunk: (text) => {
 		const trimFix = text.replace(/^\s*(\r?\n)*|(\r?\n)*$/g, ''); //remove extra whitespace/newlines at ends
 		const { language, relevance, value } = highlightAuto(trimFix, highlightOptions.languageSubset);
+console.log(language, relevance);
 		if (relevance >= highlightOptions.threshold) {
 			return `<span class='code hljs'>${value}\n<small>language: ${language}, relevance: ${relevance}</small></span>`;
 		} else {

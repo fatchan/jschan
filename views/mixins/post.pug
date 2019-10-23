@@ -1,7 +1,7 @@
 include ./report.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 	.anchor(id=post.postId)
-	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}`)
+	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId)
 		- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
 		.post-info
 			label
@@ -43,8 +43,11 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					if !post.thread
 						|  
 						span: a(href=`${postURL}#postform`) [Reply]
-				a.jsonly.no-decoration.postmenu
-					|  ▶
+				|  
+				select.jsonly.postmenu
+					option Hide
+					if post.userId
+						option Hide by ID
 		.post-data
 			if post.files.length > 0
 				.post-files

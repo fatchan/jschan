@@ -235,7 +235,7 @@ p {
 
 .spoiler:not(:hover) * {
 	color: black;
-	background: black!important; /*for detected coloring*/
+	background: black!important;
 }
 
 .banposts .thread {
@@ -503,8 +503,12 @@ details.actions div {
 	align-items: start;
 }
 
-a, video, img, input, summary {
+a, video, img, input, summary, select, option {
 	outline: 0;
+}
+
+option {
+	background: var(--post-color);
 }
 
 .post-data {
@@ -617,6 +621,17 @@ textarea {
 
 .postmenu {
 	cursor: pointer;
+	width: 1.1em;
+	height: 1.1em;
+	position: relative;
+	top: 3px;
+	color: var(--font-color);
+	border: none;
+	background: transparent;
+}
+
+.catalog-tile.hidden {
+	display: none;
 }
 
 .post-container.hidden .post-data {
@@ -672,6 +687,7 @@ textarea {
 	padding: 5px;
 	padding-left: 3px;
 	display:block;
+	user-select: none;
 }
 
 .post-container.op .post-info {
