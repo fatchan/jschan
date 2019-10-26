@@ -78,6 +78,7 @@ const express = require('express')
 
 	//default settings
 	app.locals.defaultTheme = configs.boardDefaults.theme;
+	app.locals.defaultCodeTheme = configs.boardDefaults.codeTheme;
 	app.locals.globalLimits = configs.globalLimits;
 	app.locals.meta = configs.meta;
 

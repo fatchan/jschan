@@ -636,7 +636,16 @@ textarea {
 }
 
 .catalog-tile.hidden {
+	height: min-content;
+}
+
+.catalog-tile.hidden .post-message, .catalog-tile.hidden .post-file-src {
 	display: none;
+}
+
+.catalog-tile.hidden .post-info {
+	opacity: .5;
+	margin-bottom: -6px;
 }
 
 .post-container.hidden .post-data {
