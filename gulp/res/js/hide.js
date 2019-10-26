@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	const setHidden = (posts, hide) => {
-        if (posts && posts.length > 0) {
+		if (posts && posts.length > 0) {
 			for (let i = 0; i < posts.length; i++) {
 				const post = posts[i];
 				if (!post.dataset) {
@@ -48,7 +48,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					post.classList.remove('hidden');
 				}
 			}
-        }
+		}
 	}
 
 	const changeOption = function(e) {
@@ -108,12 +108,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		if (hidden.has(hiddenKey) || hidden.has(userId)) {
 			post.classList.add('hidden');
 		}		
-		const menu = post.getElementsByClassName('postmenu');
+		const menu = post.querySelector('.postmenu');
+console.log(menu)
 		for (let i = 0; i < menu.children.length; i++) {
 			menu.children[i].originalText = menu.children[i].innerText;
 		}
 		menu.value = '';
-		menu[0].addEventListener('change', changeOption, false);
+		menu.addEventListener('change', changeOption, false);
+	});
+
+	window.addEventListener('settingsReady', function(event) {
+
+		//add option here and in modal compiledclient for clearing hide list and unhide all hidden posts
+
 	});
 
 });

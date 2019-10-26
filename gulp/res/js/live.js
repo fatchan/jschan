@@ -1,8 +1,20 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+if (!localStorage.getItem('live')) {
+	localStorage.setItem('live', true);
+}
+let liveEnabled = localStorage.getItem('live') == 'true';
+const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
+let socket;
 
-	const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
+window.addEventListener('settingsReady', function(event) { //after domcontentloaded
 
-	if (isThread) {
+	const livecolor = document.getElementById('livecolor');
+	const livetext = document.getElementById('livetext').childNodes[1];
+	const updateLive = (message, color) => {
+		livecolor.style.backgroundColor = color;
+		livetext.nodeValue = message;
+	}
+
+	const startLive = () => {
 		const anchors = document.getElementsByClassName('anchor');
 		if (anchors.length === 0) {
 			return; //url matches, but on a 404 page so dont bother with the rest
@@ -76,21 +88,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
 		const room = `${roomParts[1]}-${roomParts[3]}`;
 		const thread = document.querySelector('.thread');
-		const socket = io({ transports: ['websocket'] }); //no polling
-		const livecolor = document.getElementById('livecolor');
-		const livetext = document.getElementById('livetext').childNodes[1];
-		const updateLive = (message, color) => {
-			livecolor.style.backgroundColor = color;
-			livetext.nodeValue = message;
-		}
-
-		let firstConnect = true;
+		socket = io({ transports: ['websocket'] }); //no polling
 		socket.on('connect', () => {
 			console.log('joined room', room);
-			if (firstConnect) {
-				updateLive('Connected for live posts', '#0de600');
-				firstConnect = false;
-			}
+			updateLive('Connected for live posts', '#0de600');
 			socket.emit('room', room);
 		});
 		socket.on('pong', (latency) => {
@@ -113,7 +114,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			jsonCatchup();
 		});
 		socket.on('newPost', newPost);
-
 	}
+
+	const toggleLive = () => {
+		if (isThread) {
+			if (socket && liveEnabled) {
+				socket.disconnect();
+				updateLive('Live posts disabled', 'red');
+			} else if (!socket) {
+				startLive();
+			} else {
+				socket.connect();
+			}
+		}
+		liveEnabled = !liveEnabled;
+		console.log('toggling live posts', liveEnabled);
+		localStorage.setItem('live', liveEnabled);
+	}
+
+	//todo
+	startLive();
+
+	/*
+	const liveSetting = document.getElementById('live-setting');
+	liveSetting.checked = liveEnabled;
+	liveSetting.addEventListener('change', toggleLive, false);
+
+	if (liveEnabled) {
+		startLive();
+	} else {
+		updateLive('Live posts disabled', 'red');
+	}
+	*/
 
 });

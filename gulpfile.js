@@ -148,6 +148,9 @@ function custompages() {
 
 function scripts() {
 	try {
+		const themelist = `const themes = ['${themes.join("', '")}']
+const codeThemes = ['${codeThemes.join("', '")}']`;
+		fs.writeFileSync('gulp/res/js/themelist.js', themelist);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
 		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
@@ -155,7 +158,14 @@ function scripts() {
 		console.log(e);
 		//already exists, ignore error
 	}
-	gulp.src(`${paths.scripts.src}/*.js`)
+	gulp.src([
+			`${paths.scripts.src}/themelist.js`,
+			`${paths.scripts.src}/modal.js`,
+			`${paths.scripts.src}/settings.js`,
+			`${paths.scripts.src}/hide.js`,
+			`${paths.scripts.src}/live.js`,
+			`${paths.scripts.src}/*.js`
+		])
 		.pipe(concat('all.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));

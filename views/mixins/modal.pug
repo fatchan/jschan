@@ -1,6 +1,6 @@
 mixin modal(data)
-	.modal-bg
-	.modal
+	.modal-bg(style=data.hidden?'display:none':'')
+	.modal(style=data.hidden?'display:none':'')
 		.row
 			p.bold #{data.title}
 			a.close.postform-style#modalclose X
@@ -18,6 +18,20 @@ mixin modal(data)
 						each error in data.errors
 							li #{error}
 			else if data.settings
-				each setting in settings
-					//settings here
-	
+				.form-wrapper.flexleft.mt-10
+					.row
+						.label Main Theme
+						select#theme-changer(name='theme')
+							option(value='default') default
+							each theme in data.settings.themes
+								option(value=theme) #{theme}
+					.row
+						.label Code Block Theme
+						select#code-theme-changer
+							option(value='default') default
+							each theme in data.settings.codeThemes
+								option(value=theme) #{theme}
+					//removed until i find a solution to not scrolling without reload
+					//.row
+						.label Live Post Updates
+						input#live-setting(type='checkbox')
