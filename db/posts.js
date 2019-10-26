@@ -4,7 +4,7 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.client.db('jschan').collection('posts')
-	, { quoteLimit } = require(__dirname+'/../configs.main.json');
+	, { quoteLimit } = require(__dirname+'/../configs/main.json');
 
 module.exports = {
 

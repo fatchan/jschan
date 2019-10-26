@@ -3,5 +3,5 @@ backup.sh
 configs/*.json
 static/*
 gulp/res/js/socket.io.js
-gulp/res/css/hljs.css
+gulp/res/css/codethemes/
 tmp/

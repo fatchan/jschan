@@ -5,15 +5,19 @@ mixin modal(data)
 			p.bold #{data.title}
 			a.close.postform-style#modalclose X
 		.row
-			ul.nomarks
-				if data.message
-					li #{data.message}
-				if data.error
-					li #{data.error}
-				if data.messages
-					each msg in data.messages
-						li #{msg}
-				if data.errors
-					each error in data.errors
-						li #{error}
+			if data.message || data.messages || data.error || data.errors
+				ul.nomarks
+					if data.message
+						li #{data.message}
+					if data.error
+						li #{data.error}
+					if data.messages
+						each msg in data.messages
+							li #{msg}
+					if data.errors
+						each error in data.errors
+							li #{error}
+			else if data.settings
+				each setting in settings
+					//settings here
 	

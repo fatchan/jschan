@@ -68,6 +68,7 @@ module.exports = async (req, res, next) => {
 		'filterMode': typeof req.body.filter_mode === 'number' && req.body.filter_mode !== oldSettings.filterMode ? req.body.filter_mode : oldSettings.filterMode,
 		'filterBanDuration': typeof req.body.ban_duration === 'number' && req.body.ban_duration !== oldSettings.filterBanDuration ? req.body.ban_duration : oldSettings.filterBanDuration,
 		'theme': req.body.theme ? req.body.theme : oldSettings.theme,
+		'codeTheme': req.body.code_theme ? req.body.code_theme : oldSettings.codeTheme,
 		'announcement': {
 			'raw': req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
 			'markdown': req.body.announcement !== null ? markdownAnnouncement : oldSettings.announcement.markdown
@@ -125,7 +126,8 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	if (newSettings.theme !== oldSettings.theme) {
+	if (newSettings.theme !== oldSettings.theme
+		|| newSettings.codetheme !== oldSettings.codeTheme) {
 		rebuildThreads = true;
 		rebuildBoard = true;
 		rebuildCatalog = true;
