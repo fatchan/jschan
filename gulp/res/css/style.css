@@ -333,6 +333,7 @@ th {
 
 td, th {
 	padding: 5px;
+	word-break: break-word;
 }
 
 .action-wrapper {
@@ -805,6 +806,12 @@ hr + .thread {
 	overflow-y: auto;
 	overflow-x: hidden;
 	border: 1px solid var(--box-border-color);
+}
+
+table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
+table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
+table.boardtable td:nth-child(5), table.boardtable th:nth-child(5) {
+	word-break: keep-all;
 }
 
 table.boardtable th:nth-child(6) {
