@@ -5,8 +5,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts, Files } = require(__dirname+'/../../db/')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
-	, escape = require(__dirname+'/../../helpers/posting/escape.js')
-	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
+	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
 
@@ -114,7 +113,7 @@ module.exports = async (posts, board, all=false) => {
 			await Promise.all(remarkupPosts.map(async post => { //doing these all at once
 				if (post.nomarkup && post.nomarkup.length > 0) { //is this check even necessary? how would it have a quote with no message
 					//redo the markup
-					let message = simpleMarkdown(escape(post.nomarkup));
+					let message = markdown(post.nomarkup);
 					const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(post.board, message, post.thread);
 					message = sanitize(quotedMessage, sanitizeOptions.after);
 					bulkWrites.push({

@@ -3,7 +3,7 @@
 const gulp = require('gulp')
 	, fs = require('fs')
 	, configs = require(__dirname+'/configs/main.json')
-	, themes = require(__dirname+'/helpers/themes.js')
+	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
 	, cleanCSS = require('gulp-clean-css')
@@ -13,7 +13,7 @@ const gulp = require('gulp')
 	, gulppug = require('gulp-pug')
 	, paths = {
 		styles: {
-			src: 'gulp/res/css/**/*',
+			src: 'gulp/res/css/**/*.css',
 			dest: 'static/css/'
 		},
 		images: {
@@ -110,6 +110,12 @@ async function wipe() {
 
 //update the css file
 function css() {
+	try {
+		fs.symlinkSync(__dirname+'/node_modules/highlight.js/styles', __dirname+'/gulp/res/css/codethemes', 'dir');
+	} catch (e) {
+		console.log(e);
+		//already exists, ignore error
+	}
 	return gulp.src(paths.styles.src)
 		.pipe(less())
 		.pipe(cleanCSS())
@@ -133,8 +139,8 @@ function custompages() {
 	return gulp.src([`${paths.pug.src}/custompages/*.pug`, `${paths.pug.src}/pages/404.pug`])
 		.pipe(gulppug({
 			locals: {
-				themes,
-				defaultTheme: configs.boardDefaults.theme
+				defaultTheme: configs.boardDefaults.theme,
+				defaultCodeTheme: configs.boardDefaults.codeTheme
 			}
 		}))
 		.pipe(gulp.dest(paths.pug.dest));
@@ -142,13 +148,24 @@ function custompages() {
 
 function scripts() {
 	try {
+		const themelist = `const themes = ['${themes.join("', '")}']
+const codeThemes = ['${codeThemes.join("', '")}']`;
+		fs.writeFileSync('gulp/res/js/themelist.js', themelist);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
 		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
 	} catch (e) {
+		console.log(e);
 		//already exists, ignore error
 	}
-	gulp.src(`${paths.scripts.src}/*.js`)
+	gulp.src([
+			`${paths.scripts.src}/themelist.js`,
+			`${paths.scripts.src}/modal.js`,
+			`${paths.scripts.src}/settings.js`,
+			`${paths.scripts.src}/hide.js`,
+			`${paths.scripts.src}/live.js`,
+			`${paths.scripts.src}/*.js`
+		])
 		.pipe(concat('all.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));

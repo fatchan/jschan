@@ -4,6 +4,7 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.client.db('jschan').collection('posts')
+	, { quoteLimit } = require(__dirname+'/../configs/main.json');
 
 module.exports = {
 
@@ -296,7 +297,7 @@ module.exports = {
 				'board': 1,
 				'thread': 1,
 			}
-		}).limit(15).toArray(); //limit 15 quotes for now.
+		}).limit(quoteLimit).toArray();
 	},
 
 	//takes array "ids" of mongo ids to get posts from any board
@@ -309,6 +310,7 @@ module.exports = {
 	},
 
 	insertOne: async (board, data, thread) => {
+		let saged = false;
 		if (data.thread !== null) {
 			const filter = {
 				'postId': data.thread,
@@ -326,6 +328,8 @@ module.exports = {
 				query['$set'] = {
 					'bumped': new Date()
 				}
+			} else {
+				saged = true;
 			}
 			//update the thread
 			await db.updateOne(filter, query);
@@ -335,7 +339,7 @@ module.exports = {
 		}
 
 		//get the postId and add it to the post
-		const postId = await Boards.getNextId(board._id);
+		const postId = await Boards.getNextId(board._id, saged);
 		data.postId = postId;
 
 		//insert the post itself

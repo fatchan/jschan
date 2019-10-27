@@ -150,6 +150,11 @@ block content
 					each theme in themes
 						option(value=theme selected=board.settings.theme === theme) #{theme}
 			.row
+				.label Code Theme
+				select(name='code_theme')
+					each theme in codeThemes
+						option(value=theme selected=board.settings.codeTheme === theme) #{theme}
+			.row
 				.label Captcha Mode
 				select(name='captcha_mode')
 					option(value='0', selected=board.settings.captchaMode === 0) No Captcha

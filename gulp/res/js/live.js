@@ -1,8 +1,20 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+if (!localStorage.getItem('live')) {
+	localStorage.setItem('live', true);
+}
+let liveEnabled = localStorage.getItem('live') == 'true';
+const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
+let socket;
 
-	const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
+window.addEventListener('settingsReady', function(event) { //after domcontentloaded
 
-	if (isThread) {
+	const livecolor = document.getElementById('livecolor');
+	const livetext = document.getElementById('livetext').childNodes[1];
+	const updateLive = (message, color) => {
+		livecolor.style.backgroundColor = color;
+		livetext.nodeValue = message;
+	}
+
+	const startLive = () => {
 		const anchors = document.getElementsByClassName('anchor');
 		if (anchors.length === 0) {
 			return; //url matches, but on a 404 page so dont bother with the rest
@@ -31,6 +43,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					quotedPostData.appendChild(newRepliesDiv);
 					replies = newRepliesDiv;
 				}
+				if (new RegExp(`>>${postData.postId}(\s|$)`).test(replies.innerText)) {
+					//reply link already exists (probably from a late catch up
+					continue;
+				}
 				const newReply = document.createElement('a');
 				newReply.href = `${window.location.pathname}#${postData.postId}`;
 				newReply.textContent = `>>${postData.postId} `;
@@ -50,11 +66,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const jsonPath = window.location.pathname.replace(/\.html$/, '.json');
 		const jsonCatchup = async () => {
 			console.log('catching up after reconnect');
+			updateLive('Checking for missed posts...', 'yellow');
 			let json;
 			try {
 				json = await fetch(jsonPath).then(res => res.json());
 			} catch (e) {
-				return console.error(e);
+				console.error(e);
 			}
 			if (json && json.replies && json.replies.length > 0) {
 				const newPosts = json.replies.filter(r => r.postId > lastPostId); //filter to only newer posts
@@ -64,18 +81,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					}
 				}
 			}
+			setTimeout(() => {
+				updateLive('Connected for live posts', '#0de600');
+			}, 1000);
 		}
 		const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
 		const room = `${roomParts[1]}-${roomParts[3]}`;
 		const thread = document.querySelector('.thread');
-		const socket = io({ transports: ['websocket'] }); //no polling
-		const livecolor = document.getElementById('livecolor');
-		const livetext = document.getElementById('livetext').childNodes[1];
-		const updateLive = (message, color) => {
-			livecolor.style.backgroundColor = color;
-			livetext.nodeValue = message;			
-		}
-		
+		socket = io({ transports: ['websocket'] }); //no polling
 		socket.on('connect', () => {
 			console.log('joined room', room);
 			updateLive('Connected for live posts', '#0de600');
@@ -101,7 +114,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			jsonCatchup();
 		});
 		socket.on('newPost', newPost);
-
 	}
+
+	const toggleLive = () => {
+		if (isThread) {
+			if (socket && liveEnabled) {
+				socket.disconnect();
+				updateLive('Live posts disabled', 'red');
+			} else if (!socket) {
+				startLive();
+			} else {
+				socket.connect();
+			}
+		}
+		liveEnabled = !liveEnabled;
+		console.log('toggling live posts', liveEnabled);
+		localStorage.setItem('live', liveEnabled);
+	}
+
+	//todo
+	startLive();
+
+	/*
+	const liveSetting = document.getElementById('live-setting');
+	liveSetting.checked = liveEnabled;
+	liveSetting.addEventListener('change', toggleLive, false);
+
+	if (liveEnabled) {
+		startLive();
+	} else {
+		updateLive('Live posts disabled', 'red');
+	}
+	*/
 
 });

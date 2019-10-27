@@ -1,7 +1,7 @@
 'use strict';
 
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
-	, themes = require(__dirname+'/../../helpers/themes.js')
+	, { themes, codeThemes } = require(__dirname+'/../../helpers/themes.js')
 	, { Ratelimits } = require(__dirname+'/../../db/')
 	, { globalLimits } = require(__dirname+'/../../configs/main.json');
 
@@ -62,6 +62,9 @@ module.exports = async (req, res, next) => {
 	}
 	if (req.body.theme && !themes.includes(req.body.theme)) {
 		errors.push('Invalid theme');
+	}
+	if (req.body.code_theme && !codeThemes.includes(req.body.code_theme)) {
+		errors.push('Invalid code theme');
 	}
 
 	if (errors.length > 0) {
