@@ -1,4 +1,3 @@
-
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	const captchaFields = document.getElementsByClassName('captchafield');
