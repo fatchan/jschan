@@ -99,7 +99,10 @@ const express = require('express')
 	// catch any unhandled errors
 	app.use((err, req, res, next) => {
 		if (err.code === 'EBADCSRFTOKEN') {
-			return res.status(403).send('Invalid CSRF token');
+			return res.status(403).render('message', {
+				'title': 'Forbidden',
+				'message': 'Invalid CSRF token'
+  			});
 		}
 		console.error(err.stack);
 		return dynamicResponse(req, res, 500, 'message', {

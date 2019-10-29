@@ -878,6 +878,10 @@ table.boardtable td:nth-child(6) {
 		display: none;
 	}
 
+	.postmenu {
+		float: right;
+	}
+
 	.post-file-info {
 		max-width: 150px;
 	}
