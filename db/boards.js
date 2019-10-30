@@ -50,6 +50,7 @@ module.exports = {
 
 	insertOne: (data) => {
 		cache.del(`board_${data._id}`); //removing cached no_exist
+		cache.set('webring_update', 1);
 		return db.insertOne(data);
 	},
 

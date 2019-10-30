@@ -4,6 +4,7 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.client.db('jschan').collection('posts')
+	, cache = require(__dirname+'/../redis.js')
 	, { quoteLimit } = require(__dirname+'/../configs/main.json');
 
 module.exports = {
@@ -322,6 +323,11 @@ module.exports = {
 			data.bumped = new Date()
 		}
 
+		if (!saged && !board.unlisted) {
+			//mark webring as needing update for schedule to reduce redundant webring builds
+			cache.set('webring_update', 1);
+		}
+
 		//get the postId and add it to the post
 		const postId = await Boards.getNextId(board._id, saged);
 		data.postId = postId;
@@ -343,6 +349,7 @@ module.exports = {
 				}
 			});
 		}
+
 		return postId;
 
 	},
