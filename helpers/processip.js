@@ -1,11 +1,12 @@
 'use strict';
 
 const { ipHashSecret } = require(__dirname+'/../configs/main.json')
+	, { isIP } = require('net')
 	, { createHash } = require('crypto');
 
 module.exports = (req, res, next) => {
 	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress; //need to consider forwarded-for, etc here and in nginx
-	const ipVersion = net.isIP(ip);
+	const ipVersion = isIP(ip);
 	if (ipVersion) {
 		const delimiter = ipVersion === 4 ? '.' : ':';
 		let split = ip.split(delimiter);
