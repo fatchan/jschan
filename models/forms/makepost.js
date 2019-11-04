@@ -9,8 +9,7 @@ const path = require('path')
 	, { Stats, Posts, Boards, Files, Bans } = require(__dirname+'/../../db/')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
-	, escape = require(__dirname+'/../../helpers/posting/escape.js')
-	, simpleMarkdown = require(__dirname+'/../../helpers/posting/markdown.js')
+	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
 	, sanitize = require('sanitize-html')
 	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?:## (?<capcode>[^#]+))?$/
@@ -314,8 +313,7 @@ module.exports = async (req, res, next) => {
 	let quotes = [];
 	let crossquotes = [];
 	if (message && message.length > 0) {
-		message = escape(message);
-		message = simpleMarkdown(message);
+		message = markdown(message);
 		const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(req.params.board, message, req.body.thread || null);
 		message = quotedMessage;
 		quotes = threadQuotes;
@@ -366,15 +364,15 @@ module.exports = async (req, res, next) => {
 	const postId = await Posts.insertOne(res.locals.board, data, thread);
 
 	let enableCaptcha = false;
-	if (triggerAction > 0 //trigger is enabled
-		&& (tphTrigger > 0 || pphTrigger > 0) //and we have a trigger > 0 for threads or posts
-		&& ((triggerAction < 3 && captchaMode < triggerAction) //and captcha mode less than trigger if trigger < 2
-			|| (triggerAction === 3 && locked !== true))) { //or trigger is to lock and board not locked
-		const pastHourMongoId = Mongo.ObjectId.createFromTime(Math.floor((Date.now() - timeUtils.HOUR)/1000));
-		//count threads in past hour
+	if (triggerAction > 0 //trigger is enabled and not already been triggered
+		&& (tphTrigger > 0 || pphTrigger > 0)
+		&& ((triggerAction < 3 && captchaMode < triggerAction)
+			|| (triggerAction === 3 && locked !== true))) {
+		//read stats to check number threads in past hour
 		const hourPosts = await Stats.getHourPosts(res.locals.board._id);
-		//if its above the trigger
-		if (hourPosts && (tphTrigger > 0 && hourPosts.tph >= tphTrigger) || (pphTrigger > 0 && hourPosts.pph > pphTrigger)) { //TODO: add an option to check pph OR tph, not just tph
+		if (hourPosts //if stats exist for this hour and its above either trigger
+			&& (tphTrigger > 0 && hourPosts.tph >= tphTrigger)
+				|| (pphTrigger > 0 && hourPosts.pph > pphTrigger)) {
 			//update in memory for other stuff done e.g. rebuilds
 			const update = {
 				'$set': {}

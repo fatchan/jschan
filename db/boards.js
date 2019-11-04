@@ -50,6 +50,7 @@ module.exports = {
 
 	insertOne: (data) => {
 		cache.del(`board_${data._id}`); //removing cached no_exist
+		cache.set('webring_update', 1);
 		return db.insertOne(data);
 	},
 
@@ -161,20 +162,21 @@ module.exports = {
 		next();
 	},
 
-	getNextId: async (board, ip) => {
+	getNextId: async (board, saged) => {
+		const update = {
+			'$inc': {
+				'sequence_value': 1
+			},
+		};
+		if (!saged) {
+			update['$set'] = {
+				'lastPostTimestamp': new Date()
+			};
+		}
 		const increment = await db.findOneAndUpdate(
 			{
 				'_id': board
-			},
-			{
-				'$inc': {
-					'sequence_value': 1
-				},
-				'$set': {
-					'lastPostTimestamp': new Date()
-				}
-			},
-			{
+			}, update, {
 				'projection': {
 					'sequence_value': 1
 				}

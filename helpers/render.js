@@ -6,7 +6,6 @@ const { globalLimits, boardDefaults, cacheTemplates, meta } = require(__dirname+
 	, path = require('path')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, redlock = require(__dirname+'/../redlock.js')
-	, themes = require(__dirname+'/themes.js')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
 
 module.exports = async (htmlName, templateName, options, json=null) => {
@@ -15,8 +14,8 @@ module.exports = async (htmlName, templateName, options, json=null) => {
 		cache: cacheTemplates,
 		meta,
 		defaultTheme: boardDefaults.theme,
+		defaultCodeTheme: boardDefaults.codeTheme,
 		globalLimits,
-		themes
 	});
 	const lock = await redlock.lock(`locks:${htmlName}`, 3000); //what is a reasonable ttl?
 	const htmlPromise = outputFile(`${uploadDirectory}/html/${htmlName}`, html);

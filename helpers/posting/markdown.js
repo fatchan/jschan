@@ -11,77 +11,103 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, spoilerRegex = /\|\|([\s\S]+?)\|\|/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
 	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
-	, codeRegex = /&#x60;&#x60;&#x60;([\s\S]+?)&#x60;&#x60;&#x60;/gm
+	, codeRegex = /```([\s\S]+?)```/gm
 	, diceRegex = /##(?<numdice>\d+)d(?<numsides>\d+)(?:(?<operator>[+-])(?<modifier>\d+))?/gmi
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
-	, diceRoll = require(__dirname+'/diceroll.js');
+	, diceRoll = require(__dirname+'/diceroll.js')
+	, escape = require(__dirname+'/escape.js')
+	, { highlightAuto } = require('highlight.js')
+	, { highlightOptions } = require(__dirname+'/../../configs/main.json');
 
-module.exports = (text) => {
+module.exports = {
 
-	//pinktext 
-	text = text.replace(pinktextRegex, (match, pinktext) => {
-		return `<span class='pinktext'>&lt;${pinktext}</span>`;
-	});
+	markdown: (text) => {
+		const chunks = text.split(codeRegex);
+		for (let i = 0; i < chunks.length; i++) {
+			//every other chunk will be a code block
+			if (i % 2 === 0) {
+				const escaped = escape(chunks[i]);
+				const newlineFix = escaped.replace(/^\r?\n/,''); //fix ending newline because of codeblock
+				chunks[i] = module.exports.processRegularChunk(newlineFix);
+			} else {
+				chunks[i] = module.exports.processCodeChunk(chunks[i]);
+			}
+		}
+		return chunks.join('');
+	},
 
-	//greentext
-	text = text.replace(greentextRegex, (match, greentext) => {
-		return `<span class='greentext'>&gt;${greentext}</span>`;
-	});
+	processCodeChunk: (text) => {
+		const trimFix = text.replace(/^\s*(\r?\n)*|(\r?\n)*$/g, ''); //remove extra whitespace/newlines at ends
+		const { language, relevance, value } = highlightAuto(trimFix, highlightOptions.languageSubset);
+		if (relevance >= highlightOptions.threshold) {
+			return `<span class='code hljs'>${value}\n<small>language: ${language}, relevance: ${relevance}</small></span>`;
+		} else {
+			return `<span class='code'>${escape(trimFix)}</span>`;
+		}
+	},
 
-	//links
-	text = text.replace(linkRegex, (match) => {
-		return `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>`;
-	});
+	processRegularChunk: (text) => {
 
-	//bold
-	text = text.replace(boldRegex, (match, bold) => {
-		return `<span class='bold'>${bold}</span>`;
-	});
+		//pinktext 
+		text = text.replace(pinktextRegex, (match, pinktext) => {
+			return `<span class='pinktext'>&lt;${pinktext}</span>`;
+		});
 
-	//underline
-	text = text.replace(underlineRegex, (match, underline) => {
-		return `<span class='underline'>${underline}</span>`;
-	});
+		//greentext
+		text = text.replace(greentextRegex, (match, greentext) => {
+			return `<span class='greentext'>&gt;${greentext}</span>`;
+		});
 
-	//strikethrough
-	text = text.replace(strikethroughRegex, (match, strike) => {
-		return `<span class='strikethrough'>${strike}</span>`;
-	});
+		//bold
+		text = text.replace(boldRegex, (match, bold) => {
+			return `<span class='bold'>${bold}</span>`;
+		});
 
-	//titles
-	text = text.replace(titleRegex, (match, title) => {
-		return `<span class='title'>${title}</span>`;
-	});
+		//underline
+		text = text.replace(underlineRegex, (match, underline) => {
+			return `<span class='underline'>${underline}</span>`;
+		});
 
-	//italic
-	text = text.replace(italicRegex, (match, italic) => {
-		return `<span class='em'>${italic}</span>`;
-	});
+		//strikethrough
+		text = text.replace(strikethroughRegex, (match, strike) => {
+			return `<span class='strikethrough'>${strike}</span>`;
+		});
 
-	//spoilers
-	text = text.replace(spoilerRegex, (match, spoiler) => {
-		return `<span class='spoiler'>${spoiler}</span>`;
-	});
+		//titles
+		text = text.replace(titleRegex, (match, title) => {
+			return `<span class='title'>${title}</span>`;
+		});
 
-	//code
-	text = text.replace(codeRegex, (match, code) => {
-		const trimFix = code.replace(/^\s*\n/, ''); //remove extra whitespace/newline at start
-        return `<span class='code'>${trimFix}</span>`;
-    });
+		//italic
+		text = text.replace(italicRegex, (match, italic) => {
+			return `<span class='em'>${italic}</span>`;
+		});
 
-	//inline monospace
-	text = text.replace(monoRegex, (match, mono) => {
-        return `<span class='mono'>${mono}</span>`;
-    });
+		//spoilers
+		text = text.replace(spoilerRegex, (match, spoiler) => {
+			return `<span class='spoiler'>${spoiler}</span>`;
+		});
 
-	//detected
-	text = text.replace(detectedRegex, (match, detected) => {
-        return `<span class='detected'>${detected}</span>`;
-    });
+		//inline monospace
+		text = text.replace(monoRegex, (match, mono) => {
+			return `<span class='mono'>${mono}</span>`;
+		});
 
-	//dice rolls
-	text = text.replace(diceRegex, diceRoll);
+		//detected
+		text = text.replace(detectedRegex, (match, detected) => {
+			return `<span class='detected'>${detected}</span>`;
+		});
 
-	return text;
+		//dice rolls
+		text = text.replace(diceRegex, diceRoll);
+
+		//links
+		text = text.replace(linkRegex, (match) => {
+			return `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>`;
+		});
+
+		return text;
+
+	}
 
 }

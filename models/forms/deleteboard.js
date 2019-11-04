@@ -1,11 +1,12 @@
 'use strict';
 
 const { Boards, Stats, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
+	, cache = require(__dirname+'/../../redis.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { remove } = require('fs-extra');
 
-module.exports = async (uri) => {
+module.exports = async (uri, board) => {
 
 	//delete board
 	await Boards.deleteOne(uri);
@@ -23,5 +24,8 @@ module.exports = async (uri) => {
 		remove(`${uploadDirectory}/json/${uri}/`), //json
 		remove(`${uploadDirectory}/banners/${uri}/`) //banners
 	]);
+	if (!board.unlisted) {
+		cache.set('webring_update', 1);
+	}
 
 }

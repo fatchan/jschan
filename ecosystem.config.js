@@ -3,7 +3,7 @@ module.exports = {
 	apps : [{
 		name: 'build-worker',
 		script: 'worker.js',
-		instances: 1,
+		instances: 2,
 		/*
 			increase instances if building is getting backed up,
 			best to keep at numCPUs-1 to prevent server choke under high load though.

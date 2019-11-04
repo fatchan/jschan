@@ -1,3 +1,14 @@
+const removeModal = () => {
+	document.getElementsByClassName('modal')[0].remove();
+	document.getElementsByClassName('modal-bg')[0].remove();
+}
+
+const doModal = (data) => {
+	const modalHtml = modal({ modal: data });
+	document.body.insertAdjacentHTML('afterbegin', modalHtml);
+	document.getElementById('modalclose').onclick = removeModal;
+}
+
 window.addEventListener('DOMContentLoaded', () => {
 
 	const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
@@ -5,15 +16,8 @@ window.addEventListener('DOMContentLoaded', () => {
 	const form = document.getElementById('postform');
 	const submit = document.getElementById('submitpost');
 
-	const doModal = (data) => {
-		const modalHtml = modal({ modal: data });
-		document.body.insertAdjacentHTML('afterbegin', modalHtml);
-		document.getElementById('modalclose').onclick = closeModal;
-	}
-
-	const closeModal = () => {
-		document.getElementsByClassName('modal')[0].remove();
-		document.getElementsByClassName('modal-bg')[0].remove();
+	if (!submit || !form) {
+		return; //no postform on this page
 	}
 
 	form.addEventListener('submit', function(event) {
@@ -45,7 +49,7 @@ window.addEventListener('DOMContentLoaded', () => {
 					//successful post
 					if (!isThread && xhr.responseURL) {
 						window.location = xhr.responseURL;
-					} else if (json) {
+					} else if (socket && socket.connected && json) {
 						window.myPostId = json.postId;
 						window.location.hash = json.postId;
 					}

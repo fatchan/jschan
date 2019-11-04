@@ -78,12 +78,10 @@ pre {
 
 .code {
 	text-align: left;
-	border-width: 1px 1px 1px 10px;
 	border-style: solid;
 	border-color: var(--darken);
 	display: block;
 	margin: 0.5em 0;
-	display: flex;
 	overflow-x: auto;
 	white-space: pre;
 }
@@ -92,6 +90,8 @@ pre {
 		background: var(--darken);
 		padding: 2px;
 		font-family: monospace;
+		max-width: max-content;
+		max-width: -moz-max-content;
 }
 .text-center {
 	text-align: center;
@@ -142,6 +142,10 @@ pre {
 	padding: 5px 0;
 }
 
+#settings {
+	cursor: pointer;
+}
+
 .pages, .live {
 	box-sizing: border-box;
 	padding: 10px;
@@ -178,11 +182,13 @@ object {
 	padding: 5px;
 	margin: 5px;
 	text-align: center;
-	height: 200px;
+	height: 250px;
 	width: 250px;
 	overflow: hidden;
 	border: 1px solid var(--post-outline-color);
 	box-sizing: border-box;
+	flex-grow: 1;
+	max-width: 300px;
 }
 
 .catalog-tile:hover {
@@ -235,7 +241,7 @@ p {
 
 .spoiler:not(:hover) * {
 	color: black;
-	background: black!important; /*for detected coloring*/
+	background: black!important;
 }
 
 .banposts .thread {
@@ -333,6 +339,8 @@ th {
 
 td, th {
 	padding: 5px;
+	word-break: break-all;
+	word-break: break-word;
 }
 
 .action-wrapper {
@@ -503,8 +511,12 @@ details.actions div {
 	align-items: start;
 }
 
-a, video, img, input, summary {
+a, video, img, input, summary, select, option {
 	outline: 0;
+}
+
+option {
+	background: var(--post-color);
 }
 
 .post-data {
@@ -615,6 +627,42 @@ textarea {
 	min-width: 25em;
 }
 
+.postmenu {
+	cursor: pointer;
+	width: 1.5em;
+	height: 1em;
+	color: var(--font-color);
+	border: none;
+	background: transparent;
+	position: relative;
+	top: 2px;
+	font-size: 9pt;
+}
+
+.catalog-tile.hidden {
+	height: min-content;
+}
+
+.catalog-tile.hidden .post-message, .catalog-tile.hidden .post-file-src {
+	display: none;
+}
+
+.catalog-tile.hidden .post-info {
+	opacity: .5;
+	margin-bottom: -6px;
+}
+
+.post-container.hidden .post-data {
+	display: none;
+}
+
+.post-container.hidden .post-info {
+	margin-bottom: -6px;
+	opacity: .5;
+	border: none;
+	background: none;
+}
+
 .anchor:target + .post-container,
 .post-container.highlighted,
 .anchor:target + table tbody tr th,
@@ -657,6 +705,7 @@ textarea {
 	padding: 5px;
 	padding-left: 3px;
 	display:block;
+	user-select: none;
 }
 
 .post-container.op .post-info {
@@ -783,7 +832,10 @@ iframe.captcha {
 }
 
 hr {
-	color: var(--hr);
+	border-top: 1px solid var(--hr);
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
 	margin: 6px 0 5px 0;
 }
 
@@ -796,6 +848,12 @@ hr + .thread {
 	overflow-y: auto;
 	overflow-x: hidden;
 	border: 1px solid var(--box-border-color);
+}
+
+table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
+table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
+table.boardtable td:nth-child(5), table.boardtable th:nth-child(5) {
+	word-break: keep-all;
 }
 
 table.boardtable th:nth-child(6) {
@@ -819,6 +877,10 @@ table.boardtable td:nth-child(6) {
 	table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
 	table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
 		display: none;
+	}
+
+	.postmenu {
+		float: right;
 	}
 
 	.post-file-info {

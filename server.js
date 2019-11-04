@@ -14,7 +14,7 @@ const express = require('express')
 	, configs = require(__dirname+'/configs/main.json')
 	, processIp = require(__dirname+'/helpers/processip.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
-	, themes = require(__dirname+'/helpers/themes.js')
+	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, Mongo = require(__dirname+'/db/db.js')
 	, Socketio = require(__dirname+'/socketio.js')
 	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
@@ -78,9 +78,9 @@ const express = require('express')
 
 	//default settings
 	app.locals.defaultTheme = configs.boardDefaults.theme;
+	app.locals.defaultCodeTheme = configs.boardDefaults.codeTheme;
 	app.locals.globalLimits = configs.globalLimits;
 	app.locals.meta = configs.meta;
-	app.locals.themes = themes;
 
 	// routes
 	if (!production) {
@@ -99,7 +99,10 @@ const express = require('express')
 	// catch any unhandled errors
 	app.use((err, req, res, next) => {
 		if (err.code === 'EBADCSRFTOKEN') {
-			return res.status(403).send('Invalid CSRF token');
+			return res.status(403).render('message', {
+				'title': 'Forbidden',
+				'message': 'Invalid CSRF token'
+  			});
 		}
 		console.error(err.stack);
 		return dynamicResponse(req, res, 500, 'message', {

@@ -1,14 +1,17 @@
-function changeTheme(e) {
+function changeTheme(e, type) {
 	//is this the initial load, or an event from changing theme dropdown
-	let theme = e ? this.value : localStorage.getItem('theme');
+	if (!type) {
+		type = this.id === 'theme-changer' ? 'theme' : 'codetheme';
+	}
+	let theme = e ? this.value : localStorage.getItem(type);
 	//first visit, set theme to default
 	if (!theme) {
 		theme = 'default';
 	}
 	//add theme setting to localstorage
-	localStorage.setItem('theme', theme);
+	localStorage.setItem(type, theme);
 	//check for theme style tag
-	let tempLink = document.getElementById('customtheme');
+	let tempLink = document.getElementById(`custom${type}`);
 	if (theme === 'default') {
 		if (tempLink) {
 			//remove theme style tag if we switching to default
@@ -16,7 +19,7 @@ function changeTheme(e) {
 		}
 	} else {
 		//path of the theme css
-		const path = '/css/themes/'+theme+'.css';
+		const path = `/css/${type}s/${theme}.css`;
 		//get the raw css from localstorage
 		let css = localStorage.getItem(path);
 		if (!tempLink) {
@@ -31,7 +34,7 @@ function changeTheme(e) {
 		//then createa new link rel=stylesheet, and load the css 
 		const themeLink = document.createElement('link');
 		themeLink.rel = 'stylesheet';
-		themeLink.id = 'customtheme';
+		themeLink.id = `custom${type}`;
 		themeLink.onload = function() {
 			css = '';
 			const rulesName = themeLink.sheet.rules != null ? 'rules' : 'cssRules'; //browser compatibility shit
@@ -49,13 +52,20 @@ function changeTheme(e) {
 	}
 }
 
-changeTheme();
+changeTheme(null, 'theme');
+changeTheme(null, 'codetheme');
 
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener('settingsReady', function(event) {
 
+	//for main theme
 	const themePicker = document.getElementById('theme-changer');
 	themePicker.value = localStorage.getItem('theme')
 
+	//for code theme
+	const codeThemePicker = document.getElementById('code-theme-changer');
+	codeThemePicker.value = localStorage.getItem('codetheme')
+
 	themePicker.addEventListener('change', changeTheme, false);
+	codeThemePicker.addEventListener('change', changeTheme, false);
 
 });
