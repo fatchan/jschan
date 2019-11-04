@@ -103,6 +103,7 @@ module.exports = {
 			}, {
 				'$project': {
 					'_id': 1,
+					'board': 1,
 					'replyposts': 1,
 					'replyfiles': 1,
 					'bumped': 1

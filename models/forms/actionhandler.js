@@ -355,10 +355,10 @@ module.exports = async (req, res, next) => {
 			const bulkWrites = [];
 			for (let i = 0; i < threadAggregates.length; i++) {
 				const threadAggregate = threadAggregates[i];
-				if (threadAggregate.bumped < threadBounds[boardName].oldest.bumped) {
-					threadBounds[boardName].oldest = { bumped: threadAggregate.bumped };
-				} else if (threadAggregate.bumped < threadBounds[boardName].newest.bumped) {
-					threadBounds[boardName].newest = { bumped: threadAggregate.bumped };
+				if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].oldest.bumped) {
+					threadBounds[threadAggregate._id.board].oldest = { bumped: threadAggregate.bumped };
+				} else if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].newest.bumped) {
+					threadBounds[threadAggregate._id.board].newest = { bumped: threadAggregate.bumped };
 				}
 				/*
 					note: the aggregate will not return any replies if the thread had no remaining replies (e.g. they are all deleted)
@@ -390,14 +390,14 @@ module.exports = async (req, res, next) => {
 					};
 				});
 				//get post dates of OPS
-				const results = await Posts.resetThreadAggregates(threadOPOrs);
+				const emptyThreadAggregates = await Posts.resetThreadAggregates(threadOPOrs);
 				if (emptyThreadAggregates.length > 0) {
 					for (let i = 0; i < emptyThreadAggregates.length; i++) {
 						const threadAggregate = emptyThreadAggregates[i];
-						if (threadAggregate.bumped < threadBounds[boardName].oldest.bumped) {
-							threadBounds[boardName].oldest = { bumped: threadAggregate.bumped };
-						} else if (threadAggregate.bumped < threadBounds[boardName].newest.bumped) {
-							threadBounds[boardName].newest = { bumped: threadAggregate.bumped };
+						if (threadAggregate.bumped < threadBounds[threadAggregate.board].oldest.bumped) {
+							threadBounds[threadAggregate.board].oldest = { bumped: threadAggregate.bumped };
+						} else if (threadAggregate.bumped < threadBounds[threadAggregate.board].newest.bumped) {
+							threadBounds[threadAggregate.board].newest = { bumped: threadAggregate.bumped };
 						}
 						//set them all
 						bulkWrites.push({
