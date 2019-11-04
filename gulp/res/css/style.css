@@ -187,6 +187,8 @@ object {
 	overflow: hidden;
 	border: 1px solid var(--post-outline-color);
 	box-sizing: border-box;
+	flex-grow: 1;
+	max-width: 300px;
 }
 
 .catalog-tile:hover {
@@ -337,6 +339,7 @@ th {
 
 td, th {
 	padding: 5px;
+	word-break: break-all;
 	word-break: break-word;
 }
 
@@ -626,17 +629,27 @@ textarea {
 
 .postmenu {
 	cursor: pointer;
-	width: 1.1em;
-	height: 1.1em;
-	position: relative;
-	top: 3px;
+	width: 1.5em;
+	height: 1em;
 	color: var(--font-color);
 	border: none;
 	background: transparent;
+	position: relative;
+	top: 2px;
+	font-size: 9pt;
 }
 
 .catalog-tile.hidden {
+	height: min-content;
+}
+
+.catalog-tile.hidden .post-message, .catalog-tile.hidden .post-file-src {
 	display: none;
+}
+
+.catalog-tile.hidden .post-info {
+	opacity: .5;
+	margin-bottom: -6px;
 }
 
 .post-container.hidden .post-data {
@@ -819,7 +832,10 @@ iframe.captcha {
 }
 
 hr {
-	color: var(--hr);
+	border-top: 1px solid var(--hr);
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
 	margin: 6px 0 5px 0;
 }
 
@@ -861,6 +877,10 @@ table.boardtable td:nth-child(6) {
 	table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
 	table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
 		display: none;
+	}
+
+	.postmenu {
+		float: right;
 	}
 
 	.post-file-info {

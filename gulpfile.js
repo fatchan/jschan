@@ -162,9 +162,9 @@ const codeThemes = ['${codeThemes.join("', '")}']`;
 			`${paths.scripts.src}/themelist.js`,
 			`${paths.scripts.src}/modal.js`,
 			`${paths.scripts.src}/settings.js`,
-			`${paths.scripts.src}/hide.js`,
 			`${paths.scripts.src}/live.js`,
-			`${paths.scripts.src}/*.js`
+			`${paths.scripts.src}/*.js`,
+			`!${paths.scripts.src}/hide.js`,
 		])
 		.pipe(concat('all.js'))
 		.pipe(uglify())

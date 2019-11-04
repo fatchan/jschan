@@ -11,24 +11,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const openSettings = (data) => {
 		settingsModal.style.display = 'unset';
 		settingsBg.style.display = 'unset';
-	}	
+	}
 
 	const settings = document.getElementById('settings');
 
-	const modalHtml = modal({ 
+	const modalHtml = modal({
 		modal: {
 			title: 'Settings',
 			settings: {
 				themes, codeThemes
 			},
 			hidden: true,
-		} 
+		}
 	});
 
 	const inserted = document.body.insertAdjacentHTML('afterbegin', modalHtml);
 	settingsBg = document.getElementsByClassName('modal-bg')[0];
 	settingsModal = document.getElementsByClassName('modal')[0];
 
+	settingsBg.onclick = hideSettings;
 	settingsModal.getElementsByClassName('close')[0].onclick = hideSettings;
 	settings.onclick = openSettings;
 

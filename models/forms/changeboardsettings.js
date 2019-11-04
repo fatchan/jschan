@@ -3,6 +3,7 @@
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
+	, cache = require(__dirname+'/../../redis.js')
 	, { remove } = require('fs-extra')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
@@ -102,6 +103,16 @@ module.exports = async (req, res, next) => {
 		, rebuildCatalog = false
 		, rebuildOther = false;
 
+	//name, description, sfw, unlisted, tags changed need webring update
+	if ((!oldSettings.unlisted && !newSettings.unlisted) //if not unlisted or is changing unlisted status (thus will be added or removed from webring list)
+		&& (oldSettings.name != newSettings.name //and changing something that needs to be shown in webring
+		|| oldSettings.description != newSettings.description
+		|| oldSettings.unlisted != newSettings.unlisted
+		|| oldSettings.sfw != newSettings.sfw
+		|| oldSettings.tags != newSettings.tags)) {
+		cache.set('webring_update', 1);
+	}
+
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
 		rebuildBoard = true;
 		if (newSettings.captchaMode == 2) {
@@ -156,13 +167,13 @@ module.exports = async (req, res, next) => {
 		});
 	}
 	if (rebuildOther) {
+		//NOTE does not rebuild individual log pages they are stuck on old theme for now
 		buildQueue.push({
 			'task': 'buildModLogList',
 			'options': {
 				'board': res.locals.board,
 			}
 		});
-		//NOTE does not rebuild individual log pages they are stuck on old theme for now
 		buildQueue.push({
 			'task': 'buildBanners',
 			'options': {

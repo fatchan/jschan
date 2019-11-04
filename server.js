@@ -78,6 +78,7 @@ const express = require('express')
 
 	//default settings
 	app.locals.defaultTheme = configs.boardDefaults.theme;
+	app.locals.defaultCodeTheme = configs.boardDefaults.codeTheme;
 	app.locals.globalLimits = configs.globalLimits;
 	app.locals.meta = configs.meta;
 
@@ -98,7 +99,10 @@ const express = require('express')
 	// catch any unhandled errors
 	app.use((err, req, res, next) => {
 		if (err.code === 'EBADCSRFTOKEN') {
-			return res.status(403).send('Invalid CSRF token');
+			return res.status(403).render('message', {
+				'title': 'Forbidden',
+				'message': 'Invalid CSRF token'
+  			});
 		}
 		console.error(err.stack);
 		return dynamicResponse(req, res, 500, 'message', {

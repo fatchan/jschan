@@ -43,7 +43,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	try {
-		await deleteBoard(req.body.uri);
+		await deleteBoard(board._id, board);
 	} catch (err) {
 		return next(err);
 	}

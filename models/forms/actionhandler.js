@@ -337,10 +337,9 @@ module.exports = async (req, res, next) => {
 			return acc;
 		}, {});
 
-		let datesChanged = false;
 		if (aggregateNeeded) {
 
-			//fix latest post timestamps
+			//fix latest post timestamp on baords for webring/board list activity
 			await Posts.fixLatest(threadBoards);
 
 			//recalculate replies and image counts
@@ -351,10 +350,20 @@ module.exports = async (req, res, next) => {
 					thread: p.thread
 				}
 			});
+			//get replies, files, bump date, from threads
 			const threadAggregates = await Posts.getThreadAggregates(threadOrs);
 			const bulkWrites = [];
 			for (let i = 0; i < threadAggregates.length; i++) {
 				const threadAggregate = threadAggregates[i];
+				if (threadAggregate.bumped < threadBounds[boardName].oldest.bumped) {
+					threadBounds[boardName].oldest = { bumped: threadAggregate.bumped };
+				} else if (threadAggregate.bumped < threadBounds[boardName].newest.bumped) {
+					threadBounds[boardName].newest = { bumped: threadAggregate.bumped };
+				}
+				/*
+					note: the aggregate will not return any replies if the thread had no remaining replies (e.g. they are all deleted)
+					so here we filter them out of the original list, then afterwards the ones left in the list are set to 0 or the OP post date
+				*/
 				threadOrs = threadOrs.filter(t => t.thread !== threadAggregate._id.thread && t.board !== threadAggregate._id.board);
 				//use results from first aggregate for threads with replies still existing
 				bulkWrites.push({
@@ -380,10 +389,17 @@ module.exports = async (req, res, next) => {
 						board: t.board
 					};
 				});
+				//get post dates of OPS
 				const results = await Posts.resetThreadAggregates(threadOPOrs);
-				if (results.length > 0) {
-					for (let i = 0; i < results.length; i++) {
-						const threadAggregate = results[i];
+				if (emptyThreadAggregates.length > 0) {
+					for (let i = 0; i < emptyThreadAggregates.length; i++) {
+						const threadAggregate = emptyThreadAggregates[i];
+						if (threadAggregate.bumped < threadBounds[boardName].oldest.bumped) {
+							threadBounds[boardName].oldest = { bumped: threadAggregate.bumped };
+						} else if (threadAggregate.bumped < threadBounds[boardName].newest.bumped) {
+							threadBounds[boardName].newest = { bumped: threadAggregate.bumped };
+						}
+						//set them all
 						bulkWrites.push({
 							'updateOne': {
 								'filter': {
@@ -402,7 +418,6 @@ module.exports = async (req, res, next) => {
 				}
 			}
 			if (bulkWrites.length > 0) {
-				datesChanged = true;
 				await Posts.db.bulkWrite(bulkWrites);
 			}
 		}
@@ -430,10 +445,10 @@ module.exports = async (req, res, next) => {
 					}
 				});
 			}
-			//refersh any pages affected
+			//refresh any pages affected
 			const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
 			let catalogRebuild = true;
-			if ((beforePages[boardName] && beforePages[boardName] !== afterPages) || req.body.move || datesChanged) { //handle moves here since dates would change and not work in old/new page calculations
+			if ((beforePages[boardName] && beforePages[boardName] !== afterPages) || req.body.move) { //handle moves here since dates would change and not work in old/new page calculations
 				if (afterPages < beforePages[boardName]) {
 					//amount of pages changed, rebuild all pages and delete  any further pages (if pages amount decreased)
 					for (let k = beforePages[boardName]; k > afterPages; k--) {
