@@ -88,39 +88,56 @@ module.exports = {
 
 	},
 
-	getReplyCounts: (board, thread) => {
+	resetThreadAggregates: (ors) => {
 		return db.aggregate([
 			{
 				'$match': {
-					'thread': thread,
-					'board': board,
+					'$or': ors
 				}
 			}, {
-				'$group': {
-					'_id': null,
-					'replyposts': {
-						'$sum': 1
-					},
-					'replyfiles': {
-						'$sum': {
-							'$size': '$files'
-						}
-					}
+				'$set': {
+					'replyposts': 0,
+					'replyfiles': 0,
+					'bumped': '$date'
+				}
+			}, {
+				'$project': {
+					'_id': 1,
+					'board': 1,
+					'replyposts': 1,
+					'replyfiles': 1,
+					'bumped': 1
 				}
 			}
 		]).toArray();
 	},
 
-	setReplyCounts: (board, thread, replyposts, replyfiles) => {
-		return db.updateOne({
-			'postId': thread,
-			'board': board
-		}, {
-			'$set': {
-				'replyposts': replyposts,
-				'replyfiles': replyfiles,
-			}
-		})
+	getThreadAggregates: (ors) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'$or': ors
+				}
+			}, {
+		        '$group': {
+		            '_id': {
+						'thread': '$thread',
+						'board': '$board'
+					},
+		            'replyposts': {
+		                '$sum': 1
+		            },
+		            'replyfiles': {
+		                '$sum': {
+		                    '$size': '$files'
+		                }
+					},
+					'bumped': {
+						'$max': '$date'
+					}
+		        }
+		    }
+		]).toArray();
 	},
 
 	getPages: (board) => {
@@ -320,7 +337,7 @@ module.exports = {
 			await db.updateOne(filter, query);
 		} else {
 			//this is a new thread so just set the bump date
-			data.bumped = new Date()
+			data.bumped = new Date();
 		}
 
 		if (!saged && !board.unlisted) {

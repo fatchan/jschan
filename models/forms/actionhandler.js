@@ -130,12 +130,12 @@ module.exports = async (req, res, next) => {
 		if (boardThreadMap[req.params.board].directThreads.size > 0) {
 			const threadIds = [...boardThreadMap[req.params.board].directThreads];
 			const fetchMovePosts = await Posts.db.find({
-		        'board': req.params.board,
+				'board': req.params.board,
 				'thread': {
-		            '$in': threadIds
+					'$in': threadIds
 				}
-		    }).toArray();
-	        res.locals.posts = res.locals.posts.concat(fetchMovePosts);
+			}).toArray();
+			res.locals.posts = res.locals.posts.concat(fetchMovePosts);
 		}
 		const { message, action } = await movePosts(req, res);
 		if (action) {
@@ -298,24 +298,6 @@ module.exports = async (req, res, next) => {
 	//if there are actions that can cause some rebuilding
 	if (res.locals.actions.numBuild > 0) {
 
-		//recalculate replies and image counts
-		if (aggregateNeeded) {
-			//fix latest post timestamps
-			await Posts.fixLatest(threadBoards);
-			const selectedPosts = res.locals.posts.filter(post => post.thread !== null);
-//TODO: do this in a better way.
-			await Promise.all(selectedPosts.map(async (post) => {
-				const replyCounts = await Posts.getReplyCounts(post.board, post.thread);
-				let replyposts = 0;
-				let replyfiles = 0;
-				if (replyCounts[0]) {
-					replyposts = replyCounts[0].replyposts;
-					replyfiles = replyCounts[0].replyfiles;
-				}
-				Posts.setReplyCounts(post.board, post.thread, replyposts, replyfiles);
-			}));
-		}
-
 		//make it into an OR query for the db
 		const queryOrs = [];
 		for (let i = 0; i < threadBoards.length; i++) {
@@ -331,7 +313,6 @@ module.exports = async (req, res, next) => {
 			})
 		}
 
-
 		//fetch threads per board that we only checked posts for
 		let threadsEachBoard = await Posts.db.find({
 			'thread': null,
@@ -343,7 +324,7 @@ module.exports = async (req, res, next) => {
 		threadsEachBoard = threadsEachBoard.concat(selectedThreads)
 
 		//get the oldest and newest thread for each board to determine how to delete
-		const threadBounds = threadsEachBoard.reduce((acc, curr) => {
+		let threadBounds = threadsEachBoard.reduce((acc, curr) => {
 			if (!acc[curr.board] || curr.bumped < acc[curr.board].bumped) {
 				acc[curr.board] = { oldest: null, newest: null};
 			}
@@ -356,6 +337,91 @@ module.exports = async (req, res, next) => {
 			return acc;
 		}, {});
 
+		if (aggregateNeeded) {
+
+			//fix latest post timestamp on baords for webring/board list activity
+			await Posts.fixLatest(threadBoards);
+
+			//recalculate replies and image counts
+			const selectedPosts = res.locals.posts.filter(p => p.thread !== null);
+			let threadOrs = selectedPosts.map(p => {
+				return {
+					board: p.board,
+					thread: p.thread
+				}
+			});
+			//get replies, files, bump date, from threads
+			const threadAggregates = await Posts.getThreadAggregates(threadOrs);
+			const bulkWrites = [];
+			for (let i = 0; i < threadAggregates.length; i++) {
+				const threadAggregate = threadAggregates[i];
+				if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].oldest.bumped) {
+					threadBounds[threadAggregate._id.board].oldest = { bumped: threadAggregate.bumped };
+				} else if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].newest.bumped) {
+					threadBounds[threadAggregate._id.board].newest = { bumped: threadAggregate.bumped };
+				}
+				/*
+					note: the aggregate will not return any replies if the thread had no remaining replies (e.g. they are all deleted)
+					so here we filter them out of the original list, then afterwards the ones left in the list are set to 0 or the OP post date
+				*/
+				threadOrs = threadOrs.filter(t => t.thread !== threadAggregate._id.thread && t.board !== threadAggregate._id.board);
+				//use results from first aggregate for threads with replies still existing
+				bulkWrites.push({
+					'updateOne': {
+						'filter': {
+							'postId': threadAggregate._id.thread,
+							'board': threadAggregate._id.board
+						},
+						'update': {
+			  				'$set': {
+								'replyposts': threadAggregate.replyposts,
+								'replyfiles': threadAggregate.replyfiles,
+								'bumped': threadAggregate.bumped
+							}
+						}
+					}
+				});
+			}
+			if (threadOrs.length > 0) {
+				const threadOPOrs = threadOrs.map(t => {
+					return {
+						postId: t.thread,
+						board: t.board
+					};
+				});
+				//get post dates of OPS
+				const emptyThreadAggregates = await Posts.resetThreadAggregates(threadOPOrs);
+				if (emptyThreadAggregates.length > 0) {
+					for (let i = 0; i < emptyThreadAggregates.length; i++) {
+						const threadAggregate = emptyThreadAggregates[i];
+						if (threadAggregate.bumped < threadBounds[threadAggregate.board].oldest.bumped) {
+							threadBounds[threadAggregate.board].oldest = { bumped: threadAggregate.bumped };
+						} else if (threadAggregate.bumped < threadBounds[threadAggregate.board].newest.bumped) {
+							threadBounds[threadAggregate.board].newest = { bumped: threadAggregate.bumped };
+						}
+						//set them all
+						bulkWrites.push({
+							'updateOne': {
+								'filter': {
+									'_id': threadAggregate._id
+								},
+								'update': {
+					  				'$set': {
+										'replyposts': threadAggregate.replyposts,
+										'replyfiles': threadAggregate.replyfiles,
+										'bumped': threadAggregate.bumped
+									}
+								}
+							}
+						});
+					}
+				}
+			}
+			if (bulkWrites.length > 0) {
+				await Posts.db.bulkWrite(bulkWrites);
+			}
+		}
+
 		for (let i = 0; i < threadBoards.length; i++) {
 			const boardName = threadBoards[i];
 			const bounds = threadBounds[boardName];
@@ -363,12 +429,12 @@ module.exports = async (req, res, next) => {
 			//rebuild impacted threads
 			if (req.body.move) {
 				buildQueue.push({
-                    'task': 'buildThread',
-                    'options': {
-                        'threadId': req.body.move_to_thread,
-                        'board': board,
-                    }
-                });
+					'task': 'buildThread',
+					'options': {
+						'threadId': req.body.move_to_thread,
+						'board': board,
+					}
+				});
 			}
 			for (let j = 0; j < boardThreadMap[boardName].threads.length; j++) {
 				buildQueue.push({
@@ -379,7 +445,7 @@ module.exports = async (req, res, next) => {
 					}
 				});
 			}
-			//refersh any pages affected
+			//refresh any pages affected
 			const afterPages = Math.ceil((await Posts.getPages(boardName)) / 10);
 			let catalogRebuild = true;
 			if ((beforePages[boardName] && beforePages[boardName] !== afterPages) || req.body.move) { //handle moves here since dates would change and not work in old/new page calculations
