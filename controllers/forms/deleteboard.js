@@ -14,6 +14,7 @@ module.exports = async (req, res, next) => {
 	if (!req.body.uri) {
 		errors.push('Missing URI');
 	}
+	let board;
 	if (alphaNumericRegex.test(req.body.uri) !== true) {
 		errors.push('URI must contain a-z 0-9 only');
 	} else {
@@ -22,7 +23,6 @@ module.exports = async (req, res, next) => {
 			//board manage page to not be able to delete other boards;
 			errors.push('URI does not match current board');
 		}
-		let board;
 		try {
 			board = await Boards.findOne(req.body.uri)
 		} catch (err) {
