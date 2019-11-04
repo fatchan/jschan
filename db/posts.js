@@ -119,24 +119,24 @@ module.exports = {
 					'$or': ors
 				}
 			}, {
-		        '$group': {
-		            '_id': {
+				'$group': {
+					'_id': {
 						'thread': '$thread',
 						'board': '$board'
 					},
-		            'replyposts': {
-		                '$sum': 1
-		            },
-		            'replyfiles': {
-		                '$sum': {
-		                    '$size': '$files'
-		                }
+					'replyposts': {
+						'$sum': 1
+					},
+					'replyfiles': {
+						'$sum': {
+							'$size': '$files'
+						}
 					},
 					'bumped': {
 						'$max': '$date'
 					}
-		        }
-		    }
+				}
+			}
 		]).toArray();
 	},
 
