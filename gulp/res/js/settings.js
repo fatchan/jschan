@@ -19,7 +19,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		modal: {
 			title: 'Settings',
 			settings: {
-				themes, codeThemes
+				themes,
+				codeThemes,
 			},
 			hidden: true,
 		}
