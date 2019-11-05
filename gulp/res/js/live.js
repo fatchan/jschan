@@ -8,7 +8,7 @@ let socket;
 window.addEventListener('settingsReady', function(event) { //after domcontentloaded
 
 	const livecolor = document.getElementById('livecolor');
-	const livetext = document.getElementById('livetext').childNodes[1];
+	const livetext = isThread ? document.getElementById('livetext').childNodes[1] : null;
 	const updateLive = (message, color) => {
 		livecolor.style.backgroundColor = color;
 		livetext.nodeValue = message;
@@ -192,10 +192,12 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	scrollSetting.checked = scrollEnabled;
 	scrollSetting.addEventListener('change', toggleScroll, false);
 
-	if (liveEnabled) {
-		startLive();
-	} else {
-		updateLive('Live posts disabled', 'red');
+	if (isThread) {
+		if (liveEnabled) {
+			startLive();
+		} else {
+			updateLive('Live posts disabled', 'red');
+		}
 	}
 
 });
