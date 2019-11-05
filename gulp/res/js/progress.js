@@ -21,6 +21,9 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	form.addEventListener('submit', function(event) {
+		if (localStorage.getItem('live') != 'true') {
+			return true;
+		}
 		event.preventDefault();
 		submit.disabled = true;
 		const xhr = new XMLHttpRequest();

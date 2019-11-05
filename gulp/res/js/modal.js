@@ -57,7 +57,7 @@ pug_html = pug_html + "\u003C\u002Ful\u003E";
 }
 else
 if (data.settings) {
-pug_html = pug_html + "\u003Cdiv class=\"form-wrapper flexleft mt-10\"\u003E\u003Cdiv class=\"row\"\u003E\u003Cdiv class=\"label\"\u003EMain Theme\u003C\u002Fdiv\u003E\u003Cselect id=\"theme-changer\" name=\"theme\"\u003E\u003Coption value=\"default\"\u003Edefault\u003C\u002Foption\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"form-wrapper flexleft mt-10\"\u003E\u003Cdiv class=\"row\"\u003E\u003Cdiv class=\"label\"\u003ETheme\u003C\u002Fdiv\u003E\u003Cselect id=\"theme-changer\" name=\"theme\"\u003E\u003Coption value=\"default\"\u003Edefault\u003C\u002Foption\u003E";
 // iterate data.settings.themes
 ;(function(){
   var $$obj = data.settings.themes;
@@ -76,7 +76,7 @@ pug_html = pug_html + "\u003Coption" + (pug_attr("value", theme, true, false)) +
   }
 }).call(this);
 
-pug_html = pug_html + "\u003C\u002Fselect\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"row\"\u003E\u003Cdiv class=\"label\"\u003ECode Block Theme\u003C\u002Fdiv\u003E\u003Cselect id=\"code-theme-changer\"\u003E\u003Coption value=\"default\"\u003Edefault\u003C\u002Foption\u003E";
+pug_html = pug_html + "\u003C\u002Fselect\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"row\"\u003E\u003Cdiv class=\"label\"\u003ECode theme\u003C\u002Fdiv\u003E\u003Cselect id=\"code-theme-changer\"\u003E\u003Coption value=\"default\"\u003Edefault\u003C\u002Foption\u003E";
 // iterate data.settings.codeThemes
 ;(function(){
   var $$obj = data.settings.codeThemes;
@@ -95,7 +95,7 @@ pug_html = pug_html + "\u003Coption" + (pug_attr("value", theme, true, false)) +
   }
 }).call(this);
 
-pug_html = pug_html + "\u003C\u002Fselect\u003E\u003C\u002Fdiv\u003E\u003C!--removed until i find a solution to not scrolling without reload--\u003E\u003C!--.row.label Live Post Updates\ninput#live-setting(type='checkbox')--\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003C\u002Fselect\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"row\"\u003E\u003Cdiv class=\"label\"\u003ELive posts\u003C\u002Fdiv\u003E\u003Cinput id=\"live-setting\" type=\"checkbox\"\u002F\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"row\"\u003E\u003Cdiv class=\"label\"\u003ENotifications\u003C\u002Fdiv\u003E\u003Cinput id=\"notification-setting\" type=\"checkbox\"\u002F\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"row\"\u003E\u003Cdiv class=\"label\"\u003EScroll to new posts\u003C\u002Fdiv\u003E\u003Cinput id=\"scroll-setting\" type=\"checkbox\"\u002F\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 };
