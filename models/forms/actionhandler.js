@@ -314,10 +314,13 @@ module.exports = async (req, res, next) => {
 		}
 
 		//fetch threads per board that we only checked posts for
-		let threadsEachBoard = await Posts.db.find({
-			'thread': null,
-			'$or': queryOrs
-		}).toArray();
+		let threadsEachBoard = [];
+		if (queryOrs.length > 0) {
+			threadsEachBoard = await Posts.db.find({
+				'thread': null,
+				'$or': queryOrs
+			}).toArray();
+		}
 
 		//combine it with what we already had
 		const selectedThreads = res.locals.posts.filter(post => post.thread === null)
@@ -342,83 +345,85 @@ module.exports = async (req, res, next) => {
 			//fix latest post timestamp on baords for webring/board list activity
 			await Posts.fixLatest(threadBoards);
 
-			//recalculate replies and image counts
+			//recalculate replies and image counts if necessary
 			const selectedPosts = res.locals.posts.filter(p => p.thread !== null);
-			let threadOrs = selectedPosts.map(p => {
-				return {
-					board: p.board,
-					thread: p.thread
-				}
-			});
-			//get replies, files, bump date, from threads
-			const threadAggregates = await Posts.getThreadAggregates(threadOrs);
-			const bulkWrites = [];
-			for (let i = 0; i < threadAggregates.length; i++) {
-				const threadAggregate = threadAggregates[i];
-				if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].oldest.bumped) {
-					threadBounds[threadAggregate._id.board].oldest = { bumped: threadAggregate.bumped };
-				} else if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].newest.bumped) {
-					threadBounds[threadAggregate._id.board].newest = { bumped: threadAggregate.bumped };
-				}
-				/*
-					note: the aggregate will not return any replies if the thread had no remaining replies (e.g. they are all deleted)
-					so here we filter them out of the original list, then afterwards the ones left in the list are set to 0 or the OP post date
-				*/
-				threadOrs = threadOrs.filter(t => t.thread !== threadAggregate._id.thread && t.board !== threadAggregate._id.board);
-				//use results from first aggregate for threads with replies still existing
-				bulkWrites.push({
-					'updateOne': {
-						'filter': {
-							'postId': threadAggregate._id.thread,
-							'board': threadAggregate._id.board
-						},
-						'update': {
-			  				'$set': {
-								'replyposts': threadAggregate.replyposts,
-								'replyfiles': threadAggregate.replyfiles,
-								'bumped': threadAggregate.bumped
-							}
-						}
+			if (selectedPosts.length > 0) {
+				let threadOrs = selectedPosts.map(p => {
+					return {
+						board: p.board,
+						thread: p.thread
 					}
 				});
-			}
-			if (threadOrs.length > 0) {
-				const threadOPOrs = threadOrs.map(t => {
-					return {
-						postId: t.thread,
-						board: t.board
-					};
-				});
-				//get post dates of OPS
-				const emptyThreadAggregates = await Posts.resetThreadAggregates(threadOPOrs);
-				if (emptyThreadAggregates.length > 0) {
-					for (let i = 0; i < emptyThreadAggregates.length; i++) {
-						const threadAggregate = emptyThreadAggregates[i];
-						if (threadAggregate.bumped < threadBounds[threadAggregate.board].oldest.bumped) {
-							threadBounds[threadAggregate.board].oldest = { bumped: threadAggregate.bumped };
-						} else if (threadAggregate.bumped < threadBounds[threadAggregate.board].newest.bumped) {
-							threadBounds[threadAggregate.board].newest = { bumped: threadAggregate.bumped };
-						}
-						//set them all
-						bulkWrites.push({
-							'updateOne': {
-								'filter': {
-									'_id': threadAggregate._id
-								},
-								'update': {
-					  				'$set': {
-										'replyposts': threadAggregate.replyposts,
-										'replyfiles': threadAggregate.replyfiles,
-										'bumped': threadAggregate.bumped
-									}
+				//get replies, files, bump date, from threads
+				const threadAggregates = await Posts.getThreadAggregates(threadOrs);
+				const bulkWrites = [];
+				for (let i = 0; i < threadAggregates.length; i++) {
+					const threadAggregate = threadAggregates[i];
+					if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].oldest.bumped) {
+						threadBounds[threadAggregate._id.board].oldest = { bumped: threadAggregate.bumped };
+					} else if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].newest.bumped) {
+						threadBounds[threadAggregate._id.board].newest = { bumped: threadAggregate.bumped };
+					}
+					/*
+						note: the aggregate will not return any replies if the thread had no remaining replies (e.g. they are all deleted)
+						so here we filter them out of the original list, then afterwards the ones left in the list are set to 0 or the OP post date
+					*/
+					threadOrs = threadOrs.filter(t => t.thread !== threadAggregate._id.thread && t.board !== threadAggregate._id.board);
+					//use results from first aggregate for threads with replies still existing
+					bulkWrites.push({
+						'updateOne': {
+							'filter': {
+								'postId': threadAggregate._id.thread,
+								'board': threadAggregate._id.board
+							},
+							'update': {
+				  				'$set': {
+									'replyposts': threadAggregate.replyposts,
+									'replyfiles': threadAggregate.replyfiles,
+									'bumped': threadAggregate.bumped
 								}
 							}
-						});
+						}
+					});
+				}
+				if (threadOrs.length > 0) {
+					const threadOPOrs = threadOrs.map(t => {
+						return {
+							postId: t.thread,
+							board: t.board
+						};
+					});
+					//get post dates of OPS
+					const emptyThreadAggregates = await Posts.resetThreadAggregates(threadOPOrs);
+					if (emptyThreadAggregates.length > 0) {
+						for (let i = 0; i < emptyThreadAggregates.length; i++) {
+							const threadAggregate = emptyThreadAggregates[i];
+							if (threadAggregate.bumped < threadBounds[threadAggregate.board].oldest.bumped) {
+								threadBounds[threadAggregate.board].oldest = { bumped: threadAggregate.bumped };
+							} else if (threadAggregate.bumped < threadBounds[threadAggregate.board].newest.bumped) {
+								threadBounds[threadAggregate.board].newest = { bumped: threadAggregate.bumped };
+							}
+							//set them all
+							bulkWrites.push({
+								'updateOne': {
+									'filter': {
+										'_id': threadAggregate._id
+									},
+									'update': {
+						  				'$set': {
+											'replyposts': threadAggregate.replyposts,
+											'replyfiles': threadAggregate.replyfiles,
+											'bumped': threadAggregate.bumped
+										}
+									}
+								}
+							});
+						}
 					}
 				}
-			}
-			if (bulkWrites.length > 0) {
-				await Posts.db.bulkWrite(bulkWrites);
+				if (bulkWrites.length > 0) {
+					await Posts.db.bulkWrite(bulkWrites);
+				}
 			}
 		}
 
