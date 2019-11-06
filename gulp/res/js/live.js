@@ -53,15 +53,16 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				newReply.classList.add('quote');
 				replies.appendChild(newReply);
 			}
+			const newPostAnchor = document.getElementById(postData.postId);
+			const newPost = newPostAnchor.nextSibling;
 			if (scrollEnabled) {
-				window.location.hash = postData.postId; //scroll to post if enabled;
+				newPostAnchor.scrollIntoView(); //scroll to post if enabled;
 			}
 			if (notificationsEnabled) {
 				new Notification(document.title, {
 					body: postData.nomarkup.substring(0,100)
 				});
 			}
-			const newPost = document.getElementById(postData.postId).nextSibling;
 			const newPostEvent = new CustomEvent('addPost', {
 				detail: {
 					post: newPost,
