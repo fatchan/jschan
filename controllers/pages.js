@@ -28,7 +28,7 @@ router.get('/news.html', news);
 router.get('/boards.html', boardlist);
 
 //board pages
-router.get('/:board/:page(1[0-9]*|[2-9]*|index).html', Boards.exists, paramConverter, board); //index
+router.get('/:board/:page(1[0-9]{0,}|[2-9]{1,}|index).html', Boards.exists, paramConverter, board); //index
 router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, Posts.exists, thread); //thread view
 router.get('/:board/catalog.html', Boards.exists, catalog); //catalog
 router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
@@ -44,7 +44,7 @@ router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.ex
 router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
 /*
 todo: dynamic mod pages with no captcha required for mod forms
-router.get('/:board/manage/:page(1[0-9]*|[2-9]*|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(2), csrf, manageBoard);
+router.get('/:board/manage/:page(1[0-9]{0,}|[2-9]{1,}|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(2), csrf, manageBoard);
 router.get('/:board/manage/thread/:id(\\d+).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(2), csrf, manageThread);
 */
 
