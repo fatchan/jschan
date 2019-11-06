@@ -48,10 +48,12 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 					continue;
 				}
 				const newReply = document.createElement('a');
+				const space = document.createTextNode(' ');
 				newReply.href = `${window.location.pathname}#${postData.postId}`;
-				newReply.textContent = `>>${postData.postId} `;
+				newReply.textContent = `>>${postData.postId}`;
 				newReply.classList.add('quote');
 				replies.appendChild(newReply);
+				replies.appendChild(space);
 			}
 			const newPostAnchor = document.getElementById(postData.postId);
 			const newPost = newPostAnchor.nextSibling;
