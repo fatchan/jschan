@@ -9,14 +9,17 @@ block head
 	meta(property='og:site_name', value=meta.siteName)
 	meta(property='og:title', content=thread.subject)
 	meta(property='og:url', content=meta.url)
-	meta(property='og:description', content=thread.message)
+	meta(property='og:description', content=thread.nomarkup)
 	if thread.files.length > 0
 		if thread.spoiler
 			meta(property='og:image', content='/img/spoiler.png')
-		else if thread.files[0].hasThumb === true
-			meta(property='og:image', content=`/img/thumb-${thread.files[0].hash}${thread.files[0].thumbextension}`)
 		else
-			meta(property='og:image', content=`/img/${thread.files[0].filename}`)
+			- const file = thread.files[0];
+			- const mime = file.mimetype;
+			if mime.startsWith('image')
+				meta(property='og:image', content=`/img/${file.filename}`)
+			else
+				meta(property='og:video', content=`/img/${file.filename}`)
 
 block content
 	+boardheader()
