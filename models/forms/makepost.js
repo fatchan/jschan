@@ -299,9 +299,12 @@ module.exports = async (req, res, next) => {
 						break;
 				}
 				capcode = groups.capcodetext ? groups.capcodetext.trim() : type;
-				if (type.toLowerCase() !== capcode.toLowerCase()) {
-					capcode = `##${type} ${capcode}`;
+				if (type.toLowerCase() === capcode.toLowerCase()) {
+					capcode = type;
+				} else {
+					capcode = `${type} ${capcode}`;
 				}
+				capcode = `##${capcode}`;
 			}
 		}
 	}
