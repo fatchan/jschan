@@ -12,7 +12,7 @@ const path = require('path')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
 	, sanitize = require('sanitize-html')
-	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?:## (?<capcode>[^#]+))?$/
+	, nameRegex = /^(?<name>[^\s#]+)?(?:##(?<tripcode>[^ ]{1}[^\s#]+))?(?<capcode>##(?<capcodetext> [^#]+)?)?$/
 	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
 	, videoUpload = require(__dirname+'/../../helpers/files/videoupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
@@ -283,7 +283,6 @@ module.exports = async (req, res, next) => {
 			}
 			//capcode
 			if (res.locals.permLevel < 4 && groups.capcode) {
-				groups.capcode = groups.capcode.trim();
 				let type = '';
 				switch (res.locals.permLevel) {
 					case 3://board mod
@@ -299,10 +298,9 @@ module.exports = async (req, res, next) => {
 						type = 'Admin';
 						break;
 				}
-				if (type.toLowerCase() !== groups.capcode.toLowerCase()) {
-					capcode = `##${type} ${groups.capcode}`;
-				} else {
-					capcode = `##${type}`;
+				capcode = groups.capcodetext ? groups.capcodetext.trim() : type;
+				if (type.toLowerCase() !== capcode.toLowerCase()) {
+					capcode = `##${type} ${capcode}`;
 				}
 			}
 		}

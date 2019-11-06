@@ -59,11 +59,12 @@ block content
 					ol.mv-0
 						li Name
 						li Name##tripcode
-						li Name## Board Owner
-						li Name##tripcode## Board Owner
-						li ##tripcode## Board Owner
+						li Name## capcode
+						li Name##tripcode## capcode
+						li ##tripcode## capcode
 						li ##tripcode
-						li ## Board owner
+						li ## capcode
+					p The capcode can also be left blank to display just your role.
 					p From the examples, you can see that all components can be used in combination or independently. In a post number 4 would look like:
 						-
 							const examplePost = {
@@ -71,7 +72,7 @@ block content
 								"name" : "Name",
 								"board" : "example",
 								"tripcode" : "!!X8NXmAS44=",
-								"capcode" : "##Board Owner",
+								"capcode" : "##Board Owner capcode",
 								"message" : "Hello, world!",
 								"nomarkup" : "Hello, world!",
 								"thread" : 1,
@@ -96,7 +97,7 @@ block content
 					p A tripcode is a password of sorts, which users can provide in the tripcode component of their name. This tripcode is used in conjunction with a server-known secret to generate a unique* tripcode portion of the name. Long, unique tripcodes can be used as a form of identity. It is important that you keep tripcodes secret if you use them for some form of identity. A compromised tripcode can be used for impersonation and cannot be revoked in any way.
 
 					b Capcode
-					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. The capcoded string will be prefixed with the users role so board staff can make an authoritative post and prove their staff status.
+					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. If there is no text after the ##, the role will be displayed alone. Leaving a space and putting custom text will be prefixed by the role name. This way, the role is always shown to prevent role impersonation.
 	.table-container.flex-center.mv-5
 		.anchor#post-styling
 		table
