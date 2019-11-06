@@ -33,8 +33,22 @@ const gulp = require('gulp')
 async function wipe() {
 	const Mongo = require(__dirname+'/db/db.js');
 	await Mongo.connect();
-	const { Webring, Boards, Posts, Captchas, Ratelimits,
-		Accounts, Files, Stats, Modlogs, Bans } = require(__dirname+'/db/');
+	const db = Mongo.client.db('jschan');
+
+	//make these because mongo is dumb and doesnt make them automatically
+	await db.createCollection('accounts');
+	await db.createCollection('bans');
+	await db.createCollection('boards');
+	await db.createCollection('captcha');
+	await db.createCollection('files');
+	await db.createCollection('modlog');
+	await db.createCollection('news');
+	await db.createCollection('posts');
+	await db.createCollection('poststats');
+	await db.createCollection('ratelimit');
+	await db.createCollection('webring');
+
+	const { Webring, Boards, Posts, Captchas, Ratelimits, Accounts, Files, Stats, Modlogs, Bans } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
@@ -50,52 +64,50 @@ async function wipe() {
 		Modlogs.deleteAll()
 	]);
 
-	//add boards
-	await Promise.all([
-		//add test boards
-		Boards.insertOne({
-			'_id': 'test',
-			'owner': '',
-			'banners': [],
-			'pph': 0,
-			'ips': 0,
-			'lastPostTimestamp': null,
-			'sequence_value': 1,
-			'settings': {
-				'name': 'test',
-				'description': 'testing board',
-				'tags': [],
-				'moderators': [],
-				...configs.boardDefaults
-			}
-		})
-		//add indexes - should profiled and changed at some point if necessary
-		, Stats.db.createIndex({board:1, hour:1})
-		, Boards.db.createIndex({ips: 1, pph:1, sequence_value:1})
-		, Boards.db.createIndex({'settings.tags':1})
-		, Boards.db.createIndex({lastPostTimestamp:1})
-		, Webring.db.createIndex({uniqueUsers:1, postsPerHour:1, totalPosts:1})
-		, Webring.db.createIndex({tags:1})
-		, Webring.db.createIndex({lastPostTimestamp:1})
-		, Bans.db.dropIndexes()
-		, Captchas.db.dropIndexes()
-		, Ratelimits.db.dropIndexes()
-		, Posts.db.dropIndexes()
-		, Modlogs.db.dropIndexes()
-		, Modlogs.db.createIndex({ 'board': 1 })
-		, Files.db.createIndex({ 'count': 1 })
-		, Bans.db.createIndex({ 'ip': 1 , 'board': 1 })
-		, Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
-		, Captchas.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
-		, Ratelimits.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 60 }) //per minute captcha ratelimit
-		, Posts.db.createIndex({ 'postId': 1,'board': 1,})
-		, Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
-		, Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
-		, Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
-		//default admin acc
-		, Accounts.insertOne('admin', 'changeme', 0)
-	]);
-	Mongo.client.close();
+	//add test boards
+	Boards.insertOne({
+		'_id': 'test',
+		'owner': '',
+		'banners': [],
+		'pph': 0,
+		'ips': 0,
+		'lastPostTimestamp': null,
+		'sequence_value': 1,
+		'settings': {
+			'name': 'test',
+			'description': 'testing board',
+			'tags': [],
+			'moderators': [],
+			...configs.boardDefaults
+		}
+	});
+	//add indexes - should profiled and changed at some point if necessary
+	await Stats.db.createIndex({board:1, hour:1})
+	await Boards.db.createIndex({ips: 1, pph:1, sequence_value:1})
+	await Boards.db.createIndex({'settings.tags':1})
+	await Boards.db.createIndex({lastPostTimestamp:1})
+	await Webring.db.createIndex({uniqueUsers:1, postsPerHour:1, totalPosts:1})
+	await Webring.db.createIndex({tags:1})
+	await Webring.db.createIndex({lastPostTimestamp:1})
+	await Bans.db.dropIndexes()
+	await Captchas.db.dropIndexes()
+	await Ratelimits.db.dropIndexes()
+	await Posts.db.dropIndexes()
+	await Modlogs.db.dropIndexes()
+	await Modlogs.db.createIndex({ 'board': 1 })
+	await Files.db.createIndex({ 'count': 1 })
+	await Bans.db.createIndex({ 'ip': 1 , 'board': 1 })
+	await Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
+	await Captchas.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
+	await Ratelimits.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 60 }) //per minute captcha ratelimit
+	await Posts.db.createIndex({ 'postId': 1,'board': 1,})
+	await Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
+	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
+	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
+	//default admin acc
+	await Accounts.insertOne('admin', 'changeme', 0);
+
+	await Mongo.client.close();
 
 	//delete all the static files
 	return Promise.all([
@@ -106,6 +118,7 @@ async function wipe() {
 		del([ 'static/img/*' ]),
 		del([ 'static/css/*' ])
 	]);
+
 }
 
 //update the css file
@@ -187,5 +200,6 @@ module.exports = {
 	reset,
 	custompages,
 	scripts,
+	wipe,
 	default: build,
 };
