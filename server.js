@@ -55,7 +55,7 @@ const express = require('express')
 		saveUninitialized: false,
 		cookie: {
 			httpOnly: true,
-			secure: production,
+			secure: configs.secureCookies && production,
 			sameSite: 'strict',
 		}
 	}));

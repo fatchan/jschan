@@ -2,6 +2,7 @@
 
 const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 	, generateCaptcha = require(__dirname+'/../../helpers/captcha/captchagenerate.js')
+	, { secureCookies } = require(__dirname+'/../../configs/main.json')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {
@@ -26,7 +27,7 @@ module.exports = async (req, res, next) => {
 	return res
 		.cookie('captchaid', captchaId.toString(), {
 			'maxAge': 5*60*1000, //5 minute cookie
-			'secure': production,
+			'secure': production && secureCookies,
 			'sameSite': 'strict'
 		})
 		.redirect(`/captcha/${captchaId}.jpg`);

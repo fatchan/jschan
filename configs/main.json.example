@@ -10,6 +10,7 @@
 	"tripcodeSecret": "long random string",
 	"ipHashSecret": "long random string",
 	"postPasswordSecret": "long random string",
+	"secureCookies": true,
 	"cacheTemplates": true,
 	"pruneModlogs": true,
 	"enableUserBoards": true,
@@ -74,6 +75,8 @@
 	},
 	"boardDefaults": {
 		"theme": "lain",
+		"codeTheme": "ir-black",
+		"sfw": false,
 		"locked": false,
 		"unlisted": false,
 		"captchaMode": 0,
