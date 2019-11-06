@@ -3,7 +3,7 @@
 const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, pinktextRegex = /^&lt;(.+)/gm
 	, boldRegex = /&#39;&#39;(.+?)&#39;&#39;/gm
-	, titleRegex = /&#x3D;&#x3D;(.+?)&#x3D;&#x3D;/gm
+	, titleRegex = /&#x3D;&#x3D;(.+)&#x3D;&#x3D;/gm
 	, monoRegex = /&#x60;(.+?)&#x60;/gm
 	, underlineRegex = /__(.+?)__/gm
 	, strikethroughRegex = /~~(.+?)~~/gm
@@ -40,74 +40,36 @@ module.exports = {
 		const trimFix = text.replace(/^\s*(\r?\n)*|(\r?\n)*$/g, ''); //remove extra whitespace/newlines at ends
 		const { language, relevance, value } = highlightAuto(trimFix, highlightOptions.languageSubset);
 		if (relevance >= highlightOptions.threshold) {
-			return `<span class='code hljs'>${value}\n<small>language: ${language}, relevance: ${relevance}</small></span>`;
+			return `<span class='code hljs'><small>possible language: ${language}, relevance: ${relevance}</small>\n${value}</span>`;
 		} else {
 			return `<span class='code'>${escape(trimFix)}</span>`;
 		}
 	},
 
 	processRegularChunk: (text) => {
-
-		//pinktext 
-		text = text.replace(pinktextRegex, (match, pinktext) => {
+		return text.replace(pinktextRegex, (match, pinktext) => {
 			return `<span class='pinktext'>&lt;${pinktext}</span>`;
-		});
-
-		//greentext
-		text = text.replace(greentextRegex, (match, greentext) => {
+		}).replace(greentextRegex, (match, greentext) => {
 			return `<span class='greentext'>&gt;${greentext}</span>`;
-		});
-
-		//bold
-		text = text.replace(boldRegex, (match, bold) => {
+		}).replace(boldRegex, (match, bold) => {
 			return `<span class='bold'>${bold}</span>`;
-		});
-
-		//underline
-		text = text.replace(underlineRegex, (match, underline) => {
+		}).replace(underlineRegex, (match, underline) => {
 			return `<span class='underline'>${underline}</span>`;
-		});
-
-		//strikethrough
-		text = text.replace(strikethroughRegex, (match, strike) => {
+		}).replace(strikethroughRegex, (match, strike) => {
 			return `<span class='strikethrough'>${strike}</span>`;
-		});
-
-		//titles
-		text = text.replace(titleRegex, (match, title) => {
+		}).replace(titleRegex, (match, title) => {
 			return `<span class='title'>${title}</span>`;
-		});
-
-		//italic
-		text = text.replace(italicRegex, (match, italic) => {
+		}).replace(italicRegex, (match, italic) => {
 			return `<span class='em'>${italic}</span>`;
-		});
-
-		//spoilers
-		text = text.replace(spoilerRegex, (match, spoiler) => {
+		}).replace(spoilerRegex, (match, spoiler) => {
 			return `<span class='spoiler'>${spoiler}</span>`;
-		});
-
-		//inline monospace
-		text = text.replace(monoRegex, (match, mono) => {
+		}).replace(monoRegex, (match, mono) => {
 			return `<span class='mono'>${mono}</span>`;
-		});
-
-		//detected
-		text = text.replace(detectedRegex, (match, detected) => {
+		}).replace(detectedRegex, (match, detected) => {
 			return `<span class='detected'>${detected}</span>`;
-		});
-
-		//dice rolls
-		text = text.replace(diceRegex, diceRoll);
-
-		//links
-		text = text.replace(linkRegex, (match) => {
+		}).replace(linkRegex, (match) => {
 			return `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>`;
-		});
-
-		return text;
-
-	}
+		}).replace(diceRegex, diceRoll);
+	},
 
 }

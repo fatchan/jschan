@@ -113,8 +113,10 @@ function css() {
 	try {
 		fs.symlinkSync(__dirname+'/node_modules/highlight.js/styles', __dirname+'/gulp/res/css/codethemes', 'dir');
 	} catch (e) {
-		console.log(e);
-		//already exists, ignore error
+		if (e.code !== 'EEXIST') {
+			//already exists, ignore error
+			console.log(e);
+		}
 	}
 	return gulp.src(paths.styles.src)
 		.pipe(less())
@@ -148,15 +150,15 @@ function custompages() {
 
 function scripts() {
 	try {
-		const themelist = `const themes = ['${themes.join("', '")}']
-const codeThemes = ['${codeThemes.join("', '")}']`;
+		const themelist = `const themes = ['${themes.join("', '")}'];const codeThemes = ['${codeThemes.join("', '")}']`;
 		fs.writeFileSync('gulp/res/js/themelist.js', themelist);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
 		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
 	} catch (e) {
-		console.log(e);
-		//already exists, ignore error
+		if (e.code !== 'EEXIST') {
+			console.log(e);
+		}
 	}
 	gulp.src([
 			`${paths.scripts.src}/themelist.js`,
