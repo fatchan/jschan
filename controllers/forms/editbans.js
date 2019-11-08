@@ -1,14 +1,17 @@
 'use strict';
 
-const removeBans = require(__dirname+'/../../models/forms/removebans.js');
+const removeBans = require(__dirname+'/../../models/forms/removebans.js')
+	, denyAppeals = require(__dirname+'/../../models/forms/denybanappeals.js');
 
 module.exports = async (req, res, next) => {
 
-	//keep this for later in case i add other options to unbans
 	const errors = [];
 
 	if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
 		errors.push('Must select 1-10 bans')
+	}
+	if (!req.body.option || (req.body.option !== 'unban' && req.body.option !== 'deny_appeal')) {
+		errors.push('Invalid ban action')
 	}
 
 	const redirect = req.params.board ? `/${req.params.board}/manage/bans.html` : '/globalmanage/bans.html';
@@ -22,15 +25,22 @@ module.exports = async (req, res, next) => {
 	}
 
 	let amount = 0;
+	let message;
 	try {
-		amount = await removeBans(req, res, next);
+		if (req.body.option === 'unban') {
+			amount = await removeBans(req, res, next);
+			message = `Removed ${amount} bans`;
+		} else {
+			amount = await denyAppeals(req, res, next);
+			message = `Denied ${amount} appeals`;
+		}
 	} catch (err) {
 		return next(err);
 	}
 
 	return res.render('message', {
 		'title': 'Success',
-		'message': `Removed ${amount} bans`,
+		message,
 		redirect
 	});
 

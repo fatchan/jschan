@@ -55,13 +55,41 @@ module.exports = {
 	getGlobalBans: () => {
 		return db.find({
 			'board': null
-		}).sort({ _id: -1 }).toArray();
+		}).sort({
+			'allowAppeal': -1,
+			'appeal': -1,
+			'date': -1,
+		}).toArray();
 	},
 
 	getBoardBans: (board) => {
 		return db.find({
 			'board': board,
-		}).sort({ _id: -1 }).toArray();
+		}).sort({
+			'allowAppeal': -1,
+			'appeal': -1,
+			'date': -1,
+		}).toArray();
+	},
+
+	denyAppeal: (board, ids) => {
+		return db.updateMany({
+			'board': board,
+			'_id': {
+				'$in': ids
+			},
+/*
+			//allow denying appeal even if missing, to allow moving ban to bottom of list
+			'allowAppeal': true,
+			'appeal': {
+				'$ne': null
+			},
+*/
+		}, {
+			'$set': {
+				'allowAppeal': false,
+			}
+		});
 	},
 
 	removeMany: (board, ids) => {

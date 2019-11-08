@@ -12,7 +12,7 @@ block content
 	+globalmanagenav('bans')
 	hr(size=1)
 	h4.no-m-p Global Bans & Appeals:
-	form(action=`/forms/global/unban` method='POST' enctype='application/x-www-form-urlencoded')
+	form(action=`/forms/global/editbans` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if bans.length === 0
 			p No bans.
@@ -20,5 +20,13 @@ block content
 			include ../includes/bantable.pug
 				for ban in bans
 					+ban(ban)
-			.action-wrapper
-			input(type='submit', value='unban')
+			.action-wrapper.mv-10
+				.row
+					label
+						input(type='radio' name='option' value='unban' checked='checked')
+						| Unban
+				.row
+					label
+						input(type='radio' name='option' value='deny_appeal')
+						| Deny Appeal
+			input(type='submit' value='submit')

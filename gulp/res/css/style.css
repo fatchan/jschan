@@ -99,6 +99,9 @@ pre {
 .fw {
 	width: 100%;
 }
+.fw textarea {
+    height: 1em;
+}
 .pr-20 {
 	padding-right: 20px;
 }
