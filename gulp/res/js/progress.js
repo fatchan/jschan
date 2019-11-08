@@ -14,11 +14,30 @@ window.addEventListener('DOMContentLoaded', () => {
 	const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
 
 	const form = document.getElementById('postform');
+	const fileInput = form.querySelector('input[type="file"]');
 	const submit = document.getElementById('submitpost');
 
 	if (!submit || !form) {
 		return; //no postform on this page
 	}
+
+	const messageBox = document.getElementById('message');
+	messageBox.addEventListener('paste', (e) => {
+		const clipboard = e.clipboardData;
+		if (clipboard.items && clipboard.items.length > 0) {
+			const items = clipboard.items;
+			for (let i = 0; i < items.length; i++) {
+				const item = items[i];
+				if (item.kind === 'file') {
+					const file = new File([item.getAsFile()], 'ClipboardImage.png', { type: item.type });
+					const upload = new DataTransfer();
+					upload.items.add(file);
+					fileInput.files = upload.files;
+//TODO: make this support multiple files somehow, not sure
+				}
+			}
+		}
+	});
 
 	form.addEventListener('submit', function(event) {
 		if (localStorage.getItem('live') != 'true') {
