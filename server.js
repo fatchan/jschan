@@ -18,6 +18,7 @@ const express = require('express')
 	, Mongo = require(__dirname+'/db/db.js')
 	, Socketio = require(__dirname+'/socketio.js')
 	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
+	, { DAY } = require(__dirname+'/helpers/timeutils.js')
 	, CachePugTemplates = require('cache-pug-templates');
 
 (async () => {
@@ -57,6 +58,7 @@ const express = require('express')
 			httpOnly: true,
 			secure: configs.secureCookies && production,
 			sameSite: 'strict',
+			maxAge: DAY,
 		}
 	}));
 
