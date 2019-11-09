@@ -250,16 +250,22 @@ module.exports = async (req, res, next) => {
 		const modlog = {};
 		const logDate = new Date(); //all events current date
 		const message = req.body.log_message || null;
+		let logUser;
+		if (res.locals.permLevel < 4) { //if staff
+			logUser = req.session.user.username;
+		} else {
+			logUser = 'Unregistered User';
+		}
 		for (let i = 0; i < res.locals.posts.length; i++) {
 			const post = res.locals.posts[i];
 			if (!modlog[post.board]) {
 				//per board actions, all actions combined to one event
-				const logUser = res.locals.permLevel < 4 ? req.session.user.username : 'Unregistered User'
 				modlog[post.board] = {
 					postIds: [],
 					actions: modlogActions,
 					date: logDate,
 					user: logUser,
+					showUser: req.body.show_name || logUser === 'Unregistered User' ? true : false,
 					message: message,
 				};
 			}

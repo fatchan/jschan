@@ -111,7 +111,8 @@
 		"allowedFileTypes": {
 			"animatedImage": true,
 			"image": true,
-			"video": true
+			"video": true,
+			"audio": true
 		}
 	}
 }
