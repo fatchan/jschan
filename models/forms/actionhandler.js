@@ -21,6 +21,8 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
+	const redirect = req.headers.referer || `/${req.params.board ? req.params.board+'/manage/reports' : 'globalmanage/recents'}.html`;
+
 	//if user isnt staff, and they put an action that requires password, e.g. delete/spoiler, then filter posts to only matching password
 	if (res.locals.permLevel >= 4 && res.locals.actions.numPasswords > 0) {
 		let passwordPosts = [];
@@ -41,7 +43,7 @@ module.exports = async (req, res, next) => {
 			return res.status(403).render('message', {
 				'title': 'Forbidden',
 				'error': 'Password did not match any selected posts',
-				'redirect': `/${req.params.board ? req.params.board+'/' : 'globalmanage/reports.html'}`
+				redirect,
 			});
 		}
 		res.locals.posts = passwordPosts
@@ -550,7 +552,7 @@ module.exports = async (req, res, next) => {
 	return res.render('message', {
 		'title': 'Success',
 		'messages': messages,
-		'redirect': `/${req.params.board ? req.params.board+'/' : 'globalmanage/reports.html'}`
+		redirect,
 	});
 
 }
