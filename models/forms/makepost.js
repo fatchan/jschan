@@ -159,16 +159,16 @@ module.exports = async (req, res, next) => {
 					mimetype: file.mimetype,
 					size: file.size,
 					extension,
-					thumbextension: thumbExtension,
 			};
+			const type = processedFile.mimetype.split('/')[0];
+			if (type !== 'audio') {
+				processedFile.thumbextension = thumbExtension;
+			}
 
 			await Files.increment(processedFile);
-
 			//check if already exists
 			const existsFull = await pathExists(`${uploadDirectory}/img/${processedFile.filename}`);
-
-			//handle video/image ffmpeg or graphicsmagick
-			switch (processedFile.mimetype.split('/')[0]) {
+			switch (type) {
 				case 'image': {
 					const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 					const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
