@@ -62,7 +62,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			}
 			if (notificationsEnabled) {
 				new Notification(document.title, {
-					body: postData.nomarkup.substring(0,100)
+					body: postData.nomarkup ? postData.nomarkup.substring(0,100) : ''
 				});
 			}
 			const newPostEvent = new CustomEvent('addPost', {
