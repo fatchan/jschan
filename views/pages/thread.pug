@@ -15,11 +15,16 @@ block head
 			meta(property='og:image', content='/img/spoiler.png')
 		else
 			- const file = thread.files[0];
-			- const mime = file.mimetype;
-			if mime.startsWith('image')
-				meta(property='og:image', content=`/img/${file.filename}`)
-			else
-				meta(property='og:video', content=`/img/${file.filename}`)
+			- const maintype = file.mimetype.split('/')[0];
+			case maintype
+				when 'image'
+					meta(property='og:image', content=`/img/${file.filename}`)
+				when 'video'
+					meta(property='og:video', content=`/img/${file.filename}`)
+				when 'audio'
+					meta(property='og:audio', content=`/img/${file.filename}`)
+				default
+					- break
 
 block content
 	+boardheader()

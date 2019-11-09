@@ -24,7 +24,7 @@ block content
 				for log in logs
 					tr
 						td #{log.date.toLocaleString(undefined, {hour12:false})}
-						td #{log.user}
+						td(class=(!log.showUser ? 'em' : '')) #{log.showUser ? log.user : 'Hidden User'}
 						td #{log.actions}
 						td #{log.postIds}
 						td #{log.message || '-'}

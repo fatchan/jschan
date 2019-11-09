@@ -14,15 +14,22 @@ const animatedImageMimeTypes = new Set([
 ]);
 
 const videoMimeTypes = new Set([
+	'video/mpeg',
 	'video/quicktime',
 	'video/mp4',
 	'video/webm',
+	'video/x-matroska',
+]);
+
+const audioMimeTypes = new Set([
+	'audio/mpeg',
+	'audio/ogg',
+	'audio/wav',
 ]);
 
 module.exports = (mimetype, options) => {
-
-	return (options.video && videoMimeTypes.has(mimetype)) ||
-			(options.image && imageMimeTypes.has(mimetype)) ||
-			(options.animatedImage && animatedImageMimeTypes.has(mimetype));
-
+	return (options.image && imageMimeTypes.has(mimetype)) ||
+		(options.animatedImage && animatedImageMimeTypes.has(mimetype)) ||
+		(options.video && videoMimeTypes.has(mimetype)) ||
+		(options.audio && audioMimeTypes.has(mimetype));
 };

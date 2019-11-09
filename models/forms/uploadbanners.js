@@ -3,7 +3,7 @@
 const path = require('path')
 	, { remove, pathExists, ensureDir } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, imageUpload = require(__dirname+'/../../helpers/files/imageupload.js')
+	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
 
 	// check all mime types before we try saving anything
 	for (let i = 0; i < res.locals.numFiles; i++) {
-		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false})) {
+		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false, audio: false})) {
 			await deleteTempFiles(req).catch(e => console.error);
 			return res.status(400).render('message', {
 				'title': 'Bad request',
@@ -64,7 +64,7 @@ module.exports = async (req, res, next) => {
 		}
 
 		//then upload it
-		await imageUpload(file, filename, `banner/${req.params.board}`);
+		await moveUpload(file, filename, `banner/${req.params.board}`);
 
 		//and delete the temp file
 		await remove(file.tempFilePath);

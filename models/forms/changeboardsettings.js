@@ -78,6 +78,7 @@ module.exports = async (req, res, next) => {
 			'animatedImage': req.body.files_allow_animated_image ? true : false,
 			'image': req.body.files_allow_image ? true : false,
 			'video': req.body.files_allow_video ? true : false,
+			'audio': req.body.files_allow_audio ? true : false,
 		},
 	};
 

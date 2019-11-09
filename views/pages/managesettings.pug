@@ -70,6 +70,10 @@ block content
 				label.postform-style.ph-5
 					input(type='checkbox', name='files_allow_animated_image', value='true' checked=board.settings.allowedFileTypes.animatedImage)
 			.row
+				.label Allow Audio Files
+				label.postform-style.ph-5
+					input(type='checkbox', name='files_allow_audio', value='true' checked=board.settings.allowedFileTypes.audio)
+			.row
 				.label Early 404
 				label.postform-style.ph-5
 					input(type='checkbox', name='early404', value='true' checked=board.settings.early404)
