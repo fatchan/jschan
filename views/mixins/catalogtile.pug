@@ -21,6 +21,6 @@ mixin catalogtile(board, post, index)
 					else if file.hasThumb
 						img.catalog-thumb(src=`/img/thumb-${file.hash}${file.thumbextension}` width='64' height='64')
 					else
-						img.catalog-thumb(src=`/img/${post.files[0].filename}` width='64' height='64')
+						img.catalog-thumb(src=`/img/${file.filename}` width='64' height='64')
 		if post.message
 			pre.no-m-p.post-message !{post.message}
