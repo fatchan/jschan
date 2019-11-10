@@ -14,12 +14,36 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		livetext.nodeValue = message;
 	}
 
+	let lastPostId;
+	const jsonPath = window.location.pathname.replace(/\.html$/, '.json');
+	const jsonCatchup = async () => {
+		console.log('catching up after reconnect');
+		updateLive('Checking for missed posts...', 'yellow');
+		let json;
+		try {
+			json = await fetch(jsonPath).then(res => res.json());
+		} catch (e) {
+			console.error(e);
+		}
+		if (json && json.replies && json.replies.length > 0) {
+			const newPosts = json.replies.filter(r => r.postId > lastPostId); //filter to only newer posts
+			if (newPosts.length > 0) {
+				for (let i = 0; i < newPosts.length; i++) {
+					newPost(newPosts[i]);
+				}
+			}
+		}
+		setTimeout(() => {
+			updateLive('Connected for live posts', '#0de600');
+		}, 1000);
+	}
+
 	const startLive = () => {
 		const anchors = document.getElementsByClassName('anchor');
 		if (anchors.length === 0) {
 			return; //url matches, but on a 404 page so dont bother with the rest
 		}
-		let lastPostId = anchors[anchors.length - 1].id;
+		lastPostId = anchors[anchors.length - 1].id;
 		const newPost = (data) => {
 			console.log('got new post');
 			lastPostId = data.postId;
@@ -74,28 +98,6 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			//dispatch the event so quote click handlers, image expand, etc can be added in separate scripts by listening to the event
 			window.dispatchEvent(newPostEvent);
 		}
-		const jsonPath = window.location.pathname.replace(/\.html$/, '.json');
-		const jsonCatchup = async () => {
-			console.log('catching up after reconnect');
-			updateLive('Checking for missed posts...', 'yellow');
-			let json;
-			try {
-				json = await fetch(jsonPath).then(res => res.json());
-			} catch (e) {
-				console.error(e);
-			}
-			if (json && json.replies && json.replies.length > 0) {
-				const newPosts = json.replies.filter(r => r.postId > lastPostId); //filter to only newer posts
-				if (newPosts.length > 0) {
-					for (let i = 0; i < newPosts.length; i++) {
-						newPost(newPosts[i]);
-					}
-				}
-			}
-			setTimeout(() => {
-				updateLive('Connected for live posts', '#0de600');
-			}, 1000);
-		}
 		const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
 		const room = `${roomParts[1]}-${roomParts[3]}`;
 		const thread = document.querySelector('.thread');
@@ -140,10 +142,13 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			if (socket && liveEnabled) {
 				socket.disconnect();
 				updateLive('Live posts disabled', 'red');
-			} else if (!socket) {
-				startLive();
 			} else {
-				socket.connect();
+				if (!socket) {
+					startLive();
+				} else {
+					socket.connect();
+				}
+				jsonCatchup();
 			}
 		}
 		liveEnabled = !liveEnabled;
@@ -154,7 +159,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				toggleNotifications(null, true);
 			}
 			if (scrollEnabled) {
-				scrollSetting.checked = false;	
+				scrollSetting.checked = false;
 				toggleScroll(null, true);
 			}
 		}
