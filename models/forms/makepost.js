@@ -201,7 +201,7 @@ module.exports = async (req, res, next) => {
 						});
 					}
 					processedFile.duration = videoData.format.duration;
-					processedFile.durationString = new Date(videoData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');//breaks for over 24h video
+					processedFile.durationString = new Date(videoData.format.duration*1000).toISOString().substr(11,8).replace(/^00:/, '');//breaks for over 24h video
 					processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height} // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}` // 123 x 123 string
@@ -217,7 +217,7 @@ module.exports = async (req, res, next) => {
 				case 'audio': {
 					const audioData = await ffprobe(req.files.file[i].tempFilePath, null, true);
 					processedFile.duration = audioData.format.duration;
-					processedFile.durationString = new Date(audioData.format.duration*1000).toLocaleString('en-US', {hour12:false}).split(' ')[1].replace(/^00:/, '');//breaks for over 24h video
+					processedFile.durationString = new Date(audioData.format.duration*1000).toISOString().substr(11,8).replace(/^00:/, '');//breaks for over 24h video
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.hasThumb = false;
 					if (!existsFull) {

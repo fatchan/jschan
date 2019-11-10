@@ -1,3 +1,6 @@
+const fileInput = document.getElementById('file');
+fileInput ? fileInput.style.display = 'none' : void 0;
+
 let hidden;
 
 const loadHiddenStorage = () => {

@@ -247,6 +247,15 @@ p {
 	background: black!important;
 }
 
+.filelabel {
+	cursor: pointer;
+	border-style: dashed !important;
+	justify-content: center;
+	padding: 5px;
+	min-width: 220px;
+	flex-grow: 1;
+}
+
 .banposts .thread {
 	display: none;
 	text-align: left;
@@ -474,7 +483,7 @@ details.actions div {
 	/*margin-top: 10px;*/
 }
 
-.toggle {
+.toggle, .togglable {
 	display: none;
 }
 
@@ -486,10 +495,6 @@ details.actions div {
 	display: flex;
 	flex-direction: column;
 	max-width: 100%;
-}
-
-.togglable {
-	display: none;
 }
 
 .user-id {

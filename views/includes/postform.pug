@@ -40,7 +40,9 @@ section.form-wrapper.flex-center
 				.label Files
 					if fileRequired
 						.required *
-				input(type='file', name='file' multiple required=fileRequired)
+				span.col
+					include ./filelabel.pug
+					input#file(type='file', name='file' multiple required=fileRequired )
 				if board.settings.userPostSpoiler
 					label.postform-style.ph-5.ml-1
 						input(type='checkbox', name='spoiler', value='true')

@@ -57,7 +57,9 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 								span: a(href='/img/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler ? 'Spoiler File' : file.originalFilename}
 								br
 								span 
-									| (#{file.sizeString}, #{file.geometryString}
+									| (#{file.sizeString}
+									if file.geometryString
+										| , #{file.geometryString}
 									if file.durationString
 										| , #{file.durationString}
 									| )

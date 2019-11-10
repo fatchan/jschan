@@ -22,6 +22,7 @@ const videoMimeTypes = new Set([
 ]);
 
 const audioMimeTypes = new Set([
+	'audio/mp3',
 	'audio/mpeg',
 	'audio/ogg',
 	'audio/wav',

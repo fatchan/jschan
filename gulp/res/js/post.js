@@ -77,7 +77,10 @@ pug_html = pug_html + "\u003Cdiv class=\"post-files\"\u003E";
   if ('number' == typeof $$obj.length) {
       for (var pug_index0 = 0, $$l = $$obj.length; pug_index0 < $$l; pug_index0++) {
         var file = $$obj[pug_index0];
-pug_html = pug_html + ("\u003Cdiv class=\"post-file\"\u003E\u003Cspan class=\"post-file-info\"\u003E\u003Cspan\u003E\u003Ca" + (pug_attr("href", '/img/'+file.filename, true, false)+pug_attr("title", 'Download '+file.originalFilename, true, false)+pug_attr("download", file.originalFilename, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.spoiler ? 'Spoiler File' : file.originalFilename) ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003Cbr\u002F\u003E\u003Cspan\u003E (" + (pug_escape(null == (pug_interp = file.sizeString) ? "" : pug_interp)) + ", " + (pug_escape(null == (pug_interp = file.geometryString) ? "" : pug_interp)));
+pug_html = pug_html + ("\u003Cdiv class=\"post-file\"\u003E\u003Cspan class=\"post-file-info\"\u003E\u003Cspan\u003E\u003Ca" + (pug_attr("href", '/img/'+file.filename, true, false)+pug_attr("title", 'Download '+file.originalFilename, true, false)+pug_attr("download", file.originalFilename, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.spoiler ? 'Spoiler File' : file.originalFilename) ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003Cbr\u002F\u003E\u003Cspan\u003E (" + (pug_escape(null == (pug_interp = file.sizeString) ? "" : pug_interp)));
+if (file.geometryString) {
+pug_html = pug_html + (", " + (pug_escape(null == (pug_interp = file.geometryString) ? "" : pug_interp)));
+}
 if (file.durationString) {
 pug_html = pug_html + (", " + (pug_escape(null == (pug_interp = file.durationString) ? "" : pug_interp)));
 }
@@ -105,7 +108,10 @@ pug_html = pug_html + "\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u
     for (var pug_index0 in $$obj) {
       $$l++;
       var file = $$obj[pug_index0];
-pug_html = pug_html + ("\u003Cdiv class=\"post-file\"\u003E\u003Cspan class=\"post-file-info\"\u003E\u003Cspan\u003E\u003Ca" + (pug_attr("href", '/img/'+file.filename, true, false)+pug_attr("title", 'Download '+file.originalFilename, true, false)+pug_attr("download", file.originalFilename, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.spoiler ? 'Spoiler File' : file.originalFilename) ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003Cbr\u002F\u003E\u003Cspan\u003E (" + (pug_escape(null == (pug_interp = file.sizeString) ? "" : pug_interp)) + ", " + (pug_escape(null == (pug_interp = file.geometryString) ? "" : pug_interp)));
+pug_html = pug_html + ("\u003Cdiv class=\"post-file\"\u003E\u003Cspan class=\"post-file-info\"\u003E\u003Cspan\u003E\u003Ca" + (pug_attr("href", '/img/'+file.filename, true, false)+pug_attr("title", 'Download '+file.originalFilename, true, false)+pug_attr("download", file.originalFilename, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.spoiler ? 'Spoiler File' : file.originalFilename) ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003Cbr\u002F\u003E\u003Cspan\u003E (" + (pug_escape(null == (pug_interp = file.sizeString) ? "" : pug_interp)));
+if (file.geometryString) {
+pug_html = pug_html + (", " + (pug_escape(null == (pug_interp = file.geometryString) ? "" : pug_interp)));
+}
 if (file.durationString) {
 pug_html = pug_html + (", " + (pug_escape(null == (pug_interp = file.durationString) ? "" : pug_interp)));
 }
