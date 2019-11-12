@@ -42,6 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			fileLabel.innerText = 'Upload/Drop/Paste file(s)';
 		} else {
 			fileLabel.innerText = `${files.length} files selected`;
+			//window.URL.createObjectURL(file);
 			//todo make x marks to remove each one with "removeFile"
 		}
 	}
@@ -105,6 +106,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	form.addEventListener('submit', function(event) {
 
+		submit.disabled = true; //prevent clicking post more than once
+
 		if (files && files.length > 0) {
 			//add files to file input element
 			const filesToUpload = new DataTransfer();
@@ -112,7 +115,6 @@ window.addEventListener('DOMContentLoaded', () => {
 				filesToUpload.items.add(files[i]);
 			}
 			fileInput.files = filesToUpload.files;
-//TODO: switch this line to workaround https://stackoverflow.com/a/46780880 - http://archive.is/niUVU
 		}
 
 		if (isBanners || localStorage.getItem('live') != 'true') {
@@ -120,7 +122,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 
 		event.preventDefault();
-		submit.disabled = true; //prevent clicking post more than once
 
 		const xhr = new XMLHttpRequest();
 

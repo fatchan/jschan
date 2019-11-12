@@ -11,18 +11,20 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, spoilerRegex = /\|\|([\s\S]+?)\|\|/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
 	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
-	, codeRegex = /```([\s\S]+?)```/gm
+	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
+	, splitRegex = /```([\s\S]+?)```/gm
+	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
 	, diceRegex = /##(?<numdice>\d+)d(?<numsides>\d+)(?:(?<operator>[+-])(?<modifier>\d+))?/gmi
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, diceRoll = require(__dirname+'/diceroll.js')
 	, escape = require(__dirname+'/escape.js')
-	, { highlightAuto } = require('highlight.js')
+	, { highlight, highlightAuto } = require('highlight.js')
 	, { highlightOptions } = require(__dirname+'/../../configs/main.json');
 
 module.exports = {
 
 	markdown: (text) => {
-		const chunks = text.split(codeRegex);
+		const chunks = text.split(splitRegex);
 		for (let i = 0; i < chunks.length; i++) {
 			//every other chunk will be a code block
 			if (i % 2 === 0) {
@@ -37,13 +39,22 @@ module.exports = {
 	},
 
 	processCodeChunk: (text) => {
-		const trimFix = text.replace(/^\s*(\r?\n)*|(\r?\n)*$/g, ''); //remove extra whitespace/newlines at ends
-		const { language, relevance, value } = highlightAuto(trimFix, highlightOptions.languageSubset);
-		if (relevance > highlightOptions.threshold) {
-			return `<span class='code hljs'><small>possible language: ${language}, relevance: ${relevance}</small>\n${value}</span>`;
-		} else {
-			return `<span class='code'>${escape(trimFix)}</span>`;
+		const matches = text.match(codeRegex);
+		const trimFix = matches.groups.code.replace(trimNewlineRegex, '');
+		let lang;
+		if (matches.groups.language && matches.groups.language.length > 0) {
+			lang = matches.groups.language.toLowerCase();
 		}
+		if (!lang) {
+			const { language, relevance, value } = highlightAuto(trimFix, highlightOptions.languageSubset);
+			if (relevance > highlightOptions.threshold) {
+				return `<span class='code hljs'><small>possible language: ${language}, relevance: ${relevance}</small>\n${value}</span>`;
+			}
+		} else if (lang !== 'plain' && highlightOptions.languageSubset.includes(lang)) {
+			const { value } = highlight(lang, trimFix);
+			return `<span class='code hljs'><small>language: ${lang}</small>\n${value}</span>`;
+		}
+		return `<span class='code'>${escape(trimFix)}</span>`;
 	},
 
 	processRegularChunk: (text) => {
