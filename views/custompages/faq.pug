@@ -143,17 +143,6 @@ block content
 				td
 					span.detected (((detected)))
 			tr
-				td
-					| ```
-					| code block
-					| ```
-				td
-					span.code code block
-			tr
-				td `inline monospace`
-				td
-					span.mono inline monospace
-			tr
 				td https://example.com
 				td: a(href='#!') https://example.com
 			tr
@@ -165,6 +154,21 @@ block content
 			tr
 				td &gt;&gt;&gt;/b/123
 				td: a(class="quote" href="#!") &gt;&gt;&gt;/b/123
+			tr
+				td `inline monospace`
+				td
+					span.mono inline monospace
+			tr
+				td
+					| ```language
+					br
+					| code block
+					br
+					| ```
+				td
+					span.code code block
+			tr
+				td(colspan=2) The "language" of code blocks is optional. Without it, automatic language detection is used. If the language is "plain", highlighting is disabled for the code block. Not all languages are supported, a subset of popular languages is used. If the language is not in the supported list, the code block will be rendered like "plain" with no highlighting.
 	.table-container.flex-center.mv-5
 		.anchor#moderation
 		table

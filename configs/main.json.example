@@ -21,6 +21,7 @@
 	"highlightOptions": {
 		"languageSubset": [
 			"javascript",
+			"js",
 			"typescript",
 			"java",
 			"kotlin",
