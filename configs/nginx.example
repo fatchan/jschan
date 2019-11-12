@@ -109,7 +109,7 @@ server {
 	}
 
 	# Images
-	location ~* \.(png|jpg|jpeg|gif|mp4|webm|mov|svg|mp3|ogg|wav)$ {
+	location ~* \.(png|jpg|jpeg|gif|mp4|webm|mov|svg|mp3|ogg|wav|opus)$ {
 		access_log off;
 		expires max;
 		root /path/to/jschan/static;
