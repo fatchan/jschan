@@ -139,7 +139,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (newSettings.theme !== oldSettings.theme
-		|| newSettings.codetheme !== oldSettings.codeTheme) {
+		|| newSettings.codeTheme !== oldSettings.codeTheme) {
 		rebuildThreads = true;
 		rebuildBoard = true;
 		rebuildCatalog = true;
