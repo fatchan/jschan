@@ -34,7 +34,7 @@ module.exports = (text, captchaId) => {
 					break;
 				case 'i':
 				case 'l':
-					lastx += 10;
+					lastx += 12;
 					break;
 				case 'f':
 				case 'j':
@@ -49,7 +49,8 @@ module.exports = (text, captchaId) => {
 		//.drawText(5, 60, text)
 		x.drawRectangle(5, recy, 195, recy+4)
 		.distort(distorts, 'Shepards')
-		.quality(30)
+		.paint(2)
+//		.quality(30)
 		.write(`${uploadDirectory}/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);

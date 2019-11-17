@@ -106,8 +106,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	form.addEventListener('submit', function(event) {
 
-		submit.disabled = true; //prevent clicking post more than once
-
 		if (files && files.length > 0) {
 			//add files to file input element
 			const filesToUpload = new DataTransfer();
@@ -122,6 +120,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 
 		event.preventDefault();
+		submit.disabled = true;
 
 		const xhr = new XMLHttpRequest();
 

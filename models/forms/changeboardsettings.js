@@ -116,8 +116,9 @@ module.exports = async (req, res, next) => {
 
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
 		rebuildBoard = true;
+		rebuildCatalog = true; //post form now on catalog page
 		if (newSettings.captchaMode == 2) {
-			rebuildThreads = true;
+			rebuildThreads = true; //thread captcha enabled, removes threads
 		}
 	}
 

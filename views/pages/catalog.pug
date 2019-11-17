@@ -10,6 +10,9 @@ block head
 block content
 	+boardheader('Catalog')
 	br
+	include ../includes/postform.pug
+	br
+	include ../includes/announcements.pug
 	include ../includes/stickynav.pug
 	nav.pages
 		+boardnav('catalog', true, false)

@@ -144,10 +144,7 @@ function images() {
 }
 
 function deletehtml() {
-	return Promise.all([
-		del([ 'static/html/*' ]),
-		del([ 'static/json/*' ])
-	]);
+	return del([ 'static/html/*' ]);
 }
 
 function custompages() {
