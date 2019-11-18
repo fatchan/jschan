@@ -462,6 +462,7 @@ details.actions div {
 }
 
 .sfw {
+	float: left;
 	background-color: gray;
 }
 
