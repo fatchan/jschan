@@ -1,9 +1,21 @@
+!localStorage.getItem('volume') ? localStorage.setItem('volume', 100) : void 0;
+
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	const isCatalog = window.location.pathname.endsWith('catalog.html');
 
 	if (!isCatalog) {
 		const thumbs = document.getElementsByClassName('post-file-src');
+
+		const volumeSetting = document.getElementById('volume-setting');
+		let volumeLevel = localStorage.getItem('volume');
+		const changeVolume = (change, changeFromConflict) => {
+			volumeLevel = volumeSetting.value;
+			console.log('adjusting volume', volumeLevel);
+			localStorage.setItem('volume', volumeLevel);
+		}
+		volumeSetting.value = volumeLevel;
+		volumeSetting.addEventListener('change', changeVolume, false);
 
 		const toggle = function(thumb, exp, fn) {
 			const close = exp.previousSibling.innerText === 'Close' ? exp.previousSibling : null;
@@ -72,6 +84,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 							toggle(thumbElement, expandedElement, fileName);
 						}, true);
 						expandedElement.controls = 'true';
+						expandedElement.volume = volumeLevel/100;
 						source = document.createElement('source');
 						expandedElement.appendChild(source);
 						fileLink.appendChild(expandedElement);
