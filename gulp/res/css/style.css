@@ -390,7 +390,7 @@ td, th {
 	}
 }
 
-.post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, .live {
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, .live, {
 	background: var(--post-color);
 	border-width: 1px;/*0 1px 1px 0;*/
 	border-style: solid;
@@ -468,6 +468,12 @@ details.actions div {
 
 .help {
 	cursor: help;
+}
+
+#float {
+	max-width: calc(100% - 10px);
+	z-index: 3;
+	position: fixed;
 }
 
 #postform:target + .toggle-summary {
