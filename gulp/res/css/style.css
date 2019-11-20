@@ -572,6 +572,7 @@ video, img {
 	justify-content: center;
 	display: flex;
 	image-orientation: from-image;
+	position:relative;
 }
 
 .expanded {
@@ -877,6 +878,37 @@ table.boardtable th:nth-child(6) {
 table.boardtable td:nth-child(6) {
 	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
 	color: white;
+}
+
+.post-file-src[data-type="audio"]::after,
+.post-file-src[data-type="video"]::after {
+	content: "▶";
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	background: #000;
+	color: #fff;
+	border-radius: 100%;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	text-align:center;
+	box-sizing:border-box;
+	font-size: 20px;
+	padding-left: 4px;
+	transform: translate(-50%, -50%);
+	opacity: 0.5;
+	box-shadow: 0 0 3px #fff;
+	pointer-events: none;
+}
+
+.post-file-src:hover::after {
+	opacity: 1;
+}
+
+.post-file-src * {
+	visibility: visible;
 }
 
 @media only screen and (max-width: 700px) {

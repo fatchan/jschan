@@ -5,6 +5,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	let hovering = false;
 	let lastHover;
 
+	const toggleDottedUnderlines = (hoveredPost, id) => {
+		let uniqueQuotes = new Set();
+		hoveredPost.querySelectorAll('.post-message .quote').forEach(q => uniqueQuotes.add(q.href));
+		if (uniqueQuotes.size > 1) {
+			const matchingQuotes = hoveredPost.querySelectorAll(`.post-message .quote[href$="${id}"]`);
+			for (let i = 0; i < matchingQuotes.length; i++) {
+				const mq = matchingQuotes[i];
+				mq.style.borderBottom = mq.style.borderBottom == '' ? '1px dashed' : '';
+				mq.style.textDecoration = mq.style.textDecoration == '' ? 'none' : '';
+			}
+		}
+	}
+
 	const isVisible = (e) => {
 		const top = e.getBoundingClientRect().top;
 		const bottom = e.getBoundingClientRect().bottom;
@@ -60,9 +73,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			return; //non-post number board quote
 		}
 		const float = document.getElementById('float');
-		if (float != null) {
-			return document.body.removeChild(float);
+		if (float) {
+			document.body.removeChild(float);
 		}
+		const thisId = this.closest('.post-container').dataset.postId;
 		const loading = Date.now();
 		lastHover = loading;
 		const hash = this.hash.substring(1);
@@ -127,9 +141,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             });
             window.dispatchEvent(newPostEvent);
 		}
+		toggleDottedUnderlines(hoveredPost, thisId);
 		if (anchor && isVisible(hoveredPost)) {
 			hoveredPost.classList.toggle('highlighted');
-		} else {
+		} else if (hovering) {
 			floatPost(hoveredPost, e.clientX, e.clientY);
 		}
 	}

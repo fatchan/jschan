@@ -17,21 +17,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		volumeSetting.value = volumeLevel;
 		volumeSetting.addEventListener('change', changeVolume, false);
 
-		const toggle = function(thumb, exp, fn) {
+		const toggle = function(thumb, exp, fn, src) {
 			const close = exp.previousSibling.innerText === 'Close' ? exp.previousSibling : null;
 			if (thumb.style.display === 'none') {
+				//closing
 				thumb.style.display = '';
 				exp.style.display = 'none';
 				fn.style.maxWidth = '';
 				if (close) {
+					src.style.visibility = 'visible';
 					close.style.display = 'none';
 					exp.pause();
 				}
 			} else {
+				//expanding
 				thumb.style.display = 'none';
 				exp.style.display = '';
 				fn.style.maxWidth = exp.offsetWidth+'px';
 				if (close) {
+					src.style.visibility = 'hidden';
 					close.style.display = '';
 					exp.play();
 				}
@@ -46,6 +50,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			const thumbElement = fileLink.firstChild;
 			const fileName = this.previousSibling;
 			const next = thumbElement.nextSibling;
+			const pfs = this.closest('.post-file-src');
 			let expandedElement;
 			if (next) {
 				if (next.innerText === 'Close') {
@@ -68,7 +73,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 							thumbElement.style.opacity = '';
 							thumbElement.style.cursor = '';
 							fileLink.appendChild(expandedElement);
-							toggle(thumbElement, expandedElement, fileName);
+							toggle(thumbElement, expandedElement, fileName, pfs);
 						}
 						break;
 					case 'video':
@@ -81,7 +86,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						close.addEventListener('click', function(e) {
 							e.preventDefault();
 							e.stopPropagation();
-							toggle(thumbElement, expandedElement, fileName);
+							toggle(thumbElement, expandedElement, fileName, pfs);
 						}, true);
 						expandedElement.controls = 'true';
 						expandedElement.volume = volumeLevel/100;
@@ -89,14 +94,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						expandedElement.appendChild(source);
 						fileLink.appendChild(expandedElement);
 						fileLink.insertBefore(close, expandedElement);
-						toggle(thumbElement, expandedElement, fileName);
+						toggle(thumbElement, expandedElement, fileName, pfs);
 						break;
 					deault:
 						break; //uh oh
 				}
 				source.src = fileSrc;
 			} else if (expandedElement) {
-				toggle(thumbElement, expandedElement, fileName);
+				toggle(thumbElement, expandedElement, fileName, pfs);
 			}
 			return false;
 		};
