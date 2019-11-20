@@ -1,6 +1,9 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	const quotes = document.getElementsByClassName('quote');
+	let hoverLoading = {};
+	let hovering = false;
+	let lastHover;
 
 	const isVisible = (e) => {
 		const top = e.getBoundingClientRect().top;
@@ -50,21 +53,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 
-	let hoverLoading = {};
 	const toggleHighlightPost = async function(e) {
+		hovering = e.type === 'mouseover';
 		const jsonPath = this.pathname.replace(/html$/, 'json');
-		if (hoverLoading[jsonPath]) {
-			//hovering off while loading;
-			delete hoverLoading[jsonPath];
-			return;
+		if (!this.hash) {
+			return; //non-post number board quote
 		}
 		const float = document.getElementById('float');
 		if (float != null) {
 			return document.body.removeChild(float);
 		}
-		if (!this.hash) {
-			return; //non-post number board quote
-		}
+		const loading = Date.now();
+		lastHover = loading;
 		const hash = this.hash.substring(1);
 		const anchor = document.getElementById(hash);
 		let hoveredPost;
@@ -83,27 +83,27 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				}
 			}
 			if (!threadJson) {
-				if (hoverLoading[jsonPath]) {
-					return;
-				}
-				hoverLoading[jsonPath] = true;
+				this.style.cursor = 'wait';
 				let json;
 				try {
-					json = await fetch(jsonPath).then(res => res.json());
+					if (!hoverLoading[jsonPath]) {
+						hoverLoading[jsonPath] = fetch(jsonPath).then(res => res.json());
+					}
+					json = await hoverLoading[jsonPath];
 				} catch (e) {
-					delete hoverLoading[jsonPath];
 					return console.error(e);
+				} finally {
+					this.style.cursor = '';
 				}
 				if (json) {
 					threadJson = json;
 					setLocalStorage(`hovercache-${jsonPath}`, JSON.stringify(threadJson));
-					if (!hoverLoading[jsonPath]) {
-						return //stopped hovering, so dont toggle after loading
-					}
 				} else {
-					delete hoverLoading[jsonPath];
 					return localStorage.removeItem(`hovercache-${jsonPath}`); //thread deleted
 				}
+			}
+			if (!hovering || lastHover !== loading) {
+				return; //dont show for ones not hovering
 			}
 			if (threadJson.postId == hash) {
 				postJson = threadJson;
@@ -111,7 +111,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				postJson = threadJson.replies.find(r => r.postId == hash);
 			}
 			if (!postJson) {
-				delete hoverLoading[jsonPath];
 				return; //post was deleted or missing for some reason
 			}
 			const postHtml = post({ post: postJson });
@@ -133,7 +132,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		} else {
 			floatPost(hoveredPost, e.clientX, e.clientY);
 		}
-		delete hoverLoading[jsonPath];
 	}
 
 	for (let i = 0; i < quotes.length; i++) {
