@@ -1,6 +1,6 @@
-!localStorage.getItem('live') ? localStorage.setItem('live', true) : void 0;
-!localStorage.getItem('notifications') ? localStorage.setItem('notifications', false) : void 0;
-!localStorage.getItem('scroll') ? localStorage.setItem('scroll', false) : void 0;
+!localStorage.getItem('live') ? setLocalStorage('live', true) : void 0;
+!localStorage.getItem('notifications') ? setLocalStorage('notifications', false) : void 0;
+!localStorage.getItem('scroll') ? setLocalStorage('scroll', false) : void 0;
 
 const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
 let socket;
@@ -164,7 +164,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			}
 		}
 		console.log('toggling live posts', liveEnabled);
-		localStorage.setItem('live', liveEnabled);
+		setLocalStorage('live', liveEnabled);
 	}
 	liveSetting.checked = liveEnabled;
 	liveSetting.addEventListener('change', toggleLive, false);
@@ -179,7 +179,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			}
 		}
 		console.log('toggling notifications', notificationsEnabled);
-		localStorage.setItem('notifications', notificationsEnabled);
+		setLocalStorage('notifications', notificationsEnabled);
 		if (!liveEnabled && !changeFromConflict) {
 			liveSetting.checked = true;
 			toggleLive();
@@ -191,7 +191,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	const toggleScroll = (change, changeFromConflict) => {
 		scrollEnabled = !scrollEnabled;
 		console.log('toggling post scrolling', scrollEnabled);
-		localStorage.setItem('scroll', scrollEnabled);
+		setLocalStorage('scroll', scrollEnabled);
 		if (!liveEnabled && !changeFromConflict) {
 			liveSetting.checked = true;
 			toggleLive();

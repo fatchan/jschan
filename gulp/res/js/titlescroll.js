@@ -45,6 +45,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	window.addEventListener('scroll', updateVisible);
 
 	window.addEventListener('addPost', function(e) {
+		if (e.detail.hover) {
+			return; //dont need to handle hovered posts for this
+		}
 		const post = e.detail.post;
 		//if browsing another tab or the post is out of scroll view
 		if (!focused || !isVisible(post)) {

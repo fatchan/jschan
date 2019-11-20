@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		if (isThread) {
 			addQuote(quoteNum);
 		} else {
-			localStorage.setItem('clickedQuote', quoteNum);
+			setLocalStorage('clickedQuote', quoteNum);
 			window.location = this.firstChild.href.replace(/#postform$/, '#'+quoteNum);
 		}
 	};
@@ -37,6 +37,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	window.addEventListener('addPost', function(e) {
+		if (e.detail.hover) {
+			return; //dont need to handle hovered posts for this
+		}
 		const post = e.detail.post;
 		const newlinks = post.getElementsByClassName('post-quoters');
 		for (let i = 0; i < newlinks.length; i++) {

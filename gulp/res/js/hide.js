@@ -14,14 +14,14 @@ const loadHiddenStorage = () => {
 		//ignore
 	}
 	//set to empty if not exist or error parsing
-	localStorage.setItem('hidden', '[]');
+	setLocalStorage('hidden', '[]');
 	hidden = new Set();
 }
 
 loadHiddenStorage();
 
 const saveHiddenStorage = () => {
-	localStorage.setItem('hidden', JSON.stringify([...hidden]));
+	setLocalStorage('hidden', JSON.stringify([...hidden]));
 }
 
 const setHidden = (posts, hide) => {

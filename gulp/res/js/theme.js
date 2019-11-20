@@ -9,7 +9,7 @@ function changeTheme(e, type) {
 		theme = 'default';
 	}
 	//add theme setting to localstorage
-	localStorage.setItem(type, theme);
+	setLocalStorage(type, theme);
 	//check for theme style tag
 	let tempLink = document.getElementById(`custom${type}`);
 	if (theme === 'default') {
@@ -42,7 +42,7 @@ function changeTheme(e, type) {
 				css += themeLink.sheet[rulesName][i].cssText;
 			}
 			//update our localstorage with latest version
-			localStorage.setItem(path, css);
+			setLocalStorage(path, css);
 			tempLink.innerHTML = css;
 			//immediately remove it since we dont need it
 			tempLink.remove();

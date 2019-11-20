@@ -30,7 +30,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				if post.capcode
 					span.post-capcode #{post.capcode}
 					| 
-				- const postDate = new Date(post.date)
+				- const postDate = new Date(post.date);
 				time.post-date(datetime=postDate.toISOString()) #{postDate.toLocaleString("en-US", { hour12:false, timeZone: "America/New_York" })}
 				| 
 				if post.userId

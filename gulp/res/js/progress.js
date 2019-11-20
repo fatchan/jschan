@@ -195,6 +195,9 @@ window.addEventListener('DOMContentLoaded', () => {
 	});
 
 	window.addEventListener('addPost', function(e) {
+		if (e.detail.hover) {
+			return; //dont need to handle hovered posts for this
+		}
 		if (window.myPostId == e.detail.postId) {
 			window.location.hash = e.detail.postId;
 		}

@@ -1,4 +1,4 @@
-!localStorage.getItem('volume') ? localStorage.setItem('volume', 100) : void 0;
+!localStorage.getItem('volume') ? setLocalStorage('volume', 100) : void 0;
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const changeVolume = (change, changeFromConflict) => {
 			volumeLevel = volumeSetting.value;
 			console.log('adjusting volume', volumeLevel);
-			localStorage.setItem('volume', volumeLevel);
+			setLocalStorage('volume', volumeLevel);
 		}
 		volumeSetting.value = volumeLevel;
 		volumeSetting.addEventListener('change', changeVolume, false);
@@ -106,6 +106,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 
 		window.addEventListener('addPost', function(e) {
+			if (e.detail.hover) {
+				return; //dont need to handle hovered posts for this
+			}
 			const post = e.detail.post;
 			const newthumbs = post.getElementsByClassName('post-file-src');
 			for (let i = 0; i < newthumbs.length; i++) {
