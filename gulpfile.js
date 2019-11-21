@@ -182,10 +182,10 @@ function scripts() {
 			`!${paths.scripts.src}/hide.js`,
 		])
 		.pipe(concat('all.js'))
-//		.pipe(uglify())
+		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src(`${paths.scripts.src}/*.js`)
-//		.pipe(uglify())
+		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 

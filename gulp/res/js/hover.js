@@ -22,7 +22,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const top = e.getBoundingClientRect().top;
 		const bottom = e.getBoundingClientRect().bottom;
 		const height = window.innerHeight;
-		return top >= 0 && bottom <= height;
+		return top >= 38 && bottom <= height;
 	}
 
 	const setFloatPos = (float, xpos, ypos) => {
@@ -116,7 +116,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					return localStorage.removeItem(`hovercache-${jsonPath}`); //thread deleted
 				}
 			}
-			if (!hovering || lastHover !== loading) {
+			if (lastHover !== loading) {
+//			if (!hovering && lastHover !== loading) {
 				return; //dont show for ones not hovering
 			}
 			if (threadJson.postId == hash) {
@@ -142,8 +143,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
             window.dispatchEvent(newPostEvent);
 		}
 		toggleDottedUnderlines(hoveredPost, thisId);
+		hoveredPost.classList.remove('highlighted');
 		if (anchor && isVisible(hoveredPost)) {
-			hoveredPost.classList.toggle('highlighted');
+			hovering ? hoveredPost.classList.add('highlighted') : hoveredPost.classList.remove('highlighted');
 		} else if (hovering) {
 			floatPost(hoveredPost, e.clientX, e.clientY);
 		}
@@ -152,7 +154,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	for (let i = 0; i < quotes.length; i++) {
 		quotes[i].addEventListener('mouseover', toggleHighlightPost, false);
 		quotes[i].addEventListener('mouseout', toggleHighlightPost, false);
-		quotes[i].addEventListener('mousemove', moveHighlightPost, false);
+//		quotes[i].addEventListener('mousemove', moveHighlightPost, false);
 	}
 
 	window.addEventListener('addPost', function(e) {
@@ -165,10 +167,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		for (let i = 0; i < newquotes.length; i++) {
 			newquotes[i].removeEventListener('mouseover', toggleHighlightPost);
 			newquotes[i].removeEventListener('mouseout', toggleHighlightPost);
-			newquotes[i].removeEventListener('mousemove', moveHighlightPost);
+//			newquotes[i].removeEventListener('mousemove', moveHighlightPost);
 			newquotes[i].addEventListener('mouseover', toggleHighlightPost, false);
 			newquotes[i].addEventListener('mouseout', toggleHighlightPost, false);
-			newquotes[i].addEventListener('mousemove', moveHighlightPost, false);
+//			newquotes[i].addEventListener('mousemove', moveHighlightPost, false);
 		}
 	});
 

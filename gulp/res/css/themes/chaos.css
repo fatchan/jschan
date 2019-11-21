@@ -1,0 +1,65 @@
+:root {
+	--alt-label-color:#001010;
+	--alt-font-color:#00CCCC;
+	--background-top:#000505;
+	--background-rest:#000505;
+	--navbar-color:#001010;
+	--post-color:#001010;
+	--post-outline-color:#B7C5D9;
+	--label-color:#001010;
+	--box-border-color:#00AAAA;
+	--darken:#00000010;
+	--highlighted-post-color:#003030;
+	--highlighted-post-outline-color:#FF0000;
+	--board-title:#af0a0f;
+	--hr:lightgray;
+	--font-color:#00CCCC;
+	--name-color:#FF0000;
+	--capcode-color:#f00;
+	--subject-color:#FF0000;
+	--link-color:#FF0000;
+	--post-link-color:#FF0000;
+	--link-hover:#d00;
+	--input-borders:#00AAAA;
+	--input-color:#00CCCC;
+	--input-background:#000505;
+	--dice-color:darkorange;
+	--title-color:#d70000;
+	--greentext-color:#FF0000;
+}
+#float	.post-container,
+.catalog-tile,
+.live,
+.modal,
+.pages,
+.post-container,
+.stickynav,
+.toggle-summary,
+input[type=file],
+input[type=number],
+input[type=password],
+input[type=submit],
+input[type=text],
+select,
+textarea,
+.label,
+.postform-style,
+.close,
+table,
+#postform {
+	border:	1px	dotted;
+}
+hr {
+	border-top:	1px	dotted;
+}
+.navbar {
+	border-bottom:	1px	dotted;
+}
+#postform {
+	border-top:	none;
+}
+a .post-name:hover,
+a:hover {
+	background:var(--link-hover)!important;
+	color:black!important;
+}
