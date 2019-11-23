@@ -452,10 +452,6 @@ details.actions div {
 	padding: 2px 0;
 }
 
-.toggle-label:hover {
-	/*box-shadow: inset 0 0 100px 100px rgba(255,255,255,.25);*/
-}
-
 .toggle-summary {
 	padding: 10px;
 	cursor: pointer;
@@ -471,6 +467,7 @@ details.actions div {
 }
 
 #float {
+	box-shadow: 0 0 3px 1px var(--darken);
 	max-width: calc(100% - 10px);
 	z-index: 3;
 	position: fixed;
@@ -487,7 +484,6 @@ details.actions div {
 	flex-flow: column wrap;
 	width: max-content;
 	width: -moz-max-content;
-	/*margin-top: 10px;*/
 }
 
 .toggle, .togglable {
@@ -588,10 +584,6 @@ video, img {
 
 input:invalid, textarea:invalid {
 	box-shadow: none;
-}
-
-textarea {
-	/*min-width: 250px;*/
 }
 
 .no-resize {
@@ -745,16 +737,8 @@ textarea {
 	clear: both;
 }
 
-.muted {
-	/*color: #000c;*/
-}
-
 .right {
 	float: right;
-}
-
-.nav-item:hover {
-	/*box-shadow: inset 0 0 100px 100px rgba(255,255,255,.25);*/
 }
 
 .footer {
@@ -970,7 +954,6 @@ table.boardtable td:nth-child(6) {
 	.post-check {
 		top: 1px;
 		margin-left: 2px!important;
-		/*height: 8px;*/
 	}
 
 	.pages {
