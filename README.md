@@ -22,17 +22,15 @@ Demo site running at https://fatpeople.lol
 - [x] Webring support [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) [infinity](https://gitlab.com/Tenicu/infinityaddon-webring)
 
 ## Todo
-- Finish moderation tools (post editing, inter and ~~intra board~~ post moving/thread merging, file hash bans, ~~range bans~~, ban history)
-- Configuration editor on the site without touching config files
-- Global settings page for filters, etc
-- Overboard/multiboard/meta boards
-- User created board custom pages
-- File URL uploads
+- Check issues
+- Improve moderation tools
+- Improve frontend scripts
+- Fork some mobile app and make it compatible with the API
 
 ## Setup
-Please note these instructions are:
-- Are not step-by-step or complete
-- Assume you can read, are comfortable with a command line and have basic problem solving skills (aka google)
+Please note:
+- these instructions are not step-by-step or complete
+- you should be able to read, be comfortable with a command line and have problem solving skills (aka search engine)
 
 ##### Requirements
 - Linux (debian used in this example)
