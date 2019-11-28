@@ -1,0 +1,20 @@
+| Page: 
+if maxPage === 0
+	a.bold(href=`?${queryString ? queryString+'&' : ''}page=1`) [1]
+else if maxPage > 0
+	- for(let i = 1; i <= maxPage; i++)
+		if page === i
+			a.bold(href=`?${queryString ? queryString+'&' : ''}page=${i}`) [#{i}]
+		else
+			a(href=`?${queryString ? queryString+'&' : ''}page=${i}`) [#{i}]
+		|  
+else
+	if page > 1
+		if page > 2
+			a(href=`?page=1`) [<<]
+			|  
+		a(href=`?page=${page-1}`) [<]
+		|  
+	a.bold(href=`?page=${page}`) [#{page}]
+	|  
+	a(href=`?page=${page+1}`) [>]
