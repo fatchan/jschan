@@ -3,24 +3,12 @@
 const { enableWebring } = require(__dirname+'/../../configs/main.json')
 	, { Boards, Webring } = require(__dirname+'/../../db/')
 	, { relativeString } = require(__dirname+'/../../helpers/timeutils.js')
+	, pageQueryConverter = require(__dirname+'/../../helpers/pagequeryconverter.js')
 	, limit = 20;
 
 module.exports = async (req, res, next) => {
 
-	const nopage = { ...req.query };
-	delete nopage.page;
-	const queryString = new URLSearchParams(nopage).toString();
-
-	let page;
-	if (req.query.page && Number.isSafeInteger(parseInt(req.query.page))) {
-		page = parseInt(req.query.page);
-		if (page <= 0) {
-			page = 1;
-		}
-	} else {
-		page = 1;
-	}
-	const offset = (page-1) * limit;
+	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 
 	const direction = req.query.direction && req.query.direction === '1' ? 1 : -1;
 	let sort

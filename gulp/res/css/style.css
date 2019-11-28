@@ -86,6 +86,10 @@ pre {
 	white-space: pre;
 }
 
+.code:not(.hljs) {
+	white-space: unset;
+}
+
 .code, .mono {
 		background: var(--darken);
 		padding: 2px;

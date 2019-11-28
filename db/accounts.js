@@ -1,4 +1,3 @@
-
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
@@ -9,12 +8,16 @@ module.exports = {
 
 	db,
 
-	count: (usernames) => {
+	countUsers: (usernames) => {
 		return db.countDocuments({
 			'_id': {
 				'$in': usernames
 			}
 		});
+	},
+
+	count: () => {
+		return db.estimatedDocumentCount();
 	},
 
 	findOne: (username) => {
@@ -44,11 +47,12 @@ module.exports = {
 	},
 
 	find: (skip=0, limit=0) => {
-		//skip and limit incase pagination is ever needed, can be added and maybe move to separate page on globalmanage
 		return db.find({}, {
 			'projection': {
 				'passwordHash': 0
 			}
+		}).sort({
+			'authLevel': 1
 		}).skip(skip).limit(limit).toArray();
 	},
 

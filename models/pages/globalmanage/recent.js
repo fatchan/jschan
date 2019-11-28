@@ -1,12 +1,16 @@
 'use strict';
 
-const { Posts } = require(__dirname+'/../../../db/');
+const { Posts } = require(__dirname+'/../../../db/')
+	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
+	, limit = 20;
 
 module.exports = async (req, res, next) => {
 
+	const { page, offset } = pageQueryConverter(req.query, limit);
+
 	let posts;
 	try {
-		posts = await Posts.getGlobalRecent(); //10 default limit can be adjusted
+		posts = await Posts.getGlobalRecent(offset, limit);
 	} catch (err) {
 		return next(err)
 	}
@@ -14,6 +18,7 @@ module.exports = async (req, res, next) => {
 	res.render('globalmanagerecent', {
 		csrf: req.csrfToken(),
 		posts,
+		page,
 	});
 
 }

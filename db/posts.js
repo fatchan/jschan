@@ -22,11 +22,11 @@ module.exports = {
 		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
 	},
 
-	getGlobalRecent: (limit=10) => {
+	getGlobalRecent: (offset=0, limit=20) => {
 		//global recent posts for recent section of global manage page
 		return db.find({}).sort({
 			'_id': -1
-		}).limit(limit).toArray();
+		}).skip(offset).limit(limit).toArray();
 	},
 
 	getRecent: async (board, page, limit=10) => {

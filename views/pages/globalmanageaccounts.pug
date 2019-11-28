@@ -11,7 +11,7 @@ block content
 	+globalmanagenav('accounts')
 	hr(size=1)
 	h4.no-m-p Delete board:
-	.form-wrapper.flexleft.mt-10
+	.form-wrapper.flexleft
 		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
@@ -24,10 +24,10 @@ block content
 			input(type='submit', value='submit')
 	hr(size-1)
 	h4.no-m-p Accounts:
-	.form-wrapper.flexleft.mt-10
+	.form-wrapper.flexleft
 		form.form-post(action=`/forms/global/editaccounts` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
-			.table-container.flex-left.mv-10
+			.table-container.flex-left
 				table
 					tr
 						th
@@ -38,6 +38,8 @@ block content
 							td: input(type='checkbox', name='checkedaccounts' value=account._id)
 							td #{account._id}
 							td #{account.authLevel}
+			nav.pages.mt-5
+				include ../includes/pages.pug
 			.row
 				.label Delete Accounts
 				label.postform-style.ph-5

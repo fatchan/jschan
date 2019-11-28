@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
 	if (moderators !== oldSettings.moderators) {
 		//make sure moderators actually have existing accounts
 		if (moderators.length > 0) {
-			const validCount = await Accounts.count(moderators);
+			const validCount = await Accounts.countUsers(moderators);
 			if (validCount !== moderators.length) {
 				moderators = oldSettings.moderators;
 			}
