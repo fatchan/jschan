@@ -8,10 +8,11 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				if globalmanage
 					input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
 					| 
-					a.bold(href=`?ip=${post.ip.hash}`) #{post.ip.hash.slice(-10)}
+					- ipHashSub = post.ip.hash.slice(-10);
+					a.bold(href=`?ip=${encodeURIComponent(ipHashSub)}`) #{ipHashSub}
 				else if !ban
 					input.post-check(type='checkbox', name='checkedposts' value=post.postId)
-				|	
+				| 
 				if !post.thread
 					include ../includes/postmods.pug
 				if post.subject

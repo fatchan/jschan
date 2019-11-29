@@ -22,9 +22,13 @@ module.exports = {
 		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
 	},
 
-	getGlobalRecent: (offset=0, limit=20) => {
+	getGlobalRecent: (offset=0, limit=20, ipHash=null) => {
 		//global recent posts for recent section of global manage page
-		return db.find({}).sort({
+		const query = {};
+		if (ipHash !== null) {
+			query['ip.hash'] = ipHash;
+		}
+		return db.find(query).sort({
 			'_id': -1
 		}).skip(offset).limit(limit).toArray();
 	},

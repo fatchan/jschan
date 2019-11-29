@@ -5,7 +5,7 @@ function pug_classes_object(r){var a="",n="";for(var o in r)o&&r[o]&&pug_has_own
 function pug_escape(e){var a=""+e,t=pug_match_html.exec(a);if(!t)return e;var r,c,n,s="";for(r=t.index,c=0;r<a.length;r++){switch(a.charCodeAt(r)){case 34:n="&quot;";break;case 38:n="&amp;";break;case 60:n="&lt;";break;case 62:n="&gt;";break;default:continue}c!==r&&(s+=a.substring(c,r)),c=r+1,s+=n}return c!==r?s+a.substring(c,r):s}
 var pug_has_own_property=Object.prototype.hasOwnProperty;
 var pug_match_html=/["&<>]/;
-function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function post(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Date, post) {pug_mixins["report"] = pug_interp = function(r){
+function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function post(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Date, encodeURIComponent, ipHashSub, post) {pug_mixins["report"] = pug_interp = function(r){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv class=\"reports post-container\"\u003E\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"checkedreports\""+pug_attr("value", r.id, true, false)) + "\u002F\u003E\t\u003Cspan\u003EDate: " + (pug_escape(null == (pug_interp = r.date.toLocaleString()) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E \u003Cspan\u003EReason: " + (pug_escape(null == (pug_interp = r.reason) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E";
 };
@@ -15,13 +15,15 @@ pug_html = pug_html + "\u003Cdiv" + (" class=\"anchor\""+pug_attr("id", post.pos
 const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
 pug_html = pug_html + "\u003Cdiv class=\"post-info\"\u003E\u003Clabel\u003E";
 if (globalmanage) {
-pug_html = pug_html + "\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"globalcheckedposts\""+pug_attr("value", post._id, true, false)) + "\u002F\u003E";
+pug_html = pug_html + "\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"globalcheckedposts\""+pug_attr("value", post._id, true, false)) + "\u002F\u003E ";
+ipHashSub = post.ip.hash.slice(-10);
+pug_html = pug_html + "\u003Ca" + (" class=\"bold\""+pug_attr("href", `?ip=${encodeURIComponent(ipHashSub)}`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = ipHashSub) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 }
 else
 if (!ban) {
 pug_html = pug_html + "\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"checkedposts\""+pug_attr("value", post.postId, true, false)) + "\u002F\u003E";
 }
-pug_html = pug_html + "\t";
+pug_html = pug_html + " ";
 if (!post.thread) {
 if (post.sticky) {
 pug_html = pug_html + "\u003Cimg src=\"\u002Fimg\u002Fsticky.png\" height=\"12\" width=\"12\" title=\"Sticky\"\u002F\u003E ";
@@ -263,4 +265,4 @@ pug_mixins["report"](r);
 
 }
 };
-pug_mixins["post"](post);}.call(this,"Date" in locals_for_with?locals_for_with.Date:typeof Date!=="undefined"?Date:undefined,"post" in locals_for_with?locals_for_with.post:typeof post!=="undefined"?post:undefined));;return pug_html;}
+pug_mixins["post"](post);}.call(this,"Date" in locals_for_with?locals_for_with.Date:typeof Date!=="undefined"?Date:undefined,"encodeURIComponent" in locals_for_with?locals_for_with.encodeURIComponent:typeof encodeURIComponent!=="undefined"?encodeURIComponent:undefined,"ipHashSub" in locals_for_with?locals_for_with.ipHashSub:typeof ipHashSub!=="undefined"?ipHashSub:undefined,"post" in locals_for_with?locals_for_with.post:typeof post!=="undefined"?post:undefined));;return pug_html;}

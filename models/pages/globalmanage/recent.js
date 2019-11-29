@@ -2,15 +2,23 @@
 
 const { Posts } = require(__dirname+'/../../../db/')
 	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
+	, escapeRegExp = require(__dirname+'/../../../helpers/escaperegexp.js')
 	, limit = 20;
 
 module.exports = async (req, res, next) => {
 
-	const { page, offset } = pageQueryConverter(req.query, limit);
+	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
+	let ipMatch = null;
+	if (req.query.ip) {
+		const decoded = decodeURIComponent(req.query.ip);
+		if (decoded.length === 10) {
+			ipMatch = new RegExp(`${escapeRegExp(decoded)}$`);
+		}
+	}
 
 	let posts;
 	try {
-		posts = await Posts.getGlobalRecent(offset, limit);
+		posts = await Posts.getGlobalRecent(offset, limit, ipMatch);
 	} catch (err) {
 		return next(err)
 	}
@@ -19,6 +27,8 @@ module.exports = async (req, res, next) => {
 		csrf: req.csrfToken(),
 		posts,
 		page,
+		ip: ipMatch ? req.query.ip : null,
+		queryString,
 	});
 
 }
