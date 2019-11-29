@@ -1,5 +1,5 @@
 const ffmpeg = require('fluent-ffmpeg')
-	, { thumbSize } = require(__dirname+'/../../configs/main.json')
+	, { thumbSize } = require(__dirname+'/../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (file, geometry) => {

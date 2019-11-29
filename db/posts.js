@@ -5,7 +5,7 @@ const Mongo = require(__dirname+'/db.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.client.db('jschan').collection('posts')
 	, cache = require(__dirname+'/../redis.js')
-	, { quoteLimit } = require(__dirname+'/../configs/main.json');
+	, { quoteLimit } = require(__dirname+'/../configs/main.js');
 
 module.exports = {
 

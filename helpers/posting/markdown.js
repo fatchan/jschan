@@ -19,7 +19,7 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, diceRoll = require(__dirname+'/diceroll.js')
 	, escape = require(__dirname+'/escape.js')
 	, { highlight, highlightAuto } = require('highlight.js')
-	, { highlightOptions } = require(__dirname+'/../../configs/main.json');
+	, { highlightOptions } = require(__dirname+'/../../configs/main.js');
 
 module.exports = {
 

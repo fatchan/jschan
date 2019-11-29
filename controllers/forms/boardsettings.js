@@ -3,7 +3,7 @@
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
 	, { themes, codeThemes } = require(__dirname+'/../../helpers/themes.js')
 	, { Ratelimits } = require(__dirname+'/../../db/')
-	, { globalLimits } = require(__dirname+'/../../configs/main.json');
+	, { globalLimits } = require(__dirname+'/../../configs/main.js');
 
 module.exports = async (req, res, next) => {
 

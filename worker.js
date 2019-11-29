@@ -5,7 +5,7 @@ process
 	.on('unhandledRejection', console.error);
 
 const Queue = require('bull')
-	, configs = require(__dirname+'/configs/main.json')
+	, configs = require(__dirname+'/configs/main.js')
 	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {

@@ -1,6 +1,7 @@
 node_modules/
 backup.sh
 configs/*.json
+configs/*.js
 static/*
 gulp/res/js/socket.io.js
 /gulp/res/css/codethemes

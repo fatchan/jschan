@@ -2,7 +2,7 @@
 
 const gulp = require('gulp')
 	, fs = require('fs')
-	, configs = require(__dirname+'/configs/main.json')
+	, configs = require(__dirname+'/configs/main.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')

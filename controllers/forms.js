@@ -3,7 +3,7 @@
 const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db/boards.js')
-	, { globalLimits } = require(__dirname+'/../configs/main.json')
+	, { globalLimits } = require(__dirname+'/../configs/main.js')
 	//middlewares
 	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
@@ -79,7 +79,7 @@ router.post('/global/editbans', sessionRefresh, csrf, calcPerms, isLoggedIn, has
 router.post('/global/addnews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
 router.post('/global/deletenews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news
 router.post('/global/editaccounts', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, editAccountsController); //account editing
-router.post('/global/deleteboard', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board
+//router.post('/global/deleteboard', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board. removed and going to change when i add a board page to globalmanage with unlisted boards and searching
 
 //accounts
 router.post('/login', loginController);

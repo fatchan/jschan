@@ -2,7 +2,7 @@
 
 const uploadBanners = require(__dirname+'/../../models/forms/uploadbanners.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.json');
+	, { globalLimits } = require(__dirname+'/../../configs/main.js');
 
 module.exports = async (req, res, next) => {
 

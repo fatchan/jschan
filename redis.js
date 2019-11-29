@@ -1,7 +1,7 @@
 'use strict';
 
 const Redis = require('ioredis')
-	, configs = require(__dirname+'/configs/main.json')
+	, configs = require(__dirname+'/configs/main.js')
 	, client = new Redis(configs.redis);
 
 module.exports = {

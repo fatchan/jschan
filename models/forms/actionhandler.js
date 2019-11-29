@@ -16,7 +16,7 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
-	, { postPasswordSecret } = require(__dirname+'/../../configs/main.json')
+	, { postPasswordSecret } = require(__dirname+'/../../configs/main.js')
 	, { createHash, timingSafeEqual } = require('crypto');
 
 module.exports = async (req, res, next) => {

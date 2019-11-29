@@ -1,7 +1,7 @@
 'use strict';
 
 const fetch = require('node-fetch')
-	, { meta } = require(__dirname+'/../configs/main.json')
+	, { meta } = require(__dirname+'/../configs/main.js')
 	, { logos, following, blacklist } = require(__dirname+'/../configs/webring.json')
 	, { Boards, Webring } = require(__dirname+'/../db/')
 	, { outputFile } = require('fs-extra')

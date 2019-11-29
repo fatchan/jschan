@@ -1,6 +1,6 @@
 'use strict';
 
-const { tripcodeSecret } = require(__dirname+'/../../configs/main.json')
+const { tripcodeSecret } = require(__dirname+'/../../configs/main.js')
     , { createHash } = require('crypto')
 
 module.exports = async (password) => {

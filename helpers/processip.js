@@ -1,6 +1,6 @@
 'use strict';
 
-const { ipHashSecret } = require(__dirname+'/../configs/main.json')
+const { ipHashSecret } = require(__dirname+'/../configs/main.js')
 	, { isIP } = require('net')
 	, { createHash } = require('crypto');
 

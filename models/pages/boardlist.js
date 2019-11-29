@@ -1,6 +1,6 @@
 'use strict';
 
-const { enableWebring } = require(__dirname+'/../../configs/main.json')
+const { enableWebring } = require(__dirname+'/../../configs/main.js')
 	, { Boards, Webring } = require(__dirname+'/../../db/')
 	, { relativeString } = require(__dirname+'/../../helpers/timeutils.js')
 	, pageQueryConverter = require(__dirname+'/../../helpers/pagequeryconverter.js')

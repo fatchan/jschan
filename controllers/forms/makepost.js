@@ -3,7 +3,7 @@
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.json')
+	, { globalLimits } = require(__dirname+'/../../configs/main.js')
 	, { Files } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {

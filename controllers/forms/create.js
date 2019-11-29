@@ -1,7 +1,7 @@
 'use strict';
 
 const createBoard = require(__dirname+'/../../models/forms/create.js')
-	, { enableUserBoards } = require(__dirname+'/../../configs/main.json')
+	, { enableUserBoards } = require(__dirname+'/../../configs/main.js')
 	, alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
 
 module.exports = async (req, res, next) => {

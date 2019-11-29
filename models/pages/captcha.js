@@ -2,7 +2,7 @@
 
 const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 	, generateCaptcha = require(__dirname+'/../../helpers/captcha/captchagenerate.js')
-	, { secureCookies } = require(__dirname+'/../../configs/main.json')
+	, { secureCookies } = require(__dirname+'/../../configs/main.js')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const configs = require(__dirname+'/../configs/main.json')
+const configs = require(__dirname+'/../configs/main.js')
 	, refererRegex = new RegExp(configs.refererRegex);
 
 module.exports = (req, res, next) => {

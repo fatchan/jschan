@@ -1,7 +1,7 @@
 'use strict';
 
 const { MongoClient, ObjectId, Int32 } = require('mongodb')
-	, configs = require(__dirname+'/../configs/main.json');
+	, configs = require(__dirname+'/../configs/main.js');
 
 module.exports = {
 

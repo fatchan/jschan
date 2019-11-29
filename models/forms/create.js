@@ -1,7 +1,7 @@
 'use strict';
 
 const { Boards } = require(__dirname+'/../../db/')
-	, { boardDefaults } = require(__dirname+'/../../configs/main.json');
+	, { boardDefaults } = require(__dirname+'/../../configs/main.js');
 
 module.exports = async (req, res, next) => {
 
