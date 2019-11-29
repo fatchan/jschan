@@ -8,20 +8,12 @@ const makePost = require(__dirname+'/../../models/forms/makepost.js')
 
 module.exports = async (req, res, next) => {
 
-	if (req.files && req.files.file) {
-		if (Array.isArray(req.files.file)) {
-			res.locals.numFiles = req.files.file.filter(file => file.size > 0).length;
-		} else {
-			res.locals.numFiles = req.files.file.size > 0 ? 1 : 0;
-			req.files.file = [req.files.file];
-		}
-		res.locals.numFiles = Math.min(res.locals.numFiles, res.locals.board.settings.maxFiles)
-	}
+	res.locals.numFiles = Math.min(res.locals.numFiles, res.locals.board.settings.maxFiles)
 
 	const errors = [];
 
 	// even if force file and message are off, the post must contain one of either.
-	if ((!req.body.message || req.body.message.length === 0) && (!res.locals.numFiles || res.locals.numFiles === 0)) {
+	if ((!req.body.message || req.body.message.length === 0) && res.locals.numFiles === 0) {
 		errors.push('Posts must include a message or file');
 	}
 
