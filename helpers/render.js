@@ -1,6 +1,6 @@
 'use strict';
 
-const { globalLimits, boardDefaults, cacheTemplates, meta } = require(__dirname+'/../configs/main.js')
+const { lockWait, globalLimits, boardDefaults, cacheTemplates, meta } = require(__dirname+'/../configs/main.js')
 	, { outputFile } = require('fs-extra')
 	, pug = require('pug')
 	, path = require('path')
@@ -17,7 +17,7 @@ module.exports = async (htmlName, templateName, options, json=null) => {
 		defaultCodeTheme: boardDefaults.codeTheme,
 		globalLimits,
 	});
-	const lock = await redlock.lock(`locks:${htmlName}`, 3000); //what is a reasonable ttl?
+	const lock = await redlock.lock(`locks:${htmlName}`, lockWait);
 	const htmlPromise = outputFile(`${uploadDirectory}/html/${htmlName}`, html);
 	let jsonPromise;
 	if (json !== null) {

@@ -26,14 +26,17 @@ module.exports = {
 	refererCheck: true,
 	refererRegex: '^https?:\\/\\/(?:www\\.)?domain\\.com\\/',
 
-	//data used in opengraph meta tags
+	//data used in opengraph meta tags. used to generate link previews in e.g. discord, twitter, etc
 	meta: {
 		siteName: 'imageboard',
 		url: 'https://domain.com'
 	},
 
-	//cache templates in memory
+	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
+
+	//max wait time in ms for obtaining locks for saving files
+	lockWait: 3000,
 
 	//prune modlogs older than 30 days. pruning occurs when new modlog entries are generated
 	pruneModlogs: true,
@@ -44,7 +47,7 @@ module.exports = {
 	//extension for thumbnails. png is larger but allows transparency
 	thumbExtension: '.png',
 
-	//max thumb dimensions
+	//max thumb dimensions (square) in px
 	thumbSize: 200,
 
 	//default ban duration in ms if ban duration field is left blank
@@ -56,7 +59,7 @@ module.exports = {
 	//options for code block highlighting in posts
 	highlightOptions: {
 
-		//subset of languages to allow
+		//subset of languages to allow.
 		languageSubset: [
 			'javascript',
 			'js',
