@@ -106,7 +106,7 @@ const express = require('express')
 				'message': 'Invalid CSRF token'
   			});
 		}
-		console.error(err.stack);
+		console.error(err);
 		return dynamicResponse(req, res, 500, 'message', {
 			'title': 'Internal Server Error',
 			'error': 'Internal Server Error', //what to put here?
