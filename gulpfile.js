@@ -180,11 +180,16 @@ function scripts() {
 			`${paths.scripts.src}/live.js`,
 			`${paths.scripts.src}/*.js`,
 			`!${paths.scripts.src}/hide.js`,
+			`!${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('all.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
-	return gulp.src(`${paths.scripts.src}/*.js`)
+	return gulp.src([
+			`${paths.scripts.src}/hide.js`,
+			`${paths.scripts.src}/time.js`,
+		])
+		.pipe(concat('render.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 }

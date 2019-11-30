@@ -32,6 +32,10 @@ mixin modal(data)
 							each theme in data.settings.codeThemes
 								option(value=theme) #{theme}
 					.row
+						.label Default volume
+						label.postform-style.ph-5
+							input#volume-setting(type='range' min='0' max='100')
+					.row
 						.label Live posts
 						label.postform-style.ph-5
 							input#live-setting(type='checkbox')
@@ -44,6 +48,6 @@ mixin modal(data)
 						label.postform-style.ph-5
 							input#scroll-setting(type='checkbox')
 					.row
-						.label Default volume
+						.label Local time
 						label.postform-style.ph-5
-							input#volume-setting(type='range' min='0' max='100')
+							input#time-setting(type='checkbox')

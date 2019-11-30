@@ -10,4 +10,5 @@ module.exports = (req, res, next) => {
 			req.files.file = [req.files.file];
 		}
 	}
+	next();
 }

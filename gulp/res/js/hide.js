@@ -20,10 +20,6 @@ const loadHiddenStorage = () => {
 
 loadHiddenStorage();
 
-const saveHiddenStorage = () => {
-	setLocalStorage('hidden', JSON.stringify([...hidden]));
-}
-
 const setHidden = (posts, hide) => {
 	if (posts && posts.length > 0) {
 		for (let i = 0; i < posts.length; i++) {
@@ -74,7 +70,7 @@ const changeOption = function(e) {
 	}
 	this.value = '';
 	setHidden(posts, hiding);
-	saveHiddenStorage();
+	setLocalStorage('hidden', JSON.stringify([...hidden]));	
 }
 
 for (let menu of document.getElementsByClassName('postmenu')) {
