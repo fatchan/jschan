@@ -430,6 +430,7 @@ td, th {
 	padding: 5px;
 	border: 1px solid var(--post-outline-color);
 	align-self: center;
+	overflow-x: scroll;
 }
 
 details.actions div {
