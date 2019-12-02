@@ -25,23 +25,23 @@ module.exports = {
 		if (difference < MINUTE) {
 			return { color: '#39d6bc', text:'Now' };
 		} else if (difference < HOUR) {
-			amount = Math.floor(difference / MINUTE);
+			amount = Math.round(difference / MINUTE);
 			color = '#008000';
 			ret += `${amount} minute`
 		} else if (difference < DAY) {
-			amount = Math.floor(difference / HOUR);
+			amount = Math.round(difference / HOUR);
 			color = '#84c100';
 			ret += `${amount} hour`
 		} else if (difference < WEEK) {
-			amount = Math.floor(difference / DAY);
+			amount = Math.round(difference / DAY);
 			color = '#fffd00';
 			ret += `${amount} day`;
 		} else if (difference < MONTH) {
-			amount = Math.floor(difference / WEEK);
+			amount = Math.round(difference / WEEK);
 			color = '#ff6700';
 			ret += `${amount} week`;
 		} else if (difference < YEAR) {
-			amount = Math.floor(difference / MONTH);
+			amount = Math.round(difference / MONTH);
 			color = '#ff0000';
 			ret += `${amount} month`;
 		} else {

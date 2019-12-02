@@ -24,19 +24,19 @@ const relativeTimeString = (date) => {
     if (difference < MINUTE) {
         return 'Now';
     } else if (difference < HOUR) {
-        amount = Math.floor(difference / MINUTE);
+        amount = Math.round(difference / MINUTE);
         ret = `${amount} minute`;
     } else if (difference < DAY) {
-        amount = Math.floor(difference / HOUR);
+        amount = Math.round(difference / HOUR);
         ret = `${amount} hour`;
     } else if (difference < WEEK) {
-        amount = Math.floor(difference / DAY);
+        amount = Math.round(difference / DAY);
         ret = `${amount} day`;;
     } else if (difference < MONTH) {
-        amount = Math.floor(difference / WEEK);
+        amount = Math.round(difference / WEEK);
         ret = `${amount} week`;
     } else if (difference < YEAR) {
-        amount = Math.floor(difference / MONTH);
+        amount = Math.round(difference / MONTH);
         ret = `${amount} month`;
     } else {
         return '> 1 year ago';
