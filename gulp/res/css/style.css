@@ -153,7 +153,13 @@ pre {
 	cursor: pointer;
 }
 
-.pages, .live {
+.statwrap {
+	display: flex;
+	justify-content: space-between;
+	flex-flow: row wrap;
+}
+
+.pages, #livetext, #poststats {
 	box-sizing: border-box;
 	padding: 10px;
 	width: max-content;

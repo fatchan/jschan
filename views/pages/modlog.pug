@@ -10,7 +10,7 @@ block content
 	+boardheader('Logs')
 	br
 	include ../includes/stickynav.pug
-	nav.pages
+	.pages
 		+boardnav('logs', true, true)
 	hr(size=1)
 	.table-container.flex-center.mv-10.text-center
@@ -29,5 +29,5 @@ block content
 						td #{log.postIds}
 						td #{log.message || '-'}
 	hr(size=1)
-	nav.pages
+	.pages
 		+boardnav('logs', true, true)

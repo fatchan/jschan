@@ -33,18 +33,28 @@ block content
 	br
 	include ../includes/announcements.pug
 	include ../includes/stickynav.pug
-	nav.pages
+	.pages
 		+boardnav(null, true, true)
+	- board.settings.ids ? const uids = new Set() : void 0;
 	form(action=`/forms/board/${board._id}/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		hr(size=1)
 		.thread
 			+post(thread)
 			for post in thread.replies
+				- uids && post.userId && uids.add(post.userId)
 				+post(post)
 		hr(size=1)
-		div.jsonly.live#livetext
+		.statwrap
+			.pages
+				+boardnav(null, true, true)
+			#threadstats 
+				span #{thread.replyposts} repl#{thread.replyposts === 1 ? 'y' : 'ies'}
+				|  |  
+				span #{thread.replyfiles} file#{thread.replyfiles === 1 ? '' : 's'}
+				if board.settings.ids
+					|  |   
+					span #{uids.size} UID#{uids.size === 1 ? '' : 's'}
+		.jsonly#livetext
 			.dot#livecolor
 			|  Connecting...
-		nav.pages
-			+boardnav(null, true, true)
 		include ../includes/actionfooter.pug
