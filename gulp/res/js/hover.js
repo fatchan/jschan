@@ -76,7 +76,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		if (float) {
 			document.body.removeChild(float);
 		}
-		const thisId = this.closest('.post-container').dataset.postId;
+		const parentPost = this.closest('.post-container');
+		let thisId = 0;
+		if (parentPost) {
+			thisId = parentPost.dataset.postId;
+		}
 		const loading = Date.now();
 		lastHover = loading;
 		const hash = this.hash.substring(1);
@@ -90,7 +94,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			let postJson;
 			if (hovercache) {
 				hovercache = JSON.parse(hovercache);
-				const highestId = Math.max(hovercache.postId, hovercache.replies[hovercache.replies.length-1].postId);
+				let highestId = 0;
+				if (hovercache.replies && hovercache.replies.length > 0) {
+					highestId = Math.max(hovercache.postId, hovercache.replies[hovercache.replies.length-1].postId);
+				}
 				if (highestId && highestId >= hash) {
 					//post already in our cache
 					threadJson = hovercache;
