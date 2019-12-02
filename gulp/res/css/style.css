@@ -1,7 +1,3 @@
-html {
-	scroll-behavior: smooth;
-}
-
 body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
@@ -159,7 +155,7 @@ pre {
 	flex-flow: row wrap;
 }
 
-.pages, #livetext, #poststats {
+.pages, #livetext, #threadstats {
 	box-sizing: border-box;
 	padding: 10px;
 	width: max-content;
@@ -400,7 +396,7 @@ td, th {
 	}
 }
 
-.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, .live, {
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, #livetext, #threadstats {
 	background: var(--post-color);
 	border-width: 1px;/*0 1px 1px 0;*/
 	border-style: solid;

@@ -35,7 +35,7 @@ block content
 	include ../includes/stickynav.pug
 	.pages
 		+boardnav(null, true, true)
-	- board.settings.ids ? const uids = new Set() : void 0;
+	- const uids = board.settings.ids ? new Set() : void 0;
 	form(action=`/forms/board/${board._id}/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		hr(size=1)
 		.thread

@@ -92,7 +92,8 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			const newPostEvent = new CustomEvent('addPost', {
 				detail: {
 					post: newPost,
-					postId: postData.postId
+					postId: postData.postId,
+					json: postData
 				}
 			});
 			//dispatch the event so quote click handlers, image expand, etc can be added in separate scripts by listening to the event
