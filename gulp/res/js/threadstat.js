@@ -12,10 +12,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				return; //dont need to handle hovered posts for this
 			}
 			const newFiles = e.detail.json.files.length;
-console.log(newFiles)
-			if (e.detail.json.userId) {
-				uidSet.add(e.detail.json.userId);
-			}
 			const numPosts = +statsElem.children[0].innerText.match(/^(\d+)/g);
 			const numFiles = +statsElem.children[1].innerText.match(/^(\d+)/g);
 			const filesTotal = numFiles + newFiles;
@@ -23,6 +19,14 @@ console.log(newFiles)
 			statsElem.children[0].innerText = `${postTotal} repl${postTotal === 1 ? 'y' : 'ies'}`;
 			statsElem.children[1].innerText = `${filesTotal} file${filesTotal === 1 ? '' : 's'}`;
 			if (e.detail.json.userId) {
+				uidSet.add(e.detail.json.userId);
+				if (!statsElem.children[2]) {
+					//UIDs enabled after thread generated
+					const spacer = document.createTextNode(' |  ');
+					const uidSpan = document.createElement('span');
+					statsElem.appendChild(spacer);
+					statsElem.appendChild(uidSpan);
+				}
 				statsElem.children[2].innerText = `${uidSet.size} UID${uidSet.size === 1 ? '' : 's'}`;
 			}
 		});

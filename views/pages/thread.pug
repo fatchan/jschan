@@ -39,6 +39,7 @@ block content
 	form(action=`/forms/board/${board._id}/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		hr(size=1)
 		.thread
+			- uids && thread.userId && uids.add(thread.userId)
 			+post(thread)
 			for post in thread.replies
 				- uids && post.userId && uids.add(post.userId)
@@ -50,7 +51,7 @@ block content
 			#threadstats 
 				span #{thread.replyposts} repl#{thread.replyposts === 1 ? 'y' : 'ies'}
 				|  |  
-				span #{thread.replyfiles} file#{thread.replyfiles === 1 ? '' : 's'}
+				span #{thread.replyfiles + thread.files.length} file#{thread.replyfiles + thread.files.length === 1 ? '' : 's'}
 				if board.settings.ids
 					|  |   
 					span #{uids.size} UID#{uids.size === 1 ? '' : 's'}
