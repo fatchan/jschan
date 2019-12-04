@@ -857,6 +857,10 @@ hr + .thread {
 	border: 1px solid var(--box-border-color);
 }
 
+tr:nth-child(odd) {
+	 background: var(--post-color);
+}
+
 table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
 table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
 table.boardtable td:nth-child(5), table.boardtable th:nth-child(5) {
