@@ -1,6 +1,6 @@
 'use strict';
 
-const { Boards } = require(__dirname+'/../../db/')
+const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, { boardDefaults } = require(__dirname+'/../../configs/main.js');
 
 module.exports = async (req, res, next) => {
@@ -8,6 +8,7 @@ module.exports = async (req, res, next) => {
 	const { name, description } = req.body
 		, uri = req.body.uri.toLowerCase()
 		, tags = req.body.tags.split('\n').filter(n => n)
+		, owner = req.session.user.username
 		, board = await Boards.findOne(uri);
 
 	// if board exists reject
@@ -22,7 +23,7 @@ module.exports = async (req, res, next) => {
 	//todo: add a settings for defaults
 	const newBoard = {
 		'_id': uri,
-		'owner': req.session.user.username,
+		owner,
 		'banners': [],
 		'sequence_value': 1,
 		'pph': 0,
@@ -37,7 +38,10 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	await Boards.insertOne(newBoard);
+	await Promise.all([
+		Boards.insertOne(newBoard),
+		Accounts.addOwnedBoard(owner, uri) 
+	]);
 
 	return res.redirect(`/${uri}/index.html`);
 

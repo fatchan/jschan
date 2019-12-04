@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
 
 	const username = req.body.username.toLowerCase();
 	const password = req.body.password;
-	const goto = req.body.goto;
+	const goto = req.body.goto || '/account.html';
 	const failRedirect = `/login.html${goto ? '?goto='+goto : ''}`
 
 	//fetch an account
@@ -31,12 +31,14 @@ module.exports = async (req, res, next) => {
 		// add the account to the session and authenticate if password was correct
 		req.session.user = {
 			'username': account._id,
-			'authLevel': account.authLevel
+			'authLevel': account.authLevel,
+			'ownedBoards': account.ownedBoards,
+			'modBoards': account.modBoards,
 		};
 		req.session.authenticated = true;
 
 		//successful login
-		return res.redirect(goto || '/');
+		return res.redirect(goto);
 
 	}
 

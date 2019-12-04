@@ -33,8 +33,12 @@ module.exports = {
 	},
 
 	//delete value with key
-	del: (key) => {
-		return client.del(key);
+	del: (keyOrKeys) => {
+		if (Array.isArray(keyOrKeys))	{
+			return client.del(...keyOrKeys);
+		} else {
+			return client.del(keyOrKeys);
+		}
 	},
 
 	deletePattern: (pattern) => {

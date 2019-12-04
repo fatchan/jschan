@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
 		errors.push('Transfer username must be at less than 50 characters');
 	}
 	if (req.body.username === res.locals.board.owner) {
-		errors.push('You are already board owner...');
+		errors.push('New owner username must not be same as old owner');
 	}
 	if (alphaNumericRegex.test(req.body.username) !== true) {
         errors.push('URI must contain a-z 0-9 only');

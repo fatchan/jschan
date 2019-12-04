@@ -1,0 +1,49 @@
+extends ../layout.pug
+
+block head
+	script(src='/js/all.js')
+	title Manage
+
+block content
+	.board-header
+		h1.board-title Welcome, #{user.username}
+		h4.board-description Auth level: #{user.authLevel}
+	br
+	hr(size=1)
+	h4.no-m-p General:
+	ul
+		if user.authLevel <= 1
+			li: a(href='/globalmanage/recent.html') Global management
+		li: a(href='/create.html') Create a board
+		li: a(href='/changepassword.html') Change password
+		li: a(href='/logout') Log out
+	hr(size=1)
+	h4.no-m-p Boards you own:
+	if user.ownedBoards && user.ownedBoards.length > 0
+		ul
+			for b in user.ownedBoards
+				li
+					a(href=`/${b}/index.html`) /#{b}/
+					|  -  
+					a(href=`/${b}/manage/reports.html`) Reports
+					| ,  
+					a(href=`/${b}/manage/bans.html`) Bans
+					| ,  
+					a(href=`/${b}/manage/settings.html`) Settings
+					| ,  
+					a(href=`/${b}/manage/banners.html`) Banners
+	else
+		p None
+	hr(size=1)
+	h4.no-m-p Boards you moderate:
+	if user.modBoards && user.modBoards.length > 0
+		ul
+			for b in user.modBoards
+				li
+					a(href=`/${b}/index.html`) /#{b}/
+					|  -  
+					a(href=`/${b}/manage/reports.html`) Reports
+					| ,  
+					a(href=`/${b}/manage/bans.html`) Bans
+	else
+		p None

@@ -11,7 +11,9 @@ module.exports = async (req, res, next) => {
 		} else {
 			req.session.user = {
 				'username': account._id,
-				'authLevel': account.authLevel
+				'authLevel': account.authLevel,
+				'modBoards': account.modBoards,
+				'ownedBoards': account.ownedBoards,
 			};
 		}
 	}

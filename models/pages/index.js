@@ -3,6 +3,7 @@
 module.exports = {
 	changePassword: require(__dirname+'/changepassword.js'),
 	register: require(__dirname+'/register.js'),
+	account: require(__dirname+'/account.js'),
 	home: require(__dirname+'/home.js'),
 	login: require(__dirname+'/login.js'),
 	logout: require(__dirname+'/logout.js'),

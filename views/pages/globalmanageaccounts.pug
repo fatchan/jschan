@@ -20,11 +20,21 @@ block content
 						th
 						th Username
 						th Auth Level
+						th Own Boards
+						th Mod Boards
 					for account in accounts
 						tr
 							td: input(type='checkbox', name='checkedaccounts' value=account._id)
 							td #{account._id}
 							td #{account.authLevel}
+							td
+								for b in account.ownedBoards
+									a(href=`/${b}/index.html`) /#{b}/
+									|  
+							td
+								for b in account.modBoards
+									a(href=`/${b}/index.html`) /#{b}/
+									|  
 			.pages.mt-5
 				include ../includes/pages.pug
 			.row

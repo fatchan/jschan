@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
 	if (!req.body.checkedaccounts || req.body.checkedaccounts.length === 0 || req.body.checkedaccounts.length > 10) {
         errors.push('Must select 1-10 accounts');
     }
-	if (!req.body.auth_level && !req.body.delete_account) {
+	if (typeof req.body.auth_level !== 'number' && !req.body.delete_account) {
 		errors.push('Missing auth level or delete action');
 	}
 	if (typeof req.body.auth_level === 'number' && req.body.auth_level < 0 || req.body.auth_level > 4) {

@@ -14,6 +14,10 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
+	//modify accounts with new board ownership
+	await Accounts.removeOwnedBoard(res.locals.board.owner, req.params.board)
+	await Accounts.addOwnedBoard(newOwner._id, req.params.board);
+
 	//set owner in memory and in db
 	res.locals.board.owner = newOwner._id;
 	await Boards.setOwner(req.params.board, res.locals.board.owner);

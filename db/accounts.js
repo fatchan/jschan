@@ -32,18 +32,20 @@ module.exports = {
 			'_id': username,
 			'passwordHash': passwordHash,
 			'authLevel': authLevel,
+			'ownedBoards': [],
+			'modBoards': []
 		});
 	},
 
 	changePassword: async (username, newPassword) => {
 		const passwordHash = await bcrypt.hash(newPassword, 12);
 		return db.updateOne({
-            '_id': username
-        }, {
-            '$set': {
-                'passwordHash': passwordHash
-            }
-        });
+			'_id': username
+		}, {
+			'$set': {
+				'passwordHash': passwordHash
+			}
+		});
 	},
 
 	find: (skip=0, limit=0) => {
@@ -62,6 +64,75 @@ module.exports = {
 				'$in': usernames
 			}
 		});
+	},
+
+	addOwnedBoard: (username, board) => {
+		return db.updateOne({
+			'_id': username
+		}, {
+			'$addToSet': {
+				'ownedBoards': board
+			}
+		});
+	},
+
+    removeOwnedBoard: (username, board) => {
+		return db.updateOne({
+			'_id': username
+		}, {
+			'$pull': {
+				'ownedBoards': board
+			}
+		});
+    },
+
+	addModBoard: (usernames, board) => {
+		return db.updateMany({
+			'_id': {
+				'$in': usernames
+			}
+		}, {
+			'$addToSet': {
+				'modBoards': board
+			}
+		});
+	},
+
+	removeModBoard: (usernames, board) => {
+		return db.updateMany({
+			'_id': {
+				'$in': usernames
+			}
+		}, {
+			'$pull': {
+				'modBoards': board
+			}
+		});
+	},
+
+	getOwnedOrModBoards: (usernames) => {
+		return db.find({
+			'_id': {
+				'$in': usernames
+			},
+			'$or': [
+				{
+					'ownedBoards.0': {
+						'$exists': true
+					},
+				},
+				{
+					'modBoards.0': {
+						'$exists': true
+					}
+				}
+			]
+		}, {
+			'projection': {
+				'ownedBoards': 1,
+				'modBoards': 1,
+			}
+		}).toArray();
 	},
 
 	setLevel: (usernames, level) => {

@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = async (req, res, next) => {
-	if (req.session.authenticated === true) {
+	if (req.session && req.session.authenticated === true) {
 		return next();
 	}
 	let goto;
@@ -9,5 +9,5 @@ module.exports = async (req, res, next) => {
 		//coming from a GET page isLoggedIn middleware check
 		goto = req.path;
 	}
-	res.redirect(`/login.html${goto ? '?goto='+goto : ''}`);
+	return res.redirect(`/login.html${goto ? '?goto='+goto : ''}`);
 }

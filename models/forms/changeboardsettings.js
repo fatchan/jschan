@@ -13,7 +13,11 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
+	//oldsettings before changes
 	const oldSettings = res.locals.board.settings;
+
+	//array of promises we might need
+	const promises = [];
 
 	let markdownAnnouncement;
 	if (req.body.announcement !== oldSettings.announcement.raw) {
@@ -24,17 +28,34 @@ module.exports = async (req, res, next) => {
 		markdownAnnouncement = sanitized;
 	}
 
-	let moderators = req.body.moderators != null ? req.body.moderators.split('\r\n').filter(n => n).slice(0,10) : oldSettings.moderators
-	if (moderators !== oldSettings.moderators) {
-		//make sure moderators actually have existing accounts
+	let moderators = req.body.moderators != null ? req.body.moderators.split('\r\n').filter(n => n).slice(0,10) : [];
+	if (moderators.length === 0 && oldSettings.moderators.length > 0) {
+		//remove all mods if mod list being emptied
+		promises.push(Accounts.removeModBoard(oldSettings.moderators, req.params.board));
+	} else if (moderators !== oldSettings.moderators) {
 		if (moderators.length > 0) {
+			//make sure moderators actually have existing accounts
 			const validCount = await Accounts.countUsers(moderators);
 			if (validCount !== moderators.length) {
+				//some usernames were not valid, reset to old setting
 				moderators = oldSettings.moderators;
+			} else {
+				//all accounts exist, check added/removed
+				const modsRemoved = oldSettings.moderators.filter(m => !moderators.includes(m));
+				const modsAdded = moderators.filter(m => !oldSettings.moderators.includes(m));
+				if (modsRemoved.length > 0) {
+					//remove mod from accounts
+					promises.push(Accounts.removeModBoard(modsRemoved, req.params.board));
+				}
+				if (modsAdded.length > 0) {
+					//add mod to accounts
+					promises.push(Accounts.addModBoard(modsAdded, req.params.board));
+				}
 			}
 		}
 	}
 
+//todo: make separate functions for handling array, boolean, number, text settings.
 	const newSettings = {
 		moderators,
 		'name': req.body.name && req.body.name.trim().length > 0 ? req.body.name : oldSettings.name,
@@ -91,9 +112,6 @@ module.exports = async (req, res, next) => {
 
 	//update this in locals incase is used in later parts
 	res.locals.board.settings = newSettings;
-
-	//array of promises we might need
-	const promises = [];
 
 	//pages in new vs old settings
 	const oldMaxPage = Math.ceil(oldSettings.threadLimit/10);

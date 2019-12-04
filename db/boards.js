@@ -131,7 +131,11 @@ module.exports = {
 	},
 
 	count: (showUnlisted=false) => {
-		return db.countDocuments(showUnlisted ? {} : { 'settings.unlisted': false });
+		if (showUnlisted) {
+			return db.countDocuments({ 'settings.unlisted': false });
+		} else {
+			return db.estimatedDocumentCount();
+		}
 	},
 
 	totalStats: () => {

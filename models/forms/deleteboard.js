@@ -1,6 +1,6 @@
 'use strict';
 
-const { Boards, Stats, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
+const { Accounts, Boards, Stats, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../redis.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
@@ -17,6 +17,8 @@ module.exports = async (uri, board) => {
 		await deletePosts(allPosts, uri, true);
 	}
 	await Promise.all([
+		Accounts.removeOwnedBoard(board.owner, uri), //remove board from owner account
+		board.settings.moderators.length > 0 ? Accounts.removeModBoard(board.settings.moderators) : void 0, //remove board from mods accounts
 		Modlogs.deleteBoard(uri), //modlogs for the board
 		Bans.deleteBoard(uri), //bans for the board
 		Stats.deleteBoard(uri), //stats for the board
