@@ -28,13 +28,19 @@ block content
 							td #{account._id}
 							td #{account.authLevel}
 							td
-								for b in account.ownedBoards
-									a(href=`/${b}/index.html`) /#{b}/
-									|  
+								if account.ownedBoards.length > 0
+									for b in account.ownedBoards
+										a(href=`/${b}/index.html`) /#{b}/
+										|  
+								else
+									| -
 							td
-								for b in account.modBoards
-									a(href=`/${b}/index.html`) /#{b}/
-									|  
+								if account.modBoards.length > 0
+									for b in account.modBoards
+										a(href=`/${b}/index.html`) /#{b}/
+										|  
+								else
+									| -
 			.pages.mt-5
 				include ../includes/pages.pug
 			.row

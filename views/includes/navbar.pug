@@ -3,5 +3,6 @@ nav.navbar#top
 	a.nav-item(href='/news.html') News
 	a.nav-item(href='/boards.html') Boards
 	a.nav-item(href='/account.html') Account
-	a.nav-item(href=`/${board ? board._id+'/manage/reports' : 'globalmanage/recent'}.html`) Manage
+	if board
+		a.nav-item(href=`/${board._id}/manage/reports.html`) Manage
 	a.jsonly.nav-item.right#settings &#9881;
