@@ -8,9 +8,9 @@ const { enableWebring } = require(__dirname+'/../../configs/main.js')
 
 module.exports = async (req, res, next) => {
 
+	const isGlobalStaff = res.locals.permLevel <= 1;
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
-
-	const direction = req.query.direction && req.query.direction === '1' ? 1 : -1;
+	const direction = req.query.direction && req.query.direction === 'asc' ? 1 : -1;
 	let sort
 	if (req.query.sort && req.query.sort === 'activity') {
 		sort = {
@@ -35,9 +35,9 @@ module.exports = async (req, res, next) => {
 	let localBoards, webringBoards, localPages, webringPages;
 	try {
 		[ localBoards, localPages, webringBoards, webringPages ] = await Promise.all([
-			Boards.boardSort(offset, limit, sort, filter),
-			Boards.count(),
-			enableWebring ? Webring.boardSort(offset, limit, sort, filter) : null,
+			Boards.boardSort(offset, limit, sort, filter, isGlobalStaff),
+			Boards.count(isGlobalStaff),
+			enableWebring ? Webring.boardSort(offset, limit, sort, filter, isGlobalStaff) : null,
 			enableWebring ? Webring.count() : 0,
 		]);
 		localPages = Math.ceil(localPages / limit);

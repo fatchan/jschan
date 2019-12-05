@@ -3,8 +3,8 @@
 module.exports = (req, res) => {
 	const { authenticated, user } = req.session;
 	if (authenticated === true && user != null) {
-		if (user.authLevel <= 1) {
-			return user.authLevel; //admin 0, global staff, 1
+		if (user.authLevel < 4) { //assigned levels
+			return user.authLevel;
 		}
 		if (res.locals.board != null) {
 			if (res.locals.board.owner === user.username) {

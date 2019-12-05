@@ -11,17 +11,17 @@ block content
 			input(type='hidden' value=page)
 			.row
 				.label Search
-				input(type='text' name='search' value=search)
+				input(type='text' name='search' value=search placeholder='uri or tags')
 			.row
 				.label Sort
 				select(name='sort')
-					option(value='default') Users, PPH, Posts
-					option(value='activity' selected=query.sort === 'activity') Activity
+					option(value='popularity') Popularity
+					option(value='activity' selected=query.sort === 'activity') Latest Activity
 			.row
 				.label Order
 				select(name='direction')
-					option(value='-1') Descending
-					option(value='1' selected=query.direction === '1') Ascending
+					option(value='desc') Descending
+					option(value='asc' selected=query.direction === 'asc') Ascending
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
 		h4.board-description Local Boards
@@ -29,9 +29,10 @@ block content
 			each board in localBoards
 				tr
 					td 
-						if board.settings.sfw
-							span.user-id.sfw SFW
-							|  
+						if board.settings.sfw === true
+							| 💼  
+						if board.settings.unlisted === true
+							| 👁  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}

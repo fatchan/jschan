@@ -25,7 +25,7 @@ router.get('/index.html', home);
 router.get('/news.html', news);
 
 //board list
-router.get('/boards.html', boardlist);
+router.get('/boards.html', sessionRefresh, calcPerms, boardlist);
 
 //board pages
 router.get('/:board/:page(1[0-9]{0,}|[2-9]{1,}|index).html', Boards.exists, paramConverter, board); //index

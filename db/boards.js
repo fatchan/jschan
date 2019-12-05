@@ -101,9 +101,10 @@ module.exports = {
 		);
 	},
 
-	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}) => {
-		const addedFilter = {
-			'settings.unlisted': false
+	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}, showUnlisted=false) => {
+		const addedFilter = {};
+		if (!showUnlisted) {
+			addedFilter['settings.unlisted'] = false;
 		}
 		if (filter.search) {
 			addedFilter['$or'] = [
@@ -122,6 +123,7 @@ module.exports = {
 				'settings.description': 1,
 				'settings.name': 1,
 				'settings.tags': 1,
+				'settings.unlisted': 1,
 			}
 		})
 		.sort(sort)
