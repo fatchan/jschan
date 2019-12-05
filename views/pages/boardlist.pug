@@ -29,10 +29,13 @@ block content
 			each board in localBoards
 				tr
 					td 
-						if board.settings.sfw === true
-							| 💼  
-						if board.settings.unlisted === true
-							| 👁  
+						span.left
+							if board.settings.sfw === true
+								span(title='SFW') 💼
+								|  
+							if board.settings.unlisted === true
+								span(title='Unlisted') 👁
+								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}
