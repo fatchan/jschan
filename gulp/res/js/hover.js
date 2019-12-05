@@ -25,48 +25,49 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		return top >= 38 && bottom <= height;
 	}
 
-	const setFloatPos = (float, xpos, ypos) => {
+	const setFloatPos = (quote, float, xpos, ypos) => {
+		const quotepos = quote.getBoundingClientRect();
 		const post = float.firstChild;
 		const iw = document.body.offsetWidth-10;
 		const ih = window.innerHeight;
 		const left = xpos < iw/2;
 		if (left) {
-			float.style.left = `${xpos+10}px`;
-			if (xpos+post.offsetWidth >= iw) {
+			float.style.left = `${quotepos.right+10}px`;
+			if (quotepos.right+10+post.offsetWidth >= iw) {
 				float.style.right = '5px';
 			}
 		} else {
-			float.style.right = `${iw-xpos+10}px`;
-			if (xpos-post.offsetWidth <= 0) {
+			float.style.right = `${iw-quotepos.left}px`;
+			if (quotepos.left-post.offsetWidth <= 0) {
 				float.style.left = '5px';
 			}
 		}
 		const top = ypos < ih/2;
-		if (top && ypos+post.offsetHeight < ih) {
-			float.style.top = `${ypos+10}px`;
+		if (top && quotepos.bottom+post.offsetHeight < ih) {
+			float.style.top = `${quotepos.top}px`;
 		} else if (!top && post.offsetHeight < ypos) {
-			float.style.top = `${ypos-post.offsetHeight-10}px`;
+			float.style.top = `${quotepos.bottom-post.offsetHeight}px`;
 		} else {
 			float.style.top = '42px';
 		}
 	}
 
-	const floatPost = (post, xpos, ypos) => {
+	const floatPost = (quote, post, xpos, ypos) => {
 		const clone = document.createElement('div');
 		clone.id = 'float';
 		clone.appendChild(post.cloneNode(true));
 		document.body.appendChild(clone);
-		setFloatPos(clone, xpos, ypos);
+		setFloatPos(quote, clone, xpos, ypos);
 	};
 
-	const moveHighlightPost = (e) => {
+	const moveHighlightPost = function (e) {
 		const float = document.getElementById('float');
 		if (float != null) {
-			setFloatPos(float, e.clientX, e.clientY);
+			setFloatPos(this, float, e.clientX, e.clientY);
 		}
 	}
 
-	const toggleHighlightPost = async function(e) {
+	const toggleHighlightPost = async function (e) {
 		hovering = e.type === 'mouseover';
 		const jsonPath = this.pathname.replace(/html$/, 'json');
 		if (!this.hash) {
@@ -124,7 +125,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				}
 			}
 			if (lastHover !== loading) {
-//			if (!hovering && lastHover !== loading) {
 				return; //dont show for ones not hovering
 			}
 			if (threadJson.postId == hash) {
@@ -154,7 +154,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		if (anchor && isVisible(hoveredPost)) {
 			hovering ? hoveredPost.classList.add('highlighted') : hoveredPost.classList.remove('highlighted');
 		} else if (hovering) {
-			floatPost(hoveredPost, e.clientX, e.clientY);
+			floatPost(this, hoveredPost, e.clientX, e.clientY);
 		}
 	}
 
