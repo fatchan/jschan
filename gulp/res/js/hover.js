@@ -37,8 +37,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				float.style.right = '5px';
 			}
 		} else {
-			float.style.right = `${iw-quotepos.left}px`;
-			if (quotepos.left-post.offsetWidth <= 0) {
+			float.style.right = `${iw-quotepos.left+15}px`;
+			if (quotepos.left-15 < post.offsetWidth) {
 				float.style.left = '5px';
 			}
 		}
@@ -59,13 +59,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		document.body.appendChild(clone);
 		setFloatPos(quote, clone, xpos, ypos);
 	};
-
-	const moveHighlightPost = function (e) {
-		const float = document.getElementById('float');
-		if (float != null) {
-			setFloatPos(this, float, e.clientX, e.clientY);
-		}
-	}
 
 	const toggleHighlightPost = async function (e) {
 		hovering = e.type === 'mouseover';
@@ -161,7 +154,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	for (let i = 0; i < quotes.length; i++) {
 		quotes[i].addEventListener('mouseover', toggleHighlightPost, false);
 		quotes[i].addEventListener('mouseout', toggleHighlightPost, false);
-//		quotes[i].addEventListener('mousemove', moveHighlightPost, false);
 	}
 
 	window.addEventListener('addPost', function(e) {
@@ -169,15 +161,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			return; //dont need to handle hovered posts for this
 		}
 		const post = e.detail.post;
-		//const newquotes = post.getElementsByClassName('quote');
 		const newquotes = document.getElementsByClassName('quote'); //to get backlinks from replying posts. just an easy way. could make more efficient and only do necessary ones later.
 		for (let i = 0; i < newquotes.length; i++) {
 			newquotes[i].removeEventListener('mouseover', toggleHighlightPost);
 			newquotes[i].removeEventListener('mouseout', toggleHighlightPost);
-//			newquotes[i].removeEventListener('mousemove', moveHighlightPost);
 			newquotes[i].addEventListener('mouseover', toggleHighlightPost, false);
 			newquotes[i].addEventListener('mouseout', toggleHighlightPost, false);
-//			newquotes[i].addEventListener('mousemove', moveHighlightPost, false);
 		}
 	});
 
