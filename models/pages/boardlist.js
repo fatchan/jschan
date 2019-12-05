@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
 	const isGlobalStaff = res.locals.permLevel <= 1;
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 	const direction = req.query.direction && req.query.direction === 'asc' ? 1 : -1;
-	let sort
+	let sort;
 	if (req.query.sort && req.query.sort === 'activity') {
 		sort = {
 			'lastPostTimestamp': direction

@@ -16,8 +16,12 @@ module.exports = {
 		});
 	},
 
-	count: () => {
-		return db.estimatedDocumentCount();
+	count: (filter) => {
+		if (filter) {
+			return db.countDocuments(filter);
+		} else {
+			return db.estimatedDocumentCount();
+		}
 	},
 
 	findOne: (username) => {
@@ -48,8 +52,8 @@ module.exports = {
 		});
 	},
 
-	find: (skip=0, limit=0) => {
-		return db.find({}, {
+	find: (filter, skip=0, limit=0) => {
+		return db.find(filter, {
 			'projection': {
 				'passwordHash': 0
 			}

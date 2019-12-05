@@ -10,44 +10,57 @@ block content
 	br
 	+globalmanagenav('accounts')
 	hr(size=1)
-	h4.no-m-p Accounts:
 	.form-wrapper.flexleft
-		form.form-post(action=`/forms/global/editaccounts` method='POST' enctype='application/x-www-form-urlencoded')
-			input(type='hidden' name='_csrf' value=csrf)
-			.table-container.flex-left
-				table
-					tr
-						th
-						th Username
-						th Auth Level
-						th Own Boards
-						th Mod Boards
-					for account in accounts
+		h4.no-m-p Search:
+		form.form-post.mv-5(action=`/globalmanage/accounts.html` method='GET')
+			input(type='hidden' value=page)
+			.row
+				.label Username
+				input(type='text' name='username' value=username)
+			.row
+				.label Board URI
+				input(type='text' name='uri' value=uri)
+			input(type='submit', value='Filter')
+		h4.no-m-p Accounts:
+		if accounts && accounts.length > 0
+			form.form-post(action=`/forms/global/editaccounts` method='POST' enctype='application/x-www-form-urlencoded')
+				input(type='hidden' name='_csrf' value=csrf)
+				.table-container.flex-left
+					table
 						tr
-							td: input(type='checkbox', name='checkedaccounts' value=account._id)
-							td #{account._id}
-							td #{account.authLevel}
-							td
-								if account.ownedBoards.length > 0
-									for b in account.ownedBoards
-										a(href=`/${b}/index.html`) /#{b}/
-										|  
-								else
-									| -
-							td
-								if account.modBoards.length > 0
-									for b in account.modBoards
-										a(href=`/${b}/index.html`) /#{b}/
-										|  
-								else
-									| -
-			.pages.mt-5
+							th
+							th Username
+							th Auth Level
+							th Own Boards
+							th Mod Boards
+						for account in accounts
+							tr
+								td: input(type='checkbox', name='checkedaccounts' value=account._id)
+								td #{account._id}
+								td #{account.authLevel}
+								td
+									if account.ownedBoards.length > 0
+										for b in account.ownedBoards
+											a(href=`/${b}/index.html`) /#{b}/
+											|  
+									else
+										| -
+								td
+									if account.modBoards.length > 0
+										for b in account.modBoards
+											a(href=`/${b}/index.html`) /#{b}/
+											|  
+									else
+										| -		
+			.pages.mv-5
 				include ../includes/pages.pug
+			.row
+				.label Set Auth Level
+				input(type='number' name='auth_level')
 			.row
 				.label Delete Accounts
 				label.postform-style.ph-5
 					input(type='checkbox', name='delete_account', value='true')
-			.row
-				.label Set Auth Level
-				input(type='number' name='auth_level')
 			input(type='submit', value='apply')
+		else
+			p No results.

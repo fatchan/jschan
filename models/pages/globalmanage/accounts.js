@@ -6,13 +6,30 @@ const { Accounts } = require(__dirname+'/../../../db/')
 
 module.exports = async (req, res, next) => {
 
-	const { page, offset } = pageQueryConverter(req.query, limit);
+	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
+
+    let filter = {};
+	const username = req.query.username;
+    if (username && !Array.isArray(username)) {
+        filter['_id'] = username;
+    }
+	const uri = req.query.uri;
+    if (uri && !Array.isArray(uri)) {
+        filter['$or'] = [
+			{
+				'ownedBoards': uri
+			},
+			{
+				'modBoards': uri
+			},
+		];
+    }
 
 	let accounts, maxPage;
 	try {
 		[accounts, maxPage] = await Promise.all([
-			Accounts.find(offset, limit),
-			Accounts.count(),
+			Accounts.find(filter, offset, limit),
+			Accounts.count(filter),
 		]);
 		maxPage = Math.ceil(maxPage/limit);
 	} catch (err) {
@@ -21,6 +38,9 @@ module.exports = async (req, res, next) => {
 
 	res.render('globalmanageaccounts', {
 		csrf: req.csrfToken(),
+		queryString,
+		username,
+		uri,
 		accounts,
 		page,
 		maxPage,
