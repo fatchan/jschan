@@ -11,24 +11,24 @@ block content
 			tr
 				th.alt Welcome
 			tr
-				td
+				td.text-center
 					p
-						| This is an anonymous imageboard, a type of discussion board where users share images and text about various topics. 
+						| This is an anonymous imageboard, a type of BBS where anyone can post messages and share images.
 					p
-						| The primary difference between anonymous imageboards and traditional forums is that anybody can make a post without registering 
-						| an account or providing any personal information. This lowers the barrier to entry, protects user identities and focuses on what is said, rather than who says it. 
+						| You do not need to register or provide any personal information to make a post. This lowers the barrier to entry, protects user identities and focuses on what is said, rather than who says it.
 					p 
-						| Choose a topic below to join the discussion, or 
-						a(href='/create.html') create your own board
+						| Choose a board below to join the discussion, or 
+						a(href='/create.html') create your own
 						| .
 	if boards && boards.length > 0
 		include ../includes/boardtable.pug
 			each board in boards
 				tr
 					td 
-						if board.settings.sfw
-							span.user-id.sfw SFW
-							|  
+						if board.settings.sfw === true
+							span.left
+								span(title='SFW') 💼
+								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}
