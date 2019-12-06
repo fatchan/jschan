@@ -2,7 +2,7 @@
 
 const { enableWebring } = require(__dirname+'/../../configs/main.js')
 	, { Boards, Webring } = require(__dirname+'/../../db/')
-	, { relativeString } = require(__dirname+'/../../helpers/timeutils.js')
+	, { relativeColor, relativeString } = require(__dirname+'/../../helpers/timeutils.js')
 	, pageQueryConverter = require(__dirname+'/../../helpers/pagequeryconverter.js')
 	, limit = 20;
 
@@ -51,14 +51,22 @@ module.exports = async (req, res, next) => {
 	if (localBoards) {
 		for (let i = 0; i < localBoards.length; i++) {
 			if (localBoards[i].lastPostTimestamp) {
-				localBoards[i].lastPostTimestamp = relativeString(now, new Date(localBoards[i].lastPostTimestamp));
+				const lastPostDate = new Date(localBoards[i].lastPostTimestamp);
+				localBoards[i].lastPostTimestamp = {
+					text: relativeString(now, lastPostDate),
+					color: relativeColor(now, lastPostDate)
+				}
 			}
 		}
 	}
 	if (webringBoards) {
 		for (let i = 0; i < webringBoards.length; i++) {
 			if (webringBoards[i].lastPostTimestamp) {
-				webringBoards[i].lastPostTimestamp = relativeString(now, new Date(webringBoards[i].lastPostTimestamp));
+				const lastPostDate = new Date(webringBoards[i].lastPostTimestamp);
+				webringBoards[i].lastPostTimestamp = {
+					text: relativeString(now, lastPostDate),
+					color: relativeColor(now, lastPostDate)
+				}
 			}
 		}
 	}

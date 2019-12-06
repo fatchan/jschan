@@ -13,7 +13,7 @@ pug_mixins["post"] = pug_interp = function(post, truncate, manage=false, globalm
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv" + (" class=\"anchor\""+pug_attr("id", post.postId, true, false)) + "\u003E\u003C\u002Fdiv\u003E\u003Cdiv" + (pug_attr("class", pug_classes([`post-container ${post.thread || ban === true ? '' : 'op'}`], [true]), false, false)+pug_attr("data-board", post.board, true, false)+pug_attr("data-post-id", post.postId, true, false)+pug_attr("data-user-id", post.userId, true, false)) + "\u003E";
 const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
-pug_html = pug_html + "\u003Cdiv class=\"post-info\"\u003E\u003Clabel\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"post-info\"\u003E\u003Clabel class=\"noselect\"\u003E";
 if (globalmanage) {
 pug_html = pug_html + "\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"globalcheckedposts\""+pug_attr("value", post._id, true, false)) + "\u002F\u003E ";
 ipHashSub = post.ip.hash.slice(-10);
@@ -62,7 +62,7 @@ pug_html = pug_html + "\u003Ctime" + (" class=\"post-date\""+pug_attr("datetime"
 if (post.userId) {
 pug_html = pug_html + "\u003Cspan" + (" class=\"user-id\""+pug_attr("style", pug_style(`background-color: #${post.userId}`), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.userId) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E ";
 }
-pug_html = pug_html + "\u003C\u002Flabel\u003E\u003Cspan class=\"post-links\"\u003E\u003Ca" + (" class=\"no-decoration\""+pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003ENo.\u003C\u002Fa\u003E\u003Cspan class=\"post-quoters\"\u003E\u003Ca" + (" class=\"no-decoration\""+pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003C\u002Flabel\u003E\u003Cspan class=\"post-links\"\u003E\u003Ca" + (" class=\"noselect no-decoration\""+pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003ENo.\u003C\u002Fa\u003E\u003Cspan class=\"post-quoters\"\u003E\u003Ca" + (" class=\"no-decoration\""+pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (!post.thread) {
 pug_html = pug_html + " \u003Cspan\u003E\u003Ca" + (pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E[Reply]\u003C\u002Fa\u003E\u003C\u002Fspan\u003E";
 }

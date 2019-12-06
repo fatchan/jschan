@@ -1,7 +1,7 @@
 'use strict';
 
 const YEAR = 31536000000
-	, MONTH = 2592000000
+	, MONTH = 2629800000
 	, WEEK = 604800000
 	, DAY = 86400000
 	, HOUR = 3600000
@@ -17,37 +17,60 @@ module.exports = {
 	},
 
 	//string representing how long since date A to date B
-	'relativeString': (currentTime, eventTime) => {
-		const difference = currentTime.getTime() - eventTime.getTime();
+	'relativeString': (now, relativeTo) => {
+		const difference = now.getTime() - relativeTo.getTime();
 		let amount = 0;
 		let ret = '';
-		let color;
 		if (difference < MINUTE) {
-			return { color: '#39d6bc', text:'Now' };
+			return 'Now';
 		} else if (difference < HOUR) {
 			amount = Math.round(difference / MINUTE);
-			color = '#008000';
-			ret += `${amount} minute`
+			ret += `${amount} minute`;
 		} else if (difference < DAY) {
 			amount = Math.round(difference / HOUR);
-			color = '#84c100';
-			ret += `${amount} hour`
+			ret += `${amount} hour`;
 		} else if (difference < WEEK) {
 			amount = Math.round(difference / DAY);
-			color = '#fffd00';
 			ret += `${amount} day`;
 		} else if (difference < MONTH) {
 			amount = Math.round(difference / WEEK);
-			color = '#ff6700';
 			ret += `${amount} week`;
 		} else if (difference < YEAR) {
 			amount = Math.round(difference / MONTH);
-			color = '#ff0000';
 			ret += `${amount} month`;
 		} else {
-			return { color: '#ff000047', text: 'More than a year ago' };
+			return 'More than a year ago';
 		}
-		return { color, text: `${ret}${amount > 1 ? 's' : ''} ago` };
+		return `${ret}${amount > 1 ? 's' : ''} ago`;
+	},
+
+	'relativeColor': (now, relativeTo) => {
+		const difference = now.getTime() - relativeTo.getTime();
+		let r = 0
+			, g = 0
+			, b = 0;
+		if (difference < MINUTE) {
+			g = 170;
+			b = 255;
+		} else if (difference < HOUR) {
+			r = (difference / HOUR) * 127;
+			g = 255;
+		} else if (difference < DAY) {
+			r = 127 + (difference / DAY) * 127;
+			g = 255;
+		} else if (difference < WEEK) {
+			g = 255 - (difference / WEEK) * 127;
+			r = 255;
+		} else if (difference < MONTH) {
+			g = 128 - (difference / MONTH) * 127;
+			r = 255;
+		} else if (difference < YEAR) {
+			r = 255 - (difference / YEAR) * 255
+		} //else, leave it black for >1 year
+		r = (Math.round(r*0.85).toString(16)).padStart(2, '0');
+		g = (Math.round(g*0.85).toString(16)).padStart(2, '0');
+		b = (Math.round(b).toString(16)).padStart(2, '0');
+		return `#${r}${g}${b}`;
 	}
 
 };
