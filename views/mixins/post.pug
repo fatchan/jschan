@@ -45,7 +45,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					a.no-decoration(href=`${postURL}#postform`) #{post.postId}
 					if !post.thread
 						|  
-						span: a(href=`${postURL}#postform`) [Reply]
+						span.noselect: a(href=`${postURL}#postform`) [Reply]
 				|  
 				select.jsonly.postmenu
 					option Hide

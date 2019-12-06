@@ -398,7 +398,7 @@ td, th {
 
 .post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, #livetext, #threadstats {
 	background: var(--post-color);
-	border-width: 1px;/*0 1px 1px 0;*/
+	border-width: 0 1px 1px 0;
 	border-style: solid;
 	border-color: var(--post-outline-color);
 }

@@ -28,4 +28,6 @@
 	--title-color: #d70000;
 	--greentext-color: #B8D962;
 }
-
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, #livetext, #threadstats {
+    border-width: 1px;
+}

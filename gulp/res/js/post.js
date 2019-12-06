@@ -64,7 +64,7 @@ pug_html = pug_html + "\u003Cspan" + (" class=\"user-id\""+pug_attr("style", pug
 }
 pug_html = pug_html + "\u003C\u002Flabel\u003E\u003Cspan class=\"post-links\"\u003E\u003Ca" + (" class=\"noselect no-decoration\""+pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003ENo.\u003C\u002Fa\u003E\u003Cspan class=\"post-quoters\"\u003E\u003Ca" + (" class=\"no-decoration\""+pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (!post.thread) {
-pug_html = pug_html + " \u003Cspan\u003E\u003Ca" + (pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E[Reply]\u003C\u002Fa\u003E\u003C\u002Fspan\u003E";
+pug_html = pug_html + " \u003Cspan class=\"noselect\"\u003E\u003Ca" + (pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E[Reply]\u003C\u002Fa\u003E\u003C\u002Fspan\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fspan\u003E \u003Cselect class=\"jsonly postmenu\"\u003E\u003Coption\u003EHide\u003C\u002Foption\u003E";
 if (post.userId) {

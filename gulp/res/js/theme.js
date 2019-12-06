@@ -1,4 +1,4 @@
-function changeTheme(e, type) {
+async function changeTheme(e, type) {
 	//is this the initial load, or an event from changing theme dropdown
 	if (!type) {
 		type = this.id === 'theme-changer' ? 'theme' : 'codetheme';
@@ -12,7 +12,10 @@ function changeTheme(e, type) {
 	setLocalStorage(type, theme);
 	//check for theme style tag
 	let tempLink = document.getElementById(`custom${type}`);
+	let defaultLink = document.getElementById(type);
 	if (theme === 'default') {
+		defaultLink.rel = 'stylesheet';
+		await new Promise(resolve => { setTimeout(resolve, 100) });//ew
 		if (tempLink) {
 			//remove theme style tag if we switching to default
 			tempLink.remove();
@@ -31,6 +34,7 @@ function changeTheme(e, type) {
 			//if we have the css in localstorage, set it (prevents FOUC)
 			tempLink.innerHTML = css;
 		}
+		defaultLink.rel = 'alternate stylesheet';
 		//then createa new link rel=stylesheet, and load the css 
 		const themeLink = document.createElement('link');
 		themeLink.rel = 'stylesheet';
