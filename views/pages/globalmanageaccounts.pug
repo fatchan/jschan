@@ -52,15 +52,15 @@ block content
 											|  
 									else
 										| -		
-			.pages.mv-5
-				include ../includes/pages.pug
-			.row
-				.label Set Auth Level
-				input(type='number' name='auth_level')
-			.row
-				.label Delete Accounts
-				label.postform-style.ph-5
-					input(type='checkbox', name='delete_account', value='true')
-			input(type='submit', value='apply')
+				.pages.mv-5
+					include ../includes/pages.pug
+				.row
+					.label Set Auth Level
+					input(type='number' name='auth_level')
+				.row
+					.label Delete Accounts
+					label.postform-style.ph-5
+						input(type='checkbox', name='delete_account', value='true')
+				input(type='submit', value='apply')
 		else
 			p No results.
