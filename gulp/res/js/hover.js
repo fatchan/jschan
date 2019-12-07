@@ -84,20 +84,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			hoveredPost = anchor.nextSibling;
 		} else {
 			let hovercache = localStorage.getItem(`hovercache-${jsonPath}`);
-			let threadJson;
 			let postJson;
 			if (hovercache) {
 				hovercache = JSON.parse(hovercache);
-				let highestId = 0;
-				if (hovercache.replies && hovercache.replies.length > 0) {
-					highestId = Math.max(hovercache.postId, hovercache.replies[hovercache.replies.length-1].postId);
-				}
-				if (highestId && highestId >= hash) {
-					//post already in our cache
-					threadJson = hovercache;
+				if (hovercache.postId == hash) {
+					postJson = hovercache;
+				} else if (hovercache.replies.length > 0) {
+					postJson = hovercache.replies.find(r => r.postId == hash);
 				}
 			}
-			if (!threadJson) {
+			if (!postJson) {//wasnt cached or cache outdates
 				this.style.cursor = 'wait';
 				let json;
 				try {
@@ -111,8 +107,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					this.style.cursor = '';
 				}
 				if (json) {
-					threadJson = json;
-					setLocalStorage(`hovercache-${jsonPath}`, JSON.stringify(threadJson));
+					setLocalStorage(`hovercache-${jsonPath}`, JSON.stringify(jsonson));
+					if (json.postId == hash) {
+						postJson = json;
+					} else {
+						postJson = json.replies.find(r => r.postId == hash);
+					}
 				} else {
 					return localStorage.removeItem(`hovercache-${jsonPath}`); //thread deleted
 				}
@@ -120,13 +120,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			if (lastHover !== loading) {
 				return; //dont show for ones not hovering
 			}
-			if (threadJson.postId == hash) {
-				postJson = threadJson;
-			} else {
-				postJson = threadJson.replies.find(r => r.postId == hash);
-			}
 			if (!postJson) {
-				return; //post was deleted or missing for some reason
+				return; //post was deleted or missing
 			}
 			const postHtml = post({ post: postJson });
 			const wrap = document.createElement('div');
@@ -134,13 +129,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			hoveredPost = wrap.firstChild.nextSibling;
 			//need this event so handlers like post hiding still apply to hover introduced posts
 			const newPostEvent = new CustomEvent('addPost', {
-                detail: {
-                    post: hoveredPost,
-                    postId: postJson.postId,
+	 		   detail: {
+					post: hoveredPost,
+					postId: postJson.postId,
 					hover: true
-                }
-            });
-            window.dispatchEvent(newPostEvent);
+				}
+			});
+			window.dispatchEvent(newPostEvent);
 		}
 		toggleDottedUnderlines(hoveredPost, thisId);
 		hoveredPost.classList.remove('highlighted');

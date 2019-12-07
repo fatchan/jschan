@@ -2,7 +2,7 @@ body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
 	color: var(--font-color);
-	background: linear-gradient(var(--background-top) 38px, var(--background-rest) 238px);
+	background: linear-gradient(var(--background-top) 3em, var(--background-rest) 230px);
 	flex: 1;
 	display: flex;
 	flex-direction: column;
@@ -11,7 +11,7 @@ body {
 }
 
 main {
-	margin: 38px 0 0 0;
+	margin: 3em 0 0 0;
 }
 
 .row {
@@ -59,6 +59,7 @@ pre {
 
 .navbar {
 	background: var(--navbar-color);
+	box-shadow: 0 0 3px 1px var(--darken);
 	border-bottom: 1px solid var(--post-outline-color);
 	position: fixed;
 	width: 100%;
@@ -424,7 +425,7 @@ td, th {
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
 	position: fixed;
-	top: 38px;
+	top: 3em;
 	background-color: var(--post-color);
 	z-index: 4;
 	box-sizing: border-box;
@@ -731,7 +732,7 @@ input:invalid, textarea:invalid {
 }
 
 .nav-item {
-	line-height: 38px;
+	line-height: 3em;
 	text-decoration: none;
 	float: left;
 	padding-left: 10px;
@@ -793,7 +794,7 @@ input[type="file"] {
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
 	position: fixed;
-	top: 38px;
+	top: 3em;
 	right: 5px;
 	background-color: var(--post-color);
 	z-index: 2;
@@ -974,7 +975,7 @@ table.boardtable td:nth-child(6) {
 	}
 
 	.pages {
-		width:100%;
+		/*width:100%;*/
 	}
 
 	.pad-anchor {

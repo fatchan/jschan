@@ -27,6 +27,8 @@
 	--title-color:#d70000;
 	--greentext-color:#FF0000;
 }
+#livetext,
+#threadstats,
 #float	.post-container,
 .catalog-tile,
 .live,
@@ -62,4 +64,15 @@ a .post-name:hover,
 a:hover {
 	background:var(--link-hover)!important;
 	color:black!important;
+}
+.anchor:target + .post-container .post-info, .post-container.highlighted .post-info {
+	border-bottom: none;
+}
+@media only screen and (max-width: 600px) {
+
+	.post-info{
+		background: none;
+		border-bottom: none;
+	}
+
 }
