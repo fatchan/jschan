@@ -30,9 +30,7 @@
 }
 
 .anchor:target + .post-container,
-.post-container.highlighted,
-.anchor:target + table tbody tr th,
-.anchor:target + table {
+.post-container.highlighted {
 	border: 1px solid var(--highlighted-post-outline-color) !important;
 }
 
