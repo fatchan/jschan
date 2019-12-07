@@ -54,7 +54,7 @@ $ sudo apt-get install bcrypt nginx ffmpeg imagemagick graphicsmagick
 [Install and configure](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-debian-9) Redis.
 
 Install nodejs. You can use [node version manager](https://github.com/nvm-sh/nvm) (nvm) to help with this.
-Once you have nvm, install the LTS version of nodejs (currently 10.x).
+Once you have nvm, install the LTS version of nodejs
 ```bash
 $ nvm install --lts
 ```
