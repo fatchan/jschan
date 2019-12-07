@@ -23,19 +23,19 @@ module.exports = {
 		let ret = '';
 		if (difference < MINUTE) {
 			return 'Now';
-		} else if (difference < HOUR) {
+		} else if (difference < MINUTE*59.5) {
 			amount = Math.round(difference / MINUTE);
 			ret += `${amount} minute`;
-		} else if (difference < DAY) {
+		} else if (difference < HOUR*23.5) {
 			amount = Math.round(difference / HOUR);
 			ret += `${amount} hour`;
-		} else if (difference < WEEK) {
+		} else if (difference < DAY*6.5) {
 			amount = Math.round(difference / DAY);
 			ret += `${amount} day`;
-		} else if (difference < MONTH) {
+		} else if (difference < WEEK*3.5) {
 			amount = Math.round(difference / WEEK);
 			ret += `${amount} week`;
-		} else if (difference < YEAR) {
+		} else if (difference < MONTH*11.5) {
 			amount = Math.round(difference / MONTH);
 			ret += `${amount} month`;
 		} else {

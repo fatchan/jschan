@@ -29,9 +29,24 @@
 	--greentext-color: green;
 }
 
+.anchor:target + .post-container,
+.post-container.highlighted,
+.anchor:target + table tbody tr th,
+.anchor:target + table {
+	border: 1px solid var(--highlighted-post-outline-color) !important;
+}
+
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, #livetext, #threadstats {
+	border-bottom: 1px solid var(--post-outline-color);
+	border-right: 1px solid var(--post-outline-color);
+	border-top: 1px solid var(--post-color);
+	border-left: 1px solid var(--post-color);
+}
+
 @media only screen and (max-width: 600px) {
 
 	.post-info{
+		background: none;
 		border-bottom: none;
 	}
 

@@ -28,3 +28,7 @@
 	--title-color: #d70000;
 	--greentext-color: green;
 }
+
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, #livetext, #threadstats {
+	border-width: 0 1px 1px 0;
+}
