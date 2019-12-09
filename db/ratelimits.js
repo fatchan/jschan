@@ -7,8 +7,8 @@ module.exports = {
 
 	db,
 
-	resetQuota: (ip, suffix) => {
-		return db.deleteOne({ '_id': `${ip}-${suffix}` });
+	resetQuota: (id, suffix) => {
+		return db.deleteOne({ '_id': `${id}-${suffix}` });
 	},
 
 	incrmentQuota: (ip, suffix, amount) => {

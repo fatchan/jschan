@@ -76,7 +76,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (res.locals.permLevel > 1) { //if not global staff or above
-		const ratelimit = await Ratelimits.incrmentQuota(res.locals.ip.hash, 'settings', 50); //2 changes a minute
+		const ratelimit = await Ratelimits.incrmentQuota(req.params.board, 'settings', 50); //2 changes a minute
 		if (ratelimit > 100) {
 			return res.status(429).render('message', {
 				'title': 'Ratelimited',
