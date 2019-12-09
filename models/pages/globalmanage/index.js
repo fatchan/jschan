@@ -6,4 +6,5 @@ module.exports = {
 	globalManageRecent: require(__dirname+'/recent.js'),
 	globalManageNews: require(__dirname+'/news.js'),
 	globalManageAccounts: require(__dirname+'/accounts.js'),
+	globalManageSettings: require(__dirname+'/settings.js'),
 }

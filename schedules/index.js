@@ -21,10 +21,10 @@ const timeUtils = require(__dirname+'/../helpers/timeutils.js')
 		'task': 'updateStats',
 		'options': {}
 	}, {
-        'repeat': {
-            'cron': '0 * * * *'
-        }
-    });
+		'repeat': {
+			'cron': '0 * * * *'
+		}
+	});
 
 	//delete files for expired captchas
 	const deleteCaptchas = require(__dirname+'/deletecaptchas.js');

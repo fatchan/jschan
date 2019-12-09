@@ -7,6 +7,7 @@ const path = require('path')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Socketio = require(__dirname+'/../../socketio.js')
 	, { Stats, Posts, Boards, Files, Bans } = require(__dirname+'/../../db/')
+	, cache = require(__dirname+'/../../redis.js')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
@@ -98,24 +99,38 @@ module.exports = async (req, res, next) => {
 		});
 	}
 	//filters
-	if (res.locals.permLevel >= 4 && filterMode > 0 && filters && filters.length > 0) {
-		const allContents = req.body.name+req.body.message+req.body.subject+req.body.email;
-		const containsFilter = filters.some(filter => { return allContents.includes(filter) });
-		if (containsFilter === true) {
+	if (res.locals.permLevel > 1) { //global staff bypass filters
+		const allContents = req.body.name+req.body.message+req.body.subject+req.body.email
+			, globalSettings = await cache.get('globalsettings');
+		let hitGlobalFilter = false
+			, hitLocalFilter = false
+			, ban;
+		//global filters
+		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
+			hitGlobalfilter = globalSettings.filters.some(filter => { return allContents.includes(filter) });
+		}
+		//board-specific filters
+		if (!hitGlobalFilter && res.locals.permLevel >= 4 && filterMode > 0 && filters && filters.length > 0) {
+			hitLocalFilter = filters.some(filter => { return allContents.includes(filter) });
+		}
+		if (hitGlobalFilter || hitLocalFilter) {
 			await deleteTempFiles(req).catch(e => console.error);
-			if (filterMode === 1) {
+			const useFilterMode = hitGlobalFilter ? globalSettings.filterMode : filterMode; //global override local filter
+			if (useFilterMode === 1) {
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
 					'message': 'Your post was blocked by a word filter',
 					'redirect': redirect
 				});
-			} else if (filterMode === 2) {
+			} else { //otherwise filter mode must be 2
+				const useFilterBanDuration = hitGlobalFilter ? globalSettings.filterBanDuration : filterBanDuration;
+				const banBoard = hitGlobalFilter ? null : res.locals.board._id;
 				const banDate = new Date();
-				const banExpiry = new Date(filterBanDuration + banDate.getTime());
+				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
 				const ban = {
 					'ip': res.locals.ip.hash,
 					'reason': 'post word filter auto ban',
-					'board': res.locals.board._id,
+					'board': banBoard,
 					'posts': null,
 					'issuer': 'system', //what should i call this
 					'date': banDate,
@@ -124,12 +139,13 @@ module.exports = async (req, res, next) => {
 					'seen': false
 				};
  				await Bans.insertOne(ban);
-				const bans = await Bans.find(res.locals.ip.hash, res.locals.board._id); //need to query db so it has _id field for unban checkmark
+				const bans = await Bans.find(res.locals.ip.hash, banBoard); //need to query db so it has _id field for appeal checkmark
 				return res.status(403).render('ban', {
 					bans: bans
 				});
 			}
 		}
+
 	}
 	let files = [];
 	// if we got a file
@@ -140,7 +156,7 @@ module.exports = async (req, res, next) => {
 				await deleteTempFiles(req).catch(e => console.error);
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
-					'message': `Mime type ${req.files.file[i].mimetype} for "${req.files.file[i].name}" not allowed.`,
+					'message': `Mime type "${req.files.file[i].mimetype}" for "${req.files.file[i].name}" not allowed.`,
 					'redirect': redirect
 				});
 			}

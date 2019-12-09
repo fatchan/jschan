@@ -107,7 +107,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					this.style.cursor = '';
 				}
 				if (json) {
-					setLocalStorage(`hovercache-${jsonPath}`, JSON.stringify(jsonson));
+					setLocalStorage(`hovercache-${jsonPath}`, JSON.stringify(json));
 					if (json.postId == hash) {
 						postJson = json;
 					} else {

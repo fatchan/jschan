@@ -1,0 +1,35 @@
+extends ../layout.pug
+include ../mixins/globalmanagenav.pug
+
+block head
+	script(src='/js/all.js')
+	title Manage
+
+block content
+	h1.board-title Global Management
+	br
+	+globalmanagenav('settings')
+	hr(size=1)
+	h4.no-m-p Settings:
+	.form-wrapper.flexleft
+		form.form-post(action=`/forms/global/settings`, enctype='application/x-www-form-urlencoded', method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			.row
+				.label Captcha Mode
+				select(name='captcha_mode')
+					option(value='0', selected=settings.captchaMode === 0) No Captcha
+					option(value='1', selected=settings.captchaMode === 1) Captcha for new thread
+					option(value='2', selected=settings.captchaMode === 2) Captcha for all posts
+			.row
+				.label Filters
+				textarea(name='filters' placeholder='newline separated, max 50') #{settings.filters.join('\n')}
+			.row
+				.label Filter Mode
+				select(name='filter_mode')
+					option(value='0', selected=settings.filterMode === 0) Do nothing
+					option(value='1', selected=settings.filterMode === 1) Block post
+					option(value='2', selected=settings.filterMode === 2) Ban
+			.row
+				.label Filter Auto Ban Duration
+				input(type='text' name='ban_duration' placeholder='e.g. 1w' value=settings.filterBanDuration)
+			input(type='submit', value='save settings')

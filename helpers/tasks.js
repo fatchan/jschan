@@ -91,7 +91,7 @@ module.exports = {
 		if (options.endpage === 0) {
 			//deleted only/all posts, so only 1 page will remain
 			options.endpage = 1;
-		} else if (maxPage < options.endpage) {
+		} else if (maxPage < options.endpage || !options.endpage) {
 			//else just build up to the max page if it is greater than input page number
 			options.endpage = maxPage
 		}

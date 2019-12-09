@@ -55,6 +55,7 @@ const express  = require('express')
 	, registerController = require(__dirname+'/forms/register.js')
 	, changePasswordController = require(__dirname+'/forms/changepassword.js')
 	, editAccountsController = require(__dirname+'/forms/editaccounts.js')
+	, globalSetttingsController = require(__dirname+'/forms/globalsettings.js')
 	, createBoardController = require(__dirname+'/forms/create.js')
 	, makePostController = require(__dirname+'/forms/makepost.js')
 	, newcaptcha = require(__dirname+'/../models/forms/newcaptcha.js')
@@ -80,7 +81,7 @@ router.post('/global/editbans', sessionRefresh, csrf, calcPerms, isLoggedIn, has
 router.post('/global/addnews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
 router.post('/global/deletenews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news
 router.post('/global/editaccounts', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, editAccountsController); //account editing
-//router.post('/global/deleteboard', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board. removed and going to change when i add a board page to globalmanage with unlisted boards and searching
+router.post('/global/setings', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, globalSettingsController); //global settings
 
 //accounts
 router.post('/login', loginController);
