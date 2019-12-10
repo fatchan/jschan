@@ -8,8 +8,8 @@ module.exports = {
 
 	queue: taskQueue,
 
-	push: (data) => {
-		taskQueue.add(data, { removeOnComplete: true });
+	push: (data, options={removeOnComplete: true}) => {
+		taskQueue.add(data, options);
 	}
 
 }
