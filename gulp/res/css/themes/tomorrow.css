@@ -29,6 +29,11 @@
 	--greentext-color: green;
 }
 
+table {
+	border: none;
+	border-spacing: revert;
+}
+
 @media only screen and (max-width: 600px) {
 
 	.post-info{

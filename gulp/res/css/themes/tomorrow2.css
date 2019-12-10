@@ -41,6 +41,11 @@
 	border-left: 1px solid var(--post-color);
 }
 
+table {
+	border: none;
+	border-spacing: revert;
+}
+
 @media only screen and (max-width: 600px) {
 
 	.post-info{

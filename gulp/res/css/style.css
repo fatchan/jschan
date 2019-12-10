@@ -755,10 +755,10 @@ input:invalid, textarea:invalid {
 	text-align: center;
 	flex-shrink: 0;
 	margin-top: auto;
-	line-height: 30px;
+	line-height: 3em;
 }
 
-input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea, select {
+input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea, select {
 	border: 1px solid var(--input-borders);
 	background: var(--input-background);
 	color: var(--input-color);
@@ -780,7 +780,7 @@ input[type=number] {
 }
 
 input[type="submit"] {
-	min-height: 30px;
+	min-height: 2.5em;
 	cursor: pointer;
 }
 
@@ -949,11 +949,11 @@ table.boardtable td:nth-child(6) {
 	}
 
 	.close {
-		width: 30px;
+		width: 2.25em;
 	}
 
-	input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style {
-		height: 30px;
+	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select {
+		height: 2.25em;
 		box-sizing: border-box;
 	}
 
