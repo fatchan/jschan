@@ -21,38 +21,26 @@ block content
 						a(href='/create.html') create your own
 						| .
 	if boards && boards.length > 0
+		.table-container.flex-center.mv-10.text-center
+			table
+				tr
+					th Overall Stats
+				tr
+					td
+						p
+							| There are currently #[span.bold #{totalStats.total-totalStats.unlisted}] public boards, #[span.bold #{totalStats.total}] in total. 
+							| Sitewide, #[span.bold #{totalStats.pph}] posts have been made in the last hour, #[span.bold #{totalStats.posts}] in total. 
+							| #[span.bold #{fileStats.count}] files are being served, totaling #[span.bold #{fileStats.totalSizeString}].
 		include ../includes/boardtable.pug
 			each board in boards
 				tr
 					td 
 						if board.settings.sfw === true
 							span.left
-								span(title='SFW') 💼
+								span(title='SFW') &#x1F4BC;
 								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}
 					td #{board.ips}
 					td #{board.sequence_value-1}
-		.table-container.flex-center.mv-10.text-center
-			table
-				tr.help(title='Total stats including unlisted boards')
-					th Total Posts
-					th Total PPH
-					th Total Users
-					th Active Content
-				tr
-					td #{totalStats.posts}
-					td #{totalStats.pph}
-					td #{totalStats.ips}
-					td #{fileStats.totalSizeString}
-	.table-container.flex-center.mv-10
-		table
-			tr
-				th Source Code
-			tr
-				td
-					p
-						| The source code for this site is available 
-						a(href='https://github.com/fatchan/jschan/') here
-						|  (and in the footer of each page) and is licensed under the Affero General Public License v3.

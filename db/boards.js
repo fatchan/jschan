@@ -148,12 +148,18 @@ module.exports = {
 					'posts': {
 						'$sum': '$sequence_value'
 					},
-					'ips': {
-						'$sum': '$ips'
-					},
 					'pph': {
 						'$sum': '$pph'
-					}
+					},
+					'total': {
+						'$sum': 1
+					},
+					'unlisted': {
+						'$sum': {
+							'$cond': ['$settings.unlisted', 1, 0]
+						}
+					},
+					//removed ips because sum is inaccurate
 				}
 			}
 		]).toArray().then(res => res[0]);

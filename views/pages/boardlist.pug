@@ -31,10 +31,10 @@ block content
 					td 
 						span.left
 							if board.settings.sfw === true
-								span(title='SFW') 💼
+								span(title='SFW') &#x1F4BC;
 								|  
 							if board.settings.unlisted === true
-								span(title='Unlisted') 👁
+								span(title='Unlisted') &#x1F441;&#xFE0F;
 								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
@@ -52,7 +52,7 @@ block content
 				tr
 					td
 						if !board.nsfw
-							span.user-id.sfw SFW
+							span(title='SFW') &#x1F4BC;
 							|  
 						a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
 					td #{board.subtitle || '-'}
