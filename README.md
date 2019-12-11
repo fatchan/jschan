@@ -61,12 +61,22 @@ $ nvm install --lts
 
 Configure nginx. Modify the example config included in configs/nginx.example and put it in /etc/nginx/sites-available, then symlink it to /etc/nginx/sites-enabled. Make sure the sites enabled folder is included by the main nginx.conf
 Next, get https with a certificate generated from [letsencrypt](https://wiki.debian.org/LetsEncrypt).
+If you need support for Country flags, [follow this guide](http://archive.is/2SMOb) to set them up in nginx.
+Then edit your `/etc/nginx/nginx.conf` and put these directives within the http block:
+```
+#geoip settings
+geoip_country /usr/share/GeoIP/GeoIP.dat;
+geoip_city /usr/share/GeoIP/GeoIPCity.dat;
+
+```
 
 Now clone the repo, browse to the folder and set some things up.
 ```bash
 # in repo directory
 $ cp configs/main.js.example configs/main.js && nano configs/main.js #copy example config and edit
-$ npm run-script setup #install dependencies, pm2, gulp and run gulp tasks
+$ npm install #install dependencies
+$ npm run-script setup #install global modules pm2 and gulp, then runs gulp tasks
+$ gulp reset #clear the database, create test board and account username:admin, password:changeme
 $ npm run-script start #start all the backend processes
 $ pm2 list #list running pm2 processes
 $ pm2 logs #see logs

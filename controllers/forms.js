@@ -14,28 +14,40 @@ const express  = require('express')
 	, verifyCaptcha = require(__dirname+'/../helpers/captcha/captchaverify.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
+	, dynamicResponse = require(__dirname+'/../helpers/dynamic.js')
+	, uploadLimitFunction = (req, res, next) => {
+		return dynamicResponse(req, res, 413, 'message', {
+			'title': 'Payload Too Large',
+			'message': 'Your upload was too large',
+			'redirect': req.headers.referer
+		});
+	}
 	, upload = require('express-fileupload')
 	, postFiles = upload({
+		debug: false,
 		createParentPath: true,
 		safeFileNames: /[^\w\s-]+/g,
 		preserveExtension: 4,
 		limits: {
+			totalSize: globalLimits.postFilesSize.max,
 			fileSize: globalLimits.postFilesSize.max,
 			files: globalLimits.postFiles.max
 		},
-		abortOnLimit: true,
+		limitHandler: uploadLimitFunction,
 		useTempFiles: true,
 		tempFileDir: __dirname+'/../tmp/'
 	})
 	, bannerFiles = upload({
+		debug: false,
 		createParentPath: true,
 		safeFileNames: /[^\w\s-]+/g,
 		preserveExtension: 3,
 		limits: {
+			totalSize: globalLimits.postFilesSize.max,
 			fileSize: globalLimits.bannerFilesSize.max,
 			files: globalLimits.bannerFiles.max
 		},
-		abortOnLimit: true,
+		limitHandler: uploadLimitFunction,
 		useTempFiles: true,
 		tempFileDir: __dirname+'/../tmp/'
 	})

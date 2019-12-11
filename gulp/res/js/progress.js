@@ -165,6 +165,10 @@ window.addEventListener('DOMContentLoaded', () => {
 						captcha[0].dispatchEvent(new Event('dblclick'));
 					}
 				} else {
+					if (xhr.status === 413) {
+						clearFiles();
+					}
+					xhr.abort();
 					//not 200 status, so some error/failed post, wrong captcha, etc
 					if (json) {
 						doModal(json);
