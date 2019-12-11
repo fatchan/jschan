@@ -168,7 +168,6 @@ window.addEventListener('DOMContentLoaded', () => {
 					if (xhr.status === 413) {
 						clearFiles();
 					}
-					xhr.abort();
 					//not 200 status, so some error/failed post, wrong captcha, etc
 					if (json) {
 						doModal(json);

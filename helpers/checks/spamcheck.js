@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
 	const now = Date.now();
 	const last120id = Mongo.ObjectId.createFromTime(Math.floor((now - (timeUtils.MINUTE*2))/1000));
 	const last30id = Mongo.ObjectId.createFromTime(Math.floor((now - (timeUtils.MINUTE*0.5))/1000));
-	const last15id = Mongo.ObjectId.createFromTime(Math.floor((now - 3000)/1000));
+	const last5id = Mongo.ObjectId.createFromTime(Math.floor((now - 5000)/1000));
 	const ors = [];
 	const contentOr = [];
 	if (res.locals.numFiles > 0) {
@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
 	//any posts from same IP in past 15 seconds
 	ors.push({
 		'_id': {
-			'$gt': last15id
+			'$gt': last5id
 		},
 		'ip': res.locals.ip.hash
 	})

@@ -43,7 +43,7 @@ const express  = require('express')
 		safeFileNames: /[^\w\s-]+/g,
 		preserveExtension: 3,
 		limits: {
-			totalSize: globalLimits.postFilesSize.max,
+			totalSize: globalLimits.bannerFilesSize.max,
 			fileSize: globalLimits.bannerFilesSize.max,
 			files: globalLimits.bannerFiles.max
 		},

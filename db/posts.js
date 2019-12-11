@@ -400,7 +400,6 @@ module.exports = {
 			'projection': {
 				'salt': 0,
 				'password': 0,
-				'ip': 0,
 				'reports': 0,
 			}
 		}).toArray();
