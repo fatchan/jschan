@@ -65,7 +65,7 @@ Next, get https with a certificate generated from [letsencrypt](https://wiki.deb
 Now clone the repo, browse to the folder and set some things up.
 ```bash
 # in repo directory
-$ cp configs/main.js.example configs/main.js && nano configs/main.json #copy example config and edit
+$ cp configs/main.js.example configs/main.js && nano configs/main.js #copy example config and edit
 $ npm run-script setup #install dependencies, pm2, gulp and run gulp tasks
 $ npm run-script start #start all the backend processes
 $ pm2 list #list running pm2 processes
