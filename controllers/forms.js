@@ -14,6 +14,14 @@ const express  = require('express')
 	, verifyCaptcha = require(__dirname+'/../helpers/captcha/captchaverify.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
+	, dynamicResponse = require(__dirname+'/../helpers/dynamic.js')
+	, uploadLimitFunction = (req, res, next) => {
+		return dynamicResponse(req, res, 413, 'message', {
+			'title': 'Payload Too Large',
+			'message': 'Your upload was too large',
+			'redirect': req.headers.referer
+		});
+	}
 	, upload = require('express-fileupload')
 	, postFiles = upload({
 		createParentPath: true,
@@ -24,6 +32,7 @@ const express  = require('express')
 			files: globalLimits.postFiles.max
 		},
 		abortOnLimit: true,
+		limitHandler: uploadLimitFunction,
 		useTempFiles: true,
 		tempFileDir: __dirname+'/../tmp/'
 	})
@@ -36,6 +45,7 @@ const express  = require('express')
 			files: globalLimits.bannerFiles.max
 		},
 		abortOnLimit: true,
+		limitHandler: uploadLimitFunction,
 		useTempFiles: true,
 		tempFileDir: __dirname+'/../tmp/'
 	})
