@@ -6,31 +6,17 @@ block head
 
 block content
 	h1.board-title #{meta.siteName}
-	.table-container.flex-center.mv-10
+	.table-container.flex-center.mv-10.text-center
 		table
 			tr
 				th.alt Welcome
 			tr
-				td.text-center
-					p
+				td
+					pre.no-m-p
 						| This is an anonymous imageboard, a type of BBS where anyone can post messages and share images.
-					p
-						| You do not need to register or provide any personal information to make a post. This lowers the barrier to entry, protects user identities and focuses on what is said, rather than who says it.
-					p 
-						| Choose a board below to join the discussion, or 
-						a(href='/create.html') create your own
-						| .
+						| You don't need to register or provide any personal information to make a post.
+						| Choose a board below to join the discussion, or #[a(href='/create.html') create your own].
 	if boards && boards.length > 0
-		.table-container.flex-center.mv-10.text-center
-			table
-				tr
-					th Overall Stats
-				tr
-					td
-						p
-							| There are currently #[span.bold #{totalStats.total-totalStats.unlisted}] public boards, #[span.bold #{totalStats.total}] in total. 
-							| Sitewide, #[span.bold #{totalStats.pph}] posts have been made in the last hour, #[span.bold #{totalStats.posts}] in total. 
-							| #[span.bold #{fileStats.count}] files are being served, totaling #[span.bold #{fileStats.totalSizeString}].
 		include ../includes/boardtable.pug
 			each board in boards
 				tr
@@ -44,3 +30,13 @@ block content
 					td #{board.pph}
 					td #{board.ips}
 					td #{board.sequence_value-1}
+		.table-container.flex-center.mv-10.text-center
+			table(style='max-width:450px')
+				tr
+					th Overall Stats
+				tr
+					td
+						pre.no-m-p
+							| There are currently #[span.bold #{totalStats.total-totalStats.unlisted}] public boards, #[span.bold #{totalStats.total}] in total.
+							| Sitewide, #[span.bold #{totalStats.pph}] post#{totalStats.pph === 1 ? ' has' : 's have'} been made in the last hour, #[span.bold #{totalStats.posts}] in total.
+							| #[span.bold #{fileStats.count}] file#{fileStats.count === 1 ? ' is' : 's are'} being served, totaling #[span.bold #{fileStats.totalSizeString}].
