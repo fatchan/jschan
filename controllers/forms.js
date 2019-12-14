@@ -31,7 +31,7 @@ const express  = require('express')
 		limits: {
 			totalSize: globalLimits.postFilesSize.max,
 			fileSize: globalLimits.postFilesSize.max,
-			files: globalLimits.postFiles.max
+			//files: globalLimits.postFiles.max
 		},
 		limitHandler: uploadLimitFunction,
 		useTempFiles: true,
