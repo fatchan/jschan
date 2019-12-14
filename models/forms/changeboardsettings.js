@@ -62,6 +62,7 @@ module.exports = async (req, res, next) => {
 		'description': req.body.description && req.body.description.trim().length > 0 ? req.body.description : oldSettings.description,
 		'sfw': req.body.sfw ? true : false,
 		'unlisted': req.body.unlisted ? true : false,
+		'webring': req.body.webring ? true : false,
 		'locked': req.body.locked ? true : false,
 		'early404': req.body.early404 ? true : false,
 		'ids': req.body.ids ? true : false,
@@ -123,8 +124,8 @@ module.exports = async (req, res, next) => {
 		, rebuildOther = false;
 
 	//name, description, sfw, unlisted, tags changed need webring update
-	if ((!oldSettings.unlisted && !newSettings.unlisted) //if not unlisted or is changing unlisted status (thus will be added or removed from webring list)
-		&& (oldSettings.name != newSettings.name //and changing something that needs to be shown in webring
+	if ((oldSettings.webring && newSettings.webring)
+		&& (oldSettings.name != newSettings.name
 		|| oldSettings.description != newSettings.description
 		|| oldSettings.unlisted != newSettings.unlisted
 		|| oldSettings.sfw != newSettings.sfw

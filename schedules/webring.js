@@ -58,7 +58,7 @@ module.exports = async () => {
 	//output our own webring json
 	const needsUpdate = await cache.del('webring_update'); //returns 1 if somethign was deleted, 0 if not exist
 	if (needsUpdate) {
-		const boards = await Boards.boardSort(0, 0);
+		const boards = await Boards.webringBoards();
 		const json = {
 			name: meta.siteName,
 			url: meta.url,

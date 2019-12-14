@@ -122,6 +122,7 @@ module.exports = {
 		sfw: false,
 		locked: false,
 		unlisted: false,
+		webring: true,
 		captchaMode: 0,
 		tphTrigger: 0,
 		pphTrigger: 0,
