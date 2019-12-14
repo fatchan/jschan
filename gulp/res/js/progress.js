@@ -23,9 +23,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	const fileInput = document.getElementById('file');
 	const fileLabel = fileInput.previousSibling;
+	const fileLabelText = fileLabel.childNodes[0];
 	let files = [];
 
-	const removeFile = (name) => {
+	const removeFile = (name) => { //unused atm
 		for(let i = 1; i < fileLabel.childNodes.length; i++) {
 			const childNode = fileLabel.childNodes[i];
 			if (childNode.nodeValue === name) {
@@ -39,9 +40,9 @@ window.addEventListener('DOMContentLoaded', () => {
 	//show number of files on new label
 	const updateFilesText = () => {
 		if (files.length === 0) {
-			fileLabel.innerText = 'Upload/Drop/Paste file(s)';
+			fileLabelText.nodeValue = 'Upload/Drop/Paste file(s)';
 		} else {
-			fileLabel.innerText = `${files.length} files selected`;
+			fileLabelText.nodeValue = `${files.length} files selected`;
 			//window.URL.createObjectURL(file);
 			//todo make x marks to remove each one with "removeFile"
 		}
@@ -88,7 +89,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	//add files to list instead of replacing when regular upload
 	fileInput.onchange = () => {
-		fileLabel.innerText = `${fileInput.files.length} files selected`;
+		fileLabelText.nodeValue = `${fileInput.files.length} files selected`;
 		const newFiles = fileInput.files;
 		for (let i = 0; i < newFiles.length; i++) {
 			files.push(newFiles[i]);

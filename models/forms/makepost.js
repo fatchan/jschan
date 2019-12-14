@@ -90,14 +90,6 @@ module.exports = async (req, res, next) => {
 			});
 		}
 	}
-	if (res.locals.numFiles > maxFiles) {
-		await deleteTempFiles(req).catch(e => console.error);
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'message': `Too many files. Max files per post is ${maxFiles}.`,
-			'redirect': redirect
-		});
-	}
 	//filters
 	if (res.locals.permLevel > 1) { //global staff bypass filters
 		const allContents = req.body.name+req.body.message+req.body.subject+req.body.email
