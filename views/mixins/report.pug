@@ -1,7 +1,7 @@
 mixin report(r)
 	.reports.post-container
 		input.post-check(type='checkbox', name='checkedreports' value=r.id)
-		|	
-		span Date: #{r.date.toLocaleString()}
-		|  
-		span Reason: #{r.reason}
+		|  Date: 
+		- const reportDate = new Date(r.date);
+		time.reltime(datetime=reportDate.toISOString()) #{reportDate.toLocaleString(undefined, { hour12:false })}
+		|  Reason: #{r.reason}

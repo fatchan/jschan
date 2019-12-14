@@ -5,7 +5,7 @@ let relativeTime = localStorage.getItem('relative') == 'true';
 let hour24 = localStorage.getItem('24hour') == 'true';
 
 let dates = [];
-const dateElems = document.getElementsByClassName('post-date');
+const dateElems = document.getElementsByClassName('reltime');
 for (let i = 0; i < dateElems.length; i++) {
 	dates.push(dateElems[i]); //convert to array
 }
@@ -96,7 +96,7 @@ window.addEventListener('settingsReady', function(event) {
 
 window.addEventListener('addPost', function(e) {
 
-	const date = e.detail.post.querySelector('.post-date');
+	const date = e.detail.post.querySelector('.reltime');
 	if (!e.detail.hover) {
 		dates.push(date);
 	}
