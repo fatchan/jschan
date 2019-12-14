@@ -46,30 +46,31 @@ module.exports = {
 
 	'relativeColor': (now, relativeTo) => {
 		const difference = now.getTime() - relativeTo.getTime();
+		const minutesAgo = Math.floor(difference / MINUTE);
 		let r = 0
 			, g = 0
 			, b = 0;
 		if (difference < MINUTE) {
-			g = 170;
-			b = 255;
+			g = 0.7;
+			b = 1;
 		} else if (difference < HOUR) {
-			r = (difference / HOUR) * 127;
-			g = 255;
+			r = (minutesAgo / 60) * 0.5;
+			g = 1;
 		} else if (difference < DAY) {
-			r = 127 + (difference / DAY) * 127;
-			g = 255;
+			r = 0.5 + (minutesAgo / 1440) * 0.5;
+			g = 1;
 		} else if (difference < WEEK) {
-			g = 255 - (difference / WEEK) * 127;
-			r = 255;
+			g = 1 - (minutesAgo / 10080) * 0.5;
+			r = 1;
 		} else if (difference < MONTH) {
-			g = 128 - (difference / MONTH) * 127;
-			r = 255;
+			g = 0.5 - (minutesAgo / 43830) * 0.5;
+			r = 1;
 		} else if (difference < YEAR) {
-			r = 255 - (difference / YEAR) * 255
+			r = 1 - (minutesAgo / 525960);
 		} //else, leave it black for >1 year
-		r = (Math.round(r*0.85).toString(16)).padStart(2, '0');
-		g = (Math.round(g*0.85).toString(16)).padStart(2, '0');
-		b = (Math.round(b).toString(16)).padStart(2, '0');
+		r = (Math.round(r*255*0.85).toString(16)).padStart(2, '0');
+		g = (Math.round(g*255*0.85).toString(16)).padStart(2, '0');
+		b = (Math.round(b*255).toString(16)).padStart(2, '0');
 		return `#${r}${g}${b}`;
 	}
 
