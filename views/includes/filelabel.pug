@@ -1,4 +1,3 @@
 label.jsonly.postform-style.filelabel(for='file') 
 	| Select/Drop/Paste file(s)
-	if board != null
-		small (Max #{board.settings.maxFiles})
+	small (Max #{thread || threads ? board.settings.maxFiles : globalLimits.bannerFiles.max})
