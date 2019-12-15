@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path')
-	, { remove, pathExists, ensureDir } = require('fs-extra')
+	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
@@ -42,9 +42,6 @@ module.exports = async (req, res, next) => {
 
 		//add to list after checking it doesnt already exist
 		filenames.push(filename);
-
-		//make directory if doesnt exist
-		await ensureDir(`${uploadDirectory}/banner/${req.params.board}/`);
 
 		//get metadata from tempfile
 		const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);

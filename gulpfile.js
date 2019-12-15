@@ -1,7 +1,8 @@
 'use strict';
 
 const gulp = require('gulp')
-	, fs = require('fs')
+	, fs = require('fs-extra')
+	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
 	, configs = require(__dirname+'/configs/main.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, less = require('gulp-less')
@@ -31,6 +32,7 @@ const gulp = require('gulp')
 	};
 
 async function wipe() {
+
 	const Mongo = require(__dirname+'/db/db.js');
 	await Mongo.connect();
 	const db = Mongo.client.db('jschan');
@@ -104,7 +106,6 @@ async function wipe() {
 	await Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
-	//default admin acc
 	await Accounts.insertOne('admin', 'changeme', 0);
 
 	await Mongo.client.close();
@@ -116,7 +117,8 @@ async function wipe() {
 		del([ 'static/banner/*' ]),
 		del([ 'static/captcha/*' ]),
 		del([ 'static/img/*' ]),
-		del([ 'static/css/*' ])
+		del([ 'static/css/*' ]),
+		fs.ensureDir(`${uploadDirectory}/captcha`),
 	]);
 
 }
@@ -195,8 +197,8 @@ function scripts() {
 }
 
 const build = gulp.parallel(css, scripts, images, gulp.series(deletehtml, custompages));
-const reset = gulp.series(wipe, build)
-const html = gulp.series(deletehtml, custompages)
+const reset = gulp.parallel(wipe, build);
+const html = gulp.series(deletehtml, custompages);
 
 module.exports = {
 	html,

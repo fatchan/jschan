@@ -1,6 +1,8 @@
 'use strict';
 
 const { Boards, Accounts } = require(__dirname+'/../../db/')
+	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, { ensureDir } = require('fs-extra')
 	, { boardDefaults } = require(__dirname+'/../../configs/main.js');
 
 module.exports = async (req, res, next) => {
@@ -40,7 +42,10 @@ module.exports = async (req, res, next) => {
 
 	await Promise.all([
 		Boards.insertOne(newBoard),
-		Accounts.addOwnedBoard(owner, uri) 
+		Accounts.addOwnedBoard(owner, uri),
+		ensureDir(`${uploadDirectory}/html/${uri}`),
+		ensureDir(`${uploadDirectory}/json/${uri}`),
+		ensureDir(`${uploadDirectory}/banners/${uri}`)
 	]);
 
 	return res.redirect(`/${uri}/index.html`);
