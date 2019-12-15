@@ -1,3 +1,4 @@
 label.jsonly.postform-style.filelabel(for='file') 
-	| Select/Drop/Paste file(s)
-	small (Max #{thread || threads ? board.settings.maxFiles : globalLimits.bannerFiles.max})
+	- const maxFiles = thread || threads ? board.settings.maxFiles : globalLimits.bannerFiles.max;
+	| Select/Drop/Paste file#{maxFiles > 1 ? 's' : ''}
+	small (Max #{maxFiles})
