@@ -41,12 +41,11 @@ Please note:
 - Certbot/letsencrypt (for https cert)
 - Graphicsmagick+Imagemagick (thumbnailing images, generating captchas)
 - Ffmpeg (thumbnailing videos)
-- Bcrypt (account password hashes)
 
 Install some dependencies. You may need to add some sources.
 ```bash
 $ sudo apt-get update
-$ sudo apt-get install bcrypt nginx ffmpeg imagemagick graphicsmagick
+$ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick
 ```
 
 [Install](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian) and [configure auth for mongodb](https://medium.com/mongoaudit/how-to-enable-authentication-on-mongodb-b9e8a924efac). This is to avoid out of date verisons in debian repos.
