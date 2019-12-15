@@ -66,23 +66,6 @@ async function wipe() {
 		Modlogs.deleteAll()
 	]);
 
-	//add test boards
-	Boards.insertOne({
-		'_id': 'test',
-		'owner': '',
-		'banners': [],
-		'pph': 0,
-		'ips': 0,
-		'lastPostTimestamp': null,
-		'sequence_value': 1,
-		'settings': {
-			'name': 'test',
-			'description': 'testing board',
-			'tags': [],
-			'moderators': [],
-			...configs.boardDefaults
-		}
-	});
 	//add indexes - should profiled and changed at some point if necessary
 	await Stats.db.createIndex({board:1, hour:1})
 	await Boards.db.createIndex({ips: 1, pph:1, sequence_value:1})
