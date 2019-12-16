@@ -44,15 +44,15 @@ module.exports = async (req, res) => {
 		'_id': {
 			'$gt': last120id
 		},
-		'ip': res.locals.ip.hash,
+		'ip.hash': res.locals.ip.hash,
 		'$or': contentOr
 	});
-	//any posts from same IP in past 15 seconds
+	//any posts from same IP in past 5 seconds
 	ors.push({
 		'_id': {
 			'$gt': last5id
 		},
-		'ip': res.locals.ip.hash
+		'ip.hash': res.locals.ip.hash
 	})
 
 	let flood = await Posts.db.find({
