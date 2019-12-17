@@ -4,7 +4,6 @@ const gulp = require('gulp')
 	, fs = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
 	, configs = require(__dirname+'/configs/main.js')
-	, cache = require(__dirname+'/redis.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
@@ -34,7 +33,8 @@ const gulp = require('gulp')
 
 async function wipe() {
 
-	const Mongo = require(__dirname+'/db/db.js');
+	const Mongo = require(__dirname+'/db/db.js')
+		, cache = require(__dirname+'/redis.js')
 	await Mongo.connect();
 	const db = Mongo.client.db('jschan');
 
@@ -95,6 +95,7 @@ async function wipe() {
 	await Accounts.insertOne('admin', 'changeme', 0);
 
 	await Mongo.client.close();
+	cache.redisClient.quit();
 
 	//delete all the static files
 	return Promise.all([
