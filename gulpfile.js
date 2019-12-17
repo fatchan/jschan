@@ -4,6 +4,7 @@ const gulp = require('gulp')
 	, fs = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
 	, configs = require(__dirname+'/configs/main.js')
+	, cache = require(__dirname+'/redis.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
@@ -54,6 +55,8 @@ async function wipe() {
 
 	//wipe db shit
 	await Promise.all([
+		cache.deletePattern('board_*'),
+		cache.deletePattern('banners_*'),
 		Captchas.deleteAll(),
 		Ratelimits.deleteAll(),
 		Accounts.deleteAll(),

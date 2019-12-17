@@ -15,6 +15,7 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, movePosts = require(__dirname+'/moveposts.js')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, getAffectedBoards = require(__dirname+'/../../helpers/affectedboards.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/main.js')
 	, { createHash, timingSafeEqual } = require('crypto');
@@ -49,32 +50,9 @@ module.exports = async (req, res, next) => {
 		res.locals.posts = passwordPosts
 	}
 
-	//get a map of boards to threads affected
-	const boardThreadMap = {};
-	for (let i = 0; i < res.locals.posts.length; i++) {
-		const post = res.locals.posts[i];
-		if (!boardThreadMap[post.board]) {
-			boardThreadMap[post.board] = {
-				'directThreads': new Set(),
-				'threads': new Set()
-			};
-		}
-		if (!post.thread) {
-			//a thread was directly selected on this board, not just posts. so we handle deletes differently
-			boardThreadMap[post.board].directThreads.add(post.postId);
-		}
-		const threadId = post.thread || post.postId;
-		boardThreadMap[post.board].threads.add(threadId);
-	}
-
-	const beforePages = {};
-	const threadBoards = Object.keys(boardThreadMap);
-	//get number of pages for each before actions for deleting old pages and changing page nav numbers incase number of pages changes
-	if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
-		await Promise.all(threadBoards.map(async board => {
-			beforePages[board] = Math.ceil((await Posts.getPages(board)) / 10);
-		}));
-	}
+	//affected boards, list and page numbers
+	const deleting = req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global;
+	let { boardThreadMap, beforePages, threadBoards } = await getAffectedBoards(res.locals.posts, deleting);
 
 	const messages = [];
 	const modlogActions = []
@@ -94,15 +72,21 @@ module.exports = async (req, res, next) => {
 			modlogActions.push('Global ban reporter');
 		}
 		if (action) {
+
 			combinedQuery[action] = { ...combinedQuery[action], ...query}
 		}
 		messages.push(message);
 	}
-	if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
+	if (deleting) {
+		const postsBefore = res.locals.posts.length;
 		if (req.body.delete_ip_board || req.body.delete_ip_global) {
 			const deletePostIps = res.locals.posts.map(x => x.ip.hash);
+			const deletePostMongoIds = res.locals.posts.map(x => x._id)
 			let query = {
-				'ip': {
+				'_id': {
+					'$nin': deletePostMongoIds
+				},
+				'ip.hash': {
 					'$in': deletePostIps
 				}
 			};
@@ -111,6 +95,13 @@ module.exports = async (req, res, next) => {
 			}
 			const deleteIpPosts = await Posts.db.find(query).toArray();
 			res.locals.posts = res.locals.posts.concat(deleteIpPosts);
+		}
+		if (res.locals.posts.length > postsBefore) {
+			//recalc for extra fetched posts
+			const updatedAffected = await getAffectedBoards(res.locals.posts, deleting);
+			boardThreadMap = updatedAffected.boardThreadMap;
+			beforePages = updatedAffected.beforePages;
+			threadBoards = updatedAffected.threadBoards;
 		}
 		if (req.body.delete_file) {
 			const { message } = await deletePostsFiles(res.locals.posts, false); //delete files, not just unlink
@@ -434,7 +425,6 @@ module.exports = async (req, res, next) => {
 				}
 			}
 		}
-
 		for (let i = 0; i < threadBoards.length; i++) {
 			const boardName = threadBoards[i];
 			const bounds = threadBounds[boardName];
@@ -482,7 +472,7 @@ module.exports = async (req, res, next) => {
 				//number of pages did not change, only possibly building existing pages
 				const threadPageOldest = await Posts.getThreadPage(boardName, bounds.oldest);
 				const threadPageNewest = bounds.oldest.postId === bounds.newest.postId ? threadPageOldest : await Posts.getThreadPage(boardName, bounds.newest);
-				if (req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global) {
+				if (deleting) {
 					if (boardThreadMap[boardName].directThreads.length === 0) {
 						//only deleting posts from threads, so thread order wont change, thus we dont delete all pages after
 						buildQueue.push({
