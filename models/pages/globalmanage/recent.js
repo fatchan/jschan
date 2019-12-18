@@ -2,19 +2,13 @@
 
 const { Posts } = require(__dirname+'/../../../db/')
 	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
-	, escapeRegExp = require(__dirname+'/../../../helpers/escaperegexp.js')
+	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
 	, limit = 20;
 
 module.exports = async (req, res, next) => {
 
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
-	let ipMatch = null;
-	if (req.query.ip) {
-		const decoded = decodeURIComponent(req.query.ip);
-		if (decoded.length === 10) {
-			ipMatch = new RegExp(`${escapeRegExp(decoded)}$`);
-		}
-	}
+	let ipMatch = decodeQueryIP(req.query);
 
 	let posts;
 	try {

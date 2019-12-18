@@ -22,11 +22,11 @@ module.exports = {
 		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
 	},
 
-	getGlobalRecent: (offset=0, limit=20, ipHash=null) => {
+	getGlobalRecent: (offset=0, limit=20, ip) => {
 		//global recent posts for recent section of global manage page
 		const query = {};
-		if (ipHash !== null) {
-			query['ip.hash'] = ipHash;
+		if (ip !== null) {
+			query['ip.hash'] = ip;
 		}
 		return db.find(query).sort({
 			'_id': -1
@@ -391,18 +391,25 @@ module.exports = {
 		}).toArray();
 	},
 
-	getGlobalReports: () => {
-		return db.find({
-			'globalreports.0': {
-				'$exists': true
-			}
-		}, {
+	getGlobalReports: (offset=0, limit, ip) => {
+		const query = {
+            'globalreports.0': {
+                '$exists': true
+            }
+        }
+		if (ip !== null) {
+			query['$or'] = [
+				{ 'ip.hash': ip },
+				{ 'globalreports.ip': ip }
+			];
+		}
+		return db.find(query, {
 			'projection': {
 				'salt': 0,
 				'password': 0,
 				'reports': 0,
 			}
-		}).toArray();
+		}).skip(offset).limit(limit).toArray();
 	},
 
 	deleteOne: (board, options) => {

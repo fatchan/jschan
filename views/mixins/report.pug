@@ -4,7 +4,7 @@ mixin report(r, globalmanage=false)
 		|  
 		if globalmanage
 			- ipHashSub = r.ip.slice(-10);
-			a.bold(href=`?rip=${encodeURIComponent(ipHashSub)}`) #{ipHashSub}
+			a.bold(href=`?ip=${encodeURIComponent(ipHashSub)}`) #{ipHashSub}
 			|  
 		- const reportDate = new Date(r.date);
 		time.reltime(datetime=reportDate.toISOString()) #{reportDate.toLocaleString(undefined, { hour12:false })}

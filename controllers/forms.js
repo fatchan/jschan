@@ -24,7 +24,7 @@ const express  = require('express')
 	}
 	, upload = require('express-fileupload')
 	, postFiles = upload({
-		debug: false,
+		debug: true,
 		createParentPath: true,
 		safeFileNames: /[^\w\s-]+/g,
 		preserveExtension: 4,
@@ -38,7 +38,7 @@ const express  = require('express')
 		tempFileDir: __dirname+'/../tmp/'
 	})
 	, bannerFiles = upload({
-		debug: false,
+		debug: true,
 		createParentPath: true,
 		safeFileNames: /[^\w\s-]+/g,
 		preserveExtension: 3,
