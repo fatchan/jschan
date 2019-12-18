@@ -914,6 +914,10 @@ table.boardtable td:nth-child(6) {
 	visibility: visible;
 }
 
+.invisible {
+	visibility: hidden!important;
+}
+
 table, .boardtable {
 	max-width: 100%;
 }

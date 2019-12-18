@@ -10,7 +10,7 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv class=\"reports post-container\"\u003E\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"checkedreports\""+pug_attr("value", r.id, true, false)) + "\u002F\u003E ";
 if (globalmanage) {
 ipHashSub = r.ip.slice(-10);
-pug_html = pug_html + "\u003Ca" + (" class=\"bold\""+pug_attr("href", `?rip=${encodeURIComponent(ipHashSub)}`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = ipHashSub) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
+pug_html = pug_html + "\u003Ca" + (" class=\"bold\""+pug_attr("href", `?ip=${encodeURIComponent(ipHashSub)}`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = ipHashSub) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
 }
 const reportDate = new Date(r.date);
 pug_html = pug_html + "\u003Ctime" + (" class=\"reltime\""+pug_attr("datetime", reportDate.toISOString(), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = reportDate.toLocaleString(undefined, { hour12:false })) ? "" : pug_interp)) + "\u003C\u002Ftime\u003E | Reason: " + (pug_escape(null == (pug_interp = r.reason) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";

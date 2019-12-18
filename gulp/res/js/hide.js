@@ -98,6 +98,31 @@ for (let elem of hidden) {
 	setHidden(posts, true);
 }
 
+!localStorage.getItem('hideimages') ? setLocalStorage('hideimages', false) : void 0;
+let hideImagesEnabled = localStorage.getItem('hideimages') == 'true';
+const hideImages = () => {
+	const postThumbs = document.getElementsByClassName('file-thumb');
+	for (thumb of postThumbs) {
+		thumb.classList.toggle('invisible');
+	}
+}
+if (hideImagesEnabled) {
+	hideImages();
+}
+
+window.addEventListener('settingsReady', function(event) {
+
+//todo: option here and in modal for clearing hide list and unhide all hidden posts
+    const hideImagesSetting = document.getElementById('hideimages-setting');
+	hideImagesSetting.checked = hideImagesEnabled;
+	const toggleHideImages = () => {
+		hideImagesEnabled = !hideImagesEnabled
+		setLocalStorage('hideimages', hideImagesEnabled);
+		hideImages();
+	}
+    hideImagesSetting.addEventListener('change', toggleHideImages, false);
+});
+
 window.addEventListener('addPost', function(e) {
 	const post = e.detail.post;
 	const { board, postId, userId } = post.dataset;
@@ -105,16 +130,15 @@ window.addEventListener('addPost', function(e) {
 	if (hidden.has(hiddenKey) || hidden.has(userId)) {
 		post.classList.add('hidden');
 	}
+	if (hideImagesEnabled) {
+		for (thumb of post.querySelectorAll('.file-thumb')) {
+			thumb.classList.add('invisible');
+		}
+	}
 	const menu = post.querySelector('.postmenu');
 	for (let i = 0; i < menu.children.length; i++) {
 		menu.children[i].originalText = menu.children[i].innerText;
 	}
 	menu.value = '';
 	menu.addEventListener('change', changeOption, false);
-});
-
-window.addEventListener('settingsReady', function(event) {
-
-	//add option here and in modal compiledclient for clearing hide list and unhide all hidden posts
-
 });
