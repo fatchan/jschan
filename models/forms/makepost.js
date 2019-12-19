@@ -168,18 +168,32 @@ module.exports = async (req, res, next) => {
 					size: file.size,
 					extension,
 			};
-			const type = processedFile.mimetype.split('/')[0];
-			if (type !== 'audio') {
+
+			//type and subtype
+			const [type, subtype] = processedFile.mimetype.split('/');
+			if (type !== 'audio') { //audio doesnt need thumb
 				processedFile.thumbextension = thumbExtension;
 			}
+			let imageData;
+			if (type === 'image') {
+				///detect images with opacity for PNG thumbnails, settumh thumbextension before increment
+				imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
+				if (imageData['Channel Statistics'] && imageData['Channel Statistics']['Opacity']) { //does this change depending on GM version or anything?
+					const opacityMaximum = imageData['Channel Statistics']['Opacity']['Maximum'];
+					if (opacityMaximum !== '0.00 (0.0000)') {
+						processedFile.thumbextension = '.png';
+					}
+				}
+			}
 
+			//increment file count
 			await Files.increment(processedFile);
+
 			//check if already exists
 			const existsFull = await pathExists(`${uploadDirectory}/img/${processedFile.filename}`);
 			switch (type) {
 				case 'image': {
 					const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
-					const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
 					processedFile.geometry = imageData.size // object with width and height pixels
 					processedFile.sizeString = formatSize(processedFile.size) // 123 Ki string
 					processedFile.geometryString = imageData.Geometry // 123 x 123 string
@@ -232,19 +246,22 @@ module.exports = async (req, res, next) => {
 						await moveUpload(file, processedFile.filename, 'img');
 					}
 					break;
-				}				
+				}
 				default:
 					throw new Error(`invalid file mime type: ${processedFile}`); //throw so goes to error handler before next'ing
 			}
 
 			if (processedFile.hasThumb === true) {
+				//handle gifs that are always thumbed to prevent animation but may be smaller than thumbsize to avoid stretched thumb
+				const minThumbWidth = Math.min(processedFile.geometry.width, thumbSize);
+				const minThumbHeight = Math.min(processedFile.geometry.height, thumbSize);
 				const ratio = processedFile.geometry.width/processedFile.geometry.height;
 				if (ratio >= 1) {
-					processedFile.geometry.thumbwidth = thumbSize;
-					processedFile.geometry.thumbheight = Math.ceil(thumbSize/ratio);
+					processedFile.geometry.thumbwidth = minThumbWidth;
+					processedFile.geometry.thumbheight = Math.ceil(minThumbHeight/ratio);
 				} else {
-					processedFile.geometry.thumbwidth = Math.ceil(thumbSize*ratio);
-					processedFile.geometry.thumbheight = thumbSize;
+					processedFile.geometry.thumbwidth = Math.ceil(minThumbWidth*ratio);
+					processedFile.geometry.thumbheight = minThumbHeight;
 				}
 			}
 

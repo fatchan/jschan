@@ -6,7 +6,7 @@ module.exports = (file) => {
 
 	return new Promise((resolve, reject) => {
 		gm(`${uploadDirectory}/img/${file.filename}[0]`) //0 for first gif frame
-		.resize(thumbSize, thumbSize)
+		.resize(Math.min(thumbSize, file.geometry.width), Math.min(thumbSize, file.geometry.height))
 		.write(`${uploadDirectory}/img/thumb-${file.hash}${file.thumbextension}`, function (err) {
 			if (err) {
 				return reject(err);
