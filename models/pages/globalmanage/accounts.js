@@ -36,7 +36,9 @@ module.exports = async (req, res, next) => {
 		return next(err)
 	}
 
-	res.render('globalmanageaccounts', {
+	res
+	.set('Cache-Control', 'private, max-age=5')
+	.render('globalmanageaccounts', {
 		csrf: req.csrfToken(),
 		queryString,
 		username,

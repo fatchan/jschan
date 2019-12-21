@@ -71,7 +71,9 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	return res.render('boardlist', {
+	res
+	.set('Cache-Control', 'private, max-age=60')
+	.render('boardlist', {
 		localBoards,
 		webringBoards,
 		page,

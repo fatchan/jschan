@@ -17,7 +17,9 @@ module.exports = async (req, res, next) => {
 		return next(err)
 	}
 
-	res.render('globalmanagerecent', {
+	res
+	.set('Cache-Control', 'private, max-age=5')
+	.render('globalmanagerecent', {
 		csrf: req.csrfToken(),
 		posts,
 		page,

@@ -15,7 +15,9 @@ module.exports = async (req, res, next) => {
 		cache.set('globalsettings', settings);
 	}
 
-	res.render('globalmanagesettings', {
+	res
+	.set('Cache-Control', 'private, max-age=5')
+	.render('globalmanagesettings', {
 		csrf: req.csrfToken(),
 		settings,
 	});

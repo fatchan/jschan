@@ -11,7 +11,9 @@ module.exports = async (req, res, next) => {
 		return next(err)
 	}
 
-	res.render('managereports', {
+	res
+	.set('Cache-Control', 'private, max-age=5')
+	.render('managereports', {
 		csrf: req.csrfToken(),
 		reports,
 	});

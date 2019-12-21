@@ -2,8 +2,10 @@
 
 module.exports = async (req, res, next) => {
 
-	return res.render('account', {
-		user: req.session.user		
+	res
+	.set('Cache-Control', 'private, max-age=60')
+	.render('account', {
+		user: req.session.user,
 	});
 
 }
