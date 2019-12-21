@@ -28,8 +28,9 @@ block content
 		.form-wrapper.flexleft.mt-10
 			form.form-post(action=`/forms/board/${board._id}/deletebanners`, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
-				each banner in board.banners
-					label.banner-check
-						input(type='checkbox' name='checkedbanners' value=banner)
-						img.board-banner(src=`/banner/${board._id}/${banner}` width='300' height='100')
+				.catalog
+					each banner in board.banners
+						label.banner-check
+							input(type='checkbox' name='checkedbanners' value=banner)
+							img.board-banner(src=`/banner/${board._id}/${banner}` width='300' height='100')
 				input(type='submit', value='delete')

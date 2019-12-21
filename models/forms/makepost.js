@@ -462,14 +462,17 @@ module.exports = async (req, res, next) => {
 		'board': res.locals.board
 	};
 	if (req.headers['x-using-xhr'] != null && data.thread) {
-		//if this is a reply, and sent with xhr just respond with postId so we can highlight and live insert
-		res.json({ 'postId': postId });
+		//js and live enabled, defer build and send post live with websocket
+		res.json({ 
+			'postId': postId,
+			'redirect': successRedirect
+		});
 		buildQueue.push({
 			'task': 'buildThread',
 			'options': buildOptions
 		});
 	} else {
-		//build just the thread they need to see immediately for regular form posts/noscript users
+		//noscript or live disabled, regular redirect and build immediately
 		await buildThread(buildOptions);
 		res.redirect(successRedirect);
 	}

@@ -22,7 +22,8 @@ module.exports = async (req, res, next) => {
 	if (!input || input.length !== 6) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Incorrect captcha'
+			'message': 'Incorrect captcha',
+			'redirect': req.headers.referer,
 		});
 	}
 
@@ -31,7 +32,8 @@ module.exports = async (req, res, next) => {
 	if (!captchaId || captchaId.length !== 24) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Captcha expired'
+			'message': 'Captcha expired',
+			'redirect': req.headers.referer,
 		});
 	}
 
@@ -48,7 +50,8 @@ module.exports = async (req, res, next) => {
 	if (!captcha || !captcha.value || captcha.value.text !== input) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Incorrect captcha'
+			'message': 'Incorrect captcha',
+			'redirect': req.headers.referer,
 		});
 	}
 

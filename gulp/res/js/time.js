@@ -1,4 +1,4 @@
-!localStorage.getItem('relative') ? setLocalStorage('relative', false) : void 0;
+setDefaultLocalStorage('relative', false);
 let relativeTime = localStorage.getItem('relative') == 'true';
 
 !localStorage.getItem('24hour') ? setLocalStorage('24hour', false) : void 0;
@@ -18,30 +18,30 @@ const YEAR = 31536000000
 	, MINUTE = 60000;
 
 const relativeTimeString = (date) => {
-    const difference = Date.now() - new Date(date).getTime();
-    let amount = 0;
-    let ret = '';
-    if (difference < MINUTE) {
-        return 'Now';
-    } else if (difference < MINUTE*59.5) {
-        amount = Math.round(difference / MINUTE);
-        ret = `${amount} minute`;
-    } else if (difference < HOUR*23.5) {
-        amount = Math.round(difference / HOUR);
-        ret = `${amount} hour`;
-    } else if (difference < DAY*6.5) {
-        amount = Math.round(difference / DAY);
-        ret = `${amount} day`;;
-    } else if (difference < WEEK*3.5) {
-        amount = Math.round(difference / WEEK);
-        ret = `${amount} week`;
-    } else if (difference < MONTH*11.5) {
-        amount = Math.round(difference / MONTH);
-        ret = `${amount} month`;
-    } else {
-        return '> 1 year ago';
-    }
-    return `${ret}${amount > 1 ? 's' : ''} ago`;
+	const difference = Date.now() - new Date(date).getTime();
+	let amount = 0;
+	let ret = '';
+	if (difference < MINUTE) {
+		return 'Now';
+	} else if (difference < MINUTE*59.5) {
+		amount = Math.round(difference / MINUTE);
+		ret = `${amount} minute`;
+	} else if (difference < HOUR*23.5) {
+		amount = Math.round(difference / HOUR);
+		ret = `${amount} hour`;
+	} else if (difference < DAY*6.5) {
+		amount = Math.round(difference / DAY);
+		ret = `${amount} day`;;
+	} else if (difference < WEEK*3.5) {
+		amount = Math.round(difference / WEEK);
+		ret = `${amount} week`;
+	} else if (difference < MONTH*11.5) {
+		amount = Math.round(difference / MONTH);
+		ret = `${amount} month`;
+	} else {
+		return '> 1 year ago';
+	}
+	return `${ret}${amount > 1 ? 's' : ''} ago`;
 }
 
 const changeDateFormat = (date) => {

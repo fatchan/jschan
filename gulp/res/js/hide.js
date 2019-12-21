@@ -98,7 +98,7 @@ for (let elem of hidden) {
 	setHidden(posts, true);
 }
 
-!localStorage.getItem('hideimages') ? setLocalStorage('hideimages', false) : void 0;
+setDefaultLocalStorage('hideimages', false);
 let hideImagesEnabled = localStorage.getItem('hideimages') == 'true';
 const hideImages = () => {
 	const postThumbs = document.getElementsByClassName('file-thumb');

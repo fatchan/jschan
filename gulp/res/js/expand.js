@@ -1,3 +1,4 @@
+setDefaultLocalStorage('volume', 100);
 !localStorage.getItem('volume') ? setLocalStorage('volume', 100) : void 0;
 
 window.addEventListener('DOMContentLoaded', (event) => {

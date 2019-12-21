@@ -44,6 +44,6 @@
     "start": "pm2 start ecosystem.config.js --env production",
     "start-dev": "pm2 start ecosystem.config.js --env development"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "fatchan",
+  "license": "AGPL-3.0-or-later"
 }

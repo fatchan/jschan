@@ -1,9 +1,9 @@
-!localStorage.getItem('live') ? setLocalStorage('live', true) : void 0;
-!localStorage.getItem('notifications') ? setLocalStorage('notifications', false) : void 0;
-!localStorage.getItem('scroll') ? setLocalStorage('scroll', false) : void 0;
+setDefaultLocalStorage('live', true);
+setDefaultLocalStorage('notifications', false);
+setDefaultLocalStorage('scroll', false);
 
 const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
-let socket;
+var socket;
 
 window.addEventListener('settingsReady', function(event) { //after domcontentloaded
 
