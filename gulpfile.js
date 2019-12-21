@@ -137,7 +137,7 @@ function deletehtml() {
 }
 
 function custompages() {
-	return gulp.src([`${paths.pug.src}/custompages/*.pug`, `${paths.pug.src}/pages/404.pug`])
+	return gulp.src([`${paths.pug.src}/custompages/*.pug`, `${paths.pug.src}/pages/404.pug`, `${paths.pug.src}/pages/502.pug`])
 		.pipe(gulppug({
 			locals: {
 				defaultTheme: configs.boardDefaults.theme,
