@@ -3,6 +3,13 @@ setDefaultLocalStorage('volume', 100);
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
+	const actionFooter = document.querySelector('summary.toggle-summary');
+	if (actionFooter) {
+		actionFooter.onclick = () => {
+			actionFooter.scrollIntoView();
+		}
+	}
+
 	const isCatalog = window.location.pathname.endsWith('catalog.html');
 
 	if (!isCatalog) {
