@@ -1,6 +1,6 @@
 'use strict';
 
-const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
+const { Ratelimits } = require(__dirname+'/../../db/')
 	, generateCaptcha = require(__dirname+'/../../helpers/captcha/captchagenerate.js')
 	, { secureCookies } = require(__dirname+'/../../configs/main.js')
 	, production = process.env.NODE_ENV === 'production';
@@ -17,9 +17,8 @@ module.exports = async (req, res, next) => {
 		if (ratelimit > 100) {
 			return res.status(429).redirect('/img/ratelimit.png');
 		}
-		const text = Math.random().toString(36).substr(2,6);
-		captchaId = await Captchas.insertOne(text).then(r => r.insertedId); //get id of document as filename and captchaid
-		await generateCaptcha(text, captchaId);
+		const { id, text } = await generateCaptcha();
+		captchaId = id;
 	} catch (err) {
 		return next(err);
 	}
