@@ -9,51 +9,65 @@ module.exports = {
 
 	getDates: (board) => {
 		return db.aggregate([
-            {
-                '$match': {
-                    'board': board._id
-                }
-            },
-            {
-                '$project': {
-                    'year': {
-                        '$year': '$date'
-                    },
-                    'month': {
-                        '$month': '$date'
-                    },
-                    'day': {
-                        '$dayOfMonth': '$date'
-                    }
-                }
-            },
-            {
-                '$group': {
-                    '_id': {
-		                'year': '$year',
-		                'month': '$month',
-		                'day': '$day',
+			{
+				'$match': {
+					'board': board._id
+				}
+			},
+			{
+				'$project': {
+					'year': {
+						'$year': '$date'
 					},
-                    'count': {
+					'month': {
+						'$month': '$date'
+					},
+					'day': {
+						'$dayOfMonth': '$date'
+					}
+				}
+			},
+			{
+				'$group': {
+					'_id': {
+						'year': '$year',
+						'month': '$month',
+						'day': '$day',
+					},
+					'count': {
 						'$sum': 1
 					}
-                }
-            },
+				}
+			},
 			{
-                '$project': {
+				'$project': {
 					'_id': 0,
 					'date': '$_id',
 					'count': '$count'
 				}
 			},
-            {
-                '$sort': {
-                    'date.year': -1,
-                    'date.month': -1,
-                    'date.day': -1
-                }
+			{
+				'$sort': {
+					'date.year': -1,
+					'date.month': -1,
+					'date.day': -1
+				}
 			},
 		]).toArray();
+	},
+
+	find: (filter, offset, limit) => {
+		return db.find(filter)
+			.skip(offset)
+			.limit(limit)
+			.sort({
+				'_id': -1
+			})
+			.toArray();
+	},
+
+	count: (filter) => {
+		return db.countDocuments(filter);
 	},
 
 	findBetweenDate: (board, start, end) => {

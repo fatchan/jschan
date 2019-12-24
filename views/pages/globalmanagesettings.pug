@@ -15,12 +15,6 @@ block content
 		form.form-post(action=`/forms/global/settings`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
-				.label Captcha Mode
-				select(name='captcha_mode')
-					option(value='0', selected=settings.captchaMode === 0) No Captcha
-					option(value='1', selected=settings.captchaMode === 1) Captcha for new thread
-					option(value='2', selected=settings.captchaMode === 2) Captcha for all posts
-			.row
 				.label Filters
 				textarea(name='filters' placeholder='newline separated, max 50') #{settings.filters.join('\n')}
 			.row

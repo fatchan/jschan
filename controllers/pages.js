@@ -13,7 +13,8 @@ const express  = require('express')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	//page models
 	, { manageReports, manageBanners, manageSettings, manageBans } = require(__dirname+'/../models/pages/manage/')
-	, { globalManageSettings, globalManageReports, globalManageBans, globalManageRecent, globalManageAccounts, globalManageNews } = require(__dirname+'/../models/pages/globalmanage/')
+	, { globalManageSettings, globalManageReports, globalManageBans,
+		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, home, register, login, logout, create,
 		board, catalog, banners, randombanner, news, captchaPage,
 		captcha, thread, modlog, modloglist, account, boardlist } = require(__dirname+'/../models/pages/');
@@ -52,6 +53,7 @@ router.get('/:board/manage/thread/:id(\\d+).html', sessionRefresh, isLoggedIn, B
 router.get('/globalmanage/reports.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
 router.get('/globalmanage/bans.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBans);
 router.get('/globalmanage/recent.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageRecent);
+router.get('/globalmanage/globallogs.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageLogs);
 router.get('/globalmanage/news.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageNews);
 router.get('/globalmanage/accounts.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageAccounts);
 router.get('/globalmanage/settings.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);

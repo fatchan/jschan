@@ -5,6 +5,8 @@ mixin globalmanagenav(selected)
 		a(href='bans.html' class=(selected === 'bans' ? 'bold' : '')) [Bans]
 		|  
 		a(href='recent.html' class=(selected === 'recent' ? 'bold' : '')) [Recent]
+		|  
+		a(href='globallogs.html' class=(selected === 'logs' ? 'bold' : '')) [Logs]
 		if permLevel === 0
 			|  
 			a(href='accounts.html' class=(selected === 'accounts' ? 'bold' : '')) [Accounts]

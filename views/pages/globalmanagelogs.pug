@@ -1,0 +1,47 @@
+extends ../layout.pug
+include ../mixins/ban.pug
+include ../mixins/globalmanagenav.pug
+
+block head
+	script(src='/js/all.js')
+	title Manage
+
+block content
+	h1.board-title Global Management
+	br
+	+globalmanagenav('logs')
+	hr(size=1)
+	.form-wrapper.flexleft
+		h4.no-m-p Search:
+		form.form-post.mv-5(action=`/globalmanage/globallogs.html` method='GET')
+			input(type='hidden' value=page)
+			.row
+				.label Board URI
+				input(type='text' name='uri' value=uri)
+			.row
+				.label Username
+				input(type='text' name='username' value=username)
+			input(type='submit', value='Filter')
+		h4.no-m-p Global Logs:
+		if logs && logs.length > 0
+			.table-container.flex-center.mv-10.text-center
+				table
+						tr
+							th Date
+							th Board
+							th User
+							th Actions
+							th Post IDs
+							th Log Message
+						for log in logs
+							tr
+								td #{log.date.toLocaleString(undefined, {hour12:false})}
+								td #{log.board}
+								td #{log.user}
+								td #{log.actions}
+								td #{log.postIds}
+								td #{log.message || '-'}
+			.pages.mv-5
+				include ../includes/pages.pug
+		else
+			p No logs.
