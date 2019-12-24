@@ -127,6 +127,9 @@ pre {
 .mt-5 {
 	margin-top: 5px;
 }
+.mt-1 {
+	margin-top: 1px;
+}
 .mv-5 {
 	margin: 5px 0;
 }
@@ -161,6 +164,7 @@ pre {
 	padding: 10px;
 	width: max-content;
 	width: -moz-max-content;
+	max-width: 100%;
 	margin-bottom: 5px;
 }
 
@@ -259,9 +263,19 @@ p {
 	border-style: dashed !important;
 	justify-content: center;
 	padding: 5px;
-	min-width: 220px;
+	/*min-width: 220px;*/
 	flex-grow: 1;
 	flex-direction: column;
+}
+
+.form-file {
+	max-width: 200px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: keep-all;
+	align-items: center;
+	display: flex;
+	margin-top: 1px;
 }
 
 .banposts .thread {
@@ -377,6 +391,10 @@ td, th {
 	right: 5px;
 	position: fixed;
 	z-index: 1;
+}
+
+.ml-0 {
+	margin-left: 0;
 }
 
 .dot {
@@ -815,6 +833,7 @@ input[type="file"] {
 	border: 1px solid var(--input-borders);
 	background: var(--input-background);
 	align-items: center;
+	box-sizing: border-box;
 }
 
 iframe.captcha {

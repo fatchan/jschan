@@ -70,10 +70,12 @@ class formHandler {
 			this.fileInput.files = filesToUpload.files;
 		}
 		let isLive = localStorage.getItem('live') == 'true' && socket && socket.connected;
-		if (!isLive) {
+		if (!this.banned && !isLive) {
 			return true;
 		}
-		e.preventDefault();
+		if (!this.banned) {
+			e.preventDefault();
+		}
 		this.submit.disabled = true;
 		const xhr = new XMLHttpRequest();
 		if (this.files && this.files.length > 0) {
@@ -107,8 +109,7 @@ class formHandler {
 							window.location = xhr.responseURL;
 							return;
 						} else if (xhr.responseText) {
-							//success page e.g. actions
-							return doTextResponse(xhr.responseText, xhr.resoponseURL);
+//todo: show success messages nicely for forms like actions (this doesnt apply to non file forms yet)
 						}
 					} else {
 						if (json.postId && socket && socket.connected) {
@@ -133,8 +134,10 @@ class formHandler {
 					if (json) {
 						doModal(json);
 					} else {
-						//for bans, show
-						return doTextResponse(xhr.responseText, xhr.resoponseURL);
+						//for bans, post form to show
+						this.clearFiles(); //dont resubmit files
+						this.banned = true;
+						this.form.dispatchEvent(new Event('submit'));
 					}
 				}
 				this.submit.value = this.originalSubmitText;
@@ -160,16 +163,15 @@ class formHandler {
 	}
 
 	//remove a single file, unused atm
-	removeFile(name) {
-		for(let i = 1; i < this.fileLabel.childNodes.length; i++) {
-			const childNode = this.fileLabel.childNodes[i];
-			if (childNode.nodeValue === name) {
-				//w about multiple w same name?
-				childNode.nextSibling.remove();
-				childNode.remove();
-				files = files.filter(file => file.name !== name);
-			}
-		}
+	removeFile(index) {
+		const childNode = this.fileLabel.childNodes[index+1]; //+1 because first one is fileLabelText
+		childNode.remove();
+		files.splice(index, 1);
+	}
+
+	addFile(file) {
+		this.files.push(file);
+//const newFileLabel = 
 	}
 
 	//show number of files on new label
@@ -200,10 +202,10 @@ class formHandler {
 				const item = items[i];
 				if (item.kind === 'file') {
 					const file = new File([item.getAsFile()], 'ClipboardImage.png', { type: item.type });
-					this.files.push(file);
-					this.updateFilesText();
+					this.addFile(file);
 				}
 			}
+			this.updateFilesText();
 		}
 	}
 
@@ -220,7 +222,7 @@ class formHandler {
 		e.preventDefault();
 		const newFiles = e.dataTransfer.files;
 		for (let i = 0; i < newFiles.length; i++) {
-			this.files.push(newFiles[i]);
+			this.addFile(newFiles[i]);
 		}
 		this.updateFilesText();
 	}
@@ -229,7 +231,7 @@ class formHandler {
 	fileInputChange(e) {
 		const newFiles = this.fileInput.files;
 		for (let i = 0; i < newFiles.length; i++) {
-			this.files.push(newFiles[i]);
+			this.addFile(newFiles[i]);
 		}
 		this.updateFilesText();
 	}
