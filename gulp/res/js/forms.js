@@ -61,13 +61,21 @@ class formHandler {
 	}
 
 	formSubmit(e) {
-		if (this.files && this.files.length > 0) {
-			//add files to file input element
-			const filesToUpload = new DataTransfer();
-			for (let i = 0; i < this.files.length; i++) {
-				filesToUpload.items.add(this.files[i]);
+		let postData;
+		if (this.form.getAttribute('enctype') === 'multipart/form-data') {
+			//remove the file input since some browsers dont supprot formdata.delete()
+			this.fileInput.remove();
+			//make a formdata
+			postData = new FormData(this.form);
+			if (this.files && this.files.length > 0) {
+				//add files to file input element
+				for (let i = 0; i < this.files.length; i++) {
+					postData.append('file', this.files[i]);
+				}
 			}
-			this.fileInput.files = filesToUpload.files;
+		} else {
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			postData = formToJSON(this.form);
 		}
 		let isLive = localStorage.getItem('live') == 'true' && socket && socket.connected;
 		if (!this.banned && !isLive) {
@@ -152,13 +160,6 @@ class formHandler {
 		}
 		xhr.open(this.form.getAttribute('method'), this.form.getAttribute('action'), true);
 		xhr.setRequestHeader('x-using-xhr', true);
-		let postData;
-		if (this.form.getAttribute('enctype') === 'multipart/form-data') {
-			postData = new FormData(this.form);
-		} else {
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			postData = formToJSON(this.form);
-		}
 		xhr.send(postData);
 	}
 
