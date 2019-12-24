@@ -63,10 +63,9 @@ class formHandler {
 	formSubmit(e) {
 		let postData;
 		if (this.form.getAttribute('enctype') === 'multipart/form-data') {
-			//remove the file input since some browsers dont supprot formdata.delete()
-			this.fileInput.remove();
-			//make a formdata
+			this.fileInput.disabled = true; //palemoon is dumb, so append them instead
 			postData = new FormData(this.form);
+			this.fileInput.disabled = false;
 			if (this.files && this.files.length > 0) {
 				//add files to file input element
 				for (let i = 0; i < this.files.length; i++) {
@@ -172,7 +171,6 @@ class formHandler {
 
 	addFile(file) {
 		this.files.push(file);
-//const newFileLabel = 
 	}
 
 	//show number of files on new label
