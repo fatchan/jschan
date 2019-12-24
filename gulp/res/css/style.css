@@ -309,6 +309,7 @@ p {
 
 .required {
 	color: maroon;
+	margin: 0 .5em;
 }
 
 .title {
@@ -317,10 +318,6 @@ p {
 
 #bottom {
 	margin-bottom: 10px;
-}
-
-.required {
-	margin: 0 5px;
 }
 
 .pinktext {
@@ -916,6 +913,14 @@ table.boardtable td:nth-child(6) {
 
 .invisible {
 	visibility: hidden!important;
+}
+
+.db {
+	display: block;
+}
+
+.wp {
+	white-space: pre-wrap;
 }
 
 table, .boardtable {

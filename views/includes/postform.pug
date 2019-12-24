@@ -36,10 +36,15 @@ section.form-wrapper.flex-center
 					.required *
 			textarea#message(name='message', rows='5', autocomplete='off' maxlength=globalLimits.messageLength.max required=messageRequired)
 		if board.settings.maxFiles > 0
+			- const maxFiles = board.settings.maxFiles;
 			section.row
-				.label Files
+				.label.wp
+					| File#{maxFiles > 1 ? 's' : ''}
 					if fileRequired
 						.required *
+					if maxFiles > 1
+						|  
+						small (Max #{maxFiles})
 				span.col
 					include ./filelabel.pug
 					input#file(type='file', name='file' multiple required=fileRequired )

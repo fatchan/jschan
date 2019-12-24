@@ -16,8 +16,13 @@ block content
 		form.form-post(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
-				.label Upload
+				- const maxFiles = globalLimits.bannerFiles.max;
+				.label.wp
+					| Banner#{maxFiles > 1 ? 's' : ''}
 					.required *
+					if maxFiles > 1
+						|  
+						div (Max #{maxFiles})
 				span.col
 					include ../includes/filelabel.pug
 					input#file(type='file', name='file' multiple required)
