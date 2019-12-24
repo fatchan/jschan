@@ -11,11 +11,11 @@ module.exports = async (req, res, next) => {
     let filter = {};
 	const username = req.query.username;
     if (username && !Array.isArray(username)) {
-        filter['name'] = username;
+        filter.user = username;
     }
 	const uri = req.query.uri;
     if (uri && !Array.isArray(uri)) {
-        filter['board'] = uri;
+        filter.board = uri;
     }
 
 	let logs, maxPage;

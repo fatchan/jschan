@@ -25,7 +25,7 @@ block content
 		h4.no-m-p Global Logs:
 		if logs && logs.length > 0
 			.table-container.flex-center.mv-10.text-center
-				table
+				table.fw
 						tr
 							th Date
 							th Board
@@ -36,8 +36,14 @@ block content
 						for log in logs
 							tr
 								td #{log.date.toLocaleString(undefined, {hour12:false})}
-								td #{log.board}
-								td #{log.user}
+								td
+									a(href=`/${log.board}/index.html`) /#{log.board}/
+									|   
+									a(href=`?uri=${log.board}`) [+]
+								td
+									a(href=`accounts.html?username=${log.user}`) #{log.user}
+									|   
+									a(href=`?username=${log.user}`) [+]
 								td #{log.actions}
 								td #{log.postIds}
 								td #{log.message || '-'}
