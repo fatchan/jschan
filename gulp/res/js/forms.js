@@ -76,11 +76,9 @@ class formHandler {
 			xhr.setRequestHeader('Content-Type', 'application/json');
 			postData = formToJSON(this.form);
 		}
-		let isLive = localStorage.getItem('live') == 'true' && socket && socket.connected;
-		if (!this.banned && !isLive) {
+		if (this.banned) {
 			return true;
-		}
-		if (!this.banned) {
+		} else {
 			e.preventDefault();
 		}
 		this.submit.disabled = true;
@@ -158,7 +156,10 @@ class formHandler {
 			this.submit.disabled = false;
 		}
 		xhr.open(this.form.getAttribute('method'), this.form.getAttribute('action'), true);
-		xhr.setRequestHeader('x-using-xhr', true);
+		const isLive = localStorage.getItem('live') == 'true' && socket && socket.connected;
+		if (isLive) {
+			xhr.setRequestHeader('x-using-xhr', true);
+		}
 		xhr.send(postData);
 	}
 
