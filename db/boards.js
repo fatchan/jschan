@@ -150,12 +150,18 @@ module.exports = {
 		}).toArray();
 	},
 
-	count: (showUnlisted=false) => {
-		if (showUnlisted) {
-			return db.countDocuments({ 'settings.unlisted': false });
-		} else {
-			return db.estimatedDocumentCount();
+	count: (filter, showUnlisted=false) => {
+		const addedFilter = {};
+		if (!showUnlisted) {
+			addedFilter['settings.unlisted'] = false;
 		}
+		if (filter.search) {
+			addedFilter['$or'] = [
+				{ 'settings.tags': filter.search },
+				{ '_id':  filter.search },
+			];
+		}
+		return db.countDocuments(addedFilter);
 	},
 
 	totalStats: () => {

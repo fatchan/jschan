@@ -36,7 +36,7 @@ module.exports = async (req, res, next) => {
 	try {
 		[ localBoards, localPages, webringBoards, webringPages ] = await Promise.all([
 			Boards.boardSort(offset, limit, sort, filter, isGlobalStaff),
-			Boards.count(isGlobalStaff),
+			Boards.count(filter, isGlobalStaff),
 			enableWebring ? Webring.boardSort(offset, limit, sort, filter, isGlobalStaff) : null,
 			enableWebring ? Webring.count() : 0,
 		]);
