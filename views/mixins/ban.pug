@@ -12,8 +12,10 @@ mixin ban(ban, banpage)
 		td= ban.reason
 		td ...#{ban.ip.slice(-10)}
 		td= ban.issuer
-		td= ban.date.toLocaleString(undefined, {hour12:false})
-		td= ban.expireAt.toLocaleString()
+		- const banDate = new Date(ban.date);
+		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(undefined, {hour12:false})}
+		- const expireDate = new Date(ban.expireAt);
+		td: time.right.reltime(datetime=expireDate.toISOString()) #{expireDate.toLocaleString(undefined, {hour12:false})}
 		td.banposts
 			if ban.posts && ban.posts.length > 0
 				| Hover to view

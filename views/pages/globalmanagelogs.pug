@@ -35,13 +35,17 @@ block content
 							th Log Message
 						for log in logs
 							tr
-								td #{log.date.toLocaleString(undefined, {hour12:false})}
+								- const logDate = new Date(log.date);
+								td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hour12:false})}
 								td
 									a(href=`/${log.board}/index.html`) /#{log.board}/
 									|   
 									a(href=`?uri=${log.board}`) [+]
 								td
-									a(href=`accounts.html?username=${log.user}`) #{log.user}
+									if log.user !== 'Unregistered User'
+										a(href=`accounts.html?username=${log.user}`) #{log.user}	
+									else 
+										| #{log.user}
 									|   
 									a(href=`?username=${log.user}`) [+]
 								td #{log.actions}

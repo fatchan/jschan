@@ -263,7 +263,7 @@ p {
 	border-style: dashed !important;
 	justify-content: center;
 	padding: 5px;
-	/*min-width: 220px;*/
+	min-width: 220px;
 	flex-grow: 1;
 	flex-direction: column;
 }
@@ -986,6 +986,14 @@ table, .boardtable {
 	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select {
 		height: 2.25em;
 		box-sizing: border-box;
+	}
+
+	.filelabel {
+		min-width: 0;
+	}
+
+	.fh	{
+		height: 100%;
 	}
 
 	.form-post {
