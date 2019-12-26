@@ -35,9 +35,15 @@ module.exports = {
 		.toArray();
 	},
 
-	count: () => {
-		//no need to countDocuments beacuse we dont filter anything. just use metadata
-		return db.estimatedDocumentCount();
+	count: (filter) => {
+		const addedFilter = {};
+		if (filter.search) {
+			addedFilter['$or'] = [
+				{ uri: filter.search },
+				{ tags: filter.search }
+			]
+		}
+		return db.countDocuments(addedFilter);
 	},
 
 	deleteAll: (board) => {
