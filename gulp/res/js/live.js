@@ -66,9 +66,11 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			newPostAnchor.scrollIntoView(); //scroll to post if enabled;
 		}
 		if (notificationsEnabled) {
-			new Notification(document.title, {
-				body: postData.nomarkup ? postData.nomarkup.substring(0,100) : ''
-			});
+			if (!window.myPostId || window.myPostId != postData.postId) {
+				new Notification(document.title, {
+					body: postData.nomarkup ? postData.nomarkup.substring(0,100) : ''
+				});
+			}
 		}
 		const newPostEvent = new CustomEvent('addPost', {
 			detail: {
