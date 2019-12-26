@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 		const volumeSetting = document.getElementById('volume-setting');
 		let volumeLevel = localStorage.getItem('volume');
-		const changeVolume = (change, changeFromConflict) => {
+		const changeVolume = (change) => {
 			volumeLevel = volumeSetting.value;
 			console.log('adjusting volume', volumeLevel);
 			setLocalStorage('volume', volumeLevel);
@@ -41,7 +41,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				//expanding
 				thumb.style.display = 'none';
 				exp.style.display = '';
-				fn.style.maxWidth = exp.offsetWidth+'px';
+				if (exp.offsetWidth >= fn.offsetWidth) {
+					fn.style.maxWidth = exp.offsetWidth+'px';
+				}
 				if (close) {
 					src.style.visibility = 'hidden';
 					close.style.display = '';
@@ -69,10 +71,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			}
 			if (!expandedElement && thumbElement.style.opacity !== '0.5') {
 				let source;
+				fileLink.style.minWidth = fileLink.offsetWidth+'px';
+				fileLink.style.minHeight = fileLink.offsetHeight+'px';
 				switch(type) {
 					case 'image':
-						fileLink.style.minWidth = fileLink.offsetWidth+'px';
-						fileLink.style.minHeight = fileLink.offsetHeight+'px';
 						thumbElement.style.opacity = '0.5';
 						thumbElement.style.cursor = 'wait'
 						expandedElement = document.createElement('img');
@@ -85,8 +87,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						}
 						break;
 					case 'video':
-						fileLink.style.minWidth = fileLink.offsetWidth+'px';
-						fileLink.style.minHeight = fileLink.offsetHeight+'px';
 					case 'audio':
 						expandedElement = document.createElement(type);
 						close = document.createElement('div');
@@ -114,9 +114,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			return false;
 		};
 
-		for (let i = 0; i < thumbs.length; i++) {
-			thumbs[i].addEventListener('click', expand, false);
+		const dontexpand = (e) => {
+			e.preventDefault();
 		}
+
+		const addExpandEvent = (t) => {
+			for (let i = 0; i < t.length; i++) {
+				const type = t[i].dataset.type;
+				const thumb = t[i].firstChild.firstChild;
+				const thumbsrc = thumb.getAttribute('src');
+				if (type !== 'image' || thumbsrc.startsWith('/img/thumb') || thumbsrc.startsWith('/img/spoiler')) {
+					//non-images, non-spoiler s and images with thumnbs are expanded
+					t[i].addEventListener('click', expand, false);
+				} else {
+					//otherwise (too small images), dont expand. add dummy event to stop opening in new tab
+					t[i].addEventListener('click', dontexpand, false);
+				}
+			}
+		}
+
+		addExpandEvent(thumbs)
 
 		window.addEventListener('addPost', function(e) {
 			if (e.detail.hover) {
@@ -124,9 +141,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			}
 			const post = e.detail.post;
 			const newthumbs = post.getElementsByClassName('post-file-src');
-			for (let i = 0; i < newthumbs.length; i++) {
-				newthumbs[i].addEventListener('click', expand, false);
-			}
+			addExpandEvent(newthumbs);
 		});
 	}
 
