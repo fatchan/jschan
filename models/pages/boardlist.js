@@ -38,7 +38,7 @@ module.exports = async (req, res, next) => {
 			Boards.boardSort(offset, limit, sort, filter, isGlobalStaff),
 			Boards.count(filter, isGlobalStaff),
 			enableWebring ? Webring.boardSort(offset, limit, sort, filter, isGlobalStaff) : null,
-			enableWebring ? Webring.count() : 0,
+			enableWebring ? Webring.count(filter) : 0,
 		]);
 		localPages = Math.ceil(localPages / limit);
 		webringPages = Math.ceil(webringPages / limit);
