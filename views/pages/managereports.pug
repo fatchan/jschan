@@ -15,10 +15,10 @@ block content
 	hr(size=1)
 	h4.no-m-p Reports:
 	form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
-		input(type='hidden' name='_csrf' value=csrf)
 		if reports.length === 0
 			p No reports.
 		else
+			input(type='hidden' name='_csrf' value=csrf)
 			for report in reports
 				.thread
 					+post(report, false, true)
