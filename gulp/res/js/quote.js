@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
 	const links = document.getElementsByClassName('post-quoters');
 	const messageBox = document.getElementById('message');
 

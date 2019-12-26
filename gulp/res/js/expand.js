@@ -10,8 +10,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 
-	const isCatalog = window.location.pathname.endsWith('catalog.html');
-
 	if (!isCatalog) {
 		const thumbs = document.getElementsByClassName('post-file-src');
 

@@ -461,8 +461,9 @@ module.exports = async (req, res, next) => {
 		'threadId': data.thread || postId,
 		'board': res.locals.board
 	};
-	if (req.headers['x-using-xhr'] != null && data.thread) {
-		//js and live enabled, defer build and send post live with websocket
+
+	if (req.headers['x-using-live'] != null && data.thread) {
+		//defer build and post will come live
 		res.json({ 
 			'postId': postId,
 			'redirect': successRedirect
@@ -472,9 +473,16 @@ module.exports = async (req, res, next) => {
 			'options': buildOptions
 		});
 	} else {
-		//noscript or live disabled, regular redirect and build immediately
+		//build immediately and refresh when built
 		await buildThread(buildOptions);
-		res.redirect(successRedirect);
+		if (req.headers['x-using-xhr'] != null) {
+			res.json({ 
+				'postId': postId,
+				'redirect': successRedirect
+			});
+		} else {
+			res.redirect(successRedirect);
+		}
 	}
 
 	if (data.thread) {

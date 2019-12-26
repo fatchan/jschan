@@ -1,3 +1,6 @@
+const isCatalog = window.location.pathname.endsWith('catalog.html');
+const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
+
 function setLocalStorage(key, value) {
 	try {
 		localStorage.setItem(key, value);

@@ -117,11 +117,15 @@ class formHandler {
 //todo: show success messages nicely for forms like actions (this doesnt apply to non file forms yet)
 						}
 					} else {
-						if (json.postId && socket && socket.connected) {
+						if (socket && socket.connected) {
 							window.myPostId = json.postId;
-							window.location.hash = json.postId;
-						} else if (json.redirect) {
-							window.location = json.redirect;
+							window.location.hash = json.postId
+						} else {
+							if (!isThread) {
+								return window.location = json.redirect;
+							}
+							setLocalStorage('myPostId', json.postId);
+							window.location.reload();
 						}
 					}
 					this.form.reset();
@@ -156,9 +160,10 @@ class formHandler {
 			this.submit.disabled = false;
 		}
 		xhr.open(this.form.getAttribute('method'), this.form.getAttribute('action'), true);
+		xhr.setRequestHeader('x-using-xhr', true);
 		const isLive = localStorage.getItem('live') == 'true' && socket && socket.connected;
 		if (isLive) {
-			xhr.setRequestHeader('x-using-xhr', true);
+			xhr.setRequestHeader('x-using-live', true);
 		}
 		xhr.send(postData);
 	}
@@ -247,6 +252,12 @@ class formHandler {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+
+	const myPostId = localStorage.getItem('myPostId');
+	if (myPostId) {
+		window.location.hash = myPostId;
+		localStorage.removeItem('myPostId');
+	}
 
 	const forms = document.getElementsByTagName('form');
 	for(let i = 0; i < forms.length; i++) {

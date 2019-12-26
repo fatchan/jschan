@@ -6,8 +6,6 @@ var socket;
 
 window.addEventListener('settingsReady', function(event) { //after domcontentloaded
 
-	const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
-
 	const livecolor = document.getElementById('livecolor');
 	const livetext = isThread ? document.getElementById('livetext').childNodes[1] : null;
 	const updateLive = (message, color) => {
