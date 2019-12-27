@@ -102,15 +102,12 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				}
 			}
 		}
-		setTimeout(() => {
-			updateLive('Connected for live posts', '#0de600');
-		}, 1000);
 	}
 
 	const startLive = () => {
 		const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
 		const room = `${roomParts[1]}-${roomParts[3]}`;
-		socket = io({ transports: ['websocket', 'polling'] });
+		socket = io({ transports: ['websocket'] });
 		socket.on('connect', () => {
 			console.log('joined room', room);
 			updateLive('Connected for live posts', '#0de600');
@@ -120,9 +117,6 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			if (socket.connected) {
 				updateLive(`Connected for live posts (${latency}ms)`, '#0de600');
 			}
-		});
-		socket.on('reconnect_error', () => {
-			updateLive('Error reconnecting', 'orange');
 		});
 		socket.on('reconnect_attempt', () => {
 			updateLive('Attempting to reconnect...', 'yellow');
@@ -134,6 +128,18 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		socket.on('reconnect', () => {
 			console.log('reconnected to room');
 			jsonCatchup();
+		});
+		socket.on('error', (e) => {
+			updateLive('Socket error', 'orange');
+			console.error(e);
+		});
+		socket.on('connect_error', (e) => {
+			updateLive('Error connecting', 'orange');
+			console.error(e);
+		});
+		socket.on('reconnect_error', (e) => {
+			updateLive('Error reconnecting', 'orange');
+			console.error(e);
 		});
 		socket.on('newPost', newPost);
 	}

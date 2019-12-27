@@ -101,7 +101,7 @@ pre {
 	width: 100%;
 }
 .fw textarea {
-    height: 1em;
+	height: 1em;
 }
 .pr-20 {
 	padding-right: 20px;
@@ -947,6 +947,33 @@ table, .boardtable {
 }
 
 @media only screen and (max-width: 600px) {
+	
+ 	[title] {
+		position:relative
+ 	}
+	[title]:hover:after {
+		content:attr(title);
+		color: white;
+		font-size: small;
+		border-radius: 2px;
+		background:black;
+		position:absolute;
+		top:-1.75em;
+		left:50%;
+		transform:translateX(-50%);
+		width:max-content;
+		width:-moz-max-content;
+		padding:1px 2px;
+ 	}
+	[title]:hover:before {
+		content: '';
+		position: absolute;
+		top: -6px;
+		left: calc(50% - 5px);
+		border-top: 5px solid black;
+		border-left: 5px solid transparent;
+		border-right: 5px solid transparent;
+	}
 
 	table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
 	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),

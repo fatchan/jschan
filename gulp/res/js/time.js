@@ -51,7 +51,7 @@ const changeDateFormat = (date) => {
 		date.title = dateString;
 	} else {
 		date.innerText = dateString;
-		date.title = '';
+		date.removeAttribute('title');
 	}
 }
 

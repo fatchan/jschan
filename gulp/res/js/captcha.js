@@ -32,8 +32,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	};
 
 	for (let i = 0; i < captchaFields.length; i++) {
-		captchaFields[i].placeholder = 'click to load';
-		captchaFields[i].addEventListener('click', loadCaptcha, { once: true });
+		captchaFields[i].placeholder = 'click to load captcha';
+		captchaFields[i].addEventListener('focus', loadCaptcha, { once: true });
 	}
 
 });
