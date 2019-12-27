@@ -72,6 +72,16 @@ module.exports = {
 		g = (Math.round(g*255*0.85).toString(16)).padStart(2, '0');
 		b = (Math.round(b*255).toString(16)).padStart(2, '0');
 		return `#${r}${g}${b}`;
+	},
+
+	'durationString': (ms) => {
+		const durString = new Date(ms).toISOString();
+		if (ms < DAY) {
+			return durString.substr(11,8).replace(/^00:/, '');
+		} else {
+			const hours = Math.floor(ms/HOUR);
+			return `${hours}:${durString.substring(14,19)}`;
+		}
 	}
 
 };
