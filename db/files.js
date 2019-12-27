@@ -10,6 +10,7 @@ module.exports = {
 	db,
 
 	increment: (file) => {
+		file.inced = true;
 		return db.updateOne({
 			'_id': file.filename
 		}, {
