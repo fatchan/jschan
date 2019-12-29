@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
 		markdownAnnouncement = sanitized;
 	}
 
-	let moderators = req.body.moderators != null ? req.body.moderators.split('\r\n').filter(n => n && !n == res.locals.board.owner).slice(0,10) : [];
+	let moderators = req.body.moderators != null ? req.body.moderators.split('\r\n').filter(n => n && !(n == res.locals.board.owner)).slice(0,10) : [];
 	if (moderators.length === 0 && oldSettings.moderators.length > 0) {
 		//remove all mods if mod list being emptied
 		promises.push(Accounts.removeModBoard(oldSettings.moderators, req.params.board));
