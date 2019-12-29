@@ -251,16 +251,14 @@ module.exports = async (req, res, next) => {
 			}
 
 			if (processedFile.hasThumb === true) {
-				//handle gifs that are always thumbed to prevent animation but may be smaller than thumbsize to avoid stretched thumb
-				const minThumbWidth = Math.min(processedFile.geometry.width, thumbSize);
-				const minThumbHeight = Math.min(processedFile.geometry.height, thumbSize);
-				const ratio = processedFile.geometry.width/processedFile.geometry.height;
-				if (ratio >= 1) {
-					processedFile.geometry.thumbwidth = minThumbWidth;
-					processedFile.geometry.thumbheight = Math.ceil(minThumbHeight/ratio);
+				if (processedFile.geometry.width < thumbSize && processedFile.geometry.height < thumbSize) {
+					//dont scale up thumbnail for smaller images
+					processedFile.geometry.thumbwidth = processedFile.geometry.width;
+					processedFile.geometry.thumbheight = processedFile.geometry.height;
 				} else {
-					processedFile.geometry.thumbwidth = Math.ceil(minThumbWidth*ratio);
-					processedFile.geometry.thumbheight = minThumbHeight;
+					const ratio = Math.min(thumbSize/processedFile.geometry.width, thumbSize/processedFile.geometry.height);
+					processedFile.geometry.thumbwidth = Math.floor(Math.min(processedFile.geometry.width*ratio, thumbSize));
+					processedFile.geometry.thumbheight = Math.floor(Math.min(processedFile.geometry.height*ratio, thumbSize));
 				}
 			}
 
