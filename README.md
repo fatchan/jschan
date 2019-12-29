@@ -11,18 +11,16 @@ Demo site running at https://fatpeople.lol
 
 ## Features
 - [x] User created boards ala infinity
+- [x] Multiple files per post
 - [x] Captcha and basic antispam
 - [x] Read-only JSON api
-- [x] Public modlogs
-- [x] Multi-select posts for moderation actions/reports
-- [x] Post styling & quote linking
-- [x] Backlinks shown without javascript
-- [x] Multiple files per post
-- [x] Websocket updates threads live
-- [x] Webring support [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) [infinity](https://gitlab.com/Tenicu/infinityaddon-webring)
+- [x] Multi-select moderation actions
+- [x] Websocket update threads w/o polling
+- [x] Webring support ([lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring)) ([infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
 
 ## Todo
-- Check issues
+- Fix issues
+- Add missing features
 - Improve moderation tools
 - Improve frontend scripts
 - Fork some mobile app and make it compatible with the API
@@ -72,11 +70,14 @@ geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 Now clone the repo, browse to the folder and set some things up.
 ```bash
 # in repo directory
-$ cp configs/main.js.example configs/main.js && nano configs/main.js #copy example config and edit
+$ cp configs/main.js.example configs/main.js && nano configs/main.js #copy example config and edit, some comments included
 $ npm install #install dependencies
 $ npm run-script setup #install global modules pm2 and gulp, then runs gulp tasks
-$ gulp reset #clear the database, create test board and account username:admin, password:changeme
+$ gulp reset #clear the database, creates account username:admin, password:changeme (dont run this again unless you want to completely irreversibly wipe everything)
 $ npm run-script start #start all the backend processes
 $ pm2 list #list running pm2 processes
 $ pm2 logs #see logs
+$ pm2 reload all #reload everything, or use "chan", "build-worker" or "schedules" to only reload specific parts if you know what you are doing
+$ gulp --tasks #list available gulp tasks
+$ gulp #run default gulp task, usually used for updates, can run specific tasks if you know what you are doing
 ```

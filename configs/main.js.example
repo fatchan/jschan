@@ -44,16 +44,16 @@ module.exports = {
 	//let all users create new boards
 	enableUserBoards: true,
 
-	//extension for thumbnails. png is larger but allows transparency
-	thumbExtension: '.png',
+	//extension for thumbnails. this value is used UNLESS the image contains transparency, in which case png is used.
+	thumbExtension: '.jpg',
 
-	//max thumb dimensions (square) in px
+	//max thumb dimensions (square) in px. images smaller than this are not thumbnailed
 	thumbSize: 200,
 
-	//default ban duration in ms if ban duration field is left blank
+	//default ban duration in ms if ban duration field is left blank (default value is 1 year)
 	defaultBanDuration: 31536000000,
 
-	//max number of quotes that will be linked in a post. 0 for unlimited
+	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
 	quoteLimit: 15,
 
 	//options for code block highlighting in posts
@@ -90,27 +90,27 @@ module.exports = {
 
 	//global limits for board settings
 	globalLimits:  {
-		threadLimit: {
+		threadLimit: { //number of threads, 10 per page
 			min: 10,
 			max: 200
 		},
-		replyLimit: {
+		replyLimit: { //number of replies to a thread, thread is locked after this limit is reached
 			min: 10,
 			max: 500
 		},
-		postFiles: {
+		postFiles: { //number of files in a post
 			max: 3
 		},
-		postFilesSize: {
+		postFilesSize: { //max combined size of all files in a post (10MB default)
 			max: 10485760
 		},
-		bannerFiles: {
+		bannerFiles: { //max number of banners uploadable at once
 			max: 10
 		},
-		bannerFilesSize: {
+		bannerFilesSize: { //max combined size of banner files (10MB default)
 			max: 10485760
 		},
-		messageLength: {
+		messageLength: { //max length of a post mesage field
 			max: 4000
 		}
 	},
@@ -119,21 +119,21 @@ module.exports = {
 	boardDefaults: {
 		theme: 'lain',
 		codeTheme: 'ir-black',
-		sfw: false,
-		locked: false,
-		unlisted: false,
-		webring: true,
-		captchaMode: 0,
-		tphTrigger: 0,
-		pphTrigger: 0,
-		triggerAction: 0,
-		forceAnon: false,
-		early404: true,
-		ids: false,
-		flags: false,
-		userPostDelete: true,
-		userPostSpoiler: true,
-		userPostUnlink: true,
+		sfw: false, //safe for work board
+		locked: false, //board locked, only staff can post
+		unlisted: false, //board hidden from on-site board list and frontpage
+		webring: true, //board shown on webring
+		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts
+		tphTrigger: 0, //numebr of threads in an hour before trigger action is activated
+		pphTrigger: 0, //number of posts in an hour before ^
+		triggerAction: 0, //0=nothing, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
+		forceAnon: false, //disable name and subject, only allow sage email
+		early404: true, //delete threads beyond the first 1/3 of pages with less than 5 replies
+		ids: false, //show per thread poster ID based on ip
+		flags: false, //show geo flags, requires nginx setup
+		userPostDelete: true, //allow users to delete their posts
+		userPostSpoiler: true, //allow user to spoiler their post files
+		userPostUnlink: true, //alow user to unlink files fomr their post
 		threadLimit: 200,
 		replyLimit: 500,
 		maxFiles: 1,
@@ -145,14 +145,14 @@ module.exports = {
 		minThreadMessageLength: 0,
 		minReplyMessageLength: 0,
 		defaultName: 'Anon',
-		filters: [],
-		filterMode: 0,
-		filterBanDuration: 0,
+		filters: [], //words/phrases to block
+		filterMode: 0, //0=nothing, 1=prevent post, 2=auto ban
+		filterBanDuration: 0, //duration (in ms) to ban if filter mode=2
 		announcement: {
 			raw: null,
 			markdown: null
 		},
-		allowedFileTypes: {
+		allowedFileTypes: { //enable different types of files to be posted
 			animatedImage: true,
 			image: true,
 			video: true,
