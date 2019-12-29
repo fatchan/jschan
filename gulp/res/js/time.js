@@ -45,7 +45,7 @@ const relativeTimeString = (date) => {
 		ret = `${amount} month`;
 	} else {
 		amount = Math.round(difference / YEAR);
-		return `${amount} year`;
+		ret = `${amount} year`;
 	}
 	return `${ret}${amount > 1 ? 's' : ''} ${isFuture ? 'from now' :  'ago'}`;
 }

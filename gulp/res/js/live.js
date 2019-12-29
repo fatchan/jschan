@@ -187,6 +187,8 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			if (result != 'granted') {
 				//user denied permission popup
 				notificationsEnabled = false;
+				notificationSetting.checked = false;
+				return;
 			}
 		}
 		console.log('toggling notifications', notificationsEnabled);
