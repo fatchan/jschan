@@ -18,9 +18,14 @@ const YEAR = 31536000000
 	, MINUTE = 60000;
 
 const relativeTimeString = (date) => {
-	const difference = Date.now() - new Date(date).getTime();
+	let difference = Date.now() - new Date(date).getTime();
 	let amount = 0;
 	let ret = '';
+	let isFuture = false;
+	if (difference < 0) {
+		difference = Math.abs(difference);
+		isFuture = true;
+	}
 	if (difference < MINUTE) {
 		return 'Now';
 	} else if (difference < MINUTE*59.5) {
@@ -39,9 +44,10 @@ const relativeTimeString = (date) => {
 		amount = Math.round(difference / MONTH);
 		ret = `${amount} month`;
 	} else {
-		return '> 1 year ago';
+		amount = Math.round(difference / YEAR);
+		return `${amount} year`;
 	}
-	return `${ret}${amount > 1 ? 's' : ''} ago`;
+	return `${ret}${amount > 1 ? 's' : ''} ${isFuture ? 'from now' :  'ago'}`;
 }
 
 const changeDateFormat = (date) => {
