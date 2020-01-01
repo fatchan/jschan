@@ -21,6 +21,11 @@ module.exports = {
 		const difference = now.getTime() - relativeTo.getTime();
 		let amount = 0;
 		let ret = '';
+		let isFuture = false;
+		if (difference < 0) {
+			difference = Math.abs(difference);
+			isFuture = true;
+		}
 		if (difference < MINUTE) {
 			return 'Now';
 		} else if (difference < MINUTE*59.5) {
@@ -39,9 +44,10 @@ module.exports = {
 			amount = Math.round(difference / MONTH);
 			ret += `${amount} month`;
 		} else {
-			return 'More than a year ago';
+			amount = Math.round(difference / YEAR);
+			ret = `${amount} year`;
 		}
-		return `${ret}${amount > 1 ? 's' : ''} ago`;
+		return `${ret}${amount > 1 ? 's' : ''} ${isFuture ? 'from now' :  'ago'}`;
 	},
 
 	'relativeColor': (now, relativeTo) => {
