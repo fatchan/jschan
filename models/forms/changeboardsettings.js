@@ -9,7 +9,19 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
-	, sanitize = require('sanitize-html');
+	, sanitize = require('sanitize-html')
+	, trimSetting = (setting, oldSetting) => {
+		return setting && setting.trim().length > 0 ? setting : oldSetting;
+	}
+	, numberSetting = (setting, oldSetting) => {
+		return typeof setting === 'number' && setting !== oldSetting ? setting : oldSetting;
+	}
+	, booleanSetting = (setting) => {
+		return setting != null;
+	}
+	, arraySetting = (setting, oldSetting, limit) => {
+		return setting !== null ? setting.split('\r\n').filter(n => n).slice(0,limit) : oldSettings;
+	};
 
 module.exports = async (req, res, next) => {
 
@@ -44,63 +56,61 @@ module.exports = async (req, res, next) => {
 				const modsRemoved = oldSettings.moderators.filter(m => !moderators.includes(m));
 				const modsAdded = moderators.filter(m => !oldSettings.moderators.includes(m));
 				if (modsRemoved.length > 0) {
-					//remove mod from accounts
 					promises.push(Accounts.removeModBoard(modsRemoved, req.params.board));
 				}
 				if (modsAdded.length > 0) {
-					//add mod to accounts
 					promises.push(Accounts.addModBoard(modsAdded, req.params.board));
 				}
 			}
 		}
 	}
 
-//todo: make separate functions for handling array, boolean, number, text settings.
+	//todo: make separate functions for handling array, boolean, number, text settings.
 	const newSettings = {
 		moderators,
-		'name': req.body.name && req.body.name.trim().length > 0 ? req.body.name : oldSettings.name,
-		'description': req.body.description && req.body.description.trim().length > 0 ? req.body.description : oldSettings.description,
-		'sfw': req.body.sfw ? true : false,
-		'unlisted': req.body.unlisted ? true : false,
-		'webring': req.body.webring ? true : false,
-		'locked': req.body.locked ? true : false,
-		'early404': req.body.early404 ? true : false,
-		'ids': req.body.ids ? true : false,
-		'flags': req.body.flags ? true : false,
-		'forceAnon': req.body.force_anon ? true : false,
-		'userPostDelete': req.body.user_post_delete ? true : false,
-		'userPostSpoiler': req.body.user_post_spoiler ? true : false,
-		'userPostUnlink': req.body.user_post_unlink ? true : false,
-		'captchaMode': typeof req.body.captcha_mode === 'number' && req.body.captcha_mode !== oldSettings.captchaMode ? req.body.captcha_mode : oldSettings.captchaMode,
-		'tphTrigger': typeof req.body.tph_trigger === 'number' && req.body.tph_trigger !== oldSettings.tphTrigger ? req.body.tph_trigger : oldSettings.tphTrigger,
-		'pphTrigger': typeof req.body.pph_trigger === 'number' && req.body.pph_trigger !== oldSettings.pphTrigger ? req.body.pph_trigger : oldSettings.pphTrigger,
-		'triggerAction': typeof req.body.trigger_action === 'number' && req.body.trigger_action !== oldSettings.triggerAction ? req.body.trigger_action : oldSettings.triggerAction,
-		'threadLimit': typeof req.body.thread_limit === 'number' && req.body.thread_limit !== oldSettings.threadLimit ? req.body.thread_limit : oldSettings.threadLimit,
-		'replyLimit': typeof req.body.reply_limit === 'number' && req.body.reply_limit !== oldSettings.replyLimit ? req.body.reply_limit : oldSettings.replyLimit,
-		'maxFiles': typeof req.body.max_files === 'number' && req.body.max_files !== oldSettings.maxFiles ? req.body.max_files : oldSettings.maxFiles,
-		'minThreadMessageLength': typeof req.body.min_thread_message_length === 'number' && req.body.min_thread_message_length !== oldSettings.minThreadMessageLength ? req.body.min_thread_message_length : oldSettings.minThreadMessageLength,
-		'minReplyMessageLength': typeof req.body.min_reply_message_length === 'number' && req.body.min_reply_message_length !== oldSettings.minReplyMessageLength ? req.body.min_reply_message_length : oldSettings.minReplyMessageLength,
-		'forceThreadMessage': req.body.force_thread_message ? true : false,
-		'forceThreadFile': req.body.force_thread_file ? true : false,
-		'forceReplyMessage': req.body.force_reply_message ? true : false,
-		'forceReplyFile': req.body.force_reply_file ? true : false,
-		'forceThreadSubject': req.body.force_thread_subject ? true : false,
-		'defaultName': req.body.default_name && req.body.default_name.trim().length > 0 ? req.body.default_name : oldSettings.defaultName,
-		'tags': req.body.tags !== null ? req.body.tags.split('\r\n').filter(n => n).slice(0,10) : oldSettings.tags,
-		'filters': req.body.filters !== null ? req.body.filters.split('\r\n').filter(n => n).slice(0,50) : oldSettings.filters,
-		'filterMode': typeof req.body.filter_mode === 'number' && req.body.filter_mode !== oldSettings.filterMode ? req.body.filter_mode : oldSettings.filterMode,
-		'filterBanDuration': typeof req.body.ban_duration === 'number' && req.body.ban_duration !== oldSettings.filterBanDuration ? req.body.ban_duration : oldSettings.filterBanDuration,
-		'theme': req.body.theme ? req.body.theme : oldSettings.theme,
-		'codeTheme': req.body.code_theme ? req.body.code_theme : oldSettings.codeTheme,
+		'name': trimSetting(req.body.name, oldSettings.name),
+		'description': trimSetting(req.body.description, oldSettings.description),
+		'defaultName': trimSetting(req.body.default_name, oldSettings.defaultName),
+		'theme': req.body.theme || oldSettings.theme,
+		'codeTheme':  req.body.code_theme || oldSettings.codeTheme,
+		'sfw': booleanSetting(req.body.sfw),
+		'unlisted': booleanSetting(req.body.unlisted),
+		'webring': booleanSetting(req.body.webring),
+		'locked': booleanSetting(req.body.locked),
+		'early404': booleanSetting(req.body.early404),
+		'ids': booleanSetting(req.body.ids),
+		'flags': booleanSetting(req.body.flags),
+		'forceAnon': booleanSetting(req.body.force_anon),
+		'userPostDelete': booleanSetting(req.body.user_post_delete),
+		'userPostSpoiler': booleanSetting(req.body.user_post_spoiler),
+		'userPostUnlink': booleanSetting(req.body.user_post_unlink),
+		'forceThreadMessage': booleanSetting(req.body.force_thread_message),
+		'forceThreadFile': booleanSetting(req.body.force_thread_file),
+		'forceReplyMessage': booleanSetting(req.body.force_reply_message),
+		'forceReplyFile': booleanSetting(req.body.force_reply_file),
+		'forceThreadSubject': booleanSetting(req.body.force_thread_subject),
+		'captchaMode': numberSetting(req.body.captcha_mode, oldSettings.captchaMode),
+		'tphTrigger': numberSetting(req.body.tph_trigger, oldSettings.tphTrigger),
+		'pphTrigger': numberSetting(req.body.pph_trigger, oldSettings.pphTrigger),
+		'triggerAction': numberSetting(req.body.trigger_action, oldSettings.triggerAction),
+		'threadLimit': numberSetting(req.body.thread_limit, oldSettings.threadLimit),
+		'replyLimit': numberSetting(req.body.reply_limit, oldSettings.replyLimit),
+		'maxFiles': numberSetting(req.body.max_files, oldSettings.maxFiles),
+		'minThreadMessageLength': numberSetting(req.body.min_thread_message_length, oldSettings.minThreadMessageLength),
+		'minReplyMessageLength': numberSetting(req.body.min_reply_message_length, oldSettings.minReplyMessageLength),
+		'filterMode': numberSetting(req.body.filter_mode, oldSettings.filterMode),
+		'filterBanDuration': numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
+		'tags': arraySetting(req.body.tags, oldSettings.tags, 10),
+		'filters': arraySetting(req.body.filters, oldSettings.filters, 50),
 		'announcement': {
 			'raw': req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
-			'markdown': req.body.announcement !== null ? markdownAnnouncement : oldSettings.announcement.markdown
+			'markdown': req.body.announcement !== null ? markdownAnnouncement : oldSettings.announcement.markdown,
 		},
 		'allowedFileTypes': {
-			'animatedImage': req.body.files_allow_animated_image ? true : false,
-			'image': req.body.files_allow_image ? true : false,
-			'video': req.body.files_allow_video ? true : false,
-			'audio': req.body.files_allow_audio ? true : false,
+			'animatedImage': booleanSetting(req.body.files_allow_animated_image),
+			'image': booleanSetting(req.body.files_allow_image),
+			'video': booleanSetting(req.body.files_allow_video),
+			'audio': booleanSetting(req.body.files_allow_audio),
 		},
 	};
 
@@ -134,10 +144,20 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
-		rebuildBoard = true;
-		rebuildCatalog = true; //post form now on catalog page
-		if (newSettings.captchaMode == 2) {
-			rebuildThreads = true; //thread captcha enabled, removes threads
+		if (oldSettings.captchaMode === 0) {
+			rebuildBoard = true;
+			rebuildCatalog = true;
+		}
+		if (newSettings.captchaMode === 2) {
+			rebuildThreads = true;
+		}
+	} else if (newSettings.captchaMode < oldSettings.captchaMode) {
+		if (oldSettings.captchaMode === 2) {
+			rebuildThreads = true;
+		}
+		if (newSettings.captchaMode === 0) {
+			rebuildBoard = true;
+			rebuildCatalog = true;
 		}
 	}
 
@@ -159,7 +179,8 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (newSettings.theme !== oldSettings.theme
-		|| newSettings.codeTheme !== oldSettings.codeTheme) {
+		|| newSettings.codeTheme !== oldSettings.codeTheme
+		|| newSettings.announcement.raw !== oldSettings.announcement.raw) {
 		rebuildThreads = true;
 		rebuildBoard = true;
 		rebuildCatalog = true;
