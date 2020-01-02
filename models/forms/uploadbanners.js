@@ -7,6 +7,7 @@ const path = require('path')
 	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { Boards } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../queue.js');
 
@@ -18,7 +19,7 @@ module.exports = async (req, res, next) => {
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false, audio: false})) {
 			await deleteTempFiles(req).catch(e => console.error);
-			return res.status(400).render('message', {
+			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
 				'redirect': redirect
@@ -53,7 +54,7 @@ module.exports = async (req, res, next) => {
 		//make sure its 300x100 banner
 		if (geometry.width !== 300 || geometry.height !== 100) {
 			await deleteTempFiles(req).catch(e => console.error);
-			return res.status(400).render('message', {
+			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': `Invalid file ${file.name}. Banners must be 300x100.`,
 				'redirect': redirect
