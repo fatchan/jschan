@@ -65,7 +65,6 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	//todo: make separate functions for handling array, boolean, number, text settings.
 	const newSettings = {
 		moderators,
 		'name': trimSetting(req.body.name, oldSettings.name),

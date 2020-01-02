@@ -92,7 +92,7 @@ module.exports = async (req, res, next) => {
 	}
 	//filters
 	if (res.locals.permLevel > 1) { //global staff bypass filters
-		const allContents = (req.body.name+req.body.message+req.body.subject+req.body.email).toLowerCase()
+		const allContents = `${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase()
 			, globalSettings = await cache.get('globalsettings');
 		let hitGlobalFilter = false
 			, hitLocalFilter = false

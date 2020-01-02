@@ -10,13 +10,6 @@ function doModal(data) {
 	document.getElementsByClassName('modal-bg')[0].onclick = removeModal;
 }
 
-function doTextResponse(text, url) {
-	window.history.pushState({}, null, url);
-	document.open('text/html', true);
-	document.write(text);
-	document.close();
-}
-
 const checkTypes = ['checkbox', 'radio'];
 function isCheckBox(element) {
 	return checkTypes.includes(element.type)
@@ -143,7 +136,7 @@ class formHandler {
 					if (json) {
 						doModal(json);
 					} else {
-						//for bans, post form to show
+//for bans, post form to show TODO: make modal support bans json and send dynamicresponse from it
 						this.clearFiles(); //dont resubmit files
 						this.banned = true;
 						this.form.dispatchEvent(new Event('submit'));
