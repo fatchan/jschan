@@ -17,12 +17,13 @@ block content
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
 				- const maxFiles = globalLimits.bannerFiles.max;
-				.label.wp
+				.label.wp.db
 					| Banner#{maxFiles > 1 ? 's' : ''}
-					.required *
+					span.required *
 					if maxFiles > 1
 						|  
-						div (Max #{maxFiles})
+						|  
+						small (Max #{maxFiles})
 				span.col
 					include ../includes/filelabel.pug
 					input#file(type='file', name='file' multiple required)
