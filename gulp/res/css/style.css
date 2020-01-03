@@ -946,6 +946,14 @@ table, .boardtable {
 	max-width: 100%;
 }
 
+@media only screen and (max-height: 400px) {
+	#postform:target {
+		display: flex;
+		position: initial;
+		z-index: 0;
+	}
+}
+
 @media only screen and (max-width: 600px) {
 	
  	[title] {
