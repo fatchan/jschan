@@ -8,6 +8,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	const livecolor = document.getElementById('livecolor');
 	const livetext = isThread ? document.getElementById('livetext').childNodes[1] : null;
+	const updateButton = livetext ? livetext.nextSibling : null;
 	const updateLive = (message, color) => {
 		livecolor.style.backgroundColor = color;
 		livetext.nodeValue = message;
@@ -87,7 +88,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	const jsonPath = window.location.pathname.replace(/\.html$/, '.json');
 	const jsonCatchup = async () => {
 		console.log('catching up after reconnect');
-		updateLive('Checking for missed posts...', 'yellow');
+		updateLive('Fetching posts...', 'yellow');
 		let json;
 		try {
 			json = await fetch(jsonPath).then(res => res.json());
@@ -109,11 +110,13 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		const room = `${roomParts[1]}-${roomParts[3]}`;
 		socket = io({ transports: ['websocket'] });
 		socket.on('connect', () => {
+			updateButton.style.display = 'none';
 			console.log('joined room', room);
 			updateLive('Connected for live posts', '#0de600');
 			socket.emit('room', room);
 		});
 		socket.on('pong', (latency) => {
+			updateButton.style.display = 'none';
 			if (socket.connected) {
 				updateLive(`Connected for live posts (${latency}ms)`, '#0de600');
 			}
@@ -122,22 +125,27 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			updateLive('Attempting to reconnect...', 'yellow');
 		});
 		socket.on('disconnect', () => {
+			updateButton.removeAttribute('style');
 			console.log('lost connection to room');
 			updateLive('Disconnected', 'red');
 		});
 		socket.on('reconnect', () => {
+			updateButton.style.display = 'none';
 			console.log('reconnected to room');
 			jsonCatchup();
 		});
 		socket.on('error', (e) => {
+			updateButton.removeAttribute('style');
 			updateLive('Socket error', 'orange');
 			console.error(e);
 		});
 		socket.on('connect_error', (e) => {
+			updateButton.removeAttribute('style');
 			updateLive('Error connecting', 'orange');
 			console.error(e);
 		});
 		socket.on('reconnect_error', (e) => {
+			updateButton.removeAttribute('style');
 			updateLive('Error reconnecting', 'orange');
 			console.error(e);
 		});
@@ -214,7 +222,17 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	scrollSetting.addEventListener('change', toggleScroll, false);
 
 	if (isThread) {
+		const forceUpdate = async () => {
+			updateButton.disabled = true;
+			await jsonCatchup();
+			updateLive('Updated', 'green');
+			setTimeout(() => {
+				updateButton.disabled = false;
+			}, 10000);
+		}
+		updateButton.addEventListener('click', forceUpdate);
 		if (liveEnabled) {
+			updateButton.style.display = 'none';
 			startLive();
 		} else {
 			updateLive('Live posts disabled', 'red');
