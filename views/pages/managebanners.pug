@@ -17,9 +17,9 @@ block content
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
 				- const maxFiles = globalLimits.bannerFiles.max;
-				.label.wp.db
-					| Banner#{maxFiles > 1 ? 's' : ''}
-					span.required *
+				.label
+					span Banner#{maxFiles > 1 ? 's' : ''}
+						span.required *
 					if maxFiles > 1
 						|  
 						|  

@@ -110,7 +110,7 @@ pre {
 	margin-left: 1px;
 }
 .ml-5 {
-	margin-left: 5px;
+	margin-left: 5px!important;
 }
 .mr-1 {
 	margin-right: 1px!important;
@@ -778,7 +778,11 @@ input:invalid, textarea:invalid {
 	line-height: 3em;
 }
 
-input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea, select {
+input[type="button"][disabled] {
+	opacity: 0.5;
+}
+
+input[type="button"], input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea, select {
 	border: 1px solid var(--input-borders);
 	background: var(--input-background);
 	color: var(--input-color);
@@ -857,9 +861,11 @@ iframe.captcha {
 	min-width: 80px;
 	background: var(--label-color);
 	display: flex;
-	align-items: center;
 	font-weight: bold;
 	margin-right: 1px;
+	align-items: start;
+	flex-direction: column;
+	justify-content: center;
 }
 
 hr {
@@ -934,12 +940,8 @@ table.boardtable td:nth-child(6) {
 	visibility: hidden!important;
 }
 
-.db {
-	display: block;
-}
-
-.wp {
-	white-space: pre-wrap;
+.di {
+	display: inline;
 }
 
 table, .boardtable {

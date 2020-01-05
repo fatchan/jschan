@@ -11,9 +11,10 @@ section.form-wrapper.flex-center
 				input.mr-1(type='text', name='name', placeholder=board.settings.defaultName autocomplete='off' maxlength='50')
 				a.close.postform-style(href='#!') X
 			section.row
-				.label Subject
-					if subjectRequired
-						.required *
+				.label
+					span Subject
+						if subjectRequired
+							span.required *
 				input(type='text', name='subject', autocomplete='off' maxlength='50' required=subjectRequired)
 			section.row
 				.label Email
@@ -26,22 +27,24 @@ section.form-wrapper.flex-center
 					| Sage
 				a.close.postform-style(href='#!') X
 			section.row
-				.label Subject
-					if subjectRequired
-						.required *
+				.label
+					span Subject
+						if subjectRequired
+							span.required *
 				input(type='text', name='subject', autocomplete='off' maxlength='50' required=subjectRequired)
 		section.row
-			.label Message
-				if messageRequired
-					.required *
+			.label
+				span Message
+					if messageRequired
+						span.required *
 			textarea#message(name='message', rows='5', autocomplete='off' maxlength=globalLimits.messageLength.max required=messageRequired)
 		if board.settings.maxFiles > 0
 			- const maxFiles = board.settings.maxFiles;
 			section.row
-				.label.wp.db
-					| File#{maxFiles > 1 ? 's' : ''}
-					if fileRequired
-						span.required *
+				.label
+					span File#{maxFiles > 1 ? 's' : ''}
+						if fileRequired
+							span.required *
 					if maxFiles > 1
 						|
 						|
@@ -59,8 +62,9 @@ section.form-wrapper.flex-center
 				input(type='password', name='password', autocomplete='off' placeholder='password to delete/spoiler/unlink later' maxlength='50')
 		if (board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2
 			section.row
-				.label Captcha
-					.required *
+				.label
+					span Captcha
+						span.required *
 				.col
 					include ./captcha.pug
 		input#submitpost(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)
