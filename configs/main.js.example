@@ -41,6 +41,9 @@ module.exports = {
 	//prune modlogs older than 30 days. pruning occurs when new modlog entries are generated
 	pruneModlogs: true,
 
+	//enable the webring (also copy configs/webring.json.example -> configs/webring.json and edit)
+	enableWebring: false,
+
 	//let all users create new boards
 	enableUserBoards: true,
 

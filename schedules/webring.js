@@ -2,7 +2,7 @@
 
 const fetch = require('node-fetch')
 	, { meta } = require(__dirname+'/../configs/main.js')
-	, { logos, following, blacklist } = require(__dirname+'/../configs/webring.json')
+	, { logo, following, blacklist } = require(__dirname+'/../configs/webring.json')
 	, { Boards, Webring } = require(__dirname+'/../db/')
 	, { outputFile } = require('fs-extra')
 	, cache = require(__dirname+'/../redis.js')
@@ -63,7 +63,7 @@ module.exports = async () => {
 			name: meta.siteName,
 			url: meta.url,
 			endpoint: `${meta.url}/webring.json`,
-			logos,
+			logo,
 			following,
 			blacklist,
 			known,

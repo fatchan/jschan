@@ -5,7 +5,7 @@
 	"blacklist": [
 		"badwebsite.com",
 	],
-    "logos": [
+    "logo": [
         "https://yourdomain.com/favicon.ico"
     ]
 }
