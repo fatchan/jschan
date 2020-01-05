@@ -9,6 +9,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		messageBox.scrollTop = messageBox.scrollHeight;
 		messageBox.focus();
 		messageBox.setSelectionRange(messageBox.value.length, messageBox.value.length);
+		messageBox.dispatchEvent(new Event('input'));
 		const quotingPost = document.getElementById(number);
 		if (quotingPost) {
 			quotingPost.scrollIntoView();

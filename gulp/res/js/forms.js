@@ -37,6 +37,7 @@ class formHandler {
 
 	constructor(form) {
 		this.form = form;
+		this.messageBox = form.querySelector('#message')
 		this.submit = form.querySelector('input[type="submit"]')
 		this.originalSubmitText = this.submit.value;
 		this.fileInput = form.querySelector('input[type="file"]');
@@ -122,6 +123,7 @@ class formHandler {
 						}
 					}
 					this.form.reset();
+				    this.messageBox.dispatchEvent(new Event('input'));
 					this.files = [];
 					this.updateFilesText();
 					const captcha = this.form.querySelector('img');
