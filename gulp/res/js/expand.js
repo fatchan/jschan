@@ -112,26 +112,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			return false;
 		};
 
-		const dontexpand = (e) => {
-			e.preventDefault();
-		}
-
 		const addExpandEvent = (t) => {
 			for (let i = 0; i < t.length; i++) {
-				const type = t[i].dataset.type;
-				const thumb = t[i].firstChild.firstChild;
-				const thumbsrc = thumb.getAttribute('src');
-				if (type !== 'image' || thumbsrc.startsWith('/img/thumb') || thumbsrc.startsWith('/img/spoiler')) {
-					//non-images, non-spoiler s and images with thumnbs are expanded
-					t[i].addEventListener('click', expand, false);
-				} else {
-					//otherwise (too small images), dont expand. add dummy event to stop opening in new tab
-					t[i].addEventListener('click', dontexpand, false);
-				}
+				t[i].addEventListener('click', expand, false);
 			}
 		}
 
-		addExpandEvent(thumbs)
+		addExpandEvent(thumbs);
 
 		window.addEventListener('addPost', function(e) {
 			if (e.detail.hover) {
