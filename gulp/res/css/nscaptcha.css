@@ -8,4 +8,12 @@ input {
 	left:-1px;
 	bottom:-1px;
 	opacity:0.9;
+    border: none;
+    background: none;
+}
+body {
+    font-family: arial, helvetica, sans-serif;
+    font-size: 10pt;
+    margin: 0;
+	padding: 0
 }

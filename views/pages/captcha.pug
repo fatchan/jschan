@@ -1,9 +1,8 @@
 doctype html
 html
 	head
-		link(rel='stylesheet', href='/css/style.css')
 		link(rel='stylesheet', href='/css/nscaptcha.css')
-	body.no-m-p
+	body
 		img(src='/captcha')
 		form(action='/forms/newcaptcha', method='POST')
 			input(type='submit' value='🗘')
