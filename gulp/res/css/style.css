@@ -94,9 +94,6 @@ pre {
 		max-width: max-content;
 		max-width: -moz-max-content;
 }
-.text-center {
-	text-align: center;
-}
 .fw {
 	width: 100%;
 }
@@ -151,6 +148,9 @@ pre {
 
 #settings {
 	cursor: pointer;
+}
+#settings::after {
+	content: "Settings"
 }
 
 .statwrap {
@@ -403,8 +403,7 @@ td, th {
 	width: .75em;
 	background-color: orange;
 	border-radius: 50%;
-	animation: pulsate 2s ease;
-	animation-iteration-count: infinite;
+	animation: pulsate 2s ease infinite;
 	display: inline-block;
 }
 
@@ -948,6 +947,11 @@ table, .boardtable {
 	max-width: 100%;
 }
 
+.text-center {
+	text-align: center;
+}
+
+
 @media only screen and (max-height: 400px) {
 	#postform:target {
 		display: flex;
@@ -958,6 +962,9 @@ table, .boardtable {
 
 @media only screen and (max-width: 600px) {
 	
+	#settings::after {
+		content: "\2699"!important;
+	}
  	[title] {
 		position:relative
  	}
