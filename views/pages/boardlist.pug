@@ -51,9 +51,10 @@ block content
 			each board in webringBoards
 				tr
 					td
-						if !board.nsfw
-							span(title='SFW') &#x1F4BC;
-							|  
+						span.left
+							if !board.nsfw
+								span(title='SFW') &#x1F4BC;
+								|  
 						a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
 					td #{board.subtitle || '-'}
 					td #{board.postsPerHour}
