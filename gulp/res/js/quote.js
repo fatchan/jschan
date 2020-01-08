@@ -1,19 +1,48 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	const links = document.getElementsByClassName('post-quoters');
+	//change url hash and scroll to the element without affecting css :target selectors
+	const scrollWithoutTargeting = (e) => {
+		e.preventDefault();
+		history.replaceState({}, '', e.target.href);
+		document.querySelector(e.target.hash).scrollIntoView();
+	}
+
+	const scrollButtons = document.querySelectorAll('.stickynav .nav-item'); // '.stickynav .nav-item,.post-links a'
+	for (let i = 0; i < scrollButtons.length; i++) {
+		scrollButtons[i].addEventListener('click', scrollWithoutTargeting, false);
+	}
+
+	const postForm = document.querySelector('#postform');
+	const newPostButton = document.querySelector('a[href="#postform"]');
+	const openPostForm = (e) => {
+		if (e) {
+			e.preventDefault();
+		}
+		history.replaceState({}, '', '#postform');
+		postForm.style.display = 'flex';
+		newPostButton.style.visibility = 'hidden';
+	};
+	const closePostForm = (e) => {
+		e.preventDefault();
+		history.replaceState({}, '', location.pathname);
+		postForm.style.display = 'none';
+		newPostButton.style.visibility = 'visible';
+	};
+	if (postForm) {
+		const closeButton = postForm ? postForm.querySelector('.close') : null;
+		newPostButton.addEventListener('click', openPostForm, false);
+		closeButton.addEventListener('click', closePostForm, false);
+	}
+
 	const messageBox = document.getElementById('message');
 
 	const addQuote = function(number) {
-		window.location.hash = 'postform'; //open postform
+		openPostForm();
 		messageBox.value += `>>${number}\n`;
 		messageBox.scrollTop = messageBox.scrollHeight;
 		messageBox.focus();
 		messageBox.setSelectionRange(messageBox.value.length, messageBox.value.length);
 		messageBox.dispatchEvent(new Event('input'));
-		const quotingPost = document.getElementById(number);
-		if (quotingPost) {
-			quotingPost.scrollIntoView();
-		}
 	}
 
 	const quote = function(e) {
@@ -32,13 +61,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const quoteNum = localStorage.getItem('clickedQuote');
 		if (quoteNum != null) {
 			addQuote(quoteNum);
+			//scroll to the post you quoted
+			const quotingPost = document.getElementById(quoteNum);
+			if (quotingPost) {
+				quotingPost.scrollIntoView();
+			}
 		}
 		localStorage.removeItem('clickedQuote');
 	}
 
-	for (let i = 0; i < links.length; i++) {
-		links[i].addEventListener('click', quote, false);
-	}
+	const addQuoteListeners = (l) => {
+		for (let i = 0; i < l.length; i++) {
+			l[i].addEventListener('click', quote, false);
+		}
+	};
+
+	const links = document.getElementsByClassName('post-quoters');
+	addQuoteListeners(links);
 
 	window.addEventListener('addPost', function(e) {
 		if (e.detail.hover) {
@@ -46,9 +85,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 		const post = e.detail.post;
 		const newlinks = post.getElementsByClassName('post-quoters');
-		for (let i = 0; i < newlinks.length; i++) {
-			newlinks[i].addEventListener('click', quote, false);
-		}
+		addQuoteListeners(newlinks);
 	});
 
 });
