@@ -590,6 +590,10 @@ video, img {
 	max-height: 90vh;
 }
 
+.mh-100 {
+	max-height: 100%;
+}
+
 .post-file-src {
 	justify-content: center;
 	display: flex;

@@ -32,10 +32,6 @@ mixin modal(data)
 							each theme in data.settings.codeThemes
 								option(value=theme) #{theme}
 					.row
-						.label Default volume
-						label.postform-style.ph-5
-							input#volume-setting(type='range' min='0' max='100')
-					.row
 						.label Live posts
 						label.postform-style.ph-5
 							input#live-setting(type='checkbox')
@@ -59,3 +55,15 @@ mixin modal(data)
 						.label Hide Thumbnails
 						label.postform-style.ph-5
 							input#hideimages-setting(type='checkbox')
+					.row
+						.label Default volume
+						label.postform-style.ph-5
+							input#volume-setting(type='range' min='0' max='100')
+					.row
+						.label Loop audio/video
+						label.postform-style.ph-5
+							input#loop-setting(type='checkbox')
+					.row
+						.label Limit expand height
+						label.postform-style.ph-5
+							input#heightlimit-setting(type='checkbox')

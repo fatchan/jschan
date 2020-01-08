@@ -1,5 +1,6 @@
 setDefaultLocalStorage('volume', 100);
-!localStorage.getItem('volume') ? setLocalStorage('volume', 100) : void 0;
+setDefaultLocalStorage('loop', 'false');
+setDefaultLocalStorage('heightlimit', 'true');
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
@@ -10,20 +11,48 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 
-	if (!isCatalog) {
+	const volumeSetting = document.getElementById('volume-setting');
+	let volumeLevel = localStorage.getItem('volume');
+	const changeVolume = (change) => {
+		volumeLevel = volumeSetting.value;
+		console.log('adjusting default volume', volumeLevel);
+		setLocalStorage('volume', volumeLevel);
+	}
+	volumeSetting.value = volumeLevel;
+	volumeSetting.addEventListener('change', changeVolume, false);
+
+	const loopSetting = document.getElementById('loop-setting');
+	let loopEnabled = localStorage.getItem('loop') == 'true';
+	const toggleLoop = (change) => {
+		loopEnabled = loopSetting.checked;
+		console.log('toggling video/audio looping', loopEnabled);
+		setLocalStorage('loop', loopEnabled);
+	}
+	loopSetting.checked = loopEnabled;
+	loopSetting.addEventListener('change', toggleLoop, false);
+
+	const heightlimitSetting = document.getElementById('heightlimit-setting');
+	let heightlimitEnabled = localStorage.getItem('heightlimit') == 'true';
+	const toggleHeightlimit = (change) => {
+		heightlimitEnabled = heightlimitSetting.checked;
+		console.log('toggling image height limit', heightlimitEnabled);
+		setLocalStorage('heightlimit', heightlimitEnabled);
+	}
+	heightlimitSetting.checked = heightlimitEnabled;
+	heightlimitSetting.addEventListener('change', toggleHeightlimit, false);
+
+	if (!isCatalog) { //dont expand on catalog
 		const thumbs = document.getElementsByClassName('post-file-src');
-
-		const volumeSetting = document.getElementById('volume-setting');
-		let volumeLevel = localStorage.getItem('volume');
-		const changeVolume = (change) => {
-			volumeLevel = volumeSetting.value;
-			console.log('adjusting volume', volumeLevel);
-			setLocalStorage('volume', volumeLevel);
-		}
-		volumeSetting.value = volumeLevel;
-		volumeSetting.addEventListener('change', changeVolume, false);
-
 		const toggle = function(thumb, exp, fn, src) {
+			if (loopEnabled) {
+				exp.loop = true;
+			}
+			if (!heightlimitEnabled) {
+				exp.classList.add('mh-100');
+			} else {
+				exp.classList.remove('mh-100');
+			}
+			exp.volume = volumeLevel/100;
 			const close = exp.previousSibling.innerText === 'Close' ? exp.previousSibling : null;
 			if (thumb.style.display === 'none') {
 				//closing
@@ -95,7 +124,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 							toggle(thumbElement, expandedElement, fileName, pfs);
 						}, true);
 						expandedElement.controls = 'true';
-						expandedElement.volume = volumeLevel/100;
 						source = document.createElement('source');
 						expandedElement.appendChild(source);
 						fileLink.appendChild(expandedElement);
