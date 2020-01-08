@@ -16,15 +16,14 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	let lastPostId;
 	const anchors = document.getElementsByClassName('anchor');
-	if (anchors.length === 0) {
-		return; //url matches, but on a 404 page so dont bother with the rest
-	}
 
 	let liveEnabled = localStorage.getItem('live') == 'true';
 	let notificationsEnabled = localStorage.getItem('notifications') == 'true';
 	let scrollEnabled = localStorage.getItem('scroll') == 'true';
 
-	lastPostId = anchors[anchors.length - 1].id;
+	if (anchors.length > 0) {
+		lastPostId = anchors[anchors.length - 1].id;
+	}
 	const thread = document.querySelector('.thread');
 	const newPost = (data) => {
 		console.log('got new post');
