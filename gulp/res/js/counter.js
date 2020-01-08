@@ -19,6 +19,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		};
 
 		const updateLength = function(e) {
+			if (messageBox.value.length > maxLength) {
+				messageBox.value = messageBox.value.substring(0,maxLength);
+			}
 			currentLength = messageBox.value.length;
 			updateCounter();
 		};
