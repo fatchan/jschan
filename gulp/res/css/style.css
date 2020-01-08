@@ -1003,6 +1003,11 @@ table, .boardtable {
 		display: none;
 	}
 
+	.modal {
+		top: 5px;
+		max-height: calc(100% - 10px);
+	}
+
 	.postmenu {
 		float: right;
 	}
