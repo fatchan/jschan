@@ -1,17 +1,5 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	//change url hash and scroll to the element without affecting css :target selectors
-	const scrollWithoutTargeting = (e) => {
-		e.preventDefault();
-		history.replaceState({}, '', e.target.href);
-		document.querySelector(e.target.hash).scrollIntoView();
-	}
-
-	const scrollButtons = document.querySelectorAll('.stickynav .nav-item'); // '.stickynav .nav-item,.post-links a'
-	for (let i = 0; i < scrollButtons.length; i++) {
-		scrollButtons[i].addEventListener('click', scrollWithoutTargeting, false);
-	}
-
 	const postForm = document.querySelector('#postform');
 	const newPostButton = document.querySelector('a[href="#postform"]');
 	const openPostForm = (e) => {
@@ -56,8 +44,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	};
 
-	//on loading page after clicking quote
+	//on loading page open with js method if user has scripts
+	if (location.hash === '#postform') {
+		openPostForm();
+	}
 	if (isThread) {
+		//add quote to postform if link clicked with quote
 		const quoteNum = localStorage.getItem('clickedQuote');
 		if (quoteNum != null) {
 			addQuote(quoteNum);
