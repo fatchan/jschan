@@ -18,7 +18,7 @@ module.exports = {
 
 	//string representing how long since date A to date B
 	'relativeString': (now, relativeTo) => {
-		const difference = now.getTime() - relativeTo.getTime();
+		let difference = now.getTime() - relativeTo.getTime();
 		let amount = 0;
 		let ret = '';
 		let isFuture = false;
