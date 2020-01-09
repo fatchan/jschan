@@ -20,7 +20,7 @@ FILE_ARCHIVE_PATH="$BACKUPS_DIR/$FILE_BACKUP_NAME"
 mkdir -p $BACKUPS_DIR
 
 #backups files
-zip -r $FILE_ARCHIVE_PATH ./static
+zip -r -0 $FILE_ARCHIVE_PATH ./static
 
 #backup db
 mongodump --username $MONGO_USER --password $MONGO_PASSWORD --authenticationDatabase admin --db $MONGO_DATABASE --archive=$DB_ARCHIVE_PATH --gzip
