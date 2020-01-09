@@ -42,7 +42,7 @@ const express = require('express')
 	// disable useless express header
 	app.disable('x-powered-by');
 	// parse forms
-	app.use(express.urlencoded({extended: true}));
+	app.use(express.urlencoded({extended: false}));
 	//app.use(express.json()); //unused atm, will be used with forms.js eventually
 	// parse cookies
 	app.use(cookieParser());
