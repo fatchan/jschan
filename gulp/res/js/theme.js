@@ -13,7 +13,7 @@ async function changeTheme(e, type) {
 	//check for theme style tag
 	let tempLink = document.getElementById(`custom${type}`);
 	let defaultLink = document.getElementById(type);
-	if (theme === 'default') {
+	if (theme === 'default' || theme === defaultLink.dataset.theme) {
 		defaultLink.rel = 'stylesheet';
 		await new Promise(resolve => { setTimeout(resolve, 100) });//ew
 		if (tempLink) {

@@ -46,6 +46,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const toggle = function(thumb, exp, fn, src) {
 			if (loopEnabled) {
 				exp.loop = true;
+			} else {
+				exp.loop = false;
 			}
 			if (!heightlimitEnabled) {
 				exp.classList.add('mh-100');
