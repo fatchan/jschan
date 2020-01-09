@@ -335,7 +335,7 @@ p {
 }
 
 .pinktext {
-	color: #E0727F;
+	color: var(--pinktext-color);
 }
 
 .greentext {

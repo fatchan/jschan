@@ -27,6 +27,7 @@
 	--dice-color: darkorange;
 	--title-color: #d70000;
 	--greentext-color: green;
+	--pinktext-color:#E0727F;
 }
 
 .anchor:target + .post-container,

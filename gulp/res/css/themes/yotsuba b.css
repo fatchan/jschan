@@ -27,6 +27,7 @@
 	--dice-color: darkorange;
 	--title-color: #d70000;
 	--greentext-color: green;
+	--pinktext-color:#E0727F;
 }
 
 .post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, #livetext, #threadstats {
