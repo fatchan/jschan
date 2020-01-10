@@ -14,7 +14,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					input.post-check(type='checkbox', name='checkedposts' value=post.postId)
 				| 
 				if !post.thread
-					include ../includes/postmods.pug
+					include ../includes/posticons.pug
 				if post.subject
 					span.post-subject #{post.subject}
 					| 

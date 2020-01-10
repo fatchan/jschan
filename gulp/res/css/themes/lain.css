@@ -1,5 +1,6 @@
 /*lainchan*/
 :root {
+	--icon-color:invert(17%)sepia(89%)saturate(7057%)hue-rotate(2deg)brightness(93%)contrast(120%);
 	--alt-label-color: #333;
 	--alt-font-color: #bbb;
 	--background-top: #1E1E1E;

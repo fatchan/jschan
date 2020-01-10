@@ -1,5 +1,6 @@
 /*rei-zero*/
 :root {
+	--icon-color:invert(17%)sepia(89%)saturate(7057%)hue-rotate(2deg)brightness(93%)contrast(120%);
 	--alt-label-color: #29373e;
 	--alt-font-color: #d6d6d6;
 	--background-top: #000E1C;

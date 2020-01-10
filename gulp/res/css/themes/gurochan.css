@@ -1,5 +1,6 @@
 /*gurochan*/
 :root {
+	--icon-color:invert(17%)sepia(89%)saturate(7057%)hue-rotate(2deg)brightness(93%)contrast(120%);
 	--alt-label-color: #e6cbc0;
 	--alt-font-color: #000;
 	--background-top: #EDDAD2;

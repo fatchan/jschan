@@ -730,6 +730,11 @@ input:invalid, textarea:invalid {
 	color:var(--capcode-color);
 }
 
+.post-icons {
+	filter:var(--icon-color);
+	vertical-align: middle;
+}
+
 .post-tripcode, .post-name {
 	color: var(--name-color);
 }
@@ -1108,7 +1113,8 @@ are these (along with condensed flag image) originally from here?
 	display: inline-block;
 	width: 16px;
 	height: 11px;
-	background:url(/img/flags.png) no-repeat
+	background:url(/img/flags.png) no-repeat;
+	image-rendering: crisp-edges;
 }
 
 .flag.flag-ad {background-position: -16px 0}

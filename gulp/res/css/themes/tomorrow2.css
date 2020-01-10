@@ -1,5 +1,6 @@
 /*tomorrow*/
 :root {
+	--icon-color:invert(17%)sepia(89%)saturate(7057%)hue-rotate(2deg)brightness(93%)contrast(120%);
 	--alt-label-color: #282a2e;
 	--alt-font-color: #c5c8c6;
 	--background-top: #1d1f21;

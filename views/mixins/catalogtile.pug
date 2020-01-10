@@ -2,7 +2,7 @@ mixin catalogtile(board, post, index)
 	.catalog-tile(data-board=post.board data-post-id=post.postId data-user-id=post.userId)
 		- const postURL = `/${board._id}/thread/${post.postId}.html#${post.postId}`
 		.post-info
-			include ../includes/postmods.pug
+			include ../includes/posticons.pug
 			a.no-decoration.post-subject(href=postURL) #{post.subject || 'No subject'}
 			br 
 			span(title='Replies') R: #{post.replyposts}
