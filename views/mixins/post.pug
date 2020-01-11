@@ -4,26 +4,27 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId)
 		- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
 		.post-info
-			label.noselect
-				if globalmanage
-					input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
+			span.noselect
+				label
+					if globalmanage
+						input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
+						| 
+						- ipHashSub = post.ip.hash.slice(-10);
+						a.bold(href=`?ip=${encodeURIComponent(ipHashSub)}`) #{ipHashSub}
+					else if !ban
+						input.post-check(type='checkbox', name='checkedposts' value=post.postId)
 					| 
-					- ipHashSub = post.ip.hash.slice(-10);
-					a.bold(href=`?ip=${encodeURIComponent(ipHashSub)}`) #{ipHashSub}
-				else if !ban
-					input.post-check(type='checkbox', name='checkedposts' value=post.postId)
-				| 
-				if !post.thread
-					include ../includes/posticons.pug
-				if post.subject
-					span.post-subject #{post.subject}
-					| 
-				if post.email
-					a(href=`mailto:${post.email}`)
+					if !post.thread
+						include ../includes/posticons.pug
+					if post.subject
+						span.post-subject #{post.subject}
+						| 
+					if post.email
+						a(href=`mailto:${post.email}`)
+							span.post-name #{post.name}
+					else 
 						span.post-name #{post.name}
-				else 
-					span.post-name #{post.name}
-				| 
+					| 
 				if post.country && post.country.code
 					span(class=`flag flag-${post.country.code.toLowerCase()}` title=post.country.name alt=post.country.name)
 					| 
