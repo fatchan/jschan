@@ -378,10 +378,6 @@ td, th {
 	word-break: break-word;
 }
 
-.action-wrapper {
-	text-align: left;
-}
-
 .flex-center {
 	align-items: center;
 }
@@ -469,6 +465,7 @@ details.actions div {
 }
 
 .action-wrapper {
+	text-align: left;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -580,10 +577,6 @@ option {
 	text-overflow: ellipsis;
 	word-break: keep-all;
 	font-size: x-small;
-}
-
-.post-file-src * {
-	max-width: 100%;
 }
 
 video, img {
@@ -941,6 +934,7 @@ table.boardtable td:nth-child(6) {
 }
 
 .post-file-src * {
+	max-width: 100%;
 	visibility: visible;
 }
 
