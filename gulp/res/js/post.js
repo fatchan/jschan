@@ -19,7 +19,7 @@ pug_mixins["post"] = pug_interp = function(post, truncate, manage=false, globalm
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv" + (" class=\"anchor\""+pug_attr("id", post.postId, true, false)) + "\u003E\u003C\u002Fdiv\u003E\u003Cdiv" + (pug_attr("class", pug_classes([`post-container ${post.thread || ban === true ? '' : 'op'}`], [true]), false, false)+pug_attr("data-board", post.board, true, false)+pug_attr("data-post-id", post.postId, true, false)+pug_attr("data-user-id", post.userId, true, false)) + "\u003E";
 const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
-pug_html = pug_html + "\u003Cdiv class=\"post-info\"\u003E\u003Clabel class=\"noselect\"\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"post-info\"\u003E\u003Cspan class=\"noselect\"\u003E\u003Clabel\u003E";
 if (globalmanage) {
 pug_html = pug_html + "\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"globalcheckedposts\""+pug_attr("value", post._id, true, false)) + "\u002F\u003E ";
 ipHashSub = post.ip.hash.slice(-10);
@@ -31,17 +31,21 @@ pug_html = pug_html + "\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox
 }
 pug_html = pug_html + " ";
 if (!post.thread) {
+if (post.sticky || post.bumplocked || post.locked || post.cyclic) {
+pug_html = pug_html + "\u003Cspan class=\"post-icons\"\u003E";
 if (post.sticky) {
-pug_html = pug_html + "\u003Cimg src=\"\u002Fimg\u002Fsticky.png\" height=\"12\" width=\"12\" title=\"Sticky\"\u002F\u003E ";
+pug_html = pug_html + "\u003Cimg src=\"\u002Fimg\u002Fsticky.png\" height=\"14\" width=\"14\" title=\"Sticky\"\u002F\u003E ";
 }
 if (post.bumplocked) {
-pug_html = pug_html + "\u003Cimg src=\"\u002Fimg\u002Fbumplocked.png\" height=\"12\" width=\"12\" title=\"Bumplocked\"\u002F\u003E ";
+pug_html = pug_html + "\u003Cimg src=\"\u002Fimg\u002Fbumplock.png\" height=\"14\" width=\"14\" title=\"Bumplocked\"\u002F\u003E ";
 }
 if (post.locked) {
-pug_html = pug_html + "\u003Cimg src=\"\u002Fimg\u002Flocked.png\" height=\"12\" width=\"12\" title=\"Locked\"\u002F\u003E ";
+pug_html = pug_html + "\u003Cimg src=\"\u002Fimg\u002Flock.png\" height=\"14\" width=\"14\" title=\"Locked\"\u002F\u003E ";
 }
 if (post.cyclic) {
-pug_html = pug_html + "\u003Cimg src=\"\u002Fimg\u002Fcyclic.png\" height=\"13\" width=\"13\" title=\"Cyclic\"\u002F\u003E ";
+pug_html = pug_html + "\u003Cimg src=\"\u002Fimg\u002Fcyclic.png\" height=\"14\" width=\"14\" title=\"Cyclic\"\u002F\u003E ";
+}
+pug_html = pug_html + "\u003C\u002Fspan\u003E";
 }
 }
 if (post.subject) {
@@ -53,7 +57,7 @@ pug_html = pug_html + "\u003Ca" + (pug_attr("href", `mailto:${post.email}`, true
 else {
 pug_html = pug_html + "\u003Cspan class=\"post-name\"\u003E" + (pug_escape(null == (pug_interp = post.name) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
 }
-pug_html = pug_html + " ";
+pug_html = pug_html + " \u003C\u002Flabel\u003E";
 if (post.country && post.country.code) {
 pug_html = pug_html + "\u003Cspan" + (pug_attr("class", pug_classes([`flag flag-${post.country.code.toLowerCase()}`], [true]), false, false)+pug_attr("title", post.country.name, true, false)+pug_attr("alt", post.country.name, true, false)) + "\u003E\u003C\u002Fspan\u003E ";
 }
@@ -68,7 +72,7 @@ pug_html = pug_html + "\u003Ctime" + (" class=\"post-date reltime\""+pug_attr("d
 if (post.userId) {
 pug_html = pug_html + "\u003Cspan" + (" class=\"user-id\""+pug_attr("style", pug_style(`background-color: #${post.userId}`), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.userId) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E ";
 }
-pug_html = pug_html + "\u003C\u002Flabel\u003E\u003Cspan class=\"post-links\"\u003E\u003Ca" + (" class=\"noselect no-decoration\""+pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003ENo.\u003C\u002Fa\u003E\u003Cspan class=\"post-quoters\"\u003E\u003Ca" + (" class=\"no-decoration\""+pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003C\u002Fspan\u003E\u003Cspan class=\"post-links\"\u003E\u003Ca" + (" class=\"noselect no-decoration\""+pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003ENo.\u003C\u002Fa\u003E\u003Cspan class=\"post-quoters\"\u003E\u003Ca" + (" class=\"no-decoration\""+pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (!post.thread) {
 pug_html = pug_html + " \u003Cspan class=\"noselect\"\u003E\u003Ca" + (pug_attr("href", `${postURL}#postform`, true, false)) + "\u003E[Reply]\u003C\u002Fa\u003E\u003C\u002Fspan\u003E";
 }

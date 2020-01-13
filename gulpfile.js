@@ -168,6 +168,7 @@ function scripts() {
 			`${paths.scripts.src}/settings.js`,
 			`${paths.scripts.src}/live.js`,
 			`${paths.scripts.src}/*.js`,
+			`!${paths.scripts.src}/dragable.js`,
 			`!${paths.scripts.src}/hide.js`,
 			`!${paths.scripts.src}/time.js`,
 		])
@@ -175,6 +176,7 @@ function scripts() {
 		.pipe(uglify())
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
+			`${paths.scripts.src}/dragable.js`,
 			`${paths.scripts.src}/hide.js`,
 			`${paths.scripts.src}/time.js`,
 		])

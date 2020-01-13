@@ -5,6 +5,8 @@
 section.form-wrapper.flex-center
 	form.form-post#postform(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
+		section.row.jsonly
+			.noselect#dragHandle
 		unless board.settings.forceAnon
 			section.row
 				.label Name

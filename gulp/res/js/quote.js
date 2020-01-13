@@ -9,6 +9,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		history.replaceState({}, '', '#postform');
 		postForm.style.display = 'flex';
 		newPostButton.style.visibility = 'hidden';
+		postForm.dispatchEvent(new Event('opened'));
 	};
 	const closePostForm = (e) => {
 		e.preventDefault();
