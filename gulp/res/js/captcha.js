@@ -1,18 +1,30 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	const captchaFields = document.getElementsByClassName('captchafield');
+	let refreshing = false;
 
-	const refreshCaptcha = function(e) {
-		if (this.refreshing) {
+	const updateCaptchaImages = (url) => {
+		for (let i = 0; i < captchaFields.length; i++) {
+			if (captchaFields[i].previousSibling.children.length > 0) {
+				captchaFields[i].previousSibling.children[0].src = url;
+			}
+		}
+	};
+
+	const refreshCaptchas = function(e) {
+		if (refreshing) {
 			return;
 		}
-		this.refreshing = true;
+		refreshing = true;
 		document.cookie = 'captchaid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 		const captchaImg = this;
 		const xhr = new XMLHttpRequest();
-		xhr.onload = function() {
-			captchaImg.src = xhr.responseURL;
-			captchaImg.refreshing = false;
+		xhr.onload = () => {
+			refreshing = false;
+			updateCaptchaImages(xhr.responseURL);
+		}
+		xhr.onerror = () => {
+			refreshing = false;
 		}
 		xhr.open('GET', '/captcha', true);
 		xhr.send(null);
@@ -27,7 +39,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			field.placeholder = 'double click image to refresh';
 			captchaDiv.appendChild(captchaImg);
 			captchaDiv.style.display = '';
-			captchaImg.addEventListener('dblclick', refreshCaptcha, true);
+			captchaImg.addEventListener('dblclick', refreshCaptchas, true);
 		}
 	};
 
