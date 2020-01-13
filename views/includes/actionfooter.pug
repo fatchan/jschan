@@ -1,6 +1,6 @@
 details.toggle-label
 	summary.toggle-summary Show Post Actions
-	.actions 
+	.actions
 		h4.no-m-p Actions:
 		label
 			input.post-check(type='checkbox', name='delete' value='1')
@@ -24,6 +24,9 @@ details.toggle-label
 	details.actions
 		summary.bold Staff Actions:
 		div
+			label
+				input.post-check(type='checkbox', name='delete_ip_thread' value='1')
+				| Delete from IP in thread
 			label
 				input.post-check(type='checkbox', name='delete_ip_board' value='1')
 				| Delete from IP on board
@@ -76,7 +79,7 @@ details.toggle-label
 				| Toggle Bumplock
 			label
 				input.post-check(type='checkbox', name='cyclic' value='1')
-				| Toggle Cycle	
+				| Toggle Cycle
 	.actions
 		h4.no-m-p Captcha:
 		include ./captcha.pug

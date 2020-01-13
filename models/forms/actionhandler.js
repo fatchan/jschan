@@ -51,7 +51,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	//affected boards, list and page numbers
-	const deleting = req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global;
+	const deleting = req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global || req.body.delete_ip_thread;
 	let { boardThreadMap, beforePages, threadBoards } = await getAffectedBoards(res.locals.posts, deleting);
 
 	const messages = [];
@@ -72,14 +72,13 @@ module.exports = async (req, res, next) => {
 			modlogActions.push('Global ban reporter');
 		}
 		if (action) {
-
 			combinedQuery[action] = { ...combinedQuery[action], ...query}
 		}
 		messages.push(message);
 	}
 	if (deleting) {
 		const postsBefore = res.locals.posts.length;
-		if (req.body.delete_ip_board || req.body.delete_ip_global) {
+		if (req.body.delete_ip_board || req.body.delete_ip_global || req.body.delete_ip_thread) {
 			const deletePostIps = res.locals.posts.map(x => x.ip.hash);
 			const deletePostMongoIds = res.locals.posts.map(x => x._id)
 			let query = {
@@ -90,7 +89,22 @@ module.exports = async (req, res, next) => {
 					'$in': deletePostIps
 				}
 			};
-			if (req.body.delete_ip_board) {
+			if (req.body.delete_ip_thread) {
+				const ips_threads = [...boardThreadMap[req.params.board].threads];
+				query['board'] = req.params.board;
+				query['$or'] = [
+					{
+						'thread': {
+							'$in': ips_threads
+						}
+					},
+					{
+						'postId': {
+							'$in': ips_threads
+						}
+					}
+				];
+			} else if (req.body.delete_ip_board) {
 				query['board'] = req.params.board;
 			}
 			const deleteIpPosts = await Posts.db.find(query).toArray();
