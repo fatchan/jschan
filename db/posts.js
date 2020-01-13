@@ -5,7 +5,8 @@ const Mongo = require(__dirname+'/db.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.client.db('jschan').collection('posts')
 	, cache = require(__dirname+'/../redis.js')
-	, { quoteLimit } = require(__dirname+'/../configs/main.js');
+	, { quoteLimit, previewReplies, stickyPreviewReplies
+		, early404Replies, early404Fraction } = require(__dirname+'/../configs/main.js');
 
 module.exports = {
 
@@ -51,9 +52,10 @@ module.exports = {
 			'bumped': -1,
 		}).skip(10*(page-1)).limit(limit).toArray();
 
-		// add last 5 posts in reverse order to preview
+		// add last n posts in reverse order to preview
 		await Promise.all(threads.map(async thread => {
-			const replies = await db.find({
+			const previewRepliesLimit = thread.sticky ? stickyPreviewReplies : previewReplies;
+			const replies = previewRepliesLimit === 0 ? [] : await db.find({
 				'thread': thread.postId,
 				'board': board
 			},{
@@ -66,23 +68,24 @@ module.exports = {
 				}
 			}).sort({
 				'postId': -1
-			}).limit(5).toArray();
+			}).limit(previewRepliesLimit).toArray();
 
 			//reverse order for board page
 			thread.replies = replies.reverse();
 
 			//if enough replies, show omitted count
-			if (thread.replyposts > 5) {
-				//dont show ALL backlinks on OP for previews on index page
-				const firstPreviewId = thread.replies[0].postId;
-				const latestPreviewBacklink = thread.backlinks.find(bl => { return bl.postId >= firstPreviewId });
-				if (latestPreviewBacklink != null) {
-					const latestPreviewIndex = thread.backlinks.map(bl => bl.postId).indexOf(latestPreviewBacklink.postId);
-					thread.previewbacklinks = thread.backlinks.slice(latestPreviewIndex);
-				} else {
-					thread.previewbacklinks = [];
+			if (thread.replyposts > previewRepliesLimit) {
+				//dont show all backlinks on OP for previews on index page
+				thread.previewbacklinks = [];
+				if (previewRepliesLimit > 0) {
+					const firstPreviewId = thread.replies[0].postId;
+					const latestPreviewBacklink = thread.backlinks.find(bl => { return bl.postId >= firstPreviewId });
+					if (latestPreviewBacklink != null) {
+						const latestPreviewIndex = thread.backlinks.map(bl => bl.postId).indexOf(latestPreviewBacklink.postId);
+						thread.previewbacklinks = thread.backlinks.slice(latestPreviewIndex);
+					}
 				}
-				//cout omitted image and posts
+				//count omitted image and posts
 				const numPreviewFiles = replies.reduce((acc, post) => { return acc + post.files.length }, 0);
 				thread.omittedfiles = thread.replyfiles - numPreviewFiles;
 				thread.omittedposts = thread.replyposts - replies.length;
@@ -433,9 +436,9 @@ module.exports = {
 				'thread': null,
 				'board': board._id,
 				'replyposts': {
-					'$lt': 5
+					'$lt': early404Replies
 				}
-			}).skip(Math.ceil(board.settings.threadLimit/3)).toArray();
+			}).skip(Math.ceil(board.settings.threadLimit/early404Fraction)).toArray();
 		}
 
 		return oldThreads.concat(early404Threads);

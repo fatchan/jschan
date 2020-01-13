@@ -47,7 +47,8 @@ module.exports = {
 	//let all users create new boards
 	enableUserBoards: true,
 
-	//extension for thumbnails. this value is used UNLESS the image contains transparency, in which case png is used.
+	/* extension for thumbnails. this value is used UNLESS the image contains transparency,
+		in which case png is used. */
 	thumbExtension: '.jpg',
 
 	//max thumb dimensions (square) in px. images smaller than this are not thumbnailed
@@ -58,6 +59,18 @@ module.exports = {
 
 	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
 	quoteLimit: 15,
+
+	//how many replies to show on index pages under each OP
+	previewReplies: 5,
+	stickyPreviewReplies: 5, //choose a different amount for sticky posts if desired
+
+	/* the fraction of threadLimit beyond which early404 prunes posts
+		e.g. 3 means after the first third, so if you had 6 pages,
+		anything after page 2 with less than early404Replies gets pruned */
+	early404Fraction: 3,
+
+	//how many replies a thread needs to not get removed by early404
+	early404Replies: 5,
 
 	//options for code block highlighting in posts
 	highlightOptions: {
