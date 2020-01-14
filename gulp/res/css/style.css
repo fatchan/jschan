@@ -838,6 +838,7 @@ input[type="file"] {
 	box-sizing: border-box;
 	border: 5px solid var(--post-color);
 	overflow-y: auto;
+	box-shadow: 0 0 3px 1px var(--darken);
 }
 
 #postform:target {
@@ -1044,7 +1045,7 @@ table, .boardtable {
 		width: 2.25em;
 	}
 
-	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select {
+	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select, #dragHandle {
 		height: 2.25em;
 		box-sizing: border-box;
 	}

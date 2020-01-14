@@ -68,6 +68,8 @@ class Dragable {
 				window.addEventListener('mousemove', e => this.doDrag(e));
 				break;
 			case 'touchstart':
+				e.preventDefault();
+				e.stopPropagation();
 				this.xo = e.targetTouches[0].clientX - rect.left;
 				this.yo = e.targetTouches[0].clientY - rect.top;
 				window.addEventListener('touchmove', e => this.doDrag(e));
@@ -76,7 +78,6 @@ class Dragable {
 				//user has alien technology
 				break;
 		}
-		return false;
 	}
 
 	//do the actual drag/movement
@@ -91,6 +92,8 @@ class Dragable {
 				this.target.style.top = `${this.inBounds(e.clientY, this.yo, this.target.offsetHeight, document.documentElement.clientHeight)}px`;
 				break;
 			case 'touchmove':
+				e.preventDefault();
+				e.stopPropagation();
 				this.target.style.left = `${this.inBounds(e.targetTouches[0].clientX, this.xo, this.target.offsetWidth, document.documentElement.clientWidth)}px`;
 				this.target.style.top = `${this.inBounds(e.targetTouches[0].clientY, this.yo, this.target.offsetHeight, document.documentElement.clientHeight)}px`;
 				break;
@@ -99,7 +102,6 @@ class Dragable {
 		}
 		setLocalStorage('dragtop', this.target.style.top);
 		setLocalStorage('dragleft', this.target.style.left);
-		return false;
 	}
 
 	//stopped dragging
@@ -113,11 +115,6 @@ class Dragable {
 
 }
 
-new Dragable('#dragHandle', '#postform');
-
-/*
-todo:
--event when resizing to prevent going bigger than screen size
--event when resizing window to prevent going off screen (reset to right side)
--dont show drag handle when mobile and smaller than 400 height (set to middle)
-*/
+if (document.getElementById('postform')) {
+	new Dragable('#dragHandle', '#postform');
+}
