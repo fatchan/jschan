@@ -36,7 +36,7 @@
 	border: 1px solid var(--highlighted-post-outline-color) !important;
 }
 
-.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, #livetext, #threadstats {
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
 	border-bottom: 1px solid var(--post-outline-color);
 	border-right: 1px solid var(--post-outline-color);
 	border-top: 1px solid var(--post-color);

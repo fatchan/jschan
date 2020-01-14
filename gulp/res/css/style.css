@@ -411,7 +411,7 @@ td, th {
 		opacity: 0.5;
 	}
 }
-.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, .modal, #livetext, #threadstats {
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
 	background: var(--post-color);
 	border-width: 1px;
 	border-style: solid;
@@ -444,8 +444,7 @@ td, th {
 	background-color: var(--post-color);
 	z-index: 4;
 	box-sizing: border-box;
-	padding: 5px;
-	border: 1px solid var(--post-outline-color);
+	border: 5px solid var(--post-color);
 	align-self: center;
 	overflow: auto;
 }
@@ -956,10 +955,9 @@ table, .boardtable {
 
 
 @media only screen and (max-height: 400px) {
-	#postform:target {
-		display: flex;
-		position: initial;
-		z-index: 0;
+	.modal {
+		top: 5px;
+		max-height: calc(100% - 10px);
 	}
 }
 

@@ -21,13 +21,13 @@ mixin modal(data)
 				.form-wrapper.flexleft.mt-10
 					.row
 						.label Theme
-						select#theme-changer(name='theme')
+						select#theme-setting
 							option(value='default') default
 							each theme in data.settings.themes
 								option(value=theme) #{theme}
 					.row
 						.label Code theme
-						select#code-theme-changer
+						select#codetheme-setting
 							option(value='default') default
 							each theme in data.settings.codeThemes
 								option(value=theme) #{theme}
@@ -67,3 +67,6 @@ mixin modal(data)
 						.label Limit expand height
 						label.postform-style.ph-5
 							input#heightlimit-setting(type='checkbox')
+					.row
+						.label Custom CSS
+						textarea#customcss-setting
