@@ -1,6 +1,7 @@
 'use strict';
 
 const configs = require(__dirname+'/../configs/main.js')
+	, dynamicResponse = require(__dirname+'/dynamic.js')
 	, refererRegex = new RegExp(configs.refererRegex);
 
 module.exports = (req, res, next) => {
@@ -8,7 +9,7 @@ module.exports = (req, res, next) => {
 		return next();
 	}
 	if (configs.refererCheck === true && (!req.headers.referer || !req.headers.referer.match(refererRegex))) {
-		return res.status(403).render('message', {
+        return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Invalid or missing "Referer" header. Are you posting from the correct URL?'
 		});
