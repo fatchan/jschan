@@ -1,5 +1,6 @@
 const gm = require('gm').subClass({ imageMagick: true })
 	, { Captchas } = require(__dirname+'/../../db/')
+	, { captchaOptions } = require(__dirname+'/../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js')
 	, randomRange = (min, max) => Math.floor(Math.random() * (max-min + 1) + min)
 	, characterWidth = (char) => {
@@ -25,26 +26,22 @@ const gm = require('gm').subClass({ imageMagick: true })
 	}
 	, width = 210
 	, height = 80
-	, distortion = 13;
+	, distortion = captchaOptions.distortion;
 
 module.exports = async () => {
 	const text = Math.random().toString(36).substr(2,6);
 	const captchaId = await Captchas.insertOne(text).then(r => r.insertedId);
 	const distorts = [];
-	const numDistorts = randomRange(3,5);
+	const numDistorts = randomRange(captchaOptions.numDistorts.min,captchaOptions.numDistorts.max);
 	const div = width/numDistorts;
-
 
 	for (let i = 0; i < numDistorts; i++) {
 		const divStart = (div*i)
 			, divEnd = (div*(i+1));
-
 		const originx = randomRange(divStart, divEnd)
 			, originy = randomRange(0,height);
-		
 		const destx = randomRange(Math.max(distortion,originx-distortion),Math.min(width-distortion,originx+distortion))
 			, desty = randomRange(Math.max(distortion,originy-distortion*2),Math.min(height-distortion,originy+distortion*2));
-
 		distorts.push([
 			{x:originx,y:originy}, //origin
 			{x:destx,y:desty} //dest
@@ -66,13 +63,13 @@ module.exports = async () => {
 		captcha
 		.drawRectangle(startX, lineY, charX, lineY+4)
 		.distort(distorts, 'Shepards')
-		.paint(2)
+		.paint(captchaOptions.paintAmount)
 		.write(`${uploadDirectory}/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);
 			}
 			return resolve({ id: captchaId, text });
 		});
-	})
-}
+	});
 
+}

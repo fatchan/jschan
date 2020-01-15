@@ -32,6 +32,16 @@ module.exports = {
 		url: 'https://domain.com'
 	},
 
+	//settings for captchas, if you make them too weak they could probably be solved with OCR.
+	captchaOptions: {
+		distortion: 13,
+		numDistorts: {
+			min: 3,
+			max: 5
+		},
+		paintAmount: 2
+	},
+
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
 
