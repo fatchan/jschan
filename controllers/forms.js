@@ -3,7 +3,7 @@
 const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db/boards.js')
-	, { globalLimits } = require(__dirname+'/../configs/main.js')
+	, { globalLimits, debugLogs } = require(__dirname+'/../configs/main.js')
 	//middlewares
 	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
@@ -24,7 +24,7 @@ const express  = require('express')
 	}
 	, upload = require('express-fileupload')
 	, postFiles = upload({
-		debug: false,
+		debug: debugLogs,
 		createParentPath: true,
 		safeFileNames: /[^\w\s-]+/g,
 		preserveExtension: 4,
@@ -38,7 +38,7 @@ const express  = require('express')
 		tempFileDir: __dirname+'/../tmp/'
 	})
 	, bannerFiles = upload({
-		debug: false,
+		debug: debugLogs,
 		createParentPath: true,
 		safeFileNames: /[^\w\s-]+/g,
 		preserveExtension: 3,

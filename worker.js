@@ -5,16 +5,16 @@ process
 	.on('unhandledRejection', console.error);
 
 const Queue = require('bull')
-	, configs = require(__dirname+'/configs/main.js')
+	, { redis, debugLogs } = require(__dirname+'/configs/main.js')
 	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {
 
-	console.log('CONNECTING TO MONGODB');
+	debugLogs && console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
 
 	const tasks = require(__dirname+'/helpers/tasks.js')
-		, taskQueue = new Queue('task', { 'redis': configs.redis });
+		, taskQueue = new Queue('task', { redis });
 
 	taskQueue
 		.on('error', console.error)

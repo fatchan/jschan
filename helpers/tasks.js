@@ -5,7 +5,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, timeUtils = require(__dirname+'/timeutils.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
-	, { pruneModlogs, enableWebring } = require(__dirname+'/../configs/main.js')
+	, { debusLogs, pruneModlogs, enableWebring } = require(__dirname+'/../configs/main.js')
 	, { Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, render = require(__dirname+'/render.js')
 	, timeDiffString = require(__dirname+'/timediffstring.js');
@@ -20,7 +20,7 @@ module.exports = {
 			'data': options.board.banners
 		});
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 		return html;
 	},
 
@@ -39,7 +39,7 @@ module.exports = {
 			'data': threads
 		});
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 		return html;
 	},
 
@@ -61,7 +61,7 @@ module.exports = {
 			'data': thread
 		});
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 		return html;
 	},
 
@@ -80,7 +80,7 @@ module.exports = {
 			'data': threads
 		});
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 		return html;
 	},
 
@@ -119,7 +119,7 @@ module.exports = {
 		}
 		await Promise.all(buildArray);
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 	},
 
 	buildNews: async () => {
@@ -130,7 +130,7 @@ module.exports = {
 			news
 		});
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 		return html;
 	},
 
@@ -153,7 +153,7 @@ module.exports = {
 			...options
 		});
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 		return html;
 	},
 
@@ -186,7 +186,7 @@ module.exports = {
 			dates
 		});
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 		return html;
 	},
 
@@ -204,7 +204,7 @@ module.exports = {
 			fileStats,
 		});
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 		return html;
 	},
 
@@ -214,7 +214,7 @@ module.exports = {
 		await Stats.updateBoards();
 		await Stats.resetStats();
 		const end = process.hrtime(start);
-		console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeDiffString(label, end));
 		module.exports.buildHomepage();
 	},
 

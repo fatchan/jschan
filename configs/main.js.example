@@ -35,6 +35,9 @@ module.exports = {
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
 
+	//log extra info for debugging
+    debugLogs: true,
+
 	//max wait time in ms for obtaining locks for saving files
 	lockWait: 3000,
 

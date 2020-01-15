@@ -50,6 +50,7 @@ textarea,
 .postform-style,
 .close,
 table,
+.board-banner,
 #postform {
 	border:	1px	dotted;
 }
@@ -58,9 +59,6 @@ hr {
 }
 .navbar {
 	border-bottom:	1px	dotted;
-}
-#postform {
-	border-top:	none;
 }
 a .post-name:hover,
 a:hover {

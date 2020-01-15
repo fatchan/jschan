@@ -11,7 +11,8 @@ const express = require('express')
 	, app = express()
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
-	, configs = require(__dirname+'/configs/main.js')
+	, { cacheTemplates, boardDefaults, sessionSecret, globalLimits,
+		secureCookies, debugLogs, meta, port } = require(__dirname+'/configs/main.js')
 	, processIp = require(__dirname+'/helpers/processip.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
@@ -25,18 +26,18 @@ const express = require('express')
 
 	const env = process.env.NODE_ENV;
 	const production = env === 'production';
-	console.log('STARTING IN MODE:', env);
+	debugLogs && console.log('STARTING IN MODE:', env);
 
 	// connect to mongodb
-	console.log('CONNECTING TO MONGODB');
+	debugLogs && console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
 
 	// connect to redis
-	console.log('CONNECTING TO REDIS');
+	debugLogs && console.log('CONNECTING TO REDIS');
 	const { redisClient } = require(__dirname+'/redis.js');
 
 	// connect socketio
-	console.log('STARTING WEBSOCKET');
+	debugLogs && console.log('STARTING WEBSOCKET');
 	Socketio.connect(server);
 
 	// disable useless express header
@@ -49,7 +50,7 @@ const express = require('express')
 
 	// session store
 	app.use(session({
-		secret: configs.sessionSecret,
+		secret: sessionSecret,
 		store: new redisStore({
 			client: redisClient,
 		}),
@@ -57,7 +58,7 @@ const express = require('express')
 		saveUninitialized: false,
 		cookie: {
 			httpOnly: true,
-			secure: configs.secureCookies && production,
+			secure: secureCookies && production,
 			sameSite: 'strict',
 			maxAge: DAY,
 		}
@@ -75,15 +76,15 @@ const express = require('express')
 	app.set('view engine', 'pug');
 	app.set('views', views);
 	//cache loaded templates
-	if (configs.cacheTemplates === true) {
+	if (cacheTemplates === true) {
 		app.enable('view cache');
 	}
 
 	//default settings
-	app.locals.defaultTheme = configs.boardDefaults.theme;
-	app.locals.defaultCodeTheme = configs.boardDefaults.codeTheme;
-	app.locals.globalLimits = configs.globalLimits;
-	app.locals.meta = configs.meta;
+	app.locals.defaultTheme = boardDefaults.theme;
+	app.locals.defaultCodeTheme = boardDefaults.codeTheme;
+	app.locals.globalLimits = globalLimits;
+	app.locals.meta = meta;
 
 	// routes
 	if (!production) {
@@ -116,33 +117,33 @@ const express = require('express')
 	})
 
 	//listen
-	server.listen(configs.port, '127.0.0.1', () => {
+	server.listen(port, '127.0.0.1', () => {
 		new CachePugTemplates({ app, views }).start();
-		console.log(`LISTENING ON :${configs.port}`);
+		debugLogs && console.log(`LISTENING ON :${port}`);
 		//let PM2 know that this is ready for graceful reloads and to serialise startup
 		if (typeof process.send === 'function') {
 			//make sure we are a child process of PM2 i.e. not in dev
-			console.log('SENT READY SIGNAL TO PM2');
+			debugLogs && console.log('SENT READY SIGNAL TO PM2');
 			process.send('ready');
 		}
 	});
 
 	//listen for sigint from PM2
 	process.on('SIGINT', () => {
-		console.log('SIGINT SIGNAL RECEIVED');
+		debugLogs && console.log('SIGINT SIGNAL RECEIVED');
 		// Stops the server from accepting new connections and finishes existing connections.
 		Socketio.io.close((err) => {
 			// if error, log and exit with error (1 code)
-			console.log('CLOSING SERVER');
+			debugLogs && console.log('CLOSING SERVER');
 			if (err) {
 				console.error(err);
 				process.exit(1);
 			}
 			// close database connection
-			console.log('DISCONNECTING MONGODB');
+			debugLogs && console.log('DISCONNECTING MONGODB');
 			Mongo.client.close();
 			//close redis connection
-			console.log('DISCONNECTING REDIS')
+			debugLogs && console.log('DISCONNECTING REDIS')
 			redisClient.quit();
 			// now close without error
 			process.exit(0);

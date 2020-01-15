@@ -1,6 +1,7 @@
 'use strict';
 
 const Files = require(__dirname+'/../db/files.js')
+	, { debugLogs } =  require(__dirname+'/../configs/main.js')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js');
 
@@ -22,6 +23,7 @@ module.exports = async() => {
 		}
 	});
 	await Promise.all(files.map(async file => {
+		debugLogs && console.log(file._id)
 		return Promise.all(
 			[remove(`${uploadDirectory}/img/${file._id}`)]
 			.concat(file.exts.filter(ext => ext).map(ext => {

@@ -1,7 +1,7 @@
 'use strict';
 
 const fetch = require('node-fetch')
-	, { meta } = require(__dirname+'/../configs/main.js')
+	, { debugLogs, meta } = require(__dirname+'/../configs/main.js')
 	, { logo, following, blacklist } = require(__dirname+'/../configs/webring.json')
 	, { Boards, Webring } = require(__dirname+'/../db/')
 	, { outputFile } = require('fs-extra')
@@ -87,5 +87,5 @@ module.exports = async () => {
 	}
 
 	const end = process.hrtime(start);
-	console.log(timeDiffString(label, end));
+	debugLogs && console.log(timeDiffString(label, end));
 }

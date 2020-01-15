@@ -552,7 +552,7 @@ details.actions div {
 	align-items: start;
 }
 
-a, video, img, input, summary, select, option {
+a, video, img, input, summary, select, option, textarea {
 	outline: 0;
 }
 
@@ -838,7 +838,6 @@ input[type="file"] {
 	box-sizing: border-box;
 	border: 5px solid var(--post-color);
 	overflow-y: auto;
-	box-shadow: 0 0 3px 1px var(--darken);
 }
 
 #postform:target {
