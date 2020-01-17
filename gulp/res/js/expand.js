@@ -1,6 +1,7 @@
 setDefaultLocalStorage('volume', 100);
-setDefaultLocalStorage('loop', 'false');
-setDefaultLocalStorage('heightlimit', 'true');
+setDefaultLocalStorage('loop', false);
+setDefaultLocalStorage('heightlimit', true);
+setDefaultLocalStorage('crispimages', false);
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
@@ -10,6 +11,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			actionFooter.scrollIntoView();
 		}
 	}
+
+	const crispSetting = document.getElementById('crispimages-setting');
+	let crispEnabled = localStorage.getItem('crispimages') == 'true';
+	const normCss = 'img{}';
+	const crispCss = 'img{image-rendering:crisp-edges}';
+	const mainSheet = document.querySelector('link[rel="stylesheet"]').sheet;
+	const insertImgCss = () => {
+		mainSheet.insertRule(crispEnabled ? crispCss : normCss);
+	}
+	insertImgCss();
+	const changeCrispSetting = (change) => {
+		crispEnabled = crispSetting.checked;
+		mainSheet.removeRule(0);
+		insertImgCss();
+		console.log('setting images crisp', crispEnabled);
+		setLocalStorage('crispimages', crispEnabled);
+	}
+	crispSetting.checked = crispEnabled;
+	crispSetting.addEventListener('change', changeCrispSetting, false);
 
 	const volumeSetting = document.getElementById('volume-setting');
 	let volumeLevel = localStorage.getItem('volume');
