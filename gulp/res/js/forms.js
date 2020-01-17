@@ -123,7 +123,7 @@ class formHandler {
 						}
 					}
 					this.form.reset();
-				    this.messageBox.dispatchEvent(new Event('input'));
+					this.updateMessageBox();
 					this.files = [];
 					this.updateFilesText();
 					const captcha = this.form.querySelector('img');
@@ -161,6 +161,10 @@ class formHandler {
 			xhr.setRequestHeader('x-using-live', true);
 		}
 		xhr.send(postData);
+	}
+
+	updateMessageBox() {
+		this.messageBox && this.messageBox.dispatchEvent(new Event('input'));
 	}
 
 	//remove a single file, unused atm

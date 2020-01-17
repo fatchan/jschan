@@ -71,10 +71,19 @@ module.exports = async (req, res, next) => {
 
 	deleteTempFiles(req).catch(e => console.error);
 
+	// no new banners
+	if (filenames.length === 0) {
+		return dynamicResponse(req, res, 400, 'message', {
+			'title': 'Bad request',
+			'message': `Banner${res.locals.numFiles > 1 ? 's' : ''} already exist${res.locals.numFiles > 1 ? '' : 's'}`,
+			'redirect': redirect
+		});
+	}
+
 	// add banners to the db
 	await Boards.addBanners(req.params.board, filenames);
 
-	//add banners to board in memory
+	// add banners to board in memory
 	res.locals.board.banners = res.locals.board.banners.concat(filenames);
 
 	if (filenames.length > 0) {
@@ -87,7 +96,7 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': `Uploaded ${filenames.length} new banners.`,
 		'redirect': redirect
