@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	const crispSetting = document.getElementById('crispimages-setting');
 	let crispEnabled = localStorage.getItem('crispimages') == 'true';
-	const normCss = 'img{}';
+	const normCss = 'img{image-rendering:auto}';
 	const crispCss = 'img{image-rendering:crisp-edges}';
 	const mainSheet = document.querySelector('link[rel="stylesheet"]').sheet;
 	const insertImgCss = () => {
