@@ -735,6 +735,10 @@ input:invalid, textarea:invalid {
 	vertical-align: middle;
 }
 
+.post-icons img {
+	image-rendering: auto;
+}
+
 .post-tripcode, .post-name {
 	color: var(--name-color);
 }
