@@ -13,51 +13,57 @@ module.exports = async () => {
 	const label = `updating webring`;
 	const start = process.hrtime();
 
-	//fetch stuff from others
-	const fetchWebring = [...new Set((await cache.get('webring:sites') || []).concat(following))]
-	let rings = await Promise.all(fetchWebring.map(url => {
-		return fetch(url).then(res => res.json()).catch(e => console.error);
-	}));
-
-	let found = []; //list of found site urls
+	const visited = new Set();
+	let known = new Set(following);
 	let webringBoards = []; //list of webring boards
-	for (let i = 0; i < rings.length; i++) {
-		//this could really use some validation/sanity checking
-		const ring = rings[i];
-		if (!ring || !ring.name) {
-			return;
-		}
-		if (ring.following && ring.following.length > 0) {
-			found = found.concat(ring.following);
-		}
-		if (ring.known && ring.known.length > 0) {
-			found = found.concat(ring.known);
-		}
-		if (ring.boards && ring.boards.length > 0) {
-			ring.boards.forEach(board => {
-				board.siteName = ring.name;
-				//convert to numbers because infinity webring plugin returns strings
-				board.totalPosts = parseInt(board.totalPosts);
-				board.postsPerHour = parseInt(board.postsPerHour);
-				board.uniqueUsers = parseInt(board.uniqueUsers);
-			});
-			webringBoards = webringBoards.concat(ring.boards);
+	while (known.size > visited.size) {
+		//get sites we havent visited yet
+		const toVisit = [...known].filter(url => !visited.has(url));
+		let rings = await Promise.all(toVisit.map(url => {
+			visited.add(url);
+			return fetch(url).then(res => res.json()).catch(e => console.error);
+		}));
+		for (let i = 0; i < rings.length; i++) {
+			const ring = rings[i];
+			if (!ring || !ring.name || !ring.endpoint || !ring.url) {
+				continue;
+			}
+			if (ring.following && ring.following.length > 0) {
+				//filter their folowing by blacklist/self and add to known sites
+				ring.following
+					.filter(url => !blacklist.some(x => url.includes(x)) && !url.includes(meta.url))
+					.forEach(url => known.add(url));
+			}
+			if (ring.boards && ring.boards.length > 0) {
+				//add some stuff for the boardlist and then add their boards
+				ring.boards.forEach(board => {
+					board.siteName = ring.name;
+					//convert to numbers because old infinity webring plugin returns strings
+					board.totalPosts = parseInt(board.totalPosts);
+					board.postsPerHour = parseInt(board.postsPerHour);
+					board.uniqueUsers = parseInt(board.uniqueUsers);
+				});
+				webringBoards = webringBoards.concat(ring.boards);
+			}
 		}
 	}
-
-	//get known sites by filtering found and removing blacklist or own site
-	const known = [...new Set(found.concat(fetchWebring))]
-		.filter(site => !blacklist.some(x => site.includes(x)) && !site.includes(meta.url));
-	//add them all to cache for next time
-	cache.set('webring:sites', known);
 
 	//remove and replace webring boards
 	await Webring.deleteAll();
 	await Webring.db.insertMany(webringBoards);
+//TODO: insert into a temp colletion and use a $out aggregation stage to prevent small timeframe of empty collection
 
-	//output our own webring json
-	const needsUpdate = await cache.del('webring_update'); //returns 1 if somethign was deleted, 0 if not exist
+	let needsUpdate = await cache.del('webring_update'); //if update needed due to local board changes
+	const lastKnown = new Set([...(await cache.get('webring:sites'))]); //previous known list
+	let knownArr = [...known];
+	//if known and last known not the same, update cache and require update
+	if (lastKnown.size !== known.size || !knownArr.every(val => known.has(val))) {
+		cache.set('webring:sites', knownArr);
+		needsUpdate = true;
+	}
+
 	if (needsUpdate) {
+		//update webring.json
 		const boards = await Boards.webringBoards();
 		const json = {
 			name: meta.siteName,
@@ -66,7 +72,7 @@ module.exports = async () => {
 			logo,
 			following,
 			blacklist,
-			known,
+			known: knownArr,
 			boards: boards.map(b => {
 				//map local boards to webring format
 				return {
