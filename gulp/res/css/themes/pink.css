@@ -1,0 +1,55 @@
+/*pink*/
+:root {
+	--icon-color: invert(17%) sepia(89%) saturate(7057%) hue-rotate(2deg) brightness(93%) contrast(120%);
+	--alt-label-color: #ffcccb;
+	--alt-font-color:#c5c8c6;
+	--background-top:#ffe4e6;
+	--background-rest:#ffe4e6;
+	--navbar-color:#ffcccb;
+	--post-color:#ffcccb;
+	--post-outline-color:#80002c;
+	--label-color:#ffcccb;
+	--box-border-color:#80002c;
+	--darken:#80002c54;
+	--highlighted-post-color:#eab5b4;
+	--highlighted-post-outline-color:#80002c;
+	--board-title:#80002c;
+	--hr:#80002c;
+	--font-color:#80002c;
+	--name-color:#b3003e;
+	--capcode-color:#f00;
+	--subject-color:#e60050;
+	--link-color:#80002c;
+	--post-link-color:#80002c;
+	--link-hover:#c48899;
+	--input-borders:#80002c;
+	--input-color:#80002c;
+	--input-background:#ffe6ea;
+	--dice-color:darkorange;
+	--title-color:#d70000;
+	--greentext-color:#789922;
+	--pinktext-color:#FF00EF;
+}
+.post-container:not(.op) {
+	box-shadow: 3px 3px 3px var(--darken);
+}
+hr {
+	height: 0px;
+	border-width: 2px medium medium;
+	border-style: dashed none none;
+	border-color: var(--post-outline-color);
+}
+.post-container.highlighted {
+	border: 1px dashed;
+}
+#float {
+	box-shadow: 3px 3px 3px var(--darken);
+}
+@media only screen and (max-width:600px) {
+	.post-info,
+	anchor:target+.post-container .post-info,
+	post-container.highlighted .post-info {
+		border-bottom:none;
+	}
+}
+
