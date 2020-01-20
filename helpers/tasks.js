@@ -5,7 +5,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, timeUtils = require(__dirname+'/timeutils.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
-	, { debugLogs, pruneModlogs, enableWebring } = require(__dirname+'/../configs/main.js')
+	, { debugLogs, pruneModlogs, pruneAfterDays, enableWebring } = require(__dirname+'/../configs/main.js')
 	, { Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, render = require(__dirname+'/render.js')
 	, timeDiffString = require(__dirname+'/timediffstring.js');
@@ -163,12 +163,11 @@ module.exports = {
 		let dates = await Modlogs.getDates(options.board);
 		if (pruneModlogs === true) {
 			const pruneLogs = [];
-			const monthAgo = new Date(Date.now()-timeUtils.MONTH);
+			const pruneAfter = new Date(Date.now()-timeUtils.DAY*pruneAfterDays);
 			dates = dates.filter(date => {
-				//filter and make list of older than 1 month
-				//might change it to keep last 30 log days instead of logs within the last 30 days?
+console.log(date, pruneAfter)
 				const { year, month, day } = date.date;
-				if (new Date(year, month-1, day) > monthAgo) {
+				if (new Date(year, month-1, day) > pruneAfter) { //-1 for 0-index months
 					return true;
 				}
 				pruneLogs.push(`${month}-${day}-${year}`);
@@ -178,7 +177,7 @@ module.exports = {
 				await Promise.all(pruneLogs.map(log => {
 					remove(`${uploadDirectory}/html/${options.board._id}/logs/${log}.html`)
 				}));
-				await Modlogs.deleteOld(options.board, monthAgo);
+				await Modlogs.deleteOld(options.board, pruneAfter);
 			}
 		}
 		const html = await render(label, 'modloglist.pug', {

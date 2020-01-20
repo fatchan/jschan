@@ -51,8 +51,9 @@ module.exports = {
 	//max wait time in ms for obtaining locks for saving files
 	lockWait: 3000,
 
-	//prune modlogs older than 30 days. pruning occurs when new modlog entries are generated
+	//optionally prune oldest modlog entries (prunes when newer modlog entries are generated i.e. dead boards wont have older logs pruned)
 	pruneModlogs: true,
+	pruneAfterDays: 30,
 
 	//enable the webring (also copy configs/webring.json.example -> configs/webring.json and edit)
 	enableWebring: false,
