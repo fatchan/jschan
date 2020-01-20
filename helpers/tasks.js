@@ -165,12 +165,13 @@ module.exports = {
 			const pruneLogs = [];
 			const pruneAfter = new Date(Date.now()-timeUtils.DAY*pruneAfterDays);
 			dates = dates.filter(date => {
-console.log(date, pruneAfter)
 				const { year, month, day } = date.date;
 				if (new Date(year, month-1, day) > pruneAfter) { //-1 for 0-index months
 					return true;
 				}
-				pruneLogs.push(`${month}-${day}-${year}`);
+				const logName = `${month}-${day}-${year}`;
+				debugLogs && console.log('Pruning log', `${options.board._id}/${logName}`)
+				pruneLogs.push(logName);
 				return false;
 			});
 			if (pruneLogs.length > 0) {
