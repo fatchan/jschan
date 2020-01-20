@@ -132,6 +132,16 @@ function images() {
 		.pipe(gulp.dest(paths.images.dest));
 }
 
+async function cache() {
+	const cache = require(__dirname+'/redis.js');
+	await Promise.all([
+		cache.deletePattern('webring:sites'),
+		cache.deletePattern('board_'),
+		cache.deletePattern('banners_'),
+	]);
+	cache.redisClient.quit();
+}
+
 function deletehtml() {
 	return del([ 'static/html/*' ]);
 }
@@ -197,5 +207,6 @@ module.exports = {
 	custompages,
 	scripts,
 	wipe,
+	cache,
 	default: build,
 };
