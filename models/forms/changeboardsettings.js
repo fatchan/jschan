@@ -88,6 +88,7 @@ module.exports = async (req, res, next) => {
 		'forceReplyMessage': booleanSetting(req.body.force_reply_message),
 		'forceReplyFile': booleanSetting(req.body.force_reply_file),
 		'forceThreadSubject': booleanSetting(req.body.force_thread_subject),
+		'disableReplySubject': booleanSetting(req.body.disable_reply_subject),
 		'captchaMode': numberSetting(req.body.captcha_mode, oldSettings.captchaMode),
 		'tphTrigger': numberSetting(req.body.tph_trigger, oldSettings.tphTrigger),
 		'pphTrigger': numberSetting(req.body.pph_trigger, oldSettings.pphTrigger),
@@ -131,16 +132,6 @@ module.exports = async (req, res, next) => {
 		, rebuildBoard = false
 		, rebuildCatalog = false
 		, rebuildOther = false;
-
-	//name, description, sfw, unlisted, tags changed need webring update
-	if ((oldSettings.webring && newSettings.webring)
-		&& (oldSettings.name != newSettings.name
-		|| oldSettings.description != newSettings.description
-		|| oldSettings.unlisted != newSettings.unlisted
-		|| oldSettings.sfw != newSettings.sfw
-		|| oldSettings.tags != newSettings.tags)) {
-		cache.set('webring_update', 1);
-	}
 
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
 		if (oldSettings.captchaMode === 0) {

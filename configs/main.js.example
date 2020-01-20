@@ -171,6 +171,7 @@ module.exports = {
 		forceThreadMessage: false,
 		forceThreadFile: false,
 		forceThreadSubject: false,
+		disableReplySubject: false,
 		minThreadMessageLength: 0,
 		minReplyMessageLength: 0,
 		defaultName: 'Anon',

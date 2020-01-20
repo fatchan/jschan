@@ -49,7 +49,7 @@ module.exports = async (req, res, next) => {
 	let salt = null;
 	let thread = null;
 	const { filters, filterBanDuration, filterMode,
-			maxFiles, forceAnon, replyLimit,
+			maxFiles, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler,
 			defaultName, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, locked, allowedFileTypes, flags } = res.locals.board.settings;
@@ -294,7 +294,7 @@ module.exports = async (req, res, next) => {
 
 	//forceanon hide reply subjects so cant be used as name for replies
 	//forceanon only allow sage email
-	let subject = (res.locals.permLevel < 4 || !forceAnon || !req.body.thread) ? req.body.subject : null;
+	let subject = (res.locals.permLevel >= 4 && req.body.thread && (disableReplySubject || forceAnon)) ? null : req.body.subject;
 	let email = (res.locals.permLevel < 4 || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
 
 	//spoiler files only if board settings allow

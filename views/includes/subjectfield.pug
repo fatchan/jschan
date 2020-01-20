@@ -1,0 +1,7 @@
+if !isThread || (!board.settings.disableReplySubject && !board.settings.forceAnon)
+	section.row
+		.label
+			span Subject
+				if subjectRequired
+					span.required *
+		input(type='text', name='subject', autocomplete='off' maxlength='50' required=subjectRequired)

@@ -7,33 +7,22 @@ section.form-wrapper.flex-center
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
 		section.row.jsonly
 			.noselect#dragHandle
-		unless board.settings.forceAnon
+		if board.settings.forceAnon
+			section.row
+				.label Sage
+				label.postform-style.ph-5
+					input(type='checkbox', name='email', value='sage')
+				a.close.postform-style(href='#!') X
+			include ./subjectfield.pug
+		else
 			section.row
 				.label Name
 				input.mr-1(type='text', name='name', placeholder=board.settings.defaultName autocomplete='off' maxlength='50')
 				a.close.postform-style(href='#!') X
 			section.row
-				.label
-					span Subject
-						if subjectRequired
-							span.required *
-				input(type='text', name='subject', autocomplete='off' maxlength='50' required=subjectRequired)
-			section.row
 				.label Email
 				input(type='text', name='email', autocomplete='off' maxlength='50')
-		else 
-			section.row
-				.label Sage
-				label.postform-style.ph-5
-					input(type='checkbox', name='email', value='sage')
-					| Sage
-				a.close.postform-style(href='#!') X
-			section.row
-				.label
-					span Subject
-						if subjectRequired
-							span.required *
-				input(type='text', name='subject', autocomplete='off' maxlength='50' required=subjectRequired)
+			include ./subjectfield.pug
 		section.row
 			.label
 				span Message
