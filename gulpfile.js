@@ -195,7 +195,7 @@ function scripts() {
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 
-const build = gulp.parallel(css, scripts, images, gulp.series(deletehtml, custompages));
+const build = gulp.parallel(cache, css, scripts, images, gulp.series(deletehtml, custompages));
 const reset = gulp.parallel(wipe, build);
 const html = gulp.series(deletehtml, custompages);
 
