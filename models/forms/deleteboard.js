@@ -26,8 +26,5 @@ module.exports = async (uri, board) => {
 		remove(`${uploadDirectory}/json/${uri}/`), //json
 		remove(`${uploadDirectory}/banners/${uri}/`) //banners
 	]);
-	if (!board.unlisted) {
-		cache.set('webring_update', 1);
-	}
 
 }

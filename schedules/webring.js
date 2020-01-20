@@ -53,44 +53,33 @@ module.exports = async () => {
 	await Webring.db.insertMany(webringBoards);
 //TODO: insert into a temp colletion and use a $out aggregation stage to prevent small timeframe of empty collection
 
-	let needsUpdate = await cache.del('webring_update'); //if update needed due to local board changes
-	const lastKnown = new Set([...(await cache.get('webring:sites'))]); //previous known list
-	let knownArr = [...known];
-	//if known and last known not the same, update cache and require update
-	if (lastKnown.size !== known.size || !knownArr.every(val => known.has(val))) {
-		cache.set('webring:sites', knownArr);
-		needsUpdate = true;
+	//update webring.json
+	const boards = await Boards.webringBoards();
+	const json = {
+		name: meta.siteName,
+		url: meta.url,
+		endpoint: `${meta.url}/webring.json`,
+		logo,
+		following,
+		blacklist,
+		known: [...known],
+		boards: boards.map(b => {
+			//map local boards to webring format
+			return {
+				uri: b._id,
+				title: b.settings.name,
+				subtitle: b.settings.description,
+				path: `${meta.url}/${b._id}/`,
+				postsPerHour: b.pph,
+				totalPosts: b.sequence_value-1,
+				uniqueUsers: b.ips,
+				nsfw: !b.settings.sfw,
+				tags: b.settings.tags,
+				lastPostTimestamp: b.lastPostTimestamp,
+			};
+		}),
 	}
-
-	if (needsUpdate) {
-		//update webring.json
-		const boards = await Boards.webringBoards();
-		const json = {
-			name: meta.siteName,
-			url: meta.url,
-			endpoint: `${meta.url}/webring.json`,
-			logo,
-			following,
-			blacklist,
-			known: knownArr,
-			boards: boards.map(b => {
-				//map local boards to webring format
-				return {
-					uri: b._id,
-					title: b.settings.name,
-					subtitle: b.settings.description,
-					path: `${meta.url}/${b._id}/`,
-					postsPerHour: b.pph,
-					totalPosts: b.sequence_value-1,
-					uniqueUsers: b.ips,
-					nsfw: !b.settings.sfw,
-					tags: b.settings.tags,
-					lastPostTimestamp: b.lastPostTimestamp,
-				};
-			}),
-		}
-		await outputFile(`${uploadDirectory}/json/webring.json`, JSON.stringify(json));
-	}
+	await outputFile(`${uploadDirectory}/json/webring.json`, JSON.stringify(json));
 
 	const end = process.hrtime(start);
 	debugLogs && console.log(timeDiffString(label, end));

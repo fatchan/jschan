@@ -347,11 +347,6 @@ module.exports = {
 			data.bumped = new Date();
 		}
 
-		if (!saged && !board.unlisted) {
-			//mark webring as needing update for schedule to reduce redundant webring builds
-			cache.set('webring_update', 1);
-		}
-
 		//get the postId and add it to the post
 		const postId = await Boards.getNextId(board._id, saged);
 		data.postId = postId;
