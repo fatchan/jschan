@@ -30,7 +30,7 @@
 	--greentext-color:#789922;
 	--pinktext-color:#FF00EF;
 }
-.post-container:not(.op) {
+.post-container:not(.op), .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats,#float, .table-container {
 	box-shadow: 3px 3px 3px var(--darken);
 }
 hr {
@@ -39,17 +39,22 @@ hr {
 	border-style: dashed none none;
 	border-color: var(--post-outline-color);
 }
-.post-container.highlighted {
+.anchor:target + .post-container,
+.post-container.highlighted,
+.anchor:target + table tbody tr th,
+.anchor:target + table {
 	border: 1px dashed;
 }
-#float {
-	box-shadow: 3px 3px 3px var(--darken);
-}
-@media only screen and (max-width:600px) {
-	.post-info,
-	anchor:target+.post-container .post-info,
-	post-container.highlighted .post-info {
-		border-bottom:none;
-	}
-}
 
+@media only screen and (max-width: 600px) {
+
+	.post-info{
+		background: none;
+		border-bottom: none;
+	}
+
+	.anchor:target + .post-container .post-info, .post-container.highlighted .post-info {
+		border-bottom: none;
+	}
+
+}

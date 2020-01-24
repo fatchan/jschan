@@ -44,6 +44,7 @@ class formHandler {
 		this.files = [];
 		if (this.fileInput) {
 			this.fileLabel = this.fileInput.previousSibling;
+			this.multipleFiles = this.fileLabel.parentNode.previousSibling.firstChild.textContent.endsWith('s');
 			this.fileLabelText = this.fileLabel.childNodes[0];
 			this.fileLabel.addEventListener('dragover', e => this.fileLabelDrag(e));
 			this.fileLabel.addEventListener('drop', e => this.fileLabelDrop(e));
@@ -184,7 +185,7 @@ class formHandler {
 			return;
 		}
 		if (this.files && this.files.length === 0) {
-			this.fileLabelText.nodeValue = 'Upload/Drop/Paste file(s)';
+			this.fileLabelText.nodeValue = `Select/Drop/Paste file${this.multipleFiles ? 's' : ''}`;
 		} else {
 			this.fileLabelText.nodeValue = `${this.files.length} file${this.files.length > 1 ? 's' : ''} selected`;
 		}
