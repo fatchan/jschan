@@ -921,8 +921,9 @@ table.boardtable td:nth-child(6) {
 	color: white;
 }
 
-.post-file-src[data-type="audio"]::after,
-.post-file-src[data-type="video"]::after {
+/* ^="f" means only where attachment is false, to prevent showing on attachment files with audio or video mime type */
+.post-file-src[data-type="audio"][data-attachment^="f"]::after,
+.post-file-src[data-type="video"][data-attachment^="f"]::after {
 	content: "▶";
 	display: inline-block;
 	position: absolute;
