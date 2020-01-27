@@ -4,7 +4,7 @@ const path = require('path')
 	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
-	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
+	, mimeTypes = require(__dirname+'/../../helpers/files/mimetypes.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
@@ -17,7 +17,14 @@ module.exports = async (req, res, next) => {
 
 	// check all mime types before we try saving anything
 	for (let i = 0; i < res.locals.numFiles; i++) {
-		if (!fileCheckMimeType(req.files.file[i].mimetype, {image: true, animatedImage: true, video: false, audio: false})) {
+		if (!mimeTypes.allowed(req.files.file[i].mimetype, {
+				//banners can be static image or animated (gif, apng, etc)
+				image: true,
+				animatedImage: true,
+				video: false,
+				audio: false,
+				other: false
+			})) {
 			await deleteTempFiles(req).catch(e => console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',

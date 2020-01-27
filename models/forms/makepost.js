@@ -15,7 +15,7 @@ const path = require('path')
 	, sanitize = require('sanitize-html')
 	, nameRegex = /^(?<name>(?!##).*?)?(?:##(?<tripcode>[^ ]{1}.*?))?(?<capcode>##(?<capcodetext> .*?)?)?$/
 	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
-	, fileCheckMimeType = require(__dirname+'/../../helpers/files/mimetypes.js')
+	, mimeTypes = require(__dirname+'/../../helpers/files/mimetypes.js')
 	, imageThumbnail = require(__dirname+'/../../helpers/files/imagethumbnail.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, videoThumbnail = require(__dirname+'/../../helpers/files/videothumbnail.js')
@@ -144,7 +144,7 @@ module.exports = async (req, res, next) => {
 	if (res.locals.numFiles > 0) {
 		// check all mime types befoer we try saving anything
 		for (let i = 0; i < res.locals.numFiles; i++) {
-			if (!fileCheckMimeType(req.files.file[i].mimetype, allowedFileTypes)) {
+			if (!mimeTypes.allowed(req.files.file[i].mimetype, allowedFileTypes)) {
 				await deleteTempFiles(req).catch(e => console.error);
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
@@ -178,7 +178,7 @@ module.exports = async (req, res, next) => {
 			if (type === 'image') {
 				///detect images with opacity for PNG thumbnails, set thumbextension before increment
 				imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
-				if (imageData['Channel Statistics'] && imageData['Channel Statistics']['Opacity']) { //does this change depending on GM version or anything?
+				if (imageData['Channel Statistics'] && imageData['Channel Statistics']['Opacity']) {//does this depend on GM version or anything?
 					const opacityMaximum = imageData['Channel Statistics']['Opacity']['Maximum'];
 					if (opacityMaximum !== '0.00 (0.0000)') {
 						processedFile.thumbextension = '.png';
@@ -188,66 +188,75 @@ module.exports = async (req, res, next) => {
 
 			//increment file count
 			await Files.increment(processedFile);
-
 			//check if already exists
 			const existsFull = await pathExists(`${uploadDirectory}/img/${processedFile.filename}`);
-
 			processedFile.sizeString = formatSize(processedFile.size)
-			switch (type) {
-				case 'image': {
-					const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
-					processedFile.geometry = imageData.size ;
-					processedFile.geometryString = imageData.Geometry;
-					processedFile.hasThumb = !(fileCheckMimeType(file.mimetype, {image: true})
-						&& processedFile.geometry.height <= thumbSize
-						&& processedFile.geometry.width <= thumbSize);
-					if (!existsFull) {
-						await moveUpload(file, processedFile.filename, 'img');
-					}
-					if (!existsThumb && processedFile.hasThumb) {
-						await imageThumbnail(processedFile);
-					}
-					processedFile = fixGifs(processedFile);
-					break;
+
+			if (mimeTypes.other.has(processedFile.mimetype)) {
+				//"other" mimes from config, overrides main type to avoid codec issues in browser or ffmpeg for unsupported filetypes
+				processedFile.hasThumb = false;
+				processedFile.attachment = true;
+				if (!existsFull) {
+					await moveUpload(file, processedFile.filename, 'img');
 				}
-				case 'video': {
-					const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
-					//video metadata
-					const videoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
-					videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
-					if (videoData.streams.length <= 0) {
-						await deleteTempFiles(req).catch(e => console.error);
-						return dynamicResponse(req, res, 400, 'message', {
-							'title': 'Bad request',
-							'message': 'Audio only video file not supported (yet)',
-							'redirect': redirect
-						});
+			} else {
+				switch (type) {
+					case 'image': {
+						const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+						processedFile.geometry = imageData.size ;
+						processedFile.geometryString = imageData.Geometry;
+						processedFile.hasThumb = !(fileCheckMimeType(file.mimetype, {image: true})
+							&& processedFile.geometry.height <= thumbSize
+							&& processedFile.geometry.width <= thumbSize);
+						if (!existsFull) {
+							await moveUpload(file, processedFile.filename, 'img');
+						}
+						if (!existsThumb && processedFile.hasThumb) {
+							await imageThumbnail(processedFile);
+						}
+						processedFile = fixGifs(processedFile);
+						break;
 					}
-					processedFile.duration = videoData.format.duration;
-					processedFile.durationString = timeUtils.durationString(videoData.format.duration*1000);
-					processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height};
-					processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`
-					processedFile.hasThumb = true;
-					if (!existsFull) {
-						await moveUpload(file, processedFile.filename, 'img');
+					case 'video': {
+						const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+						//video metadata
+						const videoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
+						videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
+						if (videoData.streams.length <= 0) {
+							await deleteTempFiles(req).catch(e => console.error);
+							return dynamicResponse(req, res, 400, 'message', {
+								'title': 'Bad request',
+								'message': 'Audio only video file not supported (yet)',
+								'redirect': redirect
+							});
+						}
+						processedFile.duration = videoData.format.duration;
+						processedFile.durationString = timeUtils.durationString(videoData.format.duration*1000);
+						processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height};
+						processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`
+						processedFile.hasThumb = true;
+						if (!existsFull) {
+							await moveUpload(file, processedFile.filename, 'img');
+						}
+						if (!existsThumb) {
+							await videoThumbnail(processedFile, processedFile.geometry);
+						}
+						break;
 					}
-					if (!existsThumb) {
-						await videoThumbnail(processedFile, processedFile.geometry);
+					case 'audio': {
+						//audio metadata
+						const audioData = await ffprobe(req.files.file[i].tempFilePath, null, true);
+						processedFile.duration = audioData.format.duration;
+						processedFile.durationString = timeUtils.durationString(audioData.format.duration*1000);
+						processedFile.hasThumb = false;
+						if (!existsFull) {
+							await moveUpload(file, processedFile.filename, 'img');
+						}
+						break;
 					}
-					break;
+					default:
+						throw new Error(`invalid file mime type: ${processedFile}`);
 				}
-				case 'audio': {
-					const audioData = await ffprobe(req.files.file[i].tempFilePath, null, true);
-					processedFile.duration = audioData.format.duration;
-					processedFile.durationString = timeUtils.durationString(audioData.format.duration*1000);
-					processedFile.hasThumb = false;
-					if (!existsFull) {
-						await moveUpload(file, processedFile.filename, 'img');
-					}
-					break;
-				}
-				default:
-					throw new Error(`invalid file mime type: ${processedFile}`); //throw so goes to error handler before next'ing
 			}
 
 			if (processedFile.hasThumb === true) {

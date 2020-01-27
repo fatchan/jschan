@@ -111,6 +111,7 @@ module.exports = async (req, res, next) => {
 			'image': booleanSetting(req.body.files_allow_image),
 			'video': booleanSetting(req.body.files_allow_video),
 			'audio': booleanSetting(req.body.files_allow_audio),
+			'other': booleanSetting(req.body.files_allow_other),
 		},
 	};
 

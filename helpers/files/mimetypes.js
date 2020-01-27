@@ -1,19 +1,19 @@
 'use strict';
 
-const imageMimeTypes = new Set([
+const image = new Set([
 	'image/jpeg',
 	'image/pjpeg',
 	'image/png',
 	'image/bmp',
 ]);
 
-const animatedImageMimeTypes = new Set([
+const animatedImage = new Set([
 	'image/gif',
 	'image/webp',
 	'image/apng',
 ]);
 
-const videoMimeTypes = new Set([
+const video = new Set([
 	'video/mpeg',
 	'video/quicktime',
 	'video/mp4',
@@ -21,16 +21,26 @@ const videoMimeTypes = new Set([
 	'video/x-matroska',
 ]);
 
-const audioMimeTypes = new Set([
+const audio = new Set([
 	'audio/mp3',
 	'audio/mpeg',
 	'audio/ogg',
+	'audio/wave',
 	'audio/wav',
 ]);
 
-module.exports = (mimetype, options) => {
-	return (options.image && imageMimeTypes.has(mimetype)) ||
-		(options.animatedImage && animatedImageMimeTypes.has(mimetype)) ||
-		(options.video && videoMimeTypes.has(mimetype)) ||
-		(options.audio && audioMimeTypes.has(mimetype));
+const other = new Set(require(__dirname+'/../../configs/main.js').otherMimeTypes);
+
+module.exports = {
+
+	allowed: (mimetype, options) => {
+		return (options.image && image.has(mimetype)) ||
+			(options.animatedImage && animatedImage.has(mimetype)) ||
+			(options.video && video.has(mimetype)) ||
+			(options.audio && audio.has(mimetype)) ||
+			(options.other && other.has(mimetype));
+	},
+
+	image, animatedImage, video, audio, other
+
 };

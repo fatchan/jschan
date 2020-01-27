@@ -68,10 +68,12 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 										| , #{file.durationString}
 									| )
 							- const type = file.mimetype.split('/')[0]
-							.post-file-src(data-type=type)
+							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/img/${file.filename}`)
 									if post.spoiler
 										img.file-thumb(src='/img/spoiler.png' width='200' height='200')
+									else if file.attachment
+										img.file-thumb(src='/img/attachment.png' width='200' height='200')
 									else if type === 'audio'
 										img.file-thumb(src='/img/audio.png' width='200' height='200')
 									else if file.hasThumb

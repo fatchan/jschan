@@ -102,10 +102,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 
 		const expand = function(e) {
-			e.preventDefault();
 			const fileLink = this.firstChild;
 			const fileSrc = fileLink.href;
 			const type = this.dataset.type;
+			if (this.dataset.attachment == 'true') {
+				return; //attachments dont expand
+			}
 			const thumbElement = fileLink.firstChild;
 			const fileName = this.previousSibling;
 			const next = thumbElement.nextSibling;
@@ -124,6 +126,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				fileLink.style.minHeight = fileLink.offsetHeight+'px';
 				switch(type) {
 					case 'image':
+						e.preventDefault();
 						thumbElement.style.opacity = '0.5';
 						thumbElement.style.cursor = 'wait'
 						expandedElement = document.createElement('img');
@@ -134,9 +137,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 							fileLink.appendChild(expandedElement);
 							toggle(thumbElement, expandedElement, fileName, pfs);
 						}
+						source.src = fileSrc;
 						break;
 					case 'video':
 					case 'audio':
+						e.preventDefault();
 						expandedElement = document.createElement(type);
 						close = document.createElement('div');
 						close.innerText = 'Close';
@@ -151,15 +156,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						fileLink.appendChild(expandedElement);
 						fileLink.insertBefore(close, expandedElement);
 						toggle(thumbElement, expandedElement, fileName, pfs);
+						source.src = fileSrc;
 						break;
 					deault:
-						break; //uh oh
+						return;
 				}
-				source.src = fileSrc;
 			} else if (expandedElement) {
+				e.preventDefault();
 				toggle(thumbElement, expandedElement, fileName, pfs);
+			} else {
+				e.preventDefault();
 			}
-			return false;
 		};
 
 		const addExpandEvent = (t) => {

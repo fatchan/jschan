@@ -109,8 +109,8 @@ server {
 		try_files $uri =404;
 	}
 
-	# Images
-	location ~* \.(png|jpg|jpeg|gif|mp4|webm|mov|svg|mp3|ogg|wav|opus)$ {
+	# Files (image, video, audio, other)
+	location ~* \.(png|jpg|jpeg|gif|mp4|webm|mov|svg|mp3|ogg|wav|opus|txt)$ {
 		access_log off;
 		expires max;
 		root /path/to/jschan/static;
