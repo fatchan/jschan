@@ -205,7 +205,7 @@ module.exports = async (req, res, next) => {
 						const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						processedFile.geometry = imageData.size ;
 						processedFile.geometryString = imageData.Geometry;
-						processedFile.hasThumb = !(fileCheckMimeType(file.mimetype, {image: true})
+						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
 							&& processedFile.geometry.height <= thumbSize
 							&& processedFile.geometry.width <= thumbSize);
 						if (!existsFull) {
