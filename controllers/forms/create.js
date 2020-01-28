@@ -11,8 +11,8 @@ module.exports = async (req, res, next) => {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
 			'error': 'Board creation is only available to site administration',
-			'redirect': '/'
-		})
+			'redirect': '/create.html'
+		});
 	}
 
 	const errors = [];

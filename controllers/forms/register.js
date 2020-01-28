@@ -1,9 +1,18 @@
 'use strict';
 
 const alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
+	, { enableAccountCreation } = require(__dirname+'/../../configs/main.js')
 	, registerAccount = require(__dirname+'/../../models/forms/register.js');
 
 module.exports = async (req, res, next) => {
+
+	if (enableAccountCreation === false) {
+		return res.status(400).render('message', {
+			'title': 'Bad request',
+			'error': 'Acount creation is disabled',
+			'redirect': '/register.html'
+		});
+	}
 
 	const errors = [];
 

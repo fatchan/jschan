@@ -60,6 +60,8 @@ module.exports = {
 
 	//let all users create new boards
 	enableUserBoards: true,
+	//allow new accounts to be created
+	enableAccountCreation: true,
 
 	/* extension for thumbnails. this value is used UNLESS the image contains transparency,
 		in which case png is used. */
