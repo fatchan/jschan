@@ -536,6 +536,11 @@ details.actions div {
 	padding: 0px 2px;
 	border: 1px solid rgba(0, 0, 0, 0.4);
 	border-radius: 1px;
+	cursor: pointer;
+}
+
+.user-id:hover::after {
+	content: attr(data-count);
 }
 
 .post-check {
