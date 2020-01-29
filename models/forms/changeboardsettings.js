@@ -98,6 +98,8 @@ module.exports = async (req, res, next) => {
 		'maxFiles': numberSetting(req.body.max_files, oldSettings.maxFiles),
 		'minThreadMessageLength': numberSetting(req.body.min_thread_message_length, oldSettings.minThreadMessageLength),
 		'minReplyMessageLength': numberSetting(req.body.min_reply_message_length, oldSettings.minReplyMessageLength),
+		'maxThreadMessageLength': numberSetting(req.body.max_thread_message_length, oldSettings.maxThreadMessageLength),
+		'maxReplyMessageLength': numberSetting(req.body.max_reply_message_length, oldSettings.maxReplyMessageLength),
 		'filterMode': numberSetting(req.body.filter_mode, oldSettings.filterMode),
 		'filterBanDuration': numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
 		'tags': arraySetting(req.body.tags, oldSettings.tags, 10),

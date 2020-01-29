@@ -40,10 +40,18 @@ module.exports = async (req, res, next) => {
 	if (req.body.message) {
 		if (req.body.message.length > globalLimits.messageLength.max) {
 			errors.push(`Message must be ${globalLimits.messageLength.max} characters or less`);
+		} else if (!req.body.thread
+			&& res.locals.board.settings.maxThreadMessageLength
+			&& req.body.message.length > res.locals.board.settings.maxThreadMessageLength) {
+			errors.push(`Thread messages must be ${res.locals.board.settings.maxThreadLength} characters or less`);
+		} else if (req.body.thread
+			&& res.locals.board.settings.maxReplyMessageLength
+			&& req.body.message.length > res.locals.board.settings.maxReplyMessageLength) {
+			errors.push(`Reply messages must be ${res.locals.board.settings.maxReplyMessageLength} characters or less`);
 		} else if (!req.body.thread && req.body.message.length < res.locals.board.settings.minThreadMessageLength) {
-			errors.push(`Thread messages must be at least ${res.locals.board.settings.minMessageLength} characters long`);
+			errors.push(`Thread messages must be at least ${res.locals.board.settings.minThreadMessageLength} characters long`);
 		} else if (req.body.thread && req.body.message.length < res.locals.board.settings.minReplyMessageLength) {
-			errors.push(`Reply messages must be at least ${res.locals.board.settings.minMessageLength} characters long`);
+			errors.push(`Reply messages must be at least ${res.locals.board.settings.minReplyMessageLength} characters long`);
 		}
 	}
 

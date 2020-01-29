@@ -141,18 +141,21 @@ module.exports = {
 		postFiles: { //number of files in a post
 			max: 3
 		},
-		postFilesSize: { //max combined size of all files in a post (10MB default)
+		postFilesSize: { //in bytes, 10MB default
 			max: 10485760
 		},
 		bannerFiles: { //max number of banners uploadable at once
 			max: 10
 		},
-		bannerFilesSize: { //max combined size of banner files (10MB default)
+		bannerFilesSize: { //in bytes, 10MB default
 			max: 10485760
 		},
 		messageLength: { //max length of a post mesage field
 			max: 4000
 		}
+		/* NOTE: postFilesSize and bannerFilesSize counts in bytes the amount of total data in form submission including
+			other fields like message, name, etc. Therefore a very long message would reduce the space left for files very slightly.
+			To counteract this, consider increasing postFilesSize and bannerFilesSize beyond your desired max filesize by a small margin */
 	},
 
 	//default board settings when a board is created
@@ -185,6 +188,8 @@ module.exports = {
 		disableReplySubject: false,
 		minThreadMessageLength: 0,
 		minReplyMessageLength: 0,
+		maxThreadMessageLength: 4000,
+		maxReplyMessageLength: 4000,
 		defaultName: 'Anon',
 		filters: [], //words/phrases to block
 		filterMode: 0, //0=nothing, 1=prevent post, 2=auto ban

@@ -136,6 +136,12 @@ block content
 				.label Min Reply Message Length
 				input(type='number' name='min_reply_message_length' value=board.settings.minReplyMessageLength max=globalLimits.messageLength.max)
 			.row
+				.label Max Thread Message Length
+				input(type='number' name='max_thread_message_length' value=board.settings.maxThreadMessageLength max=globalLimits.messageLength.max)
+			.row
+				.label Max Reply Message Length
+				input(type='number' name='max_reply_message_length' value=board.settings.maxReplyMessageLength max=globalLimits.messageLength.max)
+			.row
 				.label Thread Limit
 				input(type='number' name='thread_limit' value=board.settings.threadLimit min=globalLimits.threadLimit.min max=globalLimits.threadLimit.max)
 			.row

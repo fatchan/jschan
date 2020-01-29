@@ -1,8 +1,9 @@
 setDefaultLocalStorage('relative', false);
 let relativeTime = localStorage.getItem('relative') == 'true';
-
-!localStorage.getItem('24hour') ? setLocalStorage('24hour', false) : void 0;
+setDefaultLocalStorage('24hour', false);
 let hour24 = localStorage.getItem('24hour') == 'true';
+setDefaultLocalStorage('localtime', true);
+let localTime = localStorage.getItem('localtime') == 'true';
 
 let dates = [];
 const dateElems = document.getElementsByClassName('reltime');
@@ -51,7 +52,7 @@ const relativeTimeString = (date) => {
 }
 
 const changeDateFormat = (date) => {
-	const dateString = new Date(date.dateTime).toLocaleString(0, {hour12: !hour24});
+	const dateString = new Date(date.dateTime).toLocaleString(localTime ? 0 : SERVER_TIMEZONE, {hour12: !hour24});
 	if (relativeTime) {
 		date.innerText = relativeTimeString(date.dateTime);
 		date.title = dateString;
@@ -82,6 +83,16 @@ window.addEventListener('settingsReady', function(event) {
 	}
 	hour24Setting.checked = hour24;
 	hour24Setting.addEventListener('change', togglehour24, false);
+
+	const localTimeSetting = document.getElementById('localtime-setting');
+	const toggleLocalTime = () => {
+		localTime = !localTime;
+		setLocalStorage('localtime', localTime);
+		updateDates();
+		console.log('toggling local time', localTime);
+	}
+	localTimeSetting.checked = localTime;
+	localTimeSetting.addEventListener('change', toggleLocalTime, false);
 
 	const relativeTimeSetting = document.getElementById('relative-setting');
 	const togglerelativeTime = () => {
