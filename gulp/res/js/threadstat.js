@@ -51,6 +51,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			if (e.detail.json.userId) {
 				const userId = e.detail.post.querySelector('.user-id');
 				idElems.push(userId);
+				userId.addEventListener('dblclick', toggleHighlightPosts);
 				incrementMap(e.detail.json.userId);
 				updateCounts();
 				if (!statsElem.children[2]) {
