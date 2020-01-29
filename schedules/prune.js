@@ -26,9 +26,9 @@ module.exports = async() => {
 		debugLogs && console.log(file._id)
 		return Promise.all(
 			[remove(`${uploadDirectory}/img/${file._id}`)]
-			.concat(file.exts.filter(ext => ext).map(ext => {
+			.concat(file.exts ? file.exts.filter(ext => ext).map(ext => {
 				remove(`${uploadDirectory}/img/thumb-${file._id.split('.')[0]}${ext}`)
-			}))
+			}) : [])
 		)
 	}));
 }
