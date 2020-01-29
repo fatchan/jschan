@@ -1,5 +1,11 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
+	for (rule of document.querySelector('link[rel="stylesheet"]').sheet.rules) {
+		if(rule.selectorText == '.user-id') {
+			rule.style.cursor = 'pointer'; //make ids like a link when hovering
+		}
+	}
+
 	const statsElem = document.getElementById('threadstats');
 	const idElems = [];
 	const idMap = new Map();
