@@ -950,7 +950,7 @@ table.boardtable td:nth-child(6) {
 	pointer-events: none;
 }
 
-.post-file-src:hover::after {
+.post-file-src[data-attachment^="f"]:hover::after {
 	opacity: 1;
 }
 

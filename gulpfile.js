@@ -160,7 +160,7 @@ function scripts() {
 	try {
 		const themelist = `const themes = ['${themes.join("', '")}'];const codeThemes = ['${codeThemes.join("', '")}'];`;
 		fs.writeFileSync('gulp/res/js/themelist.js', themelist);
-		const serverTimeZone = `const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().locale}'`;
+		const serverTimeZone = `const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}'`;
 		fs.writeFileSync('gulp/res/js/timezone.js', serverTimeZone);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));

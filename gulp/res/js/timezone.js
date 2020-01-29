@@ -1,1 +1,1 @@
-const SERVER_TIMEZONE = 'en-AU'
+const SERVER_TIMEZONE = 'Europe/Berlin'
