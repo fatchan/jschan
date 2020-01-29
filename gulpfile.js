@@ -158,8 +158,10 @@ function custompages() {
 
 function scripts() {
 	try {
-		const themelist = `const themes = ['${themes.join("', '")}'];const codeThemes = ['${codeThemes.join("', '")}']`;
+		const themelist = `const themes = ['${themes.join("', '")}'];const codeThemes = ['${codeThemes.join("', '")}'];`;
 		fs.writeFileSync('gulp/res/js/themelist.js', themelist);
+		const serverTimeZone = `const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().locale}'`;
+		fs.writeFileSync('gulp/res/js/timezone.js', serverTimeZone);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
 		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
@@ -171,6 +173,7 @@ function scripts() {
 	gulp.src([
 			//put scripts in order for dependencies
 			`${paths.scripts.src}/themelist.js`,
+			`${paths.scripts.src}/timezone.js`,
 			`${paths.scripts.src}/localstorage.js`,
 			`${paths.scripts.src}/modal.js`,
 			`${paths.scripts.src}/post.js`,
