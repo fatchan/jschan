@@ -16,13 +16,13 @@ module.exports = async (req, res, next) => {
 		errors.push('Board announcements must be 1-2000 characters');
 	}
 	if (req.body.tags && req.body.tags.length > 2000) {
-		errors.push('Tags length must be less than 2000 characters');
+		errors.push('Tags length must be 2000 characters or less');
 	}
 	if (req.body.filters && req.body.filters.length > 2000) {
-		errors.push('Filters length must be less than 2000 characters');
+		errors.push('Filters length must be 2000 characters or less');
 	}
 	if (req.body.moderators && req.body.moderators.length > 500) {
-		errors.push('Moderators length must be less than 500 characters');
+		errors.push('Moderators length must be 500 characters orless');
 	}
 	if (req.body.name && (req.body.name.length < 1 || req.body.name.length > 50)) {
 		errors.push('Board name must be 1-50 characters');
@@ -40,25 +40,25 @@ module.exports = async (req, res, next) => {
 		errors.push(`Max files must be 0-${globalLimits.postFiles.max}`);
 	}
 	if (typeof req.body.min_thread_message_length === 'number' && (req.body.min_thread_message_length < 0 || req.body.min_thread_message_length > globalLimits.messageLength.max)) {
-		errors.push(`Min thread message length must be 0-${globalLimits.messageLength.max}. 0 is disabled.`);
+		errors.push(`Min thread message length must be 0-${globalLimits.messageLength.max}`);
 	}
 	if (typeof req.body.min_reply_message_length === 'number' && (req.body.min_reply_message_length < 0 || req.body.min_reply_message_length > globalLimits.messageLength.max)) {
-		errors.push(`Min reply message length must be 0-${globalLimits.messageLength.max}. 0 is disabled.`);
+		errors.push(`Min reply message length must be 0-${globalLimits.messageLength.max}`);
 	}
 	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {
-		errors.push('Invalid captcha mode.');
+		errors.push('Invalid captcha mode');
 	}
 	if (typeof req.body.tph_trigger === 'number' && (req.body.tph_trigger < 0 || req.body.tph_trigger > 10000)) {
-		errors.push('Invalid tph trigger threshold.');
+		errors.push('Invalid tph trigger threshold');
 	}
 	if (typeof req.body.tph_trigger_action === 'number' && (req.body.tph_trigger_action < 0 || req.body.tph_trigger_action > 3)) {
-		errors.push('Invalid tph trigger action.');
+		errors.push('Invalid tph trigger action');
 	}
 	if (typeof req.body.filter_mode === 'number' && (req.body.filter_mode < 0 || req.body.filter_mode > 2)) {
-		errors.push('Invalid filter mode.');
+		errors.push('Invalid filter mode');
 	}
 	if (typeof req.body.ban_duration === 'number' && req.body.ban_duration <= 0) {
-		errors.push('Invalid filter auto ban duration.');
+		errors.push('Invalid filter auto ban duration');
 	}
 	if (req.body.theme && !themes.includes(req.body.theme)) {
 		errors.push('Invalid theme');

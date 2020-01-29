@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
 	const errors = [];
 
 	if (req.body.filters && req.body.filters.length > 2000) {
-		errors.push('Filters length must be less than 2000 characters');
+		errors.push('Filters length must be 2000 characters or less');
 	}
 /*
 	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {

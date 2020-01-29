@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
 		errors.push('Missing transfer username');
 	}
 	if (req.body.username && req.body.username.length > 50) {
-		errors.push('Transfer username must be at less than 50 characters');
+		errors.push('Transfer username must be 50 characters or less');
 	}
 	if (req.body.username === res.locals.board.owner) {
 		errors.push('New owner username must not be same as old owner');

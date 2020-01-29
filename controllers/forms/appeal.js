@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
 		errors.push('Appeals must include a message');
 	}
 	if (req.body.message.length > 2000) {
-		errors.push('Appeal message must be less than 2000 characters');
+		errors.push('Appeal message must be 2000 characters or less');
 	}
 
 	if (errors.length > 0) {
