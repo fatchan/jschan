@@ -1,6 +1,8 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	for (rule of document.querySelector('link[rel="stylesheet"]').sheet.rules) {
+	const mainStyleSheet = document.querySelector('link[rel="stylesheet"]').sheet;
+	const rulesKey = mainStyleSheet.rules != null ? 'rules' : 'cssRules';
+	for (rule of mainStyleSheet[rulesKey]) {
 		if(rule.selectorText == '.user-id') {
 			rule.style.cursor = 'pointer'; //make ids like a link when hovering
 		}
@@ -55,6 +57,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			statsElem.children[0].innerText = `${postTotal} repl${postTotal === 1 ? 'y' : 'ies'}`;
 			statsElem.children[1].innerText = `${filesTotal} file${filesTotal === 1 ? '' : 's'}`;
 			if (e.detail.json.userId) {
+				const existingPost = document.querySelector(`.post-container[data-user-id="${e.detail.json.userId}"]`);
+				if (existingPost && existingPost.classList.contains('highlighted')) {
+					e.detail.post.classList.add('highlighted');
+				}
 				const userId = e.detail.post.querySelector('.user-id');
 				idElems.push(userId);
 				userId.addEventListener('dblclick', toggleHighlightPosts);

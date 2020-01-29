@@ -63,9 +63,9 @@ function changeTheme(type) {
 				themeLink.id = `custom${type}`;
 				themeLink.onload = function() {
 					css = '';
-					const rulesName = themeLink.sheet.rules != null ? 'rules' : 'cssRules';
-					for(let i = 0; i < themeLink.sheet[rulesName].length; i++) {
-						css += themeLink.sheet[rulesName][i].cssText; //add all the rules to the css
+					const rulesKey = themeLink.sheet.rules != null ? 'rules' : 'cssRules';
+					for(let i = 0; i < themeLink.sheet[rulesKey].length; i++) {
+						css += themeLink.sheet[rulesKey][i].cssText; //add all the rules to the css
 					}
 					//update localstorage with latest version
 					setLocalStorage(path, css);
