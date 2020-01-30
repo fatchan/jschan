@@ -56,6 +56,7 @@ const express = require('express')
 		}),
 		resave: false,
 		saveUninitialized: false,
+		rolling: true,
 		cookie: {
 			httpOnly: true,
 			secure: secureCookies && production,
