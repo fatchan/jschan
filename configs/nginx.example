@@ -110,12 +110,25 @@ server {
 	}
 
 	# Files (image, video, audio, other)
-	location ~* \.(png|jpg|jpeg|gif|mp4|webm|mov|svg|mp3|ogg|wav|opus|txt)$ {
+	location ~* \.(png|jpg|jpeg|gif|mp4|webm|mov|svg|mp3|ogg|wav|opus)$ {
 		access_log off;
 		expires max;
 		root /path/to/jschan/static;
 		try_files $uri =404;
 	}
+
+	# "Other" Files for custom type uploads, uses content-disposition to prevent rendering
+	# inline in browser so even HTML filetypes can be offered and will present a "save" dialog box
+	# make sure these file extensions match for mimes defined in configs/main.js "otherMimeTypes"
+#	location ~* \.(txt)$ {
+#		access_log off;
+#		expires max;
+#		add_header Cache-Control "public";
+#		add_header X-Content-Type-Options "nosniff" always;
+#		add_header Content-Disposition "attachment";
+#		root /path/to/jschan/static;
+#		try_files $uri =404;
+#	}
 
 	listen 443 ssl http2; # managed by Certbot
 	listen [::]:443 ssl http2; # managed by Certbot

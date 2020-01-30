@@ -71,9 +71,9 @@ module.exports = {
 	thumbSize: 200,
 
 	/* extra mime types for files to be uploaded as attachments (no thumbnails) e.g. text files/archives
-		NOTE: appropriate file extentions will need to be added to nginx configuration, because mime types and
-		file extention does not always correspond exactly so it cant be done automatically. These are enabled
-		or disabled per-board and default can be changed under boardDefaults.allowedFileTypes */
+		NOTE: appropriate extensions will need to be added to nginx configuration, and uncommend the provided
+		"other files" section which includes an example configuration for .txt files to match this default config.
+		mime types and file extention does not always correspond exactly this cant be done automatically. */
 	otherMimeTypes: [
 		'text/plain'
 	],
