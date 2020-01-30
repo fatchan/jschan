@@ -4,7 +4,7 @@ const { Boards, Accounts } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
 
-	const newOwner = await Accounts.findOne(req.body.username);
+	const newOwner = await Accounts.findOne(req.body.username.toLowerCase());
 
 	if (!newOwner) {
 		return res.status(400).render('message', {

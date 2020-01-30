@@ -91,7 +91,7 @@ async function wipe() {
 	await Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
-	await Accounts.insertOne('admin', 'changeme', 0);
+	await Accounts.insertOne('admin', 'admin', 'changeme', 0);
 
 	await Mongo.client.close();
 	cache.redisClient.quit();

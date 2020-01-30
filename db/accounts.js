@@ -28,14 +28,15 @@ module.exports = {
 		return db.findOne({ '_id': username });
 	},
 
-	insertOne: async (username, password, authLevel) => {
+	insertOne: async (original, username, password, authLevel) => {
 		// hash the password
 		const passwordHash = await bcrypt.hash(password, 12);
 		//add to db
 		return db.insertOne({
 			'_id': username,
-			'passwordHash': passwordHash,
-			'authLevel': authLevel,
+			original,
+			authLevel,
+			passwordHash,
 			'ownedBoards': [],
 			'modBoards': []
 		});
