@@ -1042,7 +1042,7 @@ table, .boardtable {
 
 	.post-info{
 		background: var(--darken);
-		margin: -7px -7px 5px -7px;
+		margin: -6.5px -6.5px 5px -6.5px;
 		border-bottom: 1px solid var(--post-outline-color);
 	}
 
@@ -1124,6 +1124,9 @@ table, .boardtable {
 	height: 11px;
 	background:url(/img/flags.png) no-repeat;
 	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+	image-rendering: -webkit-optimize-contrast;
+	-ms-interpolation-mode: nearest-neighbor;
 }
 /*!
  * Generated with CSS Flag Sprite generator (https://www.flag-sprites.com/) -

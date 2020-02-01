@@ -15,7 +15,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const crispSetting = document.getElementById('crispimages-setting');
 	let crispEnabled = localStorage.getItem('crispimages') == 'true';
 	const normCss = 'img{image-rendering:auto}';
-	const crispCss = 'img{image-rendering:crisp-edges}';
+	const crispCss = `img{
+		image-rendering: crisp-edges;
+		image-rendering: pixelated;
+		image-rendering: -webkit-optimize-contrast;
+		-ms-interpolation-mode: nearest-neighbor;
+	}`;
 	const mainSheet = document.querySelector('link[rel="stylesheet"]').sheet;
 	const insertImgCss = () => {
 		mainSheet.insertRule(crispEnabled ? crispCss : normCss);
