@@ -35,6 +35,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	let volumeLevel = localStorage.getItem('volume');
 	const changeVolume = (change) => {
 		volumeLevel = volumeSetting.value;
+		const allMedia = document.querySelectorAll('audio,video');
+		for (let i = 0; i < allMedia.length; i++) {
+			allMedia[i].volume = volumeLevel/100;
+		}
 		console.log('adjusting default volume', volumeLevel);
 		setLocalStorage('volume', volumeLevel);
 	}
