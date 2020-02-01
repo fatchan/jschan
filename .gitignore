@@ -5,4 +5,5 @@ configs/*.js
 static/*
 gulp/res/js/socket.io.js
 /gulp/res/css/codethemes
+gulp/res/js/timezone.js
 tmp/
