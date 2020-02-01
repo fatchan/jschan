@@ -1,0 +1,70 @@
+:root {
+	--background-top: rgb(40, 40, 46);
+	--background-rest: rgb(40, 40, 46);
+	--label-color: #1f1f1f;
+	--box-border-color: #0099ff;
+	--font-color: #eee;
+	--alt-font-color: #fff;
+	--alt-label-color: #800;
+	--navbar-color: #3f3f3f;
+	--darken: #00000010;
+	--link-color: #0099ff;
+	--post-link-color: #0099ff;
+	--link-hover: #3333ff;
+	--input-borders: #a9a9a9;
+	--input-color: #fff;
+	--input-background: black;
+	--post-color: #1f1f1f;
+	--post-outline-color: #0099ff;
+	--highlighted-post-color: #2c2c3c;
+	--highlighted-post-outline-color: #0555ff;
+	--dice-color: darkorange;
+	--title-color: #ff0000;
+	--greentext-color: #55ff33;
+	--pinktext-color:#E0727F;
+	--board-title: #33ffff;
+	--name-color: #0044ff;
+	--capcode-color: #f00;
+	--subject-color: #33ddff;
+	--hr: #0099ff;
+	--icon-color:invert(17%)sepia(89%)saturate(7057%)hue-rotate(2deg)brightness(93%)contrast(120%);
+}
+body {
+	font-family: 'Hack', monospace, sans-serif;
+	font-size: 9pt;
+	color: #eee;
+}
+.bold {
+	font-weight: bold;
+	color: #fff;
+}
+.em {
+	color: #FF6700;
+}
+.strikethrough {
+	color: #e6e600;
+}
+a, a:visited, a .post-name {
+	text-decoration: none;
+	font-weight: bolder;
+	font-size: 12px;
+	color: var(--link-color);
+}
+/* prevent above rule making link in board titles small */
+.board-title a {
+    font-size: inherit;
+}
+.catalog-tile {
+	padding: 10px;
+	margin: 4px;
+	height: 240px;
+	border: 1px solid var(--post-outline-color);
+	max-width: 250px;
+}
+.catalog-thumb {
+	width: 80px;
+	height: 80px;
+}
+.spoiler {
+	cursor: help;
+}
