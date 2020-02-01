@@ -12,5 +12,7 @@ link(rel='stylesheet' href='/css/style.css')
 - const theme = isBoard ? board.settings.theme : defaultTheme;
 - const codeTheme = isBoard ? board.settings.codeTheme : defaultCodeTheme;
 link#theme(rel='stylesheet' data-theme=theme href=`/css/themes/${theme}.css`)
+if isBoard && board.settings.customCss
+	style #{board.settings.customCss}
 link#codetheme(rel='stylesheet' data-theme=codeTheme href=`/css/codethemes/${codeTheme}.css`)
 link(rel='shortcut icon' href='/favicon.ico' type='image/x-icon')

@@ -176,6 +176,10 @@ block content
 				select(name='code_theme')
 					each theme in codeThemes
 						option(value=theme selected=board.settings.codeTheme === theme) #{theme}
+			if globalLimits.customCss.enabled
+				.row
+					.label Custom CSS
+					textarea(name='custom_css' placeholder='test first in top-right settings if you have javascript enabled' maxlength=globalLimits.customCss.max) #{board.settings.customCss}
 			.row
 				.label Captcha Mode
 				select(name='captcha_mode')

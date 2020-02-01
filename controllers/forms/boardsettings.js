@@ -22,6 +22,14 @@ module.exports = async (req, res, next) => {
 	if (req.body.filters && req.body.filters.length > 2000) {
 		errors.push('Filters length must be 2000 characters or less');
 	}
+	if (req.body.custom_css && globalLimits.customCss.enabled) {
+		if (globalLimits.customCss.strict && globalLimits.customCss.filters.some(filter => req.body.custom_css.includes(filter))) {
+			errors.push(`Custom CSS strict mode is enabled and does not allow the following: "${globalLimits.customCss.filters.join('", "')}"`);
+		}
+		if (req.body.custom_css.length > globalLimits.customCss.max) {
+			errors.push(`Custom CSS must be ${globalLimits.customCss.max} characters or less`);
+		}
+	}
 	if (req.body.moderators && req.body.moderators.length > 500) {
 		errors.push('Moderators length must be 500 characters orless');
 	}

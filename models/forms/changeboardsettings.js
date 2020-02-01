@@ -1,6 +1,7 @@
 'use strict';
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+	, { globalLimits } = require(__dirname+'/../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, cache = require(__dirname+'/../../redis.js')
@@ -31,7 +32,7 @@ module.exports = async (req, res, next) => {
 	//array of promises we might need
 	const promises = [];
 
-	let markdownAnnouncement;
+	let markdownAnnouncement = oldSettings.announcement.markdown;
 	if (req.body.announcement !== oldSettings.announcement.raw) {
 		//remarkup the announcement if it changes
 		const styled = markdown(req.body.announcement);
@@ -71,7 +72,7 @@ module.exports = async (req, res, next) => {
 		'description': trimSetting(req.body.description, oldSettings.description),
 		'defaultName': trimSetting(req.body.default_name, oldSettings.defaultName),
 		'theme': req.body.theme || oldSettings.theme,
-		'codeTheme':  req.body.code_theme || oldSettings.codeTheme,
+		'codeTheme': req.body.code_theme || oldSettings.codeTheme,
 		'sfw': booleanSetting(req.body.sfw),
 		'unlisted': booleanSetting(req.body.unlisted),
 		'webring': booleanSetting(req.body.webring),
@@ -104,6 +105,7 @@ module.exports = async (req, res, next) => {
 		'filterBanDuration': numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
 		'tags': arraySetting(req.body.tags, oldSettings.tags, 10),
 		'filters': arraySetting(req.body.filters, oldSettings.filters, 50),
+		'customCss': globalLimits.customCss.enabled ? (req.body.custom_css !== null ? req.body.custom_css : oldSettings.customCss) : null,
 		'announcement': {
 			'raw': req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
 			'markdown': req.body.announcement !== null ? markdownAnnouncement : oldSettings.announcement.markdown,

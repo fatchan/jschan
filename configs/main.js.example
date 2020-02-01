@@ -151,11 +151,20 @@ module.exports = {
 			max: 10485760
 		},
 		messageLength: { //max length of a post mesage field
+			/* NOTE: postFilesSize and bannerFilesSize counts in bytes the amount of total data in form submission including
+				other fields like message, name, etc. Therefore a very long message would reduce the space left for files very slightly.
+				To counteract this, consider increasing postFilesSize and bannerFilesSize beyond your desired max filesize by a small margin */
 			max: 4000
+		},
+		customCss: {
+			enabled: true, //allow custom css by board owners
+			max: 10000, //max number of characters to allow
+			strict: true, //enables filters to block certain strings in custom css
+			filters: [
+				'@',
+				'url(',
+			]
 		}
-		/* NOTE: postFilesSize and bannerFilesSize counts in bytes the amount of total data in form submission including
-			other fields like message, name, etc. Therefore a very long message would reduce the space left for files very slightly.
-			To counteract this, consider increasing postFilesSize and bannerFilesSize beyond your desired max filesize by a small margin */
 	},
 
 	//default board settings when a board is created
