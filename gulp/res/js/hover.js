@@ -80,7 +80,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const hash = this.hash.substring(1);
 		const anchor = document.getElementById(hash);
 		let hoveredPost;
-		if (anchor) {
+		if (anchor
+			&& jsonPath.split('/')[1] === anchor.nextSibling.dataset.board) {
 			hoveredPost = anchor.nextSibling;
 		} else {
 			let hovercache = localStorage.getItem(`hovercache-${jsonPath}`);
