@@ -1,4 +1,4 @@
-setDefaultLocalStorage('relative', false);
+setDefaultLocalStorage('relative', true);
 let relativeTime = localStorage.getItem('relative') == 'true';
 setDefaultLocalStorage('24hour', false);
 let hour24 = localStorage.getItem('24hour') == 'true';
