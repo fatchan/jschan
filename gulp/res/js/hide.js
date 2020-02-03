@@ -1,12 +1,3 @@
-/*
-setDefaultLocalStorage('hidestubs', false);
-let hideStubsEnabled = localStorage.getItem('hidestubs') == 'true';
-*/
-setDefaultLocalStorage('hiderecursive', false);
-let hideRecursiveEnabled = localStorage.getItem('hiderecursive') == 'true';
-setDefaultLocalStorage('hideimages', false);
-let hideImagesEnabled = localStorage.getItem('hideimages') == 'true';
-
 const fileInput = document.getElementById('file');
 fileInput ? fileInput.style.display = 'none' : void 0;
 let hidden;
@@ -18,7 +9,7 @@ const loadHiddenStorage = () => {
 			return;
 		}
 	} catch (e) {
-		//ignore
+		console.error(e);
 	}
 	//set to empty if not exist or error parsing
 	setLocalStorage('hidden', '[]');
@@ -76,7 +67,7 @@ const changeOption = function(e) {
 	}
 	this.value = '';
 	setHidden(posts, hiding);
-	setLocalStorage('hidden', JSON.stringify([...hidden]));	
+	setLocalStorage('hidden', JSON.stringify([...hidden]));
 }
 
 for (let menu of document.getElementsByClassName('postmenu')) {
@@ -104,95 +95,64 @@ for (let elem of hidden) {
 	setHidden(posts, true);
 }
 
-const hideImages = () => {
-	const postThumbs = document.getElementsByClassName('file-thumb');
-	for (thumb of postThumbs) {
-		thumb.classList.toggle('invisible');
+const renderCSSLink = document.createElement('style');
+renderCSSLink.type = 'text/css';
+renderCSSLink.id = 'rendercss';
+document.head.appendChild(renderCSSLink);
+const renderSheet = renderCSSLink.sheet;
+const rulesKey = renderSheet.rules ? 'rules' : 'cssRules';
+
+class CssToggle {
+	constructor (settingId, localStorageKey, settingCss) {
+		this.localStorageKey = localStorageKey;
+		this.settingBoolean = localStorage.getItem(this.localStorageKey) == 'true';
+		this.settingCss = settingCss;
+		window.addEventListener('settingsReady', () => {
+			//on event fire, set boolean to correct checked stats
+			this.setting = document.getElementById(settingId);
+			this.setting.checked = this.settingBoolean;
+			this.setting.addEventListener('change', () => {
+				this.toggle();
+			}, false);
+		});
+		this.toggle();
 	}
-}
-if (hideImagesEnabled) {
-	hideImages();
-}
-
-
-window.addEventListener('settingsReady', function(event) {
-
-	const mainStyleSheet = document.querySelector('link[rel="stylesheet"]').sheet;
-	const replaceCssRule = (selectorText, css) => {
-	    const rulesKey = mainStyleSheet.rules != null ? 'rules' : 'cssRules';
-	    for (let i = 0; i < mainStyleSheet[rulesKey].length; i++) {
-			const rule = mainStyleSheet[rulesKey][i];
-	        if(rule.selectorText == selectorText) {
-				mainStyleSheet.removeRule(i);
-				return;
+	toggle () {
+		this.settingBoolean = !this.settingBoolean;
+		if (this.settingBoolean) {
+	        renderSheet.insertRule(this.settingCss);
+	    } else {
+	        for (let i = 0; i < renderSheet[rulesKey].length; i++) {
+	            if (renderSheet[rulesKey][i].cssText == this.settingCss) {
+	                renderSheet.deleteRule(i);
+	            }
 	        }
-		}
-		mainStyleSheet.insertRule(css);
-		return;
+	    }
+		console.log('toggling', this.localStorageKey, this.settingBoolean);
+		setLocalStorage(this.localStorageKey, this.settingBoolean);
 	}
+};
 
-	const hideRecursiveCss = `.op.hidden ~ .anchor, .op.hidden ~ .post-container {
-		display: none;
-	}`;
-	const hideRecursiveSetting = document.getElementById('hiderecursive-setting');
-	hideRecursiveSetting.checked = hideRecursiveEnabled;
-	hideRecursiveEnabled && replaceCssRule('.post-container.hidden, .catalog-tile.hidden', hideRecursiveCss);
-	const toggleHideRecursive = () => {
-		hideRecursiveEnabled = !hideRecursiveEnabled;
-		replaceCssRule('.op.hidden ~ .anchor, .op.hidden ~ .post-container', hideRecursiveCss);
-		console.log('toggling recursive hide', hideRecursiveEnabled);
-		setLocalStorage('hiderecursive', hideRecursiveEnabled);
-	}
-	hideRecursiveSetting.addEventListener('change', toggleHideRecursive, false);
+//det localstorage defaults
+// setDefaultLocalStorage('hidestubs', false);
+setDefaultLocalStorage('hiderecursive', false);
+setDefaultLocalStorage('hideimages', false);
+setDefaultLocalStorage('crispimages', false);
+setDefaultLocalStorage('heightlimit', false);
 
-/*
-	const hideStubsCss = `.post-container.hidden, .catalog-tile.hidden {
-		visibility: hidden;
-		margin-top: -1.5em;
-		height: 0;
-	}`;
-	const hideStubsSetting = document.getElementById('hidestubs-setting');
-	hideStubsSetting.checked = hideStubsEnabled;
-	hideStubsEnabled && replaceCssRule('.post-container.hidden, .catalog-tile.hidden', hideStubsCss);
-	const toggleHideStubs = () => {
-		hideStubsEnabled = !hideStubsEnabled;
-		replaceCssRule('.post-container.hidden, .catalog-tile.hidden', hideStubsCss);
-		console.log('toggling hiding stubs', hideStubsEnabled);
-		setLocalStorage('hidestubs', hideStubsEnabled);
-	}
-	hideStubsSetting.addEventListener('change', toggleHideStubs, false);
-*/
+//define the css
+//const hideStubsCss = `.post-container.hidden, .catalog-tile.hidden { visibility: hidden;margin-top: -1.5em;height: 0; }`;
+const hideImagesCss = `.file-thumb { visibility: hidden !important; }`
+const hideRecursiveCss = `.op.hidden ~ .anchor, .op.hidden ~ .post-container { display: none; }`;
+const heightlimitCss = `img, video { max-height: unset; }`;
+const crispCss = `img { image-rendering: crisp-edges; }`;
 
-	const crispSetting = document.getElementById('crispimages-setting');
-	let crispEnabled = localStorage.getItem('crispimages') == 'true';
-	const normCss = 'img{image-rendering:auto}';
-	const crispCss = `img{
-		image-rendering: crisp-edges;
-		image-rendering: pixelated;
-		image-rendering: -webkit-optimize-contrast;
-		-ms-interpolation-mode: nearest-neighbor;
-	}`;
-	replaceCssRule('img', crispEnabled ? crispCss : normCss);
-	const changeCrispSetting = (change) => {
-		crispEnabled = crispSetting.checked;
-		replaceCssRule('img', crispEnabled ? crispCss : normCss);
-		console.log('setting images crisp', crispEnabled);
-		setLocalStorage('crispimages', crispEnabled);
-	}
-	crispSetting.checked = crispEnabled;
-	crispSetting.addEventListener('change', changeCrispSetting, false);
-
-//todo: option here and in modal for clearing hide list and unhide all hidden posts
-	const hideImagesSetting = document.getElementById('hideimages-setting');
-	hideImagesSetting.checked = hideImagesEnabled;
-	const toggleHideImages = () => {
-		hideImagesEnabled = !hideImagesEnabled
-		setLocalStorage('hideimages', hideImagesEnabled);
-		hideImages();
-	}
-	hideImagesSetting.addEventListener('change', toggleHideImages, false);
-
-});
+//make classes with css
+//new CssToggle('hidestubs-setting', 'hidestubs', hideStubsCss);
+new CssToggle('hiderecursive-setting', 'hiderecursive', hideRecursiveCss);
+new CssToggle('heightlimit-setting', 'heightlimit', heightlimitCss);
+new CssToggle('crispimages-setting', 'crispimages', crispCss);
+new CssToggle('hideimages-setting', 'hideimages', hideImagesCss);
 
 window.addEventListener('addPost', function(e) {
 	const post = e.detail.post;
@@ -200,11 +160,6 @@ window.addEventListener('addPost', function(e) {
 	const hiddenKey = `${board}-${postId}`;
 	if (hidden.has(hiddenKey) || hidden.has(userId)) {
 		post.classList.add('hidden');
-	}
-	if (hideImagesEnabled) {
-		for (thumb of post.querySelectorAll('.file-thumb')) {
-			thumb.classList.add('invisible');
-		}
 	}
 	const menu = post.querySelector('.postmenu');
 	for (let i = 0; i < menu.children.length; i++) {

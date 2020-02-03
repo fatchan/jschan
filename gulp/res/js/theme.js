@@ -1,6 +1,7 @@
 setDefaultLocalStorage('theme', 'default');
 setDefaultLocalStorage('codetheme', 'default');
 setDefaultLocalStorage('customcss', '');
+let customCSSString = localStorage.getItem('customcss');
 
 window.addEventListener('settingsReady', function(event) {
 
@@ -22,7 +23,6 @@ window.addEventListener('settingsReady', function(event) {
 
 	//custom CSS for users
     const customCSSSetting = document.getElementById('customcss-setting');
-	let customCSSString = localStorage.getItem('customcss');
     const editCustomCSS = (change) => {
         customCSSString = customCSSSetting.value;
         console.log('editing custom CSS', customCSSString.length);
@@ -33,6 +33,11 @@ window.addEventListener('settingsReady', function(event) {
     customCSSSetting.addEventListener('input', editCustomCSS, false);
 
 });
+
+const customCSSLink = document.createElement('style');
+customCSSLink.rel = 'stylesheet';
+customCSSLink.id = 'customcss';
+document.head.appendChild(customCSSLink);
 
 function changeTheme(type) {
 	switch(type) {
@@ -78,13 +83,6 @@ function changeTheme(type) {
 			}
 			break;
 		case 'customcss':
-			let customCSSLink = document.getElementById(type);
-			if (!customCSSLink) {
-				customCSSLink = document.createElement('style');
-				customCSSLink.rel = 'stylesheet';
-				customCSSLink.id = 'customcss';
-		        document.head.appendChild(customCSSLink);
-			}
 			customCSSLink.innerHTML = localStorage.getItem('customcss');
 			break;
 	}

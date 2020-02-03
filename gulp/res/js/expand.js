@@ -1,7 +1,5 @@
 setDefaultLocalStorage('volume', 100);
 setDefaultLocalStorage('loop', false);
-setDefaultLocalStorage('heightlimit', true);
-setDefaultLocalStorage('crispimages', false);
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
@@ -36,16 +34,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	loopSetting.checked = loopEnabled;
 	loopSetting.addEventListener('change', toggleLoop, false);
 
-	const heightlimitSetting = document.getElementById('heightlimit-setting');
-	let heightlimitEnabled = localStorage.getItem('heightlimit') == 'true';
-	const toggleHeightlimit = (change) => {
-		heightlimitEnabled = heightlimitSetting.checked;
-		console.log('toggling image height limit', heightlimitEnabled);
-		setLocalStorage('heightlimit', heightlimitEnabled);
-	}
-	heightlimitSetting.checked = heightlimitEnabled;
-	heightlimitSetting.addEventListener('change', toggleHeightlimit, false);
-
 	if (!isCatalog) { //dont expand on catalog
 		const thumbs = document.getElementsByClassName('post-file-src');
 		const toggle = function(thumb, exp, fn, src) {
@@ -53,11 +41,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				exp.loop = true;
 			} else {
 				exp.loop = false;
-			}
-			if (!heightlimitEnabled) {
-				exp.classList.add('mh-100');
-			} else {
-				exp.classList.remove('mh-100');
 			}
 			exp.volume = volumeLevel/100;
 			const close = exp.previousSibling.innerText === 'Close' ? exp.previousSibling : null;
@@ -111,6 +94,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				fileLink.style.minHeight = fileLink.offsetHeight+'px';
 				switch(type) {
 					case 'image':
+/* loading bar experiment; causes some issues with loading speed from cache and extra requests
+						const request = new XMLHttpRequest();
+						request.onprogress = (e) => {
+							const progress = Math.floor((e.loaded/e.total)*100);
+							const progressWidth = Math.floor((e.loaded/e.total)*thumbElement.width);
+							if (progress >= 100) {
+								pfs.removeAttribute('data-loading');
+							} else {
+								pfs.setAttribute('data-loading', progress);
+								pfs.style = `--data-loading: ${progressWidth}px`;
+							}
+						}
+						expandedElement = document.createElement('img');
+						source = expandedElement;
+						let once = false;
+						//some jank here to try and recude any delay induced by xhr
+						const loaded = function() {
+							pfs.removeAttribute('data-loading');
+							pfs.removeAttribute('style');
+							if (once) {
+								return;
+							}
+							source.src = fileSrc;
+							once = true;
+							thumbElement.style.opacity = '';
+							thumbElement.style.cursor = '';
+							fileLink.appendChild(expandedElement);
+							toggle(thumbElement, expandedElement, fileName, pfs);
+						}
+						source.onload = loaded;
+						request.onload = loaded;
+						request.open('GET', fileSrc, true);
+						request.send(null);
+*/
 						e.preventDefault();
 						thumbElement.style.opacity = '0.5';
 						thumbElement.style.cursor = 'wait'
