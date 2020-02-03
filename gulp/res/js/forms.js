@@ -120,7 +120,8 @@ class formHandler {
 								return window.location = json.redirect;
 							}
 							setLocalStorage('myPostId', json.postId);
-							window.location.reload();
+							forceUpdate();
+//							window.location.reload();
 						}
 					}
 					this.form.reset();
