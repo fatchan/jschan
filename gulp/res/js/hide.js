@@ -115,10 +115,15 @@ class CssToggle {
 				this.toggle();
 			}, false);
 		});
-		this.toggle();
+		this.apply();
 	}
 	toggle () {
 		this.settingBoolean = !this.settingBoolean;
+		console.log('toggling', this.localStorageKey, this.settingBoolean);
+		this.apply();
+		setLocalStorage(this.localStorageKey, this.settingBoolean);
+	}
+	apply () {
 		if (this.settingBoolean) {
 	        renderSheet.insertRule(this.settingCss);
 	    } else {
@@ -128,8 +133,6 @@ class CssToggle {
 	            }
 	        }
 	    }
-		console.log('toggling', this.localStorageKey, this.settingBoolean);
-		setLocalStorage(this.localStorageKey, this.settingBoolean);
 	}
 };
 
