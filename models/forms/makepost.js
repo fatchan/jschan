@@ -53,7 +53,7 @@ module.exports = async (req, res, next) => {
 			threadLimit, ids, userPostSpoiler,
 			defaultName, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, locked, allowedFileTypes, flags } = res.locals.board.settings;
-	if (locked === true) {
+	if (locked === true && res.locals.permLevel >= 4) {
 		await deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
