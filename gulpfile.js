@@ -135,8 +135,9 @@ async function cache() {
 	const cache = require(__dirname+'/redis.js');
 	await Promise.all([
 		cache.deletePattern('webring:sites'),
-		cache.deletePattern('board_*'),
-		cache.deletePattern('banners_*'),
+		cache.deletePattern('board:*'),
+		cache.deletePattern('banners:*'),
+		cache.deletePatterh('blacklisted:*'),
 	]);
 	cache.redisClient.quit();
 }

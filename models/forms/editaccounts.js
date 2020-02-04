@@ -29,7 +29,7 @@ module.exports = async (req, res, next) => {
 							}
 						}
 					});
-					cache.del(acc.modBoards.map(b => `board_${b}`));
+					cache.del(acc.modBoards.map(b => `board:${b}`));
 				}
 				if (acc.ownedBoards.length > 0) {
 					//remove from moderators of any boards they are mod on
@@ -47,7 +47,7 @@ module.exports = async (req, res, next) => {
 							}
 						}
 					});
-					cache.del(acc.ownedBoards.map(b => `board_${b}`));
+					cache.del(acc.ownedBoards.map(b => `board:${b}`));
 //todo: use list of board with no owners for claims
 				}
 			}

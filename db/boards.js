@@ -9,25 +9,25 @@ module.exports = {
 	db,
 
 	findOne: async (name) => {
-		let board = await cache.get(`board_${name}`);
+		let board = await cache.get(`board:${name}`);
 		if (board && board !== 'no_exist') {
 			return board;
 		} else {
 			board = await db.findOne({ '_id': name });
 			if (board) {
-				cache.set(`board_${name}`, board, 3600);
+				cache.set(`board:${name}`, board, 3600);
 				if (board.banners.length > 0) {
-					cache.sadd(`banners_${name}`, board.banners);
+					cache.sadd(`banners:${name}`, board.banners);
 				}
 			} else {
-				cache.set(`board_${name}`, 'no_exist', 600);
+				cache.set(`board:${name}`, 'no_exist', 600);
 			}
 		}
 		return board;
 	},
 
 	randomBanner: async (name) => {
-		let banner = await cache.srand(`banners_${name}`);
+		let banner = await cache.srand(`banners:${name}`);
 		if (!banner) {
 			const board = await module.exports.findOne(name);
 			if (board) {
@@ -38,7 +38,7 @@ module.exports = {
 	},
 
 	setOwner: (board, username) => {
-		cache.del(`board_${board}`);
+		cache.del(`board:${board}`);
 		return db.updateOne({
 			'_id': board
 		}, {
@@ -49,18 +49,18 @@ module.exports = {
 	},
 
 	insertOne: (data) => {
-		cache.del(`board_${data._id}`); //removing cached no_exist
+		cache.del(`board:${data._id}`); //removing cached no_exist
 		return db.insertOne(data);
 	},
 
 	deleteOne: (board) => {
-		cache.del(`board_${board}`);
-		cache.del(`banners_${board}`);
+		cache.del(`board:${board}`);
+		cache.del(`banners:${board}`);
 		return db.deleteOne({ '_id': board });
 	},
 
 	updateOne: (board, update) => {
-		cache.del(`board_${board}`);
+		cache.del(`board:${board}`);
 		return db.updateOne({
 			'_id': board
 		}, update);
@@ -71,8 +71,8 @@ module.exports = {
 	},
 
 	removeBanners: (board, filenames) => {
-		cache.del(`board_${board}`);
-		cache.del(`banners_${board}`);
+		cache.del(`board:${board}`);
+		cache.del(`banners:${board}`);
 		return db.updateOne(
 			{
 				'_id': board,
@@ -85,8 +85,8 @@ module.exports = {
 	},
 
 	addBanners: (board, filenames) => {
-		cache.del(`board_${board}`);
-		cache.del(`banners_${board}`);
+		cache.del(`board:${board}`);
+		cache.del(`banners:${board}`);
 		return db.updateOne(
 			{
 				'_id': board,
