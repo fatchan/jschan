@@ -42,6 +42,14 @@ module.exports = {
 		paintAmount: 2
 	},
 
+	/* dnsbl, will add a small delay for uncached requests. You could also install some 
+		kind of dns cache e.g. unbound to improve performance. DNSBL only checked for posting */
+	dnsbl: {
+		enabled: false,
+		blacklists: ['tor.dan.me.uk', 'zen.spamhaus.org'],
+		cacheTime: 3600 //in seconds, idk whats a good value
+	},
+
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
 

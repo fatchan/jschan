@@ -14,6 +14,7 @@ const express  = require('express')
 	, verifyCaptcha = require(__dirname+'/../helpers/captcha/captchaverify.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
+	, dnsblCheck = require(__dirname+'/../helpers/checks/dnsbl.js')
 	, dynamicResponse = require(__dirname+'/../helpers/dynamic.js')
 	, uploadLimitFunction = (req, res, next) => {
 		return dynamicResponse(req, res, 413, 'message', {
@@ -73,7 +74,7 @@ const express  = require('express')
 	, newcaptcha = require(__dirname+'/../models/forms/newcaptcha.js')
 
 //make new post
-router.post('/board/:board/post', sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles, paramConverter, verifyCaptcha, numFiles, makePostController);
+router.post('/board/:board/post', dnsblCheck, sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles, paramConverter, verifyCaptcha, numFiles, makePostController);
 
 //post actions
 router.post('/board/:board/actions', sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //public, with captcha

@@ -12,6 +12,7 @@
     "cookie-parser": "^1.4.4",
     "csurf": "^1.11.0",
     "del": "^5.1.0",
+    "dnsbl": "^3.2.0",
     "express": "^4.17.1",
     "express-fileupload": "github:fatchan/express-fileupload",
     "express-session": "^1.17.0",
