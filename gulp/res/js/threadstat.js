@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const updateCounts = () => {
 		for(let i = 0; i < idElems.length; i++) {
 			idElems[i].setAttribute('data-count', ` (${idMap.get(idElems[i].innerText)})`);
-//			idElems[i].setAttribute('title', `${idMap.get(idElems[i].innerText)} posts by this ID`); //title attribute style
+			idElems[i].setAttribute('title', `Double click to highlight posts`);
 		}
 	}
 
