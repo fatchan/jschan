@@ -1,5 +1,12 @@
 const fileInput = document.getElementById('file');
-fileInput ? fileInput.style.display = 'none' : void 0;
+if (fileInput) {
+	fileInput.style.position = 'absolute';
+	fileInput.style.border = 'none';
+	fileInput.style.height = '0';
+	fileInput.style.width = '0';
+	fileInput.style.opacity = '0';
+}
+
 let hidden;
 const loadHiddenStorage = () => {
 	try {
@@ -103,8 +110,10 @@ const renderSheet = renderCSSLink.sheet;
 const rulesKey = renderSheet.rules ? 'rules' : 'cssRules';
 
 class CssToggle {
-	constructor (settingId, localStorageKey, settingCss) {
+	constructor (settingId, localStorageKey, localStorageDefault, settingCss) {
 		this.localStorageKey = localStorageKey;
+		this.localStorageDefault = localStorageDefault;
+		setDefaultLocalStorage(this.localStorageKey, this.localStorageDefault);
 		this.settingBoolean = localStorage.getItem(this.localStorageKey) == 'true';
 		this.settingCss = settingCss;
 		window.addEventListener('settingsReady', () => {
@@ -136,26 +145,18 @@ class CssToggle {
 	}
 };
 
-//det localstorage defaults
-// setDefaultLocalStorage('hidestubs', false);
-setDefaultLocalStorage('hiderecursive', false);
-setDefaultLocalStorage('hideimages', false);
-setDefaultLocalStorage('crispimages', false);
-setDefaultLocalStorage('heightlimit', false);
-
 //define the css
 //const hideStubsCss = `.post-container.hidden, .catalog-tile.hidden { visibility: hidden;margin-top: -1.5em;height: 0; }`;
 const hideImagesCss = `.file-thumb { visibility: hidden !important; }`
 const hideRecursiveCss = `.op.hidden ~ .anchor, .op.hidden ~ .post-container { display: none; }`;
 const heightlimitCss = `img, video { max-height: unset; }`;
 const crispCss = `img { image-rendering: crisp-edges; }`;
-
 //make classes with css
-//new CssToggle('hidestubs-setting', 'hidestubs', hideStubsCss);
-new CssToggle('hiderecursive-setting', 'hiderecursive', hideRecursiveCss);
-new CssToggle('heightlimit-setting', 'heightlimit', heightlimitCss);
-new CssToggle('crispimages-setting', 'crispimages', crispCss);
-new CssToggle('hideimages-setting', 'hideimages', hideImagesCss);
+//new CssToggle('hidestubs-setting', 'hidestubs', false, hideStubsCss);
+new CssToggle('hiderecursive-setting', 'hiderecursive', false, hideRecursiveCss);
+new CssToggle('heightlimit-setting', 'heightlimit', false, heightlimitCss);
+new CssToggle('crispimages-setting', 'crispimages', false, crispCss);
+new CssToggle('hideimages-setting', 'hideimages', false, hideImagesCss);
 
 window.addEventListener('addPost', function(e) {
 	const post = e.detail.post;
