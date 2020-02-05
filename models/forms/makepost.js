@@ -26,7 +26,7 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { thumbSize, thumbExtension, postPasswordSecret } = require(__dirname+'/../../configs/main.js')
+	, { thumbSize, thumbExtension, postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -92,11 +92,16 @@ module.exports = async (req, res, next) => {
 	}
 	//filters
 	if (res.locals.permLevel > 1) { //global staff bypass filters
-		const allContents = `${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase()
-			, globalSettings = await cache.get('globalsettings');
+		const globalSettings = await cache.get('globalsettings');
 		let hitGlobalFilter = false
 			, hitLocalFilter = false
 			, ban;
+		let concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase();
+		let allContents = concatContents;
+		if (strictFiltering) {
+			allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+			allContents += concatContents.replace(/[\u200B-\u200D\uFEFF]/g, '');
+		}
 		//global filters
 		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
 			hitGlobalFilter = globalSettings.filters.some(filter => { return allContents.includes(filter) });

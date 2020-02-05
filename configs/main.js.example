@@ -92,6 +92,9 @@ module.exports = {
 	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
 	quoteLimit: 15,
 
+	//aply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
+	strictFiltering: false,
+
 	//how many replies to show on index pages under each OP
 	previewReplies: 5,
 	stickyPreviewReplies: 5, //choose a different amount for sticky posts if desired
