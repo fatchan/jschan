@@ -32,7 +32,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	//check that actions are valid
-	if (req.body.password && req.body.password.length > 50) {
+	if (req.body.postpassword && req.body.postpassword.length > 50) {
 		errors.push('Password must be 50 characters or less');
 	}
 	if (req.body.ban_reason && req.body.ban_reason.length > 50) {

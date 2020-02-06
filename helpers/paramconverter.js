@@ -4,7 +4,7 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 	, allowedArrays = new Set(['checkednews', 'checkedposts', 'globalcheckedposts',
 		'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts']) //only these should be arrays, since express bodyparser can output arrays
 	, trimFields = ['tags', 'uri', 'moderators', 'filters', 'announcement', 'description', 'message',
-		'name', 'subject', 'email', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message', 'custom_css'] //trim if we dont want filed with whitespace
+		'name', 'subject', 'email', 'postpassword', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message', 'custom_css'] //trim if we dont want filed with whitespace
 	, numberFields = ['filter_mode', 'captcha_mode', 'tph_trigger', 'pph_trigger', 'trigger_action', 'reply_limit', 'move_to_thread',
 		'max_files', 'thread_limit', 'thread', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length', 'min_reply_message_length', 'auth_level'] //convert these to numbers before they hit our routes
 	, banDurationRegex = /^(?<YEAR>[\d]+y)?(?<MONTH>[\d]+m)?(?<WEEK>[\d]+w)?(?<DAY>[\d]+d)?(?<HOUR>[\d]+h)?$/

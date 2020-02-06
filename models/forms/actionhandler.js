@@ -27,9 +27,9 @@ module.exports = async (req, res, next) => {
 	//if user isnt staff, and they put an action that requires password, e.g. delete/spoiler, then filter posts to only matching password
 	if (res.locals.permLevel >= 4 && res.locals.actions.numPasswords > 0) {
 		let passwordPosts = [];
-		if (req.body.password && req.body.password.length > 0) {
+		if (req.body.postpassword && req.body.postpassword.length > 0) {
 			//hash their input and make it a buffer
-			const inputPasswordHash = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
+			const inputPasswordHash = createHash('sha256').update(postPasswordSecret + req.body.postpassword).digest('base64');
 			const inputPasswordBuffer = Buffer.from(inputPasswordHash);
 			passwordPosts = res.locals.posts.filter(post => {
 				if (post.password != null) { //null password doesnt matter for timing attack, it cant be deleted by non-staff

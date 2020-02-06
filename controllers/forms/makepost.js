@@ -65,7 +65,7 @@ module.exports = async (req, res, next) => {
 	if (req.body.email && req.body.email.length > 50) {
 		errors.push('Email must be 50 characters or less');
 	}
-	if (req.body.password && req.body.password.length > 50) {
+	if (req.body.postpassword && req.body.postpassword.length > 50) {
 		errors.push('Password must be 50 characters or less');
 	}
 

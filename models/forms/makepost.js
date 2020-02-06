@@ -302,8 +302,8 @@ module.exports = async (req, res, next) => {
 		}
 	}
 	let password = null;
-	if (req.body.password) {
-		password = createHash('sha256').update(postPasswordSecret + req.body.password).digest('base64');
+	if (req.body.postpassword) {
+		password = createHash('sha256').update(postPasswordSecret + req.body.postpassword).digest('base64');
 	}
 
 	//forceanon hide reply subjects so cant be used as name for replies
