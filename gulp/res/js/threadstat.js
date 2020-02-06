@@ -18,7 +18,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	const updateCounts = () => {
 		for(let i = 0; i < idElems.length; i++) {
-			idElems[i].setAttribute('data-count', ` (${idMap.get(idElems[i].innerText)})`);
+			const count = idMap.get(idElems[i].innerText);
+			idElems[i].setAttribute('data-count', ` (${count})`);
 			idElems[i].setAttribute('title', `Double tap highlight (${count})`);
 		}
 	}
