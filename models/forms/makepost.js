@@ -353,7 +353,7 @@ module.exports = async (req, res, next) => {
 				} else {
 					capcode = `${type} ${capcode}`;
 				}
-				capcode = `##${capcode}`;
+				capcode = `## ${capcode}`;
 			}
 		}
 	}
