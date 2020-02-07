@@ -108,9 +108,9 @@ module.exports = {
 
 	/* filter filenames on posts and banners
 		false=no filtering
-		true=alphanumeric including underscore and hyphen
-		regex= provide a regex, e.g. /[^\w\s-]+/g */
-	safeFileNames: /[^\w\s-]+/g,
+		true=allow only A-Za-z0-9_-
+		regex=custom regex of what to replace e.g. /[^\w\s-]+/g */
+	filterFileNames: false,
 
 	//options for code block highlighting in posts
 	highlightOptions: {
