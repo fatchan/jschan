@@ -103,9 +103,14 @@ module.exports = {
 		e.g. 3 means after the first third, so if you had 6 pages,
 		anything after page 2 with less than early404Replies gets pruned */
 	early404Fraction: 3,
-
 	//how many replies a thread needs to not get removed by early404
 	early404Replies: 5,
+
+	/* filter filenames on posts and banners
+		false=no filtering
+		true=alphanumeric including underscore and hyphen
+		regex= provide a regex, e.g. /[^\w\s-]+/g */
+	safeFileNames: /[^\w\s-]+/g,
 
 	//options for code block highlighting in posts
 	highlightOptions: {
