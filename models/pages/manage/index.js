@@ -5,4 +5,6 @@ module.exports = {
 	manageSettings: require(__dirname+'/settings.js'),
 	manageBans: require(__dirname+'/bans.js'),
 	manageBanners: require(__dirname+'/banners.js'),
+	manageBoard: require(__dirname+'/board.js'),
+	manageThread: require(__dirname+'/thread.js'),
 }

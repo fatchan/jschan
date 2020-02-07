@@ -75,7 +75,7 @@ const express  = require('express')
 
 //make new post
 router.post('/board/:board/post', dnsblCheck, sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles, paramConverter, verifyCaptcha, numFiles, makePostController);
-//router.post('/board/:board/modpost', dnsblCheck, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), postFiles, paramConverter, csrf, numFiles, makePostController); //mod post has token instead of captcha
+router.post('/board/:board/modpost', dnsblCheck, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), postFiles, paramConverter, csrf, numFiles, makePostController); //mod post has token instead of captcha
 
 //post actions
 router.post('/board/:board/actions', sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //public, with captcha

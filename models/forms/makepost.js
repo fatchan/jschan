@@ -466,7 +466,7 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
+	const successRedirect = `/${req.params.board}/${req.path.endsWith('/modpost') ? 'manage/' : ''}thread/${req.body.thread || postId}.html#${postId}`;
 
 	const buildOptions = {
 		'threadId': data.thread || postId,
@@ -475,7 +475,7 @@ module.exports = async (req, res, next) => {
 
 	if (req.headers['x-using-live'] != null && data.thread) {
 		//defer build and post will come live
-		res.json({ 
+		res.json({
 			'postId': postId,
 			'redirect': successRedirect
 		});
@@ -487,7 +487,7 @@ module.exports = async (req, res, next) => {
 		//build immediately and refresh when built
 		await buildThread(buildOptions);
 		if (req.headers['x-using-xhr'] != null) {
-			res.json({ 
+			res.json({
 				'postId': postId,
 				'redirect': successRedirect
 			});

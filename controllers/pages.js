@@ -12,7 +12,7 @@ const express  = require('express')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	//page models
-	, { manageReports, manageBanners, manageSettings, manageBans } = require(__dirname+'/../models/pages/manage/')
+	, { manageReports, manageBanners, manageSettings, manageBans, manageBoard, manageThread } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, home, register, login, logout, create,
@@ -43,11 +43,9 @@ router.get('/:board/manage/reports.html', sessionRefresh, isLoggedIn, Boards.exi
 router.get('/:board/manage/bans.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageBans);
 router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
 router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
-/*
-todo: dynamic mod pages with no captcha required for mod forms
-router.get('/:board/manage/:page(1[0-9]{0,}|[2-9]{1,}|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(2), csrf, manageBoard);
-router.get('/:board/manage/thread/:id(\\d+).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(2), csrf, manageThread);
-*/
+// if (mod view enabled) {
+router.get('/:board/manage/:page(1[0-9]{0,}|[2-9]{1,}|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
+router.get('/:board/manage/thread/:id(\\d+).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
 
 //global manage pages
 router.get('/globalmanage/reports.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
