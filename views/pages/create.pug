@@ -10,13 +10,13 @@ block content
 		form.form-post(action='/forms/create' method='POST')
 			.row
 				.label URI e.g. /uri/
-				input(type='text', name='uri', maxlength='50' pattern='[a-zA-Z0-9]+' required title='alphanumeric only')
+				input(type='text', name='uri', maxlength=globalLimits.fieldLength.uri pattern='[a-zA-Z0-9]+' required title='alphanumeric only')
 			.row
 				.label Name
-				input(type='text', name='name', maxlength='50' required)
+				input(type='text', name='name', maxlength=globalLimits.fieldLength.boardname required)
 			.row
 				.label Description
-				input(type='text', name='description', maxlength='50' required)
+				input(type='text', name='description', maxlength=globalLimits.fieldLength.description required)
 			.row
 				.label Tags
 				textarea(name='tags' placeholder='newline separated, max 10')

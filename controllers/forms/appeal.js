@@ -1,6 +1,7 @@
 'use strict';
 
 const appealBans = require(__dirname+'/../../models/forms/appeal.js')
+	, { globalLimits } = require(__dirname+'/../../configs/main.js')
 	, { Bans } = require(__dirname+'/../../db');
 
 module.exports = async (req, res, next) => {
@@ -12,7 +13,7 @@ module.exports = async (req, res, next) => {
 	if (!req.body.message || req.body.message.length === 0) {
 		errors.push('Appeals must include a message');
 	}
-	if (req.body.message.length > 2000) {
+	if (req.body.message.length > globalLimits.fieldLength.message) {
 		errors.push('Appeal message must be 2000 characters or less');
 	}
 

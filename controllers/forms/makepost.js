@@ -38,8 +38,8 @@ module.exports = async (req, res, next) => {
 		}
 	}
 	if (req.body.message) {
-		if (req.body.message.length > globalLimits.messageLength.max) {
-			errors.push(`Message must be ${globalLimits.messageLength.max} characters or less`);
+		if (req.body.message.length > globalLimits.fieldLength.message) {
+			errors.push(`Message must be ${globalLimits.fieldLength.message} characters or less`);
 		} else if (!req.body.thread
 			&& res.locals.board.settings.maxThreadMessageLength
 			&& req.body.message.length > res.locals.board.settings.maxThreadMessageLength) {
@@ -56,17 +56,17 @@ module.exports = async (req, res, next) => {
 	}
 
 	// subject, email, name, password limited length
-	if (req.body.name && req.body.name.length > 50) {
-		errors.push('Name must be 50 characters or less');
+	if (req.body.postpassword && req.body.postpassword.length > globalLimits.fieldLength.postpassword) {
+		errors.push(`Password must be ${globalLimits.fieldLength.postpassword} characters or less`);
 	}
-	if (req.body.subject && req.body.subject.length > 50) {
-		errors.push('Subject must be 50 characters or less');
+	if (req.body.name && req.body.name.length > globalLimits.fieldLength.name) {
+		errors.push(`Name must be ${globalLimits.fieldLength.name} characters or less`);
 	}
-	if (req.body.email && req.body.email.length > 50) {
-		errors.push('Email must be 50 characters or less');
+	if (req.body.subject && req.body.subject.length > globalLimits.fieldLength.subject) {
+		errors.push(`Subject must be ${globalLimits.fieldLength.subject} characters or less`);
 	}
-	if (req.body.postpassword && req.body.postpassword.length > 50) {
-		errors.push('Password must be 50 characters or less');
+	if (req.body.email && req.body.email.length > globalLimits.fieldLength.email) {
+		errors.push(`Email must be ${globalLimits.fieldLength.email} characters or less`);
 	}
 
 	if (errors.length > 0) {

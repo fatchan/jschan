@@ -4,4 +4,4 @@ if !isThread || (!board.settings.disableReplySubject && !board.settings.forceAno
 			span Subject
 				if subjectRequired
 					span.required *
-		input(type='text', name='subject', autocomplete='off' maxlength='50' required=subjectRequired)
+		input(type='text', name='subject', autocomplete='off' maxlength=globalLimits.fieldLength.subject required=subjectRequired)

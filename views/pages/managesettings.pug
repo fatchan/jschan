@@ -131,16 +131,16 @@ block content
 					input(type='checkbox', name='disable_reply_subject', value='true' checked=board.settings.disableReplySubject)
 			.row
 				.label Min Thread Message Length
-				input(type='number' name='min_thread_message_length' value=board.settings.minThreadMessageLength max=globalLimits.messageLength.max)
+				input(type='number' name='min_thread_message_length' value=board.settings.minThreadMessageLength max=globalLimits.fieldLength.message)
 			.row
 				.label Min Reply Message Length
-				input(type='number' name='min_reply_message_length' value=board.settings.minReplyMessageLength max=globalLimits.messageLength.max)
+				input(type='number' name='min_reply_message_length' value=board.settings.minReplyMessageLength max=globalLimits.fieldLength.message)
 			.row
 				.label Max Thread Message Length
-				input(type='number' name='max_thread_message_length' value=board.settings.maxThreadMessageLength max=globalLimits.messageLength.max)
+				input(type='number' name='max_thread_message_length' value=board.settings.maxThreadMessageLength max=globalLimits.fieldLength.message)
 			.row
 				.label Max Reply Message Length
-				input(type='number' name='max_reply_message_length' value=board.settings.maxReplyMessageLength max=globalLimits.messageLength.max)
+				input(type='number' name='max_reply_message_length' value=board.settings.maxReplyMessageLength max=globalLimits.fieldLength.message)
 			.row
 				.label Thread Limit
 				input(type='number' name='thread_limit' value=board.settings.threadLimit min=globalLimits.threadLimit.min max=globalLimits.threadLimit.max)

@@ -166,11 +166,24 @@ module.exports = {
 		bannerFilesSize: { //in bytes, 10MB default
 			max: 10485760
 		},
-		messageLength: { //max length of a post mesage field
-			/* NOTE: postFilesSize and bannerFilesSize counts in bytes the amount of total data in form submission including
-				other fields like message, name, etc. Therefore a very long message would reduce the space left for files very slightly.
-				To counteract this, consider increasing postFilesSize and bannerFilesSize beyond your desired max filesize by a small margin */
-			max: 4000
+		/* NOTE: postFilesSize and bannerFilesSize counts in bytes the amount of total data in form submission including
+			other fields like message, name, etc. Therefore a very long message would reduce the space left for files very slightly.
+			To counteract this, consider increasing postFilesSize and bannerFilesSize beyond your desired max filesize by a small margin */
+		fieldLength: { //max length of fields in some forms
+			//post form
+			name: 100,
+			email: 100,
+			subject: 100,
+			postpassword: 100,
+			message: 4000,
+			//reports/post actions
+			report_reason: 100,
+			ban_reason: 100,
+			log_message: 100,
+			//board creation
+			uri: 50,
+			boardname: 50,
+			description: 100,
 		},
 		customCss: {
 			enabled: true, //allow custom css by board owners

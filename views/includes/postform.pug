@@ -17,11 +17,11 @@ section.form-wrapper.flex-center
 		else
 			section.row
 				.label Name
-				input.mr-1(type='text', name='name', placeholder=board.settings.defaultName autocomplete='off' maxlength='50')
+				input.mr-1(type='text', name='name', placeholder=board.settings.defaultName maxlength=globalLimits.fieldLength.name)
 				a.close.postform-style(href='#!') X
 			section.row
 				.label Email
-				input(type='text', name='email', autocomplete='off' maxlength='50')
+				input(type='text', name='email', autocomplete='off' maxlength=globalLimits.fieldLength.email)
 			include ./subjectfield.pug
 		section.row
 			.label
@@ -29,7 +29,7 @@ section.form-wrapper.flex-center
 					if messageRequired
 						span.required *
 			- const minLength = (isThread ? board.settings.minReplyMessageLength : board.settings.minThreadMessageLength) || 0;
-			- const maxLength = Math.min((isThread ? board.settings.maxReplyMessageLength : board.settings.maxThreadMessageLength), globalLimits.messageLength.max) || globalLimits.messageLength.max;
+			- const maxLength = Math.min((isThread ? board.settings.maxReplyMessageLength : board.settings.maxThreadMessageLength), globalLimits.fieldLength.message) || globalLimits.fieldLength.message;
 			textarea#message(name='message', rows='5', autocomplete='off' minlength=minLength maxlength=maxLength required=messageRequired)
 		if board.settings.maxFiles > 0
 			- const maxFiles = board.settings.maxFiles;
@@ -52,7 +52,7 @@ section.form-wrapper.flex-center
 		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink
 			section.row
 				.label Password
-				input(type='password', name='postpassword', autocomplete='off' placeholder='password to delete/spoiler/unlink later' maxlength='50')
+				input(type='password', name='postpassword' placeholder='password to delete/spoiler/unlink later' maxlength=globalLimits.fieldLength.postpassword)
 		if (board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2
 			section.row
 				.label

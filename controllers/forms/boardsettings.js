@@ -68,31 +68,31 @@ module.exports = async (req, res, next) => {
 	}
 
 	//make sure existing min/max message dont conflict
-	const minThread = Math.min(globalLimits.messageLength.max, res.locals.board.settings.maxThreadMessageLength) || globalLimits.messageLength.max;
+	const minThread = Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxThreadMessageLength) || globalLimits.fieldLength.message;
 	if (typeof req.body.min_thread_message_length === 'number'
 		&& (req.body.min_thread_message_length < 0
 			|| req.body.min_thread_message_length > minThread)) {
-		errors.push(`Min thread message length must be 0-${globalLimits.messageLength.max} and not more than "Max Thread Message Length" (currently ${res.locals.board.settings.maxThreadMessageLength})`);
+		errors.push(`Min thread message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Thread Message Length" (currently ${res.locals.board.settings.maxThreadMessageLength})`);
 	}
-	const minReply = Math.min(globalLimits.messageLength.max, res.locals.board.settings.maxReplyMessageLength) || globalLimits.messageLength.max;
+	const minReply = Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxReplyMessageLength) || globalLimits.fieldLength.message;
 	if (typeof req.body.min_reply_message_length === 'number'
 		&& (req.body.min_reply_message_length < 0
 			|| req.body.min_reply_message_length > minReply)) {
-		errors.push(`Min reply message length must be 0-${globalLimits.messageLength.max} and not more than "Max Reply Message Length" (currently ${res.locals.board.settings.maxReplyMessageLength})`);
+		errors.push(`Min reply message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Reply Message Length" (currently ${res.locals.board.settings.maxReplyMessageLength})`);
 	}
 	if (typeof req.body.max_thread_message_length === 'number'
 		&& (req.body.max_thread_message_length < 0
-			|| req.body.max_thread_message_length > globalLimits.messageLength.max
+			|| req.body.max_thread_message_length > globalLimits.fieldLength.message
 			|| (req.body.max_thread_message_length
 				&& req.body.max_thread_message_length < res.locals.board.settings.minThreadMessageLength))) {
-		errors.push(`Max thread message length must be 0-${globalLimits.messageLength.max} and not less than "Min Thread Message Length" (currently ${res.locals.board.settings.minThreadMessageLength})`);
+		errors.push(`Max thread message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Thread Message Length" (currently ${res.locals.board.settings.minThreadMessageLength})`);
 	}
 	if (typeof req.body.max_reply_message_length === 'number'
 		&& (req.body.max_reply_message_length < 0
-			|| req.body.max_reply_message_length > globalLimits.messageLength.max
+			|| req.body.max_reply_message_length > globalLimits.fieldLength.message
 			|| (req.body.max_reply_message_length
 				&& req.body.max_reply_message_length < res.locals.board.settings.minReplyMessageLength))) {
-		errors.push(`Max reply message length must be 0-${globalLimits.messageLength.max} and not less than "Min Reply Message Length" (currently ${res.locals.board.settings.minReplyMessageLength})`);
+		errors.push(`Max reply message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Reply Message Length" (currently ${res.locals.board.settings.minReplyMessageLength})`);
 	}
 
 	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {

@@ -1,6 +1,7 @@
 'use strict';
 
 const { Posts } = require(__dirname+'/../../db/')
+	, { globalLimits } = require(__dirname+'/../../configs/main.js')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
 	, actionChecker = require(__dirname+'/../../helpers/checks/actionchecker.js');
 
@@ -32,14 +33,14 @@ module.exports = async (req, res, next) => {
 	}
 
 	//check that actions are valid
-	if (req.body.postpassword && req.body.postpassword.length > 50) {
-		errors.push('Password must be 50 characters or less');
+	if (req.body.postpassword && req.body.postpassword.length > globalLimits.fieldLength.postpassword) {
+		errors.push(`Password must be ${globalLimits.fieldLength.postpassword} characters or less`);
 	}
-	if (req.body.ban_reason && req.body.ban_reason.length > 50) {
-		errors.push('Ban reason must be 50 characters or less');
+	if (req.body.ban_reason && req.body.ban_reason.length > globalLimits.fieldLength.ban_reason) {
+		errors.push(`Ban reason must be ${globalLimits.fieldLength.ban_reason} characters or less`);
 	}
-	if (req.body.log_message && req.body.log_message.length > 50) {
-		errors.push('Modlog must be 50 characters or less');
+	if (req.body.log_message && req.body.log_message.length > globalLimits.fieldLength.log_message) {
+		errors.push(`Modlog message must be ${globalLimits.fieldLength.log_message} characters or less`);
 	}
 
 	//return the errors
