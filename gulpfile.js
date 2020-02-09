@@ -50,8 +50,9 @@ async function wipe() {
 	await db.createCollection('poststats');
 	await db.createCollection('ratelimit');
 	await db.createCollection('webring');
+	await db.createCollection('bypass');
 
-	const { Webring, Boards, Posts, Captchas, Ratelimits, Accounts, Files, Stats, Modlogs, Bans } = require(__dirname+'/db/');
+	const { Webring, Boards, Posts, Captchas, Ratelimits, Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
@@ -65,7 +66,8 @@ async function wipe() {
 		Bans.deleteAll(),
 		Files.deleteAll(),
 		Stats.deleteAll(),
-		Modlogs.deleteAll()
+		Modlogs.deleteAll(),
+		Bypass.deleteAll(),
 	]);
 
 	//add indexes - should profiled and changed at some point if necessary
@@ -84,9 +86,10 @@ async function wipe() {
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
 	await Bans.db.createIndex({ 'ip': 1 , 'board': 1 })
-	await Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
-	await Captchas.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
-	await Ratelimits.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 60 }) //per minute captcha ratelimit
+	await Bans.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
+	await Bypass.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 })
+	await Captchas.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
+	await Ratelimits.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 60 }) //per minute captcha ratelimit
 	await Posts.db.createIndex({ 'postId': 1,'board': 1,})
 	await Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })

@@ -2,12 +2,13 @@
 
 const cache = require(__dirname+'/../../redis.js')
 	, dynamicResponse = require(__dirname+'/../dynamic.js')
-	, { dnsbl } = require(__dirname+'/../../configs/main.js')
+	, { dnsbl, blockBypass } = require(__dirname+'/../../configs/main.js')
 	, { batch } = require('dnsbl');
 
 module.exports = async (req, res, next) => {
 
-	if (dnsbl.enabled && dnsbl.blacklists.length > 0) {
+	if (dnsbl.enabled && dnsbl.blacklists.length > 0 //if dnsbl enabled and has more than 0 blacklists
+		&& (!res.locals.bypass || !blockBypass.bypassDnsbl)) { //and there is no valid block bypass, or they do not bypass dnsbl
 		const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
 		let isBlacklisted = await cache.get(`blacklisted:${ip}`);
 		if (isBlacklisted === null) { //not cached

@@ -2,6 +2,7 @@
 
 module.exports = {
 	changePassword: require(__dirname+'/changepassword.js'),
+	blockBypass: require(__dirname+'/blockbypass.js'),
 	register: require(__dirname+'/register.js'),
 	account: require(__dirname+'/account.js'),
 	home: require(__dirname+'/home.js'),

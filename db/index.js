@@ -13,5 +13,6 @@ module.exports = {
 	News: require(__dirname+'/news.js'),
 	Ratelimits: require(__dirname+'/ratelimits.js'),
 	Modlogs: require(__dirname+'/modlogs.js'),
+	Bypass: require(__dirname+'/bypass.js'),
 
 }

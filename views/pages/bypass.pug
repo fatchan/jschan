@@ -1,0 +1,15 @@
+extends ../layout.pug
+
+block head
+	script(src='/js/all.js')
+	title Block Bypass
+
+block content
+	h1.board-title Block Bypass
+	.form-wrapper.flex-center.mv-10
+		form.form-post(action='/forms/blockbypass' method='POST')
+			.row
+				.label Captcha
+				span.col
+					include ../includes/captcha.pug
+			input(type='submit', value='Submit')

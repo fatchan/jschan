@@ -15,7 +15,7 @@ const express  = require('express')
 	, { manageReports, manageBanners, manageSettings, manageBans } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
-	, { changePassword, home, register, login, logout, create,
+	, { changePassword, blockBypass, home, register, login, logout, create,
 		board, catalog, banners, randombanner, news, captchaPage,
 		captcha, thread, modlog, modloglist, account, boardlist } = require(__dirname+'/../models/pages/');
 
@@ -61,6 +61,7 @@ router.get('/globalmanage/settings.html', sessionRefresh, isLoggedIn, calcPerms,
 //captcha
 router.get('/captcha', captcha); //get captcha image and cookie
 router.get('/captcha.html', captchaPage); //iframed for noscript users
+router.get('/bypass.html', blockBypass); //block bypass page
 
 //accounts
 router.get('/account.html', sessionRefresh, isLoggedIn, account); //page showing boards you are mod/owner of, links to password rese, logout, etc

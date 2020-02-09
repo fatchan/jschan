@@ -15,6 +15,7 @@ const express  = require('express')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
 	, dnsblCheck = require(__dirname+'/../helpers/checks/dnsbl.js')
+	, blockBypassCheck = require(__dirname+'/../helpers/checks/blockbypass.js')
 	, dynamicResponse = require(__dirname+'/../helpers/dynamic.js')
 	, uploadLimitFunction = (req, res, next) => {
 		return dynamicResponse(req, res, 413, 'message', {
@@ -71,16 +72,21 @@ const express  = require('express')
 	, globalSettingsController = require(__dirname+'/forms/globalsettings.js')
 	, createBoardController = require(__dirname+'/forms/create.js')
 	, makePostController = require(__dirname+'/forms/makepost.js')
-	, newcaptcha = require(__dirname+'/../models/forms/newcaptcha.js')
+	, newCaptcha = require(__dirname+'/../models/forms/newcaptcha.js')
+	, blockBypass = require(__dirname+'/../models/forms/blockbypass.js')
 
 //make new post
-router.post('/board/:board/post', dnsblCheck, sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles, paramConverter, verifyCaptcha, numFiles, makePostController);
-//router.post('/board/:board/modpost', dnsblCheck, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), postFiles, paramConverter, csrf, numFiles, makePostController); //mod post has token instead of captcha
+router.post('/board/:board/post', sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles,
+	paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, makePostController);
+/*router.post('/board/:board/modpost', sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), postFiles,
+	paramConverter, csrf, numFiles, blockBypassCheck, dnsblCheck, makePostController); */ //mod post has token instead of captcha
 
 //post actions
 router.post('/board/:board/actions', sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //public, with captcha
 router.post('/board/:board/modactions', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, actionController); //board manage page
 router.post('/global/actions', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page
+//appeal ban
+router.post('/appeal', sessionRefresh, paramConverter, verifyCaptcha, appealController);
 
 //board management forms
 router.post('/board/:board/transfer', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);
@@ -97,19 +103,17 @@ router.post('/global/deletenews', sessionRefresh, csrf, calcPerms, isLoggedIn, h
 router.post('/global/editaccounts', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, editAccountsController); //account editing
 router.post('/global/settings', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, globalSettingsController); //global settings
 
+//create board
+router.post('/create', sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
 //accounts
 router.post('/login', loginController);
 router.post('/register', verifyCaptcha, registerController);
 router.post('/changepassword', verifyCaptcha, changePasswordController);
 
-//appeal ban
-router.post('/appeal', sessionRefresh, paramConverter, verifyCaptcha, appealController);
-
-//create board
-router.post('/create', sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
-
 //removes captcha cookie, for refreshing for noscript users
-router.post('/newcaptcha', newcaptcha);
+router.post('/newcaptcha', newCaptcha);
+//solve captcha for block bypass
+router.post('/blockbypass', verifyCaptcha, blockBypass);
 
 module.exports = router;
 

@@ -226,6 +226,10 @@ module.exports = {
 		return render('register.html', 'register.pug');
 	},
 
+	buildBypass: () => {
+		return render('bypass.html', 'bypass.pug');
+	},
+
 	buildCreate: () => {
 		return render('create.html', 'create.pug');
 	},
