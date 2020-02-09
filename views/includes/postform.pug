@@ -3,11 +3,13 @@
 - const messageRequired = (!isThread && board.settings.forceThreadMessage) || (isThread && board.settings.forceReplyMessage);
 - const fileRequired = (!isThread && board.settings.forceThreadFile) || (isThread && board.settings.forceReplyFile);
 section.form-wrapper.flex-center
-	form.form-post#postform(action=`/forms/board/${board._id}/post`, enctype='multipart/form-data', method='POST')
+	form.form-post#postform(action=`/forms/board/${board._id}/${modview ? 'mod' : ''}post`, enctype='multipart/form-data', method='POST')
+		if modview
+			input(type='hidden' name='_csrf' value=csrf)
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
 		section.row.jsonly
 			.noselect#dragHandle
-		if board.settings.forceAnon
+		if board.settings.forceAnon && !modview
 			section.row
 				.label Sage
 				label.postform-style.ph-5
@@ -49,11 +51,11 @@ section.form-wrapper.flex-center
 					label.postform-style.ph-5.ml-1.fh
 						input(type='checkbox', name='spoiler', value='true')
 						| Spoiler
-		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink
+		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink || modview
 			section.row
 				.label Password
-				input(type='password', name='postpassword' placeholder='password to delete/spoiler/unlink later' maxlength=globalLimits.fieldLength.postpassword)
-		if (board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2
+				input(type='password', name='postpassword', placeholder='password to delete/spoiler/unlink later' maxlength='50')
+		if ((board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2) && !modview
 			section.row
 				.label
 					span Captcha

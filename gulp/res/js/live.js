@@ -83,7 +83,12 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		window.dispatchEvent(newPostEvent);
 	}
 
-	const jsonPath = window.location.pathname.replace(/\.html$/, '.json');
+	let jsonParts = window.location.pathname.split('/');
+	let jsonPath;
+	if (jsonParts[2] === 'manage') {
+		jsonParts.splice(2,1);
+		jsonPath = `${jsonParts.join('/').replace(/\.html$/, '.json')}`;
+	}
 	const fetchNewPosts = async () => {
 		console.log('fetching posts from api');
 		updateLive('Fetching posts...', 'yellow');
@@ -127,7 +132,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		if (supportsWebSockets) {
 			updateButton.style.display = 'none';
 			const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
-			const room = `${roomParts[1]}-${roomParts[3]}`;
+			const room = `${roomParts[1]}-${roomParts[roomParts.length-1]}`;
 			socket = io({
 				transports: ['websocket'],
 				reconnectionAttempts: 5
@@ -178,7 +183,6 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				socket.close();
 				supportsWebSockets = false;
 				enableLive();
-
 			});
 			socket.on('newPost', newPost);
 		} else {
