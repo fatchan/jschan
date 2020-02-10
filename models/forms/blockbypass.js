@@ -6,7 +6,9 @@ const { Bypass } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	const bypassId = await Bypass.getBypass();
+	const bypass = await Bypass.getBypass();
+	const bypassId = bypass.insertedId;
+	res.locals.blockBypass = bypass.ops[0];
 
 	return res
 		.cookie('bypassid', bypassId.toString(), {

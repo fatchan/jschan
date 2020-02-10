@@ -8,7 +8,7 @@ const cache = require(__dirname+'/../../redis.js')
 module.exports = async (req, res, next) => {
 
 	if (dnsbl.enabled && dnsbl.blacklists.length > 0 //if dnsbl enabled and has more than 0 blacklists
-		&& (!res.locals.bypass || !blockBypass.bypassDnsbl)) { //and there is no valid block bypass, or they do not bypass dnsbl
+		&& (!res.locals.blockBypass || !blockBypass.bypassDnsbl)) { //and there is no valid block bypass, or they do not bypass dnsbl
 		const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
 		let isBlacklisted = await cache.get(`blacklisted:${ip}`);
 		if (isBlacklisted === null) { //not cached

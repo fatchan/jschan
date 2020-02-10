@@ -25,7 +25,7 @@ module.exports = {
 		return db.insertOne({
 			'uses': 0,
 			'expireAt': new Date(Date.now() + blockBypass.expireAfterTime)
-		}).then(r => { return r.insertedId });
+		});
 	},
 
 	deleteAll: () => {
