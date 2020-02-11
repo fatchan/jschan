@@ -5,6 +5,8 @@ const { MongoClient, ObjectId, Int32 } = require('mongodb')
 
 module.exports = {
 
+	client,
+
 	connect: async () => {
 		if (module.exports.client) {
 			throw new Error('Mongo already connected');

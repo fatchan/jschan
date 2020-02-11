@@ -193,6 +193,7 @@ module.exports = async (req, res, next) => {
 
 			//increment file count
 			await Files.increment(processedFile);
+			req.files.file[i].inced = true;
 			//check if already exists
 			const existsFull = await pathExists(`${uploadDirectory}/img/${processedFile.filename}`);
 			processedFile.sizeString = formatSize(processedFile.size)
