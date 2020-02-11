@@ -12,6 +12,9 @@ const gulp = require('gulp')
 	, del = require('del')
 	, pug = require('pug')
 	, gulppug = require('gulp-pug')
+	, packageVersion = require(__dirname+'/package.json').dbVersion
+	, Mongo = require(__dirname+'/db/db.js')
+	, Redis = require(__dirname+'/redis.js')
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/**/*.css',
@@ -33,8 +36,6 @@ const gulp = require('gulp')
 
 async function wipe() {
 
-	const Mongo = require(__dirname+'/db/db.js')
-		, cache = require(__dirname+'/redis.js')
 	await Mongo.connect();
 	const db = Mongo.client.db('jschan');
 
@@ -56,7 +57,7 @@ async function wipe() {
 
 	//wipe db shit
 	await Promise.all([
-		cache.deletePattern('*'),
+		Redis.deletePattern('*'),
 		Captchas.deleteAll(),
 		Ratelimits.deleteAll(),
 		Accounts.deleteAll(),
@@ -96,8 +97,17 @@ async function wipe() {
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
 	await Accounts.insertOne('admin', 'admin', 'changeme', 0);
 
+	await db.collection('version').replaceOne({
+		'_id': 'version'
+	}, {
+		'_id': 'version',
+		'version': packageVersion
+	}, {
+		upsert: true
+	});
+
 	await Mongo.client.close();
-	cache.redisClient.quit();
+	Redis.redisClient.quit();
 
 	//delete all the static files
 	return Promise.all([
@@ -135,13 +145,12 @@ function images() {
 }
 
 async function cache() {
-	const cache = require(__dirname+'/redis.js');
 	await Promise.all([
-		cache.deletePattern('board:*'),
-		cache.deletePattern('banners:*'),
-		cache.deletePatterh('blacklisted:*'),
+		Redis.deletePattern('board:*'),
+		Redis.deletePattern('banners:*'),
+		Redis.deletePatterh('blacklisted:*'),
 	]);
-	cache.redisClient.quit();
+	Redis.redisClient.quit();
 }
 
 function deletehtml() {
@@ -201,6 +210,48 @@ function scripts() {
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 
+async function migrate() {
+
+	await Mongo.connect();
+	const db = Mongo.client.db('jschan');
+
+	//get current version from db if present (set in 'reset' task in recent versions)
+	let currentVersion = await db.collection('version').findOne({
+		'_id': 'version'
+	}).then(res => res ? res.version : '0.0.0'); // 0.0.0 for old versions
+
+	if (currentVersion < packageVersion) {
+		console.log(`Current version: ${currentVersion}`);
+		const migrations = require(__dirname+'/migrations/');
+		const migrationVersions = Object.keys(migrations).sort().filter(v => v > currentVersion);
+		console.log(`Migrations needed: ${currentVersion} -> ${migrationVersions.join(' -> ')}`);
+		for (let ver of migrationVersions) {
+			console.log(`=====\nStarting migration to version ${ver}`);
+			try {
+				await migrations[ver](db, Redis);
+				await db.collection('version').replaceOne({
+					'_id': 'version'
+				}, {
+					'_id': 'version',
+					'version': ver
+				}, {
+					upsert: true
+				});
+			} catch (e) {
+				console.error(e);
+				console.warn(`Migration to ${ver} encountered an error`);
+			}
+			console.log(`Finished migrating to version ${ver}`);
+		}
+	} else {
+		console.log(`Migration not required, you are already on the current version (${packageVersion})`)
+	}
+
+	await Mongo.client.close();
+	Redis.redisClient.quit();
+
+}
+
 const build = gulp.parallel(css, scripts, images, gulp.series(deletehtml, custompages));
 const reset = gulp.parallel(wipe, build);
 const html = gulp.series(deletehtml, custompages);
@@ -214,5 +265,6 @@ module.exports = {
 	scripts,
 	wipe,
 	cache,
+	migrate,
 	default: build,
 };
