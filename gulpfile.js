@@ -13,8 +13,6 @@ const gulp = require('gulp')
 	, pug = require('pug')
 	, gulppug = require('gulp-pug')
 	, packageVersion = require(__dirname+'/package.json').dbVersion
-	, Mongo = require(__dirname+'/db/db.js')
-	, Redis = require(__dirname+'/redis.js')
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/**/*.css',
@@ -36,6 +34,8 @@ const gulp = require('gulp')
 
 async function wipe() {
 
+	const Mongo = require(__dirname+'/db/db.js')
+	const Redis = require(__dirname+'/redis.js')
 	await Mongo.connect();
 	const db = Mongo.client.db('jschan');
 
@@ -145,10 +145,11 @@ function images() {
 }
 
 async function cache() {
+	const Redis = require(__dirname+'/redis.js')
 	await Promise.all([
 		Redis.deletePattern('board:*'),
 		Redis.deletePattern('banners:*'),
-		Redis.deletePatterh('blacklisted:*'),
+		Redis.deletePattern('blacklisted:*'),
 	]);
 	Redis.redisClient.quit();
 }
@@ -212,6 +213,8 @@ function scripts() {
 
 async function migrate() {
 
+	const Mongo = require(__dirname+'/db/db.js')
+	const Redis = require(__dirname+'/redis.js')
 	await Mongo.connect();
 	const db = Mongo.client.db('jschan');
 
