@@ -30,7 +30,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		lastPostId = data.postId;
 		const postData = data;
 		//create a new post
-		const postHtml = post({ post: postData });
+		const postHtml = post({ post: postData, modview:isModView });
 		//add it to the end of the thread
 		thread.insertAdjacentHTML('beforeend', postHtml);
 		for (let j = 0; j < postData.quotes.length; j++) {
@@ -83,12 +83,12 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		window.dispatchEvent(newPostEvent);
 	}
 
-	let jsonParts = window.location.pathname.split('/');
+	let jsonParts = window.location.pathname.replace(/\.html$/, '.json').split('/');
 	let jsonPath;
-	if (jsonParts[2] === 'manage') {
-		jsonParts.splice(2,1);
-		jsonPath = `${jsonParts.join('/').replace(/\.html$/, '.json')}`;
+	if (isModView) {
+		jsonParts.splice(2,1); //remove manage from json url
 	}
+	jsonPath = jsonParts.join('/');
 	const fetchNewPosts = async () => {
 		console.log('fetching posts from api');
 		updateLive('Fetching posts...', 'yellow');

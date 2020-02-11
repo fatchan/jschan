@@ -5,7 +5,7 @@ function pug_classes_object(r){var a="",n="";for(var o in r)o&&r[o]&&pug_has_own
 function pug_escape(e){var a=""+e,t=pug_match_html.exec(a);if(!t)return e;var r,c,n,s="";for(r=t.index,c=0;r<a.length;r++){switch(a.charCodeAt(r)){case 34:n="&quot;";break;case 38:n="&amp;";break;case 60:n="&lt;";break;case 62:n="&gt;";break;default:continue}c!==r&&(s+=a.substring(c,r)),c=r+1,s+=n}return c!==r?s+a.substring(c,r):s}
 var pug_has_own_property=Object.prototype.hasOwnProperty;
 var pug_match_html=/["&<>]/;
-function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function post(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Date, encodeURIComponent, ipHashSub, post) {pug_mixins["report"] = pug_interp = function(r, globalmanage=false){
+function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function post(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Date, RegExp, encodeURIComponent, ipHashSub, modview, post) {pug_mixins["report"] = pug_interp = function(r, globalmanage=false){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv class=\"reports post-container\"\u003E\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"checkedreports\""+pug_attr("value", r.id, true, false)) + "\u002F\u003E ";
 if (globalmanage) {
@@ -18,7 +18,7 @@ pug_html = pug_html + "\u003Ctime" + (" class=\"reltime\""+pug_attr("datetime", 
 pug_mixins["post"] = pug_interp = function(post, truncate, manage=false, globalmanage=false, ban=false){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv" + (" class=\"anchor\""+pug_attr("id", post.postId, true, false)) + "\u003E\u003C\u002Fdiv\u003E\u003Cdiv" + (pug_attr("class", pug_classes([`post-container ${post.thread || ban === true ? '' : 'op'}`], [true]), false, false)+pug_attr("data-board", post.board, true, false)+pug_attr("data-post-id", post.postId, true, false)+pug_attr("data-user-id", post.userId, true, false)) + "\u003E";
-const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
+const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 pug_html = pug_html + "\u003Cdiv class=\"post-info\"\u003E\u003Cspan class=\"noselect\"\u003E\u003Clabel\u003E";
 if (globalmanage) {
 pug_html = pug_html + "\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"globalcheckedposts\""+pug_attr("value", post._id, true, false)) + "\u002F\u003E ";
@@ -159,6 +159,7 @@ pug_html = pug_html + "\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u
 
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
+if (post.message && modview) { post.message = post.message.replace(new RegExp(`<a class="quote" href="/${post.board}`, 'g'), `<a class="quote" href="/${post.board}/manage`); } //quick & dirty solution to a bigger problem/design issue
 let truncatedMessage = post.message;
 if (post.message) {
 if (truncate) {
@@ -199,14 +200,14 @@ pug_html = pug_html + "\u003Cdiv class=\"replies mt-5 ml-5\"\u003EReplies: ";
   if ('number' == typeof $$obj.length) {
       for (var pug_index1 = 0, $$l = $$obj.length; pug_index1 < $$l; pug_index1++) {
         var backlink = $$obj[pug_index1];
-pug_html = pug_html + "\u003Ca" + (" class=\"quote\""+pug_attr("href", `/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`, true, false)) + "\u003E&gt;&gt;" + (pug_escape(null == (pug_interp = backlink.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
+pug_html = pug_html + "\u003Ca" + (" class=\"quote\""+pug_attr("href", `${postURL}#${backlink.postId}`, true, false)) + "\u003E&gt;&gt;" + (pug_escape(null == (pug_interp = backlink.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
       }
   } else {
     var $$l = 0;
     for (var pug_index1 in $$obj) {
       $$l++;
       var backlink = $$obj[pug_index1];
-pug_html = pug_html + "\u003Ca" + (" class=\"quote\""+pug_attr("href", `/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`, true, false)) + "\u003E&gt;&gt;" + (pug_escape(null == (pug_interp = backlink.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
+pug_html = pug_html + "\u003Ca" + (" class=\"quote\""+pug_attr("href", `${postURL}#${backlink.postId}`, true, false)) + "\u003E&gt;&gt;" + (pug_escape(null == (pug_interp = backlink.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
     }
   }
 }).call(this);
@@ -227,14 +228,14 @@ pug_html = pug_html + "\u003Cdiv class=\"replies mt-5 ml-5\"\u003EReplies: ";
   if ('number' == typeof $$obj.length) {
       for (var pug_index2 = 0, $$l = $$obj.length; pug_index2 < $$l; pug_index2++) {
         var backlink = $$obj[pug_index2];
-pug_html = pug_html + "\u003Ca" + (" class=\"quote\""+pug_attr("href", `/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`, true, false)) + "\u003E&gt;&gt;" + (pug_escape(null == (pug_interp = backlink.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
+pug_html = pug_html + "\u003Ca" + (" class=\"quote\""+pug_attr("href", `${postURL}#${backlink.postId}`, true, false)) + "\u003E&gt;&gt;" + (pug_escape(null == (pug_interp = backlink.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
       }
   } else {
     var $$l = 0;
     for (var pug_index2 in $$obj) {
       $$l++;
       var backlink = $$obj[pug_index2];
-pug_html = pug_html + "\u003Ca" + (" class=\"quote\""+pug_attr("href", `/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`, true, false)) + "\u003E&gt;&gt;" + (pug_escape(null == (pug_interp = backlink.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
+pug_html = pug_html + "\u003Ca" + (" class=\"quote\""+pug_attr("href", `${postURL}#${backlink.postId}`, true, false)) + "\u003E&gt;&gt;" + (pug_escape(null == (pug_interp = backlink.postId) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
     }
   }
 }).call(this);
@@ -283,4 +284,4 @@ pug_mixins["report"](r, true);
 
 }
 };
-pug_mixins["post"](post);}.call(this,"Date" in locals_for_with?locals_for_with.Date:typeof Date!=="undefined"?Date:undefined,"encodeURIComponent" in locals_for_with?locals_for_with.encodeURIComponent:typeof encodeURIComponent!=="undefined"?encodeURIComponent:undefined,"ipHashSub" in locals_for_with?locals_for_with.ipHashSub:typeof ipHashSub!=="undefined"?ipHashSub:undefined,"post" in locals_for_with?locals_for_with.post:typeof post!=="undefined"?post:undefined));;return pug_html;}
+pug_mixins["post"](post);}.call(this,"Date" in locals_for_with?locals_for_with.Date:typeof Date!=="undefined"?Date:undefined,"RegExp" in locals_for_with?locals_for_with.RegExp:typeof RegExp!=="undefined"?RegExp:undefined,"encodeURIComponent" in locals_for_with?locals_for_with.encodeURIComponent:typeof encodeURIComponent!=="undefined"?encodeURIComponent:undefined,"ipHashSub" in locals_for_with?locals_for_with.ipHashSub:typeof ipHashSub!=="undefined"?ipHashSub:undefined,"modview" in locals_for_with?locals_for_with.modview:typeof modview!=="undefined"?modview:undefined,"post" in locals_for_with?locals_for_with.post:typeof post!=="undefined"?post:undefined));;return pug_html;}

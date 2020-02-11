@@ -62,12 +62,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	const toggleHighlightPost = async function (e) {
 		hovering = e.type === 'mouseover';
-		let jsonParts = this.pathname.split('/');
+		let jsonParts = this.pathname.replace(/\.html$/, '.json').split('/');
 		let jsonPath;
-		if (jsonParts[2] === 'manage') {
-			jsonParts.splice(2,1);
-			jsonPath = `${jsonParts.join('/').replace(/\.html$/, '.json')}`;
+		if (isModView) {
+			jsonParts.splice(2,1); //remove manage from json url
 		}
+		jsonPath = jsonParts.join('/');
 		if (!this.hash) {
 			return; //non-post number board quote
 		}
