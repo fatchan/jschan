@@ -269,9 +269,10 @@ module.exports = async (req, res, next) => {
 					postIds: [],
 					actions: modlogActions,
 					date: logDate,
-					user: logUser,
 					showUser: req.body.show_name || logUser === 'Unregistered User' ? true : false,
 					message: message,
+					user: logUser,
+					ip: res.locals.ip.hash,
 				};
 			}
 			//push each post id

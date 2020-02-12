@@ -2,6 +2,7 @@
 
 const { Modlogs } = require(__dirname+'/../../../db/')
 	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
+	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
 	, limit = 50;
 
 module.exports = async (req, res, next) => {
@@ -17,6 +18,10 @@ module.exports = async (req, res, next) => {
     if (uri && !Array.isArray(uri)) {
         filter.board = uri;
     }
+	const ipMatch = decodeQueryIP(req.query);
+	if (ipMatch) {
+		filter.ip = ipMatch;
+	}
 
 	let logs, maxPage;
 	try {
@@ -36,6 +41,7 @@ module.exports = async (req, res, next) => {
 		queryString,
 		username,
 		uri,
+		ip: ipMatch ? req.query.ip : null,
 		logs,
 		page,
 		maxPage,
