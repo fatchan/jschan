@@ -42,6 +42,8 @@ block content
 			+boardnav(null, true, true)
 	- const uids = board.settings.ids ? new Set() : void 0;
 	form(action=`/forms/board/${board._id}/${modview ? 'mod' : ''}actions` method='POST' enctype='application/x-www-form-urlencoded')
+		if modview
+			input(type='hidden' name='_csrf' value=csrf)
 		hr(size=1)
 		.thread
 			- uids && thread.userId && uids.add(thread.userId)
