@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
 
 	//check if blockbypass exists and right length
 	const bypassId = req.cookies.bypassid;
-	if ((!bypassId || bypassId.length !== 24) && !res.locals.solvedCaptcha) {
+	if (!res.locals.solvedCaptcha && (!bypassId || bypassId.length !== 24)) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Missing or invalid block bypass',
@@ -25,12 +25,14 @@ module.exports = async (req, res, next) => {
 
 	//try to get bypass from db and make sure uses < maxUses
 	let bypass;
-	try {
-		const bypassMongoId = ObjectId(bypassId);
-		bypass = await Bypass.checkBypass(bypassMongoId);
-		res.locals.blockBypass = bypass;
-	} catch (err) {
-		return next(err);
+	if (bypassId && bypassId.length === 24) {
+		try {
+			const bypassMongoId = ObjectId(bypassId);
+			bypass = await Bypass.checkBypass(bypassMongoId);
+			res.locals.blockBypass = bypass;
+		} catch (err) {
+			return next(err);
+		}
 	}
 
 	if (bypass && bypass.uses < blockBypass.expireAfterUses) {
