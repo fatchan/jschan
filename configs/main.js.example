@@ -58,6 +58,12 @@ module.exports = {
 		bypassDnsbl: false,
 	},
 
+	/*  0=not hashed
+		1=hash for non-global staff, visible for global staff and ban pages
+		2=hash for everything 
+		its not recommended to change this setting after initial setup */
+	ipHashMode: 1,
+
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
 
@@ -119,6 +125,10 @@ module.exports = {
 		true=allow only A-Za-z0-9_-
 		regex=custom regex of what to replace e.g. /[^\w\s-]+/g */
 	filterFileNames: false,
+
+	/* delete files immediately rather than pruning later. usually disabled to prevent re-thumbnailing and processing commonly
+		uploaded files, but deleting immediately is better if you are concerned about "deleted" content not being immediately removed */
+	pruneImmediately: false,
 
 	//options for code block highlighting in posts
 	highlightOptions: {

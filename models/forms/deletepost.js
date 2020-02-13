@@ -6,6 +6,8 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, { Posts, Files } = require(__dirname+'/../../db/')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
+	, { pruneImmediately } = require(__dirname+'/../../configs/main.js')
+	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
 
@@ -58,6 +60,9 @@ module.exports = async (posts, board, all=false) => {
 	if (postFiles.length > 0) {
 		const fileNames = postFiles.map(x => x.filename)//[...new Set(postFiles.map(x => x.filename))];
         await Files.decrement(fileNames);
+		if (pruneImmediately) {
+			await pruneFiles(fileNames);
+		}
 	}
 
 	const bulkWrites = [];
