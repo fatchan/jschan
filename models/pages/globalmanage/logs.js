@@ -18,7 +18,7 @@ module.exports = async (req, res, next) => {
     if (uri && !Array.isArray(uri)) {
         filter.board = uri;
     }
-	const ipMatch = decodeQueryIP(req.query);
+	const ipMatch = decodeQueryIP(req.query, res.locals.permLevel);
 	if (ipMatch) {
 		filter.ip = ipMatch;
 	}

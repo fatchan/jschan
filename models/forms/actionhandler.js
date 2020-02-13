@@ -79,7 +79,7 @@ module.exports = async (req, res, next) => {
 	if (deleting) {
 		const postsBefore = res.locals.posts.length;
 		if (req.body.delete_ip_board || req.body.delete_ip_global || req.body.delete_ip_thread) {
-			const deletePostIps = res.locals.posts.map(x => x.ip.hash);
+			const deletePostIps = res.locals.posts.map(x => x.ip.single);
 			const deletePostMongoIds = res.locals.posts.map(x => x._id)
 			let query = {
 				'_id': {
@@ -272,7 +272,7 @@ module.exports = async (req, res, next) => {
 					showUser: req.body.show_name || logUser === 'Unregistered User' ? true : false,
 					message: message,
 					user: logUser,
-					ip: res.locals.ip.hash,
+					ip: res.locals.ip.single,
 				};
 			}
 			//push each post id

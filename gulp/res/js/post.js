@@ -5,12 +5,12 @@ function pug_classes_object(r){var a="",n="";for(var o in r)o&&r[o]&&pug_has_own
 function pug_escape(e){var a=""+e,t=pug_match_html.exec(a);if(!t)return e;var r,c,n,s="";for(r=t.index,c=0;r<a.length;r++){switch(a.charCodeAt(r)){case 34:n="&quot;";break;case 38:n="&amp;";break;case 60:n="&lt;";break;case 62:n="&gt;";break;default:continue}c!==r&&(s+=a.substring(c,r)),c=r+1,s+=n}return c!==r?s+a.substring(c,r):s}
 var pug_has_own_property=Object.prototype.hasOwnProperty;
 var pug_match_html=/["&<>]/;
-function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function post(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Date, RegExp, encodeURIComponent, ipHashSub, modview, post) {pug_mixins["report"] = pug_interp = function(r, globalmanage=false){
+function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function post(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Date, RegExp, encodeURIComponent, ipHashMode, modview, permLevel, post) {pug_mixins["report"] = pug_interp = function(r, globalmanage=false){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv class=\"reports post-container\"\u003E\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"checkedreports\""+pug_attr("value", r.id, true, false)) + "\u002F\u003E ";
 if (globalmanage) {
-ipHashSub = r.ip.slice(-10);
-pug_html = pug_html + "\u003Ca" + (" class=\"bold\""+pug_attr("href", `?ip=${encodeURIComponent(ipHashSub)}`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = ipHashSub) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
+const ip = ipHashMode === 2 || (ipHashMode === 1 && permLevel > 1) ? r.ip.slice(-10) : r.ip;
+pug_html = pug_html + "\u003Ca" + (" class=\"bold\""+pug_attr("href", `?ip=${encodeURIComponent(ip)}`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = ip) ? "" : pug_interp)) + "\u003C\u002Fa\u003E ";
 }
 const reportDate = new Date(r.date);
 pug_html = pug_html + "\u003Ctime" + (" class=\"reltime\""+pug_attr("datetime", reportDate.toISOString(), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = reportDate.toLocaleString(undefined, { hour12:false })) ? "" : pug_interp)) + "\u003C\u002Ftime\u003E | Reason: " + (pug_escape(null == (pug_interp = r.reason) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
@@ -22,8 +22,8 @@ const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.thread 
 pug_html = pug_html + "\u003Cdiv class=\"post-info\"\u003E\u003Cspan class=\"noselect\"\u003E\u003Clabel\u003E";
 if (globalmanage) {
 pug_html = pug_html + "\u003Cinput" + (" class=\"post-check\""+" type=\"checkbox\" name=\"globalcheckedposts\""+pug_attr("value", post._id, true, false)) + "\u002F\u003E ";
-ipHashSub = post.ip.hash.slice(-10);
-pug_html = pug_html + "\u003Ca" + (" class=\"bold\""+pug_attr("href", `?ip=${encodeURIComponent(ipHashSub)}`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = ipHashSub) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+const ip = ipHashMode === 2 ? post.ip.single.slice(-10) : post.ip.single;
+pug_html = pug_html + "\u003Ca" + (" class=\"bold\""+pug_attr("href", `?ip=${encodeURIComponent(ip)}`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = ip) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 }
 else
 if (!ban) {
@@ -284,4 +284,4 @@ pug_mixins["report"](r, true);
 
 }
 };
-pug_mixins["post"](post);}.call(this,"Date" in locals_for_with?locals_for_with.Date:typeof Date!=="undefined"?Date:undefined,"RegExp" in locals_for_with?locals_for_with.RegExp:typeof RegExp!=="undefined"?RegExp:undefined,"encodeURIComponent" in locals_for_with?locals_for_with.encodeURIComponent:typeof encodeURIComponent!=="undefined"?encodeURIComponent:undefined,"ipHashSub" in locals_for_with?locals_for_with.ipHashSub:typeof ipHashSub!=="undefined"?ipHashSub:undefined,"modview" in locals_for_with?locals_for_with.modview:typeof modview!=="undefined"?modview:undefined,"post" in locals_for_with?locals_for_with.post:typeof post!=="undefined"?post:undefined));;return pug_html;}
+pug_mixins["post"](post);}.call(this,"Date" in locals_for_with?locals_for_with.Date:typeof Date!=="undefined"?Date:undefined,"RegExp" in locals_for_with?locals_for_with.RegExp:typeof RegExp!=="undefined"?RegExp:undefined,"encodeURIComponent" in locals_for_with?locals_for_with.encodeURIComponent:typeof encodeURIComponent!=="undefined"?encodeURIComponent:undefined,"ipHashMode" in locals_for_with?locals_for_with.ipHashMode:typeof ipHashMode!=="undefined"?ipHashMode:undefined,"modview" in locals_for_with?locals_for_with.modview:typeof modview!=="undefined"?modview:undefined,"permLevel" in locals_for_with?locals_for_with.permLevel:typeof permLevel!=="undefined"?permLevel:undefined,"post" in locals_for_with?locals_for_with.post:typeof post!=="undefined"?post:undefined));;return pug_html;}

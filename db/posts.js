@@ -27,7 +27,7 @@ module.exports = {
 		//global recent posts for recent section of global manage page
 		const query = {};
 		if (ip !== null) {
-			query['ip.hash'] = ip;
+			query['ip.single'] = ip;
 		}
 		return db.find(query).sort({
 			'_id': -1
@@ -354,7 +354,7 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		await Stats.updateOne(board._id, data.ip.hash, data.thread == null);
+		await Stats.updateOne(board._id, data.ip.single, data.thread == null);
 
 		//add backlinks to the posts this post quotes
 		if (data.thread && data.quotes.length > 0) {
@@ -397,7 +397,7 @@ module.exports = {
         }
 		if (ip !== null) {
 			query['$or'] = [
-				{ 'ip.hash': ip },
+				{ 'ip.single': ip },
 				{ 'globalreports.ip': ip }
 			];
 		}

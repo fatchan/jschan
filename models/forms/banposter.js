@@ -15,10 +15,10 @@ module.exports = async (req, res, next) => {
 	if (req.body.ban || req.body.global_ban) {
 		const banBoard = req.body.global_ban ? null : req.params.board;
 		const ipPosts = res.locals.posts.reduce((acc, post) => {
-			if (!acc[post.ip.hash]) {
-				acc[post.ip.hash] = [];
+			if (!acc[post.ip.single]) {
+				acc[post.ip.single] = [];
 			}
-			acc[post.ip.hash].push(post);
+			acc[post.ip.single].push(post);
 			return acc;
 		}, {});
 		for (let ip in ipPosts) {

@@ -12,7 +12,7 @@ const gulp = require('gulp')
 	, del = require('del')
 	, pug = require('pug')
 	, gulppug = require('gulp-pug')
-	, packageVersion = require(__dirname+'/package.json').dbVersion
+	, migrateVersion = require(__dirname+'/package.json').migrateVersion
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/**/*.css',
@@ -101,7 +101,7 @@ async function wipe() {
 		'_id': 'version'
 	}, {
 		'_id': 'version',
-		'version': packageVersion
+		'version': migrateVersion
 	}, {
 		upsert: true
 	});
@@ -223,7 +223,7 @@ async function migrate() {
 		'_id': 'version'
 	}).then(res => res ? res.version : '0.0.0'); // 0.0.0 for old versions
 
-	if (currentVersion < packageVersion) {
+	if (currentVersion < migrateVersion) {
 		console.log(`Current version: ${currentVersion}`);
 		const migrations = require(__dirname+'/migrations/');
 		const migrationVersions = Object.keys(migrations).sort().filter(v => v > currentVersion);
@@ -247,7 +247,7 @@ async function migrate() {
 			console.log(`Finished migrating to version ${ver}`);
 		}
 	} else {
-		console.log(`Migration not required, you are already on the current version (${packageVersion})`)
+		console.log(`Migration not required, you are already on the current version (${migrateVersion})`)
 	}
 
 	await Mongo.client.close();

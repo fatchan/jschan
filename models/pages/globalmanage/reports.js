@@ -8,7 +8,7 @@ const { Posts } = require(__dirname+'/../../../db/')
 module.exports = async (req, res, next) => {
 
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
-	let ipMatch = decodeQueryIP(req.query);
+	let ipMatch = decodeQueryIP(req.query, res.locals.permLevel);
 
 	let reports;
 	try {

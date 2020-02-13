@@ -44,15 +44,15 @@ module.exports = async (req, res) => {
 		'_id': {
 			'$gt': last120id
 		},
-		'ip.hash': res.locals.ip.hash,
+		'ip.single': res.locals.ip.single,
 		'$or': contentOr
 	});
-	//any posts from same IP in past 5 seconds
+	//any posts from same IP in past 5 seconds TODO: make this just use a redis key of IP and expire after 5 seconds
 	ors.push({
 		'_id': {
 			'$gt': last5id
 		},
-		'ip.hash': res.locals.ip.hash
+		'ip.single': res.locals.ip.single
 	})
 
 	let flood = await Posts.db.find({

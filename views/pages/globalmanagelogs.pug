@@ -53,10 +53,10 @@ block content
 									|   
 									a(href=`?username=${log.user}`) [+]
 								td
-									- const ipSub = log.ip.slice(-10);
-									a(href=`recent.html?ip=${encodeURIComponent(ipSub)}`) #{ipSub}
+									- const logIp = ipHashMode === 2 ? log.ip.slice(-10) : log.ip;
+									a(href=`recent.html?ip=${encodeURIComponent(logIp)}`) #{logIp}
 									|   
-									a(href=`?ip=${encodeURIComponent(ipSub)}`) [+]
+									a(href=`?ip=${encodeURIComponent(logIp)}`) [+]
 								td #{log.actions}
 								td #{log.postIds}
 								td #{log.message || '-'}

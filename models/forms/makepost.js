@@ -125,7 +125,7 @@ module.exports = async (req, res, next) => {
 				const banDate = new Date();
 				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
 				const ban = {
-					'ip': res.locals.ip.hash,
+					'ip': res.locals.ip.single,
 					'reason': 'post word filter auto ban',
 					'board': banBoard,
 					'posts': null,
@@ -136,7 +136,7 @@ module.exports = async (req, res, next) => {
 					'seen': false
 				};
  				await Bans.insertOne(ban);
-				const bans = await Bans.find(res.locals.ip.hash, banBoard); //need to query db so it has _id field for appeal checkmark
+				const bans = await Bans.find(res.locals.ip.single, banBoard); //need to query db so it has _id field for appeal checkmark
 				return res.status(403).render('ban', {
 					bans: bans
 				});
@@ -292,7 +292,7 @@ module.exports = async (req, res, next) => {
 		salt = (await randomBytes(128)).toString('base64');
 	}
 	if (ids === true) {
-		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.hash).digest('hex');
+		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.single).digest('hex');
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 	let country = null;
