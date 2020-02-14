@@ -176,7 +176,7 @@ pre {
 	margin-bottom: 5px;
 }
 
-a, a:visited {
+a, a:visited, a.post-name {
 	text-decoration: underline;
 	color: var(--link-color);
 }
