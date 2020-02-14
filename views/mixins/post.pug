@@ -20,8 +20,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						span.post-subject #{post.subject}
 						| 
 					if post.email
-						a(href=`mailto:${post.email}`)
-							span.post-name #{post.name}
+						a.post-name(href=`mailto:${post.email}`) #{post.name}
 					else 
 						span.post-name #{post.name}
 					| 

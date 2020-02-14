@@ -176,7 +176,7 @@ pre {
 	margin-bottom: 5px;
 }
 
-a, a:visited, a .post-name {
+a, a:visited {
 	text-decoration: underline;
 	color: var(--link-color);
 }
@@ -350,7 +350,7 @@ p {
 	color: var(--greentext-color);
 }
 
-a .post-name:hover, a:hover {
+a:hover {
 	color: var(--link-hover)!important;
 }
 
