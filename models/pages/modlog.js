@@ -9,10 +9,10 @@ module.exports = async (req, res, next) => {
 		return next();
 	}
 
-    const startDate = new Date(res.locals.date);
-    const endDate = new Date(startDate.valueOf());
-    startDate.setHours(0,0,0,0);
-    endDate.setHours(23,59,59,999);
+	const startDate = res.locals.date.date;
+	const { year, month, day } = res.locals.date;
+	const endDate = new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
+
 	let html;
 	try {
 		const logs = await Modlogs.findBetweenDate(res.locals.board, startDate, endDate);

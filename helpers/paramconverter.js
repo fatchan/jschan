@@ -104,10 +104,10 @@ module.exports = (req, res, next) => {
 	}
 	//moglog date
 	if (req.params.date) {
-		const dateString = req.params.date.replace(/-/g, '/');
-		const date = new Date(dateString);
+		const [ month, day, year ] = req.params.date.split('-');
+		const date = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
 		if (date !== 'Invalid Date') {
-			res.locals.date = date;
+			res.locals.date = { month, day, year, date };
 		}
 	}
 
