@@ -52,11 +52,11 @@ const relativeTimeString = (date) => {
 }
 
 const changeDateFormat = (date) => {
-	const options = { hour12: !hour24 };
+	const options = { hourCycle: hour24 ? 'h23' : 'h12' };
 	if (!localTime) {
 		options.timeZone = SERVER_TIMEZONE;
 	}
-	const dateString = new Date(date.dateTime).toLocaleString(0, options);
+	const dateString = new Date(date.dateTime).toLocaleString('en-US', options);
 	if (relativeTime) {
 		date.innerText = relativeTimeString(date.dateTime);
 		date.title = dateString;

@@ -14,7 +14,7 @@ module.exports = {
 	incrmentQuota: (ip, suffix, amount) => {
 		return db.findOneAndUpdate(
 			{
-				'_id': `${ip}-suffix`
+				'_id': `${ip}-${suffix}`
 			},
 			{
 				'$inc': {

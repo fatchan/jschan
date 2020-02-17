@@ -35,13 +35,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	const quote = function(e) {
-		e.preventDefault();
 		const quoteNum = this.textContent.replace('[Reply]', '').split(' ')[0].trim();
-		if (isThread) {
+		if (isThread && !e.ctrlKey) {
 			addQuote(quoteNum);
 		} else {
 			setLocalStorage('clickedQuote', quoteNum);
-			window.location = this.firstChild.href.replace(/#postform$/, '#'+quoteNum);
 		}
 	};
 
