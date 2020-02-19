@@ -140,7 +140,13 @@ module.exports = {
 						}
 					},
 					'bumped': {
-						'$max': '$date'
+						'$max': {
+							'$cond': [
+								{ '$ne': [ '$email', 'sage' ] },
+								'$date',
+								0 //still need to improve this to ignore bumplocked threads
+							]
+						}
 					}
 				}
 			}
@@ -445,6 +451,9 @@ module.exports = {
 				'$match': {
 					'board': {
 						'$in': boards
+					},
+					'email': {
+						'$ne': 'sage'
 					}
 				}
 			}, {

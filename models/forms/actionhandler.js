@@ -370,6 +370,7 @@ module.exports = async (req, res, next) => {
 				});
 				//get replies, files, bump date, from threads
 				const threadAggregates = await Posts.getThreadAggregates(threadOrs);
+//TODO: change query to fetch threads and group into bumplocked/normal, and only reset bump date on non-bumplocked and ignore sages
 				const bulkWrites = [];
 				for (let i = 0; i < threadAggregates.length; i++) {
 					const threadAggregate = threadAggregates[i];

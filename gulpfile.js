@@ -256,7 +256,7 @@ async function migrate() {
 }
 
 const build = gulp.parallel(css, scripts, images, gulp.series(deletehtml, custompages));
-const reset = gulp.parallel(wipe, build);
+const reset = gulp.series(wipe, build);
 const html = gulp.series(deletehtml, custompages);
 
 module.exports = {

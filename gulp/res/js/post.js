@@ -52,7 +52,7 @@ if (post.subject) {
 pug_html = pug_html + "\u003Cspan class=\"post-subject\"\u003E" + (pug_escape(null == (pug_interp = post.subject) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E ";
 }
 if (post.email) {
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", `mailto:${post.email}`, true, false)) + "\u003E\u003Cspan class=\"post-name\"\u003E" + (pug_escape(null == (pug_interp = post.name) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"post-name\""+pug_attr("href", `mailto:${post.email}`, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.name) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 }
 else {
 pug_html = pug_html + "\u003Cspan class=\"post-name\"\u003E" + (pug_escape(null == (pug_interp = post.name) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
