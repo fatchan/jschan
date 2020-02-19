@@ -53,6 +53,9 @@ module.exports = async () => {
 		const captcha = gm(width,height,'#ffffff')
 		.fill('#000000')
 		.fontSize(65);
+		if (captchaOptions.fontPaths && captchaOptions.fontPaths.length > 0) {
+			captcha.font(captchaOptions.fontPaths[Math.floor(Math.random() * captchaOptions.fontPaths.length)]);
+		}
 		const startX = (width-totalWidth(text))/2;
 		let charX = startX;
 		for (let i = 0; i < 6; i++) {
