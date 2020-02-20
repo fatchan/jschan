@@ -126,7 +126,7 @@ module.exports = async (req, res, next) => {
 				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
 				const ban = {
 					'ip': res.locals.ip.hash,
-					'reason': 'post word filter auto ban',
+					'reason': `${hitGlobalFilter ? 'global ' :''}word filter auto ban`,
 					'board': banBoard,
 					'posts': null,
 					'issuer': 'system', //what should i call this
