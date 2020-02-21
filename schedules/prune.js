@@ -8,7 +8,7 @@ const Files = require(__dirname+'/../db/files.js')
 module.exports = async(fileNames) => {
 	const query = {
 		'count': {
-			'$lte': 1
+			'$lte': 0
 		}
 	}
 	if (fileNames) {
