@@ -1,9 +1,9 @@
 'use strict';
 
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
-	, { themes, codeThemes, rateLimitCost } = require(__dirname+'/../../helpers/themes.js')
+	, { themes, codeThemes } = require(__dirname+'/../../helpers/themes.js')
 	, { Ratelimits } = require(__dirname+'/../../db/')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js');
+	, { globalLimits, rateLimitCost } = require(__dirname+'/../../configs/main.js');
 
 module.exports = async (req, res, next) => {
 
