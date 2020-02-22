@@ -153,7 +153,7 @@ const heightlimitCss = `img, video { max-height: unset; }`;
 const crispCss = `img { image-rendering: crisp-edges; }`;
 //make classes with css
 //new CssToggle('hidestubs-setting', 'hidestubs', false, hideStubsCss);
-new CssToggle('hiderecursive-setting', 'hiderecursive', false, hideRecursiveCss);
+new CssToggle('hiderecursive-setting', 'hiderecursive', true, hideRecursiveCss);
 new CssToggle('heightlimit-setting', 'heightlimit', false, heightlimitCss);
 new CssToggle('crispimages-setting', 'crispimages', false, crispCss);
 new CssToggle('hideimages-setting', 'hideimages', false, hideImagesCss);
