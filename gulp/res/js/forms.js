@@ -43,6 +43,7 @@ class formHandler {
 		this.fileInput = form.querySelector('input[type="file"]');
 		this.files = [];
 		if (this.fileInput) {
+			this.fileRequired = this.fileInput.required;
 			this.fileLabel = this.fileInput.previousSibling;
 			this.multipleFiles = this.fileLabel.parentNode.previousSibling.firstChild.textContent.endsWith('s');
 			this.fileLabelText = this.fileLabel.childNodes[0];
@@ -178,6 +179,9 @@ class formHandler {
 	}
 
 	addFile(file) {
+		if (this.fileRequired) { //prevent drag+drop issues by removing required
+			this.fileInput.removeAttribute('required');
+		}
 		this.files.push(file);
 	}
 
@@ -197,6 +201,9 @@ class formHandler {
 	clearFiles() {
 		this.files = []; //empty file list
 		this.fileInput.value = null; //remove the files for real
+		if (this.fileRequired) { //reset to required if clearing files
+			this.fileInput.setAttribute('required', true)
+		}
 		this.updateFilesText();
 	}
 
