@@ -34,6 +34,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const captchaDiv = this.previousSibling;
 		const captchaImg = document.createElement('img');
 		const field = this;
+		field.placeholder = 'loading';
 		captchaImg.src = '/captcha';
 		captchaImg.onload = function() {
 			field.placeholder = 'double click image to refresh';
@@ -44,7 +45,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	};
 
 	for (let i = 0; i < captchaFields.length; i++) {
-		captchaFields[i].placeholder = 'click to load captcha';
+		captchaFields[i].placeholder = 'focus to load captcha';
 		captchaFields[i].addEventListener('focus', loadCaptcha, { once: true });
 	}
 

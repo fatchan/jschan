@@ -12,7 +12,7 @@ module.exports = {
 		let ipQuery;
 		if (typeof ip === 'object') { //object with hash and ranges in bancheck
 			ipQuery = {
-				'$in': Object.values(ip)
+				'$in': Object.values(ip) //gets values of ip object for single and range bans in 1 query
 			}
 		} else {
 			ipQuery = ip;

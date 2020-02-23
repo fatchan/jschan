@@ -1,8 +1,8 @@
 'use strict';
 
-const { ipHashSecret } = require(__dirname+'/../configs/main.js')
+const { ipHashMode } = require(__dirname+'/../configs/main.js')
 	, { isIP } = require('net')
-	, { createHash } = require('crypto');
+	, hashIp = require(__dirname+'/haship.js');
 
 module.exports = (req, res, next) => {
 
@@ -11,10 +11,12 @@ module.exports = (req, res, next) => {
 	if (ipVersion) {
 		const delimiter = ipVersion === 4 ? '.' : ':';
 		let split = ip.split(delimiter);
+		const qrange = split.slice(0,Math.floor(split.length*0.75)).join(delimiter);
+		const hrange = split.slice(0,Math.floor(split.length*0.5)).join(delimiter);
 		res.locals.ip = {
-			hash: createHash('sha256').update(ipHashSecret + ip).digest('base64'),
-			qrange: createHash('sha256').update(ipHashSecret + split.slice(0,Math.floor(split.length*0.75)).join(delimiter)).digest('base64'),
-			hrange: createHash('sha256').update(ipHashSecret + split.slice(0,Math.floor(split.length*0.5)).join(delimiter)).digest('base64'),
+			single: ipHashMode === 2 ? hashIp(ip) : ip,
+			qrange: ipHashMode === 2 ? hashIp(qrange) : qrange,
+			hrange: ipHashMode === 2 ? hashIp(hrange) : hrange,
 		}
 		next();
 	} else {

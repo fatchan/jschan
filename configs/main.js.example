@@ -39,7 +39,8 @@ module.exports = {
 			min: 3,
 			max: 5
 		},
-		paintAmount: 2
+		paintAmount: 2,
+		fontPaths: [], //optional list of file paths to fonts for captchas
 	},
 
 	/* dnsbl, will add a small delay for uncached requests. You could also install some 
@@ -48,6 +49,29 @@ module.exports = {
 		enabled: false,
 		blacklists: ['tor.dan.me.uk', 'zen.spamhaus.org'],
 		cacheTime: 3600 //in seconds, idk whats a good value
+	},
+
+	//block bypasses
+	blockBypass: {
+		enabled: false,
+		expireAfterUses: 40, //however many (attempted) posts per block bypass captcha
+		expireAfterTime: 86400000, //expiry in ms regardless if the limit was reached, default 1 day
+		bypassDnsbl: false,
+	},
+
+	/*  0=not hashed
+		1=hash for non-global staff, visible for global staff and ban pages
+		2=hash for everything 
+		its not recommended to change this setting after initial setup */
+	ipHashMode: 1,
+
+	/* delete files immediately rather than pruning later. usually disabled to prevent re-thumbnailing and processing commonly
+		uploaded files, but deleting immediately is better if you are concerned about "deleted" content not being immediately removed */
+	pruneImmediately: false,
+
+	rateLimitCost: { //Cost out of 100 per minute e.g. cost of 25 means 4 per minute. Cost is separate for each.
+		captcha: 10,
+		boardSettings: 30,
 	},
 
 	//cache templates in memory. disable only if editing templates and doing dev work
@@ -244,6 +268,6 @@ module.exports = {
 			audio: true,
 			other: false
 		}
-	}
+	},
 
-}
+};

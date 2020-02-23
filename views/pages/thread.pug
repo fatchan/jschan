@@ -1,42 +1,50 @@
 extends ../layout.pug
 include ../mixins/post.pug
 include ../mixins/boardnav.pug
+include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
 
 block head
 	script(src='/js/all.js')
-	title /#{board._id}/ - #{thread.subject||thread.postId}
-	meta(property='og:site_name', value=meta.siteName)
-	meta(property='og:title', content=thread.subject)
-	meta(property='og:url', content=meta.url)
-	meta(property='og:description', content=thread.nomarkup)
-	if thread.files.length > 0
-		if thread.spoiler
-			meta(property='og:image', content='/img/spoiler.png')
-		else
-			- const file = thread.files[0];
-			- const maintype = file.mimetype.split('/')[0];
-			case maintype
-				when 'image'
-					meta(property='og:image', content=`/img/${file.filename}`)
-				when 'video'
-					meta(property='og:video', content=`/img/${file.filename}`)
-				when 'audio'
-					meta(property='og:audio', content=`/img/${file.filename}`)
-				default
-					- break
+	- const subjectString = thread.subject || thread.nomarkup ? `${thread.nomarkup.substring(0, globalLimits.fieldLength.subject)}${thread.nomarkup.length > globalLimits.fieldLength.subject ? '...' : ''}` : thread.postId;
+	title /#{board._id}/ - #{subjectString}
+	if !modview
+		meta(property='og:site_name', value=meta.siteName)
+		meta(property='og:title', content=thread.subject)
+		meta(property='og:url', content=meta.url)
+		meta(property='og:description', content=thread.nomarkup)
+		if thread.files.length > 0
+			if thread.spoiler
+				meta(property='og:image', content='/img/spoiler.png')
+			else
+				- const file = thread.files[0];
+				- const maintype = file.mimetype.split('/')[0];
+				case maintype
+					when 'image'
+						meta(property='og:image', content=`/img/${file.filename}`)
+					when 'video'
+						meta(property='og:video', content=`/img/${file.filename}`)
+					when 'audio'
+						meta(property='og:audio', content=`/img/${file.filename}`)
+					default
+						- break
 
 block content
-	+boardheader()
+	+boardheader(modview ? 'Mod View' : null)
 	br
 	include ../includes/postform.pug
 	br
 	include ../includes/announcements.pug
 	include ../includes/stickynav.pug
-	.pages
-		+boardnav(null, true, true)
+	if modview
+		+managenav(null, true)
+	else
+		.pages
+			+boardnav(null, true, true)
 	- const uids = board.settings.ids ? new Set() : void 0;
-	form(action=`/forms/board/${board._id}/actions` method='POST' enctype='application/x-www-form-urlencoded')
+	form(action=`/forms/board/${board._id}/${modview ? 'mod' : ''}actions` method='POST' enctype='application/x-www-form-urlencoded')
+		if modview
+			input(type='hidden' name='_csrf' value=csrf)
 		hr(size=1)
 		.thread
 			- uids && thread.userId && uids.add(thread.userId)
@@ -46,8 +54,11 @@ block content
 				+post(post)
 		hr(size=1)
 		.statwrap
-			.pages
-				+boardnav(null, true, true)
+			if modview
+				+managenav(null, true)
+			else
+				.pages
+					+boardnav(null, true, true)
 			#threadstats 
 				span #{thread.replyposts} repl#{thread.replyposts === 1 ? 'y' : 'ies'}
 				|  |  
@@ -59,4 +70,7 @@ block content
 			.dot#livecolor
 			|  Connecting... 
 			input.postform-style.ml-5.di(type='button' value='Update')
-		include ../includes/actionfooter.pug
+		if modview
+			include ../includes/actionfooter_manage.pug
+		else
+			include ../includes/actionfooter.pug

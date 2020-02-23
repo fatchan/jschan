@@ -2,15 +2,15 @@ include ./report.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 	.anchor(id=post.postId)
 	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId)
-		- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
+		- const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info
 			span.noselect
 				label
 					if globalmanage
 						input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
 						| 
-						- ipHashSub = post.ip.hash.slice(-10);
-						a.bold(href=`?ip=${encodeURIComponent(ipHashSub)}`) #{ipHashSub}
+						- const ip = ipHashMode === 2 ? post.ip.single.slice(-10) : post.ip.single;
+						a.bold(href=`?ip=${encodeURIComponent(ip)}`) #{ip}
 					else if !ban
 						input.post-check(type='checkbox', name='checkedposts' value=post.postId)
 					| 
@@ -79,6 +79,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 										img.file-thumb(src=`/img/thumb-${file.hash}${file.thumbextension}` height=file.geometry.thumbheight width=file.geometry.thumbwidth)
 									else
 										img.file-thumb(src=`/img/${file.filename}` height=file.geometry.height width=file.geometry.width)
+			- if (post.message && modview) { post.message = post.message.replace(new RegExp(`<a class="quote" href="/${post.board}`, 'g'), `<a class="quote" href="/${post.board}/manage`); } //quick & dirty solution to a bigger problem/design issue
 			- let truncatedMessage = post.message;
 			if post.message
 				if truncate
@@ -111,7 +112,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				if post.previewbacklinks.length > 0
 					div.replies.mt-5.ml-5 Replies: 
 						each backlink in post.previewbacklinks
-							a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`) &gt;&gt;#{backlink.postId}
+							a.quote(href=`${postURL}#${backlink.postId}`) &gt;&gt;#{backlink.postId}
 							|  
 						if post.previewbacklinks.length < post.backlinks.length
 							- const ombls = post.backlinks.length-post.previewbacklinks.length;
@@ -119,7 +120,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 			else if post.backlinks && post.backlinks.length > 0
 				div.replies.mt-5.ml-5 Replies: 
 					each backlink in post.backlinks
-						a.quote(href=`/${post.board}/thread/${post.thread || post.postId}.html#${backlink.postId}`) &gt;&gt;#{backlink.postId}
+						a.quote(href=`${postURL}#${backlink.postId}`) &gt;&gt;#{backlink.postId}
 						|  
 	if manage === true
 		each r in post.reports

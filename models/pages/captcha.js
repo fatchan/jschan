@@ -2,7 +2,7 @@
 
 const { Ratelimits } = require(__dirname+'/../../db/')
 	, generateCaptcha = require(__dirname+'/../../helpers/captcha/captchagenerate.js')
-	, { secureCookies } = require(__dirname+'/../../configs/main.js')
+	, { secureCookies, rateLimitCost } = require(__dirname+'/../../configs/main.js')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {
@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
 
 	let captchaId;
 	try {
-		const ratelimit = await Ratelimits.incrmentQuota(res.locals.ip.hash, 'captcha', 10);
+		const ratelimit = await Ratelimits.incrmentQuota(res.locals.ip.hash, 'captcha', rateLimitCost.captcha);
 		if (ratelimit > 100) {
 			return res.status(429).redirect('/img/ratelimit.png');
 		}

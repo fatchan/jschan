@@ -6,7 +6,7 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, titleRegex = /&#x3D;&#x3D;(.+)&#x3D;&#x3D;/gm
 	, monoRegex = /&#x60;(.+?)&#x60;/gm
 	, underlineRegex = /__(.+?)__/gm
-	, strikethroughRegex = /~~(.+?)~~/gm
+	, strikeRegex = /~~(.+?)~~/gm
 	, italicRegex = /\*\*(.+?)\*\*/gm
 	, spoilerRegex = /\|\|([\s\S]+?)\|\|/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
@@ -16,10 +16,23 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
 	, diceRegex = /##(?<numdice>\d+)d(?<numsides>\d+)(?:(?<operator>[+-])(?<modifier>\d+))?/gmi
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
-	, diceRoll = require(__dirname+'/diceroll.js')
 	, escape = require(__dirname+'/escape.js')
 	, { highlight, highlightAuto } = require('highlight.js')
-	, { highlightOptions } = require(__dirname+'/../../configs/main.js');
+	, { highlightOptions } = require(__dirname+'/../../configs/main.js')
+	, replacements = [
+		{ regex: pinktextRegex,	 cb: (match, pinktext) => `<span class='pinktext'>&lt;${pinktext}</span>` },
+		{ regex: greentextRegex, cb: (match, greentext) => `<span class='greentext'>&gt;${greentext}</span>` },
+		{ regex: boldRegex,      cb: (match, bold) => `<span class='bold'>${bold}</span>` },
+		{ regex: underlineRegex, cb: (match, underline) => `<span class='underline'>${underline}</span>` },
+		{ regex: strikeRegex,    cb: (match, strike) => `<span class='strike'>${strike}</span>` },
+		{ regex: titleRegex,     cb: (match, title) => `<span class='title'>${title}</span>` },
+		{ regex: italicRegex,    cb: (match, italic) => `<span class='em'>${italic}</span>` },
+		{ regex: spoilerRegex,   cb: (match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
+		{ regex: monoRegex,      cb: (match, mono) => `<span class='mono'>${mono}</span>` },
+		{ regex: detectedRegex,  cb: (match, detected) => `<span class='detected'>${detected}</span>` },
+		{ regex: linkRegex,      cb: (match) => `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>` },
+		{ regex: diceRegex,      cb: require(__dirname+'/diceroll.js') },
+	];
 
 module.exports = {
 
@@ -58,29 +71,10 @@ module.exports = {
 	},
 
 	processRegularChunk: (text) => {
-		return text.replace(pinktextRegex, (match, pinktext) => {
-			return `<span class='pinktext'>&lt;${pinktext}</span>`;
-		}).replace(greentextRegex, (match, greentext) => {
-			return `<span class='greentext'>&gt;${greentext}</span>`;
-		}).replace(boldRegex, (match, bold) => {
-			return `<span class='bold'>${bold}</span>`;
-		}).replace(underlineRegex, (match, underline) => {
-			return `<span class='underline'>${underline}</span>`;
-		}).replace(strikethroughRegex, (match, strike) => {
-			return `<span class='strikethrough'>${strike}</span>`;
-		}).replace(titleRegex, (match, title) => {
-			return `<span class='title'>${title}</span>`;
-		}).replace(italicRegex, (match, italic) => {
-			return `<span class='em'>${italic}</span>`;
-		}).replace(spoilerRegex, (match, spoiler) => {
-			return `<span class='spoiler'>${spoiler}</span>`;
-		}).replace(monoRegex, (match, mono) => {
-			return `<span class='mono'>${mono}</span>`;
-		}).replace(detectedRegex, (match, detected) => {
-			return `<span class='detected'>${detected}</span>`;
-		}).replace(linkRegex, (match) => {
-			return `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>`;
-		}).replace(diceRegex, diceRoll);
+		for (let i = 0; i < replacements.length; i++) {
+			text = text.replace(replacements[i].regex, replacements[i].cb);
+		}
+		return text;
 	},
 
 }

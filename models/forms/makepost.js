@@ -125,7 +125,7 @@ module.exports = async (req, res, next) => {
 				const banDate = new Date();
 				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
 				const ban = {
-					'ip': res.locals.ip.hash,
+					'ip': res.locals.ip.single,
 					'reason': `${hitGlobalFilter ? 'global ' :''}word filter auto ban`,
 					'board': banBoard,
 					'posts': null,
@@ -136,7 +136,7 @@ module.exports = async (req, res, next) => {
 					'seen': false
 				};
  				await Bans.insertOne(ban);
-				const bans = await Bans.find(res.locals.ip.hash, banBoard); //need to query db so it has _id field for appeal checkmark
+				const bans = await Bans.find(res.locals.ip.single, banBoard); //need to query db so it has _id field for appeal checkmark
 				return res.status(403).render('ban', {
 					bans: bans
 				});
@@ -193,6 +193,7 @@ module.exports = async (req, res, next) => {
 
 			//increment file count
 			await Files.increment(processedFile);
+			req.files.file[i].inced = true;
 			//check if already exists
 			const existsFull = await pathExists(`${uploadDirectory}/img/${processedFile.filename}`);
 			processedFile.sizeString = formatSize(processedFile.size)
@@ -291,7 +292,7 @@ module.exports = async (req, res, next) => {
 		salt = (await randomBytes(128)).toString('base64');
 	}
 	if (ids === true) {
-		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.hash).digest('hex');
+		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.single).digest('hex');
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 	let country = null;
@@ -466,7 +467,7 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	const successRedirect = `/${req.params.board}/thread/${req.body.thread || postId}.html#${postId}`;
+	const successRedirect = `/${req.params.board}/${req.path.endsWith('/modpost') ? 'manage/' : ''}thread/${req.body.thread || postId}.html#${postId}`;
 
 	const buildOptions = {
 		'threadId': data.thread || postId,
@@ -475,7 +476,7 @@ module.exports = async (req, res, next) => {
 
 	if (req.headers['x-using-live'] != null && data.thread) {
 		//defer build and post will come live
-		res.json({ 
+		res.json({
 			'postId': postId,
 			'redirect': successRedirect
 		});
@@ -487,7 +488,7 @@ module.exports = async (req, res, next) => {
 		//build immediately and refresh when built
 		await buildThread(buildOptions);
 		if (req.headers['x-using-xhr'] != null) {
-			res.json({ 
+			res.json({
 				'postId': postId,
 				'redirect': successRedirect
 			});

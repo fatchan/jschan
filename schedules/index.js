@@ -6,7 +6,7 @@ process
 
 const timeUtils = require(__dirname+'/../helpers/timeutils.js')
 	, Mongo = require(__dirname+'/../db/db.js')
-	, { debugLogs, enableWebring } = require(__dirname+'/../configs/main.js')
+	, { pruneImmediately, debugLogs, enableWebring } = require(__dirname+'/../configs/main.js')
 	, doInterval = require(__dirname+'/../helpers/dointerval.js');
 
 (async () => {
@@ -31,8 +31,10 @@ const timeUtils = require(__dirname+'/../helpers/timeutils.js')
 	doInterval(deleteCaptchas, timeUtils.MINUTE*5, true);
 
 	//file pruning
-	const pruneFiles = require(__dirname+'/prune.js');
-	doInterval(pruneFiles, timeUtils.DAY, true);
+	if (!pruneImmediately) {
+		const pruneFiles = require(__dirname+'/prune.js');
+		doInterval(pruneFiles, timeUtils.DAY, true);
+	}
 
 	//update the webring
 	if (enableWebring) {

@@ -79,7 +79,7 @@ module.exports = async (req, res, next) => {
 	if (deleting) {
 		const postsBefore = res.locals.posts.length;
 		if (req.body.delete_ip_board || req.body.delete_ip_global || req.body.delete_ip_thread) {
-			const deletePostIps = res.locals.posts.map(x => x.ip.hash);
+			const deletePostIps = res.locals.posts.map(x => x.ip.single);
 			const deletePostMongoIds = res.locals.posts.map(x => x._id)
 			let query = {
 				'_id': {
@@ -269,9 +269,10 @@ module.exports = async (req, res, next) => {
 					postIds: [],
 					actions: modlogActions,
 					date: logDate,
-					user: logUser,
 					showUser: req.body.show_name || logUser === 'Unregistered User' ? true : false,
 					message: message,
+					user: logUser,
+					ip: res.locals.ip.single,
 				};
 			}
 			//push each post id
@@ -369,6 +370,7 @@ module.exports = async (req, res, next) => {
 				});
 				//get replies, files, bump date, from threads
 				const threadAggregates = await Posts.getThreadAggregates(threadOrs);
+//TODO: change query to fetch threads and group into bumplocked/normal, and only reset bump date on non-bumplocked and ignore sages
 				const bulkWrites = [];
 				for (let i = 0; i < threadAggregates.length; i++) {
 					const threadAggregate = threadAggregates[i];

@@ -1,6 +1,7 @@
 extends ../layout.pug
 include ../mixins/post.pug
 include ../mixins/boardnav.pug
+include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
 
 block head
@@ -8,16 +9,21 @@ block head
 	title /#{board._id}/ - #{board.settings.name} - page #{page}
 
 block content
-	+boardheader()
+	+boardheader(modview ? 'Mod View' : null)
 	br
 	include ../includes/postform.pug
 	br
 	include ../includes/announcements.pug
 	include ../includes/stickynav.pug
-	.pages
-		include ../includes/boardpages.pug
-		+boardnav(null, false, false)
-	form(action='/forms/board/'+board._id+'/actions' method='POST' enctype='application/x-www-form-urlencoded')
+	if modview
+			+managenav('index')
+	else
+			.pages
+					include ../includes/boardpages.pug
+					+boardnav(null, false, false)
+	form(action=`/forms/board/${board._id}/${modview ? 'mod' : ''}actions` method='POST' enctype='application/x-www-form-urlencoded')
+		if modview
+			input(type='hidden' name='_csrf' value=csrf)
 		hr(size=1)
 		if threads.length === 0
 			p No posts.
@@ -28,7 +34,13 @@ block content
 				for post in thread.replies
 					+post(post, true)
 			hr(size=1)
-		.pages
-			include ../includes/boardpages.pug
-			+boardnav(null, false, false)
-		include ../includes/actionfooter.pug
+		if modview
+			+managenav('index')
+		else
+			.pages
+				include ../includes/boardpages.pug
+				+boardnav(null, false, false)
+		if modview
+			include ../includes/actionfooter_manage.pug
+		else
+			include ../includes/actionfooter.pug

@@ -17,6 +17,9 @@ details.toggle-label
 		label
 			input#report(type='text', name='report_reason', placeholder='report reason' autocomplete='off')
 		label
+			input.post-check(type='checkbox', name='delete_ip_thread' value='1')
+			| Delete from IP in thread
+		label
 			input.post-check(type='checkbox', name='delete_ip_board' value='1')
 			| Delete from IP on board
 		label
@@ -55,4 +58,21 @@ details.toggle-label
 			input(type='text', name='ban_duration', placeholder='ban duration e.g. 7d' autocomplete='off')
 		label
 			input(type='text', name='log_message', placeholder='modlog message' autocomplete='off')
+		label
+			input.post-check(type='checkbox', name='move' value='1')
+			| Move
+		label
+			input(type='number', name='move_to_thread', placeholder='destination thread No.' autocomplete='off')
+		label
+			input.post-check(type='checkbox', name='sticky' value='1')
+			| Toggle Sticky
+		label
+			input.post-check(type='checkbox', name='lock' value='1')
+			| Toggle Lock
+		label
+			input.post-check(type='checkbox', name='bumplock' value='1')
+			| Toggle Bumplock
+		label
+			input.post-check(type='checkbox', name='cyclic' value='1')
+			| Toggle Cycle
 	input(type='submit', value='submit')

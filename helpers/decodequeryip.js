@@ -1,11 +1,13 @@
 'use strict';
 
-const  escapeRegExp = require(__dirname+'/escaperegexp.js')
+const escapeRegExp = require(__dirname+'/escaperegexp.js')
+	, { ipHashMode } = require(__dirname+'/../configs/main.js')
 
-module.exports = (query) => {
+module.exports = (query, permLevel) => {
 	if (query.ip) {
 		const decoded = decodeURIComponent(query.ip);
-		if (decoded.length === 10) {
+		const hashed = ipHashMode === 2 || (ipHashMode === 1 && permLevel > 1)
+		if (!hashed || decoded.length === 10) {
 			return new RegExp(`${escapeRegExp(decoded)}$`);
 		}
 	}

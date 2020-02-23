@@ -12,6 +12,7 @@ const gulp = require('gulp')
 	, del = require('del')
 	, pug = require('pug')
 	, gulppug = require('gulp-pug')
+	, migrateVersion = require(__dirname+'/package.json').migrateVersion
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/**/*.css',
@@ -34,7 +35,7 @@ const gulp = require('gulp')
 async function wipe() {
 
 	const Mongo = require(__dirname+'/db/db.js')
-		, cache = require(__dirname+'/redis.js')
+	const Redis = require(__dirname+'/redis.js')
 	await Mongo.connect();
 	const db = Mongo.client.db('jschan');
 
@@ -50,12 +51,13 @@ async function wipe() {
 	await db.createCollection('poststats');
 	await db.createCollection('ratelimit');
 	await db.createCollection('webring');
+	await db.createCollection('bypass');
 
-	const { Webring, Boards, Posts, Captchas, Ratelimits, Accounts, Files, Stats, Modlogs, Bans } = require(__dirname+'/db/');
+	const { Webring, Boards, Posts, Captchas, Ratelimits, Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
-		cache.deletePattern('*'),
+		Redis.deletePattern('*'),
 		Captchas.deleteAll(),
 		Ratelimits.deleteAll(),
 		Accounts.deleteAll(),
@@ -65,7 +67,8 @@ async function wipe() {
 		Bans.deleteAll(),
 		Files.deleteAll(),
 		Stats.deleteAll(),
-		Modlogs.deleteAll()
+		Modlogs.deleteAll(),
+		Bypass.deleteAll(),
 	]);
 
 	//add indexes - should profiled and changed at some point if necessary
@@ -84,17 +87,27 @@ async function wipe() {
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
 	await Bans.db.createIndex({ 'ip': 1 , 'board': 1 })
-	await Bans.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
-	await Captchas.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
-	await Ratelimits.db.createIndex({ "expireAt": 1 }, { expireAfterSeconds: 60 }) //per minute captcha ratelimit
+	await Bans.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
+	await Bypass.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 })
+	await Captchas.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
+	await Ratelimits.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 60 }) //per minute captcha ratelimit
 	await Posts.db.createIndex({ 'postId': 1,'board': 1,})
 	await Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
 	await Accounts.insertOne('admin', 'admin', 'changeme', 0);
 
+	await db.collection('version').replaceOne({
+		'_id': 'version'
+	}, {
+		'_id': 'version',
+		'version': migrateVersion
+	}, {
+		upsert: true
+	});
+
 	await Mongo.client.close();
-	cache.redisClient.quit();
+	Redis.redisClient.quit();
 
 	//delete all the static files
 	return Promise.all([
@@ -132,13 +145,13 @@ function images() {
 }
 
 async function cache() {
-	const cache = require(__dirname+'/redis.js');
+	const Redis = require(__dirname+'/redis.js')
 	await Promise.all([
-		cache.deletePattern('board:*'),
-		cache.deletePattern('banners:*'),
-		cache.deletePatterh('blacklisted:*'),
+		Redis.deletePattern('board:*'),
+		Redis.deletePattern('banners:*'),
+		Redis.deletePattern('blacklisted:*'),
 	]);
-	cache.redisClient.quit();
+	Redis.redisClient.quit();
 }
 
 function deletehtml() {
@@ -198,8 +211,52 @@ function scripts() {
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 
+async function migrate() {
+
+	const Mongo = require(__dirname+'/db/db.js')
+	const Redis = require(__dirname+'/redis.js')
+	await Mongo.connect();
+	const db = Mongo.client.db('jschan');
+
+	//get current version from db if present (set in 'reset' task in recent versions)
+	let currentVersion = await db.collection('version').findOne({
+		'_id': 'version'
+	}).then(res => res ? res.version : '0.0.0'); // 0.0.0 for old versions
+
+	if (currentVersion < migrateVersion) {
+		console.log(`Current version: ${currentVersion}`);
+		const migrations = require(__dirname+'/migrations/');
+		const migrationVersions = Object.keys(migrations).sort().filter(v => v > currentVersion);
+		console.log(`Migrations needed: ${currentVersion} -> ${migrationVersions.join(' -> ')}`);
+		for (let ver of migrationVersions) {
+			console.log(`=====\nStarting migration to version ${ver}`);
+			try {
+				await migrations[ver](db, Redis);
+				await db.collection('version').replaceOne({
+					'_id': 'version'
+				}, {
+					'_id': 'version',
+					'version': ver
+				}, {
+					upsert: true
+				});
+			} catch (e) {
+				console.error(e);
+				console.warn(`Migration to ${ver} encountered an error`);
+			}
+			console.log(`Finished migrating to version ${ver}`);
+		}
+	} else {
+		console.log(`Migration not required, you are already on the current version (${migrateVersion})`)
+	}
+
+	await Mongo.client.close();
+	Redis.redisClient.quit();
+
+}
+
 const build = gulp.parallel(css, scripts, images, gulp.series(deletehtml, custompages));
-const reset = gulp.parallel(wipe, build);
+const reset = gulp.series(wipe, build);
 const html = gulp.series(deletehtml, custompages);
 
 module.exports = {
@@ -211,5 +268,6 @@ module.exports = {
 	scripts,
 	wipe,
 	cache,
+	migrate,
 	default: build,
 };

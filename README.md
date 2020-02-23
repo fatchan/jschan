@@ -25,9 +25,9 @@ Demo site running at https://fatpeople.lol
 
 ## Setup
 Please note:
-##### 🚨 The software is still in development. If running in production, you may have to deal with breaking updates e.g. database schema changes. Automated systems to handle this will be made in future when things are more set in stone. 🚨
+#### 🚨 The software is not production-ready. There may be bugs and WILL be breaking changes. If you insist on running your own instance, always ensure you have up-to-date configs and db schema after pulling as these will be common breaking changes until a stable version is reached. 🚨
 - these instructions are not step-by-step or complete
-- you should be able to read, be comfortable with a command line and have problem solving skills (aka search engine)
+- you should be able to read, be comfortable with a command line and have problem solving skills
 
 ##### Requirements
 - Linux (debian used in this example)
@@ -76,11 +76,11 @@ geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 
 5. Clone ths repo, browse to the folder and set some things up
 ```bash
-# copy example config and edit, some comments included
+# copy example config file and edit it
 $ cp configs/main.js.example configs/main.js && editor configs/main.js
 
 # install dependencies and run build tasks
-$ npm install 
+$ npm install
 $ npm run-script setup
 
 # setup the database and folder structure, creates admin account admin:changeme
@@ -90,12 +90,13 @@ $ gulp reset
 # start all the backend processes
 $ npm run-script start
 
+
 # some commands you may need to use in future/find helpful
-# pm2 is a process manager for nodejs, gulp is used for various jobs like minifying and compiling scripts.
+# pm2 is a process manager for nodejs
 $ pm2 list #list running pm2 processes
 $ pm2 logs #see logs
 $ pm2 reload all #reload all backend processes
-
+# gulp is used for various jobs like minifying and compiling scripts
 $ gulp --tasks #list available gulp tasks
 $ gulp #run default gulp task
 ```

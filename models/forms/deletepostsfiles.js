@@ -1,6 +1,8 @@
 'use strict';
 
 const { Files } = require(__dirname+'/../../db/')
+	, { pruneImmediately } = require(__dirname+'/../../configs/main.js')
+	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
 	, deletePostFiles = require(__dirname+'/../../helpers/files/deletepostfiles.js');
 
 module.exports = async (posts, unlinkOnly) => {
@@ -28,7 +30,11 @@ module.exports = async (posts, unlinkOnly) => {
 	}
 
 	if (files.length > 0) {
-        await Files.decrement(files.map(x => x.filename));
+		const fileNames = files.map(x => x.filename);
+        await Files.decrement(fileNames);
+		if (pruneImmediately) {
+			await pruneFiles(fileNames);
+		}
 	}
 
 	if (unlinkOnly) {
