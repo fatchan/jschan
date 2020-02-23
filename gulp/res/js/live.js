@@ -132,7 +132,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	setInterval(() => {
 		if (liveEnabled && intervalStart) {
-			const remaining = (interval - (Date.now() - intervalStart))/1000;
+			const remaining = Math.abs((interval - (Date.now() - intervalStart))/1000);
 			updateButton.value = `Update (${remaining.toFixed(0)}s)`;
 		}
 	}, 1000);
