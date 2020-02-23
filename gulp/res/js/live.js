@@ -112,6 +112,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	}
 
 	let interval = 5000;
+	let intervalStart;
 	forceUpdate = async () => {
 		updateButton.disabled = true;
 		clearTimeout(liveTimeout);
@@ -124,9 +125,17 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			updateButton.disabled = false;
 		}, 10000);
 		if (liveEnabled) {
+			intervalStart = Date.now();
 			liveTimeout = setTimeout(forceUpdate, interval);
 		}
 	}
+
+	setInterval(() => {
+		if (liveEnabled && intervalStart) {
+			const remaining = (interval - (Date.now() - intervalStart))/1000;
+			updateButton.value = `Update (${remaining.toFixed(0)}s)`;
+		}
+	}, 1000);
 
 	const enableLive = () => {
 		if (supportsWebSockets) {
@@ -135,7 +144,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			const room = `${roomParts[1]}-${roomParts[roomParts.length-1]}`;
 			socket = io({
 				transports: ['websocket'],
-				reconnectionAttempts: 5
+				reconnectionAttempts: 3
 			});
 			socket.on('connect', async () => {
 				console.log('socket connected');
@@ -193,6 +202,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	};
 
 	const disableLive = () => {
+		updateButton.value = 'Update';
 		updateButton.removeAttribute('style');
 		clearTimeout(liveTimeout);
 		if (socket && supportsWebSockets) {
