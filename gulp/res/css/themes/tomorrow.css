@@ -36,6 +36,10 @@ table {
 	border-spacing: 2px;
 }
 
+.captcha {
+	filter: invert(90%);
+}
+
 @media only screen and (max-width: 600px) {
 
 	.post-info{
