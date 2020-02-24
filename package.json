@@ -6,7 +6,7 @@
   "main": "server.js",
   "dependencies": {
     "@tohru/gm": "github:fatchan/gm",
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^4.0.0",
     "bull": "^3.12.1",
     "cache-pug-templates": "^2.0.1",
     "connect-redis": "^4.0.4",
