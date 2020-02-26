@@ -168,6 +168,10 @@ module.exports = {
 
 	},
 
+	//uses names of css in gulp/res/css. if blank, all themes are enabled.
+	themes: [],
+	codeThemes: [],
+
 	//global limits for board settings
 	globalLimits:  {
 		threadLimit: { //number of threads, 10 per page
