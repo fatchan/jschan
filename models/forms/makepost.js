@@ -138,7 +138,7 @@ module.exports = async (req, res, next) => {
 				};
  				await Bans.insertOne(ban);
 				const bans = await Bans.find(res.locals.ip.single, banBoard); //need to query db so it has _id field for appeal checkmark
-				return res.status(403).render('ban', {
+				return dynamicResponse(req, res, 403, 'ban', {
 					bans: bans
 				});
 			}
@@ -453,7 +453,7 @@ module.exports = async (req, res, next) => {
 		if (cyclicOverflowPosts.length > 0) {
 			await deletePosts(cyclicOverflowPosts, req.params.board);
 			const fileCount = cyclicOverflowPosts.reduce((post, acc) => {
-				return acc + post.files.length;
+				return acc + (post.files ? post.files.length : 0);
 			}, 0);
 			//reduce amount counted in post by number of posts deleted
 			await Posts.db.updateOne({

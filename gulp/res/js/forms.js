@@ -6,6 +6,7 @@ function removeModal() {
 function doModal(data) {
 	const modalHtml = modal({ modal: data });
 	document.body.insertAdjacentHTML('afterbegin', modalHtml);
+	new formHandler(document.getElementsByClassName('modal')[0].querySelector('form'));
 	document.getElementById('modalclose').onclick = removeModal;
 	document.getElementsByClassName('modal-bg')[0].onclick = removeModal;
 }
@@ -268,15 +269,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		localStorage.removeItem('myPostId');
 	}
 
-	const forms = document.getElementsByTagName('form');
-	for(let i = 0; i < forms.length; i++) {
-		if (forms[i].method === 'post'
-			&& forms[i].encoding === 'multipart/form-data') {
-			//used only for file posting forms currently.
-			new formHandler(forms[i]);
-		}
-	}
-
 	window.addEventListener('addPost', (e) => {
 		if (e.detail.hover) {
 			return; //dont need to handle hovered posts for this
@@ -287,3 +279,16 @@ window.addEventListener('DOMContentLoaded', () => {
 	});
 
 });
+
+window.addEventListener('settingsReady', () => {
+
+	const forms = document.getElementsByTagName('form');
+	for(let i = 0; i < forms.length; i++) {
+		if (forms[i].method === 'post'
+			&& forms[i].encoding === 'multipart/form-data') {
+			//used only for file posting forms currently.
+			new formHandler(forms[i]);
+		}
+	}
+
+})
