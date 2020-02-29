@@ -19,7 +19,7 @@ mixin modal(data)
 							li #{error}
 			if data.link
 				.row
-					a(href=data.link.href target='_blank') #{data.link.text}
+					a.button.mv-0(href=data.link.href target='_blank') #{data.link.text}
 		else if data.settings
 			.row
 				.form-wrapper.flexleft.mt-10
