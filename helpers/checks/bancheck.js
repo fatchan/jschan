@@ -1,7 +1,8 @@
 'use strict';
 
 const { Bans } = require(__dirname+'/../../db/')
-	, hasPerms = require(__dirname+'/hasperms.js');
+	, hasPerms = require(__dirname+'/hasperms.js')
+	, dynamicResponse = require(__dirname+'/../dynamic.js');
 
 module.exports = async (req, res, next) => {
 
@@ -14,7 +15,7 @@ module.exports = async (req, res, next) => {
 				const unseenBans = bans.filter(b => !b.seen).map(b => b._id);
 				await Bans.markSeen(unseenBans); //mark bans as seen
 				bans.forEach(ban => ban.seen = true); //mark seen as true in memory for user viewed ban page
-				return dynamicResponse(req, res, 403, 'message', {
+				return res.status(403).render('ban', {
 					bans: bans,
 				});
 			}

@@ -795,6 +795,18 @@ input:invalid, textarea:invalid {
 	line-height: 3em;
 }
 
+a.button {
+	-webkit-appearance: button;
+	-moz-appearance: button;
+	appearance: button;
+	text-decoration: none;
+	color: initial;
+}
+
+a.button:hover {
+	color: initial!important;
+}
+
 input[type="button"][disabled] {
 	opacity: 0.5;
 }
@@ -1037,6 +1049,10 @@ table, .boardtable {
 	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
 	table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
 	table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
+		display: none;
+	}
+
+	table.newstable td:nth-child(2), table.newstable th:nth-child(2) {
 		display: none;
 	}
 

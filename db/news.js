@@ -8,10 +8,12 @@ module.exports = {
 
 	db,
 
-	find: () => {
+	find: (limit=0) => {
 		return db.find({}).sort({
 			'_id': -1
-		}).toArray();
+		})
+		.limit(limit)
+		.toArray();
 	},
 
 	insertOne: (news) => {

@@ -130,6 +130,9 @@ module.exports = {
 	//how many replies a thread needs to not get removed by early404
 	early404Replies: 5,
 
+	//how many of the most recent newsposts to show on the homepage
+	maxRecentNews: 3,
+
 	/* filter filenames on posts and banners
 		false=no filtering
 		true=allow only A-Za-z0-9_-

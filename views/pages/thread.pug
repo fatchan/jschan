@@ -6,7 +6,7 @@ include ../mixins/boardheader.pug
 
 block head
 	script(src='/js/all.js')
-	- const subjectString = thread.subject || thread.nomarkup ? `${thread.nomarkup.substring(0, globalLimits.fieldLength.subject)}${thread.nomarkup.length > globalLimits.fieldLength.subject ? '...' : ''}` : thread.postId;
+	- const subjectString = thread.subject || (thread.nomarkup ? `${thread.nomarkup.substring(0, globalLimits.fieldLength.subject)}${thread.nomarkup.length > globalLimits.fieldLength.subject ? '...' : ''}` : thread.postId);
 	title /#{board._id}/ - #{subjectString}
 	if !modview
 		meta(property='og:site_name', value=meta.siteName)

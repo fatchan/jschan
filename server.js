@@ -44,7 +44,6 @@ const express = require('express')
 	app.disable('x-powered-by');
 	// parse forms
 	app.use(express.urlencoded({extended: false}));
-	//app.use(express.json()); //unused atm, will be used with forms.js eventually
 	// parse cookies
 	app.use(cookieParser());
 
@@ -105,7 +104,7 @@ const express = require('express')
 	// catch any unhandled errors
 	app.use((err, req, res, next) => {
 		if (err.code === 'EBADCSRFTOKEN') {
-			return res.status(403).render('message', {
+			return dynamicResponse(req, res, 403, 'message', {
 				'title': 'Forbidden',
 				'message': 'Invalid CSRF token'
   			});

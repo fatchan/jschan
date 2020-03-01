@@ -5,7 +5,6 @@ const { ipHashMode } = require(__dirname+'/../configs/main.js')
 	, hashIp = require(__dirname+'/haship.js');
 
 module.exports = (req, res, next) => {
-
 	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress; //need to consider forwarded-for, etc here and in nginx
 	const ipVersion = isIP(ip);
 	if (ipVersion) {

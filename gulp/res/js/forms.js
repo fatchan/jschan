@@ -6,7 +6,6 @@ function removeModal() {
 function doModal(data) {
 	const modalHtml = modal({ modal: data });
 	document.body.insertAdjacentHTML('afterbegin', modalHtml);
-	new formHandler(document.getElementsByClassName('modal')[0].querySelector('form'));
 	document.getElementById('modalclose').onclick = removeModal;
 	document.getElementsByClassName('modal-bg')[0].onclick = removeModal;
 }
@@ -19,7 +18,7 @@ function isCheckBox(element) {
 function formToJSON(form) {
 	const data = {};
 	for (element of form.elements) {
-		if (element.name && element.value && (!isCheckBox(element) || element.checked)) {
+		if (element.name /*&& element.value*/ && (!isCheckBox(element) || element.checked)) {
 			if (isCheckBox(element) && data[element.name]) {
 				if (Array.isArray(data[element.name])) {
 					data[element.name] = data[element.name].push(element.value);
@@ -38,6 +37,7 @@ class formHandler {
 
 	constructor(form) {
 		this.form = form;
+		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message')
 		this.submit = form.querySelector('input[type="submit"]')
 		this.originalSubmitText = this.submit.value;
@@ -58,8 +58,9 @@ class formHandler {
 	}
 
 	formSubmit(e) {
+		const xhr = new XMLHttpRequest();
 		let postData;
-		if (this.form.getAttribute('enctype') === 'multipart/form-data') {
+		if (this.enctype === 'multipart/form-data') {
 			this.fileInput.disabled = true; //palemoon is dumb, so append them instead
 			postData = new FormData(this.form);
 			this.fileInput.disabled = false;
@@ -70,8 +71,7 @@ class formHandler {
 				}
 			}
 		} else {
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			postData = formToJSON(this.form);
+			postData = new URLSearchParams([...(new FormData(this.form))]);
 		}
 		if (this.banned) {
 			return true;
@@ -79,7 +79,6 @@ class formHandler {
 			e.preventDefault();
 		}
 		this.submit.disabled = true;
-		const xhr = new XMLHttpRequest();
 		if (this.files && this.files.length > 0) {
 			//show progress on file uploads
 			xhr.onloadstart = () => {
@@ -100,13 +99,14 @@ class formHandler {
 				if (xhr.responseText) {
 					try {
 						json = JSON.parse(xhr.responseText);
+console.log(json)
 					} catch (e) {
 						//wasnt json response
 					}
 				}
 				if (xhr.status == 200) {
 					if (!json) {
-						if (xhr.responseURL 
+						if (xhr.responseURL
 							&& xhr.responseURL !== `${location.origin}${this.form.getAttribute('action')}`) {
 							window.location = xhr.responseURL;
 							return;
@@ -114,7 +114,9 @@ class formHandler {
 //todo: show success messages nicely for forms like actions (this doesnt apply to non file forms yet)
 						}
 					} else {
-						if (socket && socket.connected) {
+						if (json.message || json.messages || json.error || json.errors) {
+							doModal(json);
+						} else if (socket && socket.connected) {
 							window.myPostId = json.postId;
 							window.location.hash = json.postId
 						} else {
@@ -123,7 +125,6 @@ class formHandler {
 							}
 							setLocalStorage('myPostId', json.postId);
 							forceUpdate();
-//							window.location.reload();
 						}
 					}
 					this.form.reset();
@@ -139,11 +140,10 @@ class formHandler {
 					if (xhr.status === 413) {
 						this.clearFiles();
 					}
-					//not 200 status, so some error/failed post, wrong captcha, etc
 					if (json) {
 						doModal(json);
 					} else {
-//for bans, post form to show TODO: make modal support bans json and send dynamicresponse from it
+//for bans, post form to show TODO: make modal support bans json and send dynamicresponse from it (but what about appeals, w/ captcha, etc?)
 						this.clearFiles(); //dont resubmit files
 						this.banned = true;
 						this.form.dispatchEvent(new Event('submit'));
@@ -164,6 +164,9 @@ class formHandler {
 		const isLive = localStorage.getItem('live') == 'true' && socket && socket.connected;
 		if (isLive) {
 			xhr.setRequestHeader('x-using-live', true);
+		}
+		if (this.enctype !== 'multipart/form-data') {
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		}
 		xhr.send(postData);
 	}
@@ -200,6 +203,9 @@ class formHandler {
 
 	//remove all files from this form
 	clearFiles() {
+		if (!this.fileInput) {
+			return;
+		}
 		this.files = []; //empty file list
 		this.fileInput.value = null; //remove the files for real
 		if (this.fileRequired) { //reset to required if clearing files
@@ -284,9 +290,7 @@ window.addEventListener('settingsReady', () => {
 
 	const forms = document.getElementsByTagName('form');
 	for(let i = 0; i < forms.length; i++) {
-		if (forms[i].method === 'post'
-			&& forms[i].encoding === 'multipart/form-data') {
-			//used only for file posting forms currently.
+		if (forms[i].method === 'post' /*&& forms[i].encoding === 'multipart/form-data'*/) {
 			new formHandler(forms[i]);
 		}
 	}
