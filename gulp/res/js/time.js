@@ -52,7 +52,10 @@ const relativeTimeString = (date) => {
 }
 
 const changeDateFormat = (date) => {
-	const options = { hourCycle: hour24 ? 'h23' : 'h12' };
+	const options = {
+		hourCycle: hour24 ? 'h23' : 'h12',
+		hour12: !hour24
+	};
 	if (!localTime) {
 		options.timeZone = SERVER_TIMEZONE;
 	}
