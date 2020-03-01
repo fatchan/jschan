@@ -1052,6 +1052,10 @@ table, .boardtable {
 		display: none;
 	}
 
+	table.newstable td:nth-child(2), table.newstable th:nth-child(2) {
+		display: none;
+	}
+
 	.modal {
 		top: 5px;
 		max-height: calc(100% - 10px);

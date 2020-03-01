@@ -16,6 +16,22 @@ block content
 						| This is an anonymous imageboard, a type of BBS where anyone can post messages and share images.
 						| You don't need to register or provide any personal information to make a post.
 						| Choose a board below to join the discussion, or #[a(href='/create.html') create your own].
+	if recentNews && recentNews.length > 0
+		.table-container.flex-center.mv-5
+			table.newstable
+				tr
+					th(colspan=3)
+						a(href='/news.html') Latest News
+				each post in recentNews
+					tr
+						td
+							a.left(href=`/news.html#${post._id}`) #{post.title}
+						td
+							p.no-m-p #{`${post.message.raw.substring(0,50)}${post.message.raw.length > 50 ? '...' : ''}`}
+						td
+							- const newsDate = new Date(post.date);
+							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hour12:false})}
+
 	if boards && boards.length > 0
 		include ../includes/boardtable.pug
 			each board in boards

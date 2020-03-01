@@ -5,7 +5,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, timeUtils = require(__dirname+'/timeutils.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
-	, { debugLogs, pruneModlogs, pruneAfterDays, enableWebring } = require(__dirname+'/../configs/main.js')
+	, { debugLogs, pruneModlogs, pruneAfterDays, enableWebring, maxRecentNews } = require(__dirname+'/../configs/main.js')
 	, { Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, render = require(__dirname+'/render.js')
 	, timeDiffString = require(__dirname+'/timediffstring.js');
@@ -195,15 +195,17 @@ module.exports = {
 	buildHomepage: async () => {
 		const label = '/index.html';
 		const start = process.hrtime();
-		let [ totalStats, boards, fileStats ] = await Promise.all([
+		let [ totalStats, boards, fileStats, recentNews ] = await Promise.all([
 			Boards.totalStats(), //overall total posts ever made
 			Boards.boardSort(0, 20), //top 20 boards sorted by users, pph, total posts
-			Files.activeContent() //size ans number of files
+			Files.activeContent(), //size ans number of files
+			News.find(maxRecentNews), //some recent newsposts
 		]);
 		const html = await render('index.html', 'home.pug', {
 			totalStats,
 			boards,
 			fileStats,
+			recentNews,
 		});
 		const end = process.hrtime(start);
 		debugLogs && console.log(timeDiffString(label, end));
