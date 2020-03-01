@@ -16,6 +16,7 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, getAffectedBoards = require(__dirname+'/../../helpers/affectedboards.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/main.js')
 	, { createHash, timingSafeEqual } = require('crypto');
@@ -41,7 +42,7 @@ module.exports = async (req, res, next) => {
 		}
 		//no posts matched password, reject
 		if (passwordPosts.length === 0) {
-			return res.status(403).render('message', {
+			return dynamicResponse(req, res, 403, 'message', {
 				'title': 'Forbidden',
 				'error': 'Password did not match any selected posts',
 				redirect,
@@ -561,7 +562,7 @@ module.exports = async (req, res, next) => {
 		await Promise.all(parallelPromises);
 	}
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'messages': messages,
 		redirect,

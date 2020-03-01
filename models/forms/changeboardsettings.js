@@ -1,6 +1,7 @@
 'use strict';
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { globalLimits } = require(__dirname+'/../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
@@ -35,7 +36,7 @@ module.exports = async (req, res, next) => {
 	let markdownAnnouncement = oldSettings.announcement.markdown;
 	if (req.body.announcement !== oldSettings.announcement.raw) {
 		//remarkup the announcement if it changes
-		const styled = markdown(req.body.announcement);
+		const styled = markdown(req.body.announcement || '');
 		const quoted = (await linkQuotes(req.params.board, styled, null)).quotedMessage;
 		const sanitized = sanitize(quoted, sanitizeOptions.after);
 		markdownAnnouncement = sanitized;
@@ -225,7 +226,7 @@ module.exports = async (req, res, next) => {
 		await Promise.all(promises);
 	}
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': 'Updated settings.',
 		'redirect': `/${req.params.board}/manage/settings.html`

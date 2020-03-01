@@ -1,7 +1,8 @@
 'use strict';
 
 const { Accounts, Boards } = require(__dirname+'/../../db/')
-	 , cache = require(__dirname+'/../../redis.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, cache = require(__dirname+'/../../redis.js')
 
 module.exports = async (req, res, next) => {
 
@@ -58,7 +59,7 @@ module.exports = async (req, res, next) => {
 		amount = await Accounts.setLevel(req.body.checkedaccounts, req.body.auth_level).then(res => res.modifiedCount);
 	}
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': `${req.body.delete_account ? 'Deleted' : 'Edited'} ${amount} accounts`,
 		'redirect': '/globalmanage/accounts.html'

@@ -2,6 +2,7 @@
 
 const appealBans = require(__dirname+'/../../models/forms/appeal.js')
 	, { globalLimits } = require(__dirname+'/../../configs/main.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { Bans } = require(__dirname+'/../../db');
 
 module.exports = async (req, res, next) => {
@@ -18,7 +19,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (errors.length > 0) {
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': '/'
@@ -37,14 +38,14 @@ module.exports = async (req, res, next) => {
 			this can occur if they selected invalid id, non-ip match, already appealed, or unappealable bans. prevented by databse filter, so we use
 			use the updatedCount return value to check if any appeals were made successfully. if not, we end up here.
 		*/
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'error': 'Invalid bans selected',
 			'redirect': '/'
 		});
 	}
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': `Appealed ${amount} bans successfully`,
 		'redirect': '/'

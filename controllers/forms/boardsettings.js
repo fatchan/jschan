@@ -3,6 +3,7 @@
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
 	, { themes, codeThemes } = require(__dirname+'/../../helpers/themes.js')
 	, { Ratelimits } = require(__dirname+'/../../db/')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { globalLimits, rateLimitCost } = require(__dirname+'/../../configs/main.js');
 
 module.exports = async (req, res, next) => {
@@ -118,7 +119,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (errors.length > 0) {
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': `/${req.params.board}/manage/settings.html`
@@ -129,7 +130,7 @@ module.exports = async (req, res, next) => {
 		const ratelimitBoard = await Ratelimits.incrmentQuota(req.params.board, 'settings', rateLimitCost.boardSettings); //2 changes a minute
 		const ratelimitIp = await Ratelimits.incrmentQuota(res.locals.ip.hash, 'settings', rateLimitCost.boardSettings);
 		if (ratelimitBoard > 100 || ratelimitIp > 100) {
-			return res.status(429).render('message', {
+			return dynamicResponse(req, res, 429, 'message', {
 				'title': 'Ratelimited',
 				'error': 'You are changing settings too quickly, please wait a minute and try again',
 				'redirect': `/${req.params.board}/manage/settings.html`

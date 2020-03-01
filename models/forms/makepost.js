@@ -138,7 +138,7 @@ module.exports = async (req, res, next) => {
 				};
  				await Bans.insertOne(ban);
 				const bans = await Bans.find(res.locals.ip.single, banBoard); //need to query db so it has _id field for appeal checkmark
-				return dynamicResponse(req, res, 403, 'ban', {
+				return res.status(403).render('ban', {
 					bans: bans
 				});
 			}

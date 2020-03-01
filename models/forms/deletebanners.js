@@ -2,6 +2,7 @@
 'use strict';
 
 const { remove } = require('fs-extra')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { Boards } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../queue.js');
@@ -31,7 +32,7 @@ module.exports = async (req, res, next) => {
 		}
 	});
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': `Deleted banners.`,
 		'redirect': redirect

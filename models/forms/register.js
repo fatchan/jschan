@@ -1,6 +1,7 @@
 'use strict';
 
-const { Accounts } = require(__dirname+'/../../db/');
+const { Accounts } = require(__dirname+'/../../db/')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
 
 module.exports = async (req, res, next) => {
 
@@ -12,7 +13,7 @@ module.exports = async (req, res, next) => {
 
 	// if the account exists reject
 	if (account != null) {
-		return res.status(409).render('message', {
+		return dynamicResponse(req, res, 409, 'message', {
 			'title': 'Conflict',
 			'message': 'Account with this username already exists',
 			'redirect': '/register.html'

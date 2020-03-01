@@ -1,6 +1,7 @@
 'use strict';
 
 const { Posts } = require(__dirname+'/../../db/')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { globalLimits } = require(__dirname+'/../../configs/main.js')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
 	, actionChecker = require(__dirname+'/../../helpers/checks/actionchecker.js');
@@ -45,7 +46,7 @@ module.exports = async (req, res, next) => {
 
 	//return the errors
 	if (errors.length > 0) {
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': '/globalmanage/reports.html'
@@ -59,7 +60,7 @@ module.exports = async (req, res, next) => {
 		return next(err);
 	}
 	if (!res.locals.posts || res.locals.posts.length === 0) {
-		return res.status(404).render('message', {
+		return dynamicResponse(req, res, 404, 'message', {
 			'title': 'Not found',
 			'errors': 'Selected posts not found',
 			'redirect': '/globalmanage/reports.html'
