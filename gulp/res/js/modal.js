@@ -54,9 +54,13 @@ pug_html = pug_html + "\u003Cli\u003E" + (pug_escape(null == (pug_interp = error
 
 }
 pug_html = pug_html + "\u003C\u002Ful\u003E\u003C\u002Fdiv\u003E";
+}
 if (data.link) {
 pug_html = pug_html + "\u003Cdiv class=\"row\"\u003E\u003Ca" + (" class=\"button mv-0\""+pug_attr("href", data.link.href, true, false)+" target=\"_blank\"") + "\u003E" + (pug_escape(null == (pug_interp = data.link.text) ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
 }
+else
+if (data.redirect && data.title.toLowerCase() === 'success') {
+pug_html = pug_html + "\u003Cdiv class=\"row\"\u003E\u003Ca" + (" class=\"button mv-0\""+pug_attr("href", data.redirect, true, false)) + "\u003EContinue\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
 }
 else
 if (data.settings) {
