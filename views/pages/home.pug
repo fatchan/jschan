@@ -20,8 +20,7 @@ block content
 		.table-container.flex-center.mv-5
 			table.newstable
 				tr
-					th(colspan=3)
-						a(href='/news.html') Latest News
+					th(colspan=3) Latest News
 				each post in recentNews
 					tr
 						td
@@ -46,6 +45,10 @@ block content
 					td #{board.pph}
 					td #{board.ips}
 					td #{board.sequence_value-1}
+			if totalStats.total-totalStats.unlisted > boards.length
+				tr
+					td(colspan=5)
+						a.bold(href='/boards.html') More Boards
 		.table-container.flex-center.mv-10.text-center
 			table(style='max-width:450px')
 				tr

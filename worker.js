@@ -21,7 +21,8 @@ const Queue = require('bull')
 		.on('failed', console.warn);
 
 	taskQueue.process(async job => {
-		return tasks[job.data.task](job.data.options);
+		await tasks[job.data.task](job.data.options);
+		return null;
 	});
 
 })();
