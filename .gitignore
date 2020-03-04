@@ -4,6 +4,7 @@ configs/*.json
 configs/*.js
 static/*
 gulp/res/js/socket.io.js
+views/custompages/*.pug
 /gulp/res/css/codethemes
 gulp/res/js/timezone.js
 tmp/

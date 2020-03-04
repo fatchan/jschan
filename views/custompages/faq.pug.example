@@ -264,16 +264,4 @@ block content
 				th: a(href='#contact') How can I contact the administration?
 			tr
 				td
-					p
-						| For casual inquiries, questions, comments, bugs, etc. use the meta board 
-						a(href='/t/index.html') &gt;&gt;&gt;/t/
-						|  and make a public post. 
-						| If you need to make a bug report and have a github account, please 
-						a.quote(href='https://github.com/fatchan/jschan/issues') open an issue
-						| . For private bug disclosure e.g. security vulnerabilities or other urgent matters email 
-						a(href='mailto:admin@fatpeople.lol') admin@fatpeople.lol
-						| .
-						| For abuse reports email 
-						a(href='mailto:abuse@fatpeople.lol') abuse@fatpeople.lol
-						| .
-						
+					p Example						

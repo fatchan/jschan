@@ -1,0 +1,13 @@
+extends ../layout.pug
+
+block head
+	script(src='/js/all.js')
+	title Rules
+
+block content
+	h1.board-title Rules
+	.table-container.flex-center.mv-10
+		table.table-body
+			tr.table-row
+				td
+					p 1. Put rules here
