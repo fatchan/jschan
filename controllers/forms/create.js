@@ -1,16 +1,15 @@
 'use strict';
 
 const createBoard = require(__dirname+'/../../models/forms/create.js')
-	, { enableUserBoards, globalLimits } = require(__dirname+'/../../configs/main.js')
+	, { enableUserBoardCreation, globalLimits } = require(__dirname+'/../../configs/main.js')
 	, alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
 
 module.exports = async (req, res, next) => {
 
-	if (enableUserBoards === false && res.locals.permLevel !== 0) {
-		//only board admin can create boards when user board creation disabled
+	if (enableUserBoardCreation === false && res.locals.permLevel > 1) {
 		return res.status(400).render('message', {
 			'title': 'Bad request',
-			'error': 'Board creation is only available to site administration',
+			'error': 'User board creation is currently disabled',
 			'redirect': '/create.html'
 		});
 	}
