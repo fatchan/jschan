@@ -189,7 +189,7 @@ if (post.omittedposts || post.omittedfiles) {
 pug_html = pug_html + "\u003Cdiv class=\"cb mt-5 ml-5\"\u003E";
 const ompo = post.omittedposts;
 const omfi = post.omittedfiles;
-pug_html = pug_html + (pug_escape(null == (pug_interp = ompo) ? "" : pug_interp)) + " repl" + (pug_escape(null == (pug_interp = ompo > 1 ? 'ies' : 'y') ? "" : pug_interp)) + "\n" + (pug_escape(null == (pug_interp = omfi > 0 ? ` and ${omfi} image${omfi > 1 ? 's' : ''}` : '') ? "" : pug_interp)) + " omitted. \n\u003Ca" + (pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003EView the full thread\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + (pug_escape(null == (pug_interp = ompo) ? "" : pug_interp)) + " repl" + (pug_escape(null == (pug_interp = ompo > 1 ? 'ies' : 'y') ? "" : pug_interp)) + "\n" + (pug_escape(null == (pug_interp = omfi > 0 ? ` and ${omfi} image${omfi > 1 ? 's' : ''}` : '') ? "" : pug_interp)) + " omitted. \n\u003Ca" + (pug_attr("href", postURL, true, false)) + "\u003EView the full thread\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
 }
 if (post.previewbacklinks != null) {
 if (post.previewbacklinks.length > 0) {

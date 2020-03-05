@@ -1,6 +1,6 @@
 mixin modal(data)
 	.modal-bg(style=data.hidden?'display:none':'')
-	.modal(style=data.hidden?'display:none':'')
+	.modal(id=(data.settings ? 'settingsmodal' : '') style=data.hidden?'display:none':'')
 		.row
 			p.bold #{data.title}
 			a.close.postform-style#modalclose X
@@ -86,6 +86,9 @@ mixin modal(data)
 					.row
 						.label Post Password
 						input#postpassword-setting(type='password' name='postpassword')
+					.row
+						.label Default Name
+						input#name-setting(type='text' name='name')
 					.row
 						.label Custom CSS
 						textarea#customcss-setting

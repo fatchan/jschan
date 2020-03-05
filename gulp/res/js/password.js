@@ -14,10 +14,27 @@ const generatePassword = () => {
 	}
 }
 setDefaultLocalStorage('postpassword', generatePassword());
+setDefaultLocalStorage('name', '');
 
 class syncedField {
 	constructor(selector, key, persistent) {
-		this.fields = document.querySelectorAll(selector);
+		this.fields = []
+
+		const settingsFields = document.getElementById('settingsmodal').querySelectorAll(selector);
+		this.fields = this.fields.concat([...settingsFields]);
+
+		const postForm = document.getElementById('postform');
+		if (postForm) {
+			const postformFields = postForm.querySelectorAll(selector);
+			this.fields = this.fields.concat([...postformFields]);
+		}
+
+		const actionForm = document.getElementById('actionform');
+		if (actionForm) {
+			const actionFields = actionForm.querySelectorAll(selector);
+			this.fields = this.fields.concat([...actionFields]);
+		}
+
 		this.key = key;
 		this.persistent = persistent;
 		for (let field of this.fields) {
@@ -38,5 +55,6 @@ class syncedField {
 window.addEventListener('settingsReady', () => {
 
 	new syncedField('input[name="postpassword"]', 'postpassword', true);
+	new syncedField('input[name="name"]', 'name', true);
 
 });
