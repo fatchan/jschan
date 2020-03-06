@@ -971,7 +971,6 @@ table.boardtable td:nth-child(6) {
 	opacity: 1;
 }
 
-/* loading bar testing
 .post-file-src[data-type="image"][data-loading]::after,
 .post-file-src[data-type="image"][data-loading]::before {
 	display: inline-block;
@@ -993,7 +992,6 @@ table.boardtable td:nth-child(6) {
 .post-file-src[data-type="image"][data-loading]::after {
 	content: attr(data-loading) "%";
 }
-*/
 
 .post-file-src * {
 	max-width: 100%;
