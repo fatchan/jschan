@@ -299,9 +299,15 @@ p {
 	right:10px;
 }
 
-.banmessage {
+.ban {
 	color: red;
 	font-weight: bold;
+}
+.reason::before {
+	content:"\0028";
+}
+.reason::after {
+	content:"\0029";
 }
 
 .close {

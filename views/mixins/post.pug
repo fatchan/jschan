@@ -97,7 +97,10 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 			if !post.message && post.files.length === 0
 				p Post files unlinked
 			if post.banmessage
-				p.banmessage USER WAS BANNED FOR THIS POST #{post.banmessage ? `(${post.banmessage})` : ''}
+				p.ban
+					span.message USER WAS BANNED FOR THIS POST
+					|  
+					span.reason(data-reason=post.banmessage) #{post.banmessage}
 			if truncatedMessage !== post.message
 				div.cb.mt-5.ml-5
 					| Message too long. #[a(href=`${postURL}#${post.postId}`) View the full text]

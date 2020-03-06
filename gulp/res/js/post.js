@@ -180,7 +180,7 @@ if (!post.message && post.files.length === 0) {
 pug_html = pug_html + "\u003Cp\u003EPost files unlinked\u003C\u002Fp\u003E";
 }
 if (post.banmessage) {
-pug_html = pug_html + "\u003Cp class=\"banmessage\"\u003EUSER WAS BANNED FOR THIS POST " + (pug_escape(null == (pug_interp = post.banmessage ? `(${post.banmessage})` : '') ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+pug_html = pug_html + "\u003Cp class=\"ban\"\u003E\u003Cspan class=\"message\"\u003EUSER WAS BANNED FOR THIS POST\u003C\u002Fspan\u003E \u003Cspan" + (" class=\"reason\""+pug_attr("data-reason", post.banmessage, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = post.banmessage) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fp\u003E";
 }
 if (truncatedMessage !== post.message) {
 pug_html = pug_html + "\u003Cdiv class=\"cb mt-5 ml-5\"\u003EMessage too long. \u003Ca" + (pug_attr("href", `${postURL}#${post.postId}`, true, false)) + "\u003EView the full text\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
