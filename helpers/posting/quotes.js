@@ -101,7 +101,7 @@ module.exports = async (board, text, thread) => {
 				}
 				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum].thread}.html#${quotenum}'>&gt;&gt;${quotenum}</a>${postThreadIdMap[board][quotenum].postId == thread ? ' <small>(OP)</small> ' : ''}`;
 			}
-			return match;
+			return match;//`<span class='invalid-quote'>&gt;&gt;${quotenum}</span>`;
 		});
 	}
 	if (crossQuotes) {
@@ -113,7 +113,7 @@ module.exports = async (board, text, thread) => {
 					return `<a class='quote' href='/${quoteboard}/index.html'>&gt;&gt;&gt;/${quoteboard}/</a>`;
 				}
 			}
-			return match;
+			return match;// `<span class='invalid-quote'>&gt;&gt;&gt;/${quoteboard}/</span>`;
 		});
 	}
 

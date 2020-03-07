@@ -181,6 +181,11 @@ a, a:visited, a.post-name {
 	color: var(--link-color);
 }
 
+.invalid-quote {
+    cursor:pointer;
+    text-decoration: line-through;
+}
+
 .post-message a {
 	text-decoration: underline;
 	color: var(--post-link-color);
