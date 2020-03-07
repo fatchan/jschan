@@ -39,7 +39,7 @@ main {
 	font-style: italic;
 }
 
-.strikethrough {
+.strike {
 	text-decoration: line-through;
 }
 
@@ -988,9 +988,11 @@ table.boardtable td:nth-child(6) {
 	background: black;
 	width: 100%;
 	border-left: var(--data-loading) solid darkgreen;
+	transition: all 0.3s ease;
 }
 .post-file-src[data-type="image"][data-loading]::after {
 	content: attr(data-loading) "%";
+	color: white;
 }
 
 .post-file-src * {
