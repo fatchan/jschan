@@ -18,6 +18,7 @@ module.exports = async (req, res, next) => {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Missing or invalid block bypass',
+			'frame': '/bypass_minimal.html',
 			'link': {
 				'href': '/bypass.html',
 				'text': 'Get block bypass',
@@ -57,6 +58,7 @@ module.exports = async (req, res, next) => {
 	return dynamicResponse(req, res, 403, 'message', {
 		'title': 'Forbidden',
 		'message': 'Block bypass expired or exceeded max uses',
+		'frame': '/bypass_minimal.html',
 		'link': {
 			'href': '/bypass.html',
 			'text': 'Get block bypass',

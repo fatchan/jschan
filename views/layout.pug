@@ -5,7 +5,7 @@ html
 		block head
 	body#top
 		include includes/navbar.pug
-		main
+		main(class=(minimal?'minimal':''))
 			.container
 				block content
 		include includes/footer.pug

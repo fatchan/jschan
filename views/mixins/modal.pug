@@ -17,7 +17,10 @@ mixin modal(data)
 					if data.errors
 						each error in data.errors
 							li #{error}
-			if data.link
+			if data.frame
+				.row
+					iframe.bypass(src=data.frame frameborder='0' scrolling='no')
+			else if data.link
 				.row
 					a.button.mv-0(href=data.link.href target='_blank') #{data.link.text}
 		else if data.settings

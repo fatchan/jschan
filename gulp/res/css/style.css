@@ -13,6 +13,9 @@ body {
 main {
 	margin: 3em 0 0 0;
 }
+main.minimal {
+	margin: 0;
+}
 
 .row {
 	display: flex;
@@ -884,9 +887,13 @@ input[type="file"] {
 	box-sizing: border-box;
 }
 
-iframe.captcha {
+iframe.captcha, iframe.bypass {
 	/*dumb hack cos of noscript wrapping in unstyleable span*/
 	margin-bottom: -2px;
+}
+
+iframe.bypass {
+	height: 215px;
 }
 
 .captcha {

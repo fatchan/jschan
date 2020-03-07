@@ -230,8 +230,10 @@ module.exports = {
 		return render('register.html', 'register.pug');
 	},
 
-	buildBypass: () => {
-		return render('bypass.html', 'bypass.pug');
+	buildBypass: (minimal=false) => {
+		return render(`bypass${minimal ? '_minimal' : ''}.html`, 'bypass.pug', {
+			minimal,
+		});
 	},
 
 	buildCreate: () => {
