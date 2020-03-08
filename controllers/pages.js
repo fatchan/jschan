@@ -30,8 +30,8 @@ router.get('/news.html', news);
 router.get('/boards.html', sessionRefresh, calcPerms, boardlist);
 
 //board pages
-router.get('/:board/:page(1[0-9]{0,}|[2-9]{1,}|index).html', Boards.exists, paramConverter, board); //index
-router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, Posts.exists, thread); //thread view
+router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', Boards.exists, paramConverter, board); //index
+router.get('/:board/thread/:id([1-9][0-9]{0,}).html', Boards.exists, paramConverter, Posts.exists, thread); //thread view
 router.get('/:board/catalog.html', Boards.exists, catalog); //catalog
 router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
 router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
@@ -45,8 +45,8 @@ router.get('/:board/manage/bans.html', sessionRefresh, isLoggedIn, Boards.exists
 router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
 router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
 // if (mod view enabled) {
-router.get('/:board/manage/:page(1[0-9]{0,}|[2-9]{1,}|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
-router.get('/:board/manage/thread/:id(\\d+).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
+router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
+router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
 
 //global manage pages
 router.get('/globalmanage/reports.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
