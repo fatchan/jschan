@@ -101,19 +101,15 @@ module.exports = async (board, text, thread) => {
 				}
 				return `<a class='quote' href='/${board}/thread/${postThreadIdMap[board][quotenum].thread}.html#${quotenum}'>&gt;&gt;${quotenum}</a>${postThreadIdMap[board][quotenum].postId == thread ? ' <small>(OP)</small> ' : ''}`;
 			}
-			return match;//`<span class='invalid-quote'>&gt;&gt;${quotenum}</span>`;
+			return `<span class='invalid-quote'>&gt;&gt;${quotenum}</span>`;
 		});
 	}
 	if (crossQuotes) {
 		text = text.replace(crossQuoteRegex, (match, quoteboard, quotenum) => {
-			if (postThreadIdMap[quoteboard]) {
-				if (!isNaN(quotenum) && quotenum > 0 && postThreadIdMap[quoteboard][quotenum]) {
-					return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum].thread}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
-				} else {
-					return `<a class='quote' href='/${quoteboard}/index.html'>&gt;&gt;&gt;/${quoteboard}/</a>`;
-				}
+			if (postThreadIdMap[quoteboard] && !isNaN(quotenum) && quotenum > 0 && postThreadIdMap[quoteboard][quotenum]) {
+				return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum].thread}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
 			}
-			return match;// `<span class='invalid-quote'>&gt;&gt;&gt;/${quoteboard}/</span>`;
+			return `<span class='invalid-quote'>&gt;&gt;&gt;/${quoteboard}/${quotenum || ''}</span>`;
 		});
 	}
 
