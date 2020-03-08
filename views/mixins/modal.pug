@@ -19,7 +19,7 @@ mixin modal(data)
 							li #{error}
 			if data.frame
 				.row
-					iframe.bypass(src=data.frame frameborder='0' scrolling='no')
+					iframe.bypass#modalframe(src=data.frame frameborder='0' scrolling='no')
 			else if data.link
 				.row
 					a.button.mv-0(href=data.link.href target='_blank') #{data.link.text}

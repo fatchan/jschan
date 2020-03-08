@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
 	if (!res.locals.solvedCaptcha && (!bypassId || bypassId.length !== 24)) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Missing or invalid block bypass',
+			'message': 'Please complete a block bypass to post',
 			'frame': '/bypass_minimal.html',
 			'link': {
 				'href': '/bypass.html',
