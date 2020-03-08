@@ -1,3 +1,9 @@
+:root {
+	--attachment-img: url('/img/attachment.png');
+	--spoiler-img: url('/img/spoiler.png');
+	--audio-img: url('/img/audio.png');
+}
+
 body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
@@ -234,8 +240,8 @@ p {
 .catalog-thumb {
 	display: block;
 	box-shadow: 0 0 3px black;
-	width: 64px;
-	height: 64px;
+	width: 64px !important;
+	height: 64px !important;
 	object-fit: cover;
 	margin: 5px;
 }
@@ -626,6 +632,23 @@ video, img {
 	object-fit: contain;
 	max-width: 200px;
 	max-height: 200px;
+}
+
+.spoilerimg, .attachmentimg, .audioimg {
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain; /* make it full */
+	height: 200px;
+	width: 200px;
+}
+.attachmentimg {
+	background-image: var(--atachment-img);
+}
+.spoilerimg {
+	background-image: var(--spoiler-img);
+}
+.audioimg {
+	background-image: var(--audio-img);
 }
 
 input:invalid, textarea:invalid {

@@ -70,11 +70,11 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/img/${file.filename}`)
 									if post.spoiler
-										img.file-thumb(src='/img/spoiler.png' width='200' height='200')
+										div.spoilerimg.file-thumb
 									else if file.attachment
-										img.file-thumb(src='/img/attachment.png' width='200' height='200')
+										div.attachmentimg.file-thumb
 									else if type === 'audio'
-										img.file-thumb(src='/img/audio.png' width='200' height='200')
+										div.audioimg.file-thumb
 									else if file.hasThumb
 										img.file-thumb(src=`/img/thumb-${file.hash}${file.thumbextension}` height=file.geometry.thumbheight width=file.geometry.thumbwidth)
 									else

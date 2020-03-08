@@ -15,11 +15,11 @@ mixin catalogtile(board, post, index)
 				a(href=postURL)
 					- const file = post.files[0]
 					if post.spoiler
-						img.catalog-thumb(src='/img/spoiler.png' width='64' height='64')
+						div.spoilerimg.catalog-thumb
 					else if file.attachment
-						img.catalog-thumb(src='/img/attachment.png' width='64' height='64')
+						div.attachmentimg.catalog-thumb
 					else if file.mimetype.startsWith('audio')
-						img.catalog-thumb(src='/img/audio.png' width='64' height='64')
+						div.audioimg.catalog-thumb
 					else if file.hasThumb
 						img.catalog-thumb(src=`/img/thumb-${file.hash}${file.thumbextension}` width='64' height='64')
 					else

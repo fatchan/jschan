@@ -108,7 +108,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						e.preventDefault();
 						thumbElement.style.opacity = '0.5';
 						thumbElement.style.cursor = 'wait'
-// loading bar experiment; causes some issues with loading speed from cache and extra requests
+// loading bar experiment
 						if (localStorage.getItem('imageloadingbars') == 'true') {
 							const request = new XMLHttpRequest();
 							request.onprogress = (e) => {
@@ -135,11 +135,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 								toggle(thumbElement, expandedElement, fileName, pfs);
 							}
 							request.onload = loaded;
-							request.responseType = 'blob';  
+							request.responseType = 'blob';
 							request.open('GET', fileSrc, true);
 							request.send(null);
 						} else {
-// loading bar experiment; causes some issues with loading speed from cache and extra requests
+// loading bar experiment
 							expandedElement = document.createElement('img');
 							source = expandedElement;
 							source.onload = function() {
