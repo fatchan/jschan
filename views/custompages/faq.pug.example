@@ -2,7 +2,6 @@ extends ../layout.pug
 include ../mixins/post.pug
 
 block head
-	script(src='/js/all.js')
 	title Frequently Asked Questions
 
 block content
