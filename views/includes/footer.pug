@@ -1,9 +1,10 @@
-small.footer#bottom
-	| - 
-	a(href='/rules.html') rules
-	|  - 
-	a(href='/faq.html') faq
-	|  - 
-	a(href='https://github.com/fatchan/jschan/') source code
-	|  -  
+unless minimal
+	small.footer#bottom
+		| - 
+		a(href='/rules.html') rules
+		|  - 
+		a(href='/faq.html') faq
+		|  - 
+		a(href='https://github.com/fatchan/jschan/') source code
+		|  -  
 script(src='/js/render.js')

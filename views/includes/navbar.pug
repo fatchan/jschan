@@ -1,8 +1,9 @@
-nav.navbar
-	a.nav-item(href='/index.html') Home
-	a.nav-item(href='/news.html') News
-	a.nav-item(href='/boards.html') Boards
-	a.nav-item(href='/account.html') Account
-	if board
-		a.nav-item(href=`/${board._id}/manage/reports.html`) Manage
-	a.jsonly.nav-item.right#settings
+unless minimal
+	nav.navbar
+		a.nav-item(href='/index.html') Home
+		a.nav-item(href='/news.html') News
+		a.nav-item(href='/boards.html') Boards
+		a.nav-item(href='/account.html') Account
+		if board
+			a.nav-item(href=`/${board._id}/manage/reports.html`) Manage
+		a.jsonly.nav-item.right#settings

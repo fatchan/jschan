@@ -3,11 +3,26 @@ function removeModal() {
 	modalClasses.forEach(c => document.getElementsByClassName(c)[0].remove());
 }
 
-function doModal(data) {
+function doModal(data, postcallback) {
 	const modalHtml = modal({ modal: data });
+	let checkInterval;
 	document.body.insertAdjacentHTML('afterbegin', modalHtml);
-	document.getElementById('modalclose').onclick = removeModal;
-	document.getElementsByClassName('modal-bg')[0].onclick = removeModal;
+	document.getElementById('modalclose').onclick = () => {
+		removeModal();
+		clearInterval(checkInterval);
+	};
+	document.getElementsByClassName('modal-bg')[0].onclick = () => {
+		removeModal();
+		clearInterval(checkInterval);
+	};
+	const modalframe = document.getElementById('modalframe');
+	checkInterval = setInterval(() => {
+		if (modalframe && modalframe.contentDocument.title == 'Success') {
+			clearInterval(checkInterval);
+			removeModal();
+			postcallback();
+		}
+	}, 100);
 }
 
 const checkTypes = ['checkbox', 'radio'];
@@ -140,7 +155,9 @@ class formHandler {
 					}
 					//not 200 status, so some error/failed post, wrong captcha, etc
 					if (json) {
-						doModal(json);
+						doModal(json, () => {
+							this.form.dispatchEvent(new Event('submit'));
+						});
 					} else {
 //for bans, post form to show TODO: make modal support bans json and send dynamicresponse from it
 						this.clearFiles(); //dont resubmit files
