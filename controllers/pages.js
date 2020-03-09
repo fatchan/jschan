@@ -11,6 +11,7 @@ const express  = require('express')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
+	, setMinimal = require(__dirname+'/../helpers/setminimal.js')
 	//page models
 	, { manageReports, manageBanners, manageSettings, manageBans, manageBoard, manageThread } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans,
@@ -60,6 +61,7 @@ router.get('/globalmanage/settings.html', sessionRefresh, isLoggedIn, calcPerms,
 router.get('/captcha', captcha); //get captcha image and cookie
 router.get('/captcha.html', captchaPage); //iframed for noscript users
 router.get('/bypass.html', blockBypass); //block bypass page
+router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
 
 //accounts
 router.get('/account.html', sessionRefresh, isLoggedIn, account); //page showing boards you are mod/owner of, links to password rese, logout, etc

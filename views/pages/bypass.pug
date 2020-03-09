@@ -11,4 +11,6 @@ block content
 				.label Captcha
 				span.col
 					include ../includes/captcha.pug
+			if minimal
+				input(type='hidden' name='minimal' value='1')
 			input(type='submit', value='Submit')

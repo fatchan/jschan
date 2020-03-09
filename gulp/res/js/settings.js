@@ -13,8 +13,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		settingsBg.style.display = 'unset';
 	}
 
-	const settings = document.getElementById('settings');
-
 	const modalHtml = modal({
 		modal: {
 			title: 'Settings',
@@ -32,7 +30,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	settingsBg.onclick = hideSettings;
 	settingsModal.getElementsByClassName('close')[0].onclick = hideSettings;
-	settings.onclick = openSettings;
+
+	const settings = document.getElementById('settings');
+	if (settings) { //can be false if we are in minimal view
+		settings.onclick = openSettings;
+	}
 
 	window.dispatchEvent(new CustomEvent('settingsReady'));
 

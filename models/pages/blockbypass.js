@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
 
 	let html;
 	try {
-		html = await buildBypass();
+		html = await buildBypass(res.locals.minimal);
 	} catch (err) {
 		return next(err);
 	}

@@ -17,6 +17,7 @@ module.exports = async (req, res, next) => {
 			'sameSite': 'strict'
 		})
 		.render('message', {
+			'minimal': req.body.minimal, //todo: make use x- header for ajax once implm.
 			'title': 'Success',
 			'message': 'Completed block bypass, you may go back and make your post.',
 		});
