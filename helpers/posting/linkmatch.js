@@ -12,9 +12,11 @@ module.exports = (match) => {
 		const lastIndex = match.lastIndexOf(lastMatch);
 		trimmedMatch = match.substring(0, lastIndex+lastMatch.length);
 		excess = match.substring(lastIndex+lastMatch.length);
-	} else {
+	} else if (match.indexOf(')') !== -1){
 		trimmedMatch = match.substring(0, match.indexOf(')'));
 		excess = match.substring(match.indexOf(')'));
+	} else {
+		trimmedMatch = match;
 	}
 	trimmedMatch = trimmedMatch
 		.replace(/\(/g, '%28')
