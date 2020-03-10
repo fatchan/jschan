@@ -64,7 +64,7 @@ module.exports = {
 				return `<span class='code hljs'><small>possible language: ${language}, relevance: ${relevance}</small>\n${value}</span>`;
 			}
 		} else if (lang !== 'plain' && highlightOptions.languageSubset.includes(lang)) {
-			const { value } = highlight(lang, trimFix);
+			const { value } = highlight(lang, trimFix, true);
 			return `<span class='code hljs'><small>language: ${lang}</small>\n${value}</span>`;
 		}
 		return `<span class='code'>${escape(trimFix)}</span>`;
