@@ -647,7 +647,7 @@ video, img {
 	width: 200px;
 }
 .attachmentimg {
-	background-image: var(--atachment-img);
+	background-image: var(--attachment-img);
 }
 .spoilerimg {
 	background-image: var(--spoiler-img);
