@@ -1,0 +1,41 @@
+:root {
+	--icon-color:invert(17%)sepia(89%)saturate(7057%)hue-rotate(2deg)brightness(93%)contrast(120%);
+	--alt-label-color:#2d2d86;
+	--alt-font-color:#f2f2f2;
+	--background-top:#19194d;
+	--background-rest:#19194d;
+	--navbar-color:#2d2d86;
+	--post-color:#262673;
+	--post-outline-color:#262673;
+	--label-color:#2d2d86;
+	--box-border-color:#000000;
+	--darken:#ffffff10;
+	--highlighted-post-color:#3636a6;
+	--highlighted-post-outline-color:#111;
+	--board-title:#c5c8c6;
+	--hr:#282a2e;
+	--font-color:#f2f2f2;
+	--name-color:#117743;
+	--capcode-color:red;
+	--subject-color:#6666CC;
+	--link-color:white;
+	--post-link-color:red;
+	--link-hover:#f2f2f2;
+	--input-borders:black;
+	--input-color:black;
+	--input-background:white;
+	--dice-color:darkorange;
+	--title-color:#d70000;
+	--greentext-color:#789922;
+	--pinktext-color:#E0727F;
+}
+.post-message a:hover {
+	color:var(--post-link-color)!important;
+}
+.postform-style {
+	color:black
+}
+.post-info, .post-container:target .post-info, .post-container.highlighted .post-info {
+    background:none!important;border:none!important
+}
+

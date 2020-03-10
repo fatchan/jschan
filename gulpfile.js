@@ -2,6 +2,7 @@
 
 const gulp = require('gulp')
 	, fs = require('fs-extra')
+	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
 	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
 	, configs = require(__dirname+'/configs/main.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
@@ -164,7 +165,8 @@ function custompages() {
 			locals: {
 				codeLanguages: configs.highlightOptions.languageSubset,
 				defaultTheme: configs.boardDefaults.theme,
-				defaultCodeTheme: configs.boardDefaults.codeTheme
+				defaultCodeTheme: configs.boardDefaults.codeTheme,
+				postFilesSize: formatSize(configs.globalLimits.postFilesSize.max)
 			}
 		}))
 		.pipe(gulp.dest(paths.pug.dest));

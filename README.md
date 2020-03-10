@@ -79,6 +79,10 @@ geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 # copy example config file and edit it
 $ cp configs/main.js.example configs/main.js && editor configs/main.js
 
+# copy example custompages for rules and faq and edit
+$ cp views/custompages/faq.pug.example views/custompages/faq.pug
+$ cp views/custompages/rules.pug.example views/custompages/rules.pug
+
 # install dependencies and run build tasks
 $ npm install
 $ npm run-script setup
@@ -98,5 +102,6 @@ $ pm2 logs #see logs
 $ pm2 reload all #reload all backend processes
 # gulp is used for various jobs like minifying and compiling scripts
 $ gulp --tasks #list available gulp tasks
+$ gulp migrate #check for and run db migrations
 $ gulp #run default gulp task
 ```

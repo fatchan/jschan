@@ -1,6 +1,6 @@
 'use strict';
 
-const greentextRegex = /^&gt;((?!&gt;).+)/gm
+const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 	, pinktextRegex = /^&lt;(.+)/gm
 	, boldRegex = /&#39;&#39;(.+?)&#39;&#39;/gm
 	, titleRegex = /&#x3D;&#x3D;(.+)&#x3D;&#x3D;/gm
@@ -14,7 +14,7 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
 	, splitRegex = /```([\s\S]+?)```/gm
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
-	, diceRegex = /##(?<numdice>\d+)d(?<numsides>\d+)(?:(?<operator>[+-])(?<modifier>\d+))?/gmi
+	, diceRegex = /##(?<numdice>[1-9][0-9]{0,8})d(?<numsides>[2-9][0-9]{0,8})(?:(?<operator>[+-])(?<modifier>[1-9][0-9]{0,8}))?/gmi
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, escape = require(__dirname+'/escape.js')
 	, { highlight, highlightAuto } = require('highlight.js')
@@ -22,16 +22,16 @@ const greentextRegex = /^&gt;((?!&gt;).+)/gm
 	, replacements = [
 		{ regex: pinktextRegex,	 cb: (match, pinktext) => `<span class='pinktext'>&lt;${pinktext}</span>` },
 		{ regex: greentextRegex, cb: (match, greentext) => `<span class='greentext'>&gt;${greentext}</span>` },
-		{ regex: boldRegex,      cb: (match, bold) => `<span class='bold'>${bold}</span>` },
+		{ regex: boldRegex,	  cb: (match, bold) => `<span class='bold'>${bold}</span>` },
 		{ regex: underlineRegex, cb: (match, underline) => `<span class='underline'>${underline}</span>` },
-		{ regex: strikeRegex,    cb: (match, strike) => `<span class='strike'>${strike}</span>` },
-		{ regex: titleRegex,     cb: (match, title) => `<span class='title'>${title}</span>` },
-		{ regex: italicRegex,    cb: (match, italic) => `<span class='em'>${italic}</span>` },
+		{ regex: strikeRegex,	cb: (match, strike) => `<span class='strike'>${strike}</span>` },
+		{ regex: titleRegex,	 cb: (match, title) => `<span class='title'>${title}</span>` },
+		{ regex: italicRegex,	cb: (match, italic) => `<span class='em'>${italic}</span>` },
 		{ regex: spoilerRegex,   cb: (match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
-		{ regex: monoRegex,      cb: (match, mono) => `<span class='mono'>${mono}</span>` },
+		{ regex: monoRegex,	  cb: (match, mono) => `<span class='mono'>${mono}</span>` },
+		{ regex: linkRegex, cb: require(__dirname+'/linkmatch.js') },
 		{ regex: detectedRegex,  cb: (match, detected) => `<span class='detected'>${detected}</span>` },
-		{ regex: linkRegex,      cb: (match) => `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${match}'>${match}</a>` },
-		{ regex: diceRegex,      cb: require(__dirname+'/diceroll.js') },
+		{ regex: diceRegex,	  cb: require(__dirname+'/diceroll.js') },
 	];
 
 module.exports = {

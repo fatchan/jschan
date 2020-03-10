@@ -11,6 +11,7 @@ const express  = require('express')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
+	, setMinimal = require(__dirname+'/../helpers/setminimal.js')
 	//page models
 	, { manageReports, manageBanners, manageSettings, manageBans, manageBoard, manageThread } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans,
@@ -29,8 +30,8 @@ router.get('/news.html', news);
 router.get('/boards.html', sessionRefresh, calcPerms, boardlist);
 
 //board pages
-router.get('/:board/:page(1[0-9]{0,}|[2-9]{1,}|index).html', Boards.exists, paramConverter, board); //index
-router.get('/:board/thread/:id(\\d+).html', Boards.exists, paramConverter, Posts.exists, thread); //thread view
+router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', Boards.exists, paramConverter, board); //index
+router.get('/:board/thread/:id([1-9][0-9]{0,}).html', Boards.exists, paramConverter, Posts.exists, thread); //thread view
 router.get('/:board/catalog.html', Boards.exists, catalog); //catalog
 router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
 router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
@@ -44,8 +45,8 @@ router.get('/:board/manage/bans.html', sessionRefresh, isLoggedIn, Boards.exists
 router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
 router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
 // if (mod view enabled) {
-router.get('/:board/manage/:page(1[0-9]{0,}|[2-9]{1,}|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
-router.get('/:board/manage/thread/:id(\\d+).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
+router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
+router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
 
 //global manage pages
 router.get('/globalmanage/reports.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
@@ -60,6 +61,7 @@ router.get('/globalmanage/settings.html', sessionRefresh, isLoggedIn, calcPerms,
 router.get('/captcha', captcha); //get captcha image and cookie
 router.get('/captcha.html', captchaPage); //iframed for noscript users
 router.get('/bypass.html', blockBypass); //block bypass page
+router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
 
 //accounts
 router.get('/account.html', sessionRefresh, isLoggedIn, account); //page showing boards you are mod/owner of, links to password rese, logout, etc

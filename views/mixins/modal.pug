@@ -1,6 +1,6 @@
 mixin modal(data)
 	.modal-bg(style=data.hidden?'display:none':'')
-	.modal(style=data.hidden?'display:none':'')
+	.modal(id=(data.settings ? 'settingsmodal' : '') style=data.hidden?'display:none':'')
 		.row
 			p.bold #{data.title}
 			a.close.postform-style#modalclose X
@@ -17,12 +17,12 @@ mixin modal(data)
 					if data.errors
 						each error in data.errors
 							li #{error}
-		if data.link
-			.row
-				a.button.mv-0(href=data.link.href target='_blank') #{data.link.text}
-		else if data.redirect && data.title.toLowerCase() === 'success'
-			.row
-				a.button.mv-0(href=data.redirect) Continue
+			if data.frame
+				.row
+					iframe.bypass#modalframe(src=data.frame frameborder='0' scrolling='no')
+			else if data.link
+				.row
+					a.button.mv-0(href=data.link.href target='_blank') #{data.link.text}
 		else if data.settings
 			.row
 				.form-wrapper.flexleft.mt-10
@@ -87,8 +87,15 @@ mixin modal(data)
 						label.postform-style.ph-5
 							input#crispimages-setting(type='checkbox')
 					.row
+						.label Image loading bars (EXPERIMENTAL)
+						label.postform-style.ph-5
+							input#imageloadingbars-setting(type='checkbox')
+					.row
 						.label Post Password
 						input#postpassword-setting(type='password' name='postpassword')
+					.row
+						.label Default Name
+						input#name-setting(type='text' name='name')
 					.row
 						.label Custom CSS
 						textarea#customcss-setting

@@ -1,5 +1,6 @@
 setDefaultLocalStorage('volume', 100);
 setDefaultLocalStorage('loop', false);
+setDefaultLocalStorage('imageloadingbars', false);
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
@@ -33,6 +34,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	}
 	loopSetting.checked = loopEnabled;
 	loopSetting.addEventListener('change', toggleLoop, false);
+
+	const imageloadingbarsSetting = document.getElementById('imageloadingbars-setting');
+	let imageloadingbarsEnabled = localStorage.getItem('imageloadingbars') == 'true';
+	const toggleImageloadingbars = (change) => {
+		imageloadingbarsEnabled = imageloadingbarsSetting.checked;
+		console.log('toggling video/audio imageloadingbarsing', imageloadingbarsEnabled);
+		setLocalStorage('imageloadingbars', imageloadingbarsEnabled);
+	}
+	imageloadingbarsSetting.checked = imageloadingbarsEnabled;
+	imageloadingbarsSetting.addEventListener('change', toggleImageloadingbars, false);
 
 	if (!isCatalog) { //dont expand on catalog
 		const thumbs = document.getElementsByClassName('post-file-src');
@@ -94,52 +105,51 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				fileLink.style.minHeight = fileLink.offsetHeight+'px';
 				switch(type) {
 					case 'image':
-/* loading bar experiment; causes some issues with loading speed from cache and extra requests
-						const request = new XMLHttpRequest();
-						request.onprogress = (e) => {
-							const progress = Math.floor((e.loaded/e.total)*100);
-							const progressWidth = Math.floor((e.loaded/e.total)*thumbElement.width);
-							if (progress >= 100) {
-								pfs.removeAttribute('data-loading');
-							} else {
-								pfs.setAttribute('data-loading', progress);
-								pfs.style = `--data-loading: ${progressWidth}px`;
-							}
-						}
-						expandedElement = document.createElement('img');
-						source = expandedElement;
-						let once = false;
-						//some jank here to try and recude any delay induced by xhr
-						const loaded = function() {
-							pfs.removeAttribute('data-loading');
-							pfs.removeAttribute('style');
-							if (once) {
-								return;
-							}
-							source.src = fileSrc;
-							once = true;
-							thumbElement.style.opacity = '';
-							thumbElement.style.cursor = '';
-							fileLink.appendChild(expandedElement);
-							toggle(thumbElement, expandedElement, fileName, pfs);
-						}
-						source.onload = loaded;
-						request.onload = loaded;
-						request.open('GET', fileSrc, true);
-						request.send(null);
-*/
 						e.preventDefault();
 						thumbElement.style.opacity = '0.5';
 						thumbElement.style.cursor = 'wait'
-						expandedElement = document.createElement('img');
-						source = expandedElement;
-						source.onload = function() {
-							thumbElement.style.opacity = '';
-							thumbElement.style.cursor = '';
-							fileLink.appendChild(expandedElement);
-							toggle(thumbElement, expandedElement, fileName, pfs);
+// loading bar experiment
+						if (localStorage.getItem('imageloadingbars') == 'true') {
+							const request = new XMLHttpRequest();
+							request.onprogress = (e) => {
+								const progress = Math.floor((e.loaded/e.total)*100);
+								const progressWidth = Math.floor((e.loaded/e.total)*thumbElement.width);
+								if (progress >= 100) {
+									pfs.removeAttribute('data-loading');
+								} else {
+									pfs.setAttribute('data-loading', progress);
+									pfs.style = `--data-loading: ${progressWidth}px`;
+								}
+							}
+							expandedElement = document.createElement('img');
+							source = expandedElement;
+							//some jank here to try and recude any delay induced by xhr
+							const loaded = function(e) {
+								pfs.removeAttribute('data-loading');
+								pfs.removeAttribute('style');
+								const blob = this.response;
+								source.src = window.URL.createObjectURL(blob);
+								thumbElement.style.opacity = '';
+								thumbElement.style.cursor = '';
+								fileLink.appendChild(expandedElement);
+								toggle(thumbElement, expandedElement, fileName, pfs);
+							}
+							request.onload = loaded;
+							request.responseType = 'blob';
+							request.open('GET', fileSrc, true);
+							request.send(null);
+						} else {
+// loading bar experiment
+							expandedElement = document.createElement('img');
+							source = expandedElement;
+							source.onload = function() {
+								thumbElement.style.opacity = '';
+								thumbElement.style.cursor = '';
+								fileLink.appendChild(expandedElement);
+								toggle(thumbElement, expandedElement, fileName, pfs);
+							}
+							source.src = fileSrc;
 						}
-						source.src = fileSrc;
 						break;
 					case 'video':
 					case 'audio':

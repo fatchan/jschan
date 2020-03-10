@@ -3,11 +3,28 @@ function removeModal() {
 	modalClasses.forEach(c => document.getElementsByClassName(c)[0].remove());
 }
 
-function doModal(data) {
+function doModal(data, postcallback) {
 	const modalHtml = modal({ modal: data });
+	let checkInterval;
 	document.body.insertAdjacentHTML('afterbegin', modalHtml);
-	document.getElementById('modalclose').onclick = removeModal;
-	document.getElementsByClassName('modal-bg')[0].onclick = removeModal;
+	document.getElementById('modalclose').onclick = () => {
+		removeModal();
+		clearInterval(checkInterval);
+	};
+	document.getElementsByClassName('modal-bg')[0].onclick = () => {
+		removeModal();
+		clearInterval(checkInterval);
+	};
+	const modalframe = document.getElementById('modalframe');
+	if (modalframe && postcallback) {
+		checkInterval = setInterval(() => {
+			if (modalframe && modalframe.contentDocument.title == 'Success') {
+				clearInterval(checkInterval);
+				removeModal();
+				postcallback();
+			}
+		}, 100);
+	}
 }
 
 const checkTypes = ['checkbox', 'radio'];
@@ -42,6 +59,8 @@ class formHandler {
 		this.submit = form.querySelector('input[type="submit"]')
 		this.originalSubmitText = this.submit.value;
 		this.fileInput = form.querySelector('input[type="file"]');
+		this.captcha = this.form.querySelector('img');
+		this.minimal = this.form.elements.minimal;
 		this.files = [];
 		if (this.fileInput) {
 			this.fileRequired = this.fileInput.required;
@@ -55,6 +74,19 @@ class formHandler {
 		}
 		form.addEventListener('paste', e => this.paste(e));
 		form.addEventListener('submit', e => this.formSubmit(e));
+	}
+
+	reset() {
+		this.form.reset();
+		if (this.form.elements.postpassword) {
+			this.form.elements.postpassword.value = localStorage.getItem('postpassword');
+		}
+		this.updateMessageBox();
+		this.files = [];
+		this.updateFilesText();
+		if (this.captcha) {
+			this.captcha.dispatchEvent(new Event('dblclick'));
+		}
 	}
 
 	formSubmit(e) {
@@ -73,7 +105,7 @@ class formHandler {
 		} else {
 			postData = new URLSearchParams([...(new FormData(this.form))]);
 		}
-		if (this.banned) {
+		if (this.banned || this.minimal) {
 			return true;
 		} else {
 			e.preventDefault();
@@ -127,21 +159,15 @@ console.log(json)
 							forceUpdate();
 						}
 					}
-					this.form.reset();
-					this.form.elements.postpassword.value = localStorage.getItem('postpassword');
-					this.updateMessageBox();
-					this.files = [];
-					this.updateFilesText();
-					const captcha = this.form.querySelector('img');
-					if (captcha) {
-						captcha.dispatchEvent(new Event('dblclick'));
-					}
+					this.reset();
 				} else {
 					if (xhr.status === 413) {
 						this.clearFiles();
 					}
 					if (json) {
-						doModal(json);
+						doModal(json, () => {
+							this.formSubmit(e);
+						});
 					} else {
 //for bans, post form to show TODO: make modal support bans json and send dynamicresponse from it (but what about appeals, w/ captcha, etc?)
 						this.clearFiles(); //dont resubmit files
@@ -152,7 +178,8 @@ console.log(json)
 				this.submit.value = this.originalSubmitText;
 			}
 		}
-		xhr.onerror = () => {
+		xhr.onerror = (e) => {
+			console.error(e); //why is this error fucking useless
 			doModal({
 				'title': 'Error',
 				'message': 'Something broke'
@@ -160,7 +187,9 @@ console.log(json)
 			this.submit.disabled = false;
 		}
 		xhr.open(this.form.getAttribute('method'), this.form.getAttribute('action'), true);
-		xhr.setRequestHeader('x-using-xhr', true);
+		if (!this.minimal) {
+			xhr.setRequestHeader('x-using-xhr', true);
+		}
 		const isLive = localStorage.getItem('live') == 'true' && socket && socket.connected;
 		if (isLive) {
 			xhr.setRequestHeader('x-using-live', true);

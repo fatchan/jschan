@@ -109,7 +109,7 @@ router.post('/global/settings', sessionRefresh, csrf, calcPerms, isLoggedIn, has
 router.post('/create', sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
 //accounts
 router.post('/login', loginController);
-router.post('/register', verifyCaptcha, registerController);
+router.post('/register', verifyCaptcha, calcPerms, registerController);
 router.post('/changepassword', verifyCaptcha, changePasswordController);
 
 //removes captcha cookie, for refreshing for noscript users

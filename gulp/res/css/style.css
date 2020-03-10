@@ -1,3 +1,9 @@
+:root {
+	--attachment-img: url('/img/attachment.png');
+	--spoiler-img: url('/img/spoiler.png');
+	--audio-img: url('/img/audio.png');
+}
+
 body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
@@ -12,6 +18,11 @@ body {
 
 main {
 	margin: 3em 0 0 0;
+}
+main.minimal {
+	margin: 0;
+	background: var(--post-color);
+	height: 100vh;
 }
 
 .row {
@@ -39,7 +50,7 @@ main {
 	font-style: italic;
 }
 
-.strikethrough {
+.strike {
 	text-decoration: line-through;
 }
 
@@ -181,6 +192,11 @@ a, a:visited, a.post-name {
 	color: var(--link-color);
 }
 
+.invalid-quote {
+    cursor:pointer;
+    text-decoration: line-through;
+}
+
 .post-message a {
 	text-decoration: underline;
 	color: var(--post-link-color);
@@ -229,8 +245,8 @@ p {
 .catalog-thumb {
 	display: block;
 	box-shadow: 0 0 3px black;
-	width: 64px;
-	height: 64px;
+	width: 64px !important;
+	height: 64px !important;
 	object-fit: cover;
 	margin: 5px;
 }
@@ -299,9 +315,15 @@ p {
 	right:10px;
 }
 
-.banmessage {
+.ban {
 	color: red;
 	font-weight: bold;
+}
+.reason::before {
+	content:"\0028";
+}
+.reason::after {
+	content:"\0029";
 }
 
 .close {
@@ -617,6 +639,23 @@ video, img {
 	max-height: 200px;
 }
 
+.spoilerimg, .attachmentimg, .audioimg {
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain; /* make it full */
+	height: 200px;
+	width: 200px;
+}
+.attachmentimg {
+	background-image: var(--attachment-img);
+}
+.spoilerimg {
+	background-image: var(--spoiler-img);
+}
+.audioimg {
+	background-image: var(--audio-img);
+}
+
 input:invalid, textarea:invalid {
 	box-shadow: none;
 }
@@ -873,9 +912,14 @@ input[type="file"] {
 	box-sizing: border-box;
 }
 
-iframe.captcha {
+iframe.captcha, iframe.bypass {
 	/*dumb hack cos of noscript wrapping in unstyleable span*/
 	margin-bottom: -2px;
+}
+
+iframe.bypass {
+	height: 215px;
+	width: 330px;
 }
 
 .captcha {
@@ -965,7 +1009,6 @@ table.boardtable td:nth-child(6) {
 	opacity: 1;
 }
 
-/* loading bar testing
 .post-file-src[data-type="image"][data-loading]::after,
 .post-file-src[data-type="image"][data-loading]::before {
 	display: inline-block;
@@ -983,11 +1026,12 @@ table.boardtable td:nth-child(6) {
 	background: black;
 	width: 100%;
 	border-left: var(--data-loading) solid darkgreen;
+	transition: all 0.3s ease;
 }
 .post-file-src[data-type="image"][data-loading]::after {
 	content: attr(data-loading) "%";
+	color: white;
 }
-*/
 
 .post-file-src * {
 	max-width: 100%;

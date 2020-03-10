@@ -2,7 +2,6 @@ extends ../layout.pug
 include ../mixins/post.pug
 
 block head
-	script(src='/js/all.js')
 	title Frequently Asked Questions
 
 block content
@@ -19,10 +18,12 @@ block content
 					ul.mv-0
 						li: a(href='#whats-an-imageboard') What is an imageboard?
 						li: a(href='/rules.html') What are the rules?
+						li: a(href='#contact') How can I contact the administration?
 					b Making posts
 					ul.mv-0
 						li: a(href='#name-formatting') How do names, tripcodes and capcodes work?
 						li: a(href='#post-styling') What kind of styling options are available when making a post?
+						li: a(href='#post-info') What is the file size limit?
 						li: a(href='#moderation') How does moderation work?
 					b Boards, users & permissions
 					ul.mv-0
@@ -178,6 +179,14 @@ block content
 					| If the language is not in the supported list, the code block will be rendered like "plain" with no highlighting.
 					| Languages supported: #{codeLanguages.join(', ')}
 	.table-container.flex-center.mv-5
+		.anchor#post-info
+		table
+			tr
+				th: a(href='#post-info') What is the file size limit?
+			tr
+				td
+					p Max size of form data per-post is #{postFilesSize}. Because other fields e.g. name, message, etc contribute to this, the maximum size of file uploads will be very slightly smaller than this.
+	.table-container.flex-center.mv-5
 		.anchor#moderation
 		table
 			tr
@@ -247,3 +256,11 @@ block content
 						| Level 2 and 3 are usually only aplicable to users when on a board they are owner or moderator. However, level 2 or 3 can be assigned manually to create global board owners or global board moderators
 						| who have board owner or moderation permissions on all boards, but without access to the global moderation interfaces. If assigning global boad owners (level 2), they will have access to the board settings
 						| and the ability to reassign board owners.
+	.table-container.flex-center.mv-5
+		.anchor#contact
+		table
+			tr
+				th: a(href='#contact') How can I contact the administration?
+			tr
+				td
+					p Example						
