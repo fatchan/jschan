@@ -16,13 +16,15 @@ function doModal(data, postcallback) {
 		clearInterval(checkInterval);
 	};
 	const modalframe = document.getElementById('modalframe');
-	checkInterval = setInterval(() => {
-		if (modalframe && modalframe.contentDocument.title == 'Success') {
-			clearInterval(checkInterval);
-			removeModal();
-			postcallback();
-		}
-	}, 100);
+	if (modalframe && postcallback) {
+		checkInterval = setInterval(() => {
+			if (modalframe && modalframe.contentDocument.title == 'Success') {
+				clearInterval(checkInterval);
+				removeModal();
+				postcallback();
+			}
+		}, 100);
+	}
 }
 
 const checkTypes = ['checkbox', 'radio'];
@@ -156,7 +158,7 @@ class formHandler {
 					//not 200 status, so some error/failed post, wrong captcha, etc
 					if (json) {
 						doModal(json, () => {
-							this.form.dispatchEvent(new Event('submit'));
+							this.formSubmit(e);
 						});
 					} else {
 //for bans, post form to show TODO: make modal support bans json and send dynamicresponse from it
@@ -168,7 +170,8 @@ class formHandler {
 				this.submit.value = this.originalSubmitText;
 			}
 		}
-		xhr.onerror = () => {
+		xhr.onerror = (e) => {
+			console.error(e); //why is this error fucking useless
 			doModal({
 				'title': 'Error',
 				'message': 'Something broke'
