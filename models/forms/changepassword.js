@@ -36,6 +36,11 @@ module.exports = async (req, res, next) => {
 
 	//change the password
 	await Accounts.changePassword(username, newPassword);
-	return res.redirect('/login.html');
+
+	return dynamicResponse(req, res, 200, 'message', {
+		'title': 'Success',
+		'message': 'Changed password',
+		'redirect': '/login.html'
+	});
 
 }

@@ -56,8 +56,10 @@ class formHandler {
 		this.form = form;
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message')
-		this.submit = form.querySelector('input[type="submit"]')
-		this.originalSubmitText = this.submit.value;
+		this.submit = form.querySelector('input[type="submit"]');
+		if (this.submit) {
+			this.originalSubmitText = this.submit.value;
+		}
 		this.fileInput = form.querySelector('input[type="file"]');
 		this.captcha = this.form.querySelector('img');
 		this.minimal = this.form.elements.minimal;
