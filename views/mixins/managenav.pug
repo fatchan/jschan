@@ -12,6 +12,8 @@ mixin managenav(selected, upLevel)
 		|  
 		a(href=`${upLevel ? '../' : ''}bans.html` class=(selected === 'bans' ? 'bold' : '')) [Bans]
 		|  
+		a(href=`${upLevel ? '../' : ''}logs.html` class=(selected === 'logs' ? 'bold' : '')) [Logs]
+		|  
 		if permLevel < 3
 			a(href=`${upLevel ? '../' : ''}settings.html` class=(selected === 'settings' ? 'bold' : '')) [Settings]
 			|  

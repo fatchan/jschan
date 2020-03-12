@@ -13,7 +13,8 @@ const express  = require('express')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	, setMinimal = require(__dirname+'/../helpers/setminimal.js')
 	//page models
-	, { manageRecent, manageReports, manageBanners, manageSettings, manageBans, manageBoard, manageThread } = require(__dirname+'/../models/pages/manage/')
+	, { manageRecent, manageReports, manageBanners, manageSettings, manageBans,
+		manageBoard, manageThread, manageLogs } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, logout, create,
@@ -43,6 +44,7 @@ router.get('/randombanner', randombanner); //random banner
 router.get('/:board/manage/reports.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageReports);
 router.get('/:board/manage/recent.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageRecent);
 router.get('/:board/manage/bans.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageBans);
+router.get('/:board/manage/logs.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageLogs);
 router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
 router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
 // if (mod view enabled) {
