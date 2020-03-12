@@ -10,23 +10,24 @@ const { Posts } = require(__dirname+'/../../../db/')
 module.exports = async (req, res, next) => {
 
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
-	let ipMatch = decodeQueryIP(req.query, res.locals.permLevel);
+	let ipMatch = null;//decodeQueryIP(req.query, res.locals.permLevel);
+//todo: check if, and fetch post by post number, then get IP from post and search to not expose IP to hashed ip user
 
 	let posts;
 	try {
-		posts = await Posts.getGlobalRecent(offset, limit, ipMatch);
+		posts = await Posts.getBoardRecent(offset, limit, ipMatch, req.params.board);
 	} catch (err) {
 		return next(err)
 	}
-	if (res.locals.permLevel > ipHashPermLevel) {
-		for (let i = 0; i < posts.length; i++) {
-			posts[i].ip.single = hashIp(posts[i].ip.single);
-		}
-	}
+    if (res.locals.permLevel > ipHashPermLevel) {
+        for (let i = 0; i < posts.length; i++) {
+            posts[i].ip.single = hashIp(posts[i].ip.single);
+        }
+    }
 
 	res
 	.set('Cache-Control', 'private, max-age=5')
-	.render('globalmanagerecent', {
+	.render('managerecent', {
 		csrf: req.csrfToken(),
 		posts,
 		page,

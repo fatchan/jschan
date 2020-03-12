@@ -34,6 +34,18 @@ module.exports = {
 		}).skip(offset).limit(limit).toArray();
 	},
 
+	getBoardRecent: (offset=0, limit=20, ip, board) => {
+		const query = {
+			board
+		};
+		if (ip !== null) {
+			query['ip.single'] = ip;
+		}
+		return db.find(query).sort({
+			'_id': -1
+		}).skip(offset).limit(limit).toArray();
+	},
+
 	getRecent: async (board, page, limit=10) => {
 		// get all thread posts (posts with null thread id)
 		const threads = await db.find({

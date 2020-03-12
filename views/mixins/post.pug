@@ -9,7 +9,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					if globalmanage
 						input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
 						| 
-						- const ip = ipHashMode === 2 ? post.ip.single.slice(-10) : post.ip.single;
+						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
 						a.bold(href=`?ip=${encodeURIComponent(ip)}`) #{ip}
 					else if !ban
 						input.post-check(type='checkbox', name='checkedposts' value=post.postId)

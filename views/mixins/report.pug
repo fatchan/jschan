@@ -3,7 +3,7 @@ mixin report(r, globalmanage=false)
 		input.post-check(type='checkbox', name='checkedreports' value=r.id)
 		|  
 		if globalmanage
-			- const ip = ipHashMode === 2 || (ipHashMode === 1 && permLevel > 1) ? r.ip.slice(-10) : r.ip;
+			- const ip = permLevel > ipHashPermLevel ? r.ip.slice(-10) : r.ip;
 			a.bold(href=`?ip=${encodeURIComponent(ip)}`) #{ip}
 			|  
 		- const reportDate = new Date(r.date);
