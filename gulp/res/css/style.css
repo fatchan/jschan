@@ -37,7 +37,15 @@ main.minimal {
 .col {
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
+	flex-grow: 1 1;
+}
+
+.wrap {
+	flex-wrap: wrap;
+}
+
+.sb {
+	justify-content: space-between;
 }
 
 .flexcenter {
@@ -108,9 +116,6 @@ pre {
 }
 .fw {
 	width: 100%;
-}
-.fw textarea {
-	height: 1em;
 }
 .pr-20 {
 	padding-right: 20px;
