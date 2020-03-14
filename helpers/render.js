@@ -2,6 +2,7 @@
 
 const { lockWait, globalLimits, boardDefaults, cacheTemplates, meta } = require(__dirname+'/../configs/main.js')
 	, { outputFile } = require('fs-extra')
+	, formatSize = require(__dirname+'/files/formatsize.js')
 	, pug = require('pug')
 	, path = require('path')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
@@ -15,6 +16,7 @@ module.exports = async (htmlName, templateName, options, json=null) => {
 		meta,
 		defaultTheme: boardDefaults.theme,
 		defaultCodeTheme: boardDefaults.codeTheme,
+		postFilesSize: formatSize(globalLimits.postFilesSize.max),
 		globalLimits,
 	});
 	const lock = await redlock.lock(`locks:${htmlName}`, lockWait);
