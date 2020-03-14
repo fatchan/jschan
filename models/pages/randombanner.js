@@ -4,7 +4,7 @@ const Boards = require(__dirname+'/../../db/boards.js')
 
 module.exports = async (req, res, next) => {
 
-	if (!req.query.board) {
+	if (!req.query.board || typeof req.query.board !== 'string') {
 		return next();
 	}
 

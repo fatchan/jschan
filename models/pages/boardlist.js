@@ -25,7 +25,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	let filter = {};
-	const search = !Array.isArray(req.query.search) ? req.query.search : null;
+	const search = (typeof req.query.search === 'string' ? req.query.search : null);
 	if (req.query.search && search) {
 		filter = {
 			'search': search

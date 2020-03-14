@@ -8,11 +8,15 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				label
 					if globalmanage
 						input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
-						| 
-						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
-						a.bold(href=`?ip=${encodeURIComponent(ip)}`) #{ip}
 					else if !ban
 						input.post-check(type='checkbox', name='checkedposts' value=post.postId)
+					| 
+					if manage || modview
+						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
+						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]
+					else if globalmanage
+						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
+						a.bold(href=`?ip=${encodeURIComponent(ip)}`) [#{ip}]
 					| 
 					if !post.thread
 						include ../includes/posticons.pug

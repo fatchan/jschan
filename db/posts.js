@@ -254,10 +254,10 @@ module.exports = {
 
 	},
 
-	getPost: (board, id, admin) => {
+	getPost: (board, id, getsensitive) => {
 
 		// get a post
-		if (admin) {
+		if (getsensitive) {
 			return db.findOne({
 				'postId': id,
 				'board': board
@@ -286,9 +286,9 @@ module.exports = {
 	},
 
 	//takes array "ids" of post ids
-	getPosts: (board, ids, admin) => {
+	getPosts: (board, ids, getsensitive) => {
 
-		if (admin) {
+		if (getsensitive) {
 			return db.find({
 				'postId': {
 					'$in': ids

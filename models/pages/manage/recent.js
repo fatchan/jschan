@@ -2,20 +2,27 @@
 
 const { Posts } = require(__dirname+'/../../../db/')
 	, { ipHashPermLevel } = require(__dirname+'/../../../configs/main.js')
-	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
-	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
 	, hashIp = require(__dirname+'/../../../helpers/haship.js')
+	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
+	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
 	, limit = 20;
 
 module.exports = async (req, res, next) => {
 
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
-	let ipMatch = null;//decodeQueryIP(req.query, res.locals.permLevel);
-//todo: check if, and fetch post by post number, then get IP from post and search to not expose IP to hashed ip user
+	let ip = decodeQueryIP(req.query, res.locals.permLevel);
+
+	const postId = typeof req.query.postid === 'string' ? req.query.postid : null;
+	if (postId && parseInt(postId)) {
+		const fetchedPost = await Posts.getPost(req.params.board, +postId, true);
+		if (fetchedPost) {
+			ip = fetchedPost.ip.single;
+		}
+	}
 
 	let posts;
 	try {
-		posts = await Posts.getBoardRecent(offset, limit, ipMatch, req.params.board);
+		posts = await Posts.getBoardRecent(offset, limit, ip, req.params.board);
 	} catch (err) {
 		return next(err)
 	}
@@ -32,7 +39,7 @@ module.exports = async (req, res, next) => {
 		csrf: req.csrfToken(),
 		posts,
 		page,
-		ip: ipMatch ? req.query.ip : null,
+		postId,
 		queryString,
 	});
 

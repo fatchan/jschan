@@ -10,11 +10,11 @@ module.exports = async (req, res, next) => {
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 
     let filter = {};
-	const username = req.query.username;
+	const username = (typeof req.query.username === 'string' ? req.query.username : null);
     if (username && !Array.isArray(username)) {
         filter.user = username;
     }
-	const uri = req.query.uri;
+	const uri = (typeof req.query.uri === 'string' ? req.query.uri : null);
     if (uri && !Array.isArray(uri)) {
         filter.board = uri;
     }

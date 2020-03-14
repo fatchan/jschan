@@ -18,6 +18,7 @@ module.exports = async (req, res, next) => {
 	.set('Cache-Control', 'private, max-age=5')
 	.render('thread', {
 		modview: true,
+		upLevel: true,
 		board: res.locals.board,
 		thread,
 		csrf: req.csrfToken(),

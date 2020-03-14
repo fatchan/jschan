@@ -14,15 +14,14 @@ module.exports = async (req, res, next) => {
     let filter = {
 		board: req.params.board
 	};
-	const username = req.query.username;
-    if (username && !Array.isArray(username)) {
+	const username = typeof req.query.username === 'string' ? req.query.username : null;
+    if (username) {
         filter.user = username;
     }
-	const uri = req.query.uri;
-    if (uri && !Array.isArray(uri)) {
+	const uri = typeof req.query.uri === 'string' ? req.query.uri : null;
+    if (uri) {
         filter.board = uri;
     }
-	const ipMatch = null;//decodeQueryIP(req.query, res.locals.permLevel);
 //todo fetch log entry by id and then get ip and hash
 	if (ipMatch) {
 		filter.ip = ipMatch;
@@ -52,7 +51,7 @@ module.exports = async (req, res, next) => {
 		queryString,
 		username,
 		uri,
-		ip: ipMatch ? req.query.ip : null,
+//posterid here
 		logs,
 		page,
 		maxPage,

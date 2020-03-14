@@ -6,7 +6,7 @@ const { buildLogin } = require(__dirname+'/../../helpers/tasks.js')
 module.exports = async (req, res, next) => {
 
     res.render('login', {
-		'goto': req.query.goto
+		'goto': (typeof req.query.goto === 'string' ? req.query.goto : null)
     });
 
 }
