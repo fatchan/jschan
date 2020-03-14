@@ -40,10 +40,11 @@ section.form-wrapper.flex-center
 					span File#{maxFiles > 1 ? 's' : ''}
 						if fileRequired
 							span.required *
+					|
+					| 
 					if maxFiles > 1
-						|
-						|
-						small (Max #{maxFiles})
+						small Max #{maxFiles} files
+					small #{postFilesSize} total
 				span.col
 					include ./filelabel.pug
 					input#file(type='file', name='file' multiple required=fileRequired )

@@ -67,9 +67,13 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		}
 		if (notificationsEnabled) {
 			if (!window.myPostId || window.myPostId != postData.postId) {
-				new Notification(document.title, {
+				const notifTitle = document.title;
+				const notifOptions = {
 					body: postData.nomarkup ? postData.nomarkup.substring(0,100) : ''
-				});
+				}
+				try {
+					new Notification(notifTitle, notifOptions);
+				} catch (e) { /* dont break when notification cant send for some reason */ }
 			}
 		}
 		const newPostEvent = new CustomEvent('addPost', {
