@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
 
 	if (!banner) {
 		//non existing boards will show default banner, but it doesnt really matter.
-		return res.redirect('/img/defaultbanner.png');
+		return res.redirect('/file/defaultbanner.png');
 	}
 
 	return res.redirect(`/banner/${req.query.board}/${banner}`);

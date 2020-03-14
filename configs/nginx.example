@@ -30,7 +30,7 @@ server {
 	location = /favicon.ico {
 		access_log off;
 		expires max;
-		root /path/to/jschan/static/img;
+		root /path/to/jschan/static/file;
 		try_files $uri =404;
 	}
 

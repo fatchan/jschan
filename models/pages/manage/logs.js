@@ -38,7 +38,8 @@ module.exports = async (req, res, next) => {
 	} catch (err) {
 		return next(err)
 	}
-    if (res.locals.permLevel > ipHashPermLevel) {
+    if (ipHashPermLevel !== -1
+		&& res.locals.permLevel > ipHashPermLevel) {
         for (let i = 0; i < logs.length; i++) {
             logs[i].ip = hashIp(logs[i].ip);
         }

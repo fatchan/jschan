@@ -20,8 +20,8 @@ const gulp = require('gulp')
 			dest: 'static/css/'
 		},
 		images: {
-			src: 'gulp/res/img/*',
-			dest: 'static/img/'
+			src: 'gulp/res/file/*',
+			dest: 'static/file/'
 		},
 		scripts: {
 			src: 'gulp/res/js',
@@ -116,7 +116,7 @@ async function wipe() {
 		del([ 'static/json/*' ]),
 		del([ 'static/banner/*' ]),
 		del([ 'static/captcha/*' ]),
-		del([ 'static/img/*' ]),
+		del([ 'static/file/*' ]),
 		del([ 'static/css/*' ]),
 		fs.ensureDir(`${uploadDirectory}/captcha`),
 	]);

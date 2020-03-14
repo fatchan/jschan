@@ -14,17 +14,17 @@ block head
 		meta(property='og:description', content=thread.nomarkup)
 		if thread.files.length > 0
 			if thread.spoiler
-				meta(property='og:image', content='/img/spoiler.png')
+				meta(property='og:image', content='/file/spoiler.png')
 			else
 				- const file = thread.files[0];
 				- const maintype = file.mimetype.split('/')[0];
 				case maintype
 					when 'image'
-						meta(property='og:image', content=`/img/${file.filename}`)
+						meta(property='og:image', content=`/file/${file.filename}`)
 					when 'video'
-						meta(property='og:video', content=`/img/${file.filename}`)
+						meta(property='og:video', content=`/file/${file.filename}`)
 					when 'audio'
-						meta(property='og:audio', content=`/img/${file.filename}`)
+						meta(property='og:audio', content=`/file/${file.filename}`)
 					default
 						- break
 

@@ -1,7 +1,7 @@
 :root {
-	--attachment-img: url('/img/attachment.png');
-	--spoiler-img: url('/img/spoiler.png');
-	--audio-img: url('/img/audio.png');
+	--attachment-img: url('/file/attachment.png');
+	--spoiler-img: url('/file/spoiler.png');
+	--audio-img: url('/file/audio.png');
 }
 
 body {
@@ -1206,7 +1206,7 @@ table, .boardtable {
 	display: inline-block;
 	width: 16px;
 	height: 11px;
-	background:url(/img/flags.png) no-repeat;
+	background:url(/file/flags.png) no-repeat;
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 	image-rendering: -webkit-optimize-contrast;

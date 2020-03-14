@@ -196,7 +196,7 @@ module.exports = async (req, res, next) => {
 			await Files.increment(processedFile);
 			req.files.file[i].inced = true;
 			//check if already exists
-			const existsFull = await pathExists(`${uploadDirectory}/img/${processedFile.filename}`);
+			const existsFull = await pathExists(`${uploadDirectory}/file/${processedFile.filename}`);
 			processedFile.sizeString = formatSize(processedFile.size)
 
 			if (mimeTypes.other.has(processedFile.mimetype)) {
@@ -204,19 +204,19 @@ module.exports = async (req, res, next) => {
 				processedFile.hasThumb = false;
 				processedFile.attachment = true;
 				if (!existsFull) {
-					await moveUpload(file, processedFile.filename, 'img');
+					await moveUpload(file, processedFile.filename, 'file');
 				}
 			} else {
 				switch (type) {
 					case 'image': {
-						const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						processedFile.geometry = imageData.size ;
 						processedFile.geometryString = imageData.Geometry;
 						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
 							&& processedFile.geometry.height <= thumbSize
 							&& processedFile.geometry.width <= thumbSize);
 						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'img');
+							await moveUpload(file, processedFile.filename, 'file');
 						}
 						if (!existsThumb && processedFile.hasThumb) {
 							await imageThumbnail(processedFile);
@@ -225,7 +225,7 @@ module.exports = async (req, res, next) => {
 						break;
 					}
 					case 'video': {
-						const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						//video metadata
 						const videoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
 						videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
@@ -243,7 +243,7 @@ module.exports = async (req, res, next) => {
 						processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`
 						processedFile.hasThumb = true;
 						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'img');
+							await moveUpload(file, processedFile.filename, 'file');
 						}
 						if (!existsThumb) {
 							await videoThumbnail(processedFile, processedFile.geometry);
@@ -257,7 +257,7 @@ module.exports = async (req, res, next) => {
 						processedFile.durationString = timeUtils.durationString(audioData.format.duration*1000);
 						processedFile.hasThumb = false;
 						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'img');
+							await moveUpload(file, processedFile.filename, 'file');
 						}
 						break;
 					}
