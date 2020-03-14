@@ -5,15 +5,15 @@
 	--background-top:#000;
 	--background-rest:#000;
 	--navbar-color:#040404;
-	--post-color:#040404;
+	--post-color:#000;
 	--post-outline-color:#111;
 	--label-color:#040404;
 	--box-border-color:#111;
 	--darken:#040404;
-	--highlighted-post-color:#040404;
-	--highlighted-post-outline-color:#111;
+	--highlighted-post-color:#000;
+	--highlighted-post-outline-color:#444;
 	--board-title:#c5c8c6;
-	--hr:#282a2e;
+	--hr:#040404;
 	--font-color:#c5c8c6;
 	--name-color:#c5c8c6;
 	--capcode-color:#f00;
@@ -36,4 +36,13 @@
 .spoiler:not(:hover) * {
 	color: gray;
 	background: gray!important;
+}
+.anchor:target + .post-container,
+.post-container.highlighted,
+.anchor:target + table tbody tr th,
+.anchor:target + table {
+    border: 1px dashed var(--highlighted-post-outline-color) !important;
+}
+.post-info, .post-container:target .post-info, .post-container.highlighted .post-info {
+    background:none!important;border:none!important
 }
