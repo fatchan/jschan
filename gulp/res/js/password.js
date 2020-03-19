@@ -17,29 +17,38 @@ setDefaultLocalStorage('postpassword', generatePassword());
 setDefaultLocalStorage('name', '');
 
 class syncedField {
-	constructor(selector, key, persistent) {
+	constructor(selector, key, oneWay=false, persistent=true) {
 		this.fields = []
-
-		const settingsFields = document.getElementById('settingsmodal').querySelectorAll(selector);
+		this.selector = selector;
+		this.key = key;
+		this.oneWay = oneWay;
+		this.persistent = persistent;
+		this.init();
+	}
+	init() {
+		const settingsFields = document.getElementById('settingsmodal').querySelectorAll(this.selector);
 		this.fields = this.fields.concat([...settingsFields]);
 
 		const postForm = document.getElementById('postform');
 		if (postForm) {
-			const postformFields = postForm.querySelectorAll(selector);
+			const postformFields = postForm.querySelectorAll(this.selector);
 			this.fields = this.fields.concat([...postformFields]);
 		}
 
 		const actionForm = document.getElementById('actionform');
 		if (actionForm) {
-			const actionFields = actionForm.querySelectorAll(selector);
+			const actionFields = actionForm.querySelectorAll(this.selector);
 			this.fields = this.fields.concat([...actionFields]);
 		}
 
-		this.key = key;
-		this.persistent = persistent;
-		for (let field of this.fields) {
-			field.value = localStorage.getItem(this.key);
-			field.addEventListener('input', (e) => { this.update(e) }, false);
+		if (this.oneWay) {
+			settingsFields[0].value = localStorage.getItem(this.key);
+			settingsFields[0].addEventListener('input', (e) => { this.update(e) }, false);
+		} else {
+			for (let field of this.fields) {
+				field.value = localStorage.getItem(this.key);
+				field.addEventListener('input', (e) => { this.update(e) }, false);
+			}
 		}
 	}
 	update(e) {
@@ -54,7 +63,7 @@ class syncedField {
 
 window.addEventListener('settingsReady', () => {
 
-	new syncedField('input[name="postpassword"]', 'postpassword', true);
+	new syncedField('input[name="postpassword"]', 'postpassword');
 	new syncedField('input[name="name"]', 'name', true);
 
 });
