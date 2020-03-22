@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
         if (page > maxPage) {
             return next();
         }
-		threads = await Posts.getRecent(req.params.board, page);
+		threads = await Posts.getRecent(req.params.board, page, 10, true);
     } catch (err) {
         return next(err);
     }

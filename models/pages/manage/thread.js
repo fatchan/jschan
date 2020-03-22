@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
 
 	let thread;
 	try {
-		thread = await Posts.getThread(res.locals.board._id, res.locals.thread.postId);
+		thread = await Posts.getThread(res.locals.board._id, res.locals.thread.postId, true);
 		if (!thread) {
 			return next(); //deleted between exists
 		}

@@ -40,6 +40,7 @@ module.exports = async (req, res, next) => {
 		posts,
 		page,
 		postId,
+		queryIp: ip ? req.query.ip : null,
 		queryString,
 	});
 

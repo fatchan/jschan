@@ -23,9 +23,6 @@ module.exports = async (req, res, next) => {
         filter.board = uri;
     }
 //todo fetch log entry by id and then get ip and hash
-	if (ipMatch) {
-		filter.ip = ipMatch;
-	}
 
 	let logs, maxPage;
 	try {

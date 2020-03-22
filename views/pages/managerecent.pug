@@ -17,8 +17,9 @@ block content
 		if posts.length === 0
 			p No posts.
 		else
-			if postId
-				- const ip = permLevel > ipHashPermLevel ? posts[0].ip.single.slice(-10) : posts[0].ip.single;
+			if postId || queryIp
+				- const which = (queryIp || posts[0].ip.single)
+				- const ip = permLevel > ipHashPermLevel ? which.slice(-10) : which;
 				h4.no-m-p Post history for #{ip}
 				hr(size=1)
 			for p in posts

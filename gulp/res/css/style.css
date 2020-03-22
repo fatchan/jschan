@@ -1139,7 +1139,7 @@ table, .boardtable {
 	}
 
 	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select, #dragHandle {
-		height: 2.25em;
+		min-height: 2.25em;
 		box-sizing: border-box;
 	}
 

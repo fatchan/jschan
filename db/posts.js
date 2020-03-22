@@ -46,19 +46,22 @@ module.exports = {
 		}).skip(offset).limit(limit).toArray();
 	},
 
-	getRecent: async (board, page, limit=10) => {
+	getRecent: async (board, page, limit=10, getSensitive=false) => {
 		// get all thread posts (posts with null thread id)
+		const projection = {
+			'salt': 0,
+			'password': 0,
+			'reports': 0,
+			'globalreports': 0,
+		};
+		if (!getSensitive) {
+			projection['ip'] = 0;
+		}
 		const threads = await db.find({
 			'thread': null,
 			'board': board
-		},{
-			'projection': {
-				'salt': 0,
-				'password': 0,
-				'ip': 0,
-				'reports': 0,
-				'globalreports': 0,
-			}
+		}, {
+			projection
 		}).sort({
 			'sticky': -1,
 			'bumped': -1,
@@ -71,13 +74,7 @@ module.exports = {
 				'thread': thread.postId,
 				'board': board
 			},{
-				'projection': {
-					'salt': 0,
-					'password': 0,
-					'ip': 0,
-					'reports': 0,
-					'globalreports': 0,
-				}
+				projection
 			}).sort({
 				'postId': -1
 			}).limit(previewRepliesLimit).toArray();
@@ -172,23 +169,26 @@ module.exports = {
 		});
 	},
 
-	getThread: async (board, id) => {
+	getThread: async (board, id, getSensitive=false) => {
 		// get thread post and potential replies concurrently
+		const projection = {
+			'salt': 0,
+			'password': 0,
+			'reports': 0,
+			'globalreports': 0,
+		};
+		if (!getSensitive) {
+			projection['ip'] = 0;
+		}
 		const [thread, replies] = await Promise.all([
 			db.findOne({
 				'postId': id,
 				'board': board,
 				'thread': null,
 			}, {
-				'projection': {
-					'salt': 0,
-					'password': 0,
-					'ip': 0,
-					'reports': 0,
-					'globalreports': 0,
-				}
+				projection,
 			}),
-			module.exports.getThreadPosts(board, id)
+			module.exports.getThreadPosts(board, id, projection)
 		])
 		// attach the replies to the thread post
 		if (thread && replies) {
@@ -197,19 +197,13 @@ module.exports = {
 		return thread;
 	},
 
-	getThreadPosts: (board, id) => {
+	getThreadPosts: (board, id, projection) => {
 		// all posts within a thread
 		return db.find({
 			'thread': id,
 			'board': board
 		}, {
-			'projection': {
-				'salt': 0 ,
-				'password': 0,
-				'ip': 0,
-				'reports': 0,
-				'globalreports': 0,
-			}
+			projection
 		}).sort({
 			'postId': 1
 		}).toArray();
@@ -254,10 +248,10 @@ module.exports = {
 
 	},
 
-	getPost: (board, id, getsensitive) => {
+	getPost: (board, id, getSensitive=false) => {
 
 		// get a post
-		if (getsensitive) {
+		if (getSensitive) {
 			return db.findOne({
 				'postId': id,
 				'board': board
@@ -286,9 +280,9 @@ module.exports = {
 	},
 
 	//takes array "ids" of post ids
-	getPosts: (board, ids, getsensitive) => {
+	getPosts: (board, ids, getSensitive=false) => {
 
-		if (getsensitive) {
+		if (getSensitive) {
 			return db.find({
 				'postId': {
 					'$in': ids
@@ -401,7 +395,7 @@ module.exports = {
 			'projection': {
 				'salt': 0,
 				'password': 0,
-				'ip': 0,
+				//'ip': 0,
 				'globalreports': 0,
 			}
 		}).toArray();

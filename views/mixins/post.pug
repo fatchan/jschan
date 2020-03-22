@@ -11,9 +11,11 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					else if !ban
 						input.post-check(type='checkbox', name='checkedposts' value=post.postId)
 					| 
-					if manage || modview
+					if manage
 						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
-						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]
+						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]	
+					else if modview
+						a.bold(href=`${upLevel ? '../' : ''}recent.html?postid=${post.postId}`) [+]
 					else if globalmanage
 						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
 						a.bold(href=`?ip=${encodeURIComponent(ip)}`) [#{ip}]
@@ -131,7 +133,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						|  
 	if manage === true
 		each r in post.reports
-			+report(r)
+			+report(r, true)
 	if globalmanage === true
 		each r in post.globalreports
-			+report(r, true)
+			+report(r)
