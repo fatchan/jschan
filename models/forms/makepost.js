@@ -48,7 +48,7 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const { filterBanDuration, filterMode,
+	const { filterBanDuration, filterMode, filters,
 			maxFiles, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler,
 			defaultName, pphTrigger, tphTrigger, triggerAction,
