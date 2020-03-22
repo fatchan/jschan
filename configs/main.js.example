@@ -267,6 +267,7 @@ module.exports = {
 		filters: [], //words/phrases to block
 		filterMode: 0, //0=nothing, 1=prevent post, 2=auto ban
 		filterBanDuration: 0, //duration (in ms) to ban if filter mode=2
+		strictFiltering: false,
 		announcement: {
 			raw: null,
 			markdown: null

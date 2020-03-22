@@ -105,6 +105,7 @@ module.exports = async (req, res, next) => {
 		'filterBanDuration': numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
 		'tags': arraySetting(req.body.tags, oldSettings.tags, 10),
 		'filters': arraySetting(req.body.filters, oldSettings.filters, 50),
+		'strictFiltering': booleanSetting(req.body.strict_filtering),
 		'customCss': globalLimits.customCss.enabled ? (req.body.custom_css !== null ? req.body.custom_css : oldSettings.customCss) : null,
 		'announcement': {
 			'raw': req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
