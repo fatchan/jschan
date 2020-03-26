@@ -8,11 +8,17 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				label
 					if globalmanage
 						input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
-						| 
-						- const ip = ipHashMode === 2 ? post.ip.single.slice(-10) : post.ip.single;
-						a.bold(href=`?ip=${encodeURIComponent(ip)}`) #{ip}
 					else if !ban
 						input.post-check(type='checkbox', name='checkedposts' value=post.postId)
+					| 
+					if manage
+						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
+						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]
+					else if modview
+						a.bold(href=`${upLevel ? '../' : ''}recent.html?postid=${post.postId}`) [+]
+					else if globalmanage
+						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
+						a.bold(href=`?ip=${encodeURIComponent(ip)}`) [#{ip}]
 					| 
 					if !post.thread
 						include ../includes/posticons.pug
@@ -57,7 +63,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					each file in post.files
 						.post-file
 							span.post-file-info
-								span: a(href='/img/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler ? 'Spoiler File' : file.originalFilename}
+								span: a(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler ? 'Spoiler File' : file.originalFilename}
 								br
 								span 
 									| (#{file.sizeString}
@@ -68,7 +74,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 									| )
 							- const type = file.mimetype.split('/')[0]
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
-								a(target='_blank' href=`/img/${file.filename}`)
+								a(target='_blank' href=`/file/${file.filename}`)
 									if post.spoiler
 										div.spoilerimg.file-thumb
 									else if file.attachment
@@ -76,9 +82,9 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 									else if type === 'audio'
 										div.audioimg.file-thumb
 									else if file.hasThumb
-										img.file-thumb(src=`/img/thumb-${file.hash}${file.thumbextension}` height=file.geometry.thumbheight width=file.geometry.thumbwidth)
+										img.file-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` height=file.geometry.thumbheight width=file.geometry.thumbwidth)
 									else
-										img.file-thumb(src=`/img/${file.filename}` height=file.geometry.height width=file.geometry.width)
+										img.file-thumb(src=`/file/${file.filename}` height=file.geometry.height width=file.geometry.width)
 			- if (post.message && modview) { post.message = post.message.replace(new RegExp(`<a class="quote" href="/${post.board}`, 'g'), `<a class="quote" href="/${post.board}/manage`); } //quick & dirty solution to a bigger problem/design issue
 			- let truncatedMessage = post.message;
 			if post.message
@@ -127,7 +133,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						|  
 	if manage === true
 		each r in post.reports
-			+report(r)
+			+report(r, true)
 	if globalmanage === true
 		each r in post.globalreports
-			+report(r, true)
+			+report(r)

@@ -11,7 +11,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	let supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window;
 	const livecolor = document.getElementById('livecolor');
-	const livetext = isThread ? document.getElementById('livetext').childNodes[1] : null;
+	const livetext = isThread && document.getElementById('livetext') ? document.getElementById('livetext').childNodes[1] : null;
 	const updateButton = livetext ? livetext.nextSibling : null;
 	const updateLive = (message, color, showRelativeTime) => {
 		livecolor.style.backgroundColor = color;

@@ -26,9 +26,9 @@ module.exports = async(fileNames) => {
 	await Promise.all(unreferenced.map(async file => {
 		debugLogs && console.log('Pruning', file._id);
 		return Promise.all(
-			[remove(`${uploadDirectory}/img/${file._id}`)]
+			[remove(`${uploadDirectory}/file/${file._id}`)]
 			.concat(file.exts ? file.exts.filter(ext => ext).map(ext => {
-				remove(`${uploadDirectory}/img/thumb-${file._id.split('.')[0]}${ext}`)
+				remove(`${uploadDirectory}/file/thumb-${file._id.split('.')[0]}${ext}`)
 			}) : [])
 		)
 	}));

@@ -59,11 +59,8 @@ module.exports = {
 		bypassDnsbl: false,
 	},
 
-	/*  0=not hashed
-		1=hash for non-global staff, visible for global staff and ban pages
-		2=hash for everything 
-		its not recommended to change this setting after initial setup */
-	ipHashMode: 1,
+	// permission level required to see UNHASHED ips. -1 for ips to be hashed even for root user. not recommendded to change after installation
+	ipHashPermLevel: 0,
 
 	/* delete files immediately rather than pruning later. usually disabled to prevent re-thumbnailing and processing commonly
 		uploaded files, but deleting immediately is better if you are concerned about "deleted" content not being immediately removed */

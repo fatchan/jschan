@@ -12,7 +12,7 @@ const express = require('express')
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
 	, { cacheTemplates, boardDefaults, sessionSecret, globalLimits,
-		secureCookies, debugLogs, ipHashMode, meta, port } = require(__dirname+'/configs/main.js')
+		secureCookies, debugLogs, ipHashPermLevel, meta, port } = require(__dirname+'/configs/main.js')
 	, processIp = require(__dirname+'/helpers/processip.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
@@ -85,7 +85,7 @@ const express = require('express')
 	app.locals.defaultTheme = boardDefaults.theme;
 	app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 	app.locals.globalLimits = globalLimits;
-	app.locals.ipHashMode = ipHashMode;
+	app.locals.ipHashPermLevel = ipHashPermLevel;
 	app.locals.meta = meta;
 
 	// routes
