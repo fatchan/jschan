@@ -13,7 +13,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					| 
 					if manage
 						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
-						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]	
+						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]
 					else if modview
 						a.bold(href=`${upLevel ? '../' : ''}recent.html?postid=${post.postId}`) [+]
 					else if globalmanage
