@@ -20,7 +20,7 @@ const gulp = require('gulp')
 			dest: 'static/css/'
 		},
 		images: {
-			src: 'gulp/res/file/*',
+			src: 'gulp/res/img/*',
 			dest: 'static/file/'
 		},
 		scripts: {
