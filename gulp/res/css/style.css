@@ -1,7 +1,7 @@
 :root {
-	--attachment-img: url('/img/attachment.png');
-	--spoiler-img: url('/img/spoiler.png');
-	--audio-img: url('/img/audio.png');
+	--attachment-img: url('/file/attachment.png');
+	--spoiler-img: url('/file/spoiler.png');
+	--audio-img: url('/file/audio.png');
 }
 
 body {
@@ -37,7 +37,15 @@ main.minimal {
 .col {
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
+	flex-grow: 1 1;
+}
+
+.wrap {
+	flex-wrap: wrap;
+}
+
+.sb {
+	justify-content: space-between;
 }
 
 .flexcenter {
@@ -108,9 +116,6 @@ pre {
 }
 .fw {
 	width: 100%;
-}
-.fw textarea {
-	height: 1em;
 }
 .pr-20 {
 	padding-right: 20px;
@@ -1134,7 +1139,7 @@ table, .boardtable {
 	}
 
 	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select, #dragHandle {
-		height: 2.25em;
+		min-height: 2.25em;
 		box-sizing: border-box;
 	}
 
@@ -1201,7 +1206,7 @@ table, .boardtable {
 	display: inline-block;
 	width: 16px;
 	height: 11px;
-	background:url(/img/flags.png) no-repeat;
+	background:url(/file/flags.png) no-repeat;
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 	image-rendering: -webkit-optimize-contrast;

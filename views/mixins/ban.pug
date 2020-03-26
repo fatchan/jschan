@@ -10,7 +10,7 @@ mixin ban(ban, banpage)
 			else
 				| Global
 		td= ban.reason
-		- const ip = ipHashMode === 2 || (ipHashMode === 1 && permLevel > 1) ? ban.ip.slice(-10) : ban.ip;
+		- const ip = permLevel > ipHashPermLevel ? ban.ip.slice(-10) : ban.ip;
 		td #{ip}
 		td= ban.issuer
 		- const banDate = new Date(ban.date);

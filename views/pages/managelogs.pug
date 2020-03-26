@@ -1,36 +1,31 @@
 extends ../layout.pug
+include ../mixins/post.pug
 include ../mixins/ban.pug
-include ../mixins/globalmanagenav.pug
+include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
 
 block head
-	title Manage
+	title /#{board._id}/ - Manage
 
 block content
-	h1.board-title Global Management
+	+boardheader('Logs')
 	br
-	+globalmanagenav('logs')
+	+managenav('logs')
 	hr(size=1)
 	.form-wrapper.flexleft
 		h4.no-m-p Search:
-		form.form-post.mv-5(action=`/globalmanage/globallogs.html` method='GET')
+		form.form-post.mv-5(action=`/${board._id}/manage/logs.html` method='GET')
 			input(type='hidden' value=page)
-			.row
-				.label Board URI
-				input(type='text' name='uri' value=uri)
 			.row
 				.label Username
 				input(type='text' name='username' value=username)
-			.row
-				.label IP
-				input(type='text' name='ip' value=ip)
 			input(type='submit', value='Filter')
-		h4.no-m-p Global Logs:
+		h4.no-m-p Logs:
 		if logs && logs.length > 0
 			.table-container.flex-center.mv-10.text-center
 				table.fw
 						tr
 							th Date
-							th Board
 							th User
 							th IP
 							th Actions
@@ -41,21 +36,12 @@ block content
 								- const logDate = new Date(log.date);
 								td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hour12:false})}
 								td
-									a(href=`/${log.board}/index.html`) /#{log.board}/
-									|   
-									a(href=`?uri=${log.board}`) [+]
-								td
-									if log.user !== 'Unregistered User'
-										a(href=`accounts.html?username=${log.user}`) #{log.user}
-									else
-										| #{log.user}
+									| #{log.user}
 									|   
 									a(href=`?username=${log.user}`) [+]
 								td
 									- const logIp = permLevel > ipHashPermLevel ? log.ip.slice(-10) : log.ip;
-									a(href=`recent.html?ip=${encodeURIComponent(logIp)}`) #{logIp}
-									|   
-									a(href=`?ip=${encodeURIComponent(logIp)}`) [+]
+									| #{logIp}
 								td #{log.actions}
 								td #{log.postIds}
 								td #{log.message || '-'}

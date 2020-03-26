@@ -1,11 +1,10 @@
-mixin report(r, globalmanage=false)
+mixin report(r, manage=false)
 	.reports.post-container
 		input.post-check(type='checkbox', name='checkedreports' value=r.id)
 		|  
-		if globalmanage
-			- const ip = ipHashMode === 2 || (ipHashMode === 1 && permLevel > 1) ? r.ip.slice(-10) : r.ip;
-			a.bold(href=`?ip=${encodeURIComponent(ip)}`) #{ip}
-			|  
+		- const ip = permLevel > ipHashPermLevel ? r.ip.slice(-10) : r.ip;
+		a.bold(href=`${manage ? 'recent.html' : ''}?ip=${encodeURIComponent(ip)}`) [#{ip}]
+		|  
 		- const reportDate = new Date(r.date);
 		time.reltime(datetime=reportDate.toISOString()) #{reportDate.toLocaleString(undefined, { hour12:false })}
 		|  | Reason: #{r.reason}
