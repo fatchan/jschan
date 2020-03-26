@@ -19,7 +19,7 @@
     "express-session": "^1.17.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs": "0.0.1-security",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.0",
     "gm": "github:fatchan/gm",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",

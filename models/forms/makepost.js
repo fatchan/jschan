@@ -48,7 +48,7 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const { filters, filterBanDuration, filterMode,
+	const { filterBanDuration, filterMode, filters,
 			maxFiles, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler,
 			defaultName, pphTrigger, tphTrigger, triggerAction,
@@ -107,9 +107,10 @@ module.exports = async (req, res, next) => {
 		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
 			hitGlobalFilter = globalSettings.filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
 		}
-		//board-specific filters
+		//board-specific filters (doesnt use strict filtering)
 		if (!hitGlobalFilter && res.locals.permLevel >= 4 && filterMode > 0 && filters && filters.length > 0) {
-			hitLocalFilter = filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
+			const localFilterContents = res.locals.board.settings.strictFiltering ? allContents : concatContents;
+			hitLocalFilter = filters.some(filter => { return localFilterContents.includes(filter.toLowerCase()) });
 		}
 		if (hitGlobalFilter || hitLocalFilter) {
 			await deleteTempFiles(req).catch(e => console.error);
