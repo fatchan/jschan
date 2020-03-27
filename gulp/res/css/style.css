@@ -37,7 +37,7 @@ main.minimal {
 .col {
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1 1;
+	flex-grow: 1;
 }
 
 .wrap {
@@ -1055,6 +1055,14 @@ table, .boardtable {
 	text-align: center;
 }
 
+#settingsmodal{
+	min-width: 400px;
+}
+#settingsmodal .form-wrapper.flexleft.mt-10, #settingsmodal .form-wrapper.flexleft.mt-10 .row {
+	width: 100%
+}
+
+
 @media only screen and (max-height: 400px) {
 	.modal {
 		top: 5px;
@@ -1066,6 +1074,9 @@ table, .boardtable {
 
 	#settings::after {
 		content: "\2699"!important;
+	}
+	#settingsmodal {
+		width: 100%
 	}
  	[title] {
 		position:relative
