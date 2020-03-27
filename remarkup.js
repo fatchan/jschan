@@ -15,11 +15,14 @@ const Mongo = require(__dirname+'/db/db.js');
 		, sanitizeOptions = require(__dirname+'/helpers/posting/sanitizeoptions.js')
 		, sanitize = require('sanitize-html');
 
-	const post = await Posts.db.findOne({/*post query here*/});
-	let message = markdown(post.nomarkup);
-	const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes('tech', message, null);
-	message = sanitize(quotedMessage, sanitizeOptions.after);
-	await Posts.db.updateOne({board:'tech', postId:357}, {$set:{message:message}});
+	const posts = await Posts.db.find({/*query here*/}).toArray();
+	await Promise.all(posts.map(async (post) => {
+		let message = markdown(post.nomarkup);
+		const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(post.board, message, null);
+		message = sanitize(quotedMessage, sanitizeOptions.after);
+		console.log(post.postId, message.substring(0,10)+'...');
+		return Posts.db.updateOne({board:post.board, postId:post.postId}, {$set:{message:message}});
+	}));
 
 })();
 
