@@ -1,0 +1,138 @@
+:root {
+	--icon-color: invert(17%) sepia(89%) saturate(7057%) hue-rotate(2deg) brightness(93%) contrast(120%);
+	--darken: #ffffff10;
+	--board-title: #c5c8c6;
+	--hr: #282a2e;
+	--dice-color: darkorange;
+	--title-color: #d70000;
+	--greentext-color: green;
+	--pinktext-color: #E0727F;
+    --alt-label-color: transparent;
+    --alt-font-color: black;
+    --background-top: #008080;
+    --background-rest: #008080;
+    --navbar-color: #c0c0c0;
+    --post-color: #c0c0c0;
+    --post-outline-color: #c0c0c0;
+    --label-color: transparent;
+    --box-border-color: transparent;
+    --highlighted-post-color: #c0c0c0;
+    --highlighted-post-outline-color: #c0c0c0;
+    --font-color: black;
+    --post-link-color: blue;
+    --link-color: #fffff50;
+    --link-hover: #555;
+    --input-borders: #111;
+    --input-color: black;
+    --input-background: white;
+    --name-color: #ddd;
+    --capcode-color: #f00;
+    --subject-color: #ddd;
+}
+.flag {
+image-rendering:pixelated;
+}
+.post-container:not(.op), #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats, .navbar, #postform, .op, table, .board-banner, .filelabel, .modal {
+border: 2px outset lightgray!important;
+}
+input[type=button],
+input[type=file],
+input[type=number],
+input[type=password],
+input[type=range],
+input[type=text],
+select,
+textarea,
+.postform-style,
+.code {
+ border:2px inset black;
+}
+#postform {
+padding: 2px
+}
+.nav-item {
+line-height: 1.75em;
+margin: 2px;
+}
+.nav-item, .close, input[type=submit], .filelabel {
+color:black;
+background: transparent;
+border: 2px outset lightgray;
+}
+.close {
+font-weight: bold
+}
+.navbar a {
+color:black;
+}
+.anchor:target+.post-container .post-info, .post-container.highlighted .post-info, .anchor:target+table tbody tr th  {
+background: darkblue!important;
+color: white!important;
+}
+.op, th, .board-banner {
+background: var(--post-color)!important;
+}
+.navbar {
+top:unset!important;
+bottom: -3px;
+}
+.navbar a:first-of-type::before {
+content:'';
+position:absolute;
+background: url('https://fatpeople.lol/file/8bb8340d9edf7f5ee0003fd49df3ae1fbf3254025b724643c676681f9253b1fb.png');
+background-size: contain;
+height: 1.75em;
+width: 1.75em;
+left: 7px;
+}
+.navbar a:first-of-type {
+padding-left: 30px
+}
+.stickynav {
+top: 5px;
+bottom: unset
+}
+main {
+margin: 0;
+}
+table {
+background: var(--post-color);
+border-spacing:0
+}
+.post-info, #dragHandle,  th, .alt {
+font-weight: bold;
+color: #ddd;
+background: #808080!important;
+}
+th a {
+color: #ddd!important;
+}
+hr {
+border-top: 2px ridge var(--post-outline-color);
+}
+.post-info {
+margin: -6px -6px 0px;
+padding: 3px 5px 3px 3px;
+}
+.board-description {
+color:var(--board-title)
+}
+#dragHandle::before {
+content: 'New Post';
+height: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.modal {
+padding:3px;
+}
+.op {
+width:unset!important;
+}
+@media only screen and (max-width:600px) {
+  .nav-item {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}

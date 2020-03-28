@@ -1121,10 +1121,6 @@ table, .boardtable {
 		max-height: calc(100% - 10px);
 	}
 
-	.postmenu {
-		float: right;
-	}
-
 	.post-file-info {
 		max-width: 150px;
 	}
@@ -1152,6 +1148,11 @@ table, .boardtable {
 	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select, #dragHandle {
 		min-height: 2.25em;
 		box-sizing: border-box;
+	}
+
+	.postmenu {
+		float: right;
+		min-height: 1em;
 	}
 
 	.filelabel {
