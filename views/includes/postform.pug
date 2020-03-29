@@ -8,7 +8,7 @@ section.form-wrapper.flex-center
 			input(type='hidden' name='_csrf' value=csrf)
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
 		section.row.jsonly
-			.noselect#dragHandle
+			.noselect#dragHandle New Post
 		if board.settings.forceAnon && !modview
 			section.row
 				.label Sage
