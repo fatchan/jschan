@@ -175,6 +175,10 @@ pre {
 	background: var(--darken);
 	height: 1.75em;
 	cursor: move;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
 }
 
 .statwrap {

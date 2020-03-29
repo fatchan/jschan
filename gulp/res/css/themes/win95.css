@@ -117,18 +117,14 @@ padding: 3px 5px 3px 3px;
 .board-description {
 color:var(--board-title)
 }
-#dragHandle::before {
-content: 'New Post';
-height: 100%;
-display: flex;
-justify-content: center;
-align-items: center;
-}
 .modal {
 padding:3px;
 }
 .op {
 width:unset!important;
+}
+input[type=submit], input[type=submit], label[for=file] {
+background: var(--post-color)!important;
 }
 @media only screen and (max-width:600px) {
   .nav-item {
