@@ -59,6 +59,7 @@ class Dragable {
 	//start drag and attach appropriate listener for click/drag
 	startDrag(e) {
 		this.draging = true;
+		this.handle.style.cursor = 'grabbing';
 		this.target.style.position = 'fixed';
 		const rect = this.target.getBoundingClientRect();
 		switch (e.type) {
@@ -108,6 +109,7 @@ class Dragable {
 	stopDrag(e) {
 		if (this.draging) {
 			this.draging = false;
+			this.handle.style.cursor = 'move';
 			window.removeEventListener('mousemove', e => this.doDrag(e));
 			window.removeEventListener('touchmove', e => this.doDrag(e));
 		}
