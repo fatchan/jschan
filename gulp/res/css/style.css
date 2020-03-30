@@ -1080,7 +1080,8 @@ table, .boardtable {
 		content: "\2699"!important;
 	}
 	#settingsmodal {
-		width: 100%
+		width: 100%;
+		min-width: unset;
 	}
  	[title] {
 		position:relative
