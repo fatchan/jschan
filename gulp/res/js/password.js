@@ -42,13 +42,11 @@ class syncedField {
 		}
 
 		if (this.oneWay) {
-			settingsFields[0].value = localStorage.getItem(this.key);
 			settingsFields[0].addEventListener('input', (e) => { this.update(e) }, false);
-		} else {
-			for (let field of this.fields) {
-				field.value = localStorage.getItem(this.key);
-				field.addEventListener('input', (e) => { this.update(e) }, false);
-			}
+		}
+		for (let field of this.fields) {
+			field.value = localStorage.getItem(this.key);
+			!this.oneWay && field.addEventListener('input', (e) => { this.update(e) }, false);
 		}
 	}
 	update(e) {
