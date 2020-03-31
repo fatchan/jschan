@@ -98,10 +98,10 @@ module.exports = async (req, res, next) => {
 			, ban;
 		let concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase();
 		let allContents = concatContents;
-		if (strictFiltering) { //strict filtering adds a few transformations of the text to try and match filters when sers use techniques like zalgo, ZWS, markdown, multi-line, etc.
+		if (strictFiltering || res.locals.board.settings.strictFiltering) { //strict filtering adds a few transformations of the text to try and match filters when sers use techniques like zalgo, ZWS, markdown, multi-line, etc.
 			allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); //removing diacritics
 			allContents += concatContents.replace(/[\u200B-\u200D\uFEFF]/g, ''); //removing ZWS
-			allContents += concatContents.replace(/[^a-zA-Z0-9]+/gm, ''); //removing anything thats not alphamnumeric
+			allContents += concatContents.replace(/[^a-zA-Z0-9.-]+/gm, ''); //removing anything thats not alphamnumeric or . and -
 		}
 		//global filters
 		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
