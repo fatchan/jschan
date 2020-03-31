@@ -843,15 +843,16 @@ input:invalid, textarea:invalid {
 	line-height: 3em;
 }
 
-a.button {
+.button {
 	-webkit-appearance: button;
 	-moz-appearance: button;
 	appearance: button;
 	text-decoration: none;
+	cursor: pointer;
 	color: initial;
 }
 
-a.button:hover {
+.button:hover {
 	color: initial!important;
 }
 
@@ -941,7 +942,7 @@ iframe.bypass {
 	overflow: hidden;
 }
 
-.label {
+.label, .rlabel {
 	padding: 3px;
 	border: 1px solid var(--box-border-color);
 	min-width: 80px;
@@ -952,6 +953,10 @@ iframe.bypass {
 	align-items: start;
 	flex-direction: column;
 	justify-content: center;
+}
+.rlabel {
+	margin-right: 0;
+	margin-left: 1px;
 }
 
 hr {
@@ -1065,7 +1070,9 @@ table, .boardtable {
 #settingsmodal .form-wrapper.flexleft.mt-10, #settingsmodal .form-wrapper.flexleft.mt-10 .row {
 	width: 100%
 }
-
+row.wrap.sb .col {
+    flex-basis: calc(50% - 5px);
+}
 
 @media only screen and (max-height: 400px) {
 	.modal {
