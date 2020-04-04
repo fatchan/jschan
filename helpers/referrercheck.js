@@ -1,14 +1,21 @@
 'use strict';
 
-const configs = require(__dirname+'/../configs/main.js')
+const { refererCheck, allowedHosts } = require(__dirname+'/../configs/main.js')
 	, dynamicResponse = require(__dirname+'/dynamic.js')
-	, refererRegex = new RegExp(configs.refererRegex);
+	, allowedHostSet = new Set(allowedHosts);
 
 module.exports = (req, res, next) => {
 	if (req.method !== 'POST') {
 		return next();
 	}
-	if (configs.refererCheck === true && (!req.headers.referer || !req.headers.referer.match(refererRegex))) {
+	let validReferer = false;
+	try {
+		const url = new URL(req.headers.referer);
+		validReferer = allowedHostSet.has(url.hostname);
+	} catch(e) {
+		//referrer is invalid url
+	}
+	if (refererCheck === true && (!req.headers.referer || !validReferer)) {
         return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Invalid or missing "Referer" header. Are you posting from the correct URL?'
