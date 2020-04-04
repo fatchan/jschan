@@ -83,7 +83,7 @@ pre {
 	border-bottom: 1px solid var(--post-outline-color);
 	position: fixed;
 	width: 100%;
-	z-index: 1;
+	z-index: 2;
 	top: 0;
 }
 
@@ -1040,7 +1040,7 @@ table.boardtable td:nth-child(6) {
 	background: black;
 	width: 100%;
 	border-left: var(--data-loading) solid darkgreen;
-	transition: all 0.3s ease;
+	transition: all 0.3s;
 }
 .post-file-src[data-type="image"][data-loading]::after {
 	content: attr(data-loading) "%";
