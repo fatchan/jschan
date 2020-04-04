@@ -130,8 +130,7 @@ const express = require('express')
 		}
 	});
 
-	//listen for sigint from PM2
-	process.on('SIGINT', () => {
+	const gracefulStop = () => {
 		debugLogs && console.log('SIGINT SIGNAL RECEIVED');
 		// Stops the server from accepting new connections and finishes existing connections.
 		Socketio.io.close((err) => {
@@ -150,6 +149,14 @@ const express = require('express')
 			// now close without error
 			process.exit(0);
 		});
+	};
+
+	//graceful stop
+	process.on('SIGINT', gracefulStop);
+	process.on('message', (message) => {
+		if (message === 'shutdown') {
+			gracefulStop();
+		}
 	});
 
 })();
