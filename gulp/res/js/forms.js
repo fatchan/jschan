@@ -143,8 +143,12 @@ class formHandler {
 						}
 					}
 					this.form.reset();
-					this.form.elements.name.value = localStorage.getItem('name');
-					this.form.elements.postpassword.value = localStorage.getItem('postpassword');
+					if (this.form.elements.name) {
+						this.form.elements.name.value = localStorage.getItem('name');
+					}
+					if (this.form.elements.postpassword) {
+						this.form.elements.postpassword.value = localStorage.getItem('postpassword');
+					}
 					this.updateMessageBox();
 					this.files = [];
 					this.updateFilesText();
