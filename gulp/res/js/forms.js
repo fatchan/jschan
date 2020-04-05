@@ -142,9 +142,10 @@ class formHandler {
 //							window.location.reload();
 						}
 					}
+					const savedName = this.form.elements.name && this.form.elements.name.value;
 					this.form.reset();
 					if (this.form.elements.name) {
-						this.form.elements.name.value = localStorage.getItem('name');
+						this.form.elements.name.value = savedName
 					}
 					if (this.form.elements.postpassword) {
 						this.form.elements.postpassword.value = localStorage.getItem('postpassword');
