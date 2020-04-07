@@ -109,7 +109,7 @@ class Dragable {
 	stopDrag(e) {
 		if (this.draging) {
 			this.draging = false;
-			this.handle.style.cursor = 'move';
+			this.handle.style.cursor = 'grab';
 			window.removeEventListener('mousemove', e => this.doDrag(e));
 			window.removeEventListener('touchmove', e => this.doDrag(e));
 		}

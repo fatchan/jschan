@@ -48,6 +48,9 @@ module.exports = async (req, res, next) => {
 	}
 
 	//check that actions are valid
+	if (req.body.edit && req.body.checkedposts.length > 1) {
+		errors.push('Must select only 1 post for edit action');
+	}
 	if (req.body.postpassword && req.body.postpassword.length > globalLimits.fieldLength.postpassword) {
 		errors.push(`Password must be ${globalLimits.fieldLength.postpassword} characters or less`);
 	}
@@ -96,14 +99,19 @@ module.exports = async (req, res, next) => {
 		})
 	}
 
-	if (req.body.move) {
+	if (req.body.edit) {
+		//edit post, only allowing one
+		return res.render('editpost', {
+			'post': res.locals.posts[0],
+		});
+	} else if (req.body.move) {
 		res.locals.posts = res.locals.posts.filter(p => {
 			//filter to remove any posts already in the thread (or the OP) of move destionation
 			return p.postId !== req.body.move_to_thread && p.thread !== req.body.move_to_thread;
 		});
 		if (res.locals.posts.length === 0) {
-			return res.status(404).render('message', {
-				'title': 'Not found',
+			return res.status(409).render('message', {
+				'title': 'Conflict',
 				'error': 'Destionation thread cannot match source thread for move action',
 				'redirect': `/${req.params.board}/`
 			});
