@@ -1,27 +1,26 @@
 # jschan
-Anonymous imageboard. A type of BBS or forum software. 
-Demo site running at https://fatpeople.lol
+Anonymous imageboard software. Live instance at https://fatchan.org
 
 ## Goals
-- Oldschool imageboard look, with some modern touches
-- Support users that have javascript disabled (TOR users, or the security conscious)
-- Leverage nginx to serve static files, do GeoIP lookups and various other things
+- Oldschool look, newschool feel
+- Work with javascript disabled
+- Be usable on mobile
+- Static file serving
 
 ## Features
 - [x] User created boards ala infinity
 - [x] Multiple files per post
-- [x] Captcha and basic antispam
+- [x] Captcha and antispam
 - [x] Read-only JSON api
 - [x] Multi-select moderation actions
 - [x] Websocket update threads w/o polling
 - [x] Webring support ([lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring)) ([infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
 
 ## Todo
-- Fix issues
-- Add missing features
-- Improve moderation tools
-- Improve frontend scripts
-- Fork some mobile app and make it compatible with the API
+- Support running as a hidden service
+- More features
+- Mobile app
+- Full install script
 
 ## Setup
 Please note:
@@ -96,10 +95,12 @@ $ npm run-script start
 
 
 # some commands you may need to use in future/find helpful
+
 # pm2 is a process manager for nodejs
 $ pm2 list #list running pm2 processes
 $ pm2 logs #see logs
 $ pm2 reload all #reload all backend processes
+
 # gulp is used for various jobs like minifying and compiling scripts
 $ gulp --tasks #list available gulp tasks
 $ gulp migrate #check for and run db migrations
