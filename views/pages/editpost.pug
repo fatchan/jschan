@@ -6,7 +6,9 @@ block head
 block content
 	h1.board-title Edit Post
 	.form-wrapper.flex-center.mv-10
-		form.form-post(action='/forms/edit' method='POST')
+		form.form-post(action='/forms/editpost' method='POST')
+			input(type='hidden' name='board' value=post.board)
+			input(type='hidden' name='postId' value=post.postId)
 			.anchor(id=post.postId)
 			div(class=`mv-5 post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId)
 				- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;

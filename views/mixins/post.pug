@@ -101,7 +101,13 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				else
 					pre.post-message !{post.message}
 			if !post.message && post.files.length === 0
-				p Post files unlinked
+				p No message or files.
+			if post.edited
+				- const postEditDate = new Date(post.edited.date);
+				small.edited
+					| Last edited 
+					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(undefined, { hour12:false })}
+					|  by #{post.edited.username}
 			if post.banmessage
 				p.ban
 					span.message USER WAS BANNED FOR THIS POST

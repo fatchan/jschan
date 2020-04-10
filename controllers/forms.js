@@ -74,6 +74,7 @@ const express  = require('express')
 	, globalSettingsController = require(__dirname+'/forms/globalsettings.js')
 	, createBoardController = require(__dirname+'/forms/create.js')
 	, makePostController = require(__dirname+'/forms/makepost.js')
+	, editPostController = require(__dirname+'/forms/editpost.js')
 	, newCaptcha = require(__dirname+'/../models/forms/newcaptcha.js')
 	, blockBypass = require(__dirname+'/../models/forms/blockbypass.js')
 
@@ -89,6 +90,8 @@ router.post('/board/:board/modactions', sessionRefresh, csrf, Boards.exists, cal
 router.post('/global/actions', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page
 //appeal ban
 router.post('/appeal', sessionRefresh, paramConverter, verifyCaptcha, appealController);
+//edit post
+router.post('/editpost', sessionRefresh, csrf, calcPerms, hasPerms(3), paramConverter, editPostController);
 
 //board management forms
 router.post('/board/:board/transfer', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);

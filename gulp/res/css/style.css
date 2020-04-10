@@ -340,6 +340,10 @@ p {
 	content:"\0029";
 }
 
+.edited {
+    font-style: italic;
+}
+
 .close {
 	text-decoration: none;
 	justify-content: center;
