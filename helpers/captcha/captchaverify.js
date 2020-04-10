@@ -8,6 +8,8 @@ const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
+	const isBypass = req.path === '/blockbypass';
+
 	//skip captcha if disabled on board for posts only
 	if (res.locals.board
 		&& req.path === `/board/${res.locals.board._id}/post`) {
@@ -20,6 +22,12 @@ module.exports = async (req, res, next) => {
 	//check if captcha field in form is valid
 	const input = req.body.captcha;
 	if (!input || input.length !== 6) {
+		if (isBypass) {
+			return res.status(403).render('bypass', {
+				'minimal': req.body.minimal,
+				'message': 'Incorrect captcha',
+			});
+		}
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Incorrect captcha',
@@ -30,6 +38,12 @@ module.exports = async (req, res, next) => {
 	//make sure they have captcha cookie and its 24 chars
 	const captchaId = req.cookies.captchaid;
 	if (!captchaId || captchaId.length !== 24) {
+		if (isBypass) {
+			return res.status(403).render('bypass', {
+				'minimal': req.body.minimal,
+				'message': 'Captcha expired',
+			});
+		}
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Captcha expired',
@@ -48,6 +62,12 @@ module.exports = async (req, res, next) => {
 
 	//check that it exists and matches captcha in DB
 	if (!captcha || !captcha.value || captcha.value.text !== input) {
+		if (isBypass) {
+			return res.status(403).render('bypass', {
+				'minimal': req.body.minimal,
+				'message': 'Incorrect captcha',
+			});
+		}
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Incorrect captcha',

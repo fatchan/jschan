@@ -844,13 +844,13 @@ input:invalid, textarea:invalid {
 	line-height: 3em;
 }
 
-.button {
+a.button {
 	-webkit-appearance: button;
 	-moz-appearance: button;
 	appearance: button;
 	text-decoration: none;
 	cursor: pointer;
-	color: initial;
+	color: black;
 }
 
 .button:hover {
@@ -929,7 +929,7 @@ iframe.captcha, iframe.bypass {
 }
 
 iframe.bypass {
-	height: 215px;
+	height: 235px;
 	width: 330px;
 }
 
@@ -941,6 +941,14 @@ iframe.bypass {
 	box-sizing: border-box;
 	object-fit: contain;
 	overflow: hidden;
+}
+
+.captcharefresh {
+    position: absolute;
+	bottom: 0;
+    left: 5px;
+    font-size: 18px;
+    cursor: pointer;
 }
 
 .label, .rlabel {
