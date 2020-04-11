@@ -21,65 +21,6 @@ details.toggle-label#actionform
 			| Global Report
 		label
 			input#report(type='text', name='report_reason', placeholder='report reason' autocomplete='off')
-	details.actions
-		summary.bold Staff Actions:
-		div
-			label
-				input.post-check(type='checkbox', name='delete_ip_thread' value='1')
-				| Delete from IP in thread
-			label
-				input.post-check(type='checkbox', name='delete_ip_board' value='1')
-				| Delete from IP on board
-			label
-				input.post-check(type='checkbox', name='delete_ip_global' value='1')
-				| Delete from IP globally
-			label
-				input.post-check(type='checkbox', name='delete_file' value='1')
-				| Delete Files
-			label
-				input.post-check(type='checkbox', name='ban' value='1')
-				| Ban Poster
-			label
-				input.post-check(type='checkbox', name='global_ban' value='1')
-				| Global Ban Poster
-			label
-				input.post-check(type='checkbox', name='ban_q' value='1')
-				| 1/4 Range
-			label
-				input.post-check(type='checkbox', name='ban_h' value='1')
-				| 1/2 Range
-			label
-				input.post-check(type='checkbox', name='no_appeal' value='1')
-				| Non-appealable Ban
-			label
-				input.post-check(type='checkbox', name='preserve_post' value='1')
-				| Show Post In Ban
-			label
-				input.post-check(type='checkbox', name='show_name' value='1')
-				| Show Username In Modlog
-			label
-				input(type='text', name='ban_reason', placeholder='ban reason' autocomplete='off')
-			label
-				input(type='text', name='ban_duration', placeholder='ban duration e.g. 7d' autocomplete='off')
-			label
-				input(type='text', name='log_message', placeholder='modlog message' autocomplete='off')
-			label
-				input.post-check(type='checkbox', name='move' value='1')
-				| Move
-			label
-				input(type='number', name='move_to_thread', placeholder='destination thread No.' autocomplete='off')
-			label
-				input.post-check(type='checkbox', name='sticky' value='1')
-				| Toggle Sticky
-			label
-				input.post-check(type='checkbox', name='lock' value='1')
-				| Toggle Lock
-			label
-				input.post-check(type='checkbox', name='bumplock' value='1')
-				| Toggle Bumplock
-			label
-				input.post-check(type='checkbox', name='cyclic' value='1')
-				| Toggle Cycle
 	.actions
 		h4.no-m-p Captcha:
 		include ./captcha.pug
