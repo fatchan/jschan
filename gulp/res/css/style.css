@@ -901,7 +901,7 @@ input[type="file"] {
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
 	position: fixed;
-	top: 3em;
+	top: 3.5em;
 	right: 5px;
 	background-color: var(--post-color);
 	z-index: 2;
