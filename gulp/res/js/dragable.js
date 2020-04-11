@@ -101,6 +101,7 @@ class Dragable {
 			default:
 				break;
 		}
+		this.target.style.bottom = 'unset';
 		setLocalStorage('dragtop', this.target.style.top);
 		setLocalStorage('dragleft', this.target.style.left);
 	}
