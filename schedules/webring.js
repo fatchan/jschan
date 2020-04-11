@@ -25,7 +25,7 @@ module.exports = async () => {
 		}));
 		for (let i = 0; i < rings.length; i++) {
 			const ring = rings[i];
-			if (!ring || !ring.name || !ring.endpoint || !ring.url) {
+			if (!ring || !ring.name || !ring.endpoint || !ring.url || ring.endpoint.includes(meta.url)) {
 				continue;
 			}
 			if (ring.following && ring.following.length > 0) {

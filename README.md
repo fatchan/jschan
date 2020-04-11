@@ -24,7 +24,7 @@ Anonymous imageboard software. Live instance at https://fatchan.org
 
 ## Setup
 Please note:
-#### 🚨 The software is not production-ready. There may be bugs and WILL be breaking changes. If you insist on running your own instance, always ensure you have up-to-date configs and db schema after pulling as these will be common breaking changes until a stable version is reached. 🚨
+#### 🚨 The software is not production-ready. There may be bugs and WILL be breaking changes. If you insist on running your own instance, always ensure you have up-to-date configs and run `gulp migrate && gulp && pm2 reload all` after pulling. 🚨
 - these instructions are not step-by-step or complete
 - you should be able to read, be comfortable with a command line and have problem solving skills
 
