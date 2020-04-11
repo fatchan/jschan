@@ -659,6 +659,7 @@ video, img {
 	background-image: var(--attachment-img);
 }
 .spoilerimg {
+	cursor: help;
 	background-image: var(--spoiler-img);
 }
 .audioimg {
