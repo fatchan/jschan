@@ -1,6 +1,6 @@
 'use strict';
 
-	, { Posts, Bans } = require(__dirname+'/../../db/')
+const { Posts, Bans } = require(__dirname+'/../../db/')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
