@@ -12,6 +12,7 @@ class Dragable {
 		const savedTop = localStorage.getItem('dragtop');
 		if (savedTop != 'null') {
 			this.target.style.top = savedTop;
+			this.target.style.bottom = 'unset';
 		}
 		const savedLeft = localStorage.getItem('dragleft');
 		if (savedLeft != 'null') {
@@ -87,6 +88,7 @@ class Dragable {
 			return;
 		}
 		this.updateMaxSizes();
+		this.target.style.bottom = 'unset';
 		switch (e.type) {
 			case 'mousemove':
 				this.target.style.left = `${this.inBounds(e.clientX, this.xo, this.target.offsetWidth, document.documentElement.clientWidth)}px`;

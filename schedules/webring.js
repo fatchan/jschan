@@ -21,11 +21,11 @@ module.exports = async () => {
 		const toVisit = [...known].filter(url => !visited.has(url));
 		let rings = await Promise.all(toVisit.map(url => {
 			visited.add(url);
-			return fetch(url).then(res => res.json()).catch(e => console.error);
+			return fetch(url, {agent:''}).then(res => res.json()).catch(e => console.error);
 		}));
 		for (let i = 0; i < rings.length; i++) {
 			const ring = rings[i];
-			if (!ring || !ring.name || !ring.endpoint || !ring.url) {
+			if (!ring || !ring.name || !ring.endpoint || !ring.url || ring.endpoint.includes(meta.url)) {
 				continue;
 			}
 			if (ring.following && ring.following.length > 0) {

@@ -113,7 +113,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 							const request = new XMLHttpRequest();
 							request.onprogress = (e) => {
 								const progress = Math.floor((e.loaded/e.total)*100);
-								const progressWidth = Math.floor((e.loaded/e.total)*thumbElement.width);
+								const progressWidth = Math.floor((e.loaded/e.total)*thumbElement.offsetWidth);
 								if (progress >= 100) {
 									pfs.removeAttribute('data-loading');
 								} else {

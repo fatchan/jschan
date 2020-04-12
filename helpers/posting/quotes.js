@@ -65,10 +65,7 @@ module.exports = async (board, text, thread) => {
 		postQueryOrs.length > 0 ? Posts.getPostsForQuotes(postQueryOrs) : [],
 		boardQueryIns.length > 0 ? Boards.db.find({ '_id': { '$in': boardQueryIns } }, { projection: { '_id': 1 } }).toArray() : []
 	]);
-	//if none of the quotes were real, dont do a replace
-	if (posts.length === 0 && boards.length === 0) {
-		return { quotedMessage: text, threadQuotes: [], crossQuotes: [] };
-	}
+
 	//turn the result into a map of postId => threadId/postId
 	for (let i = 0; i < posts.length; i++) {
 		const post = posts[i];
@@ -91,7 +88,7 @@ module.exports = async (board, text, thread) => {
 	//then replace the quotes with only ones that exist
 	const threadQuotes = new Set();
 	const nonThreadQuotes = new Set();
-	if (quotes && Object.keys(postThreadIdMap).length > 0) {
+	if (quotes) {
 		text = text.replace(quoteRegex, (match, quotenum) => {
 			if (postThreadIdMap[board] && postThreadIdMap[board][quotenum]) {
 				if (postThreadIdMap[board][quotenum].thread === thread) {
@@ -107,10 +104,10 @@ module.exports = async (board, text, thread) => {
 	if (crossQuotes) {
 		text = text.replace(crossQuoteRegex, (match, quoteboard, quotenum) => {
 			if (postThreadIdMap[quoteboard]) {
-				if (!isNaN(quotenum) && quotenum > 0 && postThreadIdMap[quoteboard][quotenum]) {
-					return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum].thread}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
-				} else {
+				if (!quotenum) {
 					return `<a class='quote' href='/${quoteboard}/index.html'>&gt;&gt;&gt;/${quoteboard}/</a>`;
+				} else if (!isNaN(quotenum) && quotenum > 0 && postThreadIdMap[quoteboard][quotenum]) {
+					return `<a class='quote' href='/${quoteboard}/thread/${postThreadIdMap[quoteboard][quotenum].thread}.html#${quotenum}'>&gt;&gt;&gt;/${quoteboard}/${quotenum}</a>`;
 				}
 			}
 			return `<span class='invalid-quote'>&gt;&gt;&gt;/${quoteboard}/${quotenum || ''}</span>`;

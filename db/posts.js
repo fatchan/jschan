@@ -331,7 +331,7 @@ module.exports = {
 	},
 
 	insertOne: async (board, data, thread) => {
-		let saged = false;
+		let saged = data.email === 'sage' || (thread && thread.bumplocked);
 		if (data.thread !== null) {
 			const filter = {
 				'postId': data.thread,
@@ -345,12 +345,10 @@ module.exports = {
 				}
 			}
 			//if post email is not sage, and thread not bumplocked, set bump date
-			if (data.email !== 'sage' && !thread.bumplocked) {
+			if (!saged) {
 				query['$set'] = {
 					'bumped': new Date()
 				}
-			} else {
-				saged = true;
 			}
 			//update the thread
 			await db.updateOne(filter, query);

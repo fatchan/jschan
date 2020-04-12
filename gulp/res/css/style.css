@@ -668,6 +668,7 @@ video, img {
 	background-image: var(--attachment-img);
 }
 .spoilerimg {
+	cursor: help;
 	background-image: var(--spoiler-img);
 }
 .audioimg {
@@ -949,6 +950,15 @@ iframe.bypass {
 	box-sizing: border-box;
 	object-fit: contain;
 	overflow: hidden;
+	position: relative;
+}
+
+.captcharefresh {
+    position: absolute;
+	bottom: 0;
+    left: 5px;
+    font-size: 18px;
+    cursor: pointer;
 }
 
 .captcharefresh {
