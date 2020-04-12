@@ -941,6 +941,7 @@ iframe.bypass {
 	box-sizing: border-box;
 	object-fit: contain;
 	overflow: hidden;
+	position: relative;
 }
 
 .captcharefresh {
