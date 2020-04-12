@@ -14,7 +14,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
 	, splitRegex = /```([\s\S]+?)```/gm
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
-	, diceRegex = /##(?<numdice>[1-9][0-9]{0,8})d(?<numsides>[2-9][0-9]{0,8})(?:(?<operator>[+-])(?<modifier>[1-9][0-9]{0,8}))?/gmi
+	, diceRegex = /##(?<numdice>[1-9][0-9]{0,8})d(?<numsides>1[0-9]{1,8}|[2-9][0-9]{0,8})(?:(?<operator>[+-])(?<modifier>[1-9][0-9]{0,8}))?/gmi
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, escape = require(__dirname+'/escape.js')
 	, { highlight, highlightAuto } = require('highlight.js')
