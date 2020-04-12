@@ -152,11 +152,9 @@ module.exports = async (req, res) => {
 		await Posts.db.bulkWrite(bulkWrites);
 	}
 
-	const ret = {
+	return {
 		message: 'Moved posts',
 		action: movedPosts > 0,
 	};
-
-	return ret;
 
 }

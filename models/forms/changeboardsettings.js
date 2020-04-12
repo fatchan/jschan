@@ -7,10 +7,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../redis.js')
 	, { remove } = require('fs-extra')
 	, deletePosts = require(__dirname+'/deletepost.js')
-	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
-	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
-	, sanitize = require('sanitize-html')
+	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, trimSetting = (setting, oldSetting) => {
 		return setting && setting.trim().length > 0 ? setting : oldSetting;
 	}
@@ -34,11 +31,8 @@ module.exports = async (req, res, next) => {
 
 	let markdownAnnouncement = oldSettings.announcement.markdown;
 	if (req.body.announcement !== oldSettings.announcement.raw) {
-		//remarkup the announcement if it changes
-		const styled = markdown(req.body.announcement);
-		const quoted = (await linkQuotes(req.params.board, styled, null)).quotedMessage;
-		const sanitized = sanitize(quoted, sanitizeOptions.after);
-		markdownAnnouncement = sanitized;
+		const { message } = await messageHandler(req.body.announcement, req.params.board, null);
+		markdownAnnouncement = message; //is there a destructure syntax for this?
 	}
 
 	let moderators = req.body.moderators != null ? req.body.moderators.split('\r\n').filter(n => n && !(n == res.locals.board.owner)).slice(0,10) : [];
