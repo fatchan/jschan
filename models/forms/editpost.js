@@ -25,8 +25,8 @@ module.exports = async (req, res, next) => {
 		const globalSettings = await cache.get('globalsettings');
 		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
 			let hitGlobalFilter = false
-				, ban;
-				, concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase();
+				, ban
+				, concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase()
 				, allContents = concatContents;
 			if (strictFiltering) {
 				allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); //removing diacritics
