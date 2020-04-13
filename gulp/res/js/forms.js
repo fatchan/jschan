@@ -69,8 +69,15 @@ class formHandler {
 			this.fileInput.addEventListener('change', e => this.fileInputChange(e));
 			this.fileLabel.addEventListener('auxclick', e => this.fileLabelAuxclick(e));
 		}
+		this.messageBox.addEventListener('keydown', e => this.controlEnterSubmit(e));
 		form.addEventListener('paste', e => this.paste(e));
 		form.addEventListener('submit', e => this.formSubmit(e));
+	}
+
+	controlEnterSubmit(e) {
+		if (e.ctrlKey && e.key === 'Enter') {
+			this.formSubmit(e);
+		}
 	}
 
 	formSubmit(e) {
@@ -101,8 +108,8 @@ class formHandler {
 			xhr.onloadstart = () => {
 				this.submit.value = '0%';
 			}
-			xhr.upload.onprogress = (e) => {
-				const progress = Math.floor((e.loaded / e.total) * 100);
+			xhr.upload.onprogress = (ev) => {
+				const progress = Math.floor((ev.loaded / ev.total) * 100);
 				this.submit.value = `${progress}%`;
 			}
 			xhr.onload = () => {
@@ -176,8 +183,8 @@ class formHandler {
 				this.submit.value = this.originalSubmitText;
 			}
 		}
-		xhr.onerror = (e) => {
-			console.error(e); //why is this error fucking useless
+		xhr.onerror = (err) => {
+			console.error(err); //why is this error fucking useless
 			doModal({
 				'title': 'Error',
 				'message': 'Something broke'
