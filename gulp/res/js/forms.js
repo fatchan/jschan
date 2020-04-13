@@ -216,6 +216,17 @@ class formHandler {
 			this.fileInput.removeAttribute('required');
 		}
 		this.files.push(file);
+console.log(file)
+		const listElem = document.createElement('div');
+		listElem.classList.add('upload-item');
+		const thumb = document.createElement('img');
+		const name = document.createElement('p');
+		name.textContent = file.name;
+		thumb.src = URL.createObjectURL(file);
+		thumb.classList.add('upload-thumb');
+		listElem.appendChild(thumb);
+		listElem.appendChild(name);
+		this.fileInput.nextSibling.appendChild(listElem);
 	}
 
 	//show number of files on new label
@@ -238,6 +249,7 @@ class formHandler {
 			this.fileInput.setAttribute('required', true)
 		}
 		this.updateFilesText();
+		this.fileInput.nextSibling.textContent = '';
 	}
 
 	//paste file from clipboard
