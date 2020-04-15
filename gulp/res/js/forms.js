@@ -62,6 +62,7 @@ class formHandler {
 		if (this.fileInput) {
 			this.fileRequired = this.fileInput.required;
 			this.fileLabel = this.fileInput.previousSibling;
+			this.fileUploadList = this.fileInput.nextSibling;
 			this.multipleFiles = this.fileLabel.parentNode.previousSibling.firstChild.textContent.endsWith('s');
 			this.fileLabelText = this.fileLabel.childNodes[0];
 			this.fileLabel.addEventListener('dragover', e => this.fileLabelDrag(e));
@@ -160,9 +161,9 @@ class formHandler {
 					this.updateMessageBox();
 					this.files = [];
 					this.updateFilesText();
-					const captcha = this.form.querySelector('img');
+					const captcha = this.form.querySelector('.captcharefresh');
 					if (captcha) {
-						captcha.dispatchEvent(new Event('dblclick'));
+						captcha.dispatchEvent(new Event('click'));
 					}
 				} else {
 					if (xhr.status === 413) {
@@ -204,11 +205,17 @@ class formHandler {
 		this.messageBox && this.messageBox.dispatchEvent(new Event('input'));
 	}
 
-	//remove a single file, unused atm
-	removeFile(index) {
-		const childNode = this.fileLabel.childNodes[index+1]; //+1 because first one is fileLabelText
-		childNode.remove();
-		files.splice(index, 1);
+	removeFile(fileElem, name, size) {
+		fileElem.remove();
+		let fileIndex;
+		this.files.find((f, index) => {
+			if (f.name === name && f.size === size) {
+				fileIndex = index;
+			}
+		})
+		this.files.splice(fileIndex, 1);
+		this.updateFilesText();
+console.log(this.files)
 	}
 
 	addFile(file) {
@@ -216,17 +223,38 @@ class formHandler {
 			this.fileInput.removeAttribute('required');
 		}
 		this.files.push(file);
-console.log(file)
+		//add to upload list
 		const listElem = document.createElement('div');
 		listElem.classList.add('upload-item');
 		const thumb = document.createElement('img');
 		const name = document.createElement('p');
+		const remove = document.createElement('a');
 		name.textContent = file.name;
-		thumb.src = URL.createObjectURL(file);
+		remove.textContent = 'X';
+		switch (file.type.split('/')[0]) {
+			case 'image':
+				thumb.src = URL.createObjectURL(file);
+				break;
+			case 'audio':
+				thumb.src = '/file/audio.png'
+				break;
+			case 'video':
+				thumb.src = '/file/video.png'
+				break;
+			default:
+				thumb.src = '/file/attachment.png'
+				break;
+		}
 		thumb.classList.add('upload-thumb');
+		remove.classList.add('close');
 		listElem.appendChild(thumb);
 		listElem.appendChild(name);
-		this.fileInput.nextSibling.appendChild(listElem);
+		listElem.appendChild(remove);
+		remove.addEventListener('click', () => {
+			this.removeFile(listElem, file.name, file.size);
+		})
+		this.fileUploadList.appendChild(listElem);
+		this.fileUploadList.style.display = 'unset';
 	}
 
 	//show number of files on new label
@@ -235,6 +263,8 @@ console.log(file)
 			return;
 		}
 		if (this.files && this.files.length === 0) {
+			this.fileUploadList.textContent = '';
+			this.fileUploadList.style.display = 'none';
 			this.fileLabelText.nodeValue = `Select/Drop/Paste file${this.multipleFiles ? 's' : ''}`;
 		} else {
 			this.fileLabelText.nodeValue = `${this.files.length} file${this.files.length > 1 ? 's' : ''} selected`;
@@ -249,7 +279,6 @@ console.log(file)
 			this.fileInput.setAttribute('required', true)
 		}
 		this.updateFilesText();
-		this.fileInput.nextSibling.textContent = '';
 	}
 
 	//paste file from clipboard

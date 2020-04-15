@@ -48,7 +48,7 @@ section.form-wrapper.flex-center
 				span.col
 					include ./filelabel.pug
 					input#file(type='file', name='file' multiple required=fileRequired )
-					div.upload-list
+					.upload-list
 				if board.settings.userPostSpoiler
 					label.postform-style.ph-5.ml-1.fh
 						input(type='checkbox', name='spoiler', value='true')

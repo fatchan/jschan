@@ -262,8 +262,16 @@ p {
 
 .upload-list {
 	max-height: 75px;
-	overflow: hidden auto;
+	overflow-x: hidden;
+	overflow-y: auto;
 	max-width: 100%;
+	scrollbar-width: none;
+	border: 1px solid var(--input-borders);
+	margin-top: 1px;
+	display: none;
+}
+.upload-list::-webkit-scrollbar { 
+    display: none; 
 }
 
 .upload-item {
@@ -273,12 +281,18 @@ p {
 }
 
 .upload-item p {
-	max-width: calc(100% - 60px);
+	max-width: calc(100% - 85px);
 	max-height: 1.5em;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	position: absolute;
 	margin-left: 60px;
+}
+
+.upload-item a {
+	height: 50px;
+	display: flex;
+	align-items: center;
 }
 
 .upload-thumb {
