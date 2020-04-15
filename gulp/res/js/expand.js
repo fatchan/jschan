@@ -47,68 +47,63 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	if (!isCatalog) { //dont expand on catalog
 		const thumbs = document.getElementsByClassName('post-file-src');
-		const toggle = function(thumb, exp, fn, src) {
-			if (loopEnabled) {
-				exp.loop = true;
-			} else {
-				exp.loop = false;
-			}
-			exp.volume = volumeLevel/100;
-			const close = exp.previousSibling.innerText === 'Close' ? exp.previousSibling : null;
-			if (thumb.style.display === 'none') {
-				//closing
+		const toggle = function(thumb, expanded, filename, src) {
+			if (thumb.style.display === 'none') { //closing
 				thumb.style.display = '';
-				exp.style.display = 'none';
-				fn.style.maxWidth = '';
-				if (close) {
+				expanded.style.display = 'none';
+				filename.style.maxWidth = '';
+			} else { //expanding
+				thumb.style.display = 'none';
+				expanded.style.display = '';
+				if (expanded.offsetWidth >= filename.offsetWidth) {
+					filename.style.maxWidth = expanded.offsetWidth+'px';
+				}
+			}
+			//handle css thing for play icon on vid/audio
+			const close = thumb.nextSibling.innerText === 'Close' ? thumb.nextSibling : null;
+			if (close) {
+				expanded.loop = loopEnabled;
+				expanded.volume = volumeLevel/100;
+				if (src.style.visibility === 'hidden') {
 					src.style.visibility = 'visible';
 					close.style.display = 'none';
-					exp.pause();
-				}
-			} else {
-				//expanding
-				thumb.style.display = 'none';
-				exp.style.display = '';
-				if (exp.offsetWidth >= fn.offsetWidth) {
-					fn.style.maxWidth = exp.offsetWidth+'px';
-				}
-				if (close) {
+					expanded.pause();
+				} else {
 					src.style.visibility = 'hidden';
 					close.style.display = '';
-					exp.play();
+					expanded.play();
 				}
 			}
 		}
 
 		const expand = function(e) {
-			const fileLink = this.firstChild;
-			const fileSrc = fileLink.href;
-			const type = this.dataset.type;
+			if (e.target.nodeName === 'VIDEO' || e.target.nodeName === 'AUDIO') {
+				e.stopPropagation();
+				return;
+			}
 			if (this.dataset.attachment == 'true') {
-				return; //attachments dont expand
+				return;
 			}
-			const thumbElement = fileLink.firstChild;
+			e.preventDefault();
+			const fileAnchor = this.firstChild;
+			const fileHref = fileAnchor.href;
+			const type = this.dataset.type;
+			const thumbElement = fileAnchor.firstChild;
 			const fileName = this.previousSibling;
-			const next = thumbElement.nextSibling;
 			const pfs = this.closest('.post-file-src');
-			let expandedElement;
-			if (next) {
-				if (next.innerText === 'Close') {
-					expandedElement = next.nextSibling;
-				} else {
-					expandedElement = next;
-				}
-			}
-			if (!expandedElement && thumbElement.style.opacity !== '0.5') {
+			let expandedElement = type === 'image' ? thumbElement.nextSibling : fileAnchor.nextSibling;
+
+			if (expandedElement) {
+				toggle(thumbElement, expandedElement, fileName, pfs);
+			} else if (thumbElement.style.opacity !== '0.5') {
 				let source;
-				fileLink.style.minWidth = fileLink.offsetWidth+'px';
-				fileLink.style.minHeight = fileLink.offsetHeight+'px';
 				switch(type) {
 					case 'image':
 						e.preventDefault();
+						fileAnchor.style.minWidth = fileAnchor.offsetWidth+'px';
+						fileAnchor.style.minHeight = fileAnchor.offsetHeight+'px';
 						thumbElement.style.opacity = '0.5';
 						thumbElement.style.cursor = 'wait'
-// loading bar experiment
 						if (localStorage.getItem('imageloadingbars') == 'true') {
 							const request = new XMLHttpRequest();
 							request.onprogress = (e) => {
@@ -123,7 +118,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 							}
 							expandedElement = document.createElement('img');
 							source = expandedElement;
-							//some jank here to try and recude any delay induced by xhr
 							const loaded = function(e) {
 								pfs.removeAttribute('data-loading');
 								pfs.removeAttribute('style');
@@ -131,24 +125,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
 								source.src = window.URL.createObjectURL(blob);
 								thumbElement.style.opacity = '';
 								thumbElement.style.cursor = '';
-								fileLink.appendChild(expandedElement);
+								fileAnchor.appendChild(expandedElement);
 								toggle(thumbElement, expandedElement, fileName, pfs);
 							}
 							request.onload = loaded;
 							request.responseType = 'blob';
-							request.open('GET', fileSrc, true);
+							request.open('GET', fileHref, true);
 							request.send(null);
 						} else {
-// loading bar experiment
 							expandedElement = document.createElement('img');
 							source = expandedElement;
 							source.onload = function() {
 								thumbElement.style.opacity = '';
 								thumbElement.style.cursor = '';
-								fileLink.appendChild(expandedElement);
+								fileAnchor.appendChild(expandedElement);
 								toggle(thumbElement, expandedElement, fileName, pfs);
 							}
-							source.src = fileSrc;
+							source.src = fileHref;
 						}
 						break;
 					case 'video':
@@ -165,19 +158,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						expandedElement.controls = 'true';
 						source = document.createElement('source');
 						expandedElement.appendChild(source);
-						fileLink.appendChild(expandedElement);
-						fileLink.insertBefore(close, expandedElement);
+						expandedElement.style.minWidth = fileAnchor.offsetWidth+'px';
+						expandedElement.style.minHeight = fileAnchor.offsetHeight+'px';
+						pfs.appendChild(expandedElement);
+						fileAnchor.appendChild(close);
 						toggle(thumbElement, expandedElement, fileName, pfs);
-						source.src = fileSrc;
+						source.src = fileHref;
 						break;
 					deault:
 						return;
 				}
-			} else if (expandedElement) {
-				e.preventDefault();
-				toggle(thumbElement, expandedElement, fileName, pfs);
-			} else {
-				e.preventDefault();
 			}
 		};
 

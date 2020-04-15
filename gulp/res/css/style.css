@@ -677,6 +677,7 @@ video, img {
 	display: flex;
 	image-orientation: from-image;
 	position:relative;
+	flex-direction: column;
 }
 
 .expanded {
