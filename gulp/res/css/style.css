@@ -260,6 +260,47 @@ p {
 	margin: 5px;
 }
 
+.upload-list {
+	max-height: 75px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	max-width: 100%;
+	scrollbar-width: none;
+	border: 1px solid var(--input-borders);
+	margin-top: 1px;
+	display: none;
+}
+.upload-list::-webkit-scrollbar { 
+    display: none; 
+}
+
+.upload-item {
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.upload-item p {
+	max-width: calc(100% - 85px);
+	max-height: 1.5em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	position: absolute;
+	margin-left: 60px;
+}
+
+.upload-item a {
+	height: 50px;
+	display: flex;
+	align-items: center;
+}
+
+.upload-thumb {
+	width: 50px;
+	height: 50px;
+	object-fit: contain;
+}
+
 .catalog {
 	display:flex;
 	align-items:flex-start;
@@ -299,6 +340,7 @@ p {
 	min-width: 220px;
 	flex-grow: 1;
 	flex-direction: column;
+	min-height: 38px;
 }
 
 .form-file {
@@ -635,6 +677,7 @@ video, img {
 	display: flex;
 	image-orientation: from-image;
 	position:relative;
+	flex-direction: column;
 }
 
 .expanded {
