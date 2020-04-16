@@ -3,6 +3,7 @@
 const { Bypass } = require(__dirname+'/../../db/')
 	, { ObjectId } = require(__dirname+'/../../db/db.js')
 	, { secureCookies, blockBypass } = require(__dirname+'/../../configs/main.js')
+	, deleteTempFiles = require(__dirname+'/../files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../dynamic.js')
 	, production = process.env.NODE_ENV === 'production';
 
@@ -15,6 +16,7 @@ module.exports = async (req, res, next) => {
 	//check if blockbypass exists and right length
 	const bypassId = req.cookies.bypassid;
 	if (!res.locals.solvedCaptcha && (!bypassId || bypassId.length !== 24)) {
+		deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Please complete a block bypass to post',
@@ -55,6 +57,7 @@ module.exports = async (req, res, next) => {
 		return next();
 	}
 
+	deleteTempFiles(req).catch(e => console.error);
 	return dynamicResponse(req, res, 403, 'message', {
 		'title': 'Forbidden',
 		'message': 'Block bypass expired or exceeded max uses',

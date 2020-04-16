@@ -12,6 +12,7 @@ class Dragable {
 		const savedTop = localStorage.getItem('dragtop');
 		if (savedTop != 'null') {
 			this.target.style.top = savedTop;
+			this.target.style.bottom = 'unset';
 		}
 		const savedLeft = localStorage.getItem('dragleft');
 		if (savedLeft != 'null') {
@@ -59,6 +60,7 @@ class Dragable {
 	//start drag and attach appropriate listener for click/drag
 	startDrag(e) {
 		this.draging = true;
+		this.handle.style.cursor = 'grabbing';
 		this.target.style.position = 'fixed';
 		const rect = this.target.getBoundingClientRect();
 		switch (e.type) {
@@ -86,6 +88,7 @@ class Dragable {
 			return;
 		}
 		this.updateMaxSizes();
+		this.target.style.bottom = 'unset';
 		switch (e.type) {
 			case 'mousemove':
 				this.target.style.left = `${this.inBounds(e.clientX, this.xo, this.target.offsetWidth, document.documentElement.clientWidth)}px`;
@@ -108,6 +111,7 @@ class Dragable {
 	stopDrag(e) {
 		if (this.draging) {
 			this.draging = false;
+			this.handle.style.cursor = 'move';
 			window.removeEventListener('mousemove', e => this.doDrag(e));
 			window.removeEventListener('touchmove', e => this.doDrag(e));
 		}

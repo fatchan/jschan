@@ -67,6 +67,7 @@ class formHandler {
 		if (this.fileInput) {
 			this.fileRequired = this.fileInput.required;
 			this.fileLabel = this.fileInput.previousSibling;
+			this.fileUploadList = this.fileInput.nextSibling;
 			this.multipleFiles = this.fileLabel.parentNode.previousSibling.firstChild.textContent.endsWith('s');
 			this.fileLabelText = this.fileLabel.childNodes[0];
 			this.fileLabel.addEventListener('dragover', e => this.fileLabelDrag(e));
@@ -74,20 +75,32 @@ class formHandler {
 			this.fileInput.addEventListener('change', e => this.fileInputChange(e));
 			this.fileLabel.addEventListener('auxclick', e => this.fileLabelAuxclick(e));
 		}
+		this.messageBox.addEventListener('keydown', e => this.controlEnterSubmit(e));
 		form.addEventListener('paste', e => this.paste(e));
 		form.addEventListener('submit', e => this.formSubmit(e));
 	}
 
 	reset() {
+		const savedName = this.form.elements.name && this.form.elements.name.value;
 		this.form.reset();
+		if (this.form.elements.name) {
+			this.form.elements.name.value = savedName
+		}
 		if (this.form.elements.postpassword) {
 			this.form.elements.postpassword.value = localStorage.getItem('postpassword');
 		}
 		this.updateMessageBox();
 		this.files = [];
 		this.updateFilesText();
-		if (this.captcha) {
-			this.captcha.dispatchEvent(new Event('dblclick'));
+		const captcha = this.form.querySelector('.captcharefresh');
+		if (captcha) {
+			captcha.dispatchEvent(new Event('click'));
+		}
+	}
+
+	controlEnterSubmit(e) {
+		if (e.ctrlKey && e.key === 'Enter') {
+			this.formSubmit(e);
 		}
 	}
 
@@ -118,8 +131,8 @@ class formHandler {
 			xhr.onloadstart = () => {
 				this.submit.value = '0%';
 			}
-			xhr.upload.onprogress = (e) => {
-				const progress = Math.floor((e.loaded / e.total) * 100);
+			xhr.upload.onprogress = (ev) => {
+				const progress = Math.floor((ev.loaded / ev.total) * 100);
 				this.submit.value = `${progress}%`;
 			}
 			xhr.onload = () => {
@@ -133,7 +146,6 @@ class formHandler {
 				if (xhr.responseText) {
 					try {
 						json = JSON.parse(xhr.responseText);
-console.log(json)
 					} catch (e) {
 						//wasnt json response
 					}
@@ -180,8 +192,8 @@ console.log(json)
 				this.submit.value = this.originalSubmitText;
 			}
 		}
-		xhr.onerror = (e) => {
-			console.error(e); //why is this error fucking useless
+		xhr.onerror = (err) => {
+			console.error(err); //why is this error fucking useless
 			doModal({
 				'title': 'Error',
 				'message': 'Something broke'
@@ -206,11 +218,16 @@ console.log(json)
 		this.messageBox && this.messageBox.dispatchEvent(new Event('input'));
 	}
 
-	//remove a single file, unused atm
-	removeFile(index) {
-		const childNode = this.fileLabel.childNodes[index+1]; //+1 because first one is fileLabelText
-		childNode.remove();
-		files.splice(index, 1);
+	removeFile(fileElem, name, size) {
+		fileElem.remove();
+		let fileIndex;
+		this.files.find((f, index) => {
+			if (f.name === name && f.size === size) {
+				fileIndex = index;
+			}
+		})
+		this.files.splice(fileIndex, 1);
+		this.updateFilesText();
 	}
 
 	addFile(file) {
@@ -218,6 +235,38 @@ console.log(json)
 			this.fileInput.removeAttribute('required');
 		}
 		this.files.push(file);
+		//add to upload list
+		const listElem = document.createElement('div');
+		listElem.classList.add('upload-item');
+		const thumb = document.createElement('img');
+		const name = document.createElement('p');
+		const remove = document.createElement('a');
+		name.textContent = file.name;
+		remove.textContent = 'X';
+		switch (file.type.split('/')[0]) {
+			case 'image':
+				thumb.src = URL.createObjectURL(file);
+				break;
+			case 'audio':
+				thumb.src = '/file/audio.png'
+				break;
+			case 'video':
+				thumb.src = '/file/video.png'
+				break;
+			default:
+				thumb.src = '/file/attachment.png'
+				break;
+		}
+		thumb.classList.add('upload-thumb');
+		remove.classList.add('close');
+		listElem.appendChild(thumb);
+		listElem.appendChild(name);
+		listElem.appendChild(remove);
+		remove.addEventListener('click', () => {
+			this.removeFile(listElem, file.name, file.size);
+		})
+		this.fileUploadList.appendChild(listElem);
+		this.fileUploadList.style.display = 'unset';
 	}
 
 	//show number of files on new label
@@ -226,6 +275,8 @@ console.log(json)
 			return;
 		}
 		if (this.files && this.files.length === 0) {
+			this.fileUploadList.textContent = '';
+			this.fileUploadList.style.display = 'none';
 			this.fileLabelText.nodeValue = `Select/Drop/Paste file${this.multipleFiles ? 's' : ''}`;
 		} else {
 			this.fileLabelText.nodeValue = `${this.files.length} file${this.files.length > 1 ? 's' : ''} selected`;

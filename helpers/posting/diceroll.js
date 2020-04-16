@@ -13,5 +13,5 @@ module.exports = (match, numdice, numsides, operator, modifier) => {
 			sum -= modifier;
 		}
 	}
-	return `<img src='/img/dice.png' height='16' width='16' /><span class='dice'>(${match}) Rolled ${numdice} dice with ${numsides} sides${modifier ? ' and modifier '+operator+modifier : '' } = ${sum}</span>`;
+	return `<img src='/file/dice.png' height='16' width='16' /><span class='dice'>(${match}) Rolled ${numdice} dice with ${numsides} sides${modifier ? ' and modifier '+operator+modifier : '' } = ${sum}</span>`;
 }

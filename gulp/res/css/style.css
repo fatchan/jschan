@@ -1,7 +1,7 @@
 :root {
-	--attachment-img: url('/img/attachment.png');
-	--spoiler-img: url('/img/spoiler.png');
-	--audio-img: url('/img/audio.png');
+	--attachment-img: url('/file/attachment.png');
+	--spoiler-img: url('/file/spoiler.png');
+	--audio-img: url('/file/audio.png');
 }
 
 body {
@@ -40,6 +40,14 @@ main.minimal {
 	flex-grow: 1;
 }
 
+.wrap {
+	flex-wrap: wrap;
+}
+
+.sb {
+	justify-content: space-between;
+}
+
 .flexcenter {
 	display: flex;
 	flex-direction: column;
@@ -75,7 +83,7 @@ pre {
 	border-bottom: 1px solid var(--post-outline-color);
 	position: fixed;
 	width: 100%;
-	z-index: 1;
+	z-index: 2;
 	top: 0;
 }
 
@@ -108,9 +116,6 @@ pre {
 }
 .fw {
 	width: 100%;
-}
-.fw textarea {
-	height: 1em;
 }
 .pr-20 {
 	padding-right: 20px;
@@ -170,6 +175,10 @@ pre {
 	background: var(--darken);
 	height: 1.75em;
 	cursor: move;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
 }
 
 .statwrap {
@@ -251,6 +260,47 @@ p {
 	margin: 5px;
 }
 
+.upload-list {
+	max-height: 75px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	max-width: 100%;
+	scrollbar-width: none;
+	border: 1px solid var(--input-borders);
+	margin-top: 1px;
+	display: none;
+}
+.upload-list::-webkit-scrollbar { 
+    display: none; 
+}
+
+.upload-item {
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.upload-item p {
+	max-width: calc(100% - 85px);
+	max-height: 1.5em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	position: absolute;
+	margin-left: 60px;
+}
+
+.upload-item a {
+	height: 50px;
+	display: flex;
+	align-items: center;
+}
+
+.upload-thumb {
+	width: 50px;
+	height: 50px;
+	object-fit: contain;
+}
+
 .catalog {
 	display:flex;
 	align-items:flex-start;
@@ -290,6 +340,7 @@ p {
 	min-width: 220px;
 	flex-grow: 1;
 	flex-direction: column;
+	min-height: 38px;
 }
 
 .form-file {
@@ -626,6 +677,7 @@ video, img {
 	display: flex;
 	image-orientation: from-image;
 	position:relative;
+	flex-direction: column;
 }
 
 .expanded {
@@ -650,6 +702,7 @@ video, img {
 	background-image: var(--attachment-img);
 }
 .spoilerimg {
+	cursor: help;
 	background-image: var(--spoiler-img);
 }
 .audioimg {
@@ -839,10 +892,11 @@ a.button {
 	-moz-appearance: button;
 	appearance: button;
 	text-decoration: none;
-	color: initial;
+	cursor: pointer;
+	color: black;
 }
 
-a.button:hover {
+.button:hover {
 	color: initial!important;
 }
 
@@ -891,7 +945,7 @@ input[type="file"] {
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
 	position: fixed;
-	top: 3em;
+	top: 3.5em;
 	right: 5px;
 	background-color: var(--post-color);
 	z-index: 2;
@@ -918,7 +972,7 @@ iframe.captcha, iframe.bypass {
 }
 
 iframe.bypass {
-	height: 215px;
+	height: 235px;
 	width: 330px;
 }
 
@@ -930,9 +984,18 @@ iframe.bypass {
 	box-sizing: border-box;
 	object-fit: contain;
 	overflow: hidden;
+	position: relative;
 }
 
-.label {
+.captcharefresh {
+    position: absolute;
+	bottom: 0;
+    left: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.label, .rlabel {
 	padding: 3px;
 	border: 1px solid var(--box-border-color);
 	min-width: 80px;
@@ -943,6 +1006,10 @@ iframe.bypass {
 	align-items: start;
 	flex-direction: column;
 	justify-content: center;
+}
+.rlabel {
+	margin-right: 0;
+	margin-left: 1px;
 }
 
 hr {
@@ -1026,7 +1093,7 @@ table.boardtable td:nth-child(6) {
 	background: black;
 	width: 100%;
 	border-left: var(--data-loading) solid darkgreen;
-	transition: all 0.3s ease;
+	transition: all 0.3s;
 }
 .post-file-src[data-type="image"][data-loading]::after {
 	content: attr(data-loading) "%";
@@ -1050,6 +1117,16 @@ table, .boardtable {
 	text-align: center;
 }
 
+#settingsmodal{
+	min-width: 400px;
+}
+#settingsmodal .form-wrapper.flexleft.mt-10, #settingsmodal .form-wrapper.flexleft.mt-10 .row {
+	width: 100%
+}
+row.wrap.sb .col {
+    flex-basis: calc(50% - 5px);
+}
+
 @media only screen and (max-height: 400px) {
 	.modal {
 		top: 5px;
@@ -1061,6 +1138,10 @@ table, .boardtable {
 
 	#settings::after {
 		content: "\2699"!important;
+	}
+	#settingsmodal {
+		width: 100%;
+		min-width: unset;
 	}
  	[title] {
 		position:relative
@@ -1105,10 +1186,6 @@ table, .boardtable {
 		max-height: calc(100% - 10px);
 	}
 
-	.postmenu {
-		float: right;
-	}
-
 	.post-file-info {
 		max-width: 150px;
 	}
@@ -1134,8 +1211,13 @@ table, .boardtable {
 	}
 
 	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select, #dragHandle {
-		height: 2.25em;
+		min-height: 2.25em;
 		box-sizing: border-box;
+	}
+
+	.postmenu {
+		float: right;
+		min-height: 1em;
 	}
 
 	.filelabel {
@@ -1201,7 +1283,7 @@ table, .boardtable {
 	display: inline-block;
 	width: 16px;
 	height: 11px;
-	background:url(/img/flags.png) no-repeat;
+	background:url(/file/flags.png) no-repeat;
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 	image-rendering: -webkit-optimize-contrast;

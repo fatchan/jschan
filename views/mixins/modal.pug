@@ -29,6 +29,70 @@ mixin modal(data)
 		else if data.settings
 			.row
 				.form-wrapper.flexleft.mt-10
+					.row.wrap.sb
+						.col.mr-5
+							.row
+								label.postform-style.ph-5
+									input#live-setting(type='checkbox')
+								.rlabel Live posts
+							.row
+								label.postform-style.ph-5
+									input#notification-setting(type='checkbox')
+								.rlabel Notifications
+							.row
+								label.postform-style.ph-5
+									input#scroll-setting(type='checkbox')
+								.rlabel Scroll to new posts
+							.row
+								label.postform-style.ph-5
+									input#localtime-setting(type='checkbox')
+								.rlabel Local time
+							.row
+								label.postform-style.ph-5
+									input#24hour-setting(type='checkbox')
+								.rlabel 24h time
+							.row
+								label.postform-style.ph-5
+									input#relative-setting(type='checkbox')
+								.rlabel Show relative time
+
+						.col
+
+							.row
+								label.postform-style.ph-5
+									input#hideimages-setting(type='checkbox')
+								.rlabel Hide Thumbnails
+							.row
+								label.postform-style.ph-5
+									input#hiderecursive-setting(type='checkbox')
+								.rlabel Recursive Post Hide
+							.row
+								label.postform-style.ph-5
+									input#loop-setting(type='checkbox')
+								.rlabel Loop audio/video
+							.row
+								label.postform-style.ph-5
+									input#heightlimit-setting(type='checkbox')
+								.rlabel Unlimit expand height
+							.row
+								label.postform-style.ph-5
+									input#crispimages-setting(type='checkbox')
+								.rlabel Crisp image rendering
+							.row
+								label.postform-style.ph-5
+									input#imageloadingbars-setting(type='checkbox')
+								.rlabel Image loading bars
+
+					.row
+						.label Video/Audio Volume
+						label.postform-style.ph-5
+							input#volume-setting(type='range' min='0' max='100')
+					.row
+						.label Post Password
+						input#postpassword-setting(type='password' name='postpassword')
+					.row
+						.label Default Name
+						input#name-setting(type='text' name='name')
 					.row
 						.label Theme
 						select#theme-setting
@@ -42,63 +106,5 @@ mixin modal(data)
 							each theme in data.settings.codeThemes
 								option(value=theme) #{theme}
 					.row
-						.label Live posts
-						label.postform-style.ph-5
-							input#live-setting(type='checkbox')
-					.row
-						.label Notifications
-						label.postform-style.ph-5
-							input#notification-setting(type='checkbox')
-					.row
-						.label Scroll to new posts
-						label.postform-style.ph-5
-							input#scroll-setting(type='checkbox')
-					.row
-						.label Local time
-						label.postform-style.ph-5
-							input#localtime-setting(type='checkbox')
-					.row
-						.label 24h time
-						label.postform-style.ph-5
-							input#24hour-setting(type='checkbox')
-					.row
-						.label Show relative time
-						label.postform-style.ph-5
-							input#relative-setting(type='checkbox')
-					.row
-						.label Hide Thumbnails
-						label.postform-style.ph-5
-							input#hideimages-setting(type='checkbox')
-					.row
-						.label Recursive Post Hide
-						label.postform-style.ph-5
-							input#hiderecursive-setting(type='checkbox')
-					.row
-						.label Video/Audio Volume
-						label.postform-style.ph-5
-							input#volume-setting(type='range' min='0' max='100')
-					.row
-						.label Loop audio/video
-						label.postform-style.ph-5
-							input#loop-setting(type='checkbox')
-					.row
-						.label Unlimit expand height
-						label.postform-style.ph-5
-							input#heightlimit-setting(type='checkbox')
-					.row
-						.label Crisp image rendering
-						label.postform-style.ph-5
-							input#crispimages-setting(type='checkbox')
-					.row
-						.label Image loading bars (EXPERIMENTAL)
-						label.postform-style.ph-5
-							input#imageloadingbars-setting(type='checkbox')
-					.row
-						.label Post Password
-						input#postpassword-setting(type='password' name='postpassword')
-					.row
-						.label Default Name
-						input#name-setting(type='text' name='name')
-					.row
 						.label Custom CSS
-						textarea#customcss-setting
+						textarea#customcss-setting(rows=7)

@@ -11,7 +11,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	let supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window;
 	const livecolor = document.getElementById('livecolor');
-	const livetext = isThread ? document.getElementById('livetext').childNodes[1] : null;
+	const livetext = isThread && document.getElementById('livetext') ? document.getElementById('livetext').childNodes[1] : null;
 	const updateButton = livetext ? livetext.nextSibling : null;
 	const updateLive = (message, color, showRelativeTime) => {
 		livecolor.style.backgroundColor = color;
@@ -67,9 +67,13 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		}
 		if (notificationsEnabled) {
 			if (!window.myPostId || window.myPostId != postData.postId) {
-				new Notification(document.title, {
+				const notifTitle = document.title;
+				const notifOptions = {
 					body: postData.nomarkup ? postData.nomarkup.substring(0,100) : ''
-				});
+				}
+				try {
+					new Notification(notifTitle, notifOptions);
+				} catch (e) { /* dont break when notification cant send for some reason */ }
 			}
 		}
 		const newPostEvent = new CustomEvent('addPost', {

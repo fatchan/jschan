@@ -21,7 +21,7 @@ const gulp = require('gulp')
 		},
 		images: {
 			src: 'gulp/res/img/*',
-			dest: 'static/img/'
+			dest: 'static/file/'
 		},
 		scripts: {
 			src: 'gulp/res/js',
@@ -116,7 +116,7 @@ async function wipe() {
 		del([ 'static/json/*' ]),
 		del([ 'static/banner/*' ]),
 		del([ 'static/captcha/*' ]),
-		del([ 'static/img/*' ]),
+		del([ 'static/file/*' ]),
 		del([ 'static/css/*' ]),
 		fs.ensureDir(`${uploadDirectory}/captcha`),
 	]);
@@ -180,7 +180,7 @@ function scripts() {
 		fs.writeFileSync('gulp/res/js/timezone.js', serverTimeZone);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
-		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
+		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.slim.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
 	} catch (e) {
 		if (e.code !== 'EEXIST') {
 			console.log(e);
@@ -201,7 +201,7 @@ function scripts() {
 			`!${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('all.js'))
-		.pipe(uglify())
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
 			`${paths.scripts.src}/dragable.js`,
@@ -209,7 +209,7 @@ function scripts() {
 			`${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('render.js'))
-		.pipe(uglify())
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 

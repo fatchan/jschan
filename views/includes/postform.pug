@@ -8,7 +8,7 @@ section.form-wrapper.flex-center
 			input(type='hidden' name='_csrf' value=csrf)
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
 		section.row.jsonly
-			.noselect#dragHandle
+			.noselect#dragHandle New Post
 		if board.settings.forceAnon && !modview
 			section.row
 				.label Sage
@@ -40,13 +40,15 @@ section.form-wrapper.flex-center
 					span File#{maxFiles > 1 ? 's' : ''}
 						if fileRequired
 							span.required *
+					|
+					| 
 					if maxFiles > 1
-						|
-						|
-						small (Max #{maxFiles})
+						small Max #{maxFiles} files
+					small #{postFilesSize} total
 				span.col
 					include ./filelabel.pug
 					input#file(type='file', name='file' multiple required=fileRequired )
+					.upload-list
 				if board.settings.userPostSpoiler
 					label.postform-style.ph-5.ml-1.fh
 						input(type='checkbox', name='spoiler', value='true')

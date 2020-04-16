@@ -48,7 +48,7 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const { filters, filterBanDuration, filterMode,
+	const { filterBanDuration, filterMode, filters,
 			maxFiles, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler,
 			defaultName, pphTrigger, tphTrigger, triggerAction,
@@ -98,18 +98,19 @@ module.exports = async (req, res, next) => {
 			, ban;
 		let concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase();
 		let allContents = concatContents;
-		if (strictFiltering) { //strict filtering adds a few transformations of the text to try and match filters when sers use techniques like zalgo, ZWS, markdown, multi-line, etc.
+		if (strictFiltering || res.locals.board.settings.strictFiltering) { //strict filtering adds a few transformations of the text to try and match filters when sers use techniques like zalgo, ZWS, markdown, multi-line, etc.
 			allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); //removing diacritics
 			allContents += concatContents.replace(/[\u200B-\u200D\uFEFF]/g, ''); //removing ZWS
-			allContents += concatContents.replace(/[^a-zA-Z0-9]+/gm, ''); //removing anything thats not alphamnumeric
+			allContents += concatContents.replace(/[^a-zA-Z0-9.-]+/gm, ''); //removing anything thats not alphamnumeric or . and -
 		}
 		//global filters
 		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
 			hitGlobalFilter = globalSettings.filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
 		}
-		//board-specific filters
+		//board-specific filters (doesnt use strict filtering)
 		if (!hitGlobalFilter && res.locals.permLevel >= 4 && filterMode > 0 && filters && filters.length > 0) {
-			hitLocalFilter = filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
+			const localFilterContents = res.locals.board.settings.strictFiltering ? allContents : concatContents;
+			hitLocalFilter = filters.some(filter => { return localFilterContents.includes(filter.toLowerCase()) });
 		}
 		if (hitGlobalFilter || hitLocalFilter) {
 			await deleteTempFiles(req).catch(e => console.error);
@@ -196,7 +197,7 @@ module.exports = async (req, res, next) => {
 			await Files.increment(processedFile);
 			req.files.file[i].inced = true;
 			//check if already exists
-			const existsFull = await pathExists(`${uploadDirectory}/img/${processedFile.filename}`);
+			const existsFull = await pathExists(`${uploadDirectory}/file/${processedFile.filename}`);
 			processedFile.sizeString = formatSize(processedFile.size)
 
 			if (mimeTypes.other.has(processedFile.mimetype)) {
@@ -204,19 +205,19 @@ module.exports = async (req, res, next) => {
 				processedFile.hasThumb = false;
 				processedFile.attachment = true;
 				if (!existsFull) {
-					await moveUpload(file, processedFile.filename, 'img');
+					await moveUpload(file, processedFile.filename, 'file');
 				}
 			} else {
 				switch (type) {
 					case 'image': {
-						const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						processedFile.geometry = imageData.size ;
 						processedFile.geometryString = imageData.Geometry;
 						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
 							&& processedFile.geometry.height <= thumbSize
 							&& processedFile.geometry.width <= thumbSize);
 						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'img');
+							await moveUpload(file, processedFile.filename, 'file');
 						}
 						if (!existsThumb && processedFile.hasThumb) {
 							await imageThumbnail(processedFile);
@@ -225,7 +226,7 @@ module.exports = async (req, res, next) => {
 						break;
 					}
 					case 'video': {
-						const existsThumb = await pathExists(`${uploadDirectory}/img/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						//video metadata
 						const videoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
 						videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
@@ -243,7 +244,7 @@ module.exports = async (req, res, next) => {
 						processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`
 						processedFile.hasThumb = true;
 						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'img');
+							await moveUpload(file, processedFile.filename, 'file');
 						}
 						if (!existsThumb) {
 							await videoThumbnail(processedFile, processedFile.geometry);
@@ -257,7 +258,7 @@ module.exports = async (req, res, next) => {
 						processedFile.durationString = timeUtils.durationString(audioData.format.duration*1000);
 						processedFile.hasThumb = false;
 						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'img');
+							await moveUpload(file, processedFile.filename, 'file');
 						}
 						break;
 					}
