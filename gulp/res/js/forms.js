@@ -60,10 +60,9 @@ class formHandler {
 		if (this.submit) {
 			this.originalSubmitText = this.submit.value;
 		}
-		this.fileInput = form.querySelector('input[type="file"]');
-		this.captcha = this.form.querySelector('img');
 		this.minimal = this.form.elements.minimal;
 		this.files = [];
+		this.fileInput = form.querySelector('input[type="file"]');
 		if (this.fileInput) {
 			this.fileRequired = this.fileInput.required;
 			this.fileLabel = this.fileInput.previousSibling;
@@ -75,7 +74,7 @@ class formHandler {
 			this.fileInput.addEventListener('change', e => this.fileInputChange(e));
 			this.fileLabel.addEventListener('auxclick', e => this.fileLabelAuxclick(e));
 		}
-		this.messageBox.addEventListener('keydown', e => this.controlEnterSubmit(e));
+		this.messageBox && this.messageBox.addEventListener('keydown', e => this.controlEnterSubmit(e));
 		form.addEventListener('paste', e => this.paste(e));
 		form.addEventListener('submit', e => this.formSubmit(e));
 	}
@@ -372,6 +371,7 @@ window.addEventListener('settingsReady', () => {
 
 	const forms = document.getElementsByTagName('form');
 	for(let i = 0; i < forms.length; i++) {
+console.log(forms[i])
 		if (forms[i].method === 'post' /*&& forms[i].encoding === 'multipart/form-data'*/) {
 			new formHandler(forms[i]);
 		}
