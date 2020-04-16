@@ -4,6 +4,7 @@ const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 	, { ObjectId } = require(__dirname+'/../../db/db.js')
 	, remove = require('fs-extra').remove
 	, dynamicResponse = require(__dirname+'/../dynamic.js')
+	, deleteTempFiles = require(__dirname+'/../files/deletetempfiles.js')
 	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js');
 
 module.exports = async (req, res, next) => {
@@ -22,6 +23,7 @@ module.exports = async (req, res, next) => {
 	//check if captcha field in form is valid
 	const input = req.body.captcha;
 	if (!input || input.length !== 6) {
+		deleteTempFiles(req).catch(e => console.error);
 		if (isBypass) {
 			return res.status(403).render('bypass', {
 				'minimal': req.body.minimal,
@@ -38,6 +40,7 @@ module.exports = async (req, res, next) => {
 	//make sure they have captcha cookie and its 24 chars
 	const captchaId = req.cookies.captchaid;
 	if (!captchaId || captchaId.length !== 24) {
+		deleteTempFiles(req).catch(e => console.error);
 		if (isBypass) {
 			return res.status(403).render('bypass', {
 				'minimal': req.body.minimal,
@@ -62,6 +65,7 @@ module.exports = async (req, res, next) => {
 
 	//check that it exists and matches captcha in DB
 	if (!captcha || !captcha.value || captcha.value.text !== input) {
+		deleteTempFiles(req).catch(e => console.error);
 		if (isBypass) {
 			return res.status(403).render('bypass', {
 				'minimal': req.body.minimal,
