@@ -18,6 +18,7 @@ const express = require('express')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, Mongo = require(__dirname+'/db/db.js')
 	, Socketio = require(__dirname+'/socketio.js')
+	, commit = require(__dirname+'/helpers/commit.js')
 	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
 	, { DAY } = require(__dirname+'/helpers/timeutils.js')
 	, CachePugTemplates = require('cache-pug-templates');
@@ -85,6 +86,7 @@ const express = require('express')
 	app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 	app.locals.globalLimits = globalLimits;
 	app.locals.ipHashPermLevel = ipHashPermLevel;
+	app.locals.commit = commit;
 	app.locals.meta = meta;
 
 	// routes

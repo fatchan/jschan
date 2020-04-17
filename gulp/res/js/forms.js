@@ -371,7 +371,6 @@ window.addEventListener('settingsReady', () => {
 
 	const forms = document.getElementsByTagName('form');
 	for(let i = 0; i < forms.length; i++) {
-console.log(forms[i])
 		if (forms[i].method === 'post' /*&& forms[i].encoding === 'multipart/form-data'*/) {
 			new formHandler(forms[i]);
 		}
