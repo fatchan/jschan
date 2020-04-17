@@ -257,7 +257,7 @@ p {
 	width: 64px !important;
 	height: 64px !important;
 	object-fit: cover;
-	margin: 5px;
+	margin: 5px auto;
 }
 
 .upload-list {
