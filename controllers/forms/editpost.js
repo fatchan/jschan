@@ -29,7 +29,7 @@ module.exports = async (req, res, next) => {
 
 	try {
 		res.locals.board = await Boards.findOne(req.body.board);
-		res.locals.post = await Posts.getPost(req.body.board, req.body.postId);
+		res.locals.post = await Posts.getPost(req.body.board, +req.body.postId);
 	} catch (err) {
 		return next(err);
 	}

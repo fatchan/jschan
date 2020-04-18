@@ -535,7 +535,6 @@ module.exports = async (req, res, next) => {
 
 	//always rebuild catalog for post counts and ordering
 	buildQueue.push({
-		'id': `${req.params.board}:catalog`,
 		'task': 'buildCatalog',
 		'options': {
 			'board': res.locals.board,

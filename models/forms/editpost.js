@@ -4,18 +4,19 @@ const { Posts, Bans } = require(__dirname+'/../../db/')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
-	, { strictFiltering } = require(__dirname+'/../../configs/main.js');
-//	, buildQueue = require(__dirname+'/../../queue.js')
-//	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-//	, { buildThread } = require(__dirname+'/../../helpers/tasks.js')
+	, { previewReplies, strictFiltering } = require(__dirname+'/../../configs/main.js')
+	, buildQueue = require(__dirname+'/../../queue.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, { buildThread } = require(__dirname+'/../../helpers/tasks.js')
+	, { remove } = require('fs-extra');
 
 module.exports = async (req, res, next) => {
 
 /*
-	todo:
-	-quote un/re-linking
-	-rebuilds
-	-redirects to dynamicresponse
+todo: handle some more situations
+- last activity date
+- correct bump date when editing thread or last post in a thread
+- allow for regular users (OP ONLY) and option for staff to disable in board settings
 */
 
 	const { board, post } = res.locals;
@@ -40,7 +41,6 @@ module.exports = async (req, res, next) => {
 					return dynamicResponse(req, res, 400, 'message', {
 						'title': 'Bad request',
 						'message': 'Your edit was blocked by a global word filter',
-						//'redirect': redirect
 					});
 				} else {
 					const banDate = new Date();
@@ -72,18 +72,16 @@ module.exports = async (req, res, next) => {
 	const { message, quotes, crossquotes } = await messageHandler(req.body.message, req.body.board, post.thread);
 	//todo: email and subject (probably dont need any transformation since staff bypass limits on forceanon, and it doesnt have to account for sage/etc
 
-	console.log('old quotes', post.quotes)
-	console.log('new quotes', quotes)
-
-//find intersection of old and new quotes
-//unlink any quotes that dont exist anymore
-//NOTE: crossquotes can be ignored since they dont create backlinks, and can just be overwritten in updated post obejct
-/*
-	//linking only new quotes to new posts
-	if (newQuotes.length > 0) {
+	//intersection/difference of quotes sets for linking and unlinking
+	const oldQuoteIds = post.quotes.map(q => q._id);
+	const oldQuotesSet = new Set(oldQuoteIds);
+	const newQuoteIds = quotes.map(q => q._id);
+	const addedQuotesSet = new Set(newQuoteIds.filter(qid => !oldQuotesSet.has(qid)));
+	//linking new added quotes
+	if (addedQuotesSet.size > 0) {
 		await Posts.db.updateMany({
 			'_id': {
-				'$in': newQuotes.map(q => q._id)
+				'$in': [...addedQuotesSet]
 			}
 		}, {
 			'$push': {
@@ -91,59 +89,96 @@ module.exports = async (req, res, next) => {
 			}
 		});
 	}
-*/
 
-/*
-	//unlinking only old backlinks that shouldnt exist anymore
-	if (oldQuotes.length > 0) {
+	const removedQuotesSet = new Set(oldQuoteIds.filter(qid => !addedQuotesSet.has(qid)));
+	//unlinking removed quotes
+	if (removedQuotesSet.size > 0) {
 		await Posts.db.updateMany({
-				'_id': {
-					'$in': oldQuotes.map(q => q._id)
-				}
-			}, {
-				'$pull': {
-					'backlinks': {
-						'postId': post.postId
-					}
+			'_id': {
+				'$in': [...removedQuotesSet]
+			}
+		}, {
+			'$pull': {
+				'backlinks': {
+					'postId': post.postId
 				}
 			}
 		});
 	}
-*/
 
-	//new edited prop for post
-	const edited = {
-		username: req.session.user.username,
-		date: new Date(),
-	}
 
 	//update the post
-	const postId = await Posts.updateOne({
+	const postId = await Posts.db.updateOne({
 		board: req.body.board,
 		postId: post.postId
 	}, {
 		'$set': {
-			edited,
-
+			edited: {
+				username: req.session.user.username,
+				date: new Date(),
+			},
 			message,
 			quotes,
 			crossquotes,
-
 			name,
 			tripcode,
 			capcode,
-
-			email,
-			subject,
+			email: req.body.email,
+			subject: req.body.subject,
 		}
 	});
 
-	//optional: update last board activity? probs not tho
+	const buildOptions = {
+		'threadId': post.thread || post.postId,
+		'board': res.locals.board
+	};
 
-	//success message
+	//build thread immediately for redirect
+	await buildThread(buildOptions);
 
-	//rebuild thread
-	//rebuild index page
-	//if OP, rebuild catalog
+	dynamicResponse(req, res, 200, 'message', {
+		'title': 'Success',
+		'message': 'Post edited successfully',
+		//redirect
+	});
+	res.end();
+
+	let postInPreviewPosts = false;
+	if (post.thread) {
+		const threadPreviewPosts = await Posts.db.find({
+			'thread': post.thread,
+			'board': board._id
+		},{
+			'projection': {
+				'postId': 1, //only get postId
+			}
+		}).sort({
+			'postId': -1
+		}).limit(previewReplies).toArray();
+		postInPreviewPosts = threadPreviewPosts.some(p => p.postId <= post.postId)
+	}
+
+	if (post.thread === null || postInPreviewPosts) {
+		const thread = post.thread === null ? post : (await Posts.getPost(board._id, post.thread));
+		const threadPage = await Posts.getThreadPage(board._id, thread);
+		//rebuild index page if its a thread or visible in preview posts
+		buildQueue.push({
+			'task': 'buildBoard',
+			'options': {
+				'board': res.locals.board,
+				'page': threadPage
+			}
+		});
+	}
+
+	if (post.thread === null) {
+		//rebuild catalog if its a thread to correct catalog tile
+		buildQueue.push({
+			'task': 'buildCatalog',
+			'options': {
+				'board': res.locals.board,
+			}
+		});
+	}
 
 }

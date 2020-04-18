@@ -119,7 +119,9 @@ class formHandler {
 		} else {
 			postData = new URLSearchParams([...(new FormData(this.form))]);
 		}
-		if (this.banned || this.minimal) {
+		if (this.banned
+			|| this.minimal
+			|| (postData instanceof URLSearchParams && postData.get('edit') === '1')) {
 			return true;
 		} else {
 			e.preventDefault();
@@ -172,7 +174,9 @@ class formHandler {
 							forceUpdate();
 						}
 					}
-					this.reset();
+					if (this.form.getAttribute('action') !== '/forms/editpost') { //dont reset on edit, keep the new values in there. todo: add exceptions/better handling for this situation
+						this.reset();
+					}
 				} else {
 					if (xhr.status === 413) {
 						this.clearFiles();
