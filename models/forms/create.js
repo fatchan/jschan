@@ -1,6 +1,7 @@
 'use strict';
 
 const { Boards, Accounts } = require(__dirname+'/../../db/')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { ensureDir } = require('fs-extra')
 	, { boardDefaults } = require(__dirname+'/../../configs/main.js');
@@ -15,7 +16,7 @@ module.exports = async (req, res, next) => {
 
 	// if board exists reject
 	if (board != null) {
-		return res.status(409).render('message', {
+		return dynamicResponse(req, res, 409, 'message', {
 			'title': 'Conflict',
 			'message': 'Board with this URI already exists',
 			'redirect': '/create.html'

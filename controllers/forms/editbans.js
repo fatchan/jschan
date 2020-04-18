@@ -1,6 +1,7 @@
 'use strict';
 
 const removeBans = require(__dirname+'/../../models/forms/removebans.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, denyAppeals = require(__dirname+'/../../models/forms/denybanappeals.js');
 
 module.exports = async (req, res, next) => {
@@ -17,7 +18,7 @@ module.exports = async (req, res, next) => {
 	const redirect = req.params.board ? `/${req.params.board}/manage/bans.html` : '/globalmanage/bans.html';
 
 	if (errors.length > 0) {
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
 			redirect
@@ -38,7 +39,7 @@ module.exports = async (req, res, next) => {
 		return next(err);
 	}
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		message,
 		redirect

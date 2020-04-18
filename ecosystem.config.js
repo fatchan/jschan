@@ -1,13 +1,10 @@
+const numCpus = require('os').cpus().length;
 module.exports = {
 	// Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
 	apps : [{
 		name: 'build-worker',
 		script: 'worker.js',
-		instances: 2,
-		/*
-			increase instances if building is getting backed up,
-			best to keep at numCPUs-1 to prevent server choke under high load though.
-		*/
+		instances: Math.floor(numCpus/2), //if you only have 1 core and floor to 0, 0 just means "all cores" which is correct in that case.
 		autorestart: true,
 		watch: false,
 		max_memory_restart: '1G',
@@ -24,7 +21,7 @@ module.exports = {
 	}, {
 		name: 'chan',
 		script: 'server.js',
-		instances: 0, // 0 = number of cpu cores
+		instances: Math.floor(numCpus/2),
 		autorestart: true,
 		watch: false,
 		max_memory_restart: '1G',

@@ -16,13 +16,22 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, getAffectedBoards = require(__dirname+'/../../helpers/affectedboards.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/main.js')
+	, threadRegex = /\/[a-z0-9]+\/(?:manage\/)?thread\/(\d+)\.html/i
 	, { createHash, timingSafeEqual } = require('crypto');
 
 module.exports = async (req, res, next) => {
 
-	const redirect = req.headers.referer || `/${req.params.board ? req.params.board+'/manage/reports' : 'globalmanage/recents'}.html`;
+	let redirect = req.headers.referer;
+	if (!redirect) {
+		if (!req.params.board) {
+			redirect = '/globalmanage/recent.html';
+		} else {
+			redirect = `/${req.params.board}/${req.path.endsWith('modactions') ? 'manage/reports' : 'index'}.html`;
+		}
+	}
 
 	//if user isnt staff, and they put an action that requires password, e.g. delete/spoiler, then filter posts to only matching password
 	if (res.locals.permLevel >= 4 && res.locals.actions.numPasswords > 0) {
@@ -41,7 +50,7 @@ module.exports = async (req, res, next) => {
 		}
 		//no posts matched password, reject
 		if (passwordPosts.length === 0) {
-			return res.status(403).render('message', {
+			return dynamicResponse(req, res, 403, 'message', {
 				'title': 'Forbidden',
 				'error': 'Password did not match any selected posts',
 				redirect,
@@ -53,6 +62,16 @@ module.exports = async (req, res, next) => {
 	//affected boards, list and page numbers
 	const deleting = req.body.delete || req.body.delete_ip_board || req.body.delete_ip_global || req.body.delete_ip_thread;
 	let { boardThreadMap, beforePages, threadBoards } = await getAffectedBoards(res.locals.posts, deleting);
+
+	if (deleting
+		&& req.params.board
+		&& req.headers.referer
+		&& boardThreadMap[req.params.board]) {
+		const threadRefMatch = req.headers.referer.match(threadRegex);
+		if (threadRefMatch && boardThreadMap[req.params.board].directThreads.has(+threadRefMatch[1])) {
+			redirect = `/${req.params.board}/${req.path.endsWith('modactions') ? 'manage/' : ''}index.html`;
+		}
+	}
 
 	const messages = [];
 	const modlogActions = []
@@ -561,7 +580,7 @@ module.exports = async (req, res, next) => {
 		await Promise.all(parallelPromises);
 	}
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'messages': messages,
 		redirect,

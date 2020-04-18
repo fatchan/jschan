@@ -5,6 +5,7 @@ const { lockWait, globalLimits, boardDefaults, cacheTemplates, meta } = require(
 	, formatSize = require(__dirname+'/files/formatsize.js')
 	, pug = require('pug')
 	, path = require('path')
+	, commit = require(__dirname+'/commit.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, redlock = require(__dirname+'/../redlock.js')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
@@ -14,6 +15,7 @@ module.exports = async (htmlName, templateName, options, json=null) => {
 		...options,
 		cache: cacheTemplates,
 		meta,
+		commit,
 		defaultTheme: boardDefaults.theme,
 		defaultCodeTheme: boardDefaults.codeTheme,
 		postFilesSize: formatSize(globalLimits.postFilesSize.max),

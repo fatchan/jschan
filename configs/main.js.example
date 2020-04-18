@@ -89,9 +89,9 @@ module.exports = {
 	enableWebring: false,
 
 	//let all users create new boards
-	enableUserBoards: true,
+	enableUserBoardCreation: true,
 	//allow new accounts to be created
-	enableAccountCreation: true,
+	enableUserAccountCreation: true,
 
 	/* extension for thumbnails. this value is used UNLESS the image contains transparency,
 		in which case png is used. */

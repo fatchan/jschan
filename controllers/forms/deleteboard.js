@@ -2,6 +2,7 @@
 
 const { Boards } = require(__dirname+'/../../db/')
 	, deleteBoard = require(__dirname+'/../../models/forms/deleteboard.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
 
 module.exports = async (req, res, next) => {
@@ -35,7 +36,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (errors.length > 0) {
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': req.params.board ? `/${req.params.board}/manage/settings.html` : '/globalmanage/recent.html'
@@ -48,7 +49,7 @@ module.exports = async (req, res, next) => {
 		return next(err);
 	}
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': 'Board deleted',
 		'redirect': req.params.board ? '/' : '/globalmanage/recent.html'

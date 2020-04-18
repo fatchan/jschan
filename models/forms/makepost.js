@@ -398,7 +398,7 @@ module.exports = async (req, res, next) => {
 		if (cyclicOverflowPosts.length > 0) {
 			await deletePosts(cyclicOverflowPosts, req.params.board);
 			const fileCount = cyclicOverflowPosts.reduce((post, acc) => {
-				return acc + post.files.length;
+				return acc + (post.files ? post.files.length : 0);
 			}, 0);
 			//reduce amount counted in post by number of posts deleted
 			await Posts.db.updateOne({

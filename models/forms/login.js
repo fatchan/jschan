@@ -1,6 +1,7 @@
 'use strict';
 
 const bcrypt = require('bcrypt')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { Accounts } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
@@ -15,7 +16,7 @@ module.exports = async (req, res, next) => {
 
 	//if the account doesnt exist, reject
 	if (!account) {
-		return res.status(403).render('message', {
+		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Incorrect username or password',
 			'redirect': failRedirect
@@ -42,7 +43,7 @@ module.exports = async (req, res, next) => {
 
 	}
 
-	return res.status(403).render('message', {
+	return dynamicResponse(req, res, 403, 'message', {
 		'title': 'Forbidden',
 		'message': 'Incorrect username or password',
 		'redirect': failRedirect

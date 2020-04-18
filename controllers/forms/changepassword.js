@@ -1,6 +1,7 @@
 'use strict';
 
-const changePassword = require(__dirname+'/../../models/forms/changepassword.js');
+const changePassword = require(__dirname+'/../../models/forms/changepassword.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
 
 module.exports = async (req, res, next) => {
 
@@ -38,7 +39,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (errors.length > 0) {
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': '/changepassword.html'

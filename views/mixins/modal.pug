@@ -17,12 +17,15 @@ mixin modal(data)
 					if data.errors
 						each error in data.errors
 							li #{error}
-			if data.frame
-				.row
-					iframe.bypass#modalframe(src=data.frame frameborder='0' scrolling='no')
-			else if data.link
-				.row
-					a.button.mv-0(href=data.link.href target='_blank') #{data.link.text}
+		if data.frame
+			.row
+				iframe.bypass#modalframe(src=data.frame frameborder='0' scrolling='no')
+		else if data.link
+			.row
+				a.button.mv-0(href=data.link.href target='_blank') #{data.link.text}
+		else if data.redirect && data.title === 'Success'
+			.row
+				a.button.mv-0(href=data.redirect) OK
 		else if data.settings
 			.row
 				.form-wrapper.flexleft.mt-10

@@ -146,6 +146,6 @@ module.exports = async (posts, board, all=false) => {
 	}
 
 	//hooray!
-	return { action: deletedPosts > 0, message:`Deleted ${threads.length} threads and ${deletedPosts-threads.length} posts` };
+	return { action: deletedPosts > 0, message:`Deleted ${threads.length > 0 ? (threads.length + ' thread' + (threads.length > 1 ? 's' : '')) : ''} ${threads.length > 0 && deletedPosts-threads.length > 0 ? 'and' : ''} ${deletedPosts-threads.length > 0 ? (deletedPosts-threads.length + ' post' + (deletedPosts-threads.length > 1 ? 's' : '')) : ''}` };
 
 }

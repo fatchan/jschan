@@ -1,6 +1,7 @@
 'use strict';
 
 const { Bypass } = require(__dirname+'/../../db/')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { secureCookies, blockBypass } = require(__dirname+'/../../configs/main.js')
 	, production = process.env.NODE_ENV === 'production';
 

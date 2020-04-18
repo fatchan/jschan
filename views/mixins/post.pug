@@ -59,7 +59,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						option Hide by ID
 		.post-data
 			if post.files.length > 0
-				.post-files
+				.post-files(class=(post.files.length > 1 ? 'fn' : ''))
 					each file in post.files
 						.post-file
 							span.post-file-info

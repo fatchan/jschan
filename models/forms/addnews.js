@@ -1,6 +1,7 @@
 'use strict';
 
 const { News } = require(__dirname+'/../../db/')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js');
@@ -25,7 +26,7 @@ module.exports = async (req, res, next) => {
 		'options': {}
 	});
 
-	return res.render('message', {
+	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': 'Added newspost',
 		'redirect': '/globalmanage/news.html'

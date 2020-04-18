@@ -3,6 +3,7 @@
 const { Posts } = require(__dirname+'/../../db/')
 	, { globalLimits } = require(__dirname+'/../../configs/main.js')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, actionChecker = require(__dirname+'/../../helpers/checks/actionchecker.js');
 
 module.exports = async (req, res, next) => {
@@ -78,7 +79,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (errors.length > 0) {
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': `/${req.params.board}/`
@@ -92,7 +93,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (!res.locals.posts || res.locals.posts.length === 0) {
-		return res.status(404).render('message', {
+		return dynamicResponse(req, res, 404, 'message', {
 			'title': 'Not found',
 			'error': 'Selected posts not found',
 			'redirect': `/${req.params.board}/`
@@ -110,7 +111,7 @@ module.exports = async (req, res, next) => {
 			return p.postId !== req.body.move_to_thread && p.thread !== req.body.move_to_thread;
 		});
 		if (res.locals.posts.length === 0) {
-			return res.status(409).render('message', {
+			return dynamicResponse(req, res, 429, 'message', {
 				'title': 'Conflict',
 				'error': 'Destionation thread cannot match source thread for move action',
 				'redirect': `/${req.params.board}/`

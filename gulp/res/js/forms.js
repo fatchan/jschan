@@ -35,7 +35,7 @@ function isCheckBox(element) {
 function formToJSON(form) {
 	const data = {};
 	for (element of form.elements) {
-		if (element.name && element.value && (!isCheckBox(element) || element.checked)) {
+		if (element.name /*&& element.value*/ && (!isCheckBox(element) || element.checked)) {
 			if (isCheckBox(element) && data[element.name]) {
 				if (Array.isArray(data[element.name])) {
 					data[element.name] = data[element.name].push(element.value);
@@ -54,14 +54,19 @@ class formHandler {
 
 	constructor(form) {
 		this.form = form;
+		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message')
-		this.submit = form.querySelector('input[type="submit"]')
-		this.originalSubmitText = this.submit.value;
-		this.fileInput = form.querySelector('input[type="file"]');
+		this.submit = form.querySelector('input[type="submit"]');
+		if (this.submit) {
+			this.originalSubmitText = this.submit.value;
+		}
+		this.minimal = this.form.elements.minimal;
 		this.files = [];
+		this.fileInput = form.querySelector('input[type="file"]');
 		if (this.fileInput) {
 			this.fileRequired = this.fileInput.required;
 			this.fileLabel = this.fileInput.previousSibling;
+			this.fileUploadList = this.fileInput.nextSibling;
 			this.multipleFiles = this.fileLabel.parentNode.previousSibling.firstChild.textContent.endsWith('s');
 			this.fileLabelText = this.fileLabel.childNodes[0];
 			this.fileLabel.addEventListener('dragover', e => this.fileLabelDrag(e));
@@ -69,13 +74,39 @@ class formHandler {
 			this.fileInput.addEventListener('change', e => this.fileInputChange(e));
 			this.fileLabel.addEventListener('auxclick', e => this.fileLabelAuxclick(e));
 		}
+		this.messageBox && this.messageBox.addEventListener('keydown', e => this.controlEnterSubmit(e));
 		form.addEventListener('paste', e => this.paste(e));
 		form.addEventListener('submit', e => this.formSubmit(e));
 	}
 
+	reset() {
+		const savedName = this.form.elements.name && this.form.elements.name.value;
+		this.form.reset();
+		if (this.form.elements.name) {
+			this.form.elements.name.value = savedName
+		}
+		if (this.form.elements.postpassword) {
+			this.form.elements.postpassword.value = localStorage.getItem('postpassword');
+		}
+		this.updateMessageBox();
+		this.files = [];
+		this.updateFilesText();
+		const captcha = this.form.querySelector('.captcharefresh');
+		if (captcha) {
+			captcha.dispatchEvent(new Event('click'));
+		}
+	}
+
+	controlEnterSubmit(e) {
+		if (e.ctrlKey && e.key === 'Enter') {
+			this.formSubmit(e);
+		}
+	}
+
 	formSubmit(e) {
+		const xhr = new XMLHttpRequest();
 		let postData;
-		if (this.form.getAttribute('enctype') === 'multipart/form-data') {
+		if (this.enctype === 'multipart/form-data') {
 			this.fileInput.disabled = true; //palemoon is dumb, so append them instead
 			postData = new FormData(this.form);
 			this.fileInput.disabled = false;
@@ -86,23 +117,21 @@ class formHandler {
 				}
 			}
 		} else {
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			postData = formToJSON(this.form);
+			postData = new URLSearchParams([...(new FormData(this.form))]);
 		}
-		if (this.banned) {
+		if (this.banned || this.minimal) {
 			return true;
 		} else {
 			e.preventDefault();
 		}
 		this.submit.disabled = true;
-		const xhr = new XMLHttpRequest();
 		if (this.files && this.files.length > 0) {
 			//show progress on file uploads
 			xhr.onloadstart = () => {
 				this.submit.value = '0%';
 			}
-			xhr.upload.onprogress = (e) => {
-				const progress = Math.floor((e.loaded / e.total) * 100);
+			xhr.upload.onprogress = (ev) => {
+				const progress = Math.floor((ev.loaded / ev.total) * 100);
 				this.submit.value = `${progress}%`;
 			}
 			xhr.onload = () => {
@@ -122,7 +151,7 @@ class formHandler {
 				}
 				if (xhr.status == 200) {
 					if (!json) {
-						if (xhr.responseURL 
+						if (xhr.responseURL
 							&& xhr.responseURL !== `${location.origin}${this.form.getAttribute('action')}`) {
 							window.location = xhr.responseURL;
 							return;
@@ -130,7 +159,9 @@ class formHandler {
 //todo: show success messages nicely for forms like actions (this doesnt apply to non file forms yet)
 						}
 					} else {
-						if (socket && socket.connected) {
+						if (json.message || json.messages || json.error || json.errors) {
+							doModal(json);
+						} else if (socket && socket.connected) {
 							window.myPostId = json.postId;
 							window.location.hash = json.postId
 						} else {
@@ -139,35 +170,19 @@ class formHandler {
 							}
 							setLocalStorage('myPostId', json.postId);
 							forceUpdate();
-//							window.location.reload();
 						}
 					}
-					const savedName = this.form.elements.name && this.form.elements.name.value;
-					this.form.reset();
-					if (this.form.elements.name) {
-						this.form.elements.name.value = savedName
-					}
-					if (this.form.elements.postpassword) {
-						this.form.elements.postpassword.value = localStorage.getItem('postpassword');
-					}
-					this.updateMessageBox();
-					this.files = [];
-					this.updateFilesText();
-					const captcha = this.form.querySelector('img');
-					if (captcha) {
-						captcha.dispatchEvent(new Event('dblclick'));
-					}
+					this.reset();
 				} else {
 					if (xhr.status === 413) {
 						this.clearFiles();
 					}
-					//not 200 status, so some error/failed post, wrong captcha, etc
 					if (json) {
 						doModal(json, () => {
 							this.formSubmit(e);
 						});
 					} else {
-//for bans, post form to show TODO: make modal support bans json and send dynamicresponse from it
+//for bans, post form to show TODO: make modal support bans json and send dynamicresponse from it (but what about appeals, w/ captcha, etc?)
 						this.clearFiles(); //dont resubmit files
 						this.banned = true;
 						this.form.dispatchEvent(new Event('submit'));
@@ -176,8 +191,8 @@ class formHandler {
 				this.submit.value = this.originalSubmitText;
 			}
 		}
-		xhr.onerror = (e) => {
-			console.error(e); //why is this error fucking useless
+		xhr.onerror = (err) => {
+			console.error(err); //why is this error fucking useless
 			doModal({
 				'title': 'Error',
 				'message': 'Something broke'
@@ -185,10 +200,15 @@ class formHandler {
 			this.submit.disabled = false;
 		}
 		xhr.open(this.form.getAttribute('method'), this.form.getAttribute('action'), true);
-		xhr.setRequestHeader('x-using-xhr', true);
+		if (!this.minimal) {
+			xhr.setRequestHeader('x-using-xhr', true);
+		}
 		const isLive = localStorage.getItem('live') == 'true' && socket && socket.connected;
 		if (isLive) {
 			xhr.setRequestHeader('x-using-live', true);
+		}
+		if (this.enctype !== 'multipart/form-data') {
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		}
 		xhr.send(postData);
 	}
@@ -197,11 +217,16 @@ class formHandler {
 		this.messageBox && this.messageBox.dispatchEvent(new Event('input'));
 	}
 
-	//remove a single file, unused atm
-	removeFile(index) {
-		const childNode = this.fileLabel.childNodes[index+1]; //+1 because first one is fileLabelText
-		childNode.remove();
-		files.splice(index, 1);
+	removeFile(fileElem, name, size) {
+		fileElem.remove();
+		let fileIndex;
+		this.files.find((f, index) => {
+			if (f.name === name && f.size === size) {
+				fileIndex = index;
+			}
+		})
+		this.files.splice(fileIndex, 1);
+		this.updateFilesText();
 	}
 
 	addFile(file) {
@@ -209,6 +234,38 @@ class formHandler {
 			this.fileInput.removeAttribute('required');
 		}
 		this.files.push(file);
+		//add to upload list
+		const listElem = document.createElement('div');
+		listElem.classList.add('upload-item');
+		const thumb = document.createElement('img');
+		const name = document.createElement('p');
+		const remove = document.createElement('a');
+		name.textContent = file.name;
+		remove.textContent = 'X';
+		switch (file.type.split('/')[0]) {
+			case 'image':
+				thumb.src = URL.createObjectURL(file);
+				break;
+			case 'audio':
+				thumb.src = '/file/audio.png'
+				break;
+			case 'video':
+				thumb.src = '/file/video.png'
+				break;
+			default:
+				thumb.src = '/file/attachment.png'
+				break;
+		}
+		thumb.classList.add('upload-thumb');
+		remove.classList.add('close');
+		listElem.appendChild(thumb);
+		listElem.appendChild(name);
+		listElem.appendChild(remove);
+		remove.addEventListener('click', () => {
+			this.removeFile(listElem, file.name, file.size);
+		})
+		this.fileUploadList.appendChild(listElem);
+		this.fileUploadList.style.display = 'unset';
 	}
 
 	//show number of files on new label
@@ -217,6 +274,8 @@ class formHandler {
 			return;
 		}
 		if (this.files && this.files.length === 0) {
+			this.fileUploadList.textContent = '';
+			this.fileUploadList.style.display = 'none';
 			this.fileLabelText.nodeValue = `Select/Drop/Paste file${this.multipleFiles ? 's' : ''}`;
 		} else {
 			this.fileLabelText.nodeValue = `${this.files.length} file${this.files.length > 1 ? 's' : ''} selected`;
@@ -225,6 +284,9 @@ class formHandler {
 
 	//remove all files from this form
 	clearFiles() {
+		if (!this.fileInput) {
+			return;
+		}
 		this.files = []; //empty file list
 		this.fileInput.value = null; //remove the files for real
 		if (this.fileRequired) { //reset to required if clearing files
@@ -294,15 +356,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		localStorage.removeItem('myPostId');
 	}
 
-	const forms = document.getElementsByTagName('form');
-	for(let i = 0; i < forms.length; i++) {
-		if (forms[i].method === 'post'
-			&& forms[i].encoding === 'multipart/form-data') {
-			//used only for file posting forms currently.
-			new formHandler(forms[i]);
-		}
-	}
-
 	window.addEventListener('addPost', (e) => {
 		if (e.detail.hover) {
 			return; //dont need to handle hovered posts for this
@@ -313,3 +366,14 @@ window.addEventListener('DOMContentLoaded', () => {
 	});
 
 });
+
+window.addEventListener('settingsReady', () => {
+
+	const forms = document.getElementsByTagName('form');
+	for(let i = 0; i < forms.length; i++) {
+		if (forms[i].method === 'post' /*&& forms[i].encoding === 'multipart/form-data'*/) {
+			new formHandler(forms[i]);
+		}
+	}
+
+})

@@ -1,6 +1,7 @@
 'use strict';
 
-const editAccounts = require(__dirname+'/../../models/forms/editaccounts.js');
+const editAccounts = require(__dirname+'/../../models/forms/editaccounts.js')
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
 
 module.exports = async (req, res, next) => {
 
@@ -17,7 +18,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	if (errors.length > 0) {
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': '/globalmanage/accounts.html'
