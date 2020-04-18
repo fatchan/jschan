@@ -630,6 +630,10 @@ details.actions div {
 	align-items: start;
 }
 
+.fn {
+	float: none;
+}
+
 a, video, img, input, summary, select, option, textarea {
 	outline: 0;
 }
@@ -871,11 +875,9 @@ input:invalid, textarea:invalid {
 .left {
 	float: left;
 }
-
 .cb {
 	clear: both;
 }
-
 .right {
 	float: right;
 }
