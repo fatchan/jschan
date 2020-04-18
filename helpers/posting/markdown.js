@@ -3,7 +3,7 @@
 const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 	, pinktextRegex = /^&lt;(.+)/gm
 	, boldRegex = /&#39;&#39;(.+?)&#39;&#39;/gm
-	, titleRegex = /&#x3D;&#x3D;(.+)&#x3D;&#x3D;/gm
+	, titleRegex = /&#x3D;&#x3D;(.+?)&#x3D;&#x3D;/gm
 	, monoRegex = /&#x60;(.+?)&#x60;/gm
 	, underlineRegex = /__(.+?)__/gm
 	, strikeRegex = /~~(.+?)~~/gm
