@@ -8,12 +8,8 @@ const path = require('path')
 	, Socketio = require(__dirname+'/../../socketio.js')
 	, { Stats, Posts, Boards, Files, Bans } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../redis.js')
-	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
-	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
-	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
-	, sanitize = require('sanitize-html')
-	, nameRegex = /^(?<name>(?!##).*?)?(?:##(?<tripcode>[^ ]{1}.*?))?(?<capcode>##(?<capcodetext> .*?)?)?$/
+	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
+	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../helpers/files/mimetypes.js')
 	, imageThumbnail = require(__dirname+'/../../helpers/files/imagethumbnail.js')
@@ -50,8 +46,7 @@ module.exports = async (req, res, next) => {
 	let thread = null;
 	const { filterBanDuration, filterMode, filters,
 			maxFiles, forceAnon, replyLimit, disableReplySubject,
-			threadLimit, ids, userPostSpoiler,
-			defaultName, pphTrigger, tphTrigger, triggerAction,
+			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, locked, allowedFileTypes, flags } = res.locals.board.settings;
 	if (locked === true && res.locals.permLevel >= 4) {
 		await deleteTempFiles(req).catch(e => console.error);
@@ -309,70 +304,19 @@ module.exports = async (req, res, next) => {
 		password = createHash('sha256').update(postPasswordSecret + req.body.postpassword).digest('base64');
 	}
 
+
+	//spoiler files only if board settings allow
+	const spoiler = userPostSpoiler && req.body.spoiler ? true : false;
+
 	//forceanon hide reply subjects so cant be used as name for replies
 	//forceanon only allow sage email
 	let subject = (res.locals.permLevel >= 4 && req.body.thread && (disableReplySubject || forceAnon)) ? null : req.body.subject;
 	let email = (res.locals.permLevel < 4 || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
 
-	//spoiler files only if board settings allow
-	const spoiler = userPostSpoiler && req.body.spoiler ? true : false;
-
-	let name = defaultName;
-	let tripcode = null;
-	let capcode = null;
-	if ((res.locals.permLevel < 4 || !forceAnon) && req.body.name && req.body.name.length > 0) {
-		// get matches with named groups for name, trip and capcode in 1 regex
-		const matches = req.body.name.match(nameRegex);
-		if (matches && matches.groups) {
-			const groups = matches.groups;
-			//name
-			if (groups.name) {
-				name = groups.name;
-			}
-			//tripcode
-			if (groups.tripcode) {
-				tripcode = `!!${(await getTripCode(groups.tripcode))}`;
-			}
-			//capcode
-			if (res.locals.permLevel < 4 && groups.capcode) {
-				let type = '';
-				switch (res.locals.permLevel) {
-					case 3://board mod
-						type = 'Board Mod';
-						break;
-					case 2://board owner
-						type = 'Board Owner';
-						break;
-					case 1://global staff
-						type = 'Global Staff';
-						break;
-					case 0://admin
-						type = 'Admin';
-						break;
-				}
-				capcode = groups.capcodetext ? groups.capcodetext.trim() : type;
-				if (type.toLowerCase() === capcode.toLowerCase()) {
-					capcode = type;
-				} else {
-					capcode = `${type} ${capcode}`;
-				}
-				capcode = `## ${capcode}`;
-			}
-		}
-	}
-
-	//simple markdown and sanitize
-	let message = req.body.message;
-	let quotes = [];
-	let crossquotes = [];
-	if (message && message.length > 0) {
-		message = markdown(message);
-		const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(req.params.board, message, req.body.thread || null);
-		message = quotedMessage;
-		quotes = threadQuotes;
-		crossquotes = crossQuotes;
-		message = sanitize(message, sanitizeOptions.after);
-	}
+	//get name, trip and cap
+	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel, res.locals.board.settings);
+	//get message, quotes and crossquote array
+	const { message, quotes, crossquotes } = await messageHandler(req.body.message, req.params.board, req.body.thread);
 
 	//build post data for db
 	const data = {
@@ -591,7 +535,6 @@ module.exports = async (req, res, next) => {
 
 	//always rebuild catalog for post counts and ordering
 	buildQueue.push({
-		'id': `${req.params.board}:catalog`,
 		'task': 'buildCatalog',
 		'options': {
 			'board': res.locals.board,

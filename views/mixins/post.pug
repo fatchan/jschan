@@ -92,16 +92,22 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					-
 						const splitPost = post.message.split('\n');
 						const messageLines = splitPost.length;
-						if (messageLines > 10) {
-							truncatedMessage = splitPost.slice(0, 10).join('\n');
-						} else if (post.message.length > 1000) {
-							truncatedMessage = post.message.substring(0,1000).replace(/<([\w]+)?([^>]*)?$/, '');
+						if (messageLines > 15) {
+							truncatedMessage = splitPost.slice(0, 15).join('\n');
+						} else if (post.message.length > 1500) {
+							truncatedMessage = post.message.substring(0,1500).replace(/<([\w]+)?([^>]*)?$/, '');
 						}
 					pre.post-message !{truncatedMessage}
 				else
 					pre.post-message !{post.message}
 			if !post.message && post.files.length === 0
-				p Post files unlinked
+				p No message or files.
+			if post.edited
+				- const postEditDate = new Date(post.edited.date);
+				small.cb.mt-5.ml-5.edited
+					| Last edited 
+					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(undefined, { hour12:false })}
+					|  by #{post.edited.username}
 			if post.banmessage
 				p.ban
 					span.message USER WAS BANNED FOR THIS POST

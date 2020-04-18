@@ -114,6 +114,11 @@ pre {
 		max-width: max-content;
 		max-width: -moz-max-content;
 }
+.edit {
+	background: transparent!important;
+	border-color: transparent!important;
+	width: 80px;
+}
 .fw {
 	width: 100%;
 }
@@ -174,7 +179,7 @@ pre {
 	flex-grow: 1;
 	background: var(--darken);
 	height: 1.75em;
-	cursor: move;
+	cursor: grab;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -375,6 +380,10 @@ p {
 }
 .reason::after {
 	content:"\0029";
+}
+
+.edited {
+    font-style: italic;
 }
 
 .close {
@@ -987,6 +996,14 @@ iframe.bypass {
 	object-fit: contain;
 	overflow: hidden;
 	position: relative;
+}
+
+.captcharefresh {
+    position: absolute;
+	bottom: 0;
+    left: 5px;
+    font-size: 18px;
+    cursor: pointer;
 }
 
 .captcharefresh {

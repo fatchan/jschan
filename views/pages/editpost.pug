@@ -1,0 +1,54 @@
+extends ../layout.pug
+
+block head
+	title Edit Post
+
+block content
+	h1.board-title Edit Post
+	.form-wrapper.flex-center.mv-10
+		form.form-post(action='/forms/editpost' method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			input(type='hidden' name='board' value=post.board)
+			input(type='hidden' name='postId' value=post.postId)
+			.anchor(id=post.postId)
+			div(class=`mv-5 post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId)
+				- const postURL = `/${post.board}/thread/${post.thread || post.postId}.html`;
+				.post-info
+					span.noselect
+						label
+							if !post.thread
+								include ../includes/posticons.pug
+							input.edit.post-subject(value=post.subject placeholder='subject' type='text' name='subject' maxlength=globalLimits.fieldLength.subject)
+							input.edit.post-name(value=post.email type='text' name='email' placeholder='email' maxlength=globalLimits.fieldLength.email)
+							input.edit.post-name(type='text' name='name' placeholder='name' maxlength=globalLimits.fieldLength.name)
+						if post.country && post.country.code
+							span(class=`flag flag-${post.country.code.toLowerCase()}` title=post.country.name alt=post.country.name)
+							| 
+						if post.tripcode
+							span.post-tripcode #{post.tripcode}
+							| 
+						if post.capcode
+							span.post-capcode #{post.capcode}
+							| 
+						- const postDate = new Date(post.date);
+						time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(undefined, { hour12:false })}
+						| 
+						if post.userId
+							span.user-id(style=`background-color: #${post.userId}`) #{post.userId}
+							| 
+					span.post-links
+						a.noselect.no-decoration(href=`${postURL}#${post.postId}`) No.
+						span.post-quoters
+							a.no-decoration(href=`${postURL}#postform`) #{post.postId}
+							if !post.thread
+								|  
+								span.noselect: a(href=`${postURL}#postform`) [Reply]
+				.post-data
+					pre.post-message
+						textarea.edit.fw(name='message' rows='15' placeholder='message') #{post.nomarkup}
+					if post.banmessage
+						p.ban
+							span.message USER WAS BANNED FOR THIS POST
+							|  
+							span.reason(data-reason=post.banmessage) #{post.banmessage}
+			input(type='submit', value='save')

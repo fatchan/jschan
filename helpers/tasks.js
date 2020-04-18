@@ -1,7 +1,6 @@
 'use strict';
 
 const Mongo = require(__dirname+'/../db/db.js')
-	, cache = require(__dirname+'/../redis.js')
 	, timeUtils = require(__dirname+'/timeutils.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')

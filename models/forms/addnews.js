@@ -4,22 +4,17 @@ const { News } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
-	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
-	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js')
-	, sanitize = require('sanitize-html');
+	, messageHandler = require(__dirname+'/../../helpers/posting/message.js');
 
 module.exports = async (req, res, next) => {
 
-	const styled = markdown(req.body.message);
-	const quoted = (await linkQuotes(null, styled, null)).quotedMessage;
-	const sanitized = sanitize(quoted, sanitizeOptions.after);
+	const { message: markdownNews } = await messageHandler(req.body.message, null, null);
 
 	const post = {
 		'title': req.body.title,
 		'message': {
 			'raw': req.body.message,
-			'markdown': sanitized
+			'markdown': markdownNews
 		},
 		'date': new Date(),
 	};

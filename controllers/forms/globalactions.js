@@ -34,6 +34,9 @@ module.exports = async (req, res, next) => {
 	}
 
 	//check that actions are valid
+	if (req.body.edit && req.body.globalcheckedposts.length > 1) {
+		errors.push('Must select only 1 post for edit action');
+	}
 	if (req.body.postpassword && req.body.postpassword.length > globalLimits.fieldLength.postpassword) {
 		errors.push(`Password must be ${globalLimits.fieldLength.postpassword} characters or less`);
 	}
@@ -65,6 +68,13 @@ module.exports = async (req, res, next) => {
 			'errors': 'Selected posts not found',
 			'redirect': '/globalmanage/reports.html'
 		})
+	}
+
+	if (req.body.edit) {
+		//edit post, only allowing one
+		return res.render('editpost', {
+			'post': res.locals.posts[0],
+		});
 	}
 
 	try {
