@@ -92,10 +92,10 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					-
 						const splitPost = post.message.split('\n');
 						const messageLines = splitPost.length;
-						if (messageLines > 10) {
-							truncatedMessage = splitPost.slice(0, 10).join('\n');
-						} else if (post.message.length > 1000) {
-							truncatedMessage = post.message.substring(0,1000).replace(/<([\w]+)?([^>]*)?$/, '');
+						if (messageLines > 15) {
+							truncatedMessage = splitPost.slice(0, 15).join('\n');
+						} else if (post.message.length > 1500) {
+							truncatedMessage = post.message.substring(0,1500).replace(/<([\w]+)?([^>]*)?$/, '');
 						}
 					pre.post-message !{truncatedMessage}
 				else
