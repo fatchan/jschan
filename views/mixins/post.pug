@@ -104,7 +104,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				p No message or files.
 			if post.edited
 				- const postEditDate = new Date(post.edited.date);
-				small.edited
+				small.cb.mt-5.ml-5.edited
 					| Last edited 
 					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(undefined, { hour12:false })}
 					|  by #{post.edited.username}
