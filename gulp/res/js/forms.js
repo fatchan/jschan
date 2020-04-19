@@ -16,6 +16,12 @@ function doModal(data, postcallback) {
 		clearInterval(checkInterval);
 	};
 	const modalframe = document.getElementById('modalframe');
+	modalframe.onload = () => {
+		if (localStorage.getItem('theme') === 'default') {
+			const currentTheme = document.head.querySelector('#theme').href;
+			modalframe.contentDocument.styleSheets[1].ownerNode.href = currentTheme;
+		}
+	}
 	if (modalframe && postcallback) {
 		checkInterval = setInterval(() => {
 			if (modalframe && modalframe.contentDocument.title == 'Success') {
