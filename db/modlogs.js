@@ -93,6 +93,10 @@ module.exports = {
 		});
 	},
 
+	insertOne: (event) => {
+		return db.insertOne(event);
+	},
+
 	insertMany: (events) => {
 		return db.insertMany(events);
 	},

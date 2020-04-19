@@ -1,6 +1,6 @@
 'use strict';
 
-const { Posts, Bans } = require(__dirname+'/../../db/')
+const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
@@ -107,7 +107,6 @@ todo: handle some more situations
 		});
 	}
 
-
 	//update the post
 	const postId = await Posts.db.updateOne({
 		board: req.body.board,
@@ -129,6 +128,18 @@ todo: handle some more situations
 		}
 	});
 
+	//add the edit to the modlog
+	await Modlogs.insertOne({
+		board: board._id
+		postIds: [post.postId],
+		actions: 'edit',
+		date: new Date(),
+		showUser: false, //todo add "show name" option to edit screen
+		message: null, //todo add "modlog message" to edit screen
+		user: req.session.user.username,
+		ip: res.locals.ip.single,
+	});
+
 	const buildOptions = {
 		'threadId': post.thread || post.postId,
 		'board': res.locals.board
@@ -144,6 +155,21 @@ todo: handle some more situations
 	});
 	res.end();
 
+	//rebuild the modlogs
+	buildQueue.push({
+		'task': 'buildModLog',
+		'options': {
+			'board': board,
+		}
+	});
+	buildQueue.push({
+		'task': 'buildModLogList',
+		'options': {
+			'board': board,
+		}
+	});
+
+	//check if post is visible in preview posts
 	let postInPreviewPosts = false;
 	if (post.thread) {
 		const threadPreviewPosts = await Posts.db.find({
