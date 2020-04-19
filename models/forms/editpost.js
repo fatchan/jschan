@@ -130,7 +130,7 @@ todo: handle some more situations
 
 	//add the edit to the modlog
 	await Modlogs.insertOne({
-		board: board._id
+		board: board._id,
 		postIds: [post.postId],
 		actions: 'edit',
 		date: new Date(),
