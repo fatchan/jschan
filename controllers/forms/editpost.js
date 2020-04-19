@@ -26,6 +26,9 @@ module.exports = async (req, res, next) => {
 	if (req.body.email && req.body.email.length > globalLimits.fieldLength.email) {
 		errors.push(`Email must be ${globalLimits.fieldLength.email} characters or less`);
 	}
+	if (req.body.log_message && req.body.log_message.length > globalLimits.fieldLength.log_message) {
+		errors.push(`Modlog message must be ${globalLimits.fieldLength.log_message} characters or less`);
+	}
 
 	try {
 		res.locals.post = await Posts.getPost(req.body.board, req.body.postId);

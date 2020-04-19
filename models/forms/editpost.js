@@ -134,8 +134,8 @@ todo: handle some more situations
 		postIds: [post.postId],
 		actions: 'edit',
 		date: new Date(),
-		showUser: false, //todo add "show name" option to edit screen
-		message: null, //todo add "modlog message" to edit screen
+		showUser: req.body.show_name ? true : false,
+		message: req.body.log_message || null,
 		user: req.session.user.username,
 		ip: res.locals.ip.single,
 	});

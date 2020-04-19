@@ -51,4 +51,9 @@ block content
 							span.message USER WAS BANNED FOR THIS POST
 							|  
 							span.reason(data-reason=post.banmessage) #{post.banmessage}
+			label.mt-5
+				input.post-check(type='checkbox', name='show_name' value='1')
+				| Show Username In Modlog
+			label.mv-5
+				input(type='text', name='log_message', placeholder='modlog message' autocomplete='off')
 			input(type='submit', value='save')
