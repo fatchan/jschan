@@ -197,6 +197,15 @@ module.exports = {
 		next();
 	},
 
+	bodyExists: async (req, res, next) => {
+		const board = await module.exports.findOne(req.body.board);
+		if (!board) {
+			return res.status(404).render('404');
+		}
+		res.locals.board = board;
+		next();
+	},
+
 	getNextId: async (board, saged) => {
 		const update = {
 			'$inc': {

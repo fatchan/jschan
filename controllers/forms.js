@@ -91,7 +91,7 @@ router.post('/global/actions', sessionRefresh, csrf, calcPerms, isLoggedIn, hasP
 //appeal ban
 router.post('/appeal', sessionRefresh, paramConverter, verifyCaptcha, appealController);
 //edit post
-router.post('/editpost', sessionRefresh, csrf, calcPerms, hasPerms(3), paramConverter, editPostController);
+router.post('/editpost', sessionRefresh, csrf, paramConverter, Boards.bodyExists, calcPerms, hasPerms(3), editPostController);
 
 //board management forms
 router.post('/board/:board/transfer', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);

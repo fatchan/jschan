@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
 	const errors = [];
 
 	if ((!req.body.board || req.body.board.length === 0)
-		|| (!req.body.postId || req.body.postId.length === 0)) {
+		|| (!req.body.postId || typeof req.body.postId !== 'number')) {
 		errors.push('Missing board and postId form data');
 	}
 	// message, subject, email, name, limited length
@@ -28,8 +28,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	try {
-		res.locals.board = await Boards.findOne(req.body.board);
-		res.locals.post = await Posts.getPost(req.body.board, +req.body.postId);
+		res.locals.post = await Posts.getPost(req.body.board, req.body.postId);
 	} catch (err) {
 		return next(err);
 	}
