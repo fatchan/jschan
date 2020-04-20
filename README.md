@@ -54,7 +54,7 @@ $ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick
 
 4. [Install and configure](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-debian-9) Redis
 
-4. Install nodejs
+5. Install nodejs
 Recommended to use [node version manager](https://github.com/nvm-sh/nvm) (nvm).
 Install nvm then run the following commands to get the LTS version of nodejs.
 ```bash
@@ -63,7 +63,7 @@ $ nvm use --lts
 ```
 You can also repeat this process in future to update node versions as they are generally backwards compatible.
 
-4. Configure nginx
+6. Configure nginx
 - Use the example config included in `configs/nginx.example` and put it in `/etc/nginx/sites-available/YOURDOMAIN.COM`, then symlink it to `/etc/nginx/sites-enabled/YOURDOMAIN.com`.
 - Make sure the sites enabled folder is included by `/etc/nginx/nginx.conf`
 - Get https certificate from [letsencrypt](https://wiki.debian.org/LetsEncrypt).
@@ -73,7 +73,7 @@ geoip_country /usr/share/GeoIP/GeoIP.dat;
 geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 ```
 
-5. Clone ths repo, browse to the folder and set some things up
+7. Clone ths repo, browse to the folder and set some things up
 ```bash
 # copy example config file and edit it
 $ cp configs/main.js.example configs/main.js && editor configs/main.js
@@ -89,10 +89,13 @@ $ npm run-script setup
 # setup the database and folder structure, creates admin account admin:changeme
 # dont run this again unless you want to completely irreversibly wipe everything
 $ gulp reset
+```
+Use https://realfavicongenerator.net/ to generate favicons how you want them to look and replace the files in gulp/res/icons/ with the icons from that package
 
+```bash
 # start all the backend processes
 $ npm run-script start
-
+$ gulp
 
 # some commands you may need to use in future/find helpful
 
