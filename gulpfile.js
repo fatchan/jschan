@@ -24,6 +24,10 @@ const gulp = require('gulp')
 			src: 'gulp/res/img/*',
 			dest: 'static/file/'
 		},
+		icons: {
+			src: 'gulp/res/icons/*',
+			dest: 'static/file/'
+		},
 		scripts: {
 			src: 'gulp/res/js',
 			dest: 'static/js/'
@@ -140,10 +144,16 @@ function css() {
 		.pipe(gulp.dest(paths.styles.dest));
 }
 
-//favicon, spoiler/deleted image, default banner, spoiler/sticky/sage/cycle icons
+//spoiler/deleted image, default banner, spoiler/sticky/sage/cycle icons
 function images() {
 	return gulp.src(paths.images.src)
 		.pipe(gulp.dest(paths.images.dest));
+}
+
+//favicon/safari/chrome/mstiles, etc
+function icons() {
+	return gulp.src(paths.icons.src)
+		.pipe(gulp.dest(paths.icons.dest));
 }
 
 async function cache() {
@@ -260,7 +270,7 @@ async function migrate() {
 
 }
 
-const build = gulp.parallel(css, scripts, images, gulp.series(deletehtml, custompages));
+const build = gulp.parallel(css, scripts, images, icons, gulp.series(deletehtml, custompages));
 const reset = gulp.series(wipe, build);
 const html = gulp.series(deletehtml, custompages);
 
@@ -268,6 +278,7 @@ module.exports = {
 	html,
 	css,
 	images,
+	icons,
 	reset,
 	custompages,
 	scripts,

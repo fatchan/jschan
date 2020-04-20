@@ -15,5 +15,5 @@ link#theme(rel='stylesheet' data-theme=theme href=`/css/themes/${theme}.css`)
 if isBoard && board.settings.customCss
 	style #{board.settings.customCss}
 link#codetheme(rel='stylesheet' data-theme=codeTheme href=`/css/codethemes/${codeTheme}.css`)
-link(rel='shortcut icon' href='/favicon.ico' type='image/x-icon')
+include ./favicon.pug
 script(src=`/js/all.js?v=${commit}`)
