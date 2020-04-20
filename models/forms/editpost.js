@@ -132,7 +132,7 @@ todo: handle some more situations
 	await Modlogs.insertOne({
 		board: board._id,
 		postIds: [post.postId],
-		actions: 'edit',
+		actions: 'Edit',
 		date: new Date(),
 		showUser: req.body.show_name ? true : false,
 		message: req.body.log_message || null,
