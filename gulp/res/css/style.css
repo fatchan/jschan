@@ -270,15 +270,16 @@ p {
 	overflow-x: hidden;
 	overflow-y: auto;
 	max-width: 100%;
-	scrollbar-width: none;
+	/*scrollbar-width: none;*/
 	border: 1px solid var(--input-borders);
 	margin-top: 1px;
 	display: none;
 }
+/*
 .upload-list::-webkit-scrollbar { 
     display: none; 
 }
-
+*/
 .upload-item {
 	display: flex;
 	align-items: center;
