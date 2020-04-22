@@ -113,9 +113,9 @@ class formHandler {
 		const xhr = new XMLHttpRequest();
 		let postData;
 		if (this.enctype === 'multipart/form-data') {
-			this.fileInput.disabled = true; //palemoon is dumb, so append them instead
+			this.fileInput && (this.fileInput.disabled = true); 
 			postData = new FormData(this.form);
-			this.fileInput.disabled = false;
+			this.fileInput && (this.fileInput.disabled = false);
 			if (this.files && this.files.length > 0) {
 				//add files to file input element
 				for (let i = 0; i < this.files.length; i++) {
