@@ -4,6 +4,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	let unread = [];
 	const originalTitle = document.title;
 
+	const changeFavicon = (href) => {
+		const currentFav = document.head.querySelector('link[type="image/x-icon"]');
+	 	const newFav = document.createElement('link');
+		newFav.type = 'image/x-icon';
+		newFav.rel = 'shortcut icon';
+		newFav.href = href;
+		currentFav.remove();
+		document.head.appendChild(newFav);
+	}
+
 	const isVisible = (e) => {
 		const top = e.getBoundingClientRect().top;
 		const bottom = e.getBoundingClientRect().bottom;
@@ -14,8 +24,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const updateTitle = () => {
 		if (unread.length === 0) {
 			document.title = originalTitle;
+			changeFavicon('/favicon.ico');
 		} else {
 			document.title = `(${unread.length}) ${originalTitle}`;
+			changeFavicon('/file/favicon2.ico');
 		}
 	}
 
@@ -37,10 +49,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 
-	window.onfocus = () => {
-		focusChange();
-		updateVisible();
-	}
+	window.onfocus = focusChange;
 	window.onblur = focusChange;
 	window.addEventListener('scroll', updateVisible);
 
