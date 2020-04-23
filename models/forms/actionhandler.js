@@ -104,7 +104,7 @@ module.exports = async (req, res, next) => {
 				'_id': {
 					'$nin': deletePostMongoIds
 				},
-				'ip.hash': {
+				'ip.single': {
 					'$in': deletePostIps
 				}
 			};

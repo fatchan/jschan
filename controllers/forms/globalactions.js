@@ -11,8 +11,8 @@ module.exports = async (req, res, next) => {
 	const errors = [];
 
 	//make sure they checked 1-10 posts
-	if (!req.body.globalcheckedposts || req.body.globalcheckedposts.length === 0 || req.body.globalcheckedposts.length > 10) {
-		errors.push('Must select 1-10 posts')
+	if (!req.body.globalcheckedposts || req.body.globalcheckedposts.length === 0 || req.body.globalcheckedposts.length > 100) {
+		errors.push('Must select <100 posts')
 	}
 
 	//checked reports
