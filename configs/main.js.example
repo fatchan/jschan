@@ -233,9 +233,9 @@ module.exports = {
 		theme: 'lain',
 		codeTheme: 'ir-black',
 		sfw: false, //safe for work board
-		locked: false, //board locked, only staff can post
-		unlisted: false, //board hidden from on-site board list and frontpage
-		webring: true, //board shown on webring
+		lockMode: 0, //board lock mode
+		unlistedLocal: false, //board hidden from on-site board list and frontpage
+		unlistedWebring: false, //board hidden from webring
 		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts
 		tphTrigger: 0, //numebr of threads in an hour before trigger action is activated
 		pphTrigger: 0, //number of posts in an hour before ^

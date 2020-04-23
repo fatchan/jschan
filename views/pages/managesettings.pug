@@ -150,17 +150,19 @@ block content
 							input(type='checkbox', name='flags', value='true' checked=board.settings.flags)
 				.col
 					.row
-						.label Board Locked
-						label.postform-style.ph-5
-							input(type='checkbox', name='locked', value='true' checked=board.settings.locked)
+						.label Lock Mode
+						select(name='lock_mode')
+							option(value='0', selected=board.settings.lockMode === 0) Unlocked
+							option(value='1', selected=board.settings.lockMode === 1) Lock thread creation
+							option(value='2', selected=board.settings.lockMode === 2) Lock board
 					.row
-						.label Unlisted
+						.label Unlist locally
 						label.postform-style.ph-5
-							input(type='checkbox', name='unlisted', value='true' checked=board.settings.unlisted)
+							input(type='checkbox', name='unlisted_local', value='true' checked=board.settings.unlistedLocal)
 					.row
-						.label Webring
+						.label Unlist from webring
 						label.postform-style.ph-5
-							input(type='checkbox', name='webring', value='true' checked=board.settings.webring)
+							input(type='checkbox', name='unlisted_webring', value='true' checked=board.settings.unlistedWebring)
 					.row
 						.label SFW
 						label.postform-style.ph-5
@@ -197,7 +199,8 @@ block content
 							option(value='0', selected=board.settings.triggerAction === 0) Do nothing
 							option(value='1', selected=board.settings.triggerAction === 1) Enable captcha for new thread
 							option(value='2', selected=board.settings.triggerAction === 2) Enable captcha for all posts
-							option(value='3', selected=board.settings.triggerAction === 3) Lock Board
+							option(value='3', selected=board.settings.triggerAction === 3) Lock thread creation
+							option(value='4', selected=board.settings.triggerAction === 4) Lock board
 					.row
 						.label Early 404
 						label.postform-style.ph-5

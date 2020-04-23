@@ -32,7 +32,7 @@ block content
 							if board.settings.sfw === true
 								span(title='SFW') &#x1F4BC;
 								|  
-							if board.settings.unlisted === true
+							if board.settings.unlistedLocal === true
 								span(title='Unlisted') &#x1F441;&#xFE0F;
 								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
