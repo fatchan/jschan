@@ -176,6 +176,9 @@ class formHandler {
 					} else {
 						if (json.message || json.messages || json.error || json.errors) {
 							doModal(json);
+							if (json.message === 'Incorrect captcha answer') {
+								//todo: create captcha form, add method to captcha frontend code
+							}
 						} else if (socket && socket.connected) {
 							window.myPostId = json.postId;
 							window.location.hash = json.postId

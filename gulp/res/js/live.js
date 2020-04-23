@@ -30,7 +30,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		lastPostId = data.postId;
 		const postData = data;
 		//create a new post
-		const postHtml = post({ post: postData, modview:isModView });
+		const postHtml = post({ post: postData, modview:isModView, upLevel:isThread });
 		//add it to the end of the thread
 		thread.insertAdjacentHTML('beforeend', postHtml);
 		for (let j = 0; j < postData.quotes.length; j++) {
@@ -42,14 +42,12 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				const quotedPostData = quotedPost.querySelector('.post-data');
 				const newRepliesDiv = document.createElement('div');
 				newRepliesDiv.textContent = 'Replies: ';
-				['replies', 'mt-5', 'ml-5'].forEach(c => {
-					newRepliesDiv.classList.add(c);
-				});
+				newRepliesDiv.classList.add('replies', 'mt-5', 'ml-5');
 				quotedPostData.appendChild(newRepliesDiv);
 				replies = newRepliesDiv;
 			}
 			if (new RegExp(`>>${postData.postId}(\s|$)`).test(replies.innerText)) {
-				//reply link already exists (probably from a late catch up
+				//reply link already exists (probably from a late catch up)
 				continue;
 			}
 			const newReply = document.createElement('a');

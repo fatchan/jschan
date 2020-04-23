@@ -208,6 +208,8 @@ function scripts() {
 			`${paths.scripts.src}/post.js`,
 			`${paths.scripts.src}/settings.js`,
 			`${paths.scripts.src}/live.js`,
+			`${paths.scripts.src}/captcha.js`,
+			`${paths.scripts.src}/forms.js`,
 			`${paths.scripts.src}/*.js`,
 			`!${paths.scripts.src}/dragable.js`,
 			`!${paths.scripts.src}/hide.js`,
