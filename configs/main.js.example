@@ -146,13 +146,14 @@ module.exports = {
 		//subset of languages to allow.
 		languageSubset: [
 			'javascript',
-			'js',
 			'typescript',
+			'perl',
+			'js',
+			'c++',
+			'c',
 			'java',
 			'kotlin',
 			'php',
-			'c++',
-			'c',
 			'h',
 			'csharp',
 			'bash',
