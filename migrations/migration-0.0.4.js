@@ -11,14 +11,14 @@ module.exports = async(db, redis) => {
 	});
 	console.log('upadting renamed fields to proper values')
 	await db.collection('boards').updateMany({
-		'settings.locked': true,
+		'settings.lockMode': true,
 	}, {
 		'$set': {
 			'settings.lockMode': 2,
 		}
 	});
 	await db.collection('boards').updateMany({
-		'settings.locked': false,
+		'settings.lockMode': false,
 	}, {
 		'$set': {
 			'settings.lockMode': 0,
