@@ -148,7 +148,9 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			const room = `${roomParts[1]}-${roomParts[roomParts.length-1]}`;
 			socket = io({
 				transports: ['websocket'],
-				reconnectionAttempts: 3
+				reconnectionAttempts: 3,
+				reconnectionDelay: 3000,
+				reconnectionDelayMax: 15000,
 			});
 			socket.on('connect', async () => {
 				console.log('socket connected');
