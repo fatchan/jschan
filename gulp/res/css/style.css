@@ -241,7 +241,6 @@ object {
 	box-sizing: border-box;
 	flex-grow: 1;
 	max-width: 300px;
-	position: relative;
 }
 
 .catalog-tile:hover {
@@ -631,13 +630,6 @@ details.actions div {
 	position: relative;
 	top: 2px;
 	margin: -3px 1px;
-}
-
-.catalog-tile .post-check {
-	position: absolute;
-	top: 5px;
-	left: 5px;
-	margin: 0;
 }
 
 .post-files {
