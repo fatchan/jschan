@@ -74,6 +74,7 @@ module.exports = async (req, res, next) => {
 		//edit post, only allowing one
 		return res.render('editpost', {
 			'post': res.locals.posts[0],
+			'csrf': req.csrfToken(),
 		});
 	}
 
