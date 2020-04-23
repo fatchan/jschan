@@ -403,7 +403,7 @@ module.exports = async (req, res, next) => {
 		}).skip(replyLimit).toArray();
 		if (cyclicOverflowPosts.length > 0) {
 			await deletePosts(cyclicOverflowPosts, req.params.board);
-			const fileCount = cyclicOverflowPosts.reduce((post, acc) => {
+			const fileCount = cyclicOverflowPosts.reduce((acc, post) => {
 				return acc + (post.files ? post.files.length : 0);
 			}, 0);
 			//reduce amount counted in post by number of posts deleted

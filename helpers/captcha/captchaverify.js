@@ -27,12 +27,12 @@ module.exports = async (req, res, next) => {
 		if (isBypass) {
 			return res.status(403).render('bypass', {
 				'minimal': req.body.minimal,
-				'message': 'Incorrect captcha',
+				'message': 'Incorrect captcha answer',
 			});
 		}
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Incorrect captcha',
+			'message': 'Incorrect captcha answer',
 			'redirect': req.headers.referer,
 		});
 	}
@@ -69,12 +69,12 @@ module.exports = async (req, res, next) => {
 		if (isBypass) {
 			return res.status(403).render('bypass', {
 				'minimal': req.body.minimal,
-				'message': 'Incorrect captcha',
+				'message': 'Incorrect captcha answer',
 			});
 		}
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Incorrect captcha',
+			'message': 'Incorrect captcha answer',
 			'redirect': req.headers.referer,
 		});
 	}
