@@ -14,7 +14,7 @@ const express  = require('express')
 	, setMinimal = require(__dirname+'/../helpers/setminimal.js')
 	//page models
 	, { manageRecent, manageReports, manageBanners, manageSettings, manageBans,
-		manageBoard, manageThread, manageLogs } = require(__dirname+'/../models/pages/manage/')
+		manageBoard, manageThread, manageLogs, manageCatalog } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, logout, create,
@@ -48,6 +48,7 @@ router.get('/:board/manage/logs.html', sessionRefresh, isLoggedIn, Boards.exists
 router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
 router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
 // if (mod view enabled) {
+router.get('/:board/manage/catalog.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageCatalog);
 router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
 router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
 
