@@ -126,6 +126,9 @@ width:unset!important;
 input[type=submit], input[type=submit], label[for=file] {
 background: var(--post-color)!important;
 }
+.footer {
+padding-bottom: 3em;
+}
 @media only screen and (max-width:600px) {
   .nav-item {
     padding-left: 5px;
