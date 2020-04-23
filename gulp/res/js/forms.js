@@ -4,32 +4,39 @@ function removeModal() {
 }
 
 function doModal(data, postcallback) {
-	const modalHtml = modal({ modal: data });
-	let checkInterval;
-	document.body.insertAdjacentHTML('afterbegin', modalHtml);
-	document.getElementById('modalclose').onclick = () => {
-		removeModal();
-		clearInterval(checkInterval);
-	};
-	document.getElementsByClassName('modal-bg')[0].onclick = () => {
-		removeModal();
-		clearInterval(checkInterval);
-	};
-	const modalframe = document.getElementById('modalframe');
-	modalframe.onload = () => {
-		if (localStorage.getItem('theme') === 'default') {
-			const currentTheme = document.head.querySelector('#theme').href;
-			modalframe.contentDocument.styleSheets[1].ownerNode.href = currentTheme;
-		}
-	}
-	if (modalframe && postcallback) {
-		checkInterval = setInterval(() => {
-			if (modalframe && modalframe.contentDocument.title == 'Success') {
-				clearInterval(checkInterval);
-				removeModal();
-				postcallback();
+	try {
+		const modalHtml = modal({ modal: data });
+		let checkInterval;
+		document.body.insertAdjacentHTML('afterbegin', modalHtml);
+		document.getElementById('modalclose').onclick = () => {
+			removeModal();
+			clearInterval(checkInterval);
+		};
+		document.getElementsByClassName('modal-bg')[0].onclick = () => {
+			removeModal();
+			clearInterval(checkInterval);
+		};
+		const modalframe = document.getElementById('modalframe');
+		if (modalframe) {
+			//if theres a modal frame and user has default theme, style it
+			if (localStorage.getItem('theme') === 'default') {
+				modalframe.onload = () => {
+					const currentTheme = document.head.querySelector('#theme').href;
+					modalframe.contentDocument.styleSheets[1].ownerNode.href = currentTheme;
+				}
 			}
-		}, 100);
+			if (postcallback) {
+				checkInterval = setInterval(() => {
+					if (modalframe && modalframe.contentDocument.title == 'Success') {
+						clearInterval(checkInterval);
+						removeModal();
+						postcallback();
+					}
+				}, 100);
+			}
+		}
+	} catch(e) {
+		console.error(e)
 	}
 }
 

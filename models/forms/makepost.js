@@ -48,7 +48,8 @@ module.exports = async (req, res, next) => {
 			maxFiles, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
-	if ((lockMode === 0 || (lockMode === 1 && !req.body.thread)) && res.locals.permLevel >= 4) {
+	if ((lockMode === 2 || (lockMode === 1 && !req.body.thread)) //if board lock, or thread lock and its a new thread
+		&& res.locals.permLevel >= 4) { //and not staff
 		await deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
