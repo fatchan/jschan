@@ -403,7 +403,7 @@ module.exports = async (req, res, next) => {
 			//reduce amount counted in post by number of posts deleted
 			await Posts.db.updateOne({
 				'postId': thread.postId,
-				'board': board._id
+				'board': res.locals.board._id
 			}, {
 				'$inc': { //negative increment
 					'replyposts': -cyclicOverflowPosts.length,
