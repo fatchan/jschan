@@ -11,8 +11,12 @@ module.exports = async (req, res, next) => {
 	const errors = [];
 
 	//make sure they checked 1-10 posts
-	if (!req.body.checkedposts || req.body.checkedposts.length === 0 || req.body.checkedposts.length > 10) {
-		errors.push('Must select 1-10 posts');
+	if (!req.body.checkedposts || req.body.checkedposts.length === 0) {
+		errors.push("You didn't check any posts");
+	} else if (res.locals.permLevel >= 4 && req.body.checkedposts.length > 10) {
+		errors.push('Must select <10 posts per action');
+	} else if (req.body.checkedposts.length > 50) {
+		errors.push('Must select <50 posts per action');
 	}
 	//checked reports
 	if (req.body.checkedreports) {
@@ -49,7 +53,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	//check that actions are valid
-	if (req.body.edit && req.body.checkedposts.length > 1) {
+	if (req.body.edit && req.body.checkedposts && req.body.checkedposts.length > 1) {
 		errors.push('Must select only 1 post for edit action');
 	}
 	if (req.body.postpassword && req.body.postpassword.length > globalLimits.fieldLength.postpassword) {
