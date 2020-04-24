@@ -133,7 +133,7 @@ module.exports = {
 
 	webringBoards: () => {
 		return db.find({
-			'settings.unlistedWebring': true
+			'settings.unlistedWebring': false
 		}, {
 			'projection': {
 				'_id': 1,
