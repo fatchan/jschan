@@ -792,7 +792,7 @@ input:invalid, textarea:invalid {
 	box-sizing: border-box;
 	padding: .5em;
 	max-width: 100%;
-	min-width: 25em;
+	min-width: 30em;
 }
 
 .postmenu {
