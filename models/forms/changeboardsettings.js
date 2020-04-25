@@ -19,7 +19,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		return setting != null;
 	}
 	, arraySetting = (setting, oldSetting, limit) => {
-		return setting !== null ? setting.split('\r\n').filter(n => n).slice(0,limit) : oldSettings;
+		return setting !== null ? setting.split(/\r?\n/).filter(n => n).slice(0,limit) : oldSettings;
 	};
 
 module.exports = async (req, res, next) => {
@@ -36,7 +36,7 @@ module.exports = async (req, res, next) => {
 		markdownAnnouncement = message; //is there a destructure syntax for this?
 	}
 
-	let moderators = req.body.moderators != null ? req.body.moderators.split('\r\n').filter(n => n && !(n == res.locals.board.owner)).slice(0,10) : [];
+	let moderators = req.body.moderators != null ? req.body.moderators.split(/\r?\n/).filter(n => n && !(n == res.locals.board.owner)).slice(0,10) : [];
 	if (moderators.length === 0 && oldSettings.moderators.length > 0) {
 		//remove all mods if mod list being emptied
 		promises.push(Accounts.removeModBoard(oldSettings.moderators, req.params.board));
