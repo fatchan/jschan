@@ -31,13 +31,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	};
 
 	const loadCaptcha = function(e) {
-		const captchaDiv = this.previousSibling;
+		const field = e.target;
+		const captchaDiv = field.previousSibling;
 		const captchaImg = document.createElement('img');
 		const refreshDiv = document.createElement('div');
 		refreshDiv.classList.add('captcharefresh', 'noselect');
 		refreshDiv.addEventListener('click', refreshCaptchas, true);
 		refreshDiv.textContent = '↻';
-		const field = this;
 		field.placeholder = 'loading';
 		captchaImg.src = '/captcha';
 		captchaImg.onload = function() {
@@ -49,8 +49,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	};
 
 	for (let i = 0; i < captchaFields.length; i++) {
-		captchaFields[i].placeholder = 'focus to load captcha';
-		captchaFields[i].addEventListener('focus', loadCaptcha, { once: true });
+		const field = captchaFields[i];
+		if (field.form.action.endsWith('/forms/blockbypass')) {
+			return loadCaptcha({target: field })
+		}
+		field.placeholder = 'focus to load captcha';
+		field.addEventListener('focus', loadCaptcha, { once: true });
 	}
 
 });

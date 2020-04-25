@@ -47,12 +47,13 @@ module.exports = async (req, res, next) => {
 	const { filterBanDuration, filterMode, filters,
 			maxFiles, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
-			captchaMode, locked, allowedFileTypes, flags } = res.locals.board.settings;
-	if (locked === true && res.locals.permLevel >= 4) {
+			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
+	if ((lockMode === 2 || (lockMode === 1 && !req.body.thread)) //if board lock, or thread lock and its a new thread
+		&& res.locals.permLevel >= 4) { //and not staff
 		await deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
-			'message': 'Board is locked.',
+			'message': lockMode === 1 ? 'Thread creation locked' : 'Board locked',
 			'redirect': redirect
 		});
 	}
@@ -62,7 +63,7 @@ module.exports = async (req, res, next) => {
 			await deleteTempFiles(req).catch(e => console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
-				'message': 'Thread does not exist.',
+				'message': 'Thread does not exist',
 				'redirect': redirect
 			});
 		}
@@ -150,7 +151,7 @@ module.exports = async (req, res, next) => {
 				await deleteTempFiles(req).catch(e => console.error);
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
-					'message': `Mime type "${req.files.file[i].mimetype}" for "${req.files.file[i].name}" not allowed.`,
+					'message': `Mime type "${req.files.file[i].mimetype}" for "${req.files.file[i].name}" not allowed`,
 					'redirect': redirect
 				});
 			}
@@ -226,10 +227,11 @@ module.exports = async (req, res, next) => {
 						const videoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
 						videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
 						if (videoData.streams.length <= 0) {
+							//corrupt, or audio only?
 							await deleteTempFiles(req).catch(e => console.error);
 							return dynamicResponse(req, res, 400, 'message', {
 								'title': 'Bad request',
-								'message': 'Audio only video file not supported (yet)',
+								'message': 'Audio only video file not supported',
 								'redirect': redirect
 							});
 						}
@@ -361,10 +363,11 @@ module.exports = async (req, res, next) => {
 	const postId = await Posts.insertOne(res.locals.board, data, thread);
 
 	let enableCaptcha = false;
-	if (triggerAction > 0 //trigger is enabled and not already been triggered
-		&& (tphTrigger > 0 || pphTrigger > 0)
-		&& ((triggerAction < 3 && captchaMode < triggerAction)
-			|| (triggerAction === 3 && locked !== true))) {
+	if (triggerAction > 0 //if trigger is enabled
+		&& (tphTrigger > 0 || pphTrigger > 0) //and has a threshold > 0
+		&& ((triggerAction < 3 && captchaMode < triggerAction) //and its triggering captcha and captcha isnt on
+			|| (triggerAction === 3 && lockMode < 1) //or triggering locking and board isnt locked
+			|| (triggerAction === 4 && lockMode < 2))) {
 		//read stats to check number threads in past hour
 		const hourPosts = await Stats.getHourPosts(res.locals.board._id);
 		if (hourPosts //if stats exist for this hour and its above either trigger
@@ -379,8 +382,11 @@ module.exports = async (req, res, next) => {
 				update['$set']['settings.captchaMode'] = triggerAction;
 				enableCaptcha = true;
 			} else if (triggerAction === 3) {
-				res.locals.board.settings.locked = true;
-				update['$set']['settings.locked'] = true;
+				res.locals.board.settings.lockMode = 1;
+				update['$set']['settings.lockMode'] = 1;
+			} else if (triggerAction === 4) {
+				res.locals.board.settings.lockMode = 2;
+				update['$set']['settings.lockMode'] = 2;
 			}
 			//set it in the db
 			await Boards.updateOne(res.locals.board._id, update);
@@ -397,7 +403,7 @@ module.exports = async (req, res, next) => {
 		}).skip(replyLimit).toArray();
 		if (cyclicOverflowPosts.length > 0) {
 			await deletePosts(cyclicOverflowPosts, req.params.board);
-			const fileCount = cyclicOverflowPosts.reduce((post, acc) => {
+			const fileCount = cyclicOverflowPosts.reduce((acc, post) => {
 				return acc + (post.files ? post.files.length : 0);
 			}, 0);
 			//reduce amount counted in post by number of posts deleted

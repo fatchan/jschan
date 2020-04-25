@@ -8,5 +8,6 @@ module.exports = {
 	manageLogs: require(__dirname+'/logs.js'),
 	manageBanners: require(__dirname+'/banners.js'),
 	manageBoard: require(__dirname+'/board.js'),
+	manageCatalog: require(__dirname+'/catalog.js'),
 	manageThread: require(__dirname+'/thread.js'),
 }

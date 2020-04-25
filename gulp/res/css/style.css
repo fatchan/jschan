@@ -62,6 +62,25 @@ main.minimal {
 	text-decoration: line-through;
 }
 
+@keyframes rainbow-anim {
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 400% 0;
+	}
+}
+
+.rainbow {
+	background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	animation: rainbow-anim 10s linear infinite;
+	background-size: 400% 100%;
+	text-shadow: #00000050 0px 0px 1px;
+}
+
 .underline {
 	text-decoration: underline;
 }
@@ -207,8 +226,8 @@ a, a:visited, a.post-name {
 }
 
 .invalid-quote {
-    cursor:pointer;
-    text-decoration: line-through;
+	cursor:pointer;
+	text-decoration: line-through;
 }
 
 .post-message a {
@@ -277,7 +296,7 @@ p {
 }
 /*
 .upload-list::-webkit-scrollbar { 
-    display: none; 
+	display: none; 
 }
 */
 .upload-item {
@@ -384,7 +403,7 @@ p {
 }
 
 .edited {
-    font-style: italic;
+	font-style: italic;
 }
 
 .close {
@@ -629,7 +648,7 @@ details.actions div {
 .post-check {
 	position: relative;
 	top: 2px;
-	margin: -3px 1px !important;
+	margin: -3px 1px;
 }
 
 .post-files {
@@ -773,7 +792,7 @@ input:invalid, textarea:invalid {
 	box-sizing: border-box;
 	padding: .5em;
 	max-width: 100%;
-	min-width: 25em;
+	min-width: 30em;
 }
 
 .postmenu {
@@ -880,6 +899,11 @@ input:invalid, textarea:invalid {
 	float: left;
 	padding-left: 10px;
 	padding-right: 10px;
+	text-align: center;
+}
+
+.nav-item:nth-of-type(3) {
+	line-height:1.5em;
 }
 
 .left {
@@ -1000,20 +1024,20 @@ iframe.bypass {
 }
 
 .captcharefresh {
-    position: absolute;
+	position: absolute;
 	bottom: 0;
-    left: 5px;
-    font-size: 18px;
-    cursor: pointer;
+	left: 5px;
+	font-size: 18px;
+	cursor: pointer;
 	color: black;
 }
 
 .captcharefresh {
-    position: absolute;
+	position: absolute;
 	bottom: 0;
-    left: 5px;
-    font-size: 18px;
-    cursor: pointer;
+	left: 5px;
+	font-size: 18px;
+	cursor: pointer;
 }
 
 .label, .rlabel {
@@ -1145,7 +1169,7 @@ table, .boardtable {
 	width: 100%
 }
 row.wrap.sb .col {
-    flex-basis: calc(50% - 5px);
+	flex-basis: calc(50% - 5px);
 }
 
 @media only screen and (max-height: 400px) {
@@ -1263,7 +1287,7 @@ row.wrap.sb .col {
 
 	.post-check {
 		top: 1px;
-		margin-left: 2px!important;
+		margin-left: 2px;
 	}
 
 	.pages {

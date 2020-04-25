@@ -19,7 +19,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		return setting != null;
 	}
 	, arraySetting = (setting, oldSetting, limit) => {
-		return setting !== null ? setting.split('\r\n').filter(n => n).slice(0,limit) : oldSettings;
+		return setting !== null ? setting.split(/\r?\n/).filter(n => n).slice(0,limit) : oldSettings;
 	};
 
 module.exports = async (req, res, next) => {
@@ -36,7 +36,7 @@ module.exports = async (req, res, next) => {
 		markdownAnnouncement = message; //is there a destructure syntax for this?
 	}
 
-	let moderators = req.body.moderators != null ? req.body.moderators.split('\r\n').filter(n => n && !(n == res.locals.board.owner)).slice(0,10) : [];
+	let moderators = req.body.moderators != null ? req.body.moderators.split(/\r?\n/).filter(n => n && !(n == res.locals.board.owner)).slice(0,10) : [];
 	if (moderators.length === 0 && oldSettings.moderators.length > 0) {
 		//remove all mods if mod list being emptied
 		promises.push(Accounts.removeModBoard(oldSettings.moderators, req.params.board));
@@ -69,9 +69,8 @@ module.exports = async (req, res, next) => {
 		'theme': req.body.theme || oldSettings.theme,
 		'codeTheme': req.body.code_theme || oldSettings.codeTheme,
 		'sfw': booleanSetting(req.body.sfw),
-		'unlisted': booleanSetting(req.body.unlisted),
-		'webring': booleanSetting(req.body.webring),
-		'locked': booleanSetting(req.body.locked),
+		'unlistedLocal': booleanSetting(req.body.unlisted_local),
+		'unlistedWebring': booleanSetting(req.body.unlisted_webring),
 		'early404': booleanSetting(req.body.early404),
 		'ids': booleanSetting(req.body.ids),
 		'flags': booleanSetting(req.body.flags),
@@ -96,6 +95,7 @@ module.exports = async (req, res, next) => {
 		'minReplyMessageLength': numberSetting(req.body.min_reply_message_length, oldSettings.minReplyMessageLength),
 		'maxThreadMessageLength': numberSetting(req.body.max_thread_message_length, oldSettings.maxThreadMessageLength),
 		'maxReplyMessageLength': numberSetting(req.body.max_reply_message_length, oldSettings.maxReplyMessageLength),
+		'lockMode': numberSetting(req.body.lock_mode, oldSettings.lockMode),
 		'filterMode': numberSetting(req.body.filter_mode, oldSettings.filterMode),
 		'filterBanDuration': numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
 		'tags': arraySetting(req.body.tags, oldSettings.tags, 10),

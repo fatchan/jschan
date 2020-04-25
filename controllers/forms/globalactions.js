@@ -24,7 +24,9 @@ module.exports = async (req, res, next) => {
 			//50 because checked posts is max 10 and 5 reports max per post
 			errors.push('Cannot check more than 50 reports');
 		}
-	}
+	} else if (!req.body.checkedreports && req.body.global_report_ban) {
+        errors.push('Must select posts+reports to report ban');
+    }
 
 	res.locals.actions = actionChecker(req);
 
@@ -74,6 +76,7 @@ module.exports = async (req, res, next) => {
 		//edit post, only allowing one
 		return res.render('editpost', {
 			'post': res.locals.posts[0],
+			'csrf': req.csrfToken(),
 		});
 	}
 

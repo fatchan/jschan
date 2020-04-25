@@ -96,13 +96,16 @@ module.exports = async (req, res, next) => {
 		errors.push(`Max reply message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Reply Message Length" (currently ${res.locals.board.settings.minReplyMessageLength})`);
 	}
 
+	if (typeof req.body.lock_mode === 'number' && (req.body.lock_mode < 0 || req.body.lock_mode > 2)) {
+		errors.push('Invalid lock mode');
+	}
 	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {
 		errors.push('Invalid captcha mode');
 	}
 	if (typeof req.body.tph_trigger === 'number' && (req.body.tph_trigger < 0 || req.body.tph_trigger > 10000)) {
 		errors.push('Invalid tph trigger threshold');
 	}
-	if (typeof req.body.tph_trigger_action === 'number' && (req.body.tph_trigger_action < 0 || req.body.tph_trigger_action > 3)) {
+	if (typeof req.body.tph_trigger_action === 'number' && (req.body.tph_trigger_action < 0 || req.body.tph_trigger_action > 4)) {
 		errors.push('Invalid tph trigger action');
 	}
 	if (typeof req.body.filter_mode === 'number' && (req.body.filter_mode < 0 || req.body.filter_mode > 2)) {
@@ -128,7 +131,7 @@ module.exports = async (req, res, next) => {
 
 	if (res.locals.permLevel > 1) { //if not global staff or above
 		const ratelimitBoard = await Ratelimits.incrmentQuota(req.params.board, 'settings', rateLimitCost.boardSettings); //2 changes a minute
-		const ratelimitIp = await Ratelimits.incrmentQuota(res.locals.ip.hash, 'settings', rateLimitCost.boardSettings);
+		const ratelimitIp = await Ratelimits.incrmentQuota(res.locals.ip.single, 'settings', rateLimitCost.boardSettings);
 		if (ratelimitBoard > 100 || ratelimitIp > 100) {
 			return dynamicResponse(req, res, 429, 'message', {
 				'title': 'Ratelimited',

@@ -120,10 +120,12 @@ window.addEventListener('settingsReady', function(event) {
 
 window.addEventListener('addPost', function(e) {
 
-	const date = e.detail.post.querySelector('.reltime');
-	if (!e.detail.hover) {
-		dates.push(date);
+	const dates = e.detail.post.querySelectorAll('.reltime');
+	for (let date of dates) {
+		if (!e.detail.hover) {
+			dates.push(date);
+		}
+		changeDateFormat(date);
 	}
-	changeDateFormat(date);
 
 });

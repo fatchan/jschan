@@ -103,7 +103,7 @@ module.exports = {
 	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}, showUnlisted=false) => {
 		const addedFilter = {};
 		if (!showUnlisted) {
-			addedFilter['settings.unlisted'] = false;
+			addedFilter['settings.unlistedLocal'] = false;
 		}
 		if (filter.search) {
 			addedFilter['$or'] = [
@@ -122,7 +122,7 @@ module.exports = {
 				'settings.description': 1,
 				'settings.name': 1,
 				'settings.tags': 1,
-				'settings.unlisted': 1,
+				'settings.unlistedLocal': 1,
 			}
 		})
 		.sort(sort)
@@ -133,7 +133,7 @@ module.exports = {
 
 	webringBoards: () => {
 		return db.find({
-			'settings.webring': true
+			'settings.unlistedWebring': false
 		}, {
 			'projection': {
 				'_id': 1,
@@ -152,7 +152,7 @@ module.exports = {
 	count: (filter, showUnlisted=false) => {
 		const addedFilter = {};
 		if (!showUnlisted) {
-			addedFilter['settings.unlisted'] = false;
+			addedFilter['settings.unlistedLocal'] = false;
 		}
 		if (filter.search) {
 			addedFilter['$or'] = [
@@ -179,7 +179,7 @@ module.exports = {
 					},
 					'unlisted': {
 						'$sum': {
-							'$cond': ['$settings.unlisted', 1, 0]
+							'$cond': ['$settings.unlistedLocal', 1, 0]
 						}
 					},
 					//removed ips because sum is inaccurate
