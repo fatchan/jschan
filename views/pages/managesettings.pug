@@ -141,6 +141,9 @@ block content
 						.label Reply Limit
 						input(type='number' name='reply_limit' value=board.settings.replyLimit min=globalLimits.replyLimit.min max=globalLimits.replyLimit.max)
 					.row
+						.label Bump Limit
+						input(type='number' name='bump_limit' value=board.settings.bumpLimit min=globalLimits.bumpLimit.min max=globalLimits.bumpLimit.max)
+					.row
 						.label IDs
 						label.postform-style.ph-5
 							input(type='checkbox', name='ids', value='true' checked=board.settings.ids)

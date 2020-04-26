@@ -187,6 +187,10 @@ module.exports = {
 			min: 10,
 			max: 500
 		},
+		bumpLimit: { //number of replies to a thread before it wont get bumped anymore
+			min: 10,
+			max: 500
+		},
 		postFiles: { //number of files in a post
 			max: 3
 		},
@@ -250,6 +254,7 @@ module.exports = {
 		userPostUnlink: true, //alow user to unlink files fomr their post
 		threadLimit: 200,
 		replyLimit: 500,
+		bumpLimit: 500,
 		maxFiles: 1,
 		forceReplyMessage: false,
 		forceReplyFile: false,
