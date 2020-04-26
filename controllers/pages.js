@@ -17,7 +17,7 @@ const express  = require('express')
 		manageBoard, manageThread, manageLogs, manageCatalog } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
-	, { changePassword, blockBypass, home, register, login, logout, create,
+	, { changePassword, blockBypass, home, register, login, create,
 		board, catalog, banners, randombanner, news, captchaPage,
 		captcha, thread, modlog, modloglist, account, boardlist } = require(__dirname+'/../models/pages/');
 
@@ -72,7 +72,6 @@ router.get('/account.html', sessionRefresh, isLoggedIn, account); //page showing
 router.get('/login.html', login);
 router.get('/register.html', register);
 router.get('/changepassword.html', changePassword);
-router.get('/logout', logout);
 
 module.exports = router;
 

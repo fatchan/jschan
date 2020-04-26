@@ -16,7 +16,7 @@ server {
 	add_header X-Content-Type-Options "nosniff" always;
 	add_header X-XSS-Protection "1; mode=block" always;
 
-	if ($request_uri ~ ^/(?!captcha|randombanner|forms|logout|socket\.io)) {
+	if ($request_uri ~ ^/(?!captcha|randombanner|forms|socket\.io)) {
 		rewrite ^([^.\?]*[^/])$ $1/ redirect;
 		rewrite ^(.+)/$ $1/index.html redirect;
 	}

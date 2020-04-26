@@ -77,6 +77,7 @@ const express  = require('express')
 	, editPostController = require(__dirname+'/forms/editpost.js')
 	, newCaptcha = require(__dirname+'/../models/forms/newcaptcha.js')
 	, blockBypass = require(__dirname+'/../models/forms/blockbypass.js')
+	, logout = require(__dirname+'/../models/forms/logout.js');
 
 //make new post
 router.post('/board/:board/post', sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles,
@@ -112,6 +113,7 @@ router.post('/global/settings', sessionRefresh, csrf, calcPerms, isLoggedIn, has
 router.post('/create', sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
 //accounts
 router.post('/login', loginController);
+router.post('/logout', logout);
 router.post('/register', verifyCaptcha, calcPerms, registerController);
 router.post('/changepassword', verifyCaptcha, changePasswordController);
 
