@@ -9,6 +9,9 @@ module.exports = (file, geometry) => {
 		.on('end', () => {
 			return resolve();
 		})
+		.on('error', function(err, stdout, stderr) {
+			return reject(err);
+		})
 		.screenshots({
 			timestamps: ['1%'],//1% should remedy black first frames or fade-ins
 			count: 1,
