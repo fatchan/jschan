@@ -114,7 +114,7 @@ todo: handle some more situations
 	}, {
 		'$set': {
 			edited: {
-				username: req.session.user.username,
+				username: req.body.show_name ? req.session.user.username : 'Hidden User',
 				date: new Date(),
 			},
 			message,

@@ -151,12 +151,14 @@ const hideImagesCss = `.file-thumb { visibility: hidden !important; }`
 const hideRecursiveCss = `.op.hidden ~ .anchor, .op.hidden ~ .post-container { display: none; }`;
 const heightlimitCss = `img, video { max-height: unset; }`;
 const crispCss = `img { image-rendering: crisp-edges; }`;
+const nonColorIdsCss = `.user-id { background: transparent none repeat scroll 0% 0% !important; border-color: transparent; text-shadow: none; color: var(--font-color); }`;
 //make classes with css
 //new CssToggle('hidestubs-setting', 'hidestubs', false, hideStubsCss);
 new CssToggle('hiderecursive-setting', 'hiderecursive', true, hideRecursiveCss);
 new CssToggle('heightlimit-setting', 'heightlimit', false, heightlimitCss);
 new CssToggle('crispimages-setting', 'crispimages', false, crispCss);
 new CssToggle('hideimages-setting', 'hideimages', false, hideImagesCss);
+new CssToggle('noncolorids-setting', 'noncolorids', false, nonColorIdsCss);
 
 window.addEventListener('addPost', function(e) {
 	const post = e.detail.post;
