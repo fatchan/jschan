@@ -253,13 +253,13 @@ object {
 	padding: 5px;
 	margin: 5px;
 	text-align: center;
-	height: 250px;
-	width: 250px;
+	height: 220px;
+	width: 180px;
 	overflow: hidden;
 	border: 1px solid var(--post-outline-color);
 	box-sizing: border-box;
 	flex-grow: 1;
-	max-width: 300px;
+	max-width: 250px;
 }
 
 .catalog-tile:hover {
@@ -278,10 +278,12 @@ p {
 .catalog-thumb {
 	display: block;
 	box-shadow: 0 0 3px black;
-	width: 64px !important;
-	height: 64px !important;
+	width: auto;
+	max-height: 64px;
+	box-sizing: border-box;
 	object-fit: cover;
-	margin: 5px auto;
+	margin: 0 auto 5px;
+	padding: 2px;
 }
 
 .upload-list {
