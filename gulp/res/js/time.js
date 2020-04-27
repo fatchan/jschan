@@ -120,8 +120,8 @@ window.addEventListener('settingsReady', function(event) {
 
 window.addEventListener('addPost', function(e) {
 
-	const dates = e.detail.post.querySelectorAll('.reltime');
-	for (let date of dates) {
+	const newPostDates = e.detail.post.querySelectorAll('.reltime');
+	for (let date of newPostDates) {
 		if (!e.detail.hover) {
 			dates.push(date);
 		}
