@@ -28,6 +28,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const addQuote = function(number) {
 		openPostForm();
 		messageBox.value += `>>${number}\n`;
+		if (window.getSelection) {
+			messageBox.value += window.getSelection();
+		} else if (document.getSelection) {
+			messageBox.value += document.getSelection();
+		} else if (document.selection) {
+			messageBox.value += document.selection.createRange().text;
+		}
 		messageBox.scrollTop = messageBox.scrollHeight;
 		messageBox.focus();
 		messageBox.setSelectionRange(messageBox.value.length, messageBox.value.length);
