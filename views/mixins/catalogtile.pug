@@ -1,5 +1,10 @@
 mixin catalogtile(board, post, index)
-	.catalog-tile(data-board=post.board data-post-id=post.postId data-user-id=post.userId)
+	.catalog-tile(data-board=post.board
+		data-post-id=post.postId
+		data-filter=((post.subject+post.nomarkup).toLowerCase() || '')
+		data-date=post.date
+		data-replies=post.replyposts
+		data-bump=post.bumped)
 		- const postURL = `/${board._id}/thread/${post.postId}.html#${post.postId}`
 		.post-info
 			input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
