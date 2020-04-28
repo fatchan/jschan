@@ -205,7 +205,7 @@ pre {
 	font-weight: bold;
 }
 
-.statwrap {
+.wrapbar {
 	display: flex;
 	justify-content: space-between;
 	flex-flow: row wrap;
@@ -1307,13 +1307,8 @@ row.wrap.sb .col {
 	}
 
 	.catalog-tile {
-		width: 50%;
-		margin: 0 0 10px 0;
-	}
-
-	.catalog-tile:nth-child(odd) {
-		margin-right: 10px;
 		width: calc(50% - 10px);
+		margin: 5px;
 	}
 
 	table {

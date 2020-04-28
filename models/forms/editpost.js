@@ -114,7 +114,7 @@ todo: handle some more situations
 	}, {
 		'$set': {
 			edited: {
-				username: req.body.show_name ? req.session.user.username : 'Hidden User',
+				username: req.body.hide_name ? 'Hidden User' : req.session.user.username,
 				date: new Date(),
 			},
 			message,
@@ -134,7 +134,7 @@ todo: handle some more situations
 		postIds: [post.postId],
 		actions: 'Edit',
 		date: new Date(),
-		showUser: req.body.show_name ? true : false,
+		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,
 		user: req.session.user.username,
 		ip: res.locals.ip.single,

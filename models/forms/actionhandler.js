@@ -288,7 +288,7 @@ module.exports = async (req, res, next) => {
 					postIds: [],
 					actions: modlogActions,
 					date: logDate,
-					showUser: req.body.show_name || logUser === 'Unregistered User' ? true : false,
+					showUser: !req.body.hide_name || logUser === 'Unregistered User' ? true : false,
 					message: message,
 					user: logUser,
 					ip: res.locals.ip.single,
