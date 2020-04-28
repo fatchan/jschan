@@ -3,6 +3,7 @@
 const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, restrictedURIs = new Set(['captcha', 'forms', 'randombanner'])
 	, { ensureDir } = require('fs-extra')
 	, { boardDefaults } = require(__dirname+'/../../configs/main.js');
 
@@ -11,8 +12,17 @@ module.exports = async (req, res, next) => {
 	const { name, description } = req.body
 		, uri = req.body.uri.toLowerCase()
 		, tags = req.body.tags.split('\n').filter(n => n)
-		, owner = req.session.user.username
-		, board = await Boards.findOne(uri);
+		, owner = req.session.user.username;
+
+	if (restrictedURIs.has(uri)) {
+		return dynamicResponse(req, res, 400, 'message', {
+			'title': 'Bad Request',
+			'message': 'That URI is not available for board creation',
+			'redirect': '/create.html'
+		});
+	}
+
+	const board = await Boards.findOne(uri);
 
 	// if board exists reject
 	if (board != null) {
@@ -22,6 +32,7 @@ module.exports = async (req, res, next) => {
 			'redirect': '/create.html'
 		});
 	}
+
 
 	//todo: add a settings for defaults
 	const newBoard = {
