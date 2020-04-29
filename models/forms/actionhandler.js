@@ -288,7 +288,7 @@ module.exports = async (req, res, next) => {
 					postIds: [],
 					actions: modlogActions,
 					date: logDate,
-					showUser: req.body.show_name || logUser === 'Unregistered User' ? true : false,
+					showUser: !req.body.hide_name || logUser === 'Unregistered User' ? true : false,
 					message: message,
 					user: logUser,
 					ip: res.locals.ip.single,
@@ -404,6 +404,12 @@ module.exports = async (req, res, next) => {
 					*/
 					threadOrs = threadOrs.filter(t => t.thread !== threadAggregate._id.thread && t.board !== threadAggregate._id.board);
 					//use results from first aggregate for threads with replies still existing
+					const aggregateSet = {
+						//todo here: check if thread bumplocked or beyond bump limit
+						'replyposts': threadAggregate.replyposts,
+						'replyfiles': threadAggregate.replyfiles,
+						'bumped': threadAggregate.bumped
+					}
 					bulkWrites.push({
 						'updateOne': {
 							'filter': {
@@ -411,11 +417,7 @@ module.exports = async (req, res, next) => {
 								'board': threadAggregate._id.board
 							},
 							'update': {
-				  				'$set': {
-									'replyposts': threadAggregate.replyposts,
-									'replyfiles': threadAggregate.replyfiles,
-									'bumped': threadAggregate.bumped
-								}
+								'$set': aggregateSet,
 							}
 						}
 					});

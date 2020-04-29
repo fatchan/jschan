@@ -90,6 +90,7 @@ module.exports = async (req, res, next) => {
 		'triggerAction': numberSetting(req.body.trigger_action, oldSettings.triggerAction),
 		'threadLimit': numberSetting(req.body.thread_limit, oldSettings.threadLimit),
 		'replyLimit': numberSetting(req.body.reply_limit, oldSettings.replyLimit),
+		'bumpLimit': numberSetting(req.body.bump_limit, oldSettings.bumpLimit),
 		'maxFiles': numberSetting(req.body.max_files, oldSettings.maxFiles),
 		'minThreadMessageLength': numberSetting(req.body.min_thread_message_length, oldSettings.minThreadMessageLength),
 		'minReplyMessageLength': numberSetting(req.body.min_reply_message_length, oldSettings.minReplyMessageLength),

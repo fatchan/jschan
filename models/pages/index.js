@@ -7,7 +7,6 @@ module.exports = {
 	account: require(__dirname+'/account.js'),
 	home: require(__dirname+'/home.js'),
 	login: require(__dirname+'/login.js'),
-	logout: require(__dirname+'/logout.js'),
 	create: require(__dirname+'/create.js'),
 	board: require(__dirname+'/board.js'),
 	catalog: require(__dirname+'/catalog.js'),

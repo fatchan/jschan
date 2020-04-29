@@ -1,5 +1,10 @@
 mixin catalogtile(board, post, index)
-	.catalog-tile(data-board=post.board data-post-id=post.postId data-user-id=post.userId)
+	.catalog-tile(data-board=post.board
+		data-post-id=post.postId
+		data-filter=((post.subject+post.nomarkup).toLowerCase() || '')
+		data-date=post.date
+		data-replies=post.replyposts
+		data-bump=post.bumped)
 		- const postURL = `/${board._id}/thread/${post.postId}.html#${post.postId}`
 		.post-info
 			input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
@@ -24,8 +29,8 @@ mixin catalogtile(board, post, index)
 					else if file.mimetype.startsWith('audio')
 						div.audioimg.catalog-thumb
 					else if file.hasThumb
-						img.catalog-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` width='64' height='64' loading='lazy')
+						img.catalog-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` width=file.geometry.thumbwidth height=file.geometry.thumbheight loading='lazy')
 					else
-						img.catalog-thumb(src=`/file/${file.filename}` width='64' height='64' loading='lazy')
+						img.catalog-thumb(src=`/file/${file.filename}` width=file.geometry.width height=file.geometry.height loading='lazy')
 		if post.message
 			pre.no-m-p.post-message !{post.message}

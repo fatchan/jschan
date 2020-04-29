@@ -1,4 +1,4 @@
-/*sushi*/
+/*miku*/
 :root {
 	--icon-color:invert(17%)sepia(89%)saturate(7057%)hue-rotate(2deg)brightness(93%)contrast(120%);
 	--alt-label-color: #B6DDDE;
@@ -19,7 +19,7 @@
 	--name-color: #117743;
 	--capcode-color: #f00;
 	--subject-color: #117743;
-	--link-color: #d00;
+	--link-color: #00637B;
 	--post-link-color: #d00;
 	--link-hover: #d00;
 	--input-borders: #a9a9a9;
@@ -29,4 +29,7 @@
 	--title-color: #d70000;
 	--greentext-color: #789922;
 	--pinktext-color:#E0727F;
+}
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
+	border-width: 0 1px 1px 0;
 }

@@ -153,7 +153,7 @@ module.exports = {
 							'$cond': [
 								{ '$ne': [ '$email', 'sage' ] },
 								'$date',
-								0 //still need to improve this to ignore bumplocked threads
+								0 //still need to improve this to ignore bumplocked or bumplimited threads
 							]
 						}
 					}
@@ -331,7 +331,11 @@ module.exports = {
 	},
 
 	insertOne: async (board, data, thread) => {
-		let saged = data.email === 'sage' || (thread && thread.bumplocked);
+		let saged = data.email === 'sage' //if email is sage
+			|| (thread &&
+				(thread.bumplocked //or thread bumplocked
+				|| thread.replyposts >= board.settings.bumpLimit //or at bump limit
+			));
 		if (data.thread !== null) {
 			const filter = {
 				'postId': data.thread,

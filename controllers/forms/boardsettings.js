@@ -45,6 +45,11 @@ module.exports = async (req, res, next) => {
 			|| req.body.reply_limit > globalLimits.replyLimit.max)) {
 		errors.push(`Reply Limit must be ${globalLimits.replyLimit.min}-${globalLimits.replyLimit.max}`);
 	}
+	if (typeof req.body.bump_limit === 'number'
+		&& (req.body.bump_limit < globalLimits.bumpLimit.min
+			|| req.body.bump_limit > globalLimits.bumpLimit.max)) {
+		errors.push(`Bump Limit must be ${globalLimits.bumpLimit.min}-${globalLimits.bumpLimit.max}`);
+	}
 	if (typeof req.body.thread_limit === 'number'
 		&& (req.body.thread_limit < globalLimits.threadLimit.min
 			|| req.body.thread_limit > globalLimits.threadLimit.max)) {

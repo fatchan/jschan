@@ -28,6 +28,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const addQuote = function(number) {
 		openPostForm();
 		messageBox.value += `>>${number}\n`;
+		let selection;
+		if (window.getSelection) {
+			selection = window.getSelection().toString();
+		} else if (document.getSelection) {
+			selection = document.getSelection().toString();
+		} else if (document.selection) {
+			selection = document.selection.createRange().text;
+		}
+		if (selection && selection.length > 0) {
+			const quotedSelection = selection.split(/\r?\n/) //split by lines
+				.map(line => line.trim().length > 0 ? `>${line}` : line) //make non empty lines greentext
+				.join('\n'); //join it back together and newline
+			messageBox.value += `${quotedSelection}\n`;
+		}
 		messageBox.scrollTop = messageBox.scrollHeight;
 		messageBox.focus();
 		messageBox.setSelectionRange(messageBox.value.length, messageBox.value.length);

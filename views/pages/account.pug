@@ -15,7 +15,8 @@ block content
 			li: a(href='/globalmanage/recent.html') Global management
 		li: a(href='/create.html') Create a board
 		li: a(href='/changepassword.html') Change password
-		li: a(href='/logout') Log out
+	form(action='/forms/logout' method='post')
+		input(type='submit' value='Log out')
 	hr(size=1)
 	h4.no-m-p Boards you own:
 	if user.ownedBoards && user.ownedBoards.length > 0

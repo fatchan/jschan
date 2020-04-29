@@ -135,3 +135,9 @@ padding-bottom: 3em;
     padding-right: 5px;
   }
 }
+.rainbow {
+display: inline
+}
+.nav-item:nth-of-type(3) {
+line-height: 1.75em
+}
