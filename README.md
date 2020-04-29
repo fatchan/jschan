@@ -1,6 +1,5 @@
 # jschan
-Anonymous imageboard software. Live instance at https://fatchan.org
-
+Anonymous imageboard software.
 ## Goals
 - Oldschool look, newschool feel
 - Work with javascript disabled
