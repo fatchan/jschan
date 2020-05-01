@@ -5,6 +5,7 @@ const express  = require('express')
 	, Boards = require(__dirname+'/../db/boards.js')
 	, { globalLimits, debugLogs, filterFileNames, spaceFileNameReplacement } = require(__dirname+'/../configs/main.js')
 	//middlewares
+	, processIp = require(__dirname+'/../helpers/processip.js')
 	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
@@ -80,27 +81,27 @@ const express  = require('express')
 	, logout = require(__dirname+'/../models/forms/logout.js');
 
 //make new post
-router.post('/board/:board/post', sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles,
+router.post('/board/:board/post', processIp, sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles,
 	paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, makePostController);
-router.post('/board/:board/modpost', sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), postFiles,
+router.post('/board/:board/modpost', processIp, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), postFiles,
 	paramConverter, csrf, numFiles, blockBypassCheck, dnsblCheck, makePostController); //mod post has token instead of captcha
 
 //post actions
-router.post('/board/:board/actions', sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //public, with captcha
-router.post('/board/:board/modactions', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, actionController); //board manage page
+router.post('/board/:board/actions', processIp, sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //public, with captcha
+router.post('/board/:board/modactions', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, actionController); //board manage page
 router.post('/global/actions', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page
 //appeal ban
-router.post('/appeal', sessionRefresh, paramConverter, verifyCaptcha, appealController);
+router.post('/appeal', processIp, sessionRefresh, paramConverter, verifyCaptcha, appealController);
 //edit post
-router.post('/editpost', sessionRefresh, csrf, paramConverter, Boards.bodyExists, calcPerms, hasPerms(3), editPostController);
+router.post('/editpost', processIp, sessionRefresh, csrf, paramConverter, Boards.bodyExists, calcPerms, hasPerms(3), editPostController);
 
 //board management forms
-router.post('/board/:board/transfer', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);
-router.post('/board/:board/settings', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
-router.post('/board/:board/addbanners', sessionRefresh, bannerFiles, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
-router.post('/board/:board/deletebanners', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
-router.post('/board/:board/editbans', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
-router.post('/board/:board/deleteboard', sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController); //delete board
+router.post('/board/:board/transfer', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);
+router.post('/board/:board/settings', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
+router.post('/board/:board/addbanners', processIp, sessionRefresh, bannerFiles, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
+router.post('/board/:board/deletebanners', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
+router.post('/board/:board/editbans', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
+router.post('/board/:board/deleteboard', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController); //delete board
 
 //global management forms
 router.post('/global/editbans', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, editBansController); //remove bans
