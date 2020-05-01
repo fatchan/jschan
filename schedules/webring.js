@@ -3,12 +3,13 @@
 const fetch = require('node-fetch')
 	, { debugLogs, meta } = require(__dirname+'/../configs/main.js')
 	, { logo, following, blacklist, proxy } = require(__dirname+'/../configs/webring.json')
+	, Mongo = require(__dirname+'/../db/db.js')
 	, { Boards, Webring } = require(__dirname+'/../db/')
 	, { outputFile } = require('fs-extra')
 	, cache = require(__dirname+'/../redis.js')
 	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js')
 	, timeDiffString = require(__dirname+'/../helpers/timediffstring.js')
-	, SocksProxyAgent = proxy.enabled ? require('socks-proxy-agent') : null
+	, SocksProxyAgent = proxy.enabled && require('socks-proxy-agent')
 	, agent = SocksProxyAgent ? new SocksProxyAgent(require('url').parse(proxy.address)) : null
 
 module.exports = async () => {
@@ -55,10 +56,13 @@ module.exports = async () => {
 		}
 	}
 
-	//remove and replace webring boards
-	await Webring.deleteAll();
-	await Webring.db.insertMany(webringBoards);
-//TODO: insert into a temp colletion and use a $out aggregation stage to prevent small timeframe of empty collection
+	//$out from temp collection to replace webring boards
+	const tempCollection = Mongo.client.db('jschan').collection('tempwebring');
+	await tempCollection.insertMany(webringBoards);
+	await tempCollection.aggregate([
+		{ $out : 'webring' }
+	]);
+	await tempCollection.drop();
 
 	//update webring.json
 	const boards = await Boards.webringBoards();
