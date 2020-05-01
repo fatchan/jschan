@@ -2,12 +2,14 @@
 
 const fetch = require('node-fetch')
 	, { debugLogs, meta } = require(__dirname+'/../configs/main.js')
-	, { logo, following, blacklist } = require(__dirname+'/../configs/webring.json')
+	, { logo, following, blacklist, proxy } = require(__dirname+'/../configs/webring.json')
 	, { Boards, Webring } = require(__dirname+'/../db/')
 	, { outputFile } = require('fs-extra')
 	, cache = require(__dirname+'/../redis.js')
 	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js')
-	, timeDiffString = require(__dirname+'/../helpers/timediffstring.js');
+	, timeDiffString = require(__dirname+'/../helpers/timediffstring.js')
+	, SocksProxyAgent = proxy.enabled ? require('socks-proxy-agent') : null
+	, agent = SocksProxyAgent ? new SocksProxyAgent(require('url').parse(proxy.address)) : null
 
 module.exports = async () => {
 	const label = `updating webring`;
@@ -21,7 +23,12 @@ module.exports = async () => {
 		const toVisit = [...known].filter(url => !visited.has(url));
 		let rings = await Promise.all(toVisit.map(url => {
 			visited.add(url);
-			return fetch(url, {headers:{'User-Agent':''}}).then(res => res.json()).catch(e => console.error);
+			return fetch(url, {
+				agent,
+				headers: {
+					'User-Agent':''
+				}
+			}).then(res => res.json()).catch(e => console.error);
 		}));
 		for (let i = 0; i < rings.length; i++) {
 			const ring = rings[i];

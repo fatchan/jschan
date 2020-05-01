@@ -5,7 +5,11 @@
 	"blacklist": [
 		"badwebsite.com",
 	],
-    "logo": [
-        "https://yourdomain.com/favicon.ico"
-    ]
+	"logo": [
+		"https://yourdomain.com/favicon.ico"
+	],
+	"proxy": {
+		"enabled": false,
+		"address": "socks5h://localhost:9050"
+	}
 }

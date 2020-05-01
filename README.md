@@ -13,7 +13,7 @@ Anonymous imageboard software.
 - [x] Read-only JSON api
 - [x] Multi-select moderation actions
 - [x] Websocket update threads w/o polling
-- [x] Webring support ([lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring)) ([infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
+- [x] Webring w/proxy support ([lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring)) ([infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
 
 ## Todo
 - Support running as a hidden service
@@ -108,3 +108,8 @@ $ gulp --tasks #list available gulp tasks
 $ gulp migrate #check for and run db migrations
 $ gulp #run default gulp task
 ```
+
+8. Optionally, if you plan to use the webring and want to make requests with tor to mask your origin server IP:
+Install docker and run torproxy in a container: https://github.com/dperson/torproxy
+Edit configs/webring.json and wer proxy enabled:true
+
