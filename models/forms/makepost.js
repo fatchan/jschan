@@ -245,7 +245,7 @@ module.exports = async (req, res, next) => {
 							await moveUpload(file, processedFile.filename, 'file');
 						}
 						if (!existsThumb) {
-							await videoThumbnail(processedFile, processedFile.geometry);
+							await videoThumbnail(processedFile, processedFile.geometry, videoData.streams[0].nb_frames);
 						}
 						break;
 					}
