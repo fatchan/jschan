@@ -1,6 +1,7 @@
 'use strict';
 
 const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
+	, Mongo = require(__dirname+'/../../db/db.js')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
@@ -74,10 +75,14 @@ todo: handle some more situations
 	//todo: email and subject (probably dont need any transformation since staff bypass limits on forceanon, and it doesnt have to account for sage/etc
 
 	//intersection/difference of quotes sets for linking and unlinking
-	const oldQuoteIds = post.quotes.map(q => q._id);
+	const oldQuoteIds = post.quotes.map(q => q._id.toString());
 	const oldQuotesSet = new Set(oldQuoteIds);
-	const newQuoteIds = quotes.map(q => q._id);
-	const addedQuotesSet = new Set(newQuoteIds.filter(qid => !oldQuotesSet.has(qid)));
+	const newQuoteIds = quotes.map(q => q._id.toString());
+	const newQuotesSet = new Set(newQuoteIds);
+
+	const addedQuotesSet = new Set(newQuoteIds.filter(qid => !oldQuotesSet.has(qid)).map(Mongo.ObjectId));
+	const removedQuotesSet = new Set(oldQuoteIds.filter(qid => !newQuotesSet.has(qid)).map(Mongo.ObjectId));
+
 	//linking new added quotes
 	if (addedQuotesSet.size > 0) {
 		await Posts.db.updateMany({
@@ -91,7 +96,6 @@ todo: handle some more situations
 		});
 	}
 
-	const removedQuotesSet = new Set(oldQuoteIds.filter(qid => !addedQuotesSet.has(qid)));
 	//unlinking removed quotes
 	if (removedQuotesSet.size > 0) {
 		await Posts.db.updateMany({

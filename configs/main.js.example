@@ -112,7 +112,7 @@ module.exports = {
 	defaultBanDuration: 31536000000,
 
 	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
-	quoteLimit: 15,
+	quoteLimit: 25,
 
 	//aply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
 	strictFiltering: false,
