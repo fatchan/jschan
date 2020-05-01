@@ -2,8 +2,8 @@
 
 const editPost = require(__dirname+'/../../models/forms/editpost.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js')
-	, { Posts, Boards } = require(__dirname+'/../../db/');
+	, { rateLimitCost, globalLimits } = require(__dirname+'/../../configs/main.js')
+	, { Ratelimits, Posts, Boards } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
 
@@ -45,6 +45,17 @@ module.exports = async (req, res, next) => {
 			'title': 'Bad request',
 			'errors': errors,
 		});
+	}
+
+	if (res.locals.permLevel > 1) { //if not global staff or above
+		const ratelimitUser = await Ratelimits.incrmentQuota(req.session.user.username, 'edit', rateLimitCost.editPost);
+		const ratelimitIp = await Ratelimits.incrmentQuota(res.locals.ip.single, 'edit', rateLimitCost.editPost);
+		if (ratelimitUser > 100 || ratelimitIp > 100) {
+			return dynamicResponse(req, res, 429, 'message', {
+				'title': 'Ratelimited',
+				'error': 'You are editing posts too quickly, please wait a minute and try again',
+			});
+		}
 	}
 
 	try {

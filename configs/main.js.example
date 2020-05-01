@@ -70,6 +70,7 @@ module.exports = {
 	rateLimitCost: { //Cost out of 100 per minute e.g. cost of 25 means 4 per minute. Cost is separate for each.
 		captcha: 10,
 		boardSettings: 30,
+		editPost: 30,
 	},
 
 	//cache templates in memory. disable only if editing templates and doing dev work
