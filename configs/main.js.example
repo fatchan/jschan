@@ -98,7 +98,7 @@ module.exports = {
 	thumbExtension: '.jpg',
 
 	//max thumb dimensions (square) in px. images smaller than this are not thumbnailed
-	thumbSize: 200,
+	thumbSize: 220,
 
 	/* extra mime types for files to be uploaded as attachments (no thumbnails) e.g. text files/archives
 		NOTE: appropriate extensions will need to be added to nginx configuration, and uncommend the provided

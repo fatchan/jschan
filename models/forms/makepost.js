@@ -210,6 +210,7 @@ module.exports = async (req, res, next) => {
 						processedFile.geometry = imageData.size ;
 						processedFile.geometryString = imageData.Geometry;
 						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
+							&& subtype !== 'png'
 							&& processedFile.geometry.height <= thumbSize
 							&& processedFile.geometry.width <= thumbSize);
 						if (!existsFull) {
