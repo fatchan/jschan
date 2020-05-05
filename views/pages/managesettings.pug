@@ -209,6 +209,10 @@ block content
 						label.postform-style.ph-5
 							input(type='checkbox', name='early404', value='true' checked=board.settings.early404)
 					.row
+						.label Blocked Countries
+						- const blockedCountries = new Set(board.settings.blockedCountries);
+						include ../includes/2charisocountries.pug
+					.row
 						.label Filters
 						textarea(name='filters' placeholder='newline separated, max 50') #{board.settings.filters.join('\n')}
 					.row
