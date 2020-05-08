@@ -1,6 +1,6 @@
 'use strict';
 
-const { lockWait, globalLimits, boardDefaults, cacheTemplates, meta } = require(__dirname+'/../configs/main.js')
+const { enableAccountCreation, enableUserBoards, lockWait, globalLimits, boardDefaults, cacheTemplates, meta } = require(__dirname+'/../configs/main.js')
 	, { outputFile } = require('fs-extra')
 	, formatSize = require(__dirname+'/files/formatsize.js')
 	, pug = require('pug')
@@ -19,6 +19,8 @@ module.exports = async (htmlName, templateName, options, json=null) => {
 		defaultTheme: boardDefaults.theme,
 		defaultCodeTheme: boardDefaults.codeTheme,
 		postFilesSize: formatSize(globalLimits.postFilesSize.max),
+		enableAccountCreation,
+		enableUserBoards,
 		globalLimits,
 	});
 	const lock = await redlock.lock(`locks:${htmlName}`, lockWait);
