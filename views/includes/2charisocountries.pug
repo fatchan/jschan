@@ -258,7 +258,7 @@
 select(name='countries' size='10' multiple)
 	optgroup(label='Currently blocked')
 		each code in board.settings.blockedCountries
-			option(value=code) #{codeMap[code]}
+			option(value=code selected=true) #{codeMap[code]}
 	optgroup(label='Not blocked')
 		each code in codeKeys.filter(c => !blockedCountries.has(c))
 			option(value=code) #{codeMap[code]}
