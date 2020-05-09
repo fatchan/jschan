@@ -111,17 +111,17 @@ router.post('/global/editaccounts', sessionRefresh, csrf, calcPerms, isLoggedIn,
 router.post('/global/settings', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, globalSettingsController); //global settings
 
 //create board
-router.post('/create', sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
+router.post('/create', processIp, sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
 //accounts
 router.post('/login', loginController);
 router.post('/logout', logout);
-router.post('/register', verifyCaptcha, calcPerms, registerController);
-router.post('/changepassword', verifyCaptcha, changePasswordController);
+router.post('/register', processIp, verifyCaptcha, calcPerms, registerController);
+router.post('/changepassword', processIp, verifyCaptcha, changePasswordController);
 
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptcha);
 //solve captcha for block bypass
-router.post('/blockbypass', verifyCaptcha, blockBypass);
+router.post('/blockbypass', processIp, verifyCaptcha, blockBypass);
 
 module.exports = router;
 

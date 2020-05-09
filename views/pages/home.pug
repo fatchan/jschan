@@ -12,9 +12,7 @@ block content
 			tr
 				td
 					pre.no-m-p
-						| This is an anonymous imageboard, a type of BBS where anyone can post messages and share images.
-						| You don't need to register or provide any personal information to make a post.
-						| Choose a board below to join the discussion, or #[a(href='/create.html') create your own].
+						| The site administrator should edit views/pages/home.pug, then run "pm2 reload all" and "gulp html" to customise this page.
 	if recentNews && recentNews.length > 0
 		.table-container.flex-center.mv-5
 			table.newstable
