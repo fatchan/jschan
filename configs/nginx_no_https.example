@@ -8,9 +8,11 @@ server {
 	server_tokens off;
 	error_page 404 = /path/to/jschan/static/html/404.html;
 	error_page 502 = /path/to/jschan/static/html/502.html;
+	client_max_body_size 0; #limit handled by upstream for better errors
+	server_tokens off;
 
 	add_header Cache-Control "public";
-	add_header Content-Security-Policy "default-src 'self'; img-src 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'";
+	add_header Content-Security-Policy "default-src 'self'; img-src 'self' blob:; object-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'";
 	add_header Referrer-Policy "same-origin" always;
 	add_header X-Frame-Options "sameorigin" always;
 	add_header X-Content-Type-Options "nosniff" always;
