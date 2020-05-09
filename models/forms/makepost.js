@@ -44,10 +44,20 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const { filterBanDuration, filterMode, filters,
+	const { filterBanDuration, filterMode, filters, blockedCountries,
 			maxFiles, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
+	if (flags === true
+		&& res.locals.permLevel >= 4
+		&& req.headers['x-country-code']
+		&& blockedCountries.includes(req.headers['x-country-code'])) {
+		return dynamicResponse(req, res, 403, 'message', {
+			'title': 'Forbidden',
+			'message': `Your country code ${req.headers['x-country-code']} is not allowed to post on this board`,
+			'redirect': redirect
+		});
+	}
 	if ((lockMode === 2 || (lockMode === 1 && !req.body.thread)) //if board lock, or thread lock and its a new thread
 		&& res.locals.permLevel >= 4) { //and not staff
 		await deleteTempFiles(req).catch(e => console.error);

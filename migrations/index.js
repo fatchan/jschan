@@ -6,4 +6,5 @@ module.exports = {
 	'0.0.3': require(__dirname+'/migration-0.0.3.js'), //move files from /img to /file/
 	'0.0.4': require(__dirname+'/migration-0.0.4.js'), //rename some fields for board lock mode and unlisting
 	'0.0.5': require(__dirname+'/migration-0.0.5.js'), //add bumplimit to board settings
+	'0.0.6': require(__dirname+'/migration-0.0.6.js'), //add blocked countries to board settings
 }

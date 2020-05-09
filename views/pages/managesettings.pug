@@ -151,7 +151,6 @@ block content
 						.label Geo Flags
 						label.postform-style.ph-5
 							input(type='checkbox', name='flags', value='true' checked=board.settings.flags)
-				.col
 					.row
 						.label Lock Mode
 						select(name='lock_mode')
@@ -170,6 +169,7 @@ block content
 						.label SFW
 						label.postform-style.ph-5
 							input(type='checkbox', name='sfw', value='true' checked=board.settings.sfw)
+				.col
 					.row
 						.label Theme
 						select(name='theme')
@@ -210,7 +210,6 @@ block content
 							input(type='checkbox', name='early404', value='true' checked=board.settings.early404)
 					.row
 						.label Blocked Countries
-						- const blockedCountries = new Set(board.settings.blockedCountries);
 						include ../includes/2charisocountries.pug
 					.row
 						.label Filters
