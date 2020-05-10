@@ -72,7 +72,7 @@ geoip_country /usr/share/GeoIP/GeoIP.dat;
 geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 ```
 
-7. Clone ths repo, browse to the folder and set some things up
+7. Clone this repo, browse to the folder and set some things up
 ```bash
 # copy example config file and edit it
 $ cp configs/main.js.example configs/main.js && editor configs/main.js
