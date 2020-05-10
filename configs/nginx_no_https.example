@@ -5,7 +5,6 @@ upstream chan {
 server {
 
 	server_name domain.com www.domain.com;
-	server_tokens off;
 	error_page 404 = /path/to/jschan/static/html/404.html;
 	error_page 502 = /path/to/jschan/static/html/502.html;
 	client_max_body_size 0; #limit handled by upstream for better errors
