@@ -60,7 +60,7 @@ module.exports = {
 		bypassDnsbl: false,
 	},
 
-	// permission level required to see UNHASHED ips. -1 for ips to be hashed even for root user. not recommendded to change after installation
+	// permission level required to see UNHASHED ips. -1 for ips to be hashed even for root user. not recommended to change after installation
 	ipHashPermLevel: 0,
 
 	/* delete files immediately rather than pruning later. usually disabled to prevent re-thumbnailing and processing commonly
@@ -77,7 +77,7 @@ module.exports = {
 	cacheTemplates: true,
 
 	//log extra info for debugging
-    debugLogs: true,
+	debugLogs: true,
 
 	//max wait time in ms for obtaining locks for saving files
 	lockWait: 3000,
