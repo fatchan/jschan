@@ -8,7 +8,7 @@ const alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex
 module.exports = async (req, res, next) => {
 
 	if (enableUserAccountCreation === false && res.locals.permLevel > 1) {
-		return res.status(400).render('message', {
+		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'error': 'Acount creation is disabled',
 			'redirect': '/register.html'
