@@ -22,6 +22,7 @@ module.exports = async (req, res, next) => {
 		//no need to check these if the board name is completely invalid
 		if (req.params.board != null && req.params.board !== req.body.uri) {
 			//board manage page to not be able to delete other boards;
+			//req.params.board will be null on global delete, so this wont happen
 			errors.push('URI does not match current board');
 		}
 		try {
@@ -39,7 +40,7 @@ module.exports = async (req, res, next) => {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': req.params.board ? `/${req.params.board}/manage/settings.html` : '/globalmanage/recent.html'
+			'redirect': req.params.board ? `/${req.params.board}/manage/settings.html` : '/globalmanage/settings.html'
 		});
 	}
 
@@ -52,7 +53,7 @@ module.exports = async (req, res, next) => {
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': 'Board deleted',
-		'redirect': req.params.board ? '/' : '/globalmanage/recent.html'
+		'redirect': req.params.board ? '/' : '/globalmanage/settings.html'
 	});
 
 }
