@@ -12,7 +12,8 @@ const express = require('express')
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
 	, { cacheTemplates, boardDefaults, sessionSecret, globalLimits,
-		secureCookies, debugLogs, ipHashPermLevel, meta, port } = require(__dirname+'/configs/main.js')
+		enableUserBoardCreation, enableUserAccountCreation, secureCookies,
+		debugLogs, ipHashPermLevel, meta, port } = require(__dirname+'/configs/main.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, Mongo = require(__dirname+'/db/db.js')
@@ -80,6 +81,8 @@ const express = require('express')
 	}
 
 	//default settings
+	app.locals.enableUserAccountCreation = enableUserAccountCreation;
+	app.locals.enableUserBoardCreation = enableUserBoardCreation;
 	app.locals.defaultTheme = boardDefaults.theme;
 	app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 	app.locals.globalLimits = globalLimits;

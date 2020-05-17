@@ -13,9 +13,9 @@ block content
 	ul
 		if user.authLevel <= 1
 			li: a(href='/globalmanage/recent.html') Global management
-		if enableUserBoards || user.authLevel <= 1
+		if enableUserBoardCreation || user.authLevel <= 1
 			li: a(href='/create.html') Create a board
-		if !userAccountCreation && user.authLevel <= 1
+		if !enableUserAccountCreation && user.authLevel <= 1
 			li: a(href='/register.html') Register an account
 		li: a(href='/changepassword.html') Change password
 	form(action='/forms/logout' method='post')
