@@ -5,7 +5,7 @@ mixin catalogtile(board, post, index)
 		data-date=post.date
 		data-replies=post.replyposts
 		data-bump=post.bumped)
-		- const postURL = `/${board._id}/thread/${post.postId}.html#${post.postId}`
+		- const postURL = `/${board._id}/${modview ? 'manage/' : ''}thread/${post.postId}.html#${post.postId}`
 		.post-info
 			input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
 			if modview
