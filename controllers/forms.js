@@ -89,7 +89,7 @@ router.post('/board/:board/modpost', processIp, sessionRefresh, Boards.exists, c
 //post actions
 router.post('/board/:board/actions', processIp, sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //public, with captcha
 router.post('/board/:board/modactions', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, actionController); //board manage page
-router.post('/global/actions', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page
+router.post('/global/actions', processIp, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page
 //appeal ban
 router.post('/appeal', processIp, sessionRefresh, paramConverter, verifyCaptcha, appealController);
 //edit post
