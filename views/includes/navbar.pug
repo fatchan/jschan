@@ -2,9 +2,10 @@ unless minimal
 	nav.navbar
 		a.nav-item(href='/index.html') Home
 		a.nav-item(href='/news.html') News
-		a.nav-item(href='/boards.html')
+		a.nav-item(href='/boards.html' style=(enableWebring ? 'line-height: 1.5em' : null))
 			| Boards 
-			.rainbow +Webring
+			if enableWebring
+				.rainbow +Webring
 		a.nav-item(href='/account.html') Account
 		if board
 			a.nav-item(href=`/${board._id}/manage/reports.html`) Manage

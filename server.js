@@ -13,7 +13,7 @@ const express = require('express')
 	, cookieParser = require('cookie-parser')
 	, { cacheTemplates, boardDefaults, sessionSecret, globalLimits,
 		enableUserBoardCreation, enableUserAccountCreation, secureCookies,
-		debugLogs, ipHashPermLevel, meta, port } = require(__dirname+'/configs/main.js')
+		debugLogs, ipHashPermLevel, meta, port, enableWebring } = require(__dirname+'/configs/main.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, Mongo = require(__dirname+'/db/db.js')
@@ -87,6 +87,7 @@ const express = require('express')
 	app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 	app.locals.globalLimits = globalLimits;
 	app.locals.ipHashPermLevel = ipHashPermLevel;
+	app.locals.enableWebring = enableWebring;
 	app.locals.commit = commit;
 	app.locals.meta = meta;
 

@@ -905,10 +905,6 @@ input:invalid, textarea:invalid {
 	text-align: center;
 }
 
-.nav-item:nth-of-type(3) {
-	line-height:1.5em;
-}
-
 .left {
 	float: left;
 }
