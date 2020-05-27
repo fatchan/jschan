@@ -3,7 +3,7 @@
 		"https://example.com/webring.json"
 	],
 	"blacklist": [
-		"badwebsite.com",
+		"badwebsite.com"
 	],
 	"logo": [
 		"https://yourdomain.com/favicon.ico"
