@@ -46,7 +46,7 @@ module.exports = {
 		return db.countDocuments(addedFilter);
 	},
 
-	deleteAll: (board) => {
+	deleteAll: () => {
 		return db.deleteMany({});
 	},
 

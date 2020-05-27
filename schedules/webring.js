@@ -46,7 +46,7 @@ module.exports = async () => {
 				//add some stuff for the boardlist and then add their boards
 				ring.boards.forEach(board => {
 					board.siteName = ring.name;
-					//convert to numbers because old infinity webring plugin returns strings
+					//convert to numbers because old infinity webring plugin returns string
 					board.totalPosts = parseInt(board.totalPosts);
 					board.postsPerHour = parseInt(board.postsPerHour);
 					board.uniqueUsers = parseInt(board.uniqueUsers);
@@ -56,13 +56,18 @@ module.exports = async () => {
 		}
 	}
 
-	//$out from temp collection to replace webring boards
-	const tempCollection = Mongo.client.db('jschan').collection('tempwebring');
-	await tempCollection.insertMany(webringBoards);
-	await tempCollection.aggregate([
-		{ $out : 'webring' }
-	]);
-	await tempCollection.drop();
+	if (webringBoards.length > 0) {
+		//$out from temp collection to replace webring boards
+		const tempCollection = Mongo.client.db('jschan').collection('tempwebring');
+		await tempCollection.insertMany(webringBoards);
+		await tempCollection.aggregate([
+			{ $out : 'webring' }
+		]);
+		await tempCollection.drop();
+	} else {
+		//otherwise none found, so delete them all
+		await Webring.deleteAll();
+	}
 
 	//update webring.json
 	const boards = await Boards.webringBoards();
