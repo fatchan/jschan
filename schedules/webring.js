@@ -62,7 +62,7 @@ module.exports = async () => {
 		await tempCollection.insertMany(webringBoards);
 		await tempCollection.aggregate([
 			{ $out : 'webring' }
-		]);
+		]).toArray();
 		await tempCollection.drop();
 	} else {
 		//otherwise none found, so delete them all
