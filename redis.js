@@ -27,6 +27,16 @@ module.exports = {
 		return client.sadd(key, value);
 	},
 
+	//get all members of a set
+	sgetall: (key) => {
+		return client.smembers(key);
+	},
+
+	//remove an item from a set
+	srem: (key, value) => {
+		return client.srem(key, value);
+	},
+
 	//get random item from set
 	srand: (key) => {
 		return client.srandmember(key);

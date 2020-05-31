@@ -209,6 +209,10 @@ block content
 							option(value='3', selected=board.settings.triggerAction === 3) Lock thread creation
 							option(value='4', selected=board.settings.triggerAction === 4) Lock board
 					.row
+						.label Auto Reset Trigger
+						label.postform-style.ph-5
+							input(type='checkbox', name='reset_trigger', value='true' checked=board.settings.resetTrigger)
+					.row
 						.label Early 404
 						label.postform-style.ph-5
 							input(type='checkbox', name='early404', value='true' checked=board.settings.early404)

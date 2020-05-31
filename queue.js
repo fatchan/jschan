@@ -1,8 +1,8 @@
 'use strict';
 
 const Queue = require('bull')
-	, configs = require(__dirname+'/configs/main.js')
-	, taskQueue = new Queue('task', { 'redis': configs.redis });
+	, { redis } = require(__dirname+'/configs/main.js')
+	, taskQueue = new Queue('task', { redis });
 
 module.exports = {
 
