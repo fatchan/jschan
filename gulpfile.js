@@ -174,6 +174,8 @@ function custompages() {
 	return gulp.src([`${paths.pug.src}/custompages/*.pug`, `${paths.pug.src}/pages/404.pug`, `${paths.pug.src}/pages/502.pug`])
 		.pipe(gulppug({
 			locals: {
+				meta: configs.meta,
+				enableWebring: configs.enableWebring,
 				globalLimits: configs.globalLimits,
 				codeLanguages: configs.highlightOptions.languageSubset,
 				defaultTheme: configs.boardDefaults.theme,
