@@ -247,6 +247,7 @@ module.exports = {
 		pphTrigger: 0, //number of posts in an hour before ^
 		triggerAction: 0, //0=nothing, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
 		forceAnon: false, //disable name and subject, only allow sage email
+		sageOnlyEmail: false, //only allow sage email
 		early404: true, //delete threads beyond the first 1/3 of pages with less than 5 replies
 		ids: false, //show per thread poster ID based on ip
 		flags: false, //show geo flags, requires nginx setup

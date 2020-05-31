@@ -82,6 +82,7 @@ module.exports = async (req, res, next) => {
 		'ids': booleanSetting(req.body.ids),
 		'flags': booleanSetting(req.body.flags),
 		'forceAnon': booleanSetting(req.body.force_anon),
+		'sageOnlyEmail': booleanSetting(req.body.sage_only_email),
 		'userPostDelete': booleanSetting(req.body.user_post_delete),
 		'userPostSpoiler': booleanSetting(req.body.user_post_spoiler),
 		'userPostUnlink': booleanSetting(req.body.user_post_unlink),
