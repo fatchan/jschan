@@ -16,14 +16,14 @@ module.exports = async () => {
 	const label = `updating webring`;
 	const start = process.hrtime();
 
-	const visited = new Set();
+	const visited = new Map();
 	let known = new Set(following);
 	let webringBoards = []; //list of webring boards
 	while (known.size > visited.size) {
 		//get sites we havent visited yet
 		const toVisit = [...known].filter(url => !visited.has(url));
 		let rings = await Promise.all(toVisit.map(url => {
-			visited.add(url);
+			visited.set(url, (visited.get(url)||0)+1);
 			return fetch(url, {
 				agent,
 				headers: {
@@ -33,9 +33,12 @@ module.exports = async () => {
 		}));
 		for (let i = 0; i < rings.length; i++) {
 			const ring = rings[i];
-			if (!ring || !ring.name || !ring.endpoint || !ring.url || ring.endpoint.includes(meta.url)) {
+			if (!ring || !ring.name || !ring.endpoint || !ring.url //malformed
+				|| ring.endpoint.includes(meta.url) //own site
+				|| visited.get(ring.endpoint) > 1) { //already seen endpoint (for multiple domain sites)
 				continue;
 			}
+			visited.set(ring.endpoint, visited.get(ring.endpoint)+1);
 			if (ring.following && ring.following.length > 0) {
 				//filter their folowing by blacklist/self and add to known sites
 				ring.following
