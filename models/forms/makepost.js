@@ -45,7 +45,7 @@ module.exports = async (req, res, next) => {
 	let salt = null;
 	let thread = null;
 	const { filterBanDuration, filterMode, filters, blockedCountries,
-			maxFiles, forceAnon, replyLimit, disableReplySubject,
+			maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
 	if (flags === true
@@ -322,9 +322,9 @@ module.exports = async (req, res, next) => {
 	const spoiler = userPostSpoiler && req.body.spoiler ? true : false;
 
 	//forceanon hide reply subjects so cant be used as name for replies
-	//forceanon only allow sage email
+	//forceanon and sageonlyemail only allow sage email
 	let subject = (res.locals.permLevel >= 4 && req.body.thread && (disableReplySubject || forceAnon)) ? null : req.body.subject;
-	let email = (res.locals.permLevel < 4 || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
+	let email = (res.locals.permLevel < 4 || (!forceAnon && !sageOnlyEmail) || req.body.email === 'sage') ? req.body.email : null;
 
 	//get name, trip and cap
 	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel, res.locals.board.settings);
