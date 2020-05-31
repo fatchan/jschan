@@ -407,7 +407,7 @@ module.exports = async (req, res, next) => {
 			//set it in the db
 			await Boards.updateOne(res.locals.board._id, update);
 			if (resetTrigger) {
-				//mark the board as being triggered so we can return it to old mode after on stats schedule
+				//mark the board as being triggered so we can return it to old mode after on schedule
 				await cache.sadd('triggered', res.locals.board._id);
 			}
 		}
