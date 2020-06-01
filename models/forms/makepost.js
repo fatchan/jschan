@@ -133,7 +133,10 @@ module.exports = async (req, res, next) => {
 				const banDate = new Date();
 				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
 				const ban = {
-					'ip': res.locals.ip.single,
+					'ip': {
+						'single': res.locals.ip.single,
+						'raw': res.local.ip.raw,
+					},
 					'reason': `${hitGlobalFilter ? 'global ' :''}word filter auto ban`,
 					'board': banBoard,
 					'posts': null,

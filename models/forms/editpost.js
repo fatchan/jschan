@@ -48,7 +48,10 @@ todo: handle some more situations
 					const banDate = new Date();
 					const banExpiry = new Date(globalSettings.filterBanDuration + banDate.getTime());
 					const ban = {
-						'ip': res.locals.ip.single,
+						'ip': {
+							'single': res.locals.ip.single,
+							'raw': res.locals.ip.raw,
+						},
 						'reason': 'global word filter auto ban',
 						'board': null,
 						'posts': null,
@@ -141,7 +144,10 @@ todo: handle some more situations
 		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,
 		user: req.session.user.username,
-		ip: res.locals.ip.single,
+		ip: {
+			single: res.locals.ip.single,
+			raw: ras.locals.ip.raw,
+		}
 	});
 
 	const buildOptions = {

@@ -1,8 +1,6 @@
 'use strict';
 
-const Bans = require(__dirname+'/../../../db/bans.js')
-	, { ipHashPermLevel } = require(__dirname+'/../../../configs/main.js')
-	, hashIp = require(__dirname+'/../../../helpers/haship.js');
+const Bans = require(__dirname+'/../../../db/bans.js');
 
 module.exports = async (req, res, next) => {
 
@@ -11,12 +9,6 @@ module.exports = async (req, res, next) => {
 		bans = await Bans.getBoardBans(req.params.board);
 	} catch (err) {
 		return next(err)
-	}
-	if (ipHashPermLevel !== -1
-		&& res.locals.permLevel > ipHashPermLevel) {
-		for (let i = 0; i < bans.length; i++) {
-			bans[i].ip = hashIp(bans[i].ip);
-		}
 	}
 
 	res

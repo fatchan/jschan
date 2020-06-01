@@ -13,9 +13,10 @@ module.exports = (req, res, next) => {
 		const qrange = split.slice(0,Math.floor(split.length*0.75)).join(delimiter);
 		const hrange = split.slice(0,Math.floor(split.length*0.5)).join(delimiter);
 		res.locals.ip = {
-			single: ipHashPermLevel === -1 ? hashIp(ip) : ip,
-			qrange: ipHashPermLevel === -1 ? hashIp(qrange) : qrange,
-			hrange: ipHashPermLevel === -1 ? hashIp(hrange) : hrange,
+			raw: ipHashPermLevel === -1 ? hashIp(ip) : ip,
+			single: hashIp(ip),
+			qrange: hashIp(qrange),
+			hrange: hashIp(hrange),
 		}
 		next();
 	} else {

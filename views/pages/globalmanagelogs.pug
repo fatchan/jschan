@@ -52,7 +52,7 @@ block content
 									|   
 									a(href=`?username=${log.user}`) [+]
 								td
-									- const logIp = permLevel > ipHashPermLevel ? log.ip.slice(-10) : log.ip;
+									- const logIp = permLevel > ipHashPermLevel ? log.ip.single.slice(-10) : log.ip.raw;
 									a(href=`recent.html?ip=${encodeURIComponent(logIp)}`) #{logIp}
 									|   
 									a(href=`?ip=${encodeURIComponent(logIp)}`) [+]

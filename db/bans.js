@@ -18,7 +18,7 @@ module.exports = {
 			ipQuery = ip;
 		}
 		return db.find({
-			'ip': ipQuery,
+			'ip.single': ipQuery,
 			'board': {
 				'$in': [board, null]
 			}
@@ -42,7 +42,7 @@ module.exports = {
 			'_id': {
 				'$in': ids
 			},
-			'ip': ip,
+			'ip.single': ip,
 			'allowAppeal': true,
 			'appeal': null
 		}, {

@@ -1,10 +1,8 @@
 'use strict';
 
 const { Modlogs } = require(__dirname+'/../../../db/')
-	, { ipHashPermLevel } = require(__dirname+'/../../../configs/main.js')
 	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
-	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
-	, hashIp = require(__dirname+'/../../../helpers/haship.js')
+//	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
 	, limit = 50;
 
 module.exports = async (req, res, next) => {
@@ -34,12 +32,6 @@ module.exports = async (req, res, next) => {
 	} catch (err) {
 		return next(err)
 	}
-    if (ipHashPermLevel !== -1
-		&& res.locals.permLevel > ipHashPermLevel) {
-        for (let i = 0; i < logs.length; i++) {
-            logs[i].ip = hashIp(logs[i].ip);
-        }
-    }
 
 	res
 	.set('Cache-Control', 'private, max-age=5')

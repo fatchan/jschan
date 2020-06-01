@@ -19,8 +19,10 @@ module.exports = async (req, res, next) => {
         filter.board = uri;
     }
 	const ipMatch = decodeQueryIP(req.query, res.locals.permLevel);
-	if (ipMatch) {
-		filter.ip = ipMatch;
+	if (ipMatch instanceof RegExp) {
+		filter['ip'].single = ipMatch;
+	} else if (typeof ipMatch === 'string') {
+		filter['ip'].raw = ipMatch;
 	}
 
 	let logs, maxPage;

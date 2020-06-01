@@ -23,11 +23,14 @@ module.exports = async (req, res, next) => {
 		}, {});
 		for (let ip in ipPosts) {
 			const thisIpPosts = ipPosts[ip];
-			let banIp = ip;
+			let banIp = {
+				single: ip,
+				raw: thisIpPosts[0].ip.raw
+			};
 			if (req.body.ban_h) {
-				banIp = thisIpPosts[0].ip.hrange;
+				banIp.single = thisIpPosts[0].ip.hrange;
 			} else if (req.body.ban_q) {
-				banIp = thisIpPosts[0].ip.qrange;
+				banIp.single = thisIpPosts[0].ip.qrange;
 			}
 			bans.push({
 				'ip': banIp,
