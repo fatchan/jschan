@@ -2,15 +2,13 @@
 
 const hashIp = require(__dirname+'/../helpers/haship.js');
 
-//jesus christ
 module.exports = async(db, redis) => {
 	console.log('change bans index');
-//	await db.collection('bans').dropIndex("ip_1_board_1");
+	await db.collection('bans').dropIndex("ip_1_board_1");
 	await db.collection('bans').createIndex({ 'ip.single': 1 , 'board': 1 });
 	console.log('adjusting ip on posts and clearing reports');
 	const promises = []
 	await db.collection('posts').find().forEach(doc => {
-console.log(doc)
 		promises.push(db.collection('posts').updateOne({
 			'_id':doc._id
 		}, {
@@ -26,7 +24,6 @@ console.log(doc)
 	});
 	console.log('adjusting ip in modlogs')
 	await db.collection('modlog').find().forEach(doc => {
-console.log(doc)
 		promises.push(db.collection('modlog').updateOne({
 			'_id':doc._id
 		}, {
@@ -40,7 +37,6 @@ console.log(doc)
 	});
 	console.log('adjust ip in bans, set null type and remove saved posts')
 	await db.collection('bans').find().forEach(doc => {
-console.log(doc)
 		promises.push(db.collection('bans').updateOne({
 			'_id':doc._id
 		}, {
