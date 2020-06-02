@@ -20,9 +20,9 @@ module.exports = async (req, res, next) => {
     }
 	const ipMatch = decodeQueryIP(req.query, res.locals.permLevel);
 	if (ipMatch instanceof RegExp) {
-		filter['ip'].single = ipMatch;
+		filter['ip.single'] = ipMatch;
 	} else if (typeof ipMatch === 'string') {
-		filter['ip'].raw = ipMatch;
+		filter['ip.raw'] = ipMatch;
 	}
 
 	let logs, maxPage;
