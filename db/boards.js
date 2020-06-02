@@ -57,6 +57,7 @@ module.exports = {
 	deleteOne: (board) => {
 		cache.del(`board:${board}`);
 		cache.del(`banners:${board}`);
+		cache.srem('triggered', board);
 		return db.deleteOne({ '_id': board });
 	},
 
@@ -208,6 +209,31 @@ module.exports = {
 		}
 		res.locals.board = board;
 		next();
+	},
+
+	triggerModes: (boards) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'_id': {
+						'$in': boards
+					}
+				}
+			}, {
+				'$project': {
+					'_id': 1,
+					'lockMode': {
+						'new': '$settings.lockMode',
+						'old': '$preTriggerMode.lockMode'
+					},
+					'captchaMode': {
+						'new': '$settings.captchaMode',
+						'old': '$preTriggerMode.captchaMode'
+					},
+					'threadLimit': '$settings.threadLimit'
+				}
+			}
+		]).toArray();
 	},
 
 	getNextId: async (board, saged) => {
