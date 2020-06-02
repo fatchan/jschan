@@ -92,6 +92,7 @@ module.exports = async (req, res, next) => {
 		'forceReplyFile': booleanSetting(req.body.force_reply_file),
 		'forceThreadSubject': booleanSetting(req.body.force_thread_subject),
 		'disableReplySubject': booleanSetting(req.body.disable_reply_subject),
+		'resetTrigger': booleanSetting(req.body.reset_trigger),
 		'captchaMode': numberSetting(req.body.captcha_mode, oldSettings.captchaMode),
 		'tphTrigger': numberSetting(req.body.tph_trigger, oldSettings.tphTrigger),
 		'pphTrigger': numberSetting(req.body.pph_trigger, oldSettings.pphTrigger),
@@ -128,7 +129,11 @@ module.exports = async (req, res, next) => {
 	//settings changed in the db
 	await Boards.updateOne(req.params.board, {
 		'$set':  {
-			'settings': newSettings
+			'settings': newSettings,
+			'preTriggerMode': {
+				'lockMode': newSettings.lockMode,
+				'captchaMode': newSettings.captchaMode
+			}
 		}
 	});
 

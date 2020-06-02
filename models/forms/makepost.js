@@ -44,7 +44,7 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const { filterBanDuration, filterMode, filters, blockedCountries,
+	const { filterBanDuration, filterMode, filters, blockedCountries, resetTrigger,
 			maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
@@ -390,7 +390,12 @@ module.exports = async (req, res, next) => {
 				|| (pphTrigger > 0 && hourPosts.pph > pphTrigger)) {
 			//update in memory for other stuff done e.g. rebuilds
 			const update = {
-				'$set': {}
+				'$set': {
+					'preTriggerMode': {
+						lockMode,
+						captchaMode
+					}
+				}
 			};
 			if (triggerAction < 3) {
 				res.locals.board.settings.captchaMode = triggerAction;
@@ -405,6 +410,10 @@ module.exports = async (req, res, next) => {
 			}
 			//set it in the db
 			await Boards.updateOne(res.locals.board._id, update);
+			if (resetTrigger) {
+				//mark the board as being triggered so we can return it to old mode after on schedule
+				await cache.sadd('triggered', res.locals.board._id);
+			}
 		}
 	}
 

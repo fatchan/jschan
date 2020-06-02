@@ -8,5 +8,6 @@ module.exports = {
 	'0.0.5': require(__dirname+'/migration-0.0.5.js'), //add bumplimit to board settings
 	'0.0.6': require(__dirname+'/migration-0.0.6.js'), //add blocked countries to board settings
 	'0.0.7': require(__dirname+'/migration-0.0.7.js'), //sage only email without force anon for some reason
-	'0.0.8': require(__dirname+'/migration-0.0.8.js'), //ip changes
+	'0.0.8': require(__dirname+'/migration-0.0.8.js'), //option to auto reset triggers after hour is over
+	'0.0.9': require(__dirname+'/migration-0.0.9.js'), //ip changes
 }
