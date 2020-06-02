@@ -65,7 +65,7 @@ module.exports = async (req, res, next) => {
 			}
 			if (req.body.global_report_ban) {
 				const matches = post.globalreports.map(r => {
-					if (req.body.checkedreports.includes(r.id)) {
+					if (req.body.checkedreports.includes(r.id.toString())) {
 						return r.ip;
 					}
 				});
@@ -74,6 +74,7 @@ module.exports = async (req, res, next) => {
 			[...new Set(ips)].forEach(ip => {
 				bans.push({
 					'ip': ip,
+					'subnet': '/32',
 					'reason': banReason,
 					'board': banBoard,
 					'posts': null,
