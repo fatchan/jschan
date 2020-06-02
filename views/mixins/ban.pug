@@ -12,7 +12,8 @@ mixin ban(ban, banpage)
 		td= ban.reason
 		- const ip = permLevel > ipHashPermLevel ? ban.ip.single.slice(-10) : ban.ip.raw;
 		td #{ip}
-		td= ban.issuer
+		td #{ban.subnet}
+		td #{ban.issuer}
 		- const banDate = new Date(ban.date);
 		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(undefined, {hour12:false})}
 		- const expireDate = new Date(ban.expireAt);

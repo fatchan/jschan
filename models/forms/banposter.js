@@ -23,16 +23,20 @@ module.exports = async (req, res, next) => {
 		}, {});
 		for (let ip in ipPosts) {
 			const thisIpPosts = ipPosts[ip];
+			let subnet = '/32';
 			let banIp = {
 				single: ip,
 				raw: thisIpPosts[0].ip.raw
 			};
 			if (req.body.ban_h) {
+				subnet = '/16';
 				banIp.single = thisIpPosts[0].ip.hrange;
 			} else if (req.body.ban_q) {
+				subnet = '/24';
 				banIp.single = thisIpPosts[0].ip.qrange;
 			}
 			bans.push({
+				subnet,
 				'ip': banIp,
 				'reason': banReason,
 				'board': banBoard,

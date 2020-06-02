@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
 
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 	let ip = decodeQueryIP(req.query, res.locals.permLevel);
-
+console.log(ip)
 	const postId = typeof req.query.postid === 'string' ? req.query.postid : null;
 	if (postId && +postId === parseInt(postId) && Number.isSafeInteger(+postId)) {
 		const fetchedPost = await Posts.getPost(req.params.board, +postId, true);
