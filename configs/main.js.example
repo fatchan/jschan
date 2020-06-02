@@ -246,6 +246,7 @@ module.exports = {
 		tphTrigger: 0, //numebr of threads in an hour before trigger action is activated
 		pphTrigger: 0, //number of posts in an hour before ^
 		triggerAction: 0, //0=nothing, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
+		resetTrigger: false, //reset captcha/lock settings back to original at the end of hour
 		forceAnon: false, //disable name and subject, only allow sage email
 		sageOnlyEmail: false, //only allow sage email
 		early404: true, //delete threads beyond the first 1/3 of pages with less than 5 replies
