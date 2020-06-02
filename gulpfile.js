@@ -92,7 +92,7 @@ async function wipe() {
 	await Modlogs.db.dropIndexes()
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
-	await Bans.db.createIndex({ 'ip': 1 , 'board': 1 })
+	await Bans.db.createIndex({ 'ip.single': 1 , 'board': 1 })
 	await Bans.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
 	await Bypass.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 })
 	await Captchas.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
@@ -253,6 +253,7 @@ async function migrate() {
 			console.log(`=====\nStarting migration to version ${ver}`);
 			try {
 				await migrations[ver](db, Redis);
+/*
 				await db.collection('version').replaceOne({
 					'_id': 'version'
 				}, {
@@ -261,6 +262,7 @@ async function migrate() {
 				}, {
 					upsert: true
 				});
+*/
 			} catch (e) {
 				console.error(e);
 				console.warn(`Migration to ${ver} encountered an error`);
