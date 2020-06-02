@@ -135,8 +135,9 @@ module.exports = async (req, res, next) => {
 				const ban = {
 					'ip': {
 						'single': res.locals.ip.single,
-						'raw': res.local.ip.raw,
+						'raw': res.locals.ip.raw,
 					},
+					'subnet': '/32',
 					'reason': `${hitGlobalFilter ? 'global ' :''}word filter auto ban`,
 					'board': banBoard,
 					'posts': null,
@@ -146,10 +147,10 @@ module.exports = async (req, res, next) => {
 					'allowAppeal': true, //should i make this configurable if appealable?
 					'seen': false
 				};
- 				await Bans.insertOne(ban);
-				const bans = await Bans.find(res.locals.ip.single, banBoard); //need to query db so it has _id field for appeal checkmark
+				const insertedResult = await Bans.insertOne(ban);
+				ban._id = insertedResult.insertedId;
 				return res.status(403).render('ban', {
-					bans: bans
+					bans: [ban]
 				});
 			}
 		}

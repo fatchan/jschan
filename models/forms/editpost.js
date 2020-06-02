@@ -52,6 +52,7 @@ todo: handle some more situations
 							'single': res.locals.ip.single,
 							'raw': res.locals.ip.raw,
 						},
+						'subnet': '/32',
 						'reason': 'global word filter auto ban',
 						'board': null,
 						'posts': null,
@@ -61,10 +62,10 @@ todo: handle some more situations
 						'allowAppeal': true, //should i make this configurable if appealable?
 						'seen': false
 					};
- 					await Bans.insertOne(ban);
-					const bans = await Bans.find(res.locals.ip.single, banBoard); //need to query db so it has _id field for appeal checkmark
+ 					const insertedResult = await Bans.insertOne(ban);
+					ban._id = insertedResult.insertedId;
 					return res.status(403).render('ban', {
-						bans: bans
+						bans: [ban]
 					});
 				}
 			}
