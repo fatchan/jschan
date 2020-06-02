@@ -23,20 +23,20 @@ module.exports = async (req, res, next) => {
 		}, {});
 		for (let ip in ipPosts) {
 			const thisIpPosts = ipPosts[ip];
-			let subnet = '/32';
+			let type = 'single';
 			let banIp = {
 				single: ip,
 				raw: thisIpPosts[0].ip.raw
 			};
 			if (req.body.ban_h) {
-				subnet = '/16';
+				type = 'half';
 				banIp.single = thisIpPosts[0].ip.hrange;
 			} else if (req.body.ban_q) {
-				subnet = '/24';
+				type = 'quarter';
 				banIp.single = thisIpPosts[0].ip.qrange;
 			}
 			bans.push({
-				subnet,
+				type,
 				'ip': banIp,
 				'reason': banReason,
 				'board': banBoard,
@@ -74,7 +74,7 @@ module.exports = async (req, res, next) => {
 			[...new Set(ips)].forEach(ip => {
 				bans.push({
 					'ip': ip,
-					'subnet': '/32',
+					'type': 'single',
 					'reason': banReason,
 					'board': banBoard,
 					'posts': null,

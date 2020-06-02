@@ -137,7 +137,7 @@ module.exports = async (req, res, next) => {
 						'single': res.locals.ip.single,
 						'raw': res.locals.ip.raw,
 					},
-					'subnet': '/32',
+					'type': 'single',
 					'reason': `${hitGlobalFilter ? 'global ' :''}word filter auto ban`,
 					'board': banBoard,
 					'posts': null,

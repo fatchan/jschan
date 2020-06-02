@@ -52,7 +52,7 @@ todo: handle some more situations
 							'single': res.locals.ip.single,
 							'raw': res.locals.ip.raw,
 						},
-						'subnet': '/32',
+						'type': 'single',
 						'reason': 'global word filter auto ban',
 						'board': null,
 						'posts': null,
