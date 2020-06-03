@@ -59,7 +59,8 @@ async function wipe() {
 	await db.createCollection('webring');
 	await db.createCollection('bypass');
 
-	const { Webring, Boards, Posts, Captchas, Ratelimits, Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
+	const { Webring, Boards, Posts, Captchas, Ratelimits, News,
+		Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
@@ -75,6 +76,7 @@ async function wipe() {
 		Stats.deleteAll(),
 		Modlogs.deleteAll(),
 		Bypass.deleteAll(),
+		News.deleteAll(),
 	]);
 
 	//add indexes - should profiled and changed at some point if necessary
@@ -253,7 +255,6 @@ async function migrate() {
 			console.log(`=====\nStarting migration to version ${ver}`);
 			try {
 				await migrations[ver](db, Redis);
-/*
 				await db.collection('version').replaceOne({
 					'_id': 'version'
 				}, {
@@ -262,7 +263,6 @@ async function migrate() {
 				}, {
 					upsert: true
 				});
-*/
 			} catch (e) {
 				console.error(e);
 				console.warn(`Migration to ${ver} encountered an error`);
