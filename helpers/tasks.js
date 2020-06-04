@@ -233,54 +233,56 @@ module.exports = {
 		const label = 'Resetting pph/tph triggers';
 		const start = process.hrtime();
 		const triggeredBoards = await cache.sgetall('triggered'); //boards triggered pph/tph mode
+		if (triggeredBoards.length === 0) {
+			return; //no label is no triggers
+		}
 		await cache.del('triggered');
-		if (triggeredBoards.length > 0) {
-			const triggerModes = await Boards.triggerModes(triggeredBoards);
-			const bulkWrites = triggerModes.map(p => {
-				return {
-					'updateOne': {
-						'filter': {
-							'_id': p._id
-						},
-						'update': {
-							'$set': {
-								'settings.lockMode': p.lockMode.old,
-								'settings.captchaMode': p.captchaMode.old
-							}
+		const triggerModes = await Boards.triggerModes(triggeredBoards);
+		const bulkWrites = triggerModes.map(p => {
+			return {
+				'updateOne': {
+					'filter': {
+						'_id': p._id
+					},
+					'update': {
+						'$set': {
+							'settings.lockMode': p.lockMode.old,
+							'settings.captchaMode': p.captchaMode.old
 						}
 					}
 				}
-			})
-			await Boards.db.bulkWrite(bulkWrites);
-			const promises = [];
-			triggerModes.forEach(async (p) => {
-				await cache.del(`board:${p._id}`);
-				if (p.captchaMode.old < p.captchaMode.new) {
-					if (p.captchaMode.old === 2) {
-						promises.push(remove(`${uploadDirectory}/html/${p._id}/thread/`));
-					}
-					if (p.captchaMode.old === 0) {
-						buildQueue.push({
-							'task': 'buildBoardMultiple',
-							'options': {
-								'board': p._id,
-								'startpage': 1,
-								'endpage': Math.ceil(p.threadLimit/10)
-							}
-						})
-						buildQueue.push({
-							'task': 'buildCatalog',
-							'options': {
-								'board': p._id
-							}
-						});
-					}
+			}
+		})
+		await Boards.db.bulkWrite(bulkWrites);
+		const promises = [];
+		triggerModes.forEach(async (p) => {
+			await cache.del(`board:${p._id}`);
+			if (p.captchaMode.old < p.captchaMode.new) {
+				if (p.captchaMode.old === 2) {
+					promises.push(remove(`${uploadDirectory}/html/${p._id}/thread/`));
 				}
-			})
-			await Promise.all(promises);
-		}
+				if (p.captchaMode.old === 0) {
+					buildQueue.push({
+						'task': 'buildBoardMultiple',
+						'options': {
+							'board': p._id,
+							'startpage': 1,
+							'endpage': Math.ceil(p.threadLimit/10)
+						}
+					})
+					buildQueue.push({
+						'task': 'buildCatalog',
+						'options': {
+							'board': p._id
+						}
+					});
+				}
+			}
+		})
+		await Promise.all(promises);
 		const end = process.hrtime(start);
 		debugLogs && console.log(timeDiffString(label, end));
+
 	},
 
 	buildChangePassword: () => {
