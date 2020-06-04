@@ -12,13 +12,13 @@ module.exports = {
 		let ipQuery;
 		if (typeof ip === 'object') { //object with hash and ranges in bancheck
 			ipQuery = {
-				'$in': Object.values(ip) //gets values of ip object for single and range bans in 1 query
+				'$in': [ip.single, ip.qrange, ip.hrange] //gets single and range ban in 1 query
 			}
 		} else {
 			ipQuery = ip;
 		}
 		return db.find({
-			'ip': ipQuery,
+			'ip.single': ipQuery,
 			'board': {
 				'$in': [board, null]
 			}
@@ -42,7 +42,7 @@ module.exports = {
 			'_id': {
 				'$in': ids
 			},
-			'ip': ip,
+			'ip.single': ip,
 			'allowAppeal': true,
 			'appeal': null
 		}, {

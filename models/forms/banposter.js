@@ -23,13 +23,20 @@ module.exports = async (req, res, next) => {
 		}, {});
 		for (let ip in ipPosts) {
 			const thisIpPosts = ipPosts[ip];
-			let banIp = ip;
+			let type = 'single';
+			let banIp = {
+				single: ip,
+				raw: thisIpPosts[0].ip.raw
+			};
 			if (req.body.ban_h) {
-				banIp = thisIpPosts[0].ip.hrange;
+				type = 'half';
+				banIp.single = thisIpPosts[0].ip.hrange;
 			} else if (req.body.ban_q) {
-				banIp = thisIpPosts[0].ip.qrange;
+				type = 'quarter';
+				banIp.single = thisIpPosts[0].ip.qrange;
 			}
 			bans.push({
+				type,
 				'ip': banIp,
 				'reason': banReason,
 				'board': banBoard,
@@ -58,7 +65,7 @@ module.exports = async (req, res, next) => {
 			}
 			if (req.body.global_report_ban) {
 				const matches = post.globalreports.map(r => {
-					if (req.body.checkedreports.includes(r.id)) {
+					if (req.body.checkedreports.includes(r.id.toString())) {
 						return r.ip;
 					}
 				});
@@ -67,6 +74,7 @@ module.exports = async (req, res, next) => {
 			[...new Set(ips)].forEach(ip => {
 				bans.push({
 					'ip': ip,
+					'type': 'single',
 					'reason': banReason,
 					'board': banBoard,
 					'posts': null,

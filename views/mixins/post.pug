@@ -2,7 +2,7 @@ include ./report.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 	.anchor(id=post.postId)
 	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId)
-		- const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
+		- const postURL = `/${post.board}/${(modview || manage || globalmanage) ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info
 			span
 				label
@@ -12,12 +12,12 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						input.post-check(type='checkbox', name='checkedposts' value=post.postId)
 					| 
 					if manage
-						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
+						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.raw;
 						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]
 					else if modview
 						a.bold(href=`${upLevel ? '../' : ''}recent.html?postid=${post.postId}`) [+]
 					else if globalmanage
-						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.single;
+						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.raw;
 						a.bold(href=`?ip=${encodeURIComponent(ip)}`) [#{ip}]
 					| 
 					if !post.thread

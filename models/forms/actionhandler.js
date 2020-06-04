@@ -291,7 +291,10 @@ module.exports = async (req, res, next) => {
 					showUser: !req.body.hide_name || logUser === 'Unregistered User' ? true : false,
 					message: message,
 					user: logUser,
-					ip: res.locals.ip.single,
+					ip: {
+						single: res.locals.ip.single,
+						raw: res.locals.ip.raw
+					}
 				};
 			}
 			//push each post id

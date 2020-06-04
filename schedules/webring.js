@@ -16,14 +16,14 @@ module.exports = async () => {
 	const label = `updating webring`;
 	const start = process.hrtime();
 
-	const visited = new Set();
+	const visited = new Map();
 	let known = new Set(following);
 	let webringBoards = []; //list of webring boards
 	while (known.size > visited.size) {
 		//get sites we havent visited yet
 		const toVisit = [...known].filter(url => !visited.has(url));
 		let rings = await Promise.all(toVisit.map(url => {
-			visited.add(url);
+			visited.set(url, (visited.get(url)||0)+1);
 			return fetch(url, {
 				agent,
 				headers: {
@@ -33,9 +33,12 @@ module.exports = async () => {
 		}));
 		for (let i = 0; i < rings.length; i++) {
 			const ring = rings[i];
-			if (!ring || !ring.name || !ring.endpoint || !ring.url || ring.endpoint.includes(meta.url)) {
+			if (!ring || !ring.name || !ring.endpoint || !ring.url //malformed
+				|| ring.endpoint.includes(meta.url) //own site
+				|| visited.get(ring.endpoint) > 1) { //already seen endpoint (for multiple domain sites)
 				continue;
 			}
+			visited.set(ring.endpoint, visited.get(ring.endpoint)+1);
 			if (ring.following && ring.following.length > 0) {
 				//filter their folowing by blacklist/self and add to known sites
 				ring.following
@@ -46,7 +49,7 @@ module.exports = async () => {
 				//add some stuff for the boardlist and then add their boards
 				ring.boards.forEach(board => {
 					board.siteName = ring.name;
-					//convert to numbers because old infinity webring plugin returns strings
+					//convert to numbers because old infinity webring plugin returns string
 					board.totalPosts = parseInt(board.totalPosts);
 					board.postsPerHour = parseInt(board.postsPerHour);
 					board.uniqueUsers = parseInt(board.uniqueUsers);
@@ -56,13 +59,18 @@ module.exports = async () => {
 		}
 	}
 
-	//$out from temp collection to replace webring boards
-	const tempCollection = Mongo.client.db('jschan').collection('tempwebring');
-	await tempCollection.insertMany(webringBoards);
-	await tempCollection.aggregate([
-		{ $out : 'webring' }
-	]);
-	await tempCollection.drop();
+	if (webringBoards.length > 0) {
+		//$out from temp collection to replace webring boards
+		const tempCollection = Mongo.client.db('jschan').collection('tempwebring');
+		await tempCollection.insertMany(webringBoards);
+		await tempCollection.aggregate([
+			{ $out : 'webring' }
+		]).toArray();
+		await tempCollection.drop();
+	} else {
+		//otherwise none found, so delete them all
+		await Webring.deleteAll();
+	}
 
 	//update webring.json
 	const boards = await Boards.webringBoards();

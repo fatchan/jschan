@@ -2,6 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, cache = require(__dirname+'/../redis.js')
+	, dynamicResponse = require(__dirname+'/../helpers/dynamic.js')
 	, db = Mongo.client.db('jschan').collection('boards');
 
 module.exports = {
@@ -56,6 +57,7 @@ module.exports = {
 	deleteOne: (board) => {
 		cache.del(`board:${board}`);
 		cache.del(`banners:${board}`);
+		cache.srem('triggered', board);
 		return db.deleteOne({ '_id': board });
 	},
 
@@ -200,10 +202,38 @@ module.exports = {
 	bodyExists: async (req, res, next) => {
 		const board = await module.exports.findOne(req.body.board);
 		if (!board) {
-			return res.status(404).render('404');
+			return dynamicResponse(req, res, 404, '404', {
+				'title': 'Bad request',
+				'message': 'Board does not exist',
+			});
 		}
 		res.locals.board = board;
 		next();
+	},
+
+	triggerModes: (boards) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'_id': {
+						'$in': boards
+					}
+				}
+			}, {
+				'$project': {
+					'_id': 1,
+					'lockMode': {
+						'new': '$settings.lockMode',
+						'old': '$preTriggerMode.lockMode'
+					},
+					'captchaMode': {
+						'new': '$settings.captchaMode',
+						'old': '$preTriggerMode.captchaMode'
+					},
+					'threadLimit': '$settings.threadLimit'
+				}
+			}
+		]).toArray();
 	},
 
 	getNextId: async (board, saged) => {

@@ -59,7 +59,8 @@ async function wipe() {
 	await db.createCollection('webring');
 	await db.createCollection('bypass');
 
-	const { Webring, Boards, Posts, Captchas, Ratelimits, Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
+	const { Webring, Boards, Posts, Captchas, Ratelimits, News,
+		Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
@@ -75,6 +76,7 @@ async function wipe() {
 		Stats.deleteAll(),
 		Modlogs.deleteAll(),
 		Bypass.deleteAll(),
+		News.deleteAll(),
 	]);
 
 	//add indexes - should profiled and changed at some point if necessary
@@ -92,7 +94,7 @@ async function wipe() {
 	await Modlogs.db.dropIndexes()
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
-	await Bans.db.createIndex({ 'ip': 1 , 'board': 1 })
+	await Bans.db.createIndex({ 'ip.single': 1 , 'board': 1 })
 	await Bans.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
 	await Bypass.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 })
 	await Captchas.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
@@ -174,6 +176,8 @@ function custompages() {
 	return gulp.src([`${paths.pug.src}/custompages/*.pug`, `${paths.pug.src}/pages/404.pug`, `${paths.pug.src}/pages/502.pug`])
 		.pipe(gulppug({
 			locals: {
+				meta: configs.meta,
+				enableWebring: configs.enableWebring,
 				globalLimits: configs.globalLimits,
 				codeLanguages: configs.highlightOptions.languageSubset,
 				defaultTheme: configs.boardDefaults.theme,

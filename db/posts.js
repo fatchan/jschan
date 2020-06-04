@@ -26,8 +26,10 @@ module.exports = {
 	getGlobalRecent: (offset=0, limit=20, ip) => {
 		//global recent posts for recent section of global manage page
 		const query = {};
-		if (ip !== null) {
+		if (ip instanceof RegExp) {
 			query['ip.single'] = ip;
+		} else if (typeof ip === 'string') {
+			query['ip.raw'] = ip;
 		}
 		return db.find(query).sort({
 			'_id': -1
@@ -38,8 +40,10 @@ module.exports = {
 		const query = {
 			board
 		};
-		if (ip !== null) {
+		if (ip instanceof RegExp) {
 			query['ip.single'] = ip;
+		} else if (typeof ip === 'string') {
+			query['ip.raw'] = ip;
 		}
 		return db.find(query).sort({
 			'_id': -1
@@ -405,14 +409,19 @@ module.exports = {
 
 	getGlobalReports: (offset=0, limit, ip) => {
 		const query = {
-            'globalreports.0': {
-                '$exists': true
-            }
-        }
-		if (ip !== null) {
+			'globalreports.0': {
+				'$exists': true
+			}
+		}
+		if (ip instanceof RegExp) {
 			query['$or'] = [
 				{ 'ip.single': ip },
-				{ 'globalreports.ip': ip }
+				{ 'globalreports.ip.single': ip }
+			];
+		} else if (typeof ip === 'string') {
+			query['$or'] = [
+				{ 'ip.raw': ip },
+				{ 'globalreports.ip.raw': ip }
 			];
 		}
 		return db.find(query, {

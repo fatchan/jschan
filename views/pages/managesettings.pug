@@ -26,12 +26,12 @@ block content
 		form.form-post(action=`/forms/board/${board._id}/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
+				.label Board URI
+				input(type='text' name='uri' required)
+			.row
 				.label I'm sure
 				label.postform-style.ph-5
 					input(type='checkbox', name='confirm', value='true' required)
-			.row
-				.label Board URI
-				input(type='text' name='uri' required)
 			input(type='submit', value='submit')
 	hr(size=1)
 	h4.no-m-p Settings:
@@ -97,6 +97,10 @@ block content
 						.label Force Anon
 						label.postform-style.ph-5
 							input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
+					.row
+						.label Sage Only Email
+						label.postform-style.ph-5
+							input(type='checkbox', name='sage_only_email', value='true' checked=board.settings.sageOnlyEmail)
 				.col.mr-5
 					.row
 						.label Force Thread Subject
@@ -204,6 +208,10 @@ block content
 							option(value='2', selected=board.settings.triggerAction === 2) Enable captcha for all posts
 							option(value='3', selected=board.settings.triggerAction === 3) Lock thread creation
 							option(value='4', selected=board.settings.triggerAction === 4) Lock board
+					.row
+						.label Auto Reset Trigger
+						label.postform-style.ph-5
+							input(type='checkbox', name='reset_trigger', value='true' checked=board.settings.resetTrigger)
 					.row
 						.label Early 404
 						label.postform-style.ph-5

@@ -8,7 +8,10 @@ module.exports = (req, res) => {
 		'id': ObjectId(),
 		'reason': req.body.report_reason,
 		'date': new Date(),
-		'ip': res.locals.ip.single
+		'ip': {
+			'single': res.locals.ip.single,
+			'raw': res.locals.ip.raw
+		}
 	}
 
 	const ret = {

@@ -6,7 +6,9 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, { remove } = require('fs-extra')
 	, { debugLogs, pruneModlogs, pruneAfterDays, enableWebring, maxRecentNews } = require(__dirname+'/../configs/main.js')
 	, { Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
+	, cache = require(__dirname+'/../redis.js')
 	, render = require(__dirname+'/render.js')
+	, buildQueue = require(__dirname+'/../queue.js')
 	, timeDiffString = require(__dirname+'/timediffstring.js');
 
 module.exports = {
@@ -86,6 +88,9 @@ module.exports = {
 	//building multiple pages (for rebuilds)
 	buildBoardMultiple: async (options) => {
 		const start = process.hrtime();
+		if (!options.board._id) {
+			options.board = await Boards.findOne(options.board);
+		}
 		const maxPage = Math.min(Math.ceil((await Posts.getPages(options.board._id)) / 10), Math.ceil(options.board.settings.threadLimit/10)) || 1;
 		if (options.endpage === 0) {
 			//deleted only/all posts, so only 1 page will remain
@@ -216,9 +221,68 @@ module.exports = {
 		const start = process.hrtime();
 		await Stats.updateBoards();
 		await Stats.resetStats();
+		buildQueue.push({
+ 			'task': 'buildHomepage',
+		});
 		const end = process.hrtime(start);
 		debugLogs && console.log(timeDiffString(label, end));
-		module.exports.buildHomepage();
+		module.exports.resetTriggers();
+	},
+
+	resetTriggers: async() => {
+		const label = 'Resetting pph/tph triggers';
+		const start = process.hrtime();
+		const triggeredBoards = await cache.sgetall('triggered'); //boards triggered pph/tph mode
+		if (triggeredBoards.length === 0) {
+			return; //no label is no triggers
+		}
+		await cache.del('triggered');
+		const triggerModes = await Boards.triggerModes(triggeredBoards);
+		const bulkWrites = triggerModes.map(p => {
+			return {
+				'updateOne': {
+					'filter': {
+						'_id': p._id
+					},
+					'update': {
+						'$set': {
+							'settings.lockMode': p.lockMode.old,
+							'settings.captchaMode': p.captchaMode.old
+						}
+					}
+				}
+			}
+		})
+		await Boards.db.bulkWrite(bulkWrites);
+		const promises = [];
+		triggerModes.forEach(async (p) => {
+			await cache.del(`board:${p._id}`);
+			if (p.captchaMode.old < p.captchaMode.new) {
+				if (p.captchaMode.old === 2) {
+					promises.push(remove(`${uploadDirectory}/html/${p._id}/thread/`));
+				}
+				if (p.captchaMode.old === 0) {
+					buildQueue.push({
+						'task': 'buildBoardMultiple',
+						'options': {
+							'board': p._id,
+							'startpage': 1,
+							'endpage': Math.ceil(p.threadLimit/10)
+						}
+					})
+					buildQueue.push({
+						'task': 'buildCatalog',
+						'options': {
+							'board': p._id
+						}
+					});
+				}
+			}
+		})
+		await Promise.all(promises);
+		const end = process.hrtime(start);
+		debugLogs && console.log(timeDiffString(label, end));
+
 	},
 
 	buildChangePassword: () => {

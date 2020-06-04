@@ -44,8 +44,8 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const { filterBanDuration, filterMode, filters, blockedCountries,
-			maxFiles, forceAnon, replyLimit, disableReplySubject,
+	const { filterBanDuration, filterMode, filters, blockedCountries, resetTrigger,
+			maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
 	if (flags === true
@@ -133,7 +133,11 @@ module.exports = async (req, res, next) => {
 				const banDate = new Date();
 				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
 				const ban = {
-					'ip': res.locals.ip.single,
+					'ip': {
+						'single': res.locals.ip.single,
+						'raw': res.locals.ip.raw,
+					},
+					'type': 'single',
 					'reason': `${hitGlobalFilter ? 'global ' :''}word filter auto ban`,
 					'board': banBoard,
 					'posts': null,
@@ -143,10 +147,10 @@ module.exports = async (req, res, next) => {
 					'allowAppeal': true, //should i make this configurable if appealable?
 					'seen': false
 				};
- 				await Bans.insertOne(ban);
-				const bans = await Bans.find(res.locals.ip.single, banBoard); //need to query db so it has _id field for appeal checkmark
+				const insertedResult = await Bans.insertOne(ban);
+				ban._id = insertedResult.insertedId;
 				return res.status(403).render('ban', {
-					bans: bans
+					bans: [ban]
 				});
 			}
 		}
@@ -322,9 +326,9 @@ module.exports = async (req, res, next) => {
 	const spoiler = userPostSpoiler && req.body.spoiler ? true : false;
 
 	//forceanon hide reply subjects so cant be used as name for replies
-	//forceanon only allow sage email
+	//forceanon and sageonlyemail only allow sage email
 	let subject = (res.locals.permLevel >= 4 && req.body.thread && (disableReplySubject || forceAnon)) ? null : req.body.subject;
-	let email = (res.locals.permLevel < 4 || !forceAnon || req.body.email === 'sage') ? req.body.email : null;
+	let email = (res.locals.permLevel < 4 || (!forceAnon && !sageOnlyEmail) || req.body.email === 'sage') ? req.body.email : null;
 
 	//get name, trip and cap
 	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel, res.locals.board.settings);
@@ -386,7 +390,12 @@ module.exports = async (req, res, next) => {
 				|| (pphTrigger > 0 && hourPosts.pph > pphTrigger)) {
 			//update in memory for other stuff done e.g. rebuilds
 			const update = {
-				'$set': {}
+				'$set': {
+					'preTriggerMode': {
+						lockMode,
+						captchaMode
+					}
+				}
 			};
 			if (triggerAction < 3) {
 				res.locals.board.settings.captchaMode = triggerAction;
@@ -401,6 +410,10 @@ module.exports = async (req, res, next) => {
 			}
 			//set it in the db
 			await Boards.updateOne(res.locals.board._id, update);
+			if (resetTrigger) {
+				//mark the board as being triggered so we can return it to old mode after on schedule
+				await cache.sadd('triggered', res.locals.board._id);
+			}
 		}
 	}
 
