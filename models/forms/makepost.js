@@ -306,7 +306,7 @@ module.exports = async (req, res, next) => {
 		salt = (await randomBytes(128)).toString('base64');
 	}
 	if (ids === true) {
-		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.single).digest('hex');
+		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.raw).digest('hex');
 		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 	let country = null;
