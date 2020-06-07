@@ -13,6 +13,7 @@ const timeUtils = require(__dirname+'/../helpers/timeutils.js')
 
 	debugLogs && console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
+	await Mongo.checkVersion();
 	debugLogs && console.log('STARTING SCHEDULES');
 
 	//update board stats and homepage

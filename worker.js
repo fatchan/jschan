@@ -11,6 +11,7 @@ const { debugLogs } = require(__dirname+'/configs/main.js')
 
 	debugLogs && console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
+	await Mongo.checkVersion();
 
 	const tasks = require(__dirname+'/helpers/tasks.js')
 		, { queue } = require(__dirname+'/queue.js')

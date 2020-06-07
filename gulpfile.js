@@ -14,7 +14,7 @@ const gulp = require('gulp')
 	, del = require('del')
 	, pug = require('pug')
 	, gulppug = require('gulp-pug')
-	, migrateVersion = require(__dirname+'/package.json').migrateVersion
+	, { migrateVersion } = require(__dirname+'/package.json')
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/**/*.css',
