@@ -1,5 +1,8 @@
+Mirror: https://gitgud.io/fatchan/jschan/
+
 # jschan
 Anonymous imageboard software.
+
 ## Goals
 - Oldschool look, newschool feel
 - Work with javascript disabled
