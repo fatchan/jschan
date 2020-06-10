@@ -147,7 +147,7 @@ todo: handle some more situations
 		user: req.session.user.username,
 		ip: {
 			single: res.locals.ip.single,
-			raw: ras.locals.ip.raw,
+			raw: res.locals.ip.raw,
 		}
 	});
 

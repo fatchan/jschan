@@ -1,6 +1,7 @@
 'use strict';
 
 const { MongoClient, ObjectId, Int32 } = require('mongodb')
+	, { migrateVersion } = require(__dirname+'/../package.json')
 	, configs = require(__dirname+'/../configs/main.js');
 
 module.exports = {
@@ -13,6 +14,18 @@ module.exports = {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		});
+	},
+
+	checkVersion: async() => {
+		const currentVersion = await module.exports.client
+			.db('jschan')
+			.collection('version')
+			.findOne({ '_id': 'version' })
+			.then(res => res.version);
+		if (currentVersion < migrateVersion) {
+			console.error('Your migration version is out-of-date. Run `gulp migrate` to update.');
+			process.exit(1);
+		}
 	},
 
 	ObjectId,

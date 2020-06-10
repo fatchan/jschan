@@ -32,6 +32,7 @@ const express = require('express')
 	// connect to mongodb
 	debugLogs && console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
+	await Mongo.checkVersion();
 
 	// connect to redis
 	debugLogs && console.log('CONNECTING TO REDIS');
