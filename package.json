@@ -5,7 +5,6 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "@tohru/gm": "github:fatchan/gm",
     "bcrypt": "^5.0.0",
     "bull": "^3.12.1",
     "cache-pug-templates": "^2.0.1",
