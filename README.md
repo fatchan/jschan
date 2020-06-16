@@ -1,5 +1,3 @@
-Mirror: https://gitgud.io/fatchan/jschan/
-
 # jschan
 Anonymous imageboard software.
 
