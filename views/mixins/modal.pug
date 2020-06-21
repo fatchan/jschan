@@ -59,6 +59,10 @@ mixin modal(data)
 								label.postform-style.ph-5
 									input#noncolorids-setting(type='checkbox')
 								.rlabel Non-color IDs
+							.row
+								label.postform-style.ph-5
+									input#yous-setting(type='checkbox')
+								.rlabel Show (You)'s
 
 						.col
 
@@ -69,7 +73,7 @@ mixin modal(data)
 							.row
 								label.postform-style.ph-5
 									input#hiderecursive-setting(type='checkbox')
-								.rlabel Recursive Post Hide
+								.rlabel Recursive post hide
 							.row
 								label.postform-style.ph-5
 									input#loop-setting(type='checkbox')
@@ -92,14 +96,14 @@ mixin modal(data)
 								.rlabel Always reveal spoilers
 
 					.row
-						.label Video/Audio Volume
+						.label Video/Audio volume
 						label.postform-style.ph-5
 							input#volume-setting(type='range' min='0' max='100')
 					.row
-						.label Post Password
+						.label Post password
 						input#postpassword-setting(type='password' name='postpassword')
 					.row
-						.label Default Name
+						.label Default name
 						input#name-setting(type='text' name='name')
 					.row
 						.label Theme

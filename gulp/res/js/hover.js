@@ -136,6 +136,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			//need this event so handlers like post hiding still apply to hover introduced posts
 			const newPostEvent = new CustomEvent('addPost', {
 	 		   detail: {
+					json: postJson,
 					post: hoveredPost,
 					postId: postJson.postId,
 					hover: true

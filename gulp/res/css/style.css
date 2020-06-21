@@ -880,6 +880,13 @@ input:invalid, textarea:invalid {
 	font-weight: bold;
 }
 
+.you:after {
+	margin-left: 3px;
+	content: '(You)';
+	font-weight: lighter;
+	font-style: italic;
+}
+
 .noselect {
 	user-select: none;
 }

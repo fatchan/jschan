@@ -63,6 +63,12 @@ function formToJSON(form) {
 	return JSON.stringify(data);
 }
 
+function saveYouFromPath(path) {
+	const redirectBoard = path.split('/')[1];
+	const redirectPostId = path.split('#')[1];
+	appendLocalStorageArray('yous', `${redirectBoard}-${redirectPostId}`);
+}
+
 class formHandler {
 
 	constructor(form) {
@@ -174,13 +180,18 @@ class formHandler {
 //todo: show success messages nicely for forms like actions (this doesnt apply to non file forms yet)
 						}
 					} else {
+						if (json.postId) {
+							window.myPostId = json.postId;
+						}
+						if (json.redirect) {
+							saveYouFromPath(json.redirect);
+						}
 						if (json.message || json.messages || json.error || json.errors) {
 							doModal(json);
 							if (json.message === 'Incorrect captcha answer') {
 								//todo: create captcha form, add method to captcha frontend code
 							}
 						} else if (socket && socket.connected) {
-							window.myPostId = json.postId;
 							window.location.hash = json.postId
 						} else {
 							if (!isThread) {

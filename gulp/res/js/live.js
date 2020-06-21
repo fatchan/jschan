@@ -82,7 +82,9 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			}
 		});
 		//dispatch the event so quote click handlers, image expand, etc can be added in separate scripts by listening to the event
-		window.dispatchEvent(newPostEvent);
+//		setTimeout(() => {
+			window.dispatchEvent(newPostEvent);
+//		}, 5);
 	}
 
 	let jsonParts = window.location.pathname.replace(/\.html$/, '.json').split('/');
