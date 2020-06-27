@@ -73,6 +73,9 @@ module.exports = {
 		editPost: 30,
 	},
 
+	//how many threads to show on overboard
+	overboardLimit: 20,
+
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
 

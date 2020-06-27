@@ -1,0 +1,20 @@
+extends ../layout.pug
+include ../mixins/post.pug
+
+block head
+	title Overboard
+
+block content
+	.board-header
+		h1.board-title Overboard
+		h4.board-description Recently bumped threads from all boards
+	hr(size=1)
+	if threads.length === 0
+		p No posts.
+		hr(size=1)
+	for thread in threads
+		.thread
+			+post(thread, true)
+			for post in thread.replies
+				+post(post, true)
+		hr(size=1)

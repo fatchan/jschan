@@ -3,7 +3,7 @@
 const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, restrictedURIs = new Set(['captcha', 'forms', 'randombanner'])
+	, restrictedURIs = new Set(['captcha', 'forms', 'randombanner', 'all'])
 	, { ensureDir } = require('fs-extra')
 	, { boardDefaults } = require(__dirname+'/../../configs/main.js');
 
