@@ -62,7 +62,7 @@ section.form-wrapper.flex-center
 		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink || modview
 			section.row
 				.label Password
-				input(type='password', name='postpassword', placeholder='password to delete/spoiler/unlink later' maxlength='50')
+				input(type='password', name='postpassword', placeholder='Password to delete/spoiler/unlink later' maxlength='50')
 		if ((board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2) && !modview
 			section.row
 				.label

@@ -18,9 +18,9 @@ block content
 						label
 							if !post.thread
 								include ../includes/posticons.pug
-							input.edit.post-subject(value=post.subject placeholder='subject' type='text' name='subject' maxlength=globalLimits.fieldLength.subject)
-							input.edit.post-name(value=post.email type='text' name='email' placeholder='email' maxlength=globalLimits.fieldLength.email)
-							input.edit.post-name(type='text' name='name' placeholder='name' maxlength=globalLimits.fieldLength.name)
+							input.edit.post-subject(value=post.subject placeholder='Subject' type='text' name='subject' maxlength=globalLimits.fieldLength.subject)
+							input.edit.post-name(value=post.email type='text' name='email' placeholder='Email' maxlength=globalLimits.fieldLength.email)
+							input.edit.post-name(type='text' name='name' placeholder='Name' maxlength=globalLimits.fieldLength.name)
 						if post.country && post.country.code
 							span(class=`flag flag-${post.country.code.toLowerCase()}` title=post.country.name alt=post.country.name)
 							| 
@@ -45,7 +45,7 @@ block content
 								span.noselect: a(href=`${postURL}#postform`) [Reply]
 				.post-data
 					pre.post-message
-						textarea.edit.fw(name='message' rows='15' placeholder='message') #{post.nomarkup}
+						textarea.edit.fw(name='message' rows='15' placeholder='Message') #{post.nomarkup}
 					if post.banmessage
 						p.ban
 							span.message USER WAS BANNED FOR THIS POST
@@ -55,5 +55,5 @@ block content
 				input.post-check(type='checkbox', name='hide_name' value='1')
 				| Hide Username
 			label.mv-5
-				input(type='text', name='log_message', placeholder='modlog message' autocomplete='off')
+				input(type='text', name='log_message', placeholder='Modlog message' autocomplete='off')
 			input(type='submit', value='save')
