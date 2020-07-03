@@ -70,9 +70,9 @@ module.exports = {
 			&& update['$set'].settings
 			&& update['$set'].settings.unlistedLocal !== null) {
 			if (update['$set'].settings.unlistedLocal) {
-				cache.sadd('boards:listed', board);
-			} else {
 				cache.srem('boards:listed', board);
+			} else {
+				cache.sadd('boards:listed', board);
 			}
 		}
 		cache.del(`board:${board}`);
