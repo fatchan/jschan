@@ -65,7 +65,14 @@ module.exports = {
 			'thread': null,
 		}
 		if (board) {
-			threadsQuery[board] = board;
+			if (Array.isArray(board)) {
+				//array for overboard
+				threadsQuery['board'] = {
+					'$in': board
+				}
+			} else {
+				threadsQuery['board'] = board;
+			}
 		}
 		const threads = await db.find(threadsQuery, {
 			projection
