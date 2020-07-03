@@ -197,6 +197,7 @@ function scripts() {
 		fs.writeFileSync('gulp/res/js/timezone.js', serverTimeZone);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
+		fs.writeFileSync('gulp/res/js/uploaditem.js', pug.compileFileClient(`${paths.pug.src}/includes/uploaditem.pug`, { compileDebug: false, debug: false, name: 'uploaditem' }));
 		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.slim.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
 	} catch (e) {
 		if (e.code !== 'EEXIST') {

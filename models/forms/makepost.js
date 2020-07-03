@@ -29,6 +29,8 @@ const path = require('path')
 
 module.exports = async (req, res, next) => {
 
+console.log(req.body)
+
 	//spam/flood check
 	const flood = await spamCheck(req, res);
 	if (flood) {
@@ -178,12 +180,13 @@ module.exports = async (req, res, next) => {
 
 			//get metadata
 			let processedFile = {
-					hash: file.sha256,
-					filename: file.filename, //could probably remove since we have hash and extension
-					originalFilename: file.name,
-					mimetype: file.mimetype,
-					size: file.size,
-					extension,
+				spoiler: (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler && req.body.spoiler.includes(file.name),
+				hash: file.sha256,
+				filename: file.filename, //could probably remove since we have hash and extension
+				originalFilename: req.body.strip_filename && req.body.strip_filename.includes(file.name) ? file.filename : file.name,
+				mimetype: file.mimetype,
+				size: file.size,
+				extension,
 			};
 
 			//type and subtype
@@ -321,9 +324,8 @@ module.exports = async (req, res, next) => {
 		password = createHash('sha256').update(postPasswordSecret + req.body.postpassword).digest('base64');
 	}
 
-
 	//spoiler files only if board settings allow
-	const spoiler = userPostSpoiler && req.body.spoiler ? true : false;
+	const spoiler = (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler_all ? true : false;
 
 	//forceanon hide reply subjects so cant be used as name for replies
 	//forceanon and sageonlyemail only allow sage email

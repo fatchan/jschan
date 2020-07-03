@@ -13,7 +13,7 @@ block head
 		meta(property='og:url', content=meta.url)
 		meta(property='og:description', content=thread.nomarkup)
 		if thread.files.length > 0
-			if thread.spoiler
+			if thread.spoiler || thread.files[0].spoiler
 				meta(property='og:image', content='/file/spoiler.png')
 			else
 				- const file = thread.files[0];

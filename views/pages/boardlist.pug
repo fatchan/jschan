@@ -5,6 +5,9 @@ block head
 
 block content
 	h1.board-title Board List
+	h4.board-description
+		| or try the 
+		a(href='/all.html') overboard
 	.flexcenter.mv-10
 		form.form-post(action=`/boards.html` method='GET')
 			input(type='hidden' value=page)

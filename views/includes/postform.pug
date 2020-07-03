@@ -26,7 +26,7 @@ section.form-wrapper.flex-center
 					.label Sage
 					label.postform-style.ph-5
 						input(type='checkbox', name='email', value='sage')
-			else	
+			else
 				section.row
 					.label Email
 					input(type='text', name='email', autocomplete='off' maxlength=globalLimits.fieldLength.email)
@@ -54,11 +54,12 @@ section.form-wrapper.flex-center
 				span.col
 					include ./filelabel.pug
 					input#file(type='file', name='file' multiple required=fileRequired )
-					.upload-list
+					.upload-list(data-spoilers=(board.settings.userPostSpoiler ? 'true' : 'false'))
 				if board.settings.userPostSpoiler
-					label.postform-style.ph-5.ml-1.fh
-						input(type='checkbox', name='spoiler', value='true')
-						| Spoiler
+					noscript
+						label.postform-style.ph-5.ml-1.fh
+							input(type='checkbox', name='spoiler_all', value='true')
+							| Spoiler
 		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink || modview
 			section.row
 				.label Password
