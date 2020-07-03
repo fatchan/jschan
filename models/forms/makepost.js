@@ -29,8 +29,6 @@ const path = require('path')
 
 module.exports = async (req, res, next) => {
 
-console.log(req.body)
-
 	//spam/flood check
 	const flood = await spamCheck(req, res);
 	if (flood) {
