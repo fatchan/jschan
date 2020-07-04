@@ -1,8 +1,6 @@
 setDefaultLocalStorage('live', true);
-setDefaultLocalStorage('notifications', false);
 setDefaultLocalStorage('scroll', false);
 let liveEnabled = localStorage.getItem('live') == 'true';
-let notificationsEnabled = localStorage.getItem('notifications') == 'true';
 let scrollEnabled = localStorage.getItem('scroll') == 'true';
 let socket;
 let forceUpdate;
@@ -63,17 +61,6 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		if (scrollEnabled) {
 			newPostAnchor.scrollIntoView(); //scroll to post if enabled;
 		}
-		if (notificationsEnabled) {
-			if (!window.myPostId || window.myPostId != postData.postId) {
-				const notifTitle = document.title;
-				const notifOptions = {
-					body: postData.nomarkup ? postData.nomarkup.substring(0,100) : ''
-				}
-				try {
-					new Notification(notifTitle, notifOptions);
-				} catch (e) { /* dont break when notification cant send for some reason */ }
-			}
-		}
 		const newPostEvent = new CustomEvent('addPost', {
 			detail: {
 				post: newPost,
@@ -82,9 +69,9 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			}
 		});
 		//dispatch the event so quote click handlers, image expand, etc can be added in separate scripts by listening to the event
-//		setTimeout(() => {
+		setTimeout(() => {
 			window.dispatchEvent(newPostEvent);
-//		}, 5);
+		}, 50);
 	}
 
 	let jsonParts = window.location.pathname.replace(/\.html$/, '.json').split('/');
@@ -226,24 +213,6 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	}
 	liveSetting.checked = liveEnabled;
 	liveSetting.addEventListener('change', toggleLive, false);
-
-	const notificationSetting = document.getElementById('notification-setting');
-	const toggleNotifications = async () => {
-		notificationsEnabled = !notificationsEnabled;
-		if (notificationsEnabled) {
-			const result = await Notification.requestPermission()
-			if (result != 'granted') {
-				//user denied permission popup
-				notificationsEnabled = false;
-				notificationSetting.checked = false;
-				return;
-			}
-		}
-		console.log('toggling notifications', notificationsEnabled);
-		setLocalStorage('notifications', notificationsEnabled);
-	}
-	notificationSetting.checked = notificationsEnabled;
-	notificationSetting.addEventListener('change', toggleNotifications, false);
 
 	const scrollSetting = document.getElementById('scroll-setting');
 	const toggleScroll = () => {

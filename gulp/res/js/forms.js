@@ -63,12 +63,6 @@ function formToJSON(form) {
 	return JSON.stringify(data);
 }
 
-function saveYouFromPath(path) {
-	const redirectBoard = path.split('/')[1];
-	const redirectPostId = path.split('#')[1];
-	appendLocalStorageArray('yous', `${redirectBoard}-${redirectPostId}`);
-}
-
 class formHandler {
 
 	constructor(form) {
@@ -182,9 +176,6 @@ class formHandler {
 					} else {
 						if (json.postId) {
 							window.myPostId = json.postId;
-						}
-						if (json.redirect) {
-							saveYouFromPath(json.redirect);
 						}
 						if (json.message || json.messages || json.error || json.errors) {
 							doModal(json);
