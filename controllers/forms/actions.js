@@ -46,7 +46,7 @@ module.exports = async (req, res, next) => {
 		if (req.body.delete && !res.locals.board.settings.userPostDelete) {
 			errors.push('Post deletion is disabled on this board');
 		}
-		if ((req.body.spoiler_all || req.body.spoiler) && !res.locals.board.settings.userPostSpoiler) {
+		if (req.body.spoiler && !res.locals.board.settings.userPostSpoiler) {
 			errors.push('File spoilers are disabled on this board');
 		}
 		if (req.body.unlink_file && !res.locals.board.settings.userPostUnlink) {

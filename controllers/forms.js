@@ -62,6 +62,7 @@ const express  = require('express')
 	, appealController = require(__dirname+'/forms/appeal.js')
 	, globalActionController = require(__dirname+'/forms/globalactions.js')
 	, actionController = require(__dirname+'/forms/actions.js')
+	, addBanController = require(__dirname+'/forms/addban.js')
 	, addNewsController = require(__dirname+'/forms/addnews.js')
 	, deleteNewsController = require(__dirname+'/forms/deletenews.js')
 	, uploadBannersController = require(__dirname+'/forms/uploadbanners.js')
@@ -100,11 +101,13 @@ router.post('/board/:board/transfer', processIp, sessionRefresh, csrf, Boards.ex
 router.post('/board/:board/settings', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
 router.post('/board/:board/addbanners', processIp, sessionRefresh, bannerFiles, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
 router.post('/board/:board/deletebanners', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
+router.post('/board/:board/addban', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, addBanController); //add ban manually without post
 router.post('/board/:board/editbans', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
 router.post('/board/:board/deleteboard', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController); //delete board
 
 //global management forms
 router.post('/global/editbans', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, editBansController); //remove bans
+router.post('/global/addban', processIp, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, addBanController); //add ban manually without post
 router.post('/global/deleteboard', sessionRefresh, csrf, paramConverter, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board
 router.post('/global/addnews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
 router.post('/global/deletenews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news
