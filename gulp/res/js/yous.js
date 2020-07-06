@@ -6,32 +6,33 @@ setDefaultLocalStorage('yous-setting', true);
 let yousEnabled = localStorage.getItem('yous-setting') == 'true';
 setDefaultLocalStorage('yous', '[]');
 let savedYous = new Set(JSON.parse(localStorage.getItem('yous')));
+let yousList;
 
-const toggleAll = () => savedYous.forEach(y => toggleOne(y));
+const toggleAll = (state) => savedYous.forEach(y => toggleOne(y, state));
 
-const toggleQuotes = (quotes) => {
+const toggleQuotes = (quotes, state) => {
 	quotes.forEach(q => {
-		q.classList[yousEnabled?'add':'remove']('you');
+		q.classList[state?'add':'remove']('you');
 	});
 }
 
-const toggleOne = (you) => {
+const toggleOne = (you, state) => {
 	const [board, postId] = you.split('-');
 	const post = document.querySelector(`[data-board="${board}"][data-post-id="${postId}"]`);
 	if (post) {
 		const postName = post.querySelector('.post-name');
 		if (postName) {
-			postName.classList[yousEnabled?'add':'remove']('you');
+			postName.classList[state?'add':'remove']('you');
 		}
 	}
 	const quotes = document.querySelectorAll(`.quote[href^="/${board}/"][href$="#${postId}"]`);
 	if (quotes) {
-		toggleQuotes(quotes);
+		toggleQuotes(quotes, state);
 	}
 }
 
 if (yousEnabled) {
-	toggleAll();
+	toggleAll(yousEnabled);
 }
 
 window.addEventListener('addPost', (e) => {
@@ -40,11 +41,13 @@ window.addEventListener('addPost', (e) => {
 	if (isYou) {
 		//save you
 		savedYous.add(postYou);
-		setLocalStorage('yous', JSON.stringify([...savedYous]));
+		const arrayYous = [...savedYous];
+		yousList.value = arrayYous.toString();
+		setLocalStorage('yous', JSON.stringify(arrayYous));
 	}
 	if (savedYous.has(postYou)) {
 		//toggle forn own post for name field
-		toggleOne(postYou);
+		toggleOne(postYou, yousEnabled);
 	}
 	const quotesYou = e.detail.json.quotes
 		.map(q => `${e.detail.json.board}-${q.postId}`)
@@ -59,7 +62,7 @@ window.addEventListener('addPost', (e) => {
 			return e.detail.post.querySelector(`.quote[href^="/${board}/"][href$="#${postId}"]`)
 		});
 	//toggle for any quotes in a new post that quote (you)
-	toggleQuotes(youHoverQuotes);
+	toggleQuotes(youHoverQuotes, yousEnabled);
 	//if not a hover newpost, and enabled/for yous, send notification
 	if (!e.detail.hover && notificationsEnabled && !isYou) {
 		if (notificationYousOnly && !quotesYou) {
@@ -76,11 +79,25 @@ window.addEventListener('addPost', (e) => {
 
 window.addEventListener('settingsReady', () => {
 
+	yousList = document.getElementById('youslist-setting');
+	yousList.value = [...savedYous];
+    const yousListClearButton = document.getElementById('youslist-clear');
+    const clearYousList = () => {
+		if (yousEnabled) {
+	        toggleAll(false);
+		}
+		savedYous = new Set();
+        yousList.value = '';
+        setLocalStorage('yous', '[]');
+        console.log('cleared yous');
+    }
+    yousListClearButton.addEventListener('click', clearYousList, false);
+
     const yousSetting = document.getElementById('yous-setting');
     const toggleYousSetting = () => {
         yousEnabled = !yousEnabled;
         setLocalStorage('yous-setting', yousEnabled);
-        toggleAll();
+        toggleAll(yousEnabled);
         console.log('toggling yous', yousEnabled);
     }
     yousSetting.checked = yousEnabled;
