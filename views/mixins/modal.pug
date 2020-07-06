@@ -98,7 +98,18 @@ mixin modal(data)
 								label.postform-style.ph-5
 									input#yous-setting(type='checkbox')
 								.rlabel Show (You)s
-
+					.row
+						.label (You)s
+						input.mr-1#youslist-setting(type='text' readonly)
+						input#youslist-clear(type='button' value='Clear')
+					.row
+						.label Hidden posts
+						input.mr-1#hiddenpostslist-setting(type='text' readonly)
+						input#hiddenpostslist-clear(type='button' value='Clear')
+					.row
+						.label Hover Cache
+						input.mr-1#hovercachelist-setting(type='text' readonly)
+						input#hovercachelist-clear(type='button' value='Clear')
 					.row
 						.label Video/Audio volume
 						label.postform-style.ph-5

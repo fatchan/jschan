@@ -114,6 +114,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				}
 				if (json) {
 					setLocalStorage(`hovercache-${jsonPath}`, JSON.stringify(json));
+					hoverCacheList.value = Object.keys(localStorage).filter(k => k.startsWith('hovercache'));
 					if (json.postId == hash) {
 						postJson = json;
 					} else {
@@ -174,3 +175,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
 });
+
+window.addEventListener('settingsReady', function(e) {
+	hoverCacheList = document.getElementById('hovercachelist-setting');
+	hoverCacheList.value = Object.keys(localStorage).filter(k => k.startsWith('hovercache'));
+    const hoverCacheListClearButton = document.getElementById('hovercachelist-clear');
+    const clearHoverCacheList = () => {
+		deleteStartsWith('hovercache');
+        hoverCacheList.value = '';
+        console.log('cleared hover cache');
+    }
+    hoverCacheListClearButton.addEventListener('click', clearHoverCacheList, false);
+});
+
