@@ -61,10 +61,20 @@ module.exports = {
 		if (!getSensitive) {
 			projection['ip'] = 0;
 		}
-		const threads = await db.find({
+		const threadsQuery = {
 			'thread': null,
-			'board': board
-		}, {
+		}
+		if (board) {
+			if (Array.isArray(board)) {
+				//array for overboard
+				threadsQuery['board'] = {
+					'$in': board
+				}
+			} else {
+				threadsQuery['board'] = board;
+			}
+		}
+		const threads = await db.find(threadsQuery, {
 			projection
 		}).sort({
 			'sticky': -1,
@@ -76,7 +86,7 @@ module.exports = {
 			const previewRepliesLimit = thread.sticky ? stickyPreviewReplies : previewReplies;
 			const replies = previewRepliesLimit === 0 ? [] : await db.find({
 				'thread': thread.postId,
-				'board': board
+				'board': thread.board
 			},{
 				projection
 			}).sort({

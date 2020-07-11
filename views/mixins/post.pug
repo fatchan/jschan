@@ -63,7 +63,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 					each file in post.files
 						.post-file
 							span.post-file-info
-								span: a(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler ? 'Spoiler File' : file.originalFilename}
+								span: a(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? 'Spoiler File' : file.originalFilename}
 								br
 								span 
 									| (#{file.sizeString}
@@ -75,7 +75,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 							- const type = file.mimetype.split('/')[0]
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/file/${file.filename}`)
-									if post.spoiler
+									if post.spoiler || file.spoiler
 										div.spoilerimg.file-thumb
 									else if file.attachment
 										div.attachmentimg.file-thumb

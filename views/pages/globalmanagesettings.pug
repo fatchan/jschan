@@ -28,7 +28,7 @@ block content
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
 				.label Filters
-				textarea(name='filters' placeholder='newline separated, max 50') #{settings.filters.join('\n')}
+				textarea(name='filters' placeholder='Newline separated, max 50') #{settings.filters.join('\n')}
 			.row
 				.label Filter Mode
 				select(name='filter_mode')

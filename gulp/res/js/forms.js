@@ -174,13 +174,20 @@ class formHandler {
 //todo: show success messages nicely for forms like actions (this doesnt apply to non file forms yet)
 						}
 					} else {
+						if (json.postId) {
+							window.myPostId = json.postId;
+						}
+						if (json.redirect) {
+							const redirectBoard = json.redirect.split('/')[1];
+							const redirectPostId = json.redirect.split('#')[1];
+							appendLocalStorageArray('yous', `${redirectBoard}-${redirectPostId}`);
+						}
 						if (json.message || json.messages || json.error || json.errors) {
 							doModal(json);
 							if (json.message === 'Incorrect captcha answer') {
 								//todo: create captcha form, add method to captcha frontend code
 							}
 						} else if (socket && socket.connected) {
-							window.myPostId = json.postId;
 							window.location.hash = json.postId
 						} else {
 							if (!isThread) {
@@ -254,37 +261,31 @@ class formHandler {
 			this.fileInput.removeAttribute('required');
 		}
 		this.files.push(file);
-		//add to upload list
-		const listElem = document.createElement('div');
-		listElem.classList.add('upload-item');
-		const thumb = document.createElement('img');
-		const name = document.createElement('p');
-		const remove = document.createElement('a');
-		name.textContent = file.name;
-		remove.textContent = 'X';
+		const item = {
+			spoilers: this.fileUploadList.dataset.spoilers === 'true',
+			name: file.name
+		}
 		switch (file.type.split('/')[0]) {
 			case 'image':
-				thumb.src = URL.createObjectURL(file);
+				item.url = URL.createObjectURL(file);
 				break;
 			case 'audio':
-				thumb.src = '/file/audio.png'
+				item.url = '/file/audio.png'
 				break;
 			case 'video':
-				thumb.src = '/file/video.png'
+				item.url = '/file/video.png'
 				break;
 			default:
-				thumb.src = '/file/attachment.png'
+				item.url = '/file/attachment.png'
 				break;
 		}
-		thumb.classList.add('upload-thumb');
-		remove.classList.add('close');
-		listElem.appendChild(thumb);
-		listElem.appendChild(name);
-		listElem.appendChild(remove);
-		remove.addEventListener('click', () => {
-			this.removeFile(listElem, file.name, file.size);
+		const uploadItemHtml = uploaditem({ uploaditem: item });
+		this.fileUploadList.insertAdjacentHTML('beforeend', uploadItemHtml);
+		const fileElem = this.fileUploadList.lastChild;
+		const lastClose = fileElem.querySelector('.close');
+		lastClose.addEventListener('click', () => {
+			this.removeFile(fileElem, file.name, file.size);
 		})
-		this.fileUploadList.appendChild(listElem);
 		this.fileUploadList.style.display = 'unset';
 	}
 

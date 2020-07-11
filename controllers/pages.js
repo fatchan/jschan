@@ -19,7 +19,7 @@ const express  = require('express')
 	, { globalManageSettings, globalManageReports, globalManageBans,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, create,
-		board, catalog, banners, randombanner, news, captchaPage,
+		board, catalog, banners, randombanner, news, captchaPage, overboard,
 		captcha, thread, modlog, modloglist, account, boardlist } = require(__dirname+'/../models/pages/');
 
 //homepage
@@ -38,6 +38,7 @@ router.get('/:board/catalog.html', Boards.exists, catalog); //catalog
 router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
 router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
 router.get('/:board/banners.html', Boards.exists, banners); //banners
+router.get('/all.html', overboard); //overboard
 router.get('/create.html', sessionRefresh, isLoggedIn, create); //create new board
 router.get('/randombanner', randombanner); //random banner
 

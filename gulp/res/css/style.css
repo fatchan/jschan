@@ -569,7 +569,6 @@ details.actions div {
 
 .actions {
 	text-align: left;
-	max-width: 200px;
 	display: flex;
 	flex-direction: column;
 	margin: 2px 0;
@@ -878,6 +877,13 @@ input:invalid, textarea:invalid {
 
 .post-name {
 	font-weight: bold;
+}
+
+.you:after {
+	margin-left: 3px;
+	content: '(You)';
+	font-weight: lighter;
+	font-style: italic;
 }
 
 .noselect {

@@ -51,17 +51,30 @@ module.exports = {
 
 	insertOne: (data) => {
 		cache.del(`board:${data._id}`); //removing cached no_exist
+		if (!data.settings.unlistedLocal) {
+			cache.sadd('boards:listed', data._id);
+		}
 		return db.insertOne(data);
 	},
 
 	deleteOne: (board) => {
 		cache.del(`board:${board}`);
 		cache.del(`banners:${board}`);
+		cache.srem('boards:listed', board);
 		cache.srem('triggered', board);
 		return db.deleteOne({ '_id': board });
 	},
 
 	updateOne: (board, update) => {
+		if (update['$set']
+			&& update['$set'].settings
+			&& update['$set'].settings.unlistedLocal !== null) {
+			if (update['$set'].settings.unlistedLocal) {
+				cache.srem('boards:listed', board);
+			} else {
+				cache.sadd('boards:listed', board);
+			}
+		}
 		cache.del(`board:${board}`);
 		return db.updateOne({
 			'_id': board
@@ -100,6 +113,23 @@ module.exports = {
 				}
 			}
 		);
+	},
+
+	getLocalListed: async () => {
+		let cachedListed = await cache.sgetall('boards:listed');
+		if (cachedListed) {
+			return cachedListed;
+		}
+		let listedBoards = await db.find({
+			'settings.unlistedLocal': false
+		}, {
+			'projection': {
+				'_id': 1,
+			}
+		});
+		listedBoards = listedBoards.map(b => b._id);
+		await cache.sadd('boards:listed', listedBoards);
+		return listedBoards;
 	},
 
 	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}, showUnlisted=false) => {

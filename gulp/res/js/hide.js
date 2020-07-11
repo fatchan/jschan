@@ -8,6 +8,7 @@ if (fileInput) {
 }
 
 let hidden;
+let hiddenPostsList;
 const loadHiddenStorage = () => {
 	try {
 		const loaded = localStorage.getItem('hidden')
@@ -74,7 +75,9 @@ const changeOption = function(e) {
 	}
 	this.value = '';
 	setHidden(posts, hiding);
-	setLocalStorage('hidden', JSON.stringify([...hidden]));
+	const hiddenArray = [...hidden];
+	hiddenPostsList.value = hiddenArray.toString();
+	setLocalStorage('hidden', JSON.stringify(hiddenArray));
 }
 
 for (let menu of document.getElementsByClassName('postmenu')) {
@@ -85,22 +88,26 @@ for (let menu of document.getElementsByClassName('postmenu')) {
 	menu.addEventListener('change', changeOption, false);
 }
 
-for (let elem of hidden) {
-	let posts = [];
-	if (elem.includes('-')) {
-		const [board, postId] = elem.split('-');
-		const post = document.querySelector(`[data-board="${board}"][data-post-id="${postId}"]`);
-		if (post) {
-			posts.push(post);
-		}
-	} else {
-		const idPosts = document.querySelectorAll(`[data-user-id="${elem}"]`);
-		if (idPosts && idPosts.length > 0) {
-			posts = idPosts;
+const getHiddenElems = () => {
+	const posts = [];
+	for (let elem of hidden) {
+		if (elem.includes('-')) {
+			const [board, postId] = elem.split('-');
+			const post = document.querySelector(`[data-board="${board}"][data-post-id="${postId}"]`);
+			if (post) {
+				posts.push(post);
+			}
+		} else {
+			const idPosts = document.querySelectorAll(`[data-user-id="${elem}"]`);
+			if (idPosts && idPosts.length > 0) {
+				posts = posts.concat(idPosts);
+			}
 		}
 	}
-	setHidden(posts, true);
+	return posts;
 }
+
+setHidden(getHiddenElems(), true);
 
 const renderCSSLink = document.createElement('style');
 renderCSSLink.type = 'text/css';
@@ -175,4 +182,18 @@ window.addEventListener('addPost', function(e) {
 	}
 	menu.value = '';
 	menu.addEventListener('change', changeOption, false);
+});
+
+window.addEventListener('settingsReady', function(e) {
+	hiddenPostsList = document.getElementById('hiddenpostslist-setting');
+	hiddenPostsList.value = [...hidden];
+    const hiddenPostsListClearButton = document.getElementById('hiddenpostslist-clear');
+    const clearhiddenPostsList = () => {
+		setHidden(getHiddenElems(), false);
+		hidden = new Set();
+        hiddenPostsList.value = '';
+        setLocalStorage('hidden', '[]');
+        console.log('cleared hidden posts');
+    }
+    hiddenPostsListClearButton.addEventListener('click', clearhiddenPostsList, false);
 });

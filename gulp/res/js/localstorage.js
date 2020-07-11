@@ -6,15 +6,21 @@ function setLocalStorage(key, value) {
 	try {
 		localStorage.setItem(key, value);
 	} catch (e) {
-		clearLocalStorageJunk();
+		deleteStartsWith();
 	} finally {
 		localStorage.setItem(key, value);
 	}
 }
 
-function clearLocalStorageJunk() {
+function appendLocalStorageArray(key, value) {
+	const storedArray = JSON.parse(localStorage.getItem(key));
+	storedArray.push(value);
+	setLocalStorage(key, JSON.stringify(storedArray));
+}
+
+function deleteStartsWith(startString = 'hovercache') {
 	//clears hover cache when localstorage gets full
-	const hoverCaches = Object.keys(localStorage).filter(k => k.startsWith('hovercache'));
+	const hoverCaches = Object.keys(localStorage).filter(k => k.startsWith(startString));
 	for(let i = 0; i < hoverCaches.length; i++) {
 		localStorage.removeItem(hoverCaches[i]);
 	}

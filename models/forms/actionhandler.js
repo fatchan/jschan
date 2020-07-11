@@ -269,6 +269,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	const parallelPromises = [];
+
 	//modlog
 	if (modlogActions.length > 0) {
 		const modlog = {};
