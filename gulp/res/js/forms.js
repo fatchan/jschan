@@ -177,6 +177,11 @@ class formHandler {
 						if (json.postId) {
 							window.myPostId = json.postId;
 						}
+						if (json.redirect) {
+							const redirectBoard = json.redirect.split('/')[1];
+							const redirectPostId = json.redirect.split('#')[1];
+							appendLocalStorageArray('yous', `${redirectBoard}-${redirectPostId}`);
+						}
 						if (json.message || json.messages || json.error || json.errors) {
 							doModal(json);
 							if (json.message === 'Incorrect captcha answer') {
