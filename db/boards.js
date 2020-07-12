@@ -117,7 +117,7 @@ module.exports = {
 
 	getLocalListed: async () => {
 		let cachedListed = await cache.sgetall('boards:listed');
-		if (cachedListed) {
+		if (cachedListed && cachedListed.length > 0) {
 			return cachedListed;
 		}
 		let listedBoards = await db.find({
@@ -126,7 +126,10 @@ module.exports = {
 			'projection': {
 				'_id': 1,
 			}
-		});
+		}).toArray();
+		if (listedBoards.length == 0) {
+			return [];
+		}
 		listedBoards = listedBoards.map(b => b._id);
 		await cache.sadd('boards:listed', listedBoards);
 		return listedBoards;

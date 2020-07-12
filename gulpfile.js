@@ -161,6 +161,7 @@ function icons() {
 async function cache() {
 	const Redis = require(__dirname+'/redis.js')
 	await Promise.all([
+		Redis.deletePattern('boards:listed'),
 		Redis.deletePattern('board:*'),
 		Redis.deletePattern('banners:*'),
 		Redis.deletePattern('blacklisted:*'),
