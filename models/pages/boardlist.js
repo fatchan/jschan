@@ -18,7 +18,7 @@ module.exports = async (req, res, next) => {
 	const cacheQuery = new URLSearchParams({ direction, sort, search, page });
 	cacheQuery.sort();
 	const cacheQueryString = cacheQuery.toString();
-	const cached = await cache.get(cacheQueryString);
+	const cached = await cache.get(`boardlist:${cacheQueryString}`);
 
 	let localBoards, webringBoards, localPages, webringPages, maxPage;
 	if (cached) {
@@ -58,7 +58,7 @@ module.exports = async (req, res, next) => {
 		}
 
 		if (!isGlobalStaff) {
-			cache.set(cacheQueryString, { localBoards, localPages, webringBoards, webringPages, maxPage }, 60);
+			cache.set(`boardlist:${cacheQueryString}`, { localBoards, localPages, webringBoards, webringPages, maxPage }, 60);
 		}
 	}
 
