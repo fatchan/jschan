@@ -50,7 +50,7 @@ module.exports = {
 		}).skip(offset).limit(limit).toArray();
 	},
 
-	getRecent: async (board, page, limit=10, getSensitive=false) => {
+	getRecent: async (board, page, limit=10, getSensitive=false, getSticky=true) => {
 		// get all thread posts (posts with null thread id)
 		const projection = {
 			'salt': 0,
@@ -63,6 +63,9 @@ module.exports = {
 		}
 		const threadsQuery = {
 			'thread': null,
+		}
+		if (!getSticky) {
+			threadsQuery['sticky'] = 0;
 		}
 		if (board) {
 			if (Array.isArray(board)) {
