@@ -1,60 +1,83 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+class CaptchaController {
 
-	const captchaFields = document.getElementsByClassName('captchafield');
-	let refreshing = false;
+	constructor() {
+		this.captchaFields = [];
+		this.refreshing = false;
+	}
 
-	const updateCaptchaImages = (url) => {
-		for (let i = 0; i < captchaFields.length; i++) {
-			if (captchaFields[i].previousSibling.children.length > 0) {
-				captchaFields[i].previousSibling.children[0].src = url;
-			}
+	init() {
+		this.captchaFields = document.getElementsByClassName('captchafield');
+		this.refreshing = false;
+		for (let captcha of this.captchaFields) {
+			this.setupCaptchaField(captcha);
 		}
-	};
+	}
 
-	const refreshCaptchas = function(e) {
-		if (refreshing) {
-			return;
+	setupCaptchaField(captcha) {
+		if (captcha.form.dataset.captchaPreload == 'true') {
+			this.loadCaptcha(captcha);
+		} else {
+			captcha.placeholder = 'focus to load captcha';
+			captcha.addEventListener('focus', () => this.loadCaptcha(captcha), { once: true });
 		}
-		refreshing = true;
+	}
+
+	refreshCaptchas() {
+		if (this.refreshing) {
+			return null;
+		}
+		this.refreshing = true;
 		document.cookie = 'captchaid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-		const captchaImg = this;
 		const xhr = new XMLHttpRequest();
 		xhr.onload = () => {
-			refreshing = false;
-			updateCaptchaImages(xhr.responseURL);
+			for (let captcha of this.captchaFields) {
+				const existingImage = captcha.previousSibling.children[0];
+				if (existingImage) {
+					captcha.previousSibling.children[0].src = xhr.responseURL;
+				}
+			}
+			this.refreshing = false;
 		}
 		xhr.onerror = () => {
-			refreshing = false;
+			this.refreshing = false;
 		}
 		xhr.open('GET', '/captcha', true);
 		xhr.send(null);
-	};
+	}
 
-	const loadCaptcha = function(e) {
-		const field = e.target;
+	addMissingCaptcha() {
+		const postSubmitButton = document.getElementById('submitpost');
+		const captchaFormSectionHtml = captchaformsection();
+		postSubmitButton.insertAdjacentHTML('beforebegin', captchaFormSectionHtml);
+		const captchaFormSection = postSubmitButton.previousSibling;
+		const captchaField = captchaFormSection.querySelector('.captchafield');
+		this.loadCaptcha(captchaField);
+	}
+
+	loadCaptcha(field) {
+console.log(field)
 		const captchaDiv = field.previousSibling;
 		const captchaImg = document.createElement('img');
 		const refreshDiv = document.createElement('div');
 		refreshDiv.classList.add('captcharefresh', 'noselect');
-		refreshDiv.addEventListener('click', refreshCaptchas, true);
+		refreshDiv.addEventListener('click', () => this.refreshCaptchas(), true);
 		refreshDiv.textContent = '↻';
 		field.placeholder = 'loading';
 		captchaImg.src = '/captcha';
 		captchaImg.onload = function() {
-			field.placeholder = '';
-			captchaDiv.appendChild(captchaImg);
-			captchaDiv.appendChild(refreshDiv);
-			captchaDiv.style.display = '';
+				field.placeholder = '';
+				captchaDiv.appendChild(captchaImg);
+				captchaDiv.appendChild(refreshDiv);
+				captchaDiv.style.display = '';
 		}
-	};
-
-	for (let i = 0; i < captchaFields.length; i++) {
-		const field = captchaFields[i];
-		if (field.form.action.endsWith('/forms/blockbypass')) {
-			return loadCaptcha({target: field })
-		}
-		field.placeholder = 'focus to load captcha';
-		field.addEventListener('focus', loadCaptcha, { once: true });
 	}
+
+}
+
+const captchaController = new CaptchaController();
+
+window.addEventListener('DOMContentLoaded', () => {
+
+	captchaController.init();
 
 });

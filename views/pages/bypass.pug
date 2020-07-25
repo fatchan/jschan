@@ -8,7 +8,7 @@ block content
 	.form-wrapper.flex-center.mv-10
 		if message
 			p.title #{message}
-		form.form-post(action='/forms/blockbypass' method='POST')
+		form.form-post(action='/forms/blockbypass' method='POST' data-captcha-preload='true')
 			.row
 				.label Captcha
 				span.col

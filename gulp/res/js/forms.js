@@ -68,7 +68,8 @@ class formHandler {
 	constructor(form) {
 		this.form = form;
 		this.enctype = this.form.getAttribute('enctype');
-		this.messageBox = form.querySelector('#message')
+		this.messageBox = form.querySelector('#message');
+		this.captchaField = form.querySelector('.captchafield');
 		this.submit = form.querySelector('input[type="submit"]');
 		if (this.submit) {
 			this.originalSubmitText = this.submit.value;
@@ -184,9 +185,6 @@ class formHandler {
 						}
 						if (json.message || json.messages || json.error || json.errors) {
 							doModal(json);
-							if (json.message === 'Incorrect captcha answer') {
-								//todo: create captcha form, add method to captcha frontend code
-							}
 						} else if (socket && socket.connected) {
 							window.location.hash = json.postId
 						} else {
@@ -205,6 +203,11 @@ class formHandler {
 						this.clearFiles();
 					}
 					if (json) {
+						if (!this.captchaField && json.message === 'Incorrect captcha answer') {
+							//todo: create captcha form, add method to captcha frontend code
+							captchaController.addMissingCaptcha();
+							this.captchaField = true;
+						}
 						doModal(json, () => {
 							this.formSubmit(e);
 						});
