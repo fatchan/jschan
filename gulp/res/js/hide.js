@@ -7,23 +7,9 @@ if (fileInput) {
 	fileInput.style.opacity = '0';
 }
 
-let hidden;
-let hiddenPostsList;
-const loadHiddenStorage = () => {
-	try {
-		const loaded = localStorage.getItem('hidden')
-		if (loaded) {
-			hidden = new Set(JSON.parse(loaded));
-			return;
-		}
-	} catch (e) {
-		console.error(e);
-	}
-	//set to empty if not exist or error parsing
-	setLocalStorage('hidden', '[]');
-	hidden = new Set();
-}
-loadHiddenStorage();
+setDefaultLocalStorage('hidden', '[]');
+let hidePostsList;
+let hidden = new Set(JSON.parse(localStorage.getItem('hidden')));
 
 const setHidden = (posts, hide) => {
 	if (posts && posts.length > 0) {
@@ -76,7 +62,7 @@ const changeOption = function(e) {
 	this.value = '';
 	setHidden(posts, hiding);
 	const hiddenArray = [...hidden];
-	hiddenPostsList.value = hiddenArray.toString();
+	hidePostsList.value = hiddenArray.toString();
 	setLocalStorage('hidden', JSON.stringify(hiddenArray));
 }
 
@@ -141,19 +127,19 @@ class CssToggle {
 	}
 	apply () {
 		if (this.settingBoolean) {
-	        renderSheet.insertRule(this.settingCss);
-	    } else {
-	        for (let i = 0; i < renderSheet[rulesKey].length; i++) {
-	            if (renderSheet[rulesKey][i].selectorText == this.settingCss.split(' {')[0]) {
-	                renderSheet.deleteRule(i);
-	            }
-	        }
-	    }
+			renderSheet.insertRule(this.settingCss);
+		} else {
+			for (let i = 0; i < renderSheet[rulesKey].length; i++) {
+				if (renderSheet[rulesKey][i].selectorText == this.settingCss.split(' {')[0]) {
+					renderSheet.deleteRule(i);
+				}
+			}
+		}
 	}
 };
 
 //define the css
-//const hideStubsCss = `.post-container.hidden, .catalog-tile.hidden { visibility: hidden;margin-top: -1.5em;height: 0; }`;
+const hidePostStubsCss = `.post-container.hidden, .catalog-tile.hidden { visibility: hidden;margin-top: -1.5em;height: 0; }`;
 const hideImagesCss = `.file-thumb { visibility: hidden !important; }`
 const hideRecursiveCss = `.op.hidden ~ .anchor, .op.hidden ~ .post-container { display: none; }`;
 const heightlimitCss = `img, video { max-height: unset; }`;
@@ -161,13 +147,13 @@ const crispCss = `img { image-rendering: crisp-edges; }`;
 const nonColorIdsCss = `.user-id { background: transparent none repeat scroll 0% 0% !important; border-color: transparent; text-shadow: none; color: var(--font-color); }`;
 const alwaysShowSpoilersCss = `.spoiler { color: var(--font-color) !important; background: transparent none repeat scroll 0% 0%; outline: 1px solid black; cursor: auto; }`;
 //make classes with css
-//new CssToggle('hidestubs-setting', 'hidestubs', false, hideStubsCss);
 new CssToggle('hiderecursive-setting', 'hiderecursive', true, hideRecursiveCss);
 new CssToggle('heightlimit-setting', 'heightlimit', false, heightlimitCss);
 new CssToggle('crispimages-setting', 'crispimages', false, crispCss);
 new CssToggle('hideimages-setting', 'hideimages', false, hideImagesCss);
 new CssToggle('noncolorids-setting', 'noncolorids', false, nonColorIdsCss);
 new CssToggle('alwaysshowspoilers-setting', 'alwaysshowspoilers', false, alwaysShowSpoilersCss);
+new CssToggle('hidepoststubs-setting', 'hidepoststubs', false, hidePostStubsCss);
 
 window.addEventListener('addPost', function(e) {
 	const post = e.detail.post;
@@ -185,15 +171,17 @@ window.addEventListener('addPost', function(e) {
 });
 
 window.addEventListener('settingsReady', function(e) {
-	hiddenPostsList = document.getElementById('hiddenpostslist-setting');
-	hiddenPostsList.value = [...hidden];
-    const hiddenPostsListClearButton = document.getElementById('hiddenpostslist-clear');
-    const clearhiddenPostsList = () => {
+	hidePostsList = document.getElementById('hiddenpostslist-setting');
+	hidePostsList.value = [...hidden];
+	const hidePostsListClearButton = document.getElementById('hiddenpostslist-clear');
+	const clearhidePostsList = () => {
 		setHidden(getHiddenElems(), false);
 		hidden = new Set();
-        hiddenPostsList.value = '';
-        setLocalStorage('hidden', '[]');
-        console.log('cleared hidden posts');
-    }
-    hiddenPostsListClearButton.addEventListener('click', clearhiddenPostsList, false);
+		hidePostsList.value = '';
+		
+setLocalStorage('hidden', '[]');
+		console.log('cleared hidden posts');
+	}
+	hidePostsListClearButton.addEventListener('click', clearhidePostsList, false);
 });
+
