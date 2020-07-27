@@ -1,5 +1,3 @@
-setDefaultLocalStorage('live', true);
-setDefaultLocalStorage('scroll', false);
 let liveEnabled = localStorage.getItem('live') == 'true';
 let scrollEnabled = localStorage.getItem('scroll') == 'true';
 let socket;

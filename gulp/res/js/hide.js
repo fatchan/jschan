@@ -7,7 +7,6 @@ if (fileInput) {
 	fileInput.style.opacity = '0';
 }
 
-setDefaultLocalStorage('hidden', '[]');
 let hidePostsList;
 let hidden = new Set(JSON.parse(localStorage.getItem('hidden')));
 

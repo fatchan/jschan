@@ -1,6 +1,3 @@
-setDefaultLocalStorage('dragtop', null);
-setDefaultLocalStorage('dragleft', null);
-
 class Dragable {
 
 	constructor(handle, target) {

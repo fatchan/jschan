@@ -1,7 +1,3 @@
-setDefaultLocalStorage('volume', 100);
-setDefaultLocalStorage('loop', false);
-setDefaultLocalStorage('imageloadingbars', false);
-
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	const actionFooter = document.querySelector('summary.toggle-summary');

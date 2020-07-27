@@ -1,10 +1,6 @@
-setDefaultLocalStorage('notifications', false);
 let notificationsEnabled = localStorage.getItem('notifications') == 'true';
-setDefaultLocalStorage('notification-yous-only', false);
 let notificationYousOnly = localStorage.getItem('notification-yous-only') == 'true';
-setDefaultLocalStorage('yous-setting', true);
 let yousEnabled = localStorage.getItem('yous-setting') == 'true';
-setDefaultLocalStorage('yous', '[]');
 let savedYous = new Set(JSON.parse(localStorage.getItem('yous')));
 let yousList;
 

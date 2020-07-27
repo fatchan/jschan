@@ -1,5 +1,3 @@
-
-
 const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/';
 const generatePassword = () => {
 	if (window.crypto) {
@@ -13,8 +11,8 @@ const generatePassword = () => {
 			.join('');
 	}
 }
+
 setDefaultLocalStorage('postpassword', generatePassword());
-setDefaultLocalStorage('name', '');
 
 class syncedField {
 	constructor(selector, key, oneWay=false, persistent=true) {

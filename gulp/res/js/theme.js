@@ -1,6 +1,3 @@
-setDefaultLocalStorage('theme', 'default');
-setDefaultLocalStorage('codetheme', 'default');
-setDefaultLocalStorage('customcss', '');
 let customCSSString = localStorage.getItem('customcss');
 
 window.addEventListener('settingsReady', function(event) {
