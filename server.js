@@ -38,10 +38,6 @@ const express = require('express')
 	debugLogs && console.log('CONNECTING TO REDIS');
 	const { redisClient } = require(__dirname+'/redis.js');
 
-	// connect socketio
-	debugLogs && console.log('STARTING WEBSOCKET');
-	Socketio.connect(server);
-
 	// disable useless express header
 	app.disable('x-powered-by');
 	// parse forms
@@ -50,7 +46,7 @@ const express = require('express')
 	app.use(cookieParser());
 
 	// session store
-	app.use(session({
+	const sessionMiddleware = session({
 		secret: sessionSecret,
 		store: new redisStore({
 			client: redisClient,
@@ -64,7 +60,14 @@ const express = require('express')
 			sameSite: 'strict',
 			maxAge: DAY,
 		}
-	}));
+	});
+
+	//add session middleware to express
+	app.use(sessionMiddleware);
+
+	// connect socketio
+	debugLogs && console.log('STARTING WEBSOCKET');
+	Socketio.connect(server, sessionMiddleware);
 
 	//trust proxy for nginx
 	app.set('trust proxy', 1);
