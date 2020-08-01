@@ -55,8 +55,10 @@ window.addEventListener('addPost', (e) => {
 		.filter(y => savedYous.has(y))
 		.map(y => {
 			const [board, postId] = y.split('-');
-			return e.detail.post.querySelector(`.quote[href^="/${board}/"][href$="#${postId}"]`)
-		});
+			return e.detail.post.querySelectorAll(`.quote[href^="/${board}/"][href$="#${postId}"]`)
+		}).reduce((acc, array) => {
+			return acc.concat(Array.from(array)); //handle duplicate of same quote
+		}, []);
 	//toggle for any quotes in a new post that quote (you)
 	toggleQuotes(youHoverQuotes, yousEnabled);
 	//if not a hover newpost, and enabled/for yous, send notification
@@ -77,36 +79,36 @@ window.addEventListener('settingsReady', () => {
 
 	yousList = document.getElementById('youslist-setting');
 	yousList.value = [...savedYous];
-    const yousListClearButton = document.getElementById('youslist-clear');
-    const clearYousList = () => {
+	const yousListClearButton = document.getElementById('youslist-clear');
+	const clearYousList = () => {
 		if (yousEnabled) {
-	        toggleAll(false);
+			toggleAll(false);
 		}
 		savedYous = new Set();
-        yousList.value = '';
-        setLocalStorage('yous', '[]');
-        console.log('cleared yous');
-    }
-    yousListClearButton.addEventListener('click', clearYousList, false);
+		yousList.value = '';
+		setLocalStorage('yous', '[]');
+		console.log('cleared yous');
+	}
+	yousListClearButton.addEventListener('click', clearYousList, false);
 
-    const yousSetting = document.getElementById('yous-setting');
-    const toggleYousSetting = () => {
-        yousEnabled = !yousEnabled;
-        setLocalStorage('yous-setting', yousEnabled);
-        toggleAll(yousEnabled);
-        console.log('toggling yous', yousEnabled);
-    }
-    yousSetting.checked = yousEnabled;
-    yousSetting.addEventListener('change', toggleYousSetting, false);
+	const yousSetting = document.getElementById('yous-setting');
+	const toggleYousSetting = () => {
+		yousEnabled = !yousEnabled;
+		setLocalStorage('yous-setting', yousEnabled);
+		toggleAll(yousEnabled);
+		console.log('toggling yous', yousEnabled);
+	}
+	yousSetting.checked = yousEnabled;
+	yousSetting.addEventListener('change', toggleYousSetting, false);
 
-    const notificationYousOnlySetting = document.getElementById('notification-yous-only');
-    const toggleNotificationYousOnlySetting = () => {
-        notificationYousOnly = !notificationYousOnly;
-        setLocalStorage('notification-yous-only', notificationYousOnly);
-        console.log('toggling notification only for yous', yousEnabled);
-    }
-    notificationYousOnlySetting.checked = notificationYousOnly;
-    notificationYousOnlySetting.addEventListener('change', toggleNotificationYousOnlySetting, false);
+	const notificationYousOnlySetting = document.getElementById('notification-yous-only');
+	const toggleNotificationYousOnlySetting = () => {
+		notificationYousOnly = !notificationYousOnly;
+		setLocalStorage('notification-yous-only', notificationYousOnly);
+		console.log('toggling notification only for yous', yousEnabled);
+	}
+	notificationYousOnlySetting.checked = notificationYousOnly;
+	notificationYousOnlySetting.addEventListener('change', toggleNotificationYousOnlySetting, false);
 
 	const notificationSetting = document.getElementById('notification-setting');
 	const toggleNotifications = async () => {
