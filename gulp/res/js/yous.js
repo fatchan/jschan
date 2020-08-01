@@ -31,7 +31,7 @@ if (yousEnabled) {
 	toggleAll(yousEnabled);
 }
 
-window.addEventListener('addPost', (e) => {
+const handleNewYous = (e) => {
 	const postYou = `${e.detail.json.board}-${e.detail.postId}`;
 	const isYou = window.myPostId == e.detail.postId
 	if (isYou) {
@@ -73,7 +73,10 @@ window.addEventListener('addPost', (e) => {
 			});
 		} catch (e) { /* notification cant send for some reason -- user revoked perms in browser? */ }
 	}
-});
+}
+
+window.addEventListener('addPost', handleNewYous, false);
+window.addEventListener('updatePostMessage', handleNewYous, false);
 
 window.addEventListener('settingsReady', () => {
 

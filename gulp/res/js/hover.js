@@ -173,18 +173,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	});
 
+	window.addEventListener('updatePostMessage', function(e) {
+		const newquotes = e.detail.post.getElementsByClassName('quote');
+		for (let i = 0; i < newquotes.length; i++) {
+			newquotes[i].addEventListener('mouseover', toggleHighlightPost, false);
+			newquotes[i].addEventListener('mouseout', toggleHighlightPost, false);
+		}
+	});
 
 });
 
 window.addEventListener('settingsReady', function(e) {
 	hoverCacheList = document.getElementById('hovercachelist-setting');
 	hoverCacheList.value = Object.keys(localStorage).filter(k => k.startsWith('hovercache'));
-    const hoverCacheListClearButton = document.getElementById('hovercachelist-clear');
-    const clearHoverCacheList = () => {
+	const hoverCacheListClearButton = document.getElementById('hovercachelist-clear');
+	const clearHoverCacheList = () => {
 		deleteStartsWith('hovercache');
-        hoverCacheList.value = '';
-        console.log('cleared hover cache');
-    }
-    hoverCacheListClearButton.addEventListener('click', clearHoverCacheList, false);
+		hoverCacheList.value = '';
+		console.log('cleared hover cache');
+	}
+	hoverCacheListClearButton.addEventListener('click', clearHoverCacheList, false);
 });
 
