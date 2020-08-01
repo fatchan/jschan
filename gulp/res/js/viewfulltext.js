@@ -6,6 +6,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const viewFullText = async function (e) {
 		e.preventDefault();
 		const parentPost = this.closest('.post-container');
+		if (!parentPost) {
+			return;
+		}
 		const postId = this.hash.substring(1);
 		let jsonParts = this.pathname.replace(/\.html$/, '.json').split('/');
 		let jsonPath;
@@ -56,7 +59,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		if (messageParent) {
 			messageParent.innerHTML = postJson.message;
 		}
-
 		const updatePostMessageEvent = new CustomEvent('updatePostMessage', {
 			detail: {
 				post: parentPost,
