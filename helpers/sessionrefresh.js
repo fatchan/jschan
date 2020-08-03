@@ -5,7 +5,7 @@ const { Accounts } = require(__dirname+'/../db/');
 module.exports = async (req, res, next) => {
 	if (req.session && req.session.user) {
 		// keeping session updated incase user updated on global manage
-		const account = await Accounts.findOne(req.session.user.username);
+		const account = await Accounts.findOne(req.session.user);
 		if (!account) {
 			req.session.destroy();
 		} else {
