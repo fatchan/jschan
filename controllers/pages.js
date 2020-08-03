@@ -10,6 +10,7 @@ const express  = require('express')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, isLoggedIn = require(__dirname+'/../helpers/checks/isloggedin.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
+	, useSession = require(__dirname+'/../helpers/usesession.js')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	, setMinimal = require(__dirname+'/../helpers/setminimal.js')
@@ -29,7 +30,7 @@ router.get('/index.html', home);
 router.get('/news.html', news);
 
 //board list
-router.get('/boards.html', sessionRefresh, calcPerms, boardlist);
+router.get('/boards.html', useSession, sessionRefresh, calcPerms, boardlist);
 
 //board pages
 router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', Boards.exists, paramConverter, board); //index
@@ -39,29 +40,29 @@ router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
 router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
 router.get('/:board/banners.html', Boards.exists, banners); //banners
 router.get('/all.html', overboard); //overboard
-router.get('/create.html', sessionRefresh, isLoggedIn, create); //create new board
+router.get('/create.html', useSession, sessionRefresh, isLoggedIn, create); //create new board
 router.get('/randombanner', randombanner); //random banner
 
 //board manage pages
-router.get('/:board/manage/reports.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageReports);
-router.get('/:board/manage/recent.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageRecent);
-router.get('/:board/manage/bans.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageBans);
-router.get('/:board/manage/logs.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageLogs);
-router.get('/:board/manage/settings.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
-router.get('/:board/manage/banners.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
+router.get('/:board/manage/reports.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageReports);
+router.get('/:board/manage/recent.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageRecent);
+router.get('/:board/manage/bans.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageBans);
+router.get('/:board/manage/logs.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageLogs);
+router.get('/:board/manage/settings.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
+router.get('/:board/manage/banners.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
 // if (mod view enabled) {
-router.get('/:board/manage/catalog.html', sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageCatalog);
-router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
-router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
+router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageCatalog);
+router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
+router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
 
 //global manage pages
-router.get('/globalmanage/reports.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
-router.get('/globalmanage/bans.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBans);
-router.get('/globalmanage/recent.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageRecent);
-router.get('/globalmanage/globallogs.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageLogs);
-router.get('/globalmanage/news.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageNews);
-router.get('/globalmanage/accounts.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageAccounts);
-router.get('/globalmanage/settings.html', sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
+router.get('/globalmanage/reports.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
+router.get('/globalmanage/bans.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBans);
+router.get('/globalmanage/recent.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageRecent);
+router.get('/globalmanage/globallogs.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageLogs);
+router.get('/globalmanage/news.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageNews);
+router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageAccounts);
+router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
 
 //captcha
 router.get('/captcha', processIp, captcha); //get captcha image and cookie
@@ -70,10 +71,9 @@ router.get('/bypass.html', blockBypass); //block bypass page
 router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
 
 //accounts
-router.get('/account.html', sessionRefresh, isLoggedIn, account); //page showing boards you are mod/owner of, links to password rese, logout, etc
+router.get('/account.html', useSession, sessionRefresh, isLoggedIn, account); //page showing boards you are mod/owner of, links to password rese, logout, etc
 router.get('/login.html', login);
 router.get('/register.html', register);
 router.get('/changepassword.html', changePassword);
 
 module.exports = router;
-

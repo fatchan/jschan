@@ -14,6 +14,7 @@ const express  = require('express')
 	, isLoggedIn = require(__dirname+'/../helpers/checks/isloggedin.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captcha/captchaverify.js')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
+	, useSession = require(__dirname+'/../helpers/usesession.js')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
 	, dnsblCheck = require(__dirname+'/../helpers/checks/dnsbl.js')
 	, blockBypassCheck = require(__dirname+'/../helpers/checks/blockbypass.js')
@@ -82,45 +83,45 @@ const express  = require('express')
 	, logout = require(__dirname+'/../models/forms/logout.js');
 
 //make new post
-router.post('/board/:board/post', processIp, sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles,
+router.post('/board/:board/post', processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, postFiles,
 	paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, makePostController);
-router.post('/board/:board/modpost', processIp, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), postFiles,
+router.post('/board/:board/modpost', processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), postFiles,
 	paramConverter, csrf, numFiles, blockBypassCheck, dnsblCheck, makePostController); //mod post has token instead of captcha
 
 //post actions
-router.post('/board/:board/actions', processIp, sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //public, with captcha
-router.post('/board/:board/modactions', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, actionController); //board manage page
-router.post('/global/actions', processIp, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page
+router.post('/board/:board/actions', processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, paramConverter, verifyCaptcha, actionController); //public, with captcha
+router.post('/board/:board/modactions', processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, actionController); //board manage page
+router.post('/global/actions', processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, globalActionController); //global manage page
 //appeal ban
-router.post('/appeal', processIp, sessionRefresh, paramConverter, verifyCaptcha, appealController);
+router.post('/appeal', processIp, useSession, sessionRefresh, paramConverter, verifyCaptcha, appealController);
 //edit post
-router.post('/editpost', processIp, sessionRefresh, csrf, paramConverter, Boards.bodyExists, calcPerms, hasPerms(3), editPostController);
+router.post('/editpost', processIp, useSession, sessionRefresh, csrf, paramConverter, Boards.bodyExists, calcPerms, hasPerms(3), editPostController);
 
 //board management forms
-router.post('/board/:board/transfer', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);
-router.post('/board/:board/settings', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
-router.post('/board/:board/addbanners', processIp, sessionRefresh, bannerFiles, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
-router.post('/board/:board/deletebanners', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
-router.post('/board/:board/addban', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, addBanController); //add ban manually without post
-router.post('/board/:board/editbans', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
-router.post('/board/:board/deleteboard', processIp, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController); //delete board
+router.post('/board/:board/transfer', processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, transferController);
+router.post('/board/:board/settings', processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
+router.post('/board/:board/addbanners', processIp, useSession, sessionRefresh, bannerFiles, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
+router.post('/board/:board/deletebanners', processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
+router.post('/board/:board/addban', processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, addBanController); //add ban manually without post
+router.post('/board/:board/editbans', processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
+router.post('/board/:board/deleteboard', processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(2), deleteBoardController); //delete board
 
 //global management forms
-router.post('/global/editbans', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, editBansController); //remove bans
-router.post('/global/addban', processIp, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, addBanController); //add ban manually without post
-router.post('/global/deleteboard', sessionRefresh, csrf, paramConverter, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board
-router.post('/global/addnews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
-router.post('/global/deletenews', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news
-router.post('/global/editaccounts', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, editAccountsController); //account editing
-router.post('/global/settings', sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, globalSettingsController); //global settings
+router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, editBansController); //remove bans
+router.post('/global/addban', processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, addBanController); //add ban manually without post
+router.post('/global/deleteboard', useSession, sessionRefresh, csrf, paramConverter, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board
+router.post('/global/addnews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
+router.post('/global/deletenews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news
+router.post('/global/editaccounts', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, editAccountsController); //account editing
+router.post('/global/settings', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, globalSettingsController); //global settings
 
 //create board
-router.post('/create', processIp, sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
+router.post('/create', processIp, useSession, sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
 //accounts
-router.post('/login', loginController);
-router.post('/logout', logout);
-router.post('/register', processIp, verifyCaptcha, calcPerms, registerController);
-router.post('/changepassword', processIp, verifyCaptcha, changePasswordController);
+router.post('/login', useSession, loginController);
+router.post('/logout', useSession, logout);
+router.post('/register', processIp, useSession, sessionRefresh, verifyCaptcha, calcPerms, registerController);
+router.post('/changepassword', processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController);
 
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptcha);
