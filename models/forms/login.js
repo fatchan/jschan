@@ -30,13 +30,7 @@ module.exports = async (req, res, next) => {
 	if (passwordMatch === true) {
 
 		// add the account to the session and authenticate if password was correct
-		req.session.user = {
-			'username': account._id,
-			'authLevel': account.authLevel,
-			'ownedBoards': account.ownedBoards,
-			'modBoards': account.modBoards,
-		};
-		req.session.authenticated = true;
+		req.session.user = { 'username': account._id }
 
 		//successful login
 		return res.redirect(goto);
