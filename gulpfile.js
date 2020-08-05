@@ -164,6 +164,7 @@ async function cache() {
 		Redis.deletePattern('boards:listed'),
 		Redis.deletePattern('board:*'),
 		Redis.deletePattern('banners:*'),
+		Redis.deletePattern('users:*'),
 		Redis.deletePattern('blacklisted:*'),
 	]);
 	Redis.redisClient.quit();

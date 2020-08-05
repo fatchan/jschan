@@ -2,7 +2,8 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, db = Mongo.client.db('jschan').collection('accounts')
-	, bcrypt = require('bcrypt');
+	, bcrypt = require('bcrypt')
+	, cache = require(__dirname+'/../redis.js');
 
 module.exports = {
 
@@ -32,7 +33,7 @@ module.exports = {
 		// hash the password
 		const passwordHash = await bcrypt.hash(password, 12);
 		//add to db
-		return db.insertOne({
+		const res = await db.insertOne({
 			'_id': username,
 			original,
 			authLevel,
@@ -40,17 +41,21 @@ module.exports = {
 			'ownedBoards': [],
 			'modBoards': []
 		});
+		cache.del(`users:${username}`);
+		return res;
 	},
 
 	changePassword: async (username, newPassword) => {
 		const passwordHash = await bcrypt.hash(newPassword, 12);
-		return db.updateOne({
+		const res = await db.updateOne({
 			'_id': username
 		}, {
 			'$set': {
 				'passwordHash': passwordHash
 			}
 		});
+		cache.del(`users:${username}`);
+		return res;
 	},
 
 	find: (filter, skip=0, limit=0) => {
@@ -63,36 +68,42 @@ module.exports = {
 		}).skip(skip).limit(limit).toArray();
 	},
 
-	deleteMany: (usernames) => {
-		return db.deleteMany({
+	deleteMany: async (usernames) => {
+		const res = await db.deleteMany({
 			'_id': {
 				'$in': usernames
 			}
 		});
+		cache.del(usernames.map(n => `users:${n}`));
+		return res;
 	},
 
-	addOwnedBoard: (username, board) => {
-		return db.updateOne({
+	addOwnedBoard: async (username, board) => {
+		const res = await db.updateOne({
 			'_id': username
 		}, {
 			'$addToSet': {
 				'ownedBoards': board
 			}
 		});
+		cache.del(`users:${username}`);
+		return res;
 	},
 
-    removeOwnedBoard: (username, board) => {
-		return db.updateOne({
+    removeOwnedBoard: async (username, board) => {
+		const res = await db.updateOne({
 			'_id': username
 		}, {
 			'$pull': {
 				'ownedBoards': board
 			}
 		});
+		cache.del(`users:${username}`);
+		return res;
     },
 
-	addModBoard: (usernames, board) => {
-		return db.updateMany({
+	addModBoard: async (usernames, board) => {
+		const res = await db.updateMany({
 			'_id': {
 				'$in': usernames
 			}
@@ -101,10 +112,12 @@ module.exports = {
 				'modBoards': board
 			}
 		});
+		cache.del(`users:${username}`);
+		return res;
 	},
 
-	removeModBoard: (usernames, board) => {
-		return db.updateMany({
+	removeModBoard: async (usernames, board) => {
+		const res = await db.updateMany({
 			'_id': {
 				'$in': usernames
 			}
@@ -113,6 +126,8 @@ module.exports = {
 				'modBoards': board
 			}
 		});
+		cache.del(`users:${username}`);
+		return res;
 	},
 
 	getOwnedOrModBoards: (usernames) => {
@@ -140,9 +155,9 @@ module.exports = {
 		}).toArray();
 	},
 
-	setLevel: (usernames, level) => {
+	setLevel: async (usernames, level) => {
 		//increase users auth level
-		return db.updateMany({
+		const res = await db.updateMany({
 			'_id': {
 				'$in': usernames
 			}
@@ -151,6 +166,8 @@ module.exports = {
 				'authLevel': level
 			}
 		});
+		cache.del(`users:${username}`);
+		return res;
 	},
 
 	deleteAll: () => {
