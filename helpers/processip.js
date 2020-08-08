@@ -1,11 +1,11 @@
 'use strict';
 
-const { ipHashPermLevel } = require(__dirname+'/../configs/main.js')
+const { ipHeader, ipHashPermLevel } = require(__dirname+'/../configs/main.js')
 	, { isIP } = require('net')
 	, hashIp = require(__dirname+'/haship.js');
 
 module.exports = (req, res, next) => {
-	const ip = req.headers['x-real-ip'] || req.connection.remoteAddress; //need to consider forwarded-for, etc here and in nginx
+	const ip = req.headers[ipHeader] || req.connection.remoteAddress;
 	const ipVersion = isIP(ip);
 	if (ipVersion) {
 		const delimiter = ipVersion === 4 ? '.' : ':';

@@ -28,6 +28,7 @@
     "gulp-pug": "^4.0.1",
     "gulp-uglify-es": "^2.0.0",
     "highlight.js": "^10.1.2",
+    "i18n-iso-countries": "^6.0.0",
     "ioredis": "^4.14.1",
     "mongodb": "^3.6.0",
     "node-fetch": "^2.6.0",

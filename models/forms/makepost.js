@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path')
+	, { countryNamesMap } = require('../../helpers/countries.js')
 	, { createHash, randomBytes } = require('crypto')
 	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
@@ -22,7 +23,7 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { thumbSize, thumbExtension, postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
+	, { countryCodeHeader, thumbSize, thumbExtension, postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -50,11 +51,11 @@ module.exports = async (req, res, next) => {
 			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
 	if (flags === true
 		&& res.locals.permLevel >= 4
-		&& req.headers['x-country-code']
-		&& blockedCountries.includes(req.headers['x-country-code'])) {
+		&& req.headers[countryCodeHeader]
+		&& blockedCountries.includes(req.headers[countryCodeHeader])) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': `Your country code ${req.headers['x-country-code']} is not allowed to post on this board`,
+			'message': `Your country code ${req.headers[countryCodeHeader]} is not allowed to post on this board`,
 			'redirect': redirect
 		});
 	}
@@ -312,9 +313,10 @@ module.exports = async (req, res, next) => {
 	}
 	let country = null;
 	if (flags === true) {
+		const code = req.headers[countryCodeHeader];
 		country = {
-			'code': req.headers['x-country-code'],
-			'name': req.headers['x-country-name']
+			code,
+			'name': countryNamesMap[code]
 		}
 	}
 	let password = null;
