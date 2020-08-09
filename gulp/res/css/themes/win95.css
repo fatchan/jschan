@@ -79,7 +79,7 @@ bottom: -3px;
 .navbar a:first-of-type::before {
 content:'';
 position:absolute;
-background: url('/file/8bb8340d9edf7f5ee0003fd49df3ae1fbf3254025b724643c676681f9253b1fb.png');
+background: url('/file/win95home.png');
 background-size: contain;
 height: 1.75em;
 width: 1.75em;
