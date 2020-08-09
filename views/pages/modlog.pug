@@ -18,7 +18,7 @@ block content
 					th Date
 					th User
 					th Actions
-					th Post IDs
+					th Posts
 					th Log Message
 				for log in logs
 					tr
@@ -26,7 +26,13 @@ block content
 						td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hour12:false})}
 						td(class=(!log.showUser ? 'em' : '')) #{log.showUser ? log.user : 'Hidden User'}
 						td #{log.actions}
-						td #{log.postIds}
+						td
+							if log.showLinks
+								for postLink in log.postLinks
+									a(href=`/${board._id}/thread/${postLink.thread || postLink.postId}.html#${postLink.postId}`) &gt;&gt;#{postLink.postId}
+									|   
+							else
+								| #{log.postLinks.map(l => l.postId)}
 						td #{log.message || '-'}
 	hr(size=1)
 	.pages

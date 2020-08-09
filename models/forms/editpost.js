@@ -139,7 +139,11 @@ todo: handle some more situations
 	//add the edit to the modlog
 	await Modlogs.insertOne({
 		board: board._id,
-		postIds: [post.postId],
+		showLinks: true,
+		postLinks: [{
+			postId: post.postId,
+			thread: post.thread,
+		}],
 		actions: 'Edit',
 		date: new Date(),
 		showUser: req.body.hide_name ? false : true,

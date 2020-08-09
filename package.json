@@ -1,7 +1,7 @@
 {
   "name": "jschan",
   "version": "0.0.1",
-  "migrateVersion": "0.0.9",
+  "migrateVersion": "0.0.10",
   "description": "",
   "main": "server.js",
   "dependencies": {
@@ -38,6 +38,7 @@
     "redlock": "^4.1.0",
     "sanitize-html": "^1.27.2",
     "saslprep": "^1.0.3",
+    "semver": "^7.3.2",
     "socket.io": "^2.3.0",
     "socket.io-redis": "^5.2.0",
     "socks-proxy-agent": "^5.0.0"

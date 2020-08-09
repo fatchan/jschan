@@ -2,6 +2,7 @@
 
 const gulp = require('gulp')
 	, fs = require('fs-extra')
+	, semver = require('semver')
 	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
 	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
 	, configs = require(__dirname+'/configs/main.js')
@@ -251,10 +252,12 @@ async function migrate() {
 		'_id': 'version'
 	}).then(res => res ? res.version : '0.0.0'); // 0.0.0 for old versions
 
-	if (currentVersion < migrateVersion) {
+	if (semver.lt(currentVersion, migrateVersion)) {
 		console.log(`Current version: ${currentVersion}`);
 		const migrations = require(__dirname+'/migrations/');
-		const migrationVersions = Object.keys(migrations).sort().filter(v => v > currentVersion);
+		const migrationVersions = Object.keys(migrations)
+			.sort(semver.compare)
+			.filter(v => semver.gt(v, currentVersion));
 		console.log(`Migrations needed: ${currentVersion} -> ${migrationVersions.join(' -> ')}`);
 		for (let ver of migrationVersions) {
 			console.log(`=====\nStarting migration to version ${ver}`);

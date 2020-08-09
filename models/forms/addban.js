@@ -31,7 +31,8 @@ module.exports = async (req, res, redirect) => {
 
 	const modlogPromise = Modlogs.insertOne({
 		'board': req.params.board || null,
-		'postIds': [],
+		'showLinks': false,
+		'postLinks': [],
 		'actions': [(req.params.board ? 'Ban' : 'Global Ban')],
 		'date': actionDate,
 		'showUser': !req.body.hide_name || res.locals.permLevel >= 4 ? true : false,

@@ -16,7 +16,8 @@
             if (!modlog[post.board]) {
                 //per board actions, all actions combined to one event
                 modlog[post.board] = {
-                    postIds: [],
+					showLinks: 
+                    postLinks: [],
                     actions: modlogActions,
                     date: logDate,
                     showUser: !req.body.hide_name || logUser === 'Unregistered User' ? true : false,
@@ -29,7 +30,10 @@
                 };
             }
             //push each post id
-            modlog[post.board].postIds.push(post.postId);
+            modlog[post.board].postLinks.push({
+                postId: post.postId,
+                thread: req.body.move ? req.body.move_to_thread : post.thread,
+            })
         }
         const modlogDocuments = [];
         for (let i = 0; i < threadBoards.length; i++) {
