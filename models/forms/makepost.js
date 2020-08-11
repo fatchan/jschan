@@ -3,6 +3,7 @@
 const path = require('path')
 	, { countryNamesMap } = require('../../helpers/countries.js')
 	, { createHash, randomBytes } = require('crypto')
+	, randomBytesAsync = require('util').promisify(randomBytes)
 	, { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
@@ -305,7 +306,7 @@ module.exports = async (req, res, next) => {
 	let userId = null;
 	if (!salt) {
 		//thread salt for IDs
-		salt = (await randomBytes(128)).toString('base64');
+		salt = (await randomBytesAsync(128)).toString('base64');
 	}
 	if (ids === true) {
 		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.raw).digest('hex');
