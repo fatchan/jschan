@@ -2,7 +2,8 @@ const gm = require('gm').subClass({ imageMagick: true })
 	, { Captchas } = require(__dirname+'/../../db/')
 	, { captchaOptions } = require(__dirname+'/../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js')
-	, randomRange = (min, max) => Math.floor(Math.random() * (max-min + 1) + min)
+	, { promisify } = require('util')
+	, randomBytes = promisify(require('crypto').randomBytes)
 	, characterWidth = (char) => {
 		switch (char) {
 			case 'w':
@@ -26,22 +27,39 @@ const gm = require('gm').subClass({ imageMagick: true })
 	}
 	, width = 210
 	, height = 80
-	, distortion = captchaOptions.distortion;
+	, distortion = captchaOptions.distortion
+	, minVal = parseInt('1000000', 36)
+	, maxVal = parseInt('1zzzzzz', 36);
+
+const randomRange = async (min, max) => {
+	if (max <= min) return min;
+	const mod = max - min + 1;
+	const div = (((0xffffffff - (mod-1)) / mod) | 0) + 1;
+	let g
+	do {
+		g = (await randomBytes(4)).readUInt32LE();
+	} while (g > div * mod - 1);
+	return ((g / div) | 0) + min;
+};
 
 module.exports = async () => {
-	const text = Math.random().toString(36).substr(2,6);
+	// generate between 1000000 and 1zzzzzz and not 0 and zzzzzz, so toString
+	// will have enough characters
+	const textInt = await randomRange(minVal, maxVal);
+	const text = textInt.toString(36).substr(-6, 6);
 	const captchaId = await Captchas.insertOne(text).then(r => r.insertedId);
 	const distorts = [];
-	const numDistorts = randomRange(captchaOptions.numDistorts.min,captchaOptions.numDistorts.max);
+	const numDistorts = await randomRange(
+		captchaOptions.numDistorts.min,captchaOptions.numDistorts.max);
 	const div = width/numDistorts;
 
 	for (let i = 0; i < numDistorts; i++) {
 		const divStart = (div*i)
 			, divEnd = (div*(i+1));
-		const originx = randomRange(divStart, divEnd)
-			, originy = randomRange(0,height);
-		const destx = randomRange(Math.max(distortion,originx-distortion),Math.min(width-distortion,originx+distortion))
-			, desty = randomRange(Math.max(distortion,originy-distortion*2),Math.min(height-distortion,originy+distortion*2));
+		const originx = await randomRange(divStart, divEnd)
+			, originy = await randomRange(0,height);
+		const destx = await randomRange(Math.max(distortion,originx-distortion),Math.min(width-distortion,originx+distortion))
+			, desty = await randomRange(Math.max(distortion,originy-distortion*2),Math.min(height-distortion,originy+distortion*2));
 		distorts.push([
 			{x:originx,y:originy}, //origin
 			{x:destx,y:desty} //dest
@@ -49,6 +67,7 @@ module.exports = async () => {
 
 	}
 
+	const lineY = await randomRange(35,45);
 	return new Promise((resolve, reject) => {
 		const captcha = gm(width,height,'#ffffff')
 		.fill('#000000')
@@ -62,7 +81,6 @@ module.exports = async () => {
 			captcha.drawText(charX, 60, text[i]);
 			charX += characterWidth(text[i]);
 		}
-		const lineY = randomRange(35,45);
 		captcha
 		.drawRectangle(startX, lineY, charX, lineY+4)
 		.distort(distorts, 'Shepards')
