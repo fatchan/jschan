@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = async (req, res, next) => {
-	if (req.session && req.session.authenticated === true) {
+	if (res.locals.user) {
 		return next();
 	}
 	let goto;

@@ -5,14 +5,12 @@ process
 	.on('unhandledRejection', console.error);
 
 const express = require('express')
-	, session = require('express-session')
-	, redisStore = require('connect-redis')(session)
 	, path = require('path')
 	, app = express()
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
-	, { cacheTemplates, boardDefaults, sessionSecret, globalLimits,
-		enableUserBoardCreation, enableUserAccountCreation, secureCookies,
+	, { cacheTemplates, boardDefaults, globalLimits,
+		enableUserBoardCreation, enableUserAccountCreation,
 		debugLogs, ipHashPermLevel, meta, port, enableWebring } = require(__dirname+'/configs/main.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
@@ -20,7 +18,6 @@ const express = require('express')
 	, Socketio = require(__dirname+'/socketio.js')
 	, commit = require(__dirname+'/helpers/commit.js')
 	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
-	, { DAY } = require(__dirname+'/helpers/timeutils.js')
 	, CachePugTemplates = require('cache-pug-templates');
 
 (async () => {
@@ -46,24 +43,7 @@ const express = require('express')
 	app.use(cookieParser());
 
 	// session store
-	const sessionMiddleware = session({
-		secret: sessionSecret,
-		store: new redisStore({
-			client: redisClient,
-		}),
-		resave: false,
-		saveUninitialized: false,
-		rolling: true,
-		cookie: {
-			httpOnly: true,
-			secure: secureCookies && production,
-			sameSite: 'strict',
-			maxAge: DAY,
-		}
-	});
-
-	//add session middleware to express
-	app.use(sessionMiddleware);
+	const sessionMiddleware = require(__dirname+'/helpers/usesession.js');
 
 	// connect socketio
 	debugLogs && console.log('STARTING WEBSOCKET');

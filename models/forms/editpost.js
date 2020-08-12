@@ -122,7 +122,7 @@ todo: handle some more situations
 	}, {
 		'$set': {
 			edited: {
-				username: req.body.hide_name ? 'Hidden User' : req.session.user.username,
+				username: req.body.hide_name ? 'Hidden User' : req.session.user,
 				date: new Date(),
 			},
 			message,
@@ -144,7 +144,7 @@ todo: handle some more situations
 		date: new Date(),
 		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,
-		user: req.session.user.username,
+		user: req.session.user,
 		ip: {
 			single: res.locals.ip.single,
 			raw: res.locals.ip.raw,

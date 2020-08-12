@@ -12,7 +12,7 @@ module.exports = async (req, res, redirect) => {
 	const actionDate = new Date();
 
 	const banPromise = Bans.insertOne({
-		//note: raw ip and type single because of 
+		//note: raw ip and type single because of
         'type': 'single',
         'ip': {
             'single': isIP(req.body.ip) ? hashIp(req.body.ip) : req.body.ip,
@@ -21,7 +21,7 @@ module.exports = async (req, res, redirect) => {
         'reason': req.body.ban_reason || req.body.log_message || 'No reason specified',
         'board': req.params.board || null,
         'posts': null,
-        'issuer': req.session.user.username,
+        'issuer': req.session.user,
         'date': actionDate,
         'expireAt': new Date(actionDate.getTime() + (req.body.ban_duration || defaultBanDuration)),
         'allowAppeal': req.body.no_appeal ? false : true,
@@ -36,7 +36,7 @@ module.exports = async (req, res, redirect) => {
 		'date': actionDate,
 		'showUser': !req.body.hide_name || res.locals.permLevel >= 4 ? true : false,
 		'message': req.body.log_message || null,
-		'user': res.locals.permLevel < 4 ? req.session.user.username : 'Unregistered User',
+		'user': res.locals.permLevel < 4 ? req.session.user : 'Unregistered User',
 		'ip': {
 			'single': res.locals.ip.single,
 			'raw': res.locals.ip.raw
