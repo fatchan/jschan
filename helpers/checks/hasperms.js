@@ -2,8 +2,8 @@
 
 module.exports = (req, res) => {
 	if (req.session) {
-		const { authenticated, user } = req.session;
-		if (authenticated === true && user != null) {
+		const { user } = res.locals;
+		if (user != null) {
 			if (user.authLevel < 4) { //assigned levels
 				return user.authLevel;
 			}

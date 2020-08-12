@@ -277,7 +277,7 @@ module.exports = async (req, res, next) => {
 		const message = req.body.log_message || null;
 		let logUser;
 		if (res.locals.permLevel < 4) { //if staff
-			logUser = req.session.user.username;
+			logUser = req.session.user;
 		} else {
 			logUser = 'Unregistered User';
 		}

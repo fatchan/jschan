@@ -1,20 +1,21 @@
 'use strict';
 
-const { Accounts } = require(__dirname+'/../db/');
+const { Accounts } = require(__dirname+'/../db/')
+	, cache = require(__dirname+'/../redis.js');
 
 module.exports = async (req, res, next) => {
-	if (req.session && req.session.authenticated === true) {
-		// keeping session updated incase user updated on global manage
-		const account = await Accounts.findOne(req.session.user.username);
+	if (req.session && req.session.user && !res.locals.user) {
+		const account = await Accounts.findOne(req.session.user);
 		if (!account) {
 			req.session.destroy();
 		} else {
-			req.session.user = {
+			res.locals.user = {
 				'username': account._id,
 				'authLevel': account.authLevel,
 				'modBoards': account.modBoards,
 				'ownedBoards': account.ownedBoards,
 			};
+			cache.set(`users:${req.session.user}`, res.locals.user, 3600);
 		}
 	}
 	next();

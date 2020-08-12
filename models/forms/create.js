@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
 	const { name, description } = req.body
 		, uri = req.body.uri.toLowerCase()
 		, tags = req.body.tags.split('\n').filter(n => n)
-		, owner = req.session.user.username;
+		, owner = req.session.user;
 
 	if (restrictedURIs.has(uri)) {
 		return dynamicResponse(req, res, 400, 'message', {

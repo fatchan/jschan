@@ -8,8 +8,12 @@ module.exports = async (req, res, next) => {
 
 	const username = req.body.username.toLowerCase();
 	const password = req.body.password;
-	const goto = req.body.goto || '/account.html';
-	const failRedirect = `/login.html${goto ? '?goto='+goto : ''}`
+	let goto = req.body.goto;
+	// we don't want to redirect the user to random sites
+	if (goto == null || !/^\/[0-9a-zA-Z][0-9a-zA-Z._/-]*$/.test(goto)) {
+		goto = '/account.html';
+	}
+	const failRedirect = `/login.html${goto ? '?goto='+encodeURIComponent(goto) : ''}`
 
 	//fetch an account
 	const account = await Accounts.findOne(username);
@@ -30,13 +34,7 @@ module.exports = async (req, res, next) => {
 	if (passwordMatch === true) {
 
 		// add the account to the session and authenticate if password was correct
-		req.session.user = {
-			'username': account._id,
-			'authLevel': account.authLevel,
-			'ownedBoards': account.ownedBoards,
-			'modBoards': account.modBoards,
-		};
-		req.session.authenticated = true;
+		req.session.user = account._id;
 
 		//successful login
 		return res.redirect(goto);
