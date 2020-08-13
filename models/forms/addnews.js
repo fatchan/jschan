@@ -2,7 +2,6 @@
 
 const { News } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js');
 

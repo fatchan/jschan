@@ -1,7 +1,6 @@
 'use strict';
 
 const { Accounts, Boards, Stats, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
-	, cache = require(__dirname+'/../../redis.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { remove } = require('fs-extra');
