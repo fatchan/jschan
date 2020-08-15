@@ -19,7 +19,7 @@ module.exports = {
 	ipHashSecret: 'long random string',
 	postPasswordSecret: 'long random string',
 
-	//enable secure cookies, only use with https
+	//enable secure cookies, only use with https/not tor
 	secureCookies: true,
 
 	//check referrer to prevent some CSRF attack
@@ -31,7 +31,7 @@ module.exports = {
 	//header for country codes, for cloudflare, use 'Cf-Ipcountry'
 	countryCodeHeader: 'x-country-code',
 	//header for visitor IP, for cloudflare use 'CF-Connecting-IP'
-	ipHeader: 'X-Real-IP',
+	ipHeader: 'x-real-ip',
 
 	//data used in opengraph meta tags. used to generate link previews in e.g. discord, twitter, etc
 	meta: {
@@ -108,7 +108,7 @@ module.exports = {
 	thumbExtension: '.jpg',
 
 	//max thumb dimensions (square) in px. images smaller than this are not thumbnailed
-	thumbSize: 220,
+	thumbSize: 250,
 
 	/* extra mime types for files to be uploaded as attachments (no thumbnails) e.g. text files/archives
 		NOTE: appropriate extensions will need to be added to nginx configuration, and uncommend the provided

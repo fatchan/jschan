@@ -2,7 +2,7 @@
 	--attachment-img: url('/file/attachment.png');
 	--spoiler-img: url('/file/spoiler.png');
 	--audio-img: url('/file/audio.png');
-	--thumbnail-size: 220px;
+	--thumbnail-size: 250px;
 }
 
 body {

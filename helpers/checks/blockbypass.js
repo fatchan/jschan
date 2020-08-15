@@ -9,7 +9,7 @@ const { Bypass } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	if (!blockBypass.enabled && !res.locals.tor) { //for now, tor MUST solve a bypass
+	if (res.locals.preFetchedBypassId || !blockBypass.enabled && !res.locals.tor) { //for now, tor MUST solve a bypass
 		return next();
 	}
 

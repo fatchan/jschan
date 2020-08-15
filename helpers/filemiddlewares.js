@@ -46,8 +46,6 @@ module.exports = {
 	}),
 
 	handlePostFilesEarlyTor:  (req, res, next) => {
-console.log('handlePostFilesEarlyTor')
-console.log(res.locals.tor, postFiles)
 		if (res.locals.tor) {
 			return postFiles(req, res, next);
 		}
@@ -55,7 +53,6 @@ console.log(res.locals.tor, postFiles)
 	},
 
 	handlePostFiles: (req, res, next) => {
-console.log('handlePostFiles')
 		if (res.locals.tor) {
 			return next();
 		}

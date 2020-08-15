@@ -8,14 +8,14 @@ const { ipHeader, ipHashPermLevel } = require(__dirname+'/../configs/main.js')
 
 module.exports = (req, res, next) => {
 
-	//tor user ip uses bypassid, if they dont have one send to blockbypass
+	//tor user ip uses bypass id, if they dont have one send to blockbypass
 	if (res.locals.tor) {
-		const bypassId = req.signedCookies.bypassid;
+		const pseudoIp = res.locals.preFetchedBypassId || req.signedCookies.bypassid;
 		res.locals.ip = {
-			raw: bypassId,
-			single: bypassId,
-			qrange: bypassId,
-			hrange: bypassId,
+			raw: pseudoIp,
+			single: pseudoIp,
+			qrange: pseudoIp,
+			hrange: pseudoIp,
 		};
 		return next();
 	}

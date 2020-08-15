@@ -79,12 +79,12 @@ router.post('/global/editaccounts', useSession, sessionRefresh, csrf, calcPerms,
 router.post('/global/settings', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, globalSettingsController); //global settings
 
 //create board
-router.post('/create', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
+router.post('/create', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, hasPerms(4), createBoardController);
 //accounts
 router.post('/login', useSession, loginController);
 router.post('/logout', useSession, logout);
-router.post('/register', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, verifyCaptcha, calcPerms, registerController);
-router.post('/changepassword', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, verifyCaptcha, changePasswordController);
+router.post('/register', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, calcPerms, registerController);
+router.post('/changepassword', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController);
 
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptcha);

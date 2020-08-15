@@ -10,7 +10,6 @@ const { Bypass, Captchas } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-console.log('TOR PRE BYPASS')
 	//early byapss is only needed for tor users
 	if (!res.locals.tor) {
 		return next();
@@ -26,7 +25,8 @@ console.log('TOR PRE BYPASS')
 		});
 	}
 	const captchaId = req.cookies.captchaid;
-	if (input) {
+	let bypassId = req.signedCookies.bypassid;
+	if (input && !bypassId) {
 		// try to get the captcha from the DB
 		let captcha;
 		try {
@@ -52,6 +52,8 @@ console.log('TOR PRE BYPASS')
 		//they dont have a valid bypass, but just solved a captcha, so give them a new one
 		const newBypass = await Bypass.getBypass();
 		const newBypassId = newBypass.insertedId;
+		bypassId = newBypassId.toString();
+		res.locals.preFetchedBypassId = bypassId;
 		res.locals.blockBypass = newBypass.ops[0];
 		res.cookie('bypassid', newBypassId.toString(), {
 			'maxAge': blockBypass.expireAfterTime,
@@ -63,7 +65,6 @@ console.log('TOR PRE BYPASS')
 	}
 
 	//check if blockbypass exists and right length
-	const bypassId = req.signedCookies.bypassid;
 	if (!bypassId || bypassId.length !== 24) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
@@ -76,7 +77,6 @@ console.log('TOR PRE BYPASS')
 		});
 	}
 
-console.log('in tor pre bypass', bypassId)
 	return next();
 
 }
