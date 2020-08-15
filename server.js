@@ -9,7 +9,7 @@ const express = require('express')
 	, app = express()
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
-	, { cacheTemplates, boardDefaults, globalLimits,
+	, { cacheTemplates, boardDefaults, globalLimits, cookieSecret,
 		enableUserBoardCreation, enableUserAccountCreation,
 		debugLogs, ipHashPermLevel, meta, port, enableWebring } = require(__dirname+'/configs/main.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
@@ -40,7 +40,7 @@ const express = require('express')
 	// parse forms
 	app.use(express.urlencoded({extended: false}));
 	// parse cookies
-	app.use(cookieParser());
+	app.use(cookieParser(cookieSecret));
 
 	// session store
 	const sessionMiddleware = require(__dirname+'/helpers/usesession.js');
@@ -81,6 +81,7 @@ const express = require('express')
 		app.use(express.static(__dirname+'/static/html', { redirect: false }));
 		app.use(express.static(__dirname+'/static/json', { redirect: false }));
 	}
+
 	app.use('/forms', require(__dirname+'/controllers/forms.js'));
 	app.use('/', require(__dirname+'/controllers/pages.js'));
 

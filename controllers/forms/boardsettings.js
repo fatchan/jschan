@@ -136,8 +136,8 @@ module.exports = async (req, res, next) => {
 
 	if (res.locals.permLevel > 1) { //if not global staff or above
 		const ratelimitBoard = await Ratelimits.incrmentQuota(req.params.board, 'settings', rateLimitCost.boardSettings); //2 changes a minute
-		const ratelimitIp = await Ratelimits.incrmentQuota(res.locals.ip.single, 'settings', rateLimitCost.boardSettings);
-		if (ratelimitBoard > 100 || ratelimitIp > 100) {
+//		const ratelimitIp = await Ratelimits.incrmentQuota(res.locals.ip.single, 'settings', rateLimitCost.boardSettings);
+		if (ratelimitBoard > 100 /* || ratelimitIp > 100 */) {
 			return dynamicResponse(req, res, 429, 'message', {
 				'title': 'Ratelimited',
 				'error': 'You are changing settings too quickly, please wait a minute and try again',

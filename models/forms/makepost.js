@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path')
-	, { countryNamesMap } = require('../../helpers/countries.js')
 	, { createHash, randomBytes } = require('crypto')
 	, randomBytesAsync = require('util').promisify(randomBytes)
 	, { remove, pathExists } = require('fs-extra')
@@ -24,7 +23,7 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { countryCodeHeader, thumbSize, thumbExtension, postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
+	, { thumbSize, thumbExtension, postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -52,11 +51,11 @@ module.exports = async (req, res, next) => {
 			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
 	if (flags === true
 		&& res.locals.permLevel >= 4
-		&& req.headers[countryCodeHeader]
-		&& blockedCountries.includes(req.headers[countryCodeHeader])) {
+		&& res.locals.country
+		&& blockedCountries.includes(res.locals.country.code)) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': `Your country code ${req.headers[countryCodeHeader]} is not allowed to post on this board`,
+			'message': `Your country "${res.locals.country.name}" is not allowed to post on this board`,
 			'redirect': redirect
 		});
 	}
@@ -309,16 +308,16 @@ module.exports = async (req, res, next) => {
 		salt = (await randomBytesAsync(128)).toString('base64');
 	}
 	if (ids === true) {
-		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.raw).digest('hex');
-		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
+//		if (res.locals.country.code === 'TOR') {
+//			userId = '000000';
+//		} else {
+			const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.raw).digest('hex');
+			userId = fullUserIdHash.substring(fullUserIdHash.length-6);
+//		}
 	}
 	let country = null;
 	if (flags === true) {
-		const code = req.headers[countryCodeHeader];
-		country = {
-			code,
-			'name': countryNamesMap[code]
-		}
+		country = res.locals.country;
 	}
 	let password = null;
 	if (req.body.postpassword) {

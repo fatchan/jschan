@@ -11,6 +11,11 @@ module.exports = async (req, res, next) => {
 
 	const isBypass = req.path === '/blockbypass';
 
+	//already solved in pre stage for getting bypassID for "ip"
+	if (res.locals.tor && res.locals.solvedCaptcha) {
+		return next();
+	}
+
 	//skip captcha if disabled on board for posts only
 	if (res.locals.board
 		&& req.path === `/board/${res.locals.board._id}/post`) {
@@ -83,7 +88,7 @@ module.exports = async (req, res, next) => {
 	res.locals.solvedCaptcha = true;
 	res.clearCookie('captchaid');
 	await Promise.all([
-		Ratelimits.resetQuota(res.locals.ip.single, 'captcha'),
+		!res.locals.tor && Ratelimits.resetQuota(res.locals.ip.single, 'captcha'),
 		remove(`${uploadDirectory}/captcha/${captchaId}.jpg`)
 	]);
 

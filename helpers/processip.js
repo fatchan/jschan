@@ -2,9 +2,25 @@
 
 const { ipHeader, ipHashPermLevel } = require(__dirname+'/../configs/main.js')
 	, { parse } = require('ip6addr')
+	, deleteTempFiles = require(__dirname+'/files/deletetempfiles.js')
+	, dynamicResponse = require(__dirname+'/dynamic.js')
 	, hashIp = require(__dirname+'/haship.js');
 
 module.exports = (req, res, next) => {
+
+	//tor user ip uses bypassid, if they dont have one send to blockbypass
+	if (res.locals.tor) {
+		const bypassId = req.signedCookies.bypassid;
+		res.locals.ip = {
+			raw: bypassId,
+			single: bypassId,
+			qrange: bypassId,
+			hrange: bypassId,
+		};
+		return next();
+	}
+
+	//ip for normal user
 	const ip = req.headers[ipHeader] || req.connection.remoteAddress;
 	try {
 		const ipParsed = parse(ip);
@@ -31,4 +47,5 @@ module.exports = (req, res, next) => {
 			'message': 'Malformed IP' //should never get here
 		});
 	}
+
 }

@@ -13,9 +13,11 @@ module.exports = async (req, res, next) => {
 
 	let captchaId;
 	try {
-		const ratelimit = await Ratelimits.incrmentQuota(res.locals.ip.single, 'captcha', rateLimitCost.captcha);
-		if (ratelimit > 100) {
-			return res.status(429).redirect('/file/ratelimit.png');
+		if (!res.locals.tor) {
+			const ratelimit = await Ratelimits.incrmentQuota(res.locals.ip.single, 'captcha', rateLimitCost.captcha);
+			if (ratelimit > 100) {
+				return res.status(429).redirect('/file/ratelimit.png');
+			}
 		}
 		const { id, text } = await generateCaptcha();
 		captchaId = id;

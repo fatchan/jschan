@@ -9,17 +9,17 @@ const { Bypass } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	if (!blockBypass.enabled) {
+	if (!blockBypass.enabled && !res.locals.tor) { //for now, tor MUST solve a bypass
 		return next();
 	}
 
 	//check if blockbypass exists and right length
-	const bypassId = req.cookies.bypassid;
+	const bypassId = req.signedCookies.bypassid;
 	if (!res.locals.solvedCaptcha && (!bypassId || bypassId.length !== 24)) {
 		deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Please complete a block bypass to post',
+			'message': 'Please complete a block bypass to continue',
 			'frame': '/bypass_minimal.html',
 			'link': {
 				'href': '/bypass.html',
@@ -52,7 +52,8 @@ module.exports = async (req, res, next) => {
 		res.cookie('bypassid', newBypassId.toString(), {
 			'maxAge': blockBypass.expireAfterTime,
 			'secure': production && secureCookies,
-			'sameSite': 'strict'
+			'sameSite': 'strict',
+			'signed': true
 		});
 		return next();
 	}
