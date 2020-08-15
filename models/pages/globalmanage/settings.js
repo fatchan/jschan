@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
 			filterMode: 0,
 			filterBanDuration: 0,
 		}
-		cache.set('globalsettings', settings);
+		cache.setnx('globalsettings', settings);
 	}
 
 	res

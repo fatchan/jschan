@@ -11,8 +11,8 @@ module.exports = {
 
 	findOne: async (name) => {
 		let board = await cache.get(`board:${name}`);
-		if (board && board !== 'no_exist') {
-			return board;
+		if (board) {
+			return board === 'no_exist' ? null : board;
 		} else {
 			board = await db.findOne({ '_id': name });
 			if (board) {

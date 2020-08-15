@@ -4,7 +4,6 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.client.db('jschan').collection('posts')
-	, cache = require(__dirname+'/../redis.js')
 	, { quoteLimit, previewReplies, stickyPreviewReplies
 		, early404Replies, early404Fraction } = require(__dirname+'/../configs/main.js');
 

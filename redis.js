@@ -22,6 +22,11 @@ module.exports = {
 		}
 	},
 
+	//set a value on key if not exist
+	setnx: (key, value) => {
+		client.setnx(key, JSON.stringify(value));
+	},
+
 	//add items to a set
 	sadd: (key, value) => {
 		return client.sadd(key, value);
