@@ -22,11 +22,12 @@ class CaptchaController {
 		}
 	}
 
-	refreshCaptchas() {
+	refreshCaptchas(e) {
 		if (this.refreshing) {
 			return null;
 		}
 		this.refreshing = true;
+		e && e.target.classList.add('spin');
 		document.cookie = 'captchaid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 		const xhr = new XMLHttpRequest();
 		xhr.onload = () => {
@@ -37,9 +38,11 @@ class CaptchaController {
 				}
 			}
 			this.refreshing = false;
+			e && e.target.classList.remove('spin');
 		}
 		xhr.onerror = () => {
 			this.refreshing = false;
+			e && e.target.classList.remove('spin');
 		}
 		xhr.open('GET', '/captcha', true);
 		xhr.send(null);
@@ -60,7 +63,7 @@ console.log(field)
 		const captchaImg = document.createElement('img');
 		const refreshDiv = document.createElement('div');
 		refreshDiv.classList.add('captcharefresh', 'noselect');
-		refreshDiv.addEventListener('click', () => this.refreshCaptchas(), true);
+		refreshDiv.addEventListener('click', (e) => this.refreshCaptchas(e), true);
 		refreshDiv.textContent = '↻';
 		field.placeholder = 'loading';
 		captchaImg.src = '/captcha';
