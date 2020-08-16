@@ -516,6 +516,19 @@ td, th {
 	display: inline-block;
 }
 
+.spin {
+	animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+ 	100% {
+		transform: rotate(360deg);
+	}
+}
+
 @keyframes pulsate {
 	0% {
 		opacity: 1;
@@ -1029,20 +1042,13 @@ iframe.bypass {
 }
 
 .captcharefresh {
+	line-height: 18px;
 	position: absolute;
-	bottom: 0;
+	bottom: 5px;
 	left: 5px;
 	font-size: 18px;
 	cursor: pointer;
 	color: black;
-}
-
-.captcharefresh {
-	position: absolute;
-	bottom: 0;
-	left: 5px;
-	font-size: 18px;
-	cursor: pointer;
 }
 
 .label, .rlabel {
