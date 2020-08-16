@@ -10,12 +10,6 @@ block content
 	br
 	+globalmanagenav('bans')
 	hr(size=1)
-	h4.no-m-p Add Ban:
-	.form-wrapper.flexleft
-		form.form-post(action=`/forms/global/addban`, enctype='application/x-www-form-urlencoded', method='POST')
-			input(type='hidden' name='_csrf' value=csrf)
-			include ../includes/addbanform.pug
-	hr(size=1)
 	h4.no-m-p Global Bans & Appeals:
 	form(action=`/forms/global/editbans` method='POST' enctype='application/x-www-form-urlencoded')
 		include ../includes/managebanform.pug

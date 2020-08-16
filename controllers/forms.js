@@ -26,7 +26,7 @@ const express  = require('express')
 	, appealController = require(__dirname+'/forms/appeal.js')
 	, globalActionController = require(__dirname+'/forms/globalactions.js')
 	, actionController = require(__dirname+'/forms/actions.js')
-	, addBanController = require(__dirname+'/forms/addban.js')
+//	, addBanController = require(__dirname+'/forms/addban.js')
 	, addNewsController = require(__dirname+'/forms/addnews.js')
 	, deleteNewsController = require(__dirname+'/forms/deletenews.js')
 	, uploadBannersController = require(__dirname+'/forms/uploadbanners.js')
@@ -65,7 +65,7 @@ router.post('/board/:board/transfer', /*geoAndTor, torPreBypassCheck, processIp,
 router.post('/board/:board/settings', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
 router.post('/board/:board/addbanners', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, handleBannerFiles, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
 router.post('/board/:board/deletebanners', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
-router.post('/board/:board/addban', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), paramConverter, addBanController); //add ban manually without post
+//router.post('/board/:board/addban', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), paramConverter, addBanController); //add ban manually without post
 router.post('/board/:board/editbans', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
 router.post('/board/:board/deleteboard', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteBoardController); //delete board
 
