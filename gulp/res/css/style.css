@@ -811,6 +811,9 @@ input:invalid, textarea:invalid {
 }
 
 .postmenu {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
 	cursor: pointer;
 	width: 1.5em;
 	height: 1em;
@@ -820,6 +823,15 @@ input:invalid, textarea:invalid {
 	position: relative;
 	top: 2px;
 	font-size: 9pt;
+}
+
+.postmenu {
+    border-bottom: .5em solid transparent;
+    border-right: .5em solid transparent;
+    border-left: calc(2 * .5em * 0.866) solid var(--font-color);
+    border-top: .5em solid transparent;
+    vertical-align: top;
+    margin-left: 3px;
 }
 
 .catalog-tile.hidden {
@@ -1192,6 +1204,16 @@ row.wrap.sb .col {
 
 @media only screen and (max-width: 600px) {
 
+
+	.postmenu {
+		border-left: .5em solid transparent;
+		border-right: .5em solid transparent;
+		border-top: calc(2 * .5em * 0.866) solid var(--font-color);
+		border-bottom: .5em solid transparent;
+		vertical-align: top;
+		margin-left: 3px;
+		width: 1em;
+	}
 	#settings::after {
 		content: "\2699"!important;
 	}
