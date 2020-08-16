@@ -13,21 +13,21 @@ module.exports = async (req, res, redirect) => {
 
 	const banPromise = Bans.insertOne({
 		//note: raw ip and type single because of
-        'type': 'single',
-        'ip': {
-            'single': isIP(req.body.ip) ? hashIp(req.body.ip) : req.body.ip,
-            'raw':  req.body.ip,
-        },
-        'reason': req.body.ban_reason || req.body.log_message || 'No reason specified',
-        'board': req.params.board || null,
-        'posts': null,
-        'issuer': req.session.user,
-        'date': actionDate,
-        'expireAt': new Date(actionDate.getTime() + (req.body.ban_duration || defaultBanDuration)),
-        'allowAppeal': req.body.no_appeal ? false : true,
-        'appeal': null,
-        'seen': false,
-    });
+		'type': 'single',
+		'ip': {
+			'single': isIP(req.body.ip) ? hashIp(req.body.ip) : req.body.ip,
+			'raw':  req.body.ip,
+		},
+		'reason': req.body.ban_reason || req.body.log_message || 'No reason specified',
+		'board': req.params.board || null,
+		'posts': null,
+		'issuer': req.session.user,
+		'date': actionDate,
+		'expireAt': new Date(actionDate.getTime() + (req.body.ban_duration || defaultBanDuration)),
+		'allowAppeal': req.body.no_appeal ? false : true,
+		'appeal': null,
+		'seen': false,
+	});
 
 	const modlogPromise = Modlogs.insertOne({
 		'board': req.params.board || null,

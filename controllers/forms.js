@@ -71,7 +71,8 @@ router.post('/board/:board/deleteboard', /*geoAndTor, torPreBypassCheck, process
 
 //global management forms
 router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, editBansController); //remove bans
-router.post('/global/addban', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, addBanController); //add ban manually without post
+//commented out for now, because we cant add a manual ban based on a non existing hash suffix (or fetch the full hash from a non existing post), and the user wouldnt know if it the post didn't exist so its pointless anyway. 
+//router.post('/global/addban', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, addBanController); //add ban manually without post
 router.post('/global/deleteboard', useSession, sessionRefresh, csrf, paramConverter, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board
 router.post('/global/addnews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
 router.post('/global/deletenews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news

@@ -23,14 +23,14 @@ module.exports = async (req, res, next) => {
 		errors.push(`Modlog message must be ${globalLimits.fieldLength.log_message} characters or less`);
 	}
 
-    let redirect = req.headers.referer;
-    if (!redirect) {
-        if (!req.params.board) {
-            redirect = '/globalmanage/bans.html';
-        } else {
-            redirect = `/${req.params.board}/manage/bans.html`;
-        }
-    }
+	let redirect = req.headers.referer;
+	if (!redirect) {
+		if (!req.params.board) {
+			redirect = '/globalmanage/bans.html';
+		} else {
+			redirect = `/${req.params.board}/manage/bans.html`;
+		}
+	}
 
 	if (errors.length > 0) {
 		return dynamicResponse(req, res, 400, 'message', {

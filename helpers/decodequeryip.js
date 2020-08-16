@@ -7,7 +7,7 @@ const escapeRegExp = require(__dirname+'/escaperegexp.js')
 module.exports = (query, permLevel) => {
 	if (query.ip && typeof query.ip === 'string') {
 		const decoded = decodeURIComponent(query.ip);
-		if (permLevel <= ipHashPermLevel && isIP(decoded)) { //if perms to view raw ip, allow querying
+		if (permLevel <= ipHashPermLevel && (isIP(decoded) || decoded.match(/[a-z0-9]{24}/i))) { //if perms to view raw ip or bypass, allow querying
 			return decoded;
 		} else if (decoded.length === 10) { //otherwise, only allow last 10 char substring
 			return new RegExp(`${escapeRegExp(decoded)}$`);

@@ -11,12 +11,6 @@ block content
 	br
 	+managenav('bans')
 	hr(size=1)
-	h4.no-m-p Add Ban:
-	.form-wrapper.flexleft
-		form.form-post(action=`/forms/board/${board._id}/addban`, enctype='application/x-www-form-urlencoded', method='POST')
-			input(type='hidden' name='_csrf' value=csrf)
-			include ../includes/addbanform.pug
-	hr(size=1)
 	h4.no-m-p Bans & Appeals:
 	form(action=`/forms/board/${board._id}/editbans` method='POST' enctype='application/x-www-form-urlencoded')
 		include ../includes/managebanform.pug
