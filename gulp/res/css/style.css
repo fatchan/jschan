@@ -901,6 +901,9 @@ input:invalid, textarea:invalid {
 
 .noselect {
 	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 
 .post-info {
