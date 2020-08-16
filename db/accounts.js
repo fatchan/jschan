@@ -166,7 +166,7 @@ module.exports = {
 				'authLevel': level
 			}
 		});
-		cache.del(`users:${username}`);
+		cache.del(usernames.map(n => `users:${n}`));
 		return res;
 	},
 
