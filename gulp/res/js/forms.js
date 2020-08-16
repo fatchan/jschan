@@ -141,6 +141,7 @@ class formHandler {
 			e.preventDefault();
 		}
 		this.submit.disabled = true;
+		this.submit.value = 'Processing...';
 		if (this.files && this.files.length > 0) {
 			//show progress on file uploads
 			xhr.onloadstart = () => {
@@ -157,6 +158,7 @@ class formHandler {
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
 				this.submit.disabled = false;
+				this.submit.value = this.originalSubmitText;
 				let json;
 				if (xhr.responseText) {
 					try {
@@ -228,6 +230,7 @@ class formHandler {
 				'message': 'Something broke'
 			});
 			this.submit.disabled = false;
+			this.submit.value = this.originalSubmitText;
 		}
 		xhr.open(this.form.getAttribute('method'), this.form.getAttribute('action'), true);
 		if (!this.minimal) {
