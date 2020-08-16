@@ -6,6 +6,7 @@ const { Bypass, Captchas } = require(__dirname+'/../../db/')
 	, remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js')
 	, dynamicResponse = require(__dirname+'/../dynamic.js')
+	, deleteTempFiles = require(__dirname+'/../files/deletetempfiles.js')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {
@@ -18,6 +19,7 @@ module.exports = async (req, res, next) => {
 	//for captcha in existing form (NOTE: wont work for multipart forms yet)
 	const input = req.body.captcha;
 	if (input && input.length !== 6) {
+		deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Incorrect captcha answer',
@@ -33,6 +35,7 @@ module.exports = async (req, res, next) => {
 			const captchaMongoId = ObjectId(captchaId);
 			captcha = await Captchas.findOneAndDelete(captchaMongoId, input);
 		} catch (err) {
+			deleteTempFiles(req).catch(e => console.error);
 			return next(err);
 		}
 		if (captcha && captcha.value && captcha.value.text === input) {
@@ -40,6 +43,7 @@ module.exports = async (req, res, next) => {
 			res.clearCookie('captchaid');
 			remove(`${uploadDirectory}/captcha/${captchaId}.jpg`).catch(e => { console.error(e) });
 		} else {
+			deleteTempFiles(req).catch(e => console.error);
 			return dynamicResponse(req, res, 403, 'message', {
 				'title': 'Forbidden',
 				'message': 'Incorrect captcha answer',
@@ -66,6 +70,7 @@ module.exports = async (req, res, next) => {
 
 	//check if blockbypass exists and right length
 	if (!bypassId || bypassId.length !== 24) {
+		deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Please complete a block bypass to continue',
