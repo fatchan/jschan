@@ -6,6 +6,7 @@ const express  = require('express')
 	, Posts = require(__dirname+'/../db/posts.js')
 	//middlewares
 	, processIp = require(__dirname+'/../helpers/processip.js')
+	, geoAndTor = require(__dirname+'/../helpers/geoip.js')
 	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, isLoggedIn = require(__dirname+'/../helpers/checks/isloggedin.js')
@@ -65,7 +66,7 @@ router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
 
 //captcha
-router.get('/captcha', processIp, captcha); //get captcha image and cookie
+router.get('/captcha', geoAndTor, processIp, captcha); //get captcha image and cookie
 router.get('/captcha.html', captchaPage); //iframed for noscript users
 router.get('/bypass.html', blockBypass); //block bypass page
 router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
