@@ -139,7 +139,7 @@ class CssToggle {
 
 //define the css
 const hidePostStubsCss = `.post-container.hidden, .catalog-tile.hidden { visibility: hidden;margin-top: -1.5em;height: 0; }`;
-const hideImagesCss = `.file-thumb { visibility: hidden !important; }`
+const hideImagesCss = `.file-thumb, .catalog-thumb { visibility: hidden !important; }`;
 const hideRecursiveCss = `.op.hidden ~ .anchor, .op.hidden ~ .post-container { display: none; }`;
 const heightlimitCss = `img, video { max-height: unset; }`;
 const crispCss = `img { image-rendering: crisp-edges; }`;
