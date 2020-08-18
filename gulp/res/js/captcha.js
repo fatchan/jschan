@@ -49,16 +49,17 @@ class CaptchaController {
 	}
 
 	addMissingCaptcha() {
+/* not implemented in recaptcha branch
 		const postSubmitButton = document.getElementById('submitpost');
 		const captchaFormSectionHtml = captchaformsection();
 		postSubmitButton.insertAdjacentHTML('beforebegin', captchaFormSectionHtml);
 		const captchaFormSection = postSubmitButton.previousSibling;
 		const captchaField = captchaFormSection.querySelector('.captchafield');
 		this.loadCaptcha(captchaField);
+*/
 	}
 
 	loadCaptcha(field) {
-console.log(field)
 		const captchaDiv = field.previousSibling;
 		const captchaImg = document.createElement('img');
 		const refreshDiv = document.createElement('div');

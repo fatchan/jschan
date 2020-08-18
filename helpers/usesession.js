@@ -2,13 +2,13 @@
 
 const session = require('express-session')
 	, redisStore = require('connect-redis')(session)
-	, { sessionSecret, secureCookies } = require(__dirname+'/../configs/main.js')
+	, { cookieSecret, secureCookies } = require(__dirname+'/../configs/main.js')
 	, { redisClient } = require(__dirname+'/../redis.js')
 	, production = process.env.NODE_ENV === 'production'
 	, { DAY } = require(__dirname+'/timeutils.js');
 
 module.exports = session({
-	secret: sessionSecret,
+	secret: cookieSecret,
 	store: new redisStore({
 		client: redisClient,
 	}),

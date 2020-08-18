@@ -4,6 +4,7 @@ const express  = require('express')
 	, router = express.Router()
 	, Boards = require(__dirname+'/../db/boards.js')
 	, Posts = require(__dirname+'/../db/posts.js')
+	, { captchaOptions } = require(__dirname+'/../configs/main.js')
 	//middlewares
 	, processIp = require(__dirname+'/../helpers/processip.js')
 	, calcPerms = require(__dirname+'/../helpers/checks/calcpermsmiddleware.js')
@@ -65,7 +66,9 @@ router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
 
 //captcha
-router.get('/captcha', processIp, captcha); //get captcha image and cookie
+if (!captchaOptions.google.enabled) {
+	router.get('/captcha', processIp, captcha); //get captcha image and cookie
+}
 router.get('/captcha.html', captchaPage); //iframed for noscript users
 router.get('/bypass.html', blockBypass); //block bypass page
 router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page

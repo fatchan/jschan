@@ -9,7 +9,7 @@ const express = require('express')
 	, app = express()
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
-	, { cacheTemplates, boardDefaults, globalLimits,
+	, { cacheTemplates, boardDefaults, globalLimits, captchaOptions,
 		enableUserBoardCreation, enableUserAccountCreation,
 		debugLogs, ipHashPermLevel, meta, port, enableWebring } = require(__dirname+'/configs/main.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
@@ -67,6 +67,8 @@ const express = require('express')
 	//default settings
 	app.locals.enableUserAccountCreation = enableUserAccountCreation;
 	app.locals.enableUserBoardCreation = enableUserBoardCreation;
+	app.locals.googleRecaptchaEnabled = captchaOptions.google.enabled;
+	app.locals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
 	app.locals.defaultTheme = boardDefaults.theme;
 	app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 	app.locals.globalLimits = globalLimits;

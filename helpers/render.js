@@ -2,7 +2,7 @@
 
 const { enableUserBoardCreation, enableUserAccountCreation,
 	lockWait, globalLimits, boardDefaults, cacheTemplates,
-	meta, enableWebring } = require(__dirname+'/../configs/main.js')
+	meta, enableWebring, captchaOptions } = require(__dirname+'/../configs/main.js')
 	, { outputFile } = require('fs-extra')
 	, formatSize = require(__dirname+'/files/formatsize.js')
 	, pug = require('pug')
@@ -25,6 +25,8 @@ module.exports = async (htmlName, templateName, options, json=null) => {
 		enableUserBoardCreation,
 		globalLimits,
 		enableWebring,
+		googleRecaptchaEnabled: captchaOptions.google.enabled,
+		googleRecaptchaSiteKey: captchaOptions.google.siteKey,
 	});
 	const lock = await redlock.lock(`locks:${htmlName}`, lockWait);
 	const htmlPromise = outputFile(`${uploadDirectory}/html/${htmlName}`, html);

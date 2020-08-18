@@ -41,6 +41,11 @@ module.exports = {
 
 	//settings for captchas, if you make them too weak they could probably be solved with OCR.
 	captchaOptions: {
+		google: {
+			enabled: true, //OVERRIDES OTHER CAPTCHA OPTIONS. only used in google-recaptcha branch
+			siteKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+			secretKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
+		},
 		distortion: 13,
 		numDistorts: {
 			min: 3,
