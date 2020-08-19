@@ -9,8 +9,6 @@ const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	const isBypass = req.path === '/blockbypass';
-
 	//already solved in pre stage for getting bypassID for "ip"
 	if (res.locals.tor && res.locals.solvedCaptcha) {
 		return next();
@@ -29,12 +27,6 @@ module.exports = async (req, res, next) => {
 	const input = req.body.captcha;
 	if (!input || input.length !== 6) {
 		deleteTempFiles(req).catch(e => console.error);
-		if (isBypass) {
-			return res.status(403).render('bypass', {
-				'minimal': req.body.minimal,
-				'message': 'Incorrect captcha answer',
-			});
-		}
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Incorrect captcha answer',
@@ -46,12 +38,6 @@ module.exports = async (req, res, next) => {
 	const captchaId = req.cookies.captchaid;
 	if (!captchaId || captchaId.length !== 24) {
 		deleteTempFiles(req).catch(e => console.error);
-		if (isBypass) {
-			return res.status(403).render('bypass', {
-				'minimal': req.body.minimal,
-				'message': 'Captcha expired',
-			});
-		}
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Captcha expired',
@@ -71,12 +57,6 @@ module.exports = async (req, res, next) => {
 	//check that it exists and matches captcha in DB
 	if (!captcha || !captcha.value || captcha.value.text !== input) {
 		deleteTempFiles(req).catch(e => console.error);
-		if (isBypass) {
-			return res.status(403).render('bypass', {
-				'minimal': req.body.minimal,
-				'message': 'Incorrect captcha answer',
-			});
-		}
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Incorrect captcha answer',
