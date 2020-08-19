@@ -74,7 +74,7 @@ for (let menu of document.getElementsByClassName('postmenu')) {
 }
 
 const getHiddenElems = () => {
-	const posts = [];
+	let posts = [];
 	for (let elem of hidden) {
 		if (elem.includes('-')) {
 			const [board, postId] = elem.split('-');
@@ -145,6 +145,7 @@ const heightlimitCss = `img, video { max-height: unset; }`;
 const crispCss = `img { image-rendering: crisp-edges; }`;
 const nonColorIdsCss = `.user-id { background: transparent none repeat scroll 0% 0% !important; border-color: transparent; text-shadow: none; color: var(--font-color); }`;
 const alwaysShowSpoilersCss = `.spoiler { color: var(--font-color) !important; background: transparent none repeat scroll 0% 0%; outline: 1px solid black; cursor: auto; }`;
+const smoothScrollingCss = `html { scroll-behavior: smooth; }`;
 //make classes with css
 new CssToggle('hiderecursive-setting', 'hiderecursive', true, hideRecursiveCss);
 new CssToggle('heightlimit-setting', 'heightlimit', false, heightlimitCss);
@@ -153,6 +154,7 @@ new CssToggle('hideimages-setting', 'hideimages', false, hideImagesCss);
 new CssToggle('noncolorids-setting', 'noncolorids', false, nonColorIdsCss);
 new CssToggle('alwaysshowspoilers-setting', 'alwaysshowspoilers', false, alwaysShowSpoilersCss);
 new CssToggle('hidepoststubs-setting', 'hidepoststubs', false, hidePostStubsCss);
+new CssToggle('smoothscrolling-setting', 'smoothscrolling', false, smoothScrollingCss);
 
 window.addEventListener('addPost', function(e) {
 	const post = e.detail.post;
