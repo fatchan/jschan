@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = (req, res, code, page, data) => {
+	res.status(code);
 	if (req.body.minimal) {
 		data.minimal = true;
 	}
-	res.status(code);
-	if (req.headers['x-using-xhr'] != null && !req.body.minimal) {
+	if (req.headers['x-using-xhr'] != null) {
 		//if sending header with js, and not a bypass_minimal page, show modal
 		return res.json(data);
 	} else {

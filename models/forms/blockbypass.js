@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 	})
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'minimal': req.body.minimal, //todo: make use x- header for ajax once implm.
+		'minimal': req.body.minimal,
 		'title': 'Success',
 		'message': 'Completed block bypass, you may go back and make your post.',
 	});

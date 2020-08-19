@@ -1,7 +1,8 @@
 'use strict';
 
-const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
+const { Ratelimits } = require(__dirname+'/../../db/')
 	, { ObjectId } = require(__dirname+'/../../db/db.js')
+	, checkCaptcha = require(__dirname+'/../checks/captcha.js')
 	, remove = require('fs-extra').remove
 	, dynamicResponse = require(__dirname+'/../dynamic.js')
 	, deleteTempFiles = require(__dirname+'/../files/deletetempfiles.js')
@@ -23,43 +24,17 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	//check if captcha field in form is valid
-	const input = req.body.captcha;
-	if (!input || input.length !== 6) {
-		deleteTempFiles(req).catch(e => console.error);
-		return dynamicResponse(req, res, 403, 'message', {
-			'title': 'Forbidden',
-			'message': 'Incorrect captcha answer',
-			'redirect': req.headers.referer,
-		});
-	}
-
-	//make sure they have captcha cookie and its 24 chars
-	const captchaId = req.cookies.captchaid;
-	if (!captchaId || captchaId.length !== 24) {
-		deleteTempFiles(req).catch(e => console.error);
-		return dynamicResponse(req, res, 403, 'message', {
-			'title': 'Forbidden',
-			'message': 'Captcha expired',
-			'redirect': req.headers.referer,
-		});
-	}
-
-	// try to get the captcha from the DB
-	let captcha;
 	try {
-		const captchaMongoId = ObjectId(captchaId);
-		captcha = await Captchas.findOneAndDelete(captchaMongoId, input);
+		await checkCaptcha(req.body.captcha, req.cookies.captchaid);
 	} catch (err) {
-		return next(err);
-	}
-
-	//check that it exists and matches captcha in DB
-	if (!captcha || !captcha.value || captcha.value.text !== input) {
 		deleteTempFiles(req).catch(e => console.error);
-		return dynamicResponse(req, res, 403, 'message', {
+		if (err instanceof Error) {
+			return next(err);
+		}
+		const page = (req.body.minimal || req.path === '/blockbypass' ? 'bypass' : 'message');
+		return dynamicResponse(req, res, 403, page, {
 			'title': 'Forbidden',
-			'message': 'Incorrect captcha answer',
+			'message': err,
 			'redirect': req.headers.referer,
 		});
 	}
@@ -69,7 +44,7 @@ module.exports = async (req, res, next) => {
 	res.clearCookie('captchaid');
 	await Promise.all([
 		!res.locals.tor && Ratelimits.resetQuota(res.locals.ip.single, 'captcha'),
-		remove(`${uploadDirectory}/captcha/${captchaId}.jpg`)
+		remove(`${uploadDirectory}/captcha/${req.cookies.captchaid}.jpg`)
 	]);
 
 	return next();
