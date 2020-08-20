@@ -3,6 +3,7 @@
 const { Ratelimits } = require(__dirname+'/../../db/')
 	, { ObjectId } = require(__dirname+'/../../db/db.js')
 	, checkCaptcha = require(__dirname+'/../checks/captcha.js')
+	, { captchaOptions } = require(__dirname+'/../../configs/main.js')
 	, remove = require('fs-extra').remove
 	, dynamicResponse = require(__dirname+'/../dynamic.js')
 	, deleteTempFiles = require(__dirname+'/../files/deletetempfiles.js')
@@ -24,8 +25,10 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
+	const captchaInput = req.body.captcha || req.body['g-recaptcha-response'];
+	const captchaId = req.cookies.captchaid;
 	try {
-		await checkCaptcha(req.body.captcha, req.cookies.captchaid);
+		await checkCaptcha(captchaInput, captchaId);
 	} catch (err) {
 		deleteTempFiles(req).catch(e => console.error);
 		if (err instanceof Error) {
@@ -39,14 +42,19 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-	//it was correct, so delete the file, the cookie and reset their quota
+	//it was correct, so mark as solved for other middleware
 	res.locals.solvedCaptcha = true;
-	res.clearCookie('captchaid');
-	await Promise.all([
-		!res.locals.tor && Ratelimits.resetQuota(res.locals.ip.single, 'captcha'),
-		remove(`${uploadDirectory}/captcha/${req.cookies.captchaid}.jpg`)
-	]);
 
+	if (!captchaOptions.google.enabled) {
+		//for builtin captcha, clear captchaid cookie, delete file and reset quota
+		res.clearCookie('captchaid');
+		await Promise.all([
+			!res.locals.tor && !captchaOptions.google.enabled && Ratelimits.resetQuota(res.locals.ip.single, 'captcha'),
+			remove(`${uploadDirectory}/captcha/${captchaId}.jpg`)
+		]);
+	}
+
+	//completed captcha successfully, continue
 	return next();
 
 }

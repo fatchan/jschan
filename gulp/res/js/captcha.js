@@ -48,7 +48,7 @@ class CaptchaController {
 		xhr.send(null);
 	}
 
-	addMissingCaptcha() { // this will potentially be borked for .onion
+	addMissingCaptcha() {
 		const postSubmitButton = document.getElementById('submitpost');
 		const captchaFormSectionHtml = captchaformsection();
 		postSubmitButton.insertAdjacentHTML('beforebegin', captchaFormSectionHtml);

@@ -63,6 +63,11 @@ function formToJSON(form) {
 	return JSON.stringify(data);
 }
 
+let recaptchaResponse = null;
+function recaptchaCallback(response) {
+	recaptchaResponse = response;
+}
+
 class formHandler {
 
 	constructor(form) {
@@ -70,6 +75,7 @@ class formHandler {
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message');
 		this.captchaField = form.querySelector('.captchafield');
+		
 		this.submit = form.querySelector('input[type="submit"]');
 		if (this.submit) {
 			this.originalSubmitText = this.submit.value;
@@ -123,6 +129,9 @@ class formHandler {
 		if (this.enctype === 'multipart/form-data') {
 			this.fileInput && (this.fileInput.disabled = true); 
 			postData = new FormData(this.form);
+			if (recaptchaResponse) {
+				postData.append('captcha', recaptchaResponse);
+			}
 			this.fileInput && (this.fileInput.disabled = false);
 			if (this.files && this.files.length > 0) {
 				//add files to file input element
@@ -132,6 +141,9 @@ class formHandler {
 			}
 		} else {
 			postData = new URLSearchParams([...(new FormData(this.form))]);
+			if (recaptchaResponse) {
+				postData.set('captcha', recaptchaResponse);
+			}
 		}
 		if (this.banned
 			|| this.minimal
@@ -157,6 +169,9 @@ class formHandler {
 		}
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
+				if (recaptchaResponse && grecaptcha) {
+					grecaptcha.reset();
+				}
 				this.submit.disabled = false;
 				this.submit.value = this.originalSubmitText;
 				let json;

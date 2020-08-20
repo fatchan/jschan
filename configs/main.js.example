@@ -1,4 +1,4 @@
-module.exports = {
+nano module.exports = {
 
 	//mongodb connection string
 	dbURL: 'mongodb://username:password@localhost:27017',
@@ -41,6 +41,11 @@ module.exports = {
 
 	//settings for captchas, if you make them too weak they could probably be solved with OCR.
 	captchaOptions: {
+		google: {
+			enabled: false, //Overrides builtin captcha
+			siteKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+			secretKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
+		},
 		distortion: 13,
 		numDistorts: {
 			min: 3,
