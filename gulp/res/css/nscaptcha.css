@@ -1,6 +1,7 @@
 img {
-	width: 200px;
-	height: 80px;
+	width: 150px;
+	height: 150px;
+	image-rendering: crisp-edges;
 	margin: 0 auto;
 }
 input {

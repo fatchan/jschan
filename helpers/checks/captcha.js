@@ -10,7 +10,7 @@ const { Captchas } = require(__dirname+'/../../db/')
 module.exports = async (captchaInput, captchaId) => {
 
 	//check if captcha field in form is valid
-	if (!captchaInput || (captchaInput.length !== 6 && !captchaOptions.google.enabled)) {
+	if (!captchaInput /* || (captchaInput.length !== 6 && !captchaOptions.google.enabled)*/) {
 		throw 'Incorrect captcha answer';
 	}
 
@@ -22,10 +22,15 @@ module.exports = async (captchaInput, captchaId) => {
 	if (!captchaOptions.google.enabled) { //using builtin captcha
 		// try to get the captcha from the DB
 		const captchaMongoId = ObjectId(captchaId);
-		let captcha = await Captchas.findOneAndDelete(captchaMongoId, captchaInput);
+		captchaInput = Array.isArray(captchaInput) ? captchaInput : [captchaInput];
+		const normalisedAnswer = new Array(captchaOptions.gridSize**2).fill(false);
+		captchaInput.forEach(num => {
+			normalisedAnswer[+num] = true;
+		});
+		let captcha = await Captchas.findOneAndDelete(captchaMongoId, normalisedAnswer);
 		//check that it exists and matches captcha in DB
 		if (!captcha || !captcha.value
-			|| !timingSafeEqual(Buffer.from(captcha.value.text), Buffer.from(captchaInput))) {
+			|| !timingSafeEqual(Buffer.from(captcha.value.answer.join(',')), Buffer.from(normalisedAnswer.join(',')))) {
 			throw 'Incorrect captcha answer';
 		}
  	} else { //using google recaptcha

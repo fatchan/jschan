@@ -2,6 +2,9 @@ if googleRecaptchaEnabled
 	div(class="g-recaptcha captchafield" data-sitekey=`${googleRecaptchaSiteKey}` data-theme="dark" data-size="compact" data-callback="recaptchaCallback")
 else
 	noscript.no-m-p
-		iframe.captcha(src='/captcha.html' 'width=210' height='80' scrolling='no' loading='lazy')
+		iframe.captcha(src='/captcha.html' width='150' height='150' scrolling='no' loading='lazy')
 	.jsonly.captcha(style='display:none;')
-	input.captchafield(type='text' name='captcha' autocomplete='off' placeholder='Captcha text' pattern=".{6}" required title='6 characters')
+	div.captchafield(style='grid-template-columns: 1fr 1fr 1fr 1fr;display: grid;')
+		- for(let i = 0; i < 16; i++) {
+		input(type='checkbox' name='captcha' value=i)
+		- }

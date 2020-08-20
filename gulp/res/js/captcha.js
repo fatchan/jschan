@@ -14,11 +14,11 @@ class CaptchaController {
 	}
 
 	setupCaptchaField(captcha) {
-		if (captcha.form.dataset.captchaPreload == 'true') {
+		if (captcha.form && captcha.form.dataset.captchaPreload == 'true') {
 			this.loadCaptcha(captcha);
 		} else {
 			captcha.placeholder = 'focus to load captcha';
-			captcha.addEventListener('focus', () => this.loadCaptcha(captcha), { once: true });
+			captcha.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
 		}
 	}
 
@@ -28,6 +28,9 @@ class CaptchaController {
 		}
 		this.refreshing = true;
 		e && e.target.classList.add('spin');
+		for (let captchacheck of document.querySelectorAll('input[name="captcha"]')) {
+			captchacheck.checked=false;
+		}
 		document.cookie = 'captchaid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 		const xhr = new XMLHttpRequest();
 		xhr.onload = () => {

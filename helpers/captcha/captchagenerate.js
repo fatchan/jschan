@@ -4,92 +4,78 @@ const gm = require('gm').subClass({ imageMagick: true })
 	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js')
 	, { promisify } = require('util')
 	, randomBytes = promisify(require('crypto').randomBytes)
-	, characterWidth = (char) => {
-		switch (char) {
-			case 'w':
-			case 'm':
-				return 45;
-			case 'i':
-			case 'l':
-				return 12;
-			case 'f':
-			case 'j':
-			case 't':
-				return 15;
-			default:
-				return 30;
-		}
+	, randomRange = async (min, max) => {
+		if (max <= min) return min;
+		const mod = max - min + 1;
+		const div = (((0xffffffff - (mod-1)) / mod) | 0) + 1;
+		let g
+		do {
+			g = (await randomBytes(4)).readUInt32LE();
+		} while (g > div * mod - 1);
+		return ((g / div) | 0) + min;
 	}
-	, totalWidth = (text) => {
-		return text.split('').reduce((acc, char) => {
-			return characterWidth(char) + acc + 1;
-		}, 0);
-	}
-	, width = 210
-	, height = 80
-	, distortion = captchaOptions.distortion
-	, minVal = parseInt('1000000', 36)
-	, maxVal = parseInt('1zzzzzz', 36);
-
-const randomRange = async (min, max) => {
-	if (max <= min) return min;
-	const mod = max - min + 1;
-	const div = (((0xffffffff - (mod-1)) / mod) | 0) + 1;
-	let g
-	do {
-		g = (await randomBytes(4)).readUInt32LE();
-	} while (g > div * mod - 1);
-	return ((g / div) | 0) + min;
-};
+	, crop = 30
+	, width = captchaOptions.imageSize+crop
+	, height = captchaOptions.imageSize+crop
+	, gridSize = captchaOptions.gridSize
+	, zeros = ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧']
+	, ones = ['●','■','♞','♦','▼','▲','♜','✦','♚','♞','♛','♝','♟','♣']
 
 module.exports = async () => {
-	// generate between 1000000 and 1zzzzzz and not 0 and zzzzzz, so toString
-	// will have enough characters
-	const textInt = await randomRange(minVal, maxVal);
-	const text = textInt.toString(36).substr(-6, 6);
-	const captchaId = await Captchas.insertOne(text).then(r => r.insertedId);
-	const distorts = [];
-	const numDistorts = await randomRange(
-		captchaOptions.numDistorts.min,captchaOptions.numDistorts.max);
-	const div = width/numDistorts;
+	//number of inputs in grid
+	const numInputs = gridSize**2;
+	//random buffer to get true/false for grid from
+	const randBuffer = await randomBytes(numInputs);
+	//array of true/false, for each grid input
+	const boolArray = Array.from(randBuffer).map(x => x < 80);
 
+	const captchaId = await Captchas.insertOne(boolArray).then(r => r.insertedId);
+
+	const distorts = [];
+	const numDistorts = await randomRange(captchaOptions.numDistorts.min,captchaOptions.numDistorts.max);
+	const div = width/numDistorts;
 	for (let i = 0; i < numDistorts; i++) {
 		const divStart = (div*i)
 			, divEnd = (div*(i+1));
 		const originx = await randomRange(divStart, divEnd)
 			, originy = await randomRange(0,height);
-		const destx = await randomRange(Math.max(distortion,originx-distortion),Math.min(width-distortion,originx+distortion))
-			, desty = await randomRange(Math.max(distortion,originy-distortion*2),Math.min(height-distortion,originy+distortion*2));
+		const destx = await randomRange(Math.max(captchaOptions.distortion,originx-captchaOptions.distortion),Math.min(width-captchaOptions.distortion,originx+captchaOptions.distortion))
+			, desty = await randomRange(Math.max(captchaOptions.distortion,originy-captchaOptions.distortion*2),Math.min(height-captchaOptions.distortion,originy+captchaOptions.distortion*2));
 		distorts.push([
-			{x:originx,y:originy}, //origin
-			{x:destx,y:desty} //dest
+			{x:originx,y:originy},
+			{x:destx,y:desty}
 		]);
-
 	}
 
-	const lineY = await randomRange(35,45);
-	return new Promise((resolve, reject) => {
+	return new Promise(async(resolve, reject) => {
 		const captcha = gm(width,height,'#ffffff')
 		.fill('#000000')
-		.fontSize(65);
-		if (captchaOptions.fontPaths && captchaOptions.fontPaths.length > 0) {
-			captcha.font(captchaOptions.fontPaths[Math.floor(Math.random() * captchaOptions.fontPaths.length)]);
-		}
-		const startX = (width-totalWidth(text))/2;
-		let charX = startX;
-		for (let i = 0; i < 6; i++) {
-			captcha.drawText(charX, 60, text[i]);
-			charX += characterWidth(text[i]);
+		.font(__dirname+'/font.ttf');
+
+		const spaceSize = (width-crop)/gridSize;
+		for(let i = 0, j = 0; i < boolArray.length; i++) {
+			if (i % gridSize === 0) { j++ }
+			const cxOffset = await randomRange(0, spaceSize*0.75);
+			const cyOffset = await randomRange(spaceSize/2, spaceSize);
+			const charIndex = await randomRange(0, ones.length-1);
+			const character = (boolArray[i] ? ones : zeros)[charIndex];
+			captcha.fontSize((await randomRange(20,30)))
+			captcha.drawText(
+				(spaceSize*(i%gridSize))+cxOffset+(crop/2),
+				(spaceSize*(j-1))+cyOffset+(crop/2),
+				character
+			);
 		}
 		captcha
-		.drawRectangle(startX, lineY, charX, lineY+4)
 		.distort(distorts, 'Shepards')
-		.paint(captchaOptions.paintAmount)
+		.edge(25)
+//		.quality(10)
+		.crop(captchaOptions.imageSize,captchaOptions.imageSize,crop/2,crop/2)
 		.write(`${uploadDirectory}/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);
 			}
-			return resolve({ id: captchaId, text });
+			return resolve({ id: captchaId, boolArray });
 		});
 	});
 

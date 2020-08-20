@@ -11,7 +11,11 @@ if (googleRecaptchaEnabled) {
 pug_html = pug_html + "\u003Cdiv" + (" class=\"g-recaptcha captchafield\""+pug_attr("data-sitekey", `${googleRecaptchaSiteKey}`, true, false)+" data-theme=\"dark\" data-size=\"compact\" data-callback=\"recaptchaCallback\"") + "\u003E\u003C\u002Fdiv\u003E";
 }
 else {
-pug_html = pug_html + "\u003Cnoscript class=\"no-m-p\"\u003E\u003Ciframe" + (" class=\"captcha\""+" src=\"\u002Fcaptcha.html\""+pug_attr("width=210", true, true, false)+" height=\"80\" scrolling=\"no\" loading=\"lazy\"") + "\u003E\u003C\u002Fiframe\u003E\u003C\u002Fnoscript\u003E\u003Cdiv class=\"jsonly captcha\" style=\"display:none;\"\u003E\u003C\u002Fdiv\u003E\u003Cinput" + (" class=\"captchafield\""+" type=\"text\" name=\"captcha\" autocomplete=\"off\" placeholder=\"Captcha text\" pattern=\".{6}\""+pug_attr("required", true, true, false)+" title=\"6 characters\"") + "\u002F\u003E";
+pug_html = pug_html + "\u003Cnoscript class=\"no-m-p\"\u003E\u003Ciframe class=\"captcha\" src=\"\u002Fcaptcha.html\" width=\"150\" height=\"150\" scrolling=\"no\" loading=\"lazy\"\u003E\u003C\u002Fiframe\u003E\u003C\u002Fnoscript\u003E\u003Cdiv class=\"jsonly captcha\" style=\"display:none;\"\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"captchafield\" style=\"grid-template-columns: 1fr 1fr 1fr 1fr;display: grid;\"\u003E";
+for(let i = 0; i < 16; i++) {
+pug_html = pug_html + "\u003Cinput" + (" type=\"checkbox\" name=\"captcha\""+pug_attr("value", i, true, false)) + "\u002F\u003E";
+}
+pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fsection\u003E";
 };

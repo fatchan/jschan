@@ -11,17 +11,17 @@ module.exports = {
 		return db.findOne({ '_id': id });
 	},
 
-	insertOne: (text) => {
+	insertOne: (answer) => {
 		return db.insertOne({
-			'text': text,
+			'answer': answer,
 			'expireAt': new Date()
 		});
 	},
 
-	findOneAndDelete: (id, text) => {
+	findOneAndDelete: (id, answer) => {
 		return db.findOneAndDelete({
 			'_id': id,
-			'text': text
+			'answer': answer
 		});
 	},
 
