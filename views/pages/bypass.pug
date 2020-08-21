@@ -9,10 +9,8 @@ block content
 		if message
 			p.title #{message}
 		form.form-post(action='/forms/blockbypass' method='POST' data-captcha-preload='true')
-			.row
-				.label Captcha
-				span.col
-					include ../includes/captcha.pug
+			.catalog
+				include ../includes/captcha.pug
 			if minimal
 				input(type='hidden' name='minimal' value='1')
 			input(type='submit', value='Submit')

@@ -3,6 +3,7 @@
 	--spoiler-img: url('/file/spoiler.png');
 	--audio-img: url('/file/audio.png');
 	--thumbnail-size: 250px;
+	--captcha-size: 200px;
 }
 
 body {
@@ -599,6 +600,41 @@ details.actions div {
 	padding: 2px 0;
 }
 
+div.captchafield {
+	padding: 0px;
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	display: grid;
+	width: var(--captcha-size);
+	height: var(--captcha-size);
+	margin-left: 1px;
+	box-sizing: border-box;
+	border: 1px solid var(--font-color);
+}
+
+label.captchachecklabel {
+	border: 1px solid var(--font-color);
+	max-width: 50px;
+	padding: 0px;
+}
+
+label.captchachecklabel input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+
+label.captchachecklabel input:checked ~ .captchacheckbox {
+	background-color: var(--font-color);
+}
+
+span.captchacheckbox {
+	display: flex;
+	cursor: pointer;
+	height: 100%;
+}
+
 .toggle-summary {
 	padding: 10px;
 	cursor: pointer;
@@ -1035,26 +1071,22 @@ input[type="file"] {
 	box-sizing: border-box;
 }
 
-.captchafield {
-	grid-template-columns: 1fr 1fr 1fr 1fr;
-	display: grid;
-}
-
 iframe.captcha, iframe.bypass {
 	/*dumb hack cos of noscript wrapping in unstyleable span*/
 	margin-bottom: -2px;
 }
 
 iframe.bypass {
-	height: 235px; /*probs needs bigger for google captcha*/
-	width: 330px;
+	height: 320px; /*probs needs bigger for google captcha*/
+	width: 450px;
 }
 
 .captcha {
 	border: 1px solid var(--input-borders);
 	background: white;
 	margin-bottom: 1px;
-	width: 100%;
+	width: var(--captcha-size);
+	height: var(--captcha-size);
 	box-sizing: border-box;
 	object-fit: contain;
 	overflow: hidden;

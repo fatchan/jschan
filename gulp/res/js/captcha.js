@@ -17,7 +17,6 @@ class CaptchaController {
 		if (captcha.form && captcha.form.dataset.captchaPreload == 'true') {
 			this.loadCaptcha(captcha);
 		} else {
-			captcha.placeholder = 'focus to load captcha';
 			captcha.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
 		}
 	}
@@ -66,13 +65,12 @@ class CaptchaController {
 		const refreshDiv = document.createElement('div');
 		captchaImg.style.margin = '0 auto';
 		captchaImg.style.display = 'flex';
+		captchaImg.style.width = '100%';
 		refreshDiv.classList.add('captcharefresh', 'noselect');
 		refreshDiv.addEventListener('click', (e) => this.refreshCaptchas(e), true);
 		refreshDiv.textContent = '↻';
-		field.placeholder = 'loading';
 		captchaImg.src = '/captcha';
 		captchaImg.onload = function() {
-				field.placeholder = '';
 				captchaDiv.appendChild(captchaImg);
 				captchaDiv.appendChild(refreshDiv);
 				captchaDiv.style.display = '';

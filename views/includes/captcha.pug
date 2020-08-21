@@ -3,8 +3,10 @@ if googleRecaptchaEnabled
 else
 	noscript.no-m-p
 		iframe.captcha(src='/captcha.html' width='150' height='150' scrolling='no' loading='lazy')
-	.jsonly.captcha(style='display:none;')
-	.captchafield
+	.jsonly.captcha(style='display:none')
+	.captchafield.noselect
 		- for(let i = 0; i < 16; i++) {
-		input(type='checkbox' name='captcha' value=i style='width:100%;height:25px;margin:3px;')
+		label.captchachecklabel
+			input(type='checkbox' name='captcha' value=i)
+			span.captchacheckbox
 		- }

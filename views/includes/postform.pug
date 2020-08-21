@@ -65,11 +65,6 @@ section.form-wrapper.flex-center
 				.label Password
 				input(type='password', name='postpassword', placeholder='Password to delete/spoiler/unlink later' maxlength='50')
 		if ((board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2) && !modview
-			section.row
-				.label
-					span Captcha
-						span.required *
-				.col
-					include ./captcha.pug
+			include ./captchafieldrow.pug
 		input#submitpost(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)
 	a.toggle-summary.no-decoration(href='#postform') [New Post]
