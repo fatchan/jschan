@@ -186,8 +186,9 @@ function custompages() {
 				defaultTheme: configs.boardDefaults.theme,
 				defaultCodeTheme: configs.boardDefaults.codeTheme,
 				postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
-				googleRecaptchaEnabled: configs.captchaOptions.google.enabled,
+				captchaType: configs.captchaOptions.type,
 				googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
+				captchaGridSize: configs.captchaOptions.gridSize,
 				commit,
 			}
 		}))
@@ -196,10 +197,11 @@ function custompages() {
 
 function scripts() {
 	try {
-		const themelist = `const themes = ['${themes.join("', '")}'];const codeThemes = ['${codeThemes.join("', '")}'];`;
-		fs.writeFileSync('gulp/res/js/themelist.js', themelist);
-		const serverTimeZone = `const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}'`;
-		fs.writeFileSync('gulp/res/js/timezone.js', serverTimeZone);
+		const locals = `const themes = ['${themes.join("', '")}'];
+const codeThemes = ['${codeThemes.join("', '")}'];
+const captchaType = '${configs.captchaOptions.type}';
+const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}'`;
+		fs.writeFileSync('gulp/res/js/locals.js', locals);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
 		fs.writeFileSync('gulp/res/js/uploaditem.js', pug.compileFileClient(`${paths.pug.src}/includes/uploaditem.pug`, { compileDebug: false, debug: false, name: 'uploaditem' }));
@@ -212,8 +214,7 @@ function scripts() {
 	}
 	gulp.src([
 			//put scripts in order for dependencies
-			`${paths.scripts.src}/themelist.js`,
-			`${paths.scripts.src}/timezone.js`,
+			`${paths.scripts.src}/locals.js`,
 			`${paths.scripts.src}/localstorage.js`,
 			`${paths.scripts.src}/modal.js`,
 			`${paths.scripts.src}/post.js`,

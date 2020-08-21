@@ -10,47 +10,68 @@ const { Captchas } = require(__dirname+'/../../db/')
 module.exports = async (captchaInput, captchaId) => {
 
 	//check if captcha field in form is valid
-	if (!captchaInput /* || (captchaInput.length !== 6 && !captchaOptions.google.enabled)*/) {
+	if (!captchaInput
+		|| (captchaInput.length !== 6 && !captchaOptions.type === 'text')) {
 		throw 'Incorrect captcha answer';
 	}
 
 	//make sure they have captcha cookie and its 24 chars
-	if (!captchaOptions.google.enabled && (!captchaId || captchaId.length !== 24)) {
+	if (captchaOptions.type !== 'google'
+		&& (!captchaId || captchaId.length !== 24)) {
 		throw 'Captcha expired';
 	}
 
-	if (!captchaOptions.google.enabled) { //using builtin captcha
-		// try to get the captcha from the DB
-		const captchaMongoId = ObjectId(captchaId);
-		captchaInput = Array.isArray(captchaInput) ? captchaInput : [captchaInput];
-		const normalisedAnswer = new Array(captchaOptions.gridSize**2).fill(false);
-		captchaInput.forEach(num => {
-			normalisedAnswer[+num] = true;
-		});
-		let captcha = await Captchas.findOneAndDelete(captchaMongoId, normalisedAnswer);
-		//check that it exists and matches captcha in DB
-		if (!captcha || !captcha.value
-			|| !timingSafeEqual(Buffer.from(captcha.value.answer.join(',')), Buffer.from(normalisedAnswer.join(',')))) {
-			throw 'Incorrect captcha answer';
-		}
- 	} else { //using google recaptcha
-		//get a response from google
-		let recaptchaResponse;
-		try {
-			const form = new FormData();
-			form.append('secret', captchaOptions.google.secretKey);
-			form.append('response', captchaInput);
-			recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-				method: 'POST',
-				body: form,
-			}).then(res => res.json());
-		} catch (e) {
-			throw 'Captcha error occurred';
-			//no special error, user will jsut get captcha failed error
-		}
-		if (!recaptchaResponse || !recaptchaResponse.success) {
-			throw 'Incorrect captcha answer';
-		}
+	captchaInput = Array.isArray(captchaInput) ? captchaInput : [captchaInput];
+
+	switch (captchaOptions.type) {
+		case 'grid': //grid captcha
+			const gridCaptchaMongoId = ObjectId(captchaId);
+			const normalisedAnswer = new Array(captchaOptions.gridSize**2).fill(false);
+			captchaInput.forEach(num => {
+				normalisedAnswer[+num] = true;
+			});
+			let gridCaptcha = await Captchas.findOneAndDelete(gridCaptchaMongoId, normalisedAnswer);
+			if (!gridCaptcha || !gridCaptcha.value
+				|| !timingSafeEqual(
+					Buffer.from(gridCaptcha.value.answer.join(',')),
+					Buffer.from(normalisedAnswer.join(','))
+				)
+			) {
+				throw 'Incorrect captcha answer';
+			}
+			break;
+		case 'text': //text captcha
+			const textCaptchaMongoId = ObjectId(captchaId);
+			let textCaptcha = await Captchas.findOneAndDelete(textCaptchaMongoId, captchaInput[0]);
+			if (!textCaptcha || !textCaptcha.value
+				|| !timingSafeEqual(
+					Buffer.from(textCaptcha.value.answer),
+					Buffer.from(captchaInput[0])
+				)
+			) {
+				throw 'Incorrect captcha answer';
+			}
+			break;
+		case 'google': //google captcha
+			let recaptchaResponse;
+			try {
+				const form = new FormData();
+				form.append('secret', captchaOptions.google.secretKey);
+				form.append('response', captchaInput[0]);
+				recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+					method: 'POST',
+					body: form,
+				}).then(res => res.json());
+			} catch (e) {
+				throw 'Captcha error occurred';
+			}
+			if (!recaptchaResponse || !recaptchaResponse.success) {
+				throw 'Incorrect captcha answer';
+			}
+			break;
+		default:
+			throw 'Captcha config error';
+			break;
 	}
 
 	return true;

@@ -67,8 +67,6 @@ const express = require('express')
 	//default settings
 	app.locals.enableUserAccountCreation = enableUserAccountCreation;
 	app.locals.enableUserBoardCreation = enableUserBoardCreation;
-	app.locals.googleRecaptchaEnabled = captchaOptions.google.enabled;
-	app.locals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
 	app.locals.defaultTheme = boardDefaults.theme;
 	app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 	app.locals.globalLimits = globalLimits;
@@ -76,6 +74,17 @@ const express = require('express')
 	app.locals.enableWebring = enableWebring;
 	app.locals.commit = commit;
 	app.locals.meta = meta;
+	app.locals.captchaType = captchaOptions.type;
+	switch (captchaOptions.type) {
+		case 'google':
+			app.locals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
+			break;
+		case 'grid':
+			app.locals.captchaGridSize = captchaOptions.gridSize;
+			break;
+		default:
+			break;
+	}
 
 	// routes
 	if (!production) {

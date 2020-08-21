@@ -11,10 +11,7 @@ const { enableUserBoardCreation, enableUserAccountCreation,
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, redlock = require(__dirname+'/../redlock.js')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
-
-module.exports = async (htmlName, templateName, options, json=null) => {
-	const html = pug.renderFile(`${templateDirectory}${templateName}`, {
-		...options,
+	, renderLocals = {
 		cache: cacheTemplates,
 		meta,
 		commit,
@@ -25,8 +22,24 @@ module.exports = async (htmlName, templateName, options, json=null) => {
 		enableUserBoardCreation,
 		globalLimits,
 		enableWebring,
-		googleRecaptchaEnabled: captchaOptions.google.enabled,
-		googleRecaptchaSiteKey: captchaOptions.google.siteKey,
+		captchaType: captchaOptions.type
+	}
+
+switch (captchaOptions.type) {
+	case 'google':
+		renderLocals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
+		break;
+	case 'grid':
+		renderLocals.captchaGridSize = captchaOptions.gridSize;
+		break;
+	default:
+		break;
+}
+
+module.exports = async (htmlName, templateName, options, json=null) => {
+	const html = pug.renderFile(`${templateDirectory}${templateName}`, {
+		...options,
+		...renderLocals,
 	});
 	const lock = await redlock.lock(`locks:${htmlName}`, lockWait);
 	const htmlPromise = outputFile(`${uploadDirectory}/html/${htmlName}`, html);

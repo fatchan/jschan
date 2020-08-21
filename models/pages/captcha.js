@@ -1,8 +1,8 @@
 'use strict';
 
 const { Ratelimits } = require(__dirname+'/../../db/')
-	, generateCaptcha = require(__dirname+'/../../helpers/captcha/captchagenerate.js')
-	, { secureCookies, rateLimitCost } = require(__dirname+'/../../configs/main.js')
+	, { secureCookies, rateLimitCost, captchaOptions } = require(__dirname+'/../../configs/main.js')
+	, generateCaptcha = require(__dirname+`/../../helpers/captcha/generators/${captchaOptions.type}.js`)
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {
@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 				return res.status(429).redirect('/file/ratelimit.png');
 			}
 		}
-		const { id, text } = await generateCaptcha();
+		const { id } = await generateCaptcha();
 		captchaId = id;
 	} catch (err) {
 		return next(err);

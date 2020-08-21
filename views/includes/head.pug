@@ -18,5 +18,5 @@ link#codetheme(rel='stylesheet' data-theme=codeTheme href=`/css/codethemes/${cod
 include ./favicon.pug
 script(src=`/js/all.js?v=${commit}`)
 
-if googleRecaptchaEnabled
+if captchaType === 'google'
 	script(src="https://www.google.com/recaptcha/api.js" async defer)

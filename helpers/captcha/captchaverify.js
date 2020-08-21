@@ -45,11 +45,11 @@ module.exports = async (req, res, next) => {
 	//it was correct, so mark as solved for other middleware
 	res.locals.solvedCaptcha = true;
 
-	if (!captchaOptions.google.enabled) {
-		//for builtin captcha, clear captchaid cookie, delete file and reset quota
+	if (captchaOptions.type !== 'google') {
+		//for builtin captchas, clear captchaid cookie, delete file and reset quota
 		res.clearCookie('captchaid');
 		await Promise.all([
-			!res.locals.tor && !captchaOptions.google.enabled && Ratelimits.resetQuota(res.locals.ip.single, 'captcha'),
+			!res.locals.tor && Ratelimits.resetQuota(res.locals.ip.single, 'captcha'),
 			remove(`${uploadDirectory}/captcha/${captchaId}.jpg`)
 		]);
 	}

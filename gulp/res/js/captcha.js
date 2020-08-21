@@ -14,13 +14,19 @@ class CaptchaController {
 	}
 
 	setupCaptchaField(captcha) {
+
 		if (captcha.firstChild && captcha.firstChild.firstChild
 			&& captcha.firstChild.firstChild.form
 			&& captcha.firstChild.firstChild.form.dataset.captchaPreload == 'true') {
-			this.loadCaptcha(captcha);
-		} else {
+			return this.loadCaptcha(captcha);
+		}
+
+		if (captchaType === 'grid') {
 			const hoverListener = captcha.parentElement.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling :  captcha.parentElement;
 			hoverListener.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
+		} else {
+			captcha.placeholder = 'focus to load captcha';
+			captcha.addEventListener('focus', () => this.loadCaptcha(captcha), { once: true });
 		}
 	}
 
@@ -73,8 +79,10 @@ class CaptchaController {
 		refreshDiv.classList.add('captcharefresh', 'noselect');
 		refreshDiv.addEventListener('click', (e) => this.refreshCaptchas(e), true);
 		refreshDiv.textContent = '↻';
+		field.placeholder = 'loading';
 		captchaImg.src = '/captcha';
 		captchaImg.onload = function() {
+				field.placeholder = '';
 				captchaDiv.appendChild(captchaImg);
 				captchaDiv.appendChild(refreshDiv);
 		}

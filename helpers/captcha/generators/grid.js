@@ -1,7 +1,7 @@
 const gm = require('gm').subClass({ imageMagick: true })
-	, { Captchas } = require(__dirname+'/../../db/')
-	, { captchaOptions } = require(__dirname+'/../../configs/main.js')
-	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js')
+	, { Captchas } = require(__dirname+'/../../../db/')
+	, { captchaOptions } = require(__dirname+'/../../../configs/main.js')
+	, uploadDirectory = require(__dirname+'/../../files/uploadDirectory.js')
 	, { promisify } = require('util')
 	, randomBytes = promisify(require('crypto').randomBytes)
 	, randomRange = async (min, max) => {
@@ -50,7 +50,7 @@ module.exports = async () => {
 	return new Promise(async(resolve, reject) => {
 		const captcha = gm(width,height,'#ffffff')
 		.fill('#000000')
-		.font(__dirname+'/font.ttf');
+		.font(__dirname+'/../font.ttf');
 
 		const spaceSize = (width-crop)/gridSize;
 		for(let i = 0, j = 0; i < boolArray.length; i++) {

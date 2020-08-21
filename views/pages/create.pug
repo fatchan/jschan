@@ -19,6 +19,9 @@ block content
 			.row
 				.label Tags
 				textarea(name='tags' placeholder='Newline separated, max 10')
-			include ../includes/captchafieldrow.pug
+			if captchaType === 'text'
+				include ../includes/captchasidelabel.pug
+			else
+				include ../includes/captchafieldrow.pug
 			input(type='submit', value='submit')
 

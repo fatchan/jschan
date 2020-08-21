@@ -39,20 +39,20 @@ nano module.exports = {
 		url: 'https://domain.com'
 	},
 
-	//settings for captchas, if you make them too weak they could probably be solved with OCR.
+	//settings for captchas
 	captchaOptions: {
+		type: 'grid', //"text", "grid" or "google"
 		google: {
-			enabled: false, //Overrides builtin captcha
 			siteKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
 			secretKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
 		},
-		distortion: 13,
+		distortion: 9,
 		numDistorts: {
 			min: 3,
-			max: 5
+			max: 4
 		},
-		paintAmount: 2,
-		fontPaths: [], //optional list of file paths to fonts for captchas
+		imageSize: 150,
+		gridSize: 4,
 	},
 
 	/* dnsbl, will add a small delay for uncached requests. You could also install some 

@@ -16,7 +16,10 @@ block content
 			.row
 				.label Confirm Password
 				input(type='password', name='passwordconfirm', maxlength='100' required)
-			include ../includes/captchafieldrow.pug
+			if captchaType === 'text'
+				include ../includes/captchasidelabel.pug
+			else
+				include ../includes/captchafieldrow.pug
 			input(type='submit', value='Register')
 		p: a(href='/login.html') Login
 		p: a(href='/changepassword.html') Change Password
