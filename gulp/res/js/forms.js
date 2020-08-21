@@ -74,7 +74,7 @@ class formHandler {
 		this.form = form;
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message');
-		this.captchaField = form.querySelector('.captchafield');
+		this.captchaField = form.querySelector('.captchafield') || form.querySelector('.g-recaptcha');
 		
 		this.submit = form.querySelector('input[type="submit"]');
 		if (this.submit) {
@@ -189,7 +189,7 @@ class formHandler {
 							window.location = xhr.responseURL;
 							return;
 						} else if (xhr.responseText) {
-//todo: show success messages nicely for forms like actions (this doesnt apply to non file forms yet)
+							//
 						}
 					} else {
 						if (json.postId) {
@@ -221,9 +221,13 @@ class formHandler {
 					}
 					if (json) {
 						if (!this.captchaField && json.message === 'Incorrect captcha answer') {
-							//todo: create captcha form, add method to captcha frontend code
 							captchaController.addMissingCaptcha();
 							this.captchaField = true;
+						} else if (json.message === 'Captcha expired') {
+							const captcha = this.form.querySelector('.captcharefresh');
+							if (captcha) {
+								captcha.dispatchEvent(new Event('click'));
+							}
 						}
 						doModal(json, () => {
 							this.formSubmit(e);

@@ -186,6 +186,8 @@ function custompages() {
 				defaultTheme: configs.boardDefaults.theme,
 				defaultCodeTheme: configs.boardDefaults.codeTheme,
 				postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
+				googleRecaptchaEnabled: configs.captchaOptions.google.enabled,
+				googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
 				commit,
 			}
 		}))
@@ -227,7 +229,7 @@ function scripts() {
 			`!${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('all.js'))
-//		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
 			`${paths.scripts.src}/dragable.js`,

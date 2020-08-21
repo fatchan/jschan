@@ -14,10 +14,13 @@ class CaptchaController {
 	}
 
 	setupCaptchaField(captcha) {
-		if (captcha.form && captcha.form.dataset.captchaPreload == 'true') {
+		if (captcha.firstChild && captcha.firstChild.firstChild
+			&& captcha.firstChild.firstChild.form
+			&& captcha.firstChild.firstChild.form.dataset.captchaPreload == 'true') {
 			this.loadCaptcha(captcha);
 		} else {
-			captcha.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
+			const hoverListener = captcha.parentElement.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling :  captcha.parentElement;
+			hoverListener.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
 		}
 	}
 
@@ -28,7 +31,7 @@ class CaptchaController {
 		this.refreshing = true;
 		e && e.target.classList.add('spin');
 		for (let captchacheck of document.querySelectorAll('input[name="captcha"]')) {
-			captchacheck.checked=false;
+			captchacheck.checked = false;
 		}
 		document.cookie = 'captchaid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 		const xhr = new XMLHttpRequest();
@@ -63,6 +66,7 @@ class CaptchaController {
 		const captchaDiv = field.previousSibling;
 		const captchaImg = document.createElement('img');
 		const refreshDiv = document.createElement('div');
+		captchaDiv.style.display = '';
 		captchaImg.style.margin = '0 auto';
 		captchaImg.style.display = 'flex';
 		captchaImg.style.width = '100%';
@@ -73,7 +77,6 @@ class CaptchaController {
 		captchaImg.onload = function() {
 				captchaDiv.appendChild(captchaImg);
 				captchaDiv.appendChild(refreshDiv);
-				captchaDiv.style.display = '';
 		}
 	}
 
