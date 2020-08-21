@@ -4,11 +4,11 @@ var pug_match_html=/["&<>]/;function captchaformsection(locals) {var pug_html = 
     var locals_for_with = (locals || {});
     
     (function (googleRecaptchaEnabled, googleRecaptchaSiteKey) {
-      pug_mixins["captchaformsection"] = pug_interp = function(){
+      pug_mixins["captchaexpand"] = pug_interp = function(){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdetails class=\"row label mr-0\"\u003E\u003Csummary class=\"pv-5\"\u003ECaptcha\u003Cspan class=\"required\"\u003E*\u003C\u002Fspan\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"catalog\"\u003E";
 if (googleRecaptchaEnabled) {
-pug_html = pug_html + "\u003Cdiv" + (" class=\"g-recaptcha captchafield\""+pug_attr("data-sitekey", `${googleRecaptchaSiteKey}`, true, false)+" data-theme=\"dark\" data-size=\"compact\" data-callback=\"recaptchaCallback\"") + "\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv" + (" class=\"g-recaptcha\""+pug_attr("data-sitekey", `${googleRecaptchaSiteKey}`, true, false)+" data-theme=\"dark\" data-size=\"compact\" data-callback=\"recaptchaCallback\"") + "\u003E\u003C\u002Fdiv\u003E";
 }
 else {
 pug_html = pug_html + "\u003Cnoscript class=\"no-m-p\"\u003E\u003Ciframe class=\"captcha\" src=\"\u002Fcaptcha.html\" width=\"150\" height=\"150\" scrolling=\"no\" loading=\"lazy\"\u003E\u003C\u002Fiframe\u003E\u003C\u002Fnoscript\u003E\u003Cdiv class=\"jsonly captcha\" style=\"display:none\"\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"captchafield noselect\"\u003E";
@@ -19,7 +19,7 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E";
 };
-pug_mixins["captchaformsection"]();
+pug_mixins["captchaexpand"]();
     }.call(this, "googleRecaptchaEnabled" in locals_for_with ?
         locals_for_with.googleRecaptchaEnabled :
         typeof googleRecaptchaEnabled !== 'undefined' ? googleRecaptchaEnabled : undefined, "googleRecaptchaSiteKey" in locals_for_with ?

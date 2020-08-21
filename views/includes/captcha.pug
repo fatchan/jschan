@@ -1,5 +1,5 @@
 if googleRecaptchaEnabled
-	div(class="g-recaptcha captchafield" data-sitekey=`${googleRecaptchaSiteKey}` data-theme="dark" data-size="compact" data-callback="recaptchaCallback")
+	div(class="g-recaptcha" data-sitekey=`${googleRecaptchaSiteKey}` data-theme="dark" data-size="compact" data-callback="recaptchaCallback")
 else
 	noscript.no-m-p
 		iframe.captcha(src='/captcha.html' width='150' height='150' scrolling='no' loading='lazy')

@@ -39,7 +39,7 @@ module.exports = async (captchaInput, captchaId) => {
 		try {
 			const form = new FormData();
 			form.append('secret', captchaOptions.google.secretKey);
-			form.append('response', input);
+			form.append('response', captchaInput);
 			recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
 				method: 'POST',
 				body: form,
