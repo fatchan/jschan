@@ -1035,6 +1035,11 @@ input[type="file"] {
 	box-sizing: border-box;
 }
 
+.captchafield {
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	display: grid;
+}
+
 iframe.captcha, iframe.bypass {
 	/*dumb hack cos of noscript wrapping in unstyleable span*/
 	margin-bottom: -2px;

@@ -64,6 +64,8 @@ class CaptchaController {
 		const captchaDiv = field.previousSibling;
 		const captchaImg = document.createElement('img');
 		const refreshDiv = document.createElement('div');
+		captchaImg.style.margin = '0 auto';
+		captchaImg.style.display = 'flex';
 		refreshDiv.classList.add('captcharefresh', 'noselect');
 		refreshDiv.addEventListener('click', (e) => this.refreshCaptchas(e), true);
 		refreshDiv.textContent = '↻';
