@@ -22,7 +22,7 @@ class CaptchaController {
 		}
 
 		if (captchaType === 'grid') {
-			const hoverListener = captcha.parentElement.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling :  captcha.parentElement;
+			const hoverListener = captcha.parentElement.previousSibling.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling.previousSibling :  captcha.parentElement;
 			hoverListener.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
 		} else {
 			captcha.placeholder = 'focus to load captcha';

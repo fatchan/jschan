@@ -52,7 +52,7 @@ nano module.exports = {
 			min: 3,
 			max: 4
 		},
-		imageSize: 150,
+		imageSize: 120,
 		gridSize: 4,
 	},
 

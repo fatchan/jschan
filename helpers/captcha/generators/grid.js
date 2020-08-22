@@ -14,12 +14,13 @@ const gm = require('gm').subClass({ imageMagick: true })
 		} while (g > div * mod - 1);
 		return ((g / div) | 0) + min;
 	}
-	, crop = 30
-	, width = captchaOptions.imageSize+crop
-	, height = captchaOptions.imageSize+crop
+	, padding = 30
+	, width = captchaOptions.imageSize+padding
+	, height = captchaOptions.imageSize+padding
 	, gridSize = captchaOptions.gridSize
 	, zeros = ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧']
 	, ones = ['●','■','♞','♦','▼','▲','♜','✦','♚','♞','♛','♝','♟','♣']
+	, colors = ['#FF8080', '#80FF80', '#8080FF', '#FF80FF', '#FFFF80', '#80FFFF']
 
 module.exports = async () => {
 	//number of inputs in grid
@@ -52,25 +53,26 @@ module.exports = async () => {
 		.fill('#000000')
 		.font(__dirname+'/../font.ttf');
 
-		const spaceSize = (width-crop)/gridSize;
-		for(let i = 0, j = 0; i < boolArray.length; i++) {
-			if (i % gridSize === 0) { j++ }
-			const cxOffset = await randomRange(0, spaceSize*0.75);
-			const cyOffset = await randomRange(spaceSize/2, spaceSize);
-			const charIndex = await randomRange(0, ones.length-1);
-			const character = (boolArray[i] ? ones : zeros)[charIndex];
-			captcha.fontSize((await randomRange(20,30)))
-			captcha.drawText(
-				(spaceSize*(i%gridSize))+cxOffset+(crop/2),
-				(spaceSize*(j-1))+cyOffset+(crop/2),
-				character
-			);
+		const spaceSize = (width-padding)/gridSize;
+		for(let j = 0; j < gridSize; j++) {
+			let cxOffset = await randomRange(0, spaceSize*1.5);
+			for(let i = 0; i < gridSize; i++) {
+				const index = (j*gridSize)+i;
+				const cyOffset = await randomRange(0, spaceSize/2);
+				const charIndex = await randomRange(0, ones.length-1);
+				const character = (boolArray[index] ? ones : zeros)[charIndex];
+				captcha.fontSize((await randomRange(20,30)))
+				captcha.drawText(
+					spaceSize*(i)+cxOffset,
+					spaceSize*(j+1)+cyOffset,
+					character
+				);
+			}
 		}
+
 		captcha
 		.distort(distorts, 'Shepards')
-		.edge(25)
-//		.quality(10)
-		.crop(captchaOptions.imageSize,captchaOptions.imageSize,crop/2,crop/2)
+		.edge(5)
 		.write(`${uploadDirectory}/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);
