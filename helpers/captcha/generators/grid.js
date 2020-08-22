@@ -75,7 +75,7 @@ module.exports = async () => {
 			if (err) {
 				return reject(err);
 			}
-			return resolve({ id: captchaId, boolArray });
+			return resolve({ id: captchaId });
 		});
 	});
 

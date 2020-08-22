@@ -86,7 +86,7 @@ module.exports = async () => {
 			if (err) {
 				return reject(err);
 			}
-			return resolve({ id: captchaId, text });
+			return resolve({ id: captchaId });
 		});
 	});
 

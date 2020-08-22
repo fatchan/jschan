@@ -11,4 +11,5 @@ module.exports = {
 	'0.0.8': require(__dirname+'/migration-0.0.8.js'), //option to auto reset triggers after hour is over
 	'0.0.9': require(__dirname+'/migration-0.0.9.js'), //ip changes
 	'0.0.10': require(__dirname+'/migration-0.0.10.js'), //add links to modlog for new logs
+	'0.0.11': require(__dirname+'/migration-0.0.11.js'), //rename captcha "text" field to "answer" since we support multiple captcha types now
 }

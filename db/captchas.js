@@ -25,6 +25,14 @@ module.exports = {
 		});
 	},
 
+	randomSample: () => {
+		return db.aggregate([
+			{
+				$sample: { size: 1 }
+			}
+		]).toArray().then(res => res[0]);
+	},
+
 	deleteAll: () => {
 		return db.deleteMany({});
 	},
