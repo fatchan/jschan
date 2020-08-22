@@ -72,7 +72,7 @@ module.exports = async () => {
 
 		captcha
 		.distort(distorts, 'Shepards')
-		.edge(5)
+		.edge(25)
 		.write(`${uploadDirectory}/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);

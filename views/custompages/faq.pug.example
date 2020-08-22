@@ -49,8 +49,7 @@ block content
 				th: a(href='#captcha') How do I solve CAPTCHA?
 			tr
 				td.post-message
-					p The grid captcha has a (by default) 4x4 grid of solid/filled or outlined icons. To pass, select the boxes that correspond to the solid/filled icons in the grid.
-					b NOTE: select boxes that represent where the solid/filled icons are logically in the matrix, not where they line up in the image, because it has been distorted.
+					p Select the boxes that correspond to each solid/filled icon in the grid. The image is shuffled and distorted, so use your brain.
 	.table-container.flex-center.mv-5
 		.anchor#name-formatting
 		table
