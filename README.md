@@ -10,14 +10,14 @@ Anonymous imageboard software.
 ## Features
 - [x] User created boards ala infinity
 - [x] Multiple files per post
-- [x] Captcha and antispam
+- [x] Basic antispam & multiple captcha options
 - [x] Read-only JSON api
 - [x] Multi-select moderation actions
 - [x] Websocket update threads w/o polling
 - [x] Webring w/proxy support ([lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring)) ([infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
+- [x] Run as a tor hidden service
 
 ## Todo
-- Support running as a hidden service
 - More features
 - Mobile app
 - Full install script
@@ -72,6 +72,7 @@ You can also repeat this process in future to update node versions as they are g
 geoip_country /usr/share/GeoIP/GeoIP.dat;
 geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 ```
+If your nginx doesn't have the necessary module by default, or is using v2, find your own guide.
 
 7. Clone this repo, browse to the folder and set some things up
 ```bash
@@ -110,7 +111,22 @@ $ gulp migrate #check for and run db migrations
 $ gulp #run default gulp task
 ```
 
-8. Optionally, if you plan to use the webring and want to make requests with tor to mask your origin server IP:
-Install docker and run torproxy in a container: https://github.com/dperson/torproxy
-Edit configs/webring.json and wer proxy enabled:true
+8. Optionally, if you plan to use the webring and want to make requests with a proxy to mask your origin server IP:
+EITHER:
+- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself)
+- Use your own socks proxy
+Edit configs/webring.json and set proxy enabled:true, and the proxy address.
+
+## Updating
+In short:
+```bash
+$ git pull
+$ npm install
+```
+Diff the config files to see what changed, or alternatively replace your config with the example and edit it afresh
+```bash
+gulp
+gulp migrate
+pm2 reload all
+```
 
