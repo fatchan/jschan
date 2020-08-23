@@ -224,7 +224,7 @@ function custompages() {
 				postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
 				captchaType: configs.captchaOptions.type,
 				googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
-				captchaGridSize: configs.captchaOptions.gridSize,
+				captchaGridSize: configs.captchaOptions.grid.size,
 				commit,
 			}
 		}))

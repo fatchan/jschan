@@ -47,13 +47,16 @@ nano module.exports = {
 			siteKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
 			secretKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
 		},
-		distortion: 9,
+		grid: {
+			size: 4,
+			imageSize: 120,
+			iconYOffset: 15,
+		},
 		numDistorts: {
 			min: 3,
 			max: 4
 		},
-		imageSize: 120,
-		gridSize: 4,
+		distortion: 9,
 	},
 
 	/* dnsbl, will add a small delay for uncached requests. You could also install some 

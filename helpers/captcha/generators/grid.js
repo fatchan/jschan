@@ -15,9 +15,9 @@ const gm = require('gm').subClass({ imageMagick: true })
 		return ((g / div) | 0) + min;
 	}
 	, padding = 30
-	, width = captchaOptions.imageSize+padding
-	, height = captchaOptions.imageSize+padding
-	, gridSize = captchaOptions.gridSize
+	, width = captchaOptions.grid.imageSize+padding
+	, height = captchaOptions.grid.imageSize+padding
+	, gridSize = captchaOptions.grid.size
 	, zeros = ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧']
 	, ones = ['●','■','♞','♦','▼','▲','♜','✦','♚','♞','♛','♝','♟','♣']
 	, colors = ['#FF8080', '#80FF80', '#8080FF', '#FF80FF', '#FFFF80', '#80FFFF']
@@ -33,19 +33,21 @@ module.exports = async () => {
 	const captchaId = await Captchas.insertOne(boolArray).then(r => r.insertedId);
 
 	const distorts = [];
-	const numDistorts = await randomRange(captchaOptions.numDistorts.min,captchaOptions.numDistorts.max);
-	const div = width/numDistorts;
-	for (let i = 0; i < numDistorts; i++) {
-		const divStart = (div*i)
-			, divEnd = (div*(i+1));
-		const originx = await randomRange(divStart, divEnd)
-			, originy = await randomRange(0,height);
-		const destx = await randomRange(Math.max(captchaOptions.distortion,originx-captchaOptions.distortion),Math.min(width-captchaOptions.distortion,originx+captchaOptions.distortion))
-			, desty = await randomRange(Math.max(captchaOptions.distortion,originy-captchaOptions.distortion*2),Math.min(height-captchaOptions.distortion,originy+captchaOptions.distortion*2));
-		distorts.push([
-			{x:originx,y:originy},
-			{x:destx,y:desty}
-		]);
+	if (captchaOptions.distortion > 0) {
+		const numDistorts = await randomRange(captchaOptions.numDistorts.min,captchaOptions.numDistorts.max);
+		const div = width/numDistorts;
+		for (let i = 0; i < numDistorts; i++) {
+			const divStart = (div*i)
+				, divEnd = (div*(i+1));
+			const originx = await randomRange(divStart, divEnd)
+				, originy = await randomRange(0,height);
+			const destx = await randomRange(Math.max(captchaOptions.distortion,originx-captchaOptions.distortion),Math.min(width-captchaOptions.distortion,originx+captchaOptions.distortion))
+				, desty = await randomRange(Math.max(captchaOptions.distortion,originy-captchaOptions.distortion*2),Math.min(height-captchaOptions.distortion,originy+captchaOptions.distortion*2));
+			distorts.push([
+				{x:originx,y:originy},
+				{x:destx,y:desty}
+			]);
+		}
 	}
 
 	return new Promise(async(resolve, reject) => {
@@ -58,7 +60,7 @@ module.exports = async () => {
 			let cxOffset = await randomRange(0, spaceSize*1.5);
 			for(let i = 0; i < gridSize; i++) {
 				const index = (j*gridSize)+i;
-				const cyOffset = await randomRange(0, spaceSize/2);
+				const cyOffset = await randomRange(0, captchaOptions.grid.iconYOffset);
 				const charIndex = await randomRange(0, ones.length-1);
 				const character = (boolArray[index] ? ones : zeros)[charIndex];
 				captcha.fontSize((await randomRange(20,30)))
@@ -70,8 +72,11 @@ module.exports = async () => {
 			}
 		}
 
+		if (captchaOptions.distortion > 0) {
+			captcha.distort(distorts, 'Shepards');
+		}
+
 		captcha
-		.distort(distorts, 'Shepards')
 		.edge(25)
 		.write(`${uploadDirectory}/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {

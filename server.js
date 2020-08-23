@@ -80,7 +80,7 @@ const express = require('express')
 			app.locals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
 			break;
 		case 'grid':
-			app.locals.captchaGridSize = captchaOptions.gridSize;
+			app.locals.captchaGridSize = captchaOptions.grid.size;
 			break;
 		default:
 			break;

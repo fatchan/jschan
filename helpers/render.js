@@ -30,7 +30,7 @@ switch (captchaOptions.type) {
 		renderLocals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
 		break;
 	case 'grid':
-		renderLocals.captchaGridSize = captchaOptions.gridSize;
+		renderLocals.captchaGridSize = captchaOptions.grid.size;
 		break;
 	default:
 		break;

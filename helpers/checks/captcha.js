@@ -26,7 +26,7 @@ module.exports = async (captchaInput, captchaId) => {
 	switch (captchaOptions.type) {
 		case 'grid': //grid captcha
 			const gridCaptchaMongoId = ObjectId(captchaId);
-			const normalisedAnswer = new Array(captchaOptions.gridSize**2).fill(false);
+			const normalisedAnswer = new Array(captchaOptions.grid.size**2).fill(false);
 			captchaInput.forEach(num => {
 				normalisedAnswer[+num] = true;
 			});
