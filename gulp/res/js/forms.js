@@ -198,7 +198,9 @@ class formHandler {
 						if (json.redirect) {
 							const redirectBoard = json.redirect.split('/')[1];
 							const redirectPostId = json.redirect.split('#')[1];
-							appendLocalStorageArray('yous', `${redirectBoard}-${redirectPostId}`);
+							if (redirectBoard && redirectPostId) {
+								appendLocalStorageArray('yous', `${redirectBoard}-${redirectPostId}`);
+							}
 						}
 						if (json.message || json.messages || json.error || json.errors) {
 							doModal(json);
