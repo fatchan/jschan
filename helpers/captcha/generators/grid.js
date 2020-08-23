@@ -29,6 +29,9 @@ module.exports = async () => {
 	const randBuffer = await randomBytes(numInputs);
 	//array of true/false, for each grid input
 	const boolArray = Array.from(randBuffer).map(x => x < 80);
+	if (!boolArray.some(b => b === true)) {
+		boolArray[(await randomRange(0,numInputs))] = true;
+	}
 
 	const captchaId = await Captchas.insertOne(boolArray).then(r => r.insertedId);
 
