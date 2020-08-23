@@ -3,12 +3,11 @@
 const cache = require(__dirname+'/../redis.js')
 	, dynamicResponse = require(__dirname+'/dynamic.js')
 	, { ipHeader, dnsbl } = require(__dirname+'/../configs/main.js')
-	, { isIP } = require('net')
 	, { batch } = require('dnsbl');
 
 module.exports = async (req, res, next) => {
 
-	if (dnsbl.enabled && isIP(res.locals.ip.raw)) {
+	if (dnsbl.enabled && !res.locals.tor) {
 		const ip = res.locals.ip.raw;
 		let isBlacklisted = await cache.get(`blacklisted:${ip}`);
 		if (isBlacklisted === null) { //not cached
