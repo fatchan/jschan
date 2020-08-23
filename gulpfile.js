@@ -18,7 +18,7 @@ const gulp = require('gulp')
 	, { migrateVersion } = require(__dirname+'/package.json')
 	, paths = {
 		styles: {
-			src: 'gulp/res/css/**/*.css',
+			src: 'gulp/res/css/',
 			dest: 'static/css/'
 		},
 		images: {
@@ -132,8 +132,22 @@ async function wipe() {
 }
 
 //update the css file
-function css() {
+async function css() {
 	try {
+		//a little more configurable
+		let bypassHeight = configs.captchaOptions.type === 'google' ? 500
+			: configs.captchaOptions.type === 'grid' ? 330
+			: 235;
+		const cssLocals = `:root {
+    --attachment-img: url('/file/attachment.png');
+    --spoiler-img: url('/file/spoiler.png');
+    --audio-img: url('/file/audio.png');
+    --thumbnail-size: ${configs.thumbSize}px;
+    --captcha-w: 200px;
+    --captcha-h: 200px;
+    --bypass-height: ${bypassHeight}px;
+}`;
+		fs.writeFileSync('gulp/res/css/locals.css', cssLocals);
 		fs.symlinkSync(__dirname+'/node_modules/highlight.js/styles', __dirname+'/gulp/res/css/codethemes', 'dir');
 	} catch (e) {
 		if (e.code !== 'EEXIST') {
@@ -141,7 +155,29 @@ function css() {
 			console.log(e);
 		}
 	}
-	return gulp.src(paths.styles.src)
+	await gulp.src([
+			`${paths.styles.src}/themes/*.css`,
+		])
+		.pipe(less())
+		.pipe(cleanCSS())
+		.pipe(gulp.dest(`${paths.styles.dest}/themes/`));
+	await gulp.src([
+			`${paths.styles.src}/codethemes/*.css`,
+		])
+		.pipe(less())
+		.pipe(cleanCSS())
+		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
+	await gulp.src([
+			`${paths.styles.src}/nscaptcha.css`,
+		])
+		.pipe(less())
+		.pipe(cleanCSS())
+		.pipe(gulp.dest(paths.styles.dest));
+	return gulp.src([
+			`${paths.styles.src}/locals.css`,
+			`${paths.styles.src}/style.css`,
+		])
+		.pipe(concat('style.css'))
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(paths.styles.dest));
@@ -200,7 +236,7 @@ function scripts() {
 		const locals = `const themes = ['${themes.join("', '")}'];
 const codeThemes = ['${codeThemes.join("', '")}'];
 const captchaType = '${configs.captchaOptions.type}';
-const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}'`;
+const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';`;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
@@ -290,7 +326,7 @@ async function migrate() {
 
 }
 
-const build = gulp.parallel(css, scripts, images, icons, gulp.series(deletehtml, custompages));
+const build = gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages));
 const reset = gulp.series(wipe, build);
 const html = gulp.series(deletehtml, custompages);
 

@@ -1,12 +1,3 @@
-:root {
-	--attachment-img: url('/file/attachment.png');
-	--spoiler-img: url('/file/spoiler.png');
-	--audio-img: url('/file/audio.png');
-	--thumbnail-size: 250px;
-	--captcha-w: 200px;
-	--captcha-h: 200px;
-}
-
 body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
@@ -1078,7 +1069,7 @@ iframe.captcha, iframe.bypass {
 }
 
 iframe.bypass {
-	height: 320px; /*probs needs bigger for google captcha*/
+	height: var(--bypass-height); /*probs needs bigger for google captcha*/
 	width: 450px;
 }
 
