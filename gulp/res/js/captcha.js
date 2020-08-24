@@ -15,14 +15,13 @@ class CaptchaController {
 
 	setupCaptchaField(captcha) {
 
-		if (captcha.firstChild && captcha.firstChild.firstChild
-			&& captcha.firstChild.firstChild.form
-			&& captcha.firstChild.firstChild.form.dataset.captchaPreload == 'true') {
+		if (captcha.closest('form').dataset.captchaPreload == 'true') {
 			return this.loadCaptcha(captcha);
 		}
 
 		if (captchaType === 'grid') {
-			const hoverListener = captcha.parentElement.previousSibling.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling.previousSibling :  captcha.parentElement;
+			let hoverListener = captcha.closest('details') || captcha;
+			//captcha.parentElement.previousSibling.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling.previousSibling :  captcha.parentElement;
 			hoverListener.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
 		} else {
 			captcha.placeholder = 'focus to load captcha';
