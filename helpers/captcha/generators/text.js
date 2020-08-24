@@ -1,9 +1,9 @@
+'use strict';
+
 const gm = require('gm').subClass({ imageMagick: true })
 	, { Captchas } = require(__dirname+'/../../../db/')
 	, { captchaOptions } = require(__dirname+'/../../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/../../files/uploadDirectory.js')
-	, { promisify } = require('util')
-	, randomBytes = promisify(require('crypto').randomBytes)
 	, characterWidth = (char) => {
 		switch (char) {
 			case 'w':
@@ -30,20 +30,7 @@ const gm = require('gm').subClass({ imageMagick: true })
 	, distortion = captchaOptions.distortion
 	, minVal = parseInt('1000000', 36)
 	, maxVal = parseInt('1zzzzzz', 36);
-
-const  randomRange = async (min, max) => {
-	if (max <= min) return min;
-	const mod = max - min + 1;
-	const div = Math.ceil(Math.log2(mod));
-	const numberBytes = Math.ceil(div / 4);
-	const mask = (1 << div) - 1;
-	let rand;
-	do {
-		rand = (await randomBytes(numberBytes)).readUIntBE(0, numberBytes);
-		rand = rand & mask;
-	} while (rand > mod);
-	return rand + min;
-}
+	, randomRange = require(__dirname+'/../../randomrange.js');
 
 module.exports = async () => {
 	// generate between 1000000 and 1zzzzzz and not 0 and zzzzzz, so toString

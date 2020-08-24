@@ -1,22 +1,12 @@
+'use strict';
+
 const gm = require('gm').subClass({ imageMagick: true })
+	, { promisify } = require('util')
+	, randomBytes = promisify(require('crypto').randomBytes)
 	, { Captchas } = require(__dirname+'/../../../db/')
 	, { captchaOptions } = require(__dirname+'/../../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/../../files/uploadDirectory.js')
-	, { promisify } = require('util')
-	, randomBytes = promisify(require('crypto').randomBytes)
-	, randomRange = async (min, max) => {
-		if (max <= min) return min;
-		const mod = max - min + 1;
-		const div = Math.ceil(Math.log2(mod));
-		const numberBytes = Math.ceil(div / 4);
-		const mask = (1 << div) - 1;
-		let rand;
-		do {
-			rand = (await randomBytes(numberBytes)).readUIntBE(0, numberBytes);
-			rand = rand & mask;
-		} while (rand >= mod);
-		return rand + min;
-	}
+	, randomRange = require(__dirname+'/../../randomrange.js')
 	, padding = 30
 	, width = captchaOptions.grid.imageSize+padding
 	, height = captchaOptions.grid.imageSize+padding
