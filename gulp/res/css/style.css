@@ -1,3 +1,7 @@
+table, img, .label, .pages, .catalog-tile, .post-container, .stickynav, .toggle-summary, .postform-style, input[type="button"], input[type="file"], input[type="number"], input[type="password"], input[type="range"], input[type="submit"], input[type="text"], select, textarea {
+	border-radius: 2px!important;
+}
+
 body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
@@ -486,6 +490,10 @@ td, th {
 
 .flex-center {
 	align-items: center;
+}
+
+.f1 {
+	flex: 1;
 }
 
 .stickynav {
@@ -1069,7 +1077,7 @@ iframe.captcha, iframe.bypass {
 }
 
 iframe.bypass {
-	height: var(--bypass-height); /*probs needs bigger for google captcha*/
+	height: var(--bypass-height);
 	width: 450px;
 }
 
@@ -1299,6 +1307,10 @@ row.wrap.sb .col {
 
 	.post-file-info {
 		max-width: 150px;
+	}
+
+	iframe.bypass {
+		height: 100vh;
 	}
 
 	.file-thumb {

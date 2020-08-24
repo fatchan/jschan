@@ -18,7 +18,7 @@ mixin modal(data)
 						each error in data.errors
 							li #{error}
 		if data.frame
-			.row
+			.row.f1
 				iframe.bypass#modalframe(src=data.frame frameborder='0' scrolling='no')
 		else if data.link
 			.row

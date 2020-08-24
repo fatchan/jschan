@@ -31,16 +31,19 @@ const gm = require('gm').subClass({ imageMagick: true })
 	, minVal = parseInt('1000000', 36)
 	, maxVal = parseInt('1zzzzzz', 36);
 
-const randomRange = async (min, max) => {
+const  randomRange = async (min, max) => {
 	if (max <= min) return min;
 	const mod = max - min + 1;
-	const div = (((0xffffffff - (mod-1)) / mod) | 0) + 1;
-	let g
+	const div = Math.ceil(Math.log2(mod));
+	const numberBytes = Math.ceil(div / 4);
+	const mask = (1 << div) - 1;
+	let rand;
 	do {
-		g = (await randomBytes(4)).readUInt32LE();
-	} while (g > div * mod - 1);
-	return ((g / div) | 0) + min;
-};
+		rand = (await randomBytes(numberBytes)).readUIntBE(0, numberBytes);
+		rand = rand & mask;
+	} while (rand > mod);
+	return rand + min;
+}
 
 module.exports = async () => {
 	// generate between 1000000 and 1zzzzzz and not 0 and zzzzzz, so toString
@@ -86,7 +89,7 @@ module.exports = async () => {
 			if (err) {
 				return reject(err);
 			}
-			return resolve({ id: captchaId });
+			return resolve({ captchaId });
 		});
 	});
 

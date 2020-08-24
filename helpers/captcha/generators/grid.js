@@ -7,12 +7,15 @@ const gm = require('gm').subClass({ imageMagick: true })
 	, randomRange = async (min, max) => {
 		if (max <= min) return min;
 		const mod = max - min + 1;
-		const div = (((0xffffffff - (mod-1)) / mod) | 0) + 1;
-		let g
+		const div = Math.ceil(Math.log2(mod));
+		const numberBytes = Math.ceil(div / 4);
+		const mask = (1 << div) - 1;
+		let rand;
 		do {
-			g = (await randomBytes(4)).readUInt32LE();
-		} while (g > div * mod - 1);
-		return ((g / div) | 0) + min;
+			rand = (await randomBytes(numberBytes)).readUIntBE(0, numberBytes);
+			rand = rand & mask;
+		} while (rand > mod);
+		return rand + min;
 	}
 	, padding = 30
 	, width = captchaOptions.grid.imageSize+padding
@@ -44,8 +47,8 @@ module.exports = async () => {
 				, divEnd = (div*(i+1));
 			const originx = await randomRange(divStart, divEnd)
 				, originy = await randomRange(0,height);
-			const destx = await randomRange(Math.max(captchaOptions.distortion,originx-captchaOptions.distortion),Math.min(width-captchaOptions.distortion,originx+captchaOptions.distortion))
-				, desty = await randomRange(Math.max(captchaOptions.distortion,originy-captchaOptions.distortion*2),Math.min(height-captchaOptions.distortion,originy+captchaOptions.distortion*2));
+			const destx = await randomRange(Math.max(captchaOptions.distortion,originx-captchaOptions.distortion),Math.min(width-captchaOptions.distortion,originx+captchaOptions.distortion)).catch(e => console.error(e))
+				, desty = await randomRange(Math.max(captchaOptions.distortion,originy-captchaOptions.distortion*2),Math.min(height-captchaOptions.distortion,originy+captchaOptions.distortion*2)).catch(e => console.error(e));
 			distorts.push([
 				{x:originx,y:originy},
 				{x:destx,y:desty}
@@ -53,39 +56,41 @@ module.exports = async () => {
 		}
 	}
 
-	return new Promise(async(resolve, reject) => {
-		const captcha = gm(width,height,'#ffffff')
-		.fill('#000000')
-		.font(__dirname+'/../font.ttf');
+	const captcha = gm(width,height,'#ffffff')
+	.fill('#000000')
+	.font(__dirname+'/../font.ttf');
 
-		const spaceSize = (width-padding)/gridSize;
-		for(let j = 0; j < gridSize; j++) {
-			let cxOffset = await randomRange(0, spaceSize*1.5);
-			for(let i = 0; i < gridSize; i++) {
-				const index = (j*gridSize)+i;
-				const cyOffset = await randomRange(0, captchaOptions.grid.iconYOffset);
-				const charIndex = await randomRange(0, ones.length-1);
-				const character = (boolArray[index] ? ones : zeros)[charIndex];
-				captcha.fontSize((await randomRange(20,30)))
-				captcha.drawText(
-					spaceSize*(i)+cxOffset,
-					spaceSize*(j+1)+cyOffset,
-					character
-				);
-			}
+	const spaceSize = (width-padding)/gridSize;
+	for(let j = 0; j < gridSize; j++) {
+		let cxOffset = await randomRange(0, spaceSize*1.5);
+		for(let i = 0; i < gridSize; i++) {
+			const index = (j*gridSize)+i;
+			const cyOffset = await randomRange(0, captchaOptions.grid.iconYOffset);
+			const charIndex = await randomRange(0, ones.length-1);
+			const character = (boolArray[index] ? ones : zeros)[charIndex];
+			captcha.fontSize((await randomRange(20,30)))
+			captcha.drawText(
+				spaceSize*(i)+cxOffset,
+				spaceSize*(j+1)+cyOffset,
+				character
+			);
 		}
+	}
 
-		if (captchaOptions.distortion > 0) {
-			captcha.distort(distorts, 'Shepards');
-		}
+	if (captchaOptions.distortion > 0) {
+		captcha.distort(distorts, 'Shepards');
+	}
 
+	captcha
+	.edge(25);
+
+	return new Promise((resolve, reject) => {
 		captcha
-		.edge(25)
 		.write(`${uploadDirectory}/captcha/${captchaId}.jpg`, (err) => {
 			if (err) {
 				return reject(err);
 			}
-			return resolve({ id: captchaId });
+			return resolve({ captchaId });
 		});
 	});
 

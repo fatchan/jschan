@@ -30,7 +30,7 @@ module.exports = {
 			{
 				$sample: { size: 1 }
 			}
-		]).toArray().then(res => res[0]);
+		]).toArray();
 	},
 
 	deleteAll: () => {

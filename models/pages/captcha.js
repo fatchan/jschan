@@ -21,15 +21,16 @@ module.exports = async (req, res, next) => {
 			}
 		}
 		let id;
-		if ((await Captchas.db.estimatedDocumentCount()) >= captchaOptions.generateLimit) {
+		const captchaCount = await Captchas.db.estimatedDocumentCount();
+		if (captchaCount >= captchaOptions.generateLimit) {
 			//TODOs: round robin sample? store in redis? only sample random with longer than x expiry?
-			const randomCaptcha = await Captchas.randomSample();
-			id = randomCaptcha._id;
+			const captchaSample = await Captchas.randomSample();
+			const randomCaptcha = captchaSample[0];
+			captchaId = randomCaptcha._id;
 			maxAge = Math.abs((randomCaptcha.expireAt.getTime()+maxAge) - Date.now()); //abs in case mongo hasn't pruned, and will not be too big since it can't be too far away from pruning anyway
 		} else {
-			({ id } = await generateCaptcha());
+			({ captchaId } = await generateCaptcha());
 		}
-		captchaId = id;
 	} catch (err) {
 		return next(err);
 	}
