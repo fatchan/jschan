@@ -14,7 +14,7 @@ const gm = require('gm').subClass({ imageMagick: true })
 		do {
 			rand = (await randomBytes(numberBytes)).readUIntBE(0, numberBytes);
 			rand = rand & mask;
-		} while (rand > mod);
+		} while (rand >= mod);
 		return rand + min;
 	}
 	, padding = 30
@@ -33,7 +33,7 @@ module.exports = async () => {
 	//array of true/false, for each grid input
 	const boolArray = Array.from(randBuffer).map(x => x < 80);
 	if (!boolArray.some(b => b === true)) {
-		boolArray[(await randomRange(0,numInputs))] = true;
+		boolArray[(await randomRange(0,numInputs-1))] = true;
 	}
 
 	const captchaId = await Captchas.insertOne(boolArray).then(r => r.insertedId);
