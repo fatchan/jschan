@@ -5,9 +5,9 @@ const  { promisify } = require('util')
 
 //NOTE: should only be used for ints, floors your inputs
 module.exports = async (min, max) => {
-	if (max <= min) return min;
 	min = Math.floor(min);
 	max = Math.floor(max);
+	if (max <= min) return min;
 	const mod = max - min + 1;
 	const div = (((0xffffffff - (mod-1)) / mod) | 0) + 1;
 	let g
