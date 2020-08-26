@@ -29,7 +29,7 @@ const gm = require('gm').subClass({ imageMagick: true })
 	, height = 80
 	, distortion = captchaOptions.distortion
 	, minVal = parseInt('1000000', 36)
-	, maxVal = parseInt('1zzzzzz', 36);
+	, maxVal = parseInt('1zzzzzz', 36)
 	, randomRange = require(__dirname+'/../../randomrange.js');
 
 module.exports = async () => {
