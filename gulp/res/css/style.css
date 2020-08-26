@@ -1073,7 +1073,7 @@ iframe.captcha, iframe.bypass {
 }
 
 iframe.captcha {
-	width: 100%;
+	/*width: 100%;*/
 }
 
 iframe.bypass {
