@@ -1,6 +1,6 @@
 img {
-	width: 200px;
-	height: 200px;
+	width: var(--captcha-w);
+	height: var(--captcha-h);
 	image-rendering: crisp-edges;
 	margin: 0 auto;
 }

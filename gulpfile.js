@@ -138,13 +138,19 @@ async function css() {
 		let bypassHeight = configs.captchaOptions.type === 'google' ? 500
 			: configs.captchaOptions.type === 'grid' ? 330
 			: 235;
+		let captchaHeight = configs.captchaOptions.type === 'text' ? 80
+			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
+			: 200; //'google' doesnt need this set
+		let captchaWidth = configs.captchaOptions.type === 'text' ? 210
+			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
+			: 200; //'google' doesnt need this set
 		const cssLocals = `:root {
     --attachment-img: url('/file/attachment.png');
     --spoiler-img: url('/file/spoiler.png');
     --audio-img: url('/file/audio.png');
     --thumbnail-size: ${configs.thumbSize}px;
-    --captcha-w: 200px;
-    --captcha-h: 200px;
+    --captcha-w: ${captchaWidth}px;
+    --captcha-h: ${captchaHeight}px;
     --bypass-height: ${bypassHeight}px;
 }`;
 		fs.writeFileSync('gulp/res/css/locals.css', cssLocals);
@@ -168,8 +174,10 @@ async function css() {
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
 	await gulp.src([
+			`${paths.styles.src}/locals.css`,
 			`${paths.styles.src}/nscaptcha.css`,
 		])
+		.pipe(concat('nscaptcha.css'))
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(paths.styles.dest));
@@ -264,6 +272,8 @@ const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';`;
 			`!${paths.scripts.src}/yous.js`,
 			`!${paths.scripts.src}/catalog.js`,
 			`!${paths.scripts.src}/time.js`,
+			`!${paths.scripts.src}/themelist.js`, //dont include files from my fuck up with git. todo: make this a migration?
+			`!${paths.scripts.src}/timezone.js`,
 		])
 		.pipe(concat('all.js'))
 		.pipe(uglify({compress:false}))

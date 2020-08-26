@@ -1,7 +1,3 @@
-table, img, .label, .pages, .catalog-tile, .post-container, .stickynav, .toggle-summary, .postform-style, input[type="button"], input[type="file"], input[type="number"], input[type="password"], input[type="range"], input[type="submit"], input[type="text"], select, textarea {
-	border-radius: 2px!important;
-}
-
 body {
 	font-family: arial, helvetica, sans-serif;
 	font-size: 10pt;
@@ -1073,19 +1069,23 @@ input[type="file"] {
 
 iframe.captcha, iframe.bypass {
 	/*dumb hack cos of noscript wrapping in unstyleable span*/
-	margin-bottom: -2px;
+	/*margin-bottom: -2px;*/
+}
+
+iframe.captcha {
+	width: 100%;
 }
 
 iframe.bypass {
 	height: var(--bypass-height);
-	width: 450px;
+	width: 350px;
 }
 
 .captcha {
 	border: 1px solid var(--input-borders);
 	background: white;
 	margin-bottom: 1px;
-	width: var(--captcha-w);
+	min-width: var(--captcha-w);
 	height: var(--captcha-h);
 	box-sizing: border-box;
 	object-fit: contain;
@@ -1245,7 +1245,6 @@ row.wrap.sb .col {
 
 @media only screen and (max-width: 600px) {
 
-
 	.postmenu {
 		border-left: .5em solid transparent;
 		border-right: .5em solid transparent;
@@ -1311,6 +1310,7 @@ row.wrap.sb .col {
 
 	iframe.bypass {
 		height: 100vh;
+		width: 100%;
 	}
 
 	.file-thumb {
@@ -1392,6 +1392,10 @@ row.wrap.sb .col {
 	}
 
 	#postform {
+		width: 100%;
+	}
+
+	input#file {
 		width: 100%;
 	}
 

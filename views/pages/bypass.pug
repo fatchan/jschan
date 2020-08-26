@@ -7,7 +7,9 @@ block content
 	h1.board-title Block Bypass
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/blockbypass' method='POST' data-captcha-preload='true')
-			include ../includes/captcha.pug
+			.row
+				.col
+					include ../includes/captcha.pug
 			if minimal
 				input(type='hidden' name='minimal' value='1')
 			input(type='submit', value='Submit')

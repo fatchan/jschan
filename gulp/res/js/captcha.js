@@ -74,14 +74,14 @@ class CaptchaController {
 		captchaDiv.style.display = '';
 		captchaImg.style.margin = '0 auto';
 		captchaImg.style.display = 'flex';
-		captchaImg.style.width = '100%';
+		//captchaImg.style.width = '100%';
 		refreshDiv.classList.add('captcharefresh', 'noselect');
 		refreshDiv.addEventListener('click', (e) => this.refreshCaptchas(e), true);
 		refreshDiv.textContent = '↻';
 		field.placeholder = 'loading';
 		captchaImg.src = '/captcha';
 		captchaImg.onload = function() {
-				field.placeholder = '';
+				field.placeholder = 'Captcha text';
 				captchaDiv.appendChild(captchaImg);
 				captchaDiv.appendChild(refreshDiv);
 		}
