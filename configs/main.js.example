@@ -41,7 +41,7 @@ nano module.exports = {
 
 	//settings for captchas
 	captchaOptions: {
-		type: 'grid', //"text", "grid" or "google"
+		type: 'grid', //"text", "grid" or "google". If using google, make sure your CSP header in nginx config allows the google domain.
 		generateLimit: 1000, //max number of captchas to have generated at any time, prevent mass unsolved captcha spam, especially on TOR.
 		google: { //options for google captcha, when captcha type is google
 			siteKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',

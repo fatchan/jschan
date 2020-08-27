@@ -5,8 +5,6 @@ upstream chan {
 server {
 
 	server_name domain.com www.domain.com;
-	error_page 404 = /path/to/jschan/static/html/404.html;
-	error_page 502 = /path/to/jschan/static/html/502.html;
 	client_max_body_size 0; #limit handled by upstream for better errors
 	server_tokens off;
 
@@ -16,6 +14,32 @@ server {
 	add_header X-Frame-Options "sameorigin" always;
 	add_header X-Content-Type-Options "nosniff" always;
 	add_header X-XSS-Protection "1; mode=block" always;
+
+	error_page 404 /404.html;
+	error_page 500 /500.html;
+	error_page 502 /502.html;
+	error_page 503 /503.html;
+	error_page 504 /504.html;
+	location = /404.html {
+		root /path/to/jschan/static/html;
+		internal;
+	}
+	location = /500.html {
+		root /path/to/jschan/static/html;
+		internal;
+	}
+	location = /502.html {
+		root /path/to/jschan/static/html;
+		internal;
+	}
+	location = /503.html {
+		root /path/to/jschan/static/html;
+		internal;
+	}
+	location = /504.html {
+		root /path/to/jschan/static/html;
+		internal;
+	}
 
 	if ($request_uri ~ ^/(?!captcha|randombanner|forms|socket\.io)) {
 		rewrite ^([^.\?]*[^/])$ $1/ redirect;
@@ -160,10 +184,34 @@ server {
 #server {
 #
 #	server_name zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz.onion;
-#	error_page 404 = /path/to/jschan/static/html/404.html;
-#	error_page 502 = /path/to/jschan/static/html/502.html;
 #	client_max_body_size 0; #limit handled by upstream for better errors
 #	server_tokens off;
+#
+#	error_page 404 /404.html;
+#	error_page 500 /500.html;
+#	error_page 502 /502.html;
+#	error_page 503 /503.html;
+#	error_page 504 /504.html;
+#	location = /404.html {
+#		root /path/to/jschan/static/html;
+#		internal;
+#	}
+#	location = /500.html {
+#		root /path/to/jschan/static/html;
+#		internal;
+#	}
+#	location = /502.html {
+#		root /path/to/jschan/static/html;
+#		internal;
+#	}
+#	location = /503.html {
+#		root /path/to/jschan/static/html;
+#		internal;
+#	}
+#	location = /504.html {
+#		root /path/to/jschan/static/html;
+#		internal;
+#	}
 #
 #	add_header Cache-Control "public";
 #	add_header Content-Security-Policy "default-src 'self'; img-src 'self' blob:; object-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'";
