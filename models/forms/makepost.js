@@ -10,6 +10,7 @@ const path = require('path')
 	, { Stats, Posts, Boards, Files, Bans } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../redis.js')
 	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
+	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../helpers/files/mimetypes.js')
@@ -335,7 +336,8 @@ module.exports = async (req, res, next) => {
 	//get name, trip and cap
 	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel, res.locals.board.settings);
 	//get message, quotes and crossquote array
-	const { message, quotes, crossquotes } = await messageHandler(req.body.message, req.params.board, req.body.thread);
+	const nomarkup = prepareMarkdown(req.body.message, true);
+	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread);
 
 	//build post data for db
 	const data = {
@@ -347,7 +349,7 @@ module.exports = async (req, res, next) => {
 		capcode,
 		subject,
 		'message': message || null,
-		'nomarkup': req.body.message || null,
+		'nomarkup': nomarkup || null,
 		'thread': req.body.thread || null,
 		password,
 		email,

@@ -3,16 +3,18 @@
 const { News } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
+	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js');
 
 module.exports = async (req, res, next) => {
 
-	const { message: markdownNews } = await messageHandler(req.body.message, null, null);
+	const message = prepareMarkdown(req.body.message, false);
+	const { message: markdownNews } = await messageHandler(message, null, null);
 
 	const post = {
 		'title': req.body.title,
 		'message': {
-			'raw': req.body.message,
+			'raw': message,
 			'markdown': markdownNews
 		},
 		'date': new Date(),
