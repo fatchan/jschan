@@ -1,3 +1,4 @@
+const captchaCookieRegex = /captchaid=(.[^;]*)/ig;
 class CaptchaController {
 
 	constructor() {
@@ -13,12 +14,32 @@ class CaptchaController {
 		}
 	}
 
-	setupCaptchaField(captcha) {
+	captchaAge() {
+		const captchaCookieMatch = document.cookie.match(captchaCookieRegex);
+		if (!captchaCookieMatch) { return; }
+		const cookieParams = new URLSearchParams(captchaCookieMatch[0]);
+		const captchaIdCookie = cookieParams.get('captchaid');
+		if (captchaIdCookie) {
+			const captchaExpiry = new Date(parseInt(captchaIdCookie.slice(0,8),16)*1000);
+			return (Date.now() - captchaExpiry);
+		}
+	}
 
+	startRefreshTimer() {
+		clearTimeout(this.refreshTimer); //this wont throw an error if its null, so no need to check
+		const captchaAge = this.captchaAge();
+		if (captchaAge != null) {
+			console.log('Refreshing captcha in ', 300000-captchaAge)
+			this.refreshTimer = setTimeout(() => {
+				this.refreshCaptchas();
+			}, 300000-captchaAge);
+		}
+	}
+
+	setupCaptchaField(captcha) {
 		if (captcha.closest('form').dataset.captchaPreload == 'true') {
 			return this.loadCaptcha(captcha);
 		}
-
 		if (captchaType === 'grid') {
 			let hoverListener = captcha.closest('details') || captcha;
 			//captcha.parentElement.previousSibling.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling.previousSibling :  captcha.parentElement;
@@ -41,6 +62,7 @@ class CaptchaController {
 		document.cookie = 'captchaid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 		const xhr = new XMLHttpRequest();
 		xhr.onload = () => {
+			this.startRefreshTimer();
 			for (let captcha of this.captchaFields) {
 				const existingImage = captcha.previousSibling.children[0];
 				if (existingImage) {
@@ -80,10 +102,11 @@ class CaptchaController {
 		refreshDiv.textContent = '↻';
 		field.placeholder = 'loading';
 		captchaImg.src = '/captcha';
-		captchaImg.onload = function() {
-				field.placeholder = 'Captcha text';
-				captchaDiv.appendChild(captchaImg);
-				captchaDiv.appendChild(refreshDiv);
+		captchaImg.onload = () => {
+			field.placeholder = 'Captcha text';
+			captchaDiv.appendChild(captchaImg);
+			captchaDiv.appendChild(refreshDiv);
+			this.startRefreshTimer();
 		}
 	}
 
