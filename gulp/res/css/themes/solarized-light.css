@@ -1,0 +1,40 @@
+:root {
+	--icon-color: invert(17%) sepia(89%) saturate(7057%) hue-rotate(2deg) brightness(93%) contrast(120%);
+	--alt-label-color: #EEE8D5;
+	--alt-font-color: #657B83;
+	--background-top: #FDF6E3;
+	--background-rest: #FDF6E3;
+	--navbar-color: #EEE8D5;
+	--post-color: #EEE8D5;
+	--post-outline-color: #93A1A1;
+	--label-color: #EEE8D5;
+	--box-border-color: #93A1A1;
+	--darken: #00000010;
+	--highlighted-post-color: #FDF6E3;
+	--highlighted-post-outline-color: #cb4b16;
+	--board-title: #dc322f;
+	--hr: #93a1a1;
+	--font-color: #657B83;
+	--name-color: #b58900;
+	--capcode-color: #f00;
+	--subject-color: #b58900;
+	--link-color: #657B83;
+	--post-link-color: #268bd2;
+	--link-hover: #2aa198;
+	--input-borders: #93A1A1;
+	--input-color: #657B83;
+	--input-background: #FDF6E3;
+	--dice-color: #D33682;
+	--title-color: #dc322f;
+	--greentext-color: #789922;
+	--pinktext-color: #d33682;
+}
+.bold {
+	color: #93a1a1;
+}
+.em {
+	color: #586e75;
+}
+img[src='/file/dice.png'] {
+	filter: hue-rotate(290deg)
+}
