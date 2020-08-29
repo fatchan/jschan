@@ -7,6 +7,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { remove } = require('fs-extra')
 	, deletePosts = require(__dirname+'/deletepost.js')
+	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, { countryCodes } = require(__dirname+'/../../helpers/countries.js')
 	, validCountryCodes = new Set(countryCodes)
@@ -31,9 +32,10 @@ module.exports = async (req, res, next) => {
 	//array of promises we might need
 	const promises = [];
 
+	const announcement = req.body.announcement === null ? null : prepareMarkdown(req.body.announcement, false);
 	let markdownAnnouncement = oldSettings.announcement.markdown;
-	if (req.body.announcement !== oldSettings.announcement.raw) {
-		const { message } = await messageHandler(req.body.announcement, req.params.board, null);
+	if (announcement !== oldSettings.announcement.raw) {
+		const { message } = await messageHandler(announcement, req.params.board, null);
 		markdownAnnouncement = message; //is there a destructure syntax for this?
 	}
 
@@ -114,7 +116,7 @@ module.exports = async (req, res, next) => {
 		'strictFiltering': booleanSetting(req.body.strict_filtering),
 		'customCss': globalLimits.customCss.enabled ? (req.body.custom_css !== null ? req.body.custom_css : oldSettings.customCss) : null,
 		'announcement': {
-			'raw': req.body.announcement !== null ? req.body.announcement : oldSettings.announcement.raw,
+			'raw': announcement !== null ? announcement : oldSettings.announcement.raw,
 			'markdown': req.body.announcement !== null ? markdownAnnouncement : oldSettings.announcement.markdown,
 		},
 		'allowedFileTypes': {

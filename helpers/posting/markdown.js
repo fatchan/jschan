@@ -14,11 +14,11 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
 	, splitRegex = /```([\s\S]+?)```/gm
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
-	, diceRegex = /##(?<numdice>[1-9][0-9]{0,8})d(?<numsides>1[0-9]{1,8}|[2-9][0-9]{0,8})(?:(?<operator>[+-])(?<modifier>[1-9][0-9]{0,8}))?/gmi
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, escape = require(__dirname+'/escape.js')
 	, { highlight, highlightAuto } = require('highlight.js')
 	, { highlightOptions } = require(__dirname+'/../../configs/main.js')
+	, diceroll = require(__dirname+'/diceroll.js')
 	, replacements = [
 		{ regex: pinktextRegex,	 cb: (match, pinktext) => `<span class='pinktext'>&lt;${pinktext}</span>` },
 		{ regex: greentextRegex, cb: (match, greentext) => `<span class='greentext'>&gt;${greentext}</span>` },
@@ -31,10 +31,25 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 		{ regex: monoRegex,	  cb: (match, mono) => `<span class='mono'>${mono}</span>` },
 		{ regex: linkRegex, cb: require(__dirname+'/linkmatch.js') },
 		{ regex: detectedRegex,  cb: (match, detected) => `<span class='detected'>${detected}</span>` },
-		{ regex: diceRegex,	  cb: require(__dirname+'/diceroll.js') },
+		{ regex: diceroll.regexMarkdown, cb: diceroll.markdown },
 	];
 
 module.exports = {
+
+	prepareMarkdown: (text, force) => {
+		if (!text || text.length === 0) {
+			return text;
+		}
+		const chunks = text.split(splitRegex);
+		for (let i = 0; i < chunks.length; i++) {
+			//every other chunk will be a code block
+			if (i % 2 === 0) {
+				chunks[i] = chunks[i].replace(
+					diceroll.regexPrepare, diceroll.prepare(force));
+			}
+		}
+		return chunks.join('');
+	},
 
 	markdown: (text) => {
 		const chunks = text.split(splitRegex);

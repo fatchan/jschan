@@ -30,7 +30,7 @@ Anonymous imageboard software.
 
 ##### Requirements
 - Linux - Debian used in this example
-- Node.j - the application runtime
+- Node.js - the application runtime
 - MongoDB - the database
 - Redis - session store, task queue, locks, caching, websocket message arbiter
 - Nginx - webserver/proxy, serve static files, handle https, GeoIP lookup

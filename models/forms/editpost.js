@@ -3,6 +3,7 @@
 const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
+	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
 	, { previewReplies, strictFiltering } = require(__dirname+'/../../configs/main.js')
@@ -75,7 +76,8 @@ todo: handle some more situations
 	//new name, trip and cap
 	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel, board.settings);
 	//new message and quotes
-	const { message, quotes, crossquotes } = await messageHandler(req.body.message, req.body.board, post.thread);
+	const nomarkup = prepareMarkdown(req.body.message, false);
+	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread);
 	//todo: email and subject (probably dont need any transformation since staff bypass limits on forceanon, and it doesnt have to account for sage/etc
 
 	//intersection/difference of quotes sets for linking and unlinking
@@ -125,6 +127,7 @@ todo: handle some more situations
 				username: req.body.hide_name ? 'Hidden User' : req.session.user,
 				date: new Date(),
 			},
+			nomarkup,
 			message,
 			quotes,
 			crossquotes,
