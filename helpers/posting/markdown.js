@@ -12,6 +12,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
 	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
 	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
+	, includeSplitRegex = /(```[\s\S]+?```)/gm
 	, splitRegex = /```([\s\S]+?)```/gm
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
@@ -40,7 +41,7 @@ module.exports = {
 		if (!text || text.length === 0) {
 			return text;
 		}
-		const chunks = text.split(splitRegex);
+		const chunks = text.split(includeSplitRegex);
 		for (let i = 0; i < chunks.length; i++) {
 			//every other chunk will be a code block
 			if (i % 2 === 0) {
