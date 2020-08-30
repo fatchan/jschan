@@ -892,6 +892,7 @@ input:invalid, textarea:invalid {
 
 .anchor:target + .post-container,
 .post-container.highlighted,
+.post-container.hoverhighlighted,
 .anchor:target + table tbody tr th,
 .anchor:target + table {
 	background-color: var(--highlighted-post-color) !important;
@@ -1261,11 +1262,10 @@ row.wrap.sb .col {
 		width: 100%;
 		min-width: unset;
 	}
- 	[title] {
+ 	[title], [mobiletitle] {
 		position:relative
  	}
-	[title]:hover:after {
-		content:attr(title);
+	[title]:hover:after, [mobiletitle]:hover:after {
 		color: white;
 		font-size: small;
 		border-radius: 2px;
@@ -1278,7 +1278,13 @@ row.wrap.sb .col {
 		width:-moz-max-content;
 		padding:1px 2px;
  	}
-	[title]:hover:before {
+	[title]:hover:after {
+		content:attr(title);
+	}
+	[mobiletitle]:hover:after {
+		content:attr(mobiletitle);
+	}
+	[title]:hover:before, [mobiletitle]:hover:before {
 		content: '';
 		position: absolute;
 		top: -6px;
@@ -1325,7 +1331,9 @@ row.wrap.sb .col {
 		border-bottom: 1px solid var(--post-outline-color);
 	}
 
-	.anchor:target + .post-container .post-info, .post-container.highlighted .post-info {
+	.anchor:target + .post-container .post-info,
+	.post-container.highlighted .post-info,
+	.post-container.hoverhighlighted .post-info {
 		border-bottom: 1px solid var(--highlighted-post-outline-color);
 	}
 

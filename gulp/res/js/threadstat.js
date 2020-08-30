@@ -11,35 +11,41 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const statsElem = document.getElementById('threadstats');
 	const idElems = [];
 	const idMap = new Map();
+	const isHighlightedSet = new Set();
 
 	const incrementMap = (id) => {
 		idMap.set(id, idMap.get(id)+1 || 1);
 	}
 
-	const updateCounts = () => {
-		for(let i = 0; i < idElems.length; i++) {
-			const count = idMap.get(idElems[i].innerText);
+	const updateCounts = (updateId) => {
+		for (let i = 0; i < idElems.length; i++) {
+			const idString = idElems[i].innerText;
+			if (updateId && updateId !== idString) { continue; }
+			const count = idMap.get(idString);
 			idElems[i].setAttribute('data-count', ` (${count})`);
-			idElems[i].setAttribute('title', `Double tap highlight (${count})`);
+			idElems[i].setAttribute('mobiletitle', `Double tap highlight (${count})`);
+			idElems[i].setAttribute('title', `Double click to highlight (${count})`);
 		}
 	}
 
 	const toggleHighlightPosts = (e) => {
 		const id = e.target.innerText;
 		const idPosts = document.querySelectorAll(`.post-container[data-user-id="${id}"]`);
-		for(let i = 0; i < idPosts.length; i++) {
-			idPosts[i].classList.toggle('highlighted');
+		const isHighlighted = isHighlightedSet.has(id);
+		isHighlightedSet[isHighlighted ? 'delete' : 'add'](id);
+		for (let i = 0; i < idPosts.length; i++) {
+			idPosts[i].classList[isHighlighted ? 'remove' : 'add']('highlighted');
 		}
 	}
 
 	//fetch starting ids
 	const startElems = document.getElementsByClassName('user-id');
-	for(let i = 0; i < startElems.length; i++) {
+	for (let i = 0; i < startElems.length; i++) {
 		idElems.push(startElems[i]);
 		startElems[i].addEventListener('dblclick', toggleHighlightPosts);
 	}
 	//set counts
-	for(let i = 0; i < idElems.length; i++) {
+	for (let i = 0; i < idElems.length; i++) {
 		incrementMap(idElems[i].innerText);
 	}
 
@@ -63,7 +69,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				idElems.push(userId);
 				userId.addEventListener('dblclick', toggleHighlightPosts);
 				incrementMap(e.detail.json.userId);
-				updateCounts();
+				updateCounts(e.detail.json.userId);
+				if (isHighlightedSet.has(e.detail.json.userId)) {
+					e.detail.post.classList.add('highlighted');
+				}
 				if (!statsElem.children[2]) {
 					//UIDs enabled after thread generated
 					const spacer = document.createTextNode(' |  ');

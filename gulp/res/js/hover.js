@@ -55,6 +55,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const floatPost = (quote, post, xpos, ypos) => {
 		const clone = document.createElement('div');
 		clone.id = 'float';
+		clone.classList.remove('hoverhighlighted');
 		clone.appendChild(post.cloneNode(true));
 		document.body.appendChild(clone);
 		setFloatPos(quote, clone, xpos, ypos);
@@ -146,11 +147,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			window.dispatchEvent(newPostEvent);
 		}
 		toggleDottedUnderlines(hoveredPost, thisId);
-		hoveredPost.classList.remove('highlighted');
-		if (anchor && isVisible(hoveredPost)) {
-			hovering ? hoveredPost.classList.add('highlighted') : hoveredPost.classList.remove('highlighted');
-		} else if (hovering) {
+		if (hovering && !isVisible(hoveredPost)) {
 			floatPost(this, hoveredPost, e.clientX, e.clientY);
+		} else {
+			hovering ? hoveredPost.classList.add('hoverhighlighted') : hoveredPost.classList.remove('hoverhighlighted');
 		}
 	}
 
