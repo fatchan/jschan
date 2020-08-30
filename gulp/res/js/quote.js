@@ -25,9 +25,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	const messageBox = document.getElementById('message');
 
+	const addToMessageBox = (str) => {
+		const index = messageBox.selectionStart;
+		messageBox.value = `${messageBox.value.substr(0,index)}${str}${messageBox.value.substr(index)}`;
+		messageBox.setSelectionRange(index+str.length, index+str.length); //this scroll anyway, no need to set scrolltop
+	}
+
 	const addQuote = function(number) {
 		openPostForm();
-		messageBox.value += `>>${number}\n`;
+		let quoteText = `>>${number}\n`;
 		let selection;
 		if (window.getSelection) {
 			selection = window.getSelection().toString();
@@ -40,11 +46,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			const quotedSelection = selection.split(/\r?\n/) //split by lines
 				.map(line => line.trim().length > 0 ? `>${line}` : line) //make non empty lines greentext
 				.join('\n'); //join it back together and newline
-			messageBox.value += `${quotedSelection}\n`;
+			quoteText += `${quotedSelection}\n`;
 		}
-		messageBox.scrollTop = messageBox.scrollHeight;
+		addToMessageBox(quoteText);
 		messageBox.focus();
-		messageBox.setSelectionRange(messageBox.value.length, messageBox.value.length);
 		messageBox.dispatchEvent(new Event('input'));
 	}
 
