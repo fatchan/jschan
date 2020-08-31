@@ -15,7 +15,7 @@ module.exports = (req, res) => {
 	}
 
 	const ret = {
-		message: `Reported ${res.locals.posts.length} post(s)`,
+		message: `Reported ${res.locals.posts.length} post${res.locals.posts.length > 1 ? 's' : ''}`,
 		action: '$push',
 		query: {}
 	};

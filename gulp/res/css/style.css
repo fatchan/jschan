@@ -208,8 +208,8 @@ pre {
 .pages, #livetext, #threadstats {
 	box-sizing: border-box;
 	padding: 10px;
-	width: max-content;
 	width: -moz-max-content;
+	width: max-content;
 	max-width: 100%;
 	margin-bottom: 5px;
 }
@@ -661,8 +661,8 @@ span.captchacheckbox {
 	box-sizing: border-box;
 	display: flex;
 	flex-flow: column wrap;
-	width: max-content;
 	width: -moz-max-content;
+	width: max-content;
 }
 
 .toggle, .togglable {
@@ -945,10 +945,10 @@ input:invalid, textarea:invalid {
 }
 
 .noselect {
-	user-select: none;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
+	user-select: none;
 }
 
 .post-info {
@@ -1030,6 +1030,8 @@ input[type=number]::-webkit-inner-spin-button {
 
 input[type=number] {
 	-moz-appearance:textfield;
+	-webkit-appearance: textfield;
+	appearance:textfield;
 }
 
 input[type="submit"] {
@@ -1274,8 +1276,8 @@ row.wrap.sb .col {
 		top:-1.75em;
 		left:50%;
 		transform:translateX(-50%);
-		width:max-content;
 		width:-moz-max-content;
+		width:max-content;
 		padding:1px 2px;
  	}
 	[title]:hover:after {
