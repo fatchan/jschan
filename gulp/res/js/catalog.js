@@ -8,22 +8,14 @@ if (isCatalog) {
 		const catalogFilter = document.getElementById('catalogfilter');
 		catalogFilter.value = '';
 		const filterCatalog = () => {
-			let existingRule;
-			let i = 0;
-		    for (; i < renderSheet[rulesKey].length; i++) {
+		    for (let i = 0; i < renderSheet[rulesKey].length; i++) {
 	            if (renderSheet[rulesKey][i].selectorText.startsWith('.catalog-tile:not([data-filter*=')) {
-					existingRule = renderSheet[rulesKey][i];
+					renderSheet.deleteRule(i);
 					break;
 	            }
 	        }
 			if (catalogFilter.value.length > 0) {
-				if (existingRule) {
-					existingRule.selectorText = getFilterSelector(catalogFilter.value);
-				} else {
-		            renderSheet.insertRule(getFilterSelector(catalogFilter.value) + ' { display: none; }');
-				}
-	        } else {
-		        renderSheet.deleteRule(i);
+		        renderSheet.insertRule(getFilterSelector(catalogFilter.value) + ' { display: none; }');
 			}
 		}
 		catalogFilter.addEventListener('input', filterCatalog, false);
