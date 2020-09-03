@@ -59,7 +59,7 @@ function changeTheme(type) {
 				if (css) {
 					tempLink.innerHTML = css; //set as inline style temporarily
 				}
-				defaultLink.rel = 'alternate stylesheet'; //disable default theme
+				defaultLink.rel = ''; //disable default theme
 				const themeLink = document.createElement('link');
 				themeLink.rel = 'stylesheet';
 				themeLink.id = `custom${type}`;
