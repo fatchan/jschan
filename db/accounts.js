@@ -112,7 +112,7 @@ module.exports = {
 				'modBoards': board
 			}
 		});
-		cache.del(`users:${username}`);
+		cache.del(usernames.map(n => `users:${n}`));
 		return res;
 	},
 
@@ -126,7 +126,7 @@ module.exports = {
 				'modBoards': board
 			}
 		});
-		cache.del(`users:${username}`);
+		cache.del(usernames.map(n => `users:${n}`));
 		return res;
 	},
 

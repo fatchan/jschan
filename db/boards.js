@@ -85,6 +85,19 @@ module.exports = {
 		return db.deleteMany({});
 	},
 
+	removeModerator: (board, username) => {
+		cache.del(`board:${board}`);
+		return db.updateOne(
+			{
+				'_id': board,
+			}, {
+				'$pull': {
+					'settings.moderators': username
+				}
+			}
+		);
+	},
+
 	removeBanners: (board, filenames) => {
 		cache.del(`board:${board}`);
 		cache.del(`banners:${board}`);
