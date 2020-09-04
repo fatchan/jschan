@@ -35,8 +35,7 @@ module.exports = async (req, res, next) => {
 	const announcement = req.body.announcement === null ? null : prepareMarkdown(req.body.announcement, false);
 	let markdownAnnouncement = oldSettings.announcement.markdown;
 	if (announcement !== oldSettings.announcement.raw) {
-		const { message } = await messageHandler(announcement, req.params.board, null);
-		markdownAnnouncement = message; //is there a destructure syntax for this?
+		({ message: markdownAnnouncement } = await messageHandler(announcement, req.params.board, null))
 	}
 
 	let moderators = req.body.moderators != null ? req.body.moderators.split(/\r?\n/).filter(n => n && !(n == res.locals.board.owner)).slice(0,10) : [];
