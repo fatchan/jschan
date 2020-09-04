@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	const viewFullTextLinks = document.getElementsByClassName('viewfulltext');
 	let loading = {};
 
 	const viewFullText = async function (e) {
@@ -69,19 +68,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		window.dispatchEvent(updatePostMessageEvent);
 	}
 
+	const viewFullTextLinks = document.getElementsByClassName('viewfulltext');
+
 	for (let i = 0; i < viewFullTextLinks.length; i++) {
 		viewFullTextLinks[i].addEventListener('click', viewFullText, false);
 	}
-
-	window.addEventListener('addPost', function(e) {
-		if (e.detail.hover) {
-			return; //dont need to handle for hovered posts
-		}
-		const post = e.detail.post;
-		const viewFullTextLink = post.querySelector('#viewfulltext');
-		if (viewFullTextLink) {
-			viewFullTextLink.addEventListener('click', viewFullText, false);
-		}
-	});
 
 });
