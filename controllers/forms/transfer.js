@@ -18,7 +18,7 @@ module.exports = async (req, res, next) => {
 		errors.push('New owner username must not be same as old owner');
 	}
 	if (alphaNumericRegex.test(req.body.username) !== true) {
-        errors.push('URI must contain a-z 0-9 only');
+        errors.push('Username must contain a-z 0-9 only');
     }
 
 	if (errors.length > 0) {
@@ -26,7 +26,7 @@ module.exports = async (req, res, next) => {
 			'title': 'Bad request',
 			'errors': errors,
 			'redirect': `/${req.params.board}/manage/settings.html`
-		})
+		});
 	}
 
 	try {

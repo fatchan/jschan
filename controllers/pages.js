@@ -75,7 +75,7 @@ router.get('/bypass.html', blockBypass); //block bypass page
 router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
 
 //accounts
-router.get('/account.html', useSession, sessionRefresh, isLoggedIn, account); //page showing boards you are mod/owner of, links to password rese, logout, etc
+router.get('/account.html', useSession, sessionRefresh, isLoggedIn, csrf, account); //page showing boards you are mod/owner of, links to password rese, logout, etc
 router.get('/login.html', login);
 router.get('/register.html', register);
 router.get('/changepassword.html', changePassword);

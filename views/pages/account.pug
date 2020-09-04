@@ -66,3 +66,23 @@ block content
 					a(href=`/${b}/manage/logs.html`) Logs
 	else
 		p None
+	hr(size=1)
+	h4.no-m-p Resign from a staff position:
+	.form-wrapper.flexleft.mt-10
+		form.form-post(action=`/forms/resign`, enctype='application/x-www-form-urlencoded', method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			.row
+				.label Boards
+				select(name='board' size='5')
+					optgroup(label='You own')
+						each board in user.ownedBoards
+							option(value=board) #{board}
+					optgroup(label='You moderate')
+						each board in user.modBoards
+							option(value=board) #{board}
+			.row
+				.label I'm sure
+				label.postform-style.ph-5
+					input(type='checkbox', name='confirm', value='true' required)
+			input(type='submit', value='submit')
+	
