@@ -6,7 +6,7 @@ module.exports = (match) => {
 	let trimmedMatch;
 	let excess = '';
 	const parensPairs = match.match(parenPairRegex);
-	//naive solution
+	//naive solution to conflict with detected markdown
 	if (parensPairs) {
 		const lastMatch = parensPairs[parensPairs.length-1];
 		const lastIndex = match.lastIndexOf(lastMatch);
