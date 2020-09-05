@@ -11,7 +11,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 					const searchParams = urlObject.searchParams;
 					const videoId = searchParams.get('v') || (urlObject.hostname === 'youtu.be' ? urlObject.pathname.substring(1) : null);
 					if (videoId && videoId.length === 11) {
-						return `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" style="display:block;" allowfullscreen></iframe>`;
+						return `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" style="display:block;" allowfullscreen></iframe>`;
 					}
 					return null;
 				}
@@ -35,7 +35,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 				const embedHtml = embedHandler.toHtml(l[i].href);
 				if (embedHtml) {
 					const embedLink = document.createElement('a');
-					embedLink.classList.add('embed-link', 'ml-5');
+					embedLink.classList.add('embed-link', 'ml-5', 'noselect');
 					embedLink.textContent = '[Embed]';
 					embedLink.addEventListener('click', () => toggleEmbed(embedLink, embedHtml), false);
 					l[i].parentNode.insertBefore(embedLink, l[i].nextSibling);
@@ -50,8 +50,13 @@ if (!isCatalog) { //dont show embed buttons in catalog
 			if (e.detail.hover) {
 				return;
 			}
-			const newlinks = Array.from(e.detail.post.querySelector(linkSelector))
-				.filter(link => !link.nextSibling.classList.contains('embed-link')); //dont add for existing during updatepostmessage
+			const newlinks = Array.from(e.detail.post.querySelectorAll(linkSelector))
+				.filter(link => {
+					//dont add for existing or during updatepostmessage
+					return !(link.nextSibling
+						&& link.nextSibling.classList
+						&& link.nextSibling.classList.contains('embed-link'));
+				});
 			addEmbedButtons(newlinks);
 		}
 
