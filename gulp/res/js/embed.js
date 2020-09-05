@@ -5,7 +5,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 
 		const supportedEmbeds = [
 			{
-				linkRegex: /^https?\:\/\/(?:www\.)?(?:youtube\.com|youtu\.?be)\//i,
+				linkRegex: /^https?\:\/\/(?:www\.|m\.)?(?:youtube\.com|youtu\.?be)\//i,
 				toHtml: (url) => {
 					try {
 						const urlObject = new URL(url);
@@ -34,13 +34,15 @@ if (!isCatalog) { //dont show embed buttons in catalog
 			//TODO: add more of these
 		];
 
-		const toggleEmbed = (embedLink, embedHtml) => {
-			if (embedLink.dataset.open === 'true') {
-				embedLink.nextSibling.remove();
+		const toggleEmbed = (embedSpan, embedHtml) => {
+			if (embedSpan.dataset.open === 'true') {
+				embedSpan.nextSibling.remove();
+				embedSpan.firstElementChild.textContent = 'Embed';
 			} else {
-				embedLink.insertAdjacentHTML('afterend', embedHtml);
+				embedSpan.insertAdjacentHTML('afterend', embedHtml);
+				embedSpan.firstElementChild.textContent = 'Close';
 			}
-			embedLink.dataset.open = embedLink.dataset.open === 'true' ? 'false' : 'true';
+			embedSpan.dataset.open = embedSpan.dataset.open === 'true' ? 'false' : 'true';
 		}
 
 		const addEmbedButtons = (l) => {
@@ -49,11 +51,18 @@ if (!isCatalog) { //dont show embed buttons in catalog
 				if (!embedHandler) { continue; }
 				const embedHtml = embedHandler.toHtml(l[i].href);
 				if (embedHtml) {
+					const embedSpan = document.createElement('span');
+					const openBracket = document.createTextNode('[');
 					const embedLink = document.createElement('a');
-					embedLink.classList.add('embed-link', 'ml-5', 'noselect');
-					embedLink.textContent = '[Embed]';
-					embedLink.addEventListener('click', () => toggleEmbed(embedLink, embedHtml), false);
-					l[i].parentNode.insertBefore(embedLink, l[i].nextSibling);
+					const closeBracket = document.createTextNode(']');
+					embedSpan.classList.add('ml-5', 'noselect', 'bold');
+					embedLink.classList.add('embed-link');
+					embedLink.textContent = 'Embed';
+					embedSpan.appendChild(openBracket);
+					embedSpan.appendChild(embedLink);
+					embedSpan.appendChild(closeBracket);
+					l[i].parentNode.insertBefore(embedSpan, l[i].nextSibling);
+					embedLink.addEventListener('click', () => toggleEmbed(embedSpan, embedHtml), false);
 				}
 			}
 		};
