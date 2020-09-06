@@ -32,8 +32,7 @@ router.get('/index.html', home);
 router.get('/news.html', news);
 
 //board list
-router.get('/boards.html', useSession, sessionRefresh, calcPerms, boardlist);
-router.get('/boards.json', useSession, sessionRefresh, calcPerms, boardlist);
+router.get('/boards.(html|json)', useSession, sessionRefresh, calcPerms, boardlist);
 
 //board pages
 router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, paramConverter, board); //index
