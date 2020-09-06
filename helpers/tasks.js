@@ -285,26 +285,31 @@ module.exports = {
 
 	},
 
-	buildChangePassword: () => {
-		return render('changepassword.html', 'changepassword.pug');
+	buildChangePassword: async () => {
+		const { html } = await render('changepassword.html', 'changepassword.pug');
+		return html;
 	},
 
-	buildRegister: () => {
-		return render('register.html', 'register.pug');
+	buildRegister: async () => {
+		const { html } = await render('register.html', 'register.pug');
+		return html;
 	},
 
-	buildBypass: (minimal=false) => {
-		return render(`bypass${minimal ? '_minimal' : ''}.html`, 'bypass.pug', {
+	buildBypass: async (minimal=false) => {
+		const { html } = await render(`bypass${minimal ? '_minimal' : ''}.html`, 'bypass.pug', {
 			minimal,
 		});
+		return html;
 	},
 
-	buildCreate: () => {
-		return render('create.html', 'create.pug');
+	buildCreate: async () => {
+		const { html } = await render('create.html', 'create.pug');
+		return html;
 	},
 
-	buildCaptcha: () => {
-		return render('captcha.html', 'captcha.pug');
+	buildCaptcha: async() => {
+		const { html } = await render('captcha.html', 'captcha.pug');
+		return html;
 	},
 
 }
