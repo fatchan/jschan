@@ -244,7 +244,9 @@ function scripts() {
 		const locals = `const themes = ['${themes.join("', '")}'];
 const codeThemes = ['${codeThemes.join("', '")}'];
 const captchaType = '${configs.captchaOptions.type}';
-const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';`;
+const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
+const settings = ${JSON.stringify(configs.frontendScriptDefault)};
+`;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));

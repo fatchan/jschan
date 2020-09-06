@@ -1,3 +1,4 @@
+
 const isCatalog = window.location.pathname.endsWith('catalog.html');
 const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
 const isModView = /\/\w+\/manage\/(thread\/)?(index|\d+).html/.test(window.location.pathname);
@@ -17,8 +18,8 @@ function appendLocalStorageArray(key, value) {
 	storedArray.push(value);
 	setLocalStorage(key, JSON.stringify(storedArray));
 }
-
 function deleteStartsWith(startString = 'hovercache') {
+
 	//clears hover cache when localstorage gets full
 	const hoverCaches = Object.keys(localStorage).filter(k => k.startsWith(startString));
 	for(let i = 0; i < hoverCaches.length; i++) {
@@ -32,40 +33,24 @@ function setDefaultLocalStorage(key, value) {
 	}
 }
 
-//position of floating postform
+//todo: just make the localstorage name match the names of settings and put a loop
+setDefaultLocalStorage('volume', settings.defaultVolume);
+setDefaultLocalStorage('loop', settings.loop);
+setDefaultLocalStorage('imageloadingbars', settings.imageLoadingBard);
+setDefaultLocalStorage('live', settings.live);
+setDefaultLocalStorage('scroll', settings.sctollToPosts);
+setDefaultLocalStorage('localtime', settings.localTime);
+setDefaultLocalStorage('relative', settings.relativeTime);
+setDefaultLocalStorage('24hour', settings.hour24time);
+setDefaultLocalStorage('notifications', settings.notificationsEnabled);
+setDefaultLocalStorage('notification-yous-only', settings.notificationsYousOnly);
+setDefaultLocalStorage('yous-setting', settings.showYous);
+
 setDefaultLocalStorage('dragtop', null);
 setDefaultLocalStorage('dragleft', null);
-//audio/video volume percentage
-setDefaultLocalStorage('volume', 100);
-//whether to loop audio/video
-setDefaultLocalStorage('loop', false);
-//show loading bars on images
-setDefaultLocalStorage('imageloadingbars', false);
-//list of hidden posts in <board>-<id> format
 setDefaultLocalStorage('hidden', '[]');
-//connect to websocket for live posts
-setDefaultLocalStorage('live', true);
-//scroll to new posts
-setDefaultLocalStorage('scroll', false);
-//default post name
-setDefaultLocalStorage('name', '');
-//defualt theme, 'deault' for board theme
-setDefaultLocalStorage('theme', 'default');
-//defualt theme, 'deault' for board theme
-setDefaultLocalStorage('codetheme', 'default');
-//custom css string
-setDefaultLocalStorage('customcss', '');
-//show local times
-setDefaultLocalStorage('localtime', true);
-//relative time mode
-setDefaultLocalStorage('relative', true);
-//24 hour time mode
-setDefaultLocalStorage('24hour', false);
-//notification for new posts
-setDefaultLocalStorage('notifications', false);
-//notifications only for yous, requires notifications enabled
-setDefaultLocalStorage('notification-yous-only', false);
-//show (you)'s
-setDefaultLocalStorage('yous-setting', true);
-//list of yous in <board>-<id> format
 setDefaultLocalStorage('yous', '[]');
+setDefaultLocalStorage('name', '');
+setDefaultLocalStorage('theme', 'default');
+setDefaultLocalStorage('codetheme', 'default');
+setDefaultLocalStorage('customcss', '');

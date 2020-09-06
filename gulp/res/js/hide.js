@@ -139,22 +139,22 @@ class CssToggle {
 
 //define the css
 const hidePostStubsCss = `.post-container.hidden, .catalog-tile.hidden { visibility: hidden;margin-top: -1.5em;height: 0; }`;
-const hideImagesCss = `.file-thumb, .catalog-thumb { visibility: hidden !important; }`;
+const hideThumbnailsCss = `.file-thumb, .catalog-thumb { visibility: hidden !important; }`;
 const hideRecursiveCss = `.op.hidden ~ .anchor, .op.hidden ~ .post-container { display: none; }`;
-const heightlimitCss = `img, video { max-height: unset; }`;
+const heightUnlimitCss = `img, video { max-height: unset; }`;
 const crispCss = `img { image-rendering: crisp-edges; }`;
 const nonColorIdsCss = `.user-id { background: transparent none repeat scroll 0% 0% !important; border-color: transparent; text-shadow: none; color: var(--font-color); }`;
 const alwaysShowSpoilersCss = `.spoiler { color: var(--font-color) !important; background: transparent none repeat scroll 0% 0%; outline: 1px solid black; cursor: auto; }`;
 const smoothScrollingCss = `html { scroll-behavior: smooth; }`;
 //make classes with css
-new CssToggle('hiderecursive-setting', 'hiderecursive', true, hideRecursiveCss);
-new CssToggle('heightlimit-setting', 'heightlimit', false, heightlimitCss);
-new CssToggle('crispimages-setting', 'crispimages', false, crispCss);
-new CssToggle('hideimages-setting', 'hideimages', false, hideImagesCss);
-new CssToggle('noncolorids-setting', 'noncolorids', false, nonColorIdsCss);
-new CssToggle('alwaysshowspoilers-setting', 'alwaysshowspoilers', false, alwaysShowSpoilersCss);
-new CssToggle('hidepoststubs-setting', 'hidepoststubs', false, hidePostStubsCss);
-new CssToggle('smoothscrolling-setting', 'smoothscrolling', false, smoothScrollingCss);
+new CssToggle('hiderecursive-setting', 'hiderecursive', settings.hideRecursive, hideRecursiveCss);
+new CssToggle('heightlimit-setting', 'heightlimit', settings.heightUnlimit, heightUnlimitCss);
+new CssToggle('crispimages-setting', 'crispimages', settings.crispImages, crispCss);
+new CssToggle('hidethumbnails-setting', 'hidethumbnails', settings.hideThumbnails, hideThumbnailsCss);
+new CssToggle('noncolorids-setting', 'noncolorids', settings.nonColorIds, nonColorIdsCss);
+new CssToggle('alwaysshowspoilers-setting', 'alwaysshowspoilers', settings.alwaysShowSpoilers, alwaysShowSpoilersCss);
+new CssToggle('hidepoststubs-setting', 'hidepoststubs', settings.hidePostStubs, hidePostStubsCss);
+new CssToggle('smoothscrolling-setting', 'smoothscrolling', settings.smoothScrolling, smoothScrollingCss);
 
 window.addEventListener('addPost', function(e) {
 	const post = e.detail.post;

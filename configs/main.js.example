@@ -252,6 +252,30 @@ nano module.exports = {
 		}
 	},
 
+	//default frontend script settings
+	frontendScriptDefault: {
+		heightUnlimit: false, //allow images [M -1taller than window height
+		hideRecursive: true, //hide replies to hidden OPs
+		crispImages: false, //use crisp/pixelated image rendering
+		hideThumbnails: false, //hide thumbnails
+		nonColorIds: false, //dont color ids
+		alwaysShowSpoilers: false , //always reveal spoiler text
+		hidePostStubs: false, //hide hidden posts completely, dont even show it minimized
+		smoothScrolling: false, //smooth scrolling. annoying for chrome users on long threads
+		defaultVolume: 100, //default video/audio volume
+		loop: true, //looping video/audio
+		imageLoadingBars: true, //show loading bar for images, changes behaviour of right click save/open
+		live: true, //update threads automatically
+		scrollToPosts: false, //scroll to new posts
+		localTime: true, //show local time for posts
+		hour24Time: false, //show 24 hour time for posts
+		relativeTime: true, //show relative time i.e. "5 minutes ago" for posts
+		//note: relative time overrides other time options, they show on hover in the tooltip/"title" property
+		notificationsEnabled: false, //show notifications for new posts in a thread
+		notificationsYousOnly: true, //only show notifications for posts that quote you
+		showYous: true, //show (You) next to name on your posts, and quotes linking to your post
+	},
+
 	//default board settings when a board is created
 	boardDefaults: {
 		theme: 'lain',
