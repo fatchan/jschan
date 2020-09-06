@@ -49,5 +49,5 @@ module.exports = async (htmlName, templateName, options, json=null) => {
 	}
 	await Promise.all([htmlPromise, jsonPromise]);
 	await lock.unlock();
-	return { html, json };
+	return { html, json: json ? json.data : null };
 };
