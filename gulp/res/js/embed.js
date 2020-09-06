@@ -25,7 +25,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 						const urlObject = new URL(url);
 						const videoId = urlObject.pathname.split('/')[2];
 						if (videoId) {
-							return `<iframe class="embed-video" src="https://www.bitchute.com/embed/${videoId}/" frameborder="0" scrolling="no" style="display:block;" allowfullscreen></iframe>`;
+							return `<iframe class="embed-video" src="https://www.bitchute.com/embed/${encodeURIComponent(videoId)}/" frameborder="0" scrolling="no" style="display:block;" allowfullscreen></iframe>`;
 						}
 					} catch (e) { /*invalid url*/ }
 					return null;
