@@ -1,26 +1,31 @@
 'use strict';
 
 const Posts = require(__dirname+'/../../db/posts.js')
+	, buildQueue = require(__dirname+'/../../queue.js')
 	, { buildBoard } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
 
 	const page = req.params.page === 'index' ? 1 : Number(req.params.page);
-	let html;
+	let html, json;
 	try {
 		const maxPage = Math.min(Math.ceil((await Posts.getPages(req.params.board)) / 10), Math.ceil(res.locals.board.settings.threadLimit/10)) || 1;
 		if (page > maxPage) {
 			return next();
 		}
-		html = await buildBoard({
+		({ html, json } = await buildBoard({
 			board: res.locals.board,
 			page,
 			maxPage
-		});
+		}));
 	} catch (err) {
 		return next(err);
 	}
 
-	return res.send(html);
+	if (req.path.endsWith('.json')) {
+		return res.json(json);
+	} else {
+		return res.send(html);
+	}
 
 }

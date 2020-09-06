@@ -87,15 +87,25 @@ module.exports = async (req, res, next) => {
 	}
 
 	res
-	.set('Cache-Control', `${isGlobalStaff ? 'private' : 'public'}, max-age=60`)
-	.render('boardlist', {
-		localBoards,
-		webringBoards,
-		page,
-		maxPage,
-		query: req.query,
-		search,
-		queryString,
-	});
+	.set('Cache-Control', `${isGlobalStaff ? 'private' : 'public'}, max-age=60`);
+
+	if (req.path === '/boards.json') {
+		res.json({
+			localBoards,
+			webringBoards,
+			page,
+			maxPage,
+		});
+	} else {
+		res.render('boardlist', {
+			localBoards,
+			webringBoards,
+			page,
+			maxPage,
+			query: req.query,
+			search,
+			queryString,
+		});
+	}
 
 }

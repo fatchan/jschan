@@ -4,16 +4,20 @@ const { buildThread } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
 
-	let html;
-    try {
-		html = await buildThread({
+	let html, json;
+	try {
+		({ html, json } = await buildThread({
 			threadId: res.locals.thread.postId,
 			board: res.locals.board
-		});
-    } catch (err) {
-        return next(err);
+		}));
+	} catch (err) {
+		return next(err);
 	}
 
-	return res.send(html);
+	if (req.path.endsWith('.json')) {
+		return res.json(json);
+	} else {
+		return res.send(html);
+	}
 
 }

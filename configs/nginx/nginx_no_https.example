@@ -126,8 +126,8 @@ server {
 	location ~* \.json$ {
 		expires 0;
 		root /path/to/jschan/static/json;
-		try_files $uri =404;
-		#json doesnt hit backend if it doesnt exist yet.
+		try_files $uri @backend;
+		#some json files will build pages on-demand
 	}
 
 	# CSS

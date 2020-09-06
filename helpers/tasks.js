@@ -16,7 +16,7 @@ module.exports = {
 	buildBanners: async (options) => {
 		const label = `/${options.board._id}/banners.html`;
 		const start = process.hrtime();
-		const html = await render(label, 'banners.pug', options, {
+		const { html } = await render(label, 'banners.pug', options, {
 			'name': `/${options.board._id}/banners.json`,
 			'data': options.board.banners
 		});
@@ -32,7 +32,7 @@ module.exports = {
 			options.board = await Boards.findOne(options.board);
 		}
 		const threads = await Posts.getCatalog(options.board._id);
-		const html = await render(label, 'catalog.pug', {
+		const { html, json } = await render(label, 'catalog.pug', {
 			...options,
 			threads,
 		}, {
@@ -41,7 +41,7 @@ module.exports = {
 		});
 		const end = process.hrtime(start);
 		debugLogs && console.log(timeDiffString(label, end));
-		return html;
+		return { html, json };
 	},
 
 	buildThread: async (options) => {
@@ -54,7 +54,7 @@ module.exports = {
 		if (!thread) {
 			return; //this thread may have been an OP that was deleted
 		}
-		const html = await render(label, 'thread.pug', {
+		const { html, json } = await render(label, 'thread.pug', {
 			...options,
 			thread,
 		}, {
@@ -63,7 +63,7 @@ module.exports = {
 		});
 		const end = process.hrtime(start);
 		debugLogs && console.log(timeDiffString(label, end));
-		return html;
+		return { html, json };
 	},
 
 	buildBoard: async (options) => {
@@ -73,7 +73,7 @@ module.exports = {
 		if (!options.maxPage) {
 			options.maxPage = Math.min(Math.ceil((await Posts.getPages(options.board._id)) / 10), Math.ceil(options.board.settings.threadLimit/10));
 		}
-		const html = await render(label, 'board.pug', {
+		const { html, json } = await render(label, 'board.pug', {
 			...options,
 			threads,
 		}, {
@@ -82,7 +82,7 @@ module.exports = {
 		});
 		const end = process.hrtime(start);
 		debugLogs && console.log(timeDiffString(label, end));
-		return html;
+		return { html, json };
 	},
 
 	//building multiple pages (for rebuilds)
@@ -130,7 +130,7 @@ module.exports = {
 		const label = '/news.html';
 		const start = process.hrtime();
 		const news = await News.find();
-		const html = await render('news.html', 'news.pug', {
+		const { html } = await render('news.html', 'news.pug', {
 			news
 		});
 		const end = process.hrtime(start);
@@ -155,7 +155,7 @@ module.exports = {
 		if (!options.logs) {
 			options.logs = await Modlogs.findBetweenDate(options.board, options.startDate, options.endDate);
 		}
-		const html = await render(label, 'modlog.pug', {
+		const { html } = await render(label, 'modlog.pug', {
 			...options
 		});
 		const end = process.hrtime(start);
@@ -187,7 +187,7 @@ module.exports = {
 				await Modlogs.deleteOld(options.board, pruneAfter);
 			}
 		}
-		const html = await render(label, 'modloglist.pug', {
+		const { html } = await render(label, 'modloglist.pug', {
 			board: options.board,
 			dates
 		});
@@ -205,7 +205,7 @@ module.exports = {
 			Files.activeContent(), //size ans number of files
 			News.find(maxRecentNews), //some recent newsposts
 		]);
-		const html = await render('index.html', 'home.pug', {
+		const { html } = await render('index.html', 'home.pug', {
 			totalStats,
 			boards,
 			fileStats,

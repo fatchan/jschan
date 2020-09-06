@@ -33,11 +33,12 @@ router.get('/news.html', news);
 
 //board list
 router.get('/boards.html', useSession, sessionRefresh, calcPerms, boardlist);
+router.get('/boards.json', useSession, sessionRefresh, calcPerms, boardlist);
 
 //board pages
-router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', Boards.exists, paramConverter, board); //index
-router.get('/:board/thread/:id([1-9][0-9]{0,}).html', Boards.exists, paramConverter, Posts.exists, thread); //thread view
-router.get('/:board/catalog.html', Boards.exists, catalog); //catalog
+router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, paramConverter, board); //index
+router.get('/:board/thread/:id([1-9][0-9]{0,}).(html|json)', Boards.exists, paramConverter, Posts.exists, thread); //thread view
+router.get('/:board/catalog.(html|json)', Boards.exists, catalog); //catalog
 router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
 router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
 router.get('/:board/banners.html', Boards.exists, banners); //banners
