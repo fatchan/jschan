@@ -6,7 +6,7 @@ block head
 block content
 	h1.board-title Create Board
 	.form-wrapper.flex-center.mv-10
-		form.form-post(action='/forms/create' method='POST')
+		form.form-post(action='/forms/create' method='POST' data-captcha-preload='true')
 			.row
 				.label URI e.g. /uri/
 				input(type='text', name='uri', maxlength=globalLimits.fieldLength.uri pattern='[a-zA-Z0-9]+' required title='alphanumeric only')
