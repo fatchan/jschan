@@ -1,4 +1,4 @@
-nano module.exports = {
+module.exports = {
 
 	//mongodb connection string
 	dbURL: 'mongodb://username:password@localhost:27017',
