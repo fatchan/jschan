@@ -47,23 +47,3 @@ module.exports = async (inputName, permLevel, boardSettings, boardOwner, usernam
 	return { name, tripcode, capcode };
 
 }
-
-//console.table([
-//
-//{test:'Global Staff is also Board Mod', input:'##', output: test('##', 1, {forceAnon: false, defaultName:'Anon', moderators:['user']}, 'boardowner', 'user')},
-//{test:'Global Staff is also Board Mod', input:'## test', output: test('## test', 1, {forceAnon: false, defaultName:'Anon', moderators:['user']}, 'boardowner', 'user')},
-//{test:'Global Staff is also Board Mod', input:'## Global Staff', output: test('## Global Staff', 1, {forceAnon: false, defaultName:'Anon', moderators:['user']}, 'boardowner', 'user')},
-//{test:'Global Staff is also Board Mod', input:'## Global Staff test', output: test('## Global Staff test', 1, {forceAnon: false, defaultName:'Anon', moderators:['user']}, 'boardowner', 'user')},
-//{},
-//{test:'Global Staff is also Board Owner', input:'##', output: test('##', 1, {forceAnon: false, defaultName:'Anon', moderators:['boardmod']}, 'user', 'user')},
-//{test:'Global Staff is also Board Owner', input:'## test', output: test('## test', 1, {forceAnon: false, defaultName:'Anon', moderators:['boardmod']}, 'user', 'user')},
-//{test:'Global Staff is also Board Owner', input:'## Global Staff', output: test('## Global Staff', 1, {forceAnon: false, defaultName:'Anon', moderators:['boardmod']}, 'user', 'user')},
-//{test:'Global Staff is also Board Owner', input:'## Global Staff test', output: test('## Global Staff test', 1, {forceAnon: false, defaultName:'Anon', moderators:['boardmod']}, 'user', 'user')},
-//{},
-//{test:'Global Staff is not board staff', input:'##', output: test('##', 1, {forceAnon: false, defaultName:'Anon', moderators:['boardmod']}, 'boardowner', 'user')},
-//{test:'Global Staff is not board staff', input:'## test', output: test('## test', 1, {forceAnon: false, defaultName:'Anon', moderators:['boardmod']}, 'boardowner', 'user')},
-//{test:'Global Staff is not board staff', input:'## Global Staff', output: test('## Global Staff', 1, {forceAnon: false, defaultName:'Anon', moderators:['boardmod']}, 'boardowner', 'user')},
-//{test:'Global Staff is not board staff', input:'## Global Staff test', output: test('## Global Staff test', 1, {forceAnon: false, defaultName:'Anon', moderators:['boardmod']}, 'boardowner', 'user')},
-//
-//]);
-
