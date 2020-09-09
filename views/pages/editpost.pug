@@ -20,8 +20,7 @@ block content
 								include ../includes/posticons.pug
 							input.edit.post-subject(value=post.subject placeholder='Subject' type='text' name='subject' maxlength=globalLimits.fieldLength.subject)
 							input.edit.post-name(value=post.email type='text' name='email' placeholder='Email' maxlength=globalLimits.fieldLength.email)
-							- const capcodeInput = post.capcode && post.capcode.length > 0 ? '## '+post.capcode.split(' ').slice(2) : '';
-							input.edit.post-name(type='text' name='name' placeholder='Name' maxlength=globalLimits.fieldLength.name value=post.name+capcodeInput)
+							input.edit.post-name(type='text' name='name' placeholder='Name' maxlength=globalLimits.fieldLength.name value=post.name+(post.capcode || ''))
 						if post.country && post.country.code
 							span(class=`flag flag-${post.country.code.toLowerCase()}` title=post.country.name alt=post.country.name)
 							| 

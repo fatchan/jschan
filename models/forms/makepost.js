@@ -334,7 +334,8 @@ module.exports = async (req, res, next) => {
 	let email = (res.locals.permLevel < 4 || (!forceAnon && !sageOnlyEmail) || req.body.email === 'sage') ? req.body.email : null;
 
 	//get name, trip and cap
-	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel, res.locals.board.settings);
+	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel,
+		res.locals.board.settings, res.locals.board.owner, res.locals.user ? res.locals.user.username : null);
 	//get message, quotes and crossquote array
 	const nomarkup = prepareMarkdown(req.body.message, true);
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread);

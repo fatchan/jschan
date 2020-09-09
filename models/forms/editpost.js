@@ -74,7 +74,8 @@ todo: handle some more situations
 	}
 
 	//new name, trip and cap
-	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel, board.settings);
+	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel,
+		board.settings, board.owner, res.locals.user ? res.locals.user.username : null);
 	//new message and quotes
 	const nomarkup = prepareMarkdown(req.body.message, false);
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread);
