@@ -92,7 +92,7 @@ router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, 
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptcha);
 //solve captcha for block bypass
-router.post('/blockbypass', geoAndTor, /*torPreBypassCheck, processIp, */ verifyCaptcha, blockBypass);
+router.post('/blockbypass', geoAndTor, /*torPreBypassCheck,*/ processIp, verifyCaptcha, blockBypass);
 
 module.exports = router;
 
