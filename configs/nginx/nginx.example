@@ -328,7 +328,7 @@ server {
 #	location ~* \.json$ {
 #		expires 0;
 #		root /path/to/jschan/static/json;
-#		try_files $uri =404;
+#		try_files $uri @backend;
 #		#json doesnt hit backend if it doesnt exist yet.
 #	}
 #

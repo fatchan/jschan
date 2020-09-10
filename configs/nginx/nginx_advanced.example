@@ -1,0 +1,56 @@
+upstream chan {
+	server 127.0.0.1:7000;
+}
+
+server {
+
+	server_name www.xxxxxxxx.onion xxxxxxxx.onion;
+
+	client_max_body_size 0;
+	listen unix:/var/run/nginx-tor.sock;
+	allow "unix:";
+	deny all;
+
+	include /etc/nginx/snippets/security_headers.conf;
+	include /etc/nginx/snippets/error_pages.conf;
+	include /etc/nginx/snippets/jschan_routes_tor.conf;
+
+}
+
+server {
+
+	server_name www.example.com example.com;
+
+	client_max_body_size 0;
+	#header will tell tor users accessing clearnet endpoint to use onion service
+	add_header onion-location 'http://xxxxxxxxxxx.onion';	
+
+	include /etc/nginx/snippets/security_headers.conf;
+	include /etc/nginx/snippets/error_pages.conf;
+	include /etc/nginx/snippets/jschan_routes.conf;
+
+	listen [::]:443 ssl ipv6only=on; # managed by Certbot
+	listen 443 ssl; # managed by Certbot
+	ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem; # managed by Certbot
+	ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem; # managed by Certbot
+	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+	if ($host = www.example.com) {
+		return 301 https://$host$request_uri;
+	} # managed by Certbot
+
+	if ($host = example.com) {
+		return 301 https://$host$request_uri;
+	} # managed by Certbot
+
+	server_name www.example.com example.com;
+
+	listen 80;
+	listen [::]:80;
+	return 444; # managed by Certbot
+
+}
