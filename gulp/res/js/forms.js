@@ -127,7 +127,7 @@ class formHandler {
 		const xhr = new XMLHttpRequest();
 		let postData;
 		if (this.enctype === 'multipart/form-data') {
-			this.fileInput && (this.fileInput.disabled = true); 
+			this.fileInput && (this.fileInput.disabled = true);
 			postData = new FormData(this.form);
 			if (recaptchaResponse) {
 				postData.append('captcha', recaptchaResponse);
@@ -220,8 +220,12 @@ class formHandler {
 				} else {
 					if (xhr.status === 413) {
 						this.clearFiles();
-					}
-					if (json) {
+						//not json, must be nginx response
+						doModal({
+							'title': 'Payload Too Large',
+							'message': 'Your upload was too large',
+						});
+					} else if (json) {
 						if (!this.captchaField && json.message === 'Incorrect captcha answer') {
 							captchaController.addMissingCaptcha();
 							this.captchaField = true;
