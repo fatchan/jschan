@@ -27,10 +27,9 @@ module.exports = {
 	//list of allowed host for checking referrer
 	allowedHosts: ['domain.com', 'www.domain.com'],
 
-	//These 2 are usually not necessary to change. Only if you use a proxy/cdn like cloudflare, and then it probably requires change to nginx config.
-	//header for country codes, for cloudflare, use 'Cf-Ipcountry'
+	//header for country codes
 	countryCodeHeader: 'x-country-code',
-	//header for visitor IP, for cloudflare use 'CF-Connecting-IP'
+	//header for visitor IP
 	ipHeader: 'x-real-ip',
 
 	//data used in opengraph meta tags. used to generate link previews in e.g. discord, twitter, etc

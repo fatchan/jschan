@@ -90,6 +90,9 @@ geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 ```
 If your nginx doesn't have the necessary module by default, or is using v2 instead, find your own guide.
 
+If you use cloudflare, please read [these](https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-Logging-visitor-IP-addresses-with-mod-cloudflare-) [articles](https://support.cloudflare.com/hc/en-us/articles/200168236-Configuring-Cloudflare-IP-Geolocation) to setup proper IP forwarding and geolocation headers. Similar steps would apply to other CDNs/reverse proxies.
+There are also 2 config entries in configs/main.js, `ipHeader` and `countryCodeHeader` that you can tweak for jschan to use different headers for country code or real visitor IP.
+
 A snippets folder is also included for advanced users to better organise and more easily customise the nginx configuration.
 
 **7. Clone this repo, browse to the folder and set some things up**
