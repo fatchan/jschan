@@ -37,7 +37,7 @@ module.exports = async (req, res, next) => {
 
 	return res
 		.cookie('captchaid', captchaId.toString(), {
-			'secure': production && secureCookies,
+			'secure': production && secureCookies && (req.headers['x-forwarded-proto'] === 'https'),
 			'sameSite': 'strict',
 			maxAge,
 		})
