@@ -24,7 +24,7 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { thumbSize, thumbExtension, postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
+	, { checkRealMimeTypes, thumbSize, thumbExtension, postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -161,7 +161,7 @@ module.exports = async (req, res, next) => {
 	let files = [];
 	// if we got a file
 	if (res.locals.numFiles > 0) {
-		// check all mime types befoer we try saving anything
+		// check all mime types before we try saving anything
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			if (!mimeTypes.allowed(req.files.file[i].mimetype, allowedFileTypes)) {
 				await deleteTempFiles(req).catch(e => console.error);
@@ -170,6 +170,19 @@ module.exports = async (req, res, next) => {
 					'message': `Mime type "${req.files.file[i].mimetype}" for "${req.files.file[i].name}" not allowed`,
 					'redirect': redirect
 				});
+			}
+		}
+		// check for any mismatching supposed mimetypes from the actual file mimetype
+		if (checkRealMimeTypes) {
+			for (let i = 0; i < res.locals.numFiles; i++) {
+				if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
+					deleteTempFiles(req).catch(e => console.error);
+					return dynamicResponse(req, res, 400, 'message', {
+						'title': 'Bad request',
+						'message': `Mime type mismatch for file "${req.files.file[i].name}"`,
+						'redirect': redirect
+					});
+				}
 			}
 		}
 		// then upload, thumb, get metadata, etc.

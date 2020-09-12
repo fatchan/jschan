@@ -9,6 +9,13 @@ const { globalLimits, debugLogs, filterFileNames, spaceFileNameReplacement } = r
 			'redirect': req.headers.referer
 		});
 	}
+	, numFilesUploadLimitFunction = (req, res, next) => {
+		return dynamicResponse(req, res, 400, 'message', {
+			'title': 'Too many files',
+			'message': 'You sent too many files in one request',
+			'redirect': req.headers.referer
+		});
+	}
 	, upload = require('express-fileupload')
 	, postFiles = upload({
 		debug: debugLogs,
@@ -19,8 +26,9 @@ const { globalLimits, debugLogs, filterFileNames, spaceFileNameReplacement } = r
 		limits: {
 			totalSize: globalLimits.postFilesSize.max,
 			fileSize: globalLimits.postFilesSize.max,
-			//files: globalLimits.postFiles.max
+			files: globalLimits.postFiles.max
 		},
+		numFilesLimitHandler: numFilesUploadLimitFunction,
 		limitHandler: uploadLimitFunction,
 		useTempFiles: true,
 		tempFileDir: __dirname+'/../tmp/'
@@ -29,7 +37,7 @@ const { globalLimits, debugLogs, filterFileNames, spaceFileNameReplacement } = r
 
 module.exports = {
 
-	 handleBannerFiles: upload({
+	handleBannerFiles: upload({
 		debug: debugLogs,
 		createParentPath: true,
 		safeFileNames: filterFileNames,

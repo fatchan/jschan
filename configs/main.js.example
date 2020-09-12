@@ -124,8 +124,14 @@ module.exports = {
 		"other files" section which includes an example configuration for .txt files to match this default config.
 		mime types and file extention does not always correspond exactly this cant be done automatically. */
 	otherMimeTypes: [
-		'text/plain'
+		'text/plain',
+		'application/pdf'
 	],
+
+	//check the real mime type of uploaded files
+	checkRealMimeTypes: false,
+	//if checking real mime types, and the real type is unknown, allow it anyway
+	allowMimeNoMatch: false,
 
 	//default ban duration in ms if ban duration field is left blank (default value is 1 year)
 	defaultBanDuration: 31536000000,

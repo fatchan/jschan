@@ -1,5 +1,8 @@
 'use strict';
 
+const FileType = require('file-type')
+	, { allowMimeNoMatch } = require(__dirname+'/../../configs/main.js');
+
 const image = new Set([
 	'image/jpeg',
 	'image/pjpeg',
@@ -39,6 +42,15 @@ module.exports = {
 			(options.video && video.has(mimetype)) ||
 			(options.audio && audio.has(mimetype)) ||
 			(options.other && other.has(mimetype));
+	},
+
+	realMimeCheck: async (file) => {
+		const supposedMimeType = file.mimetype;
+		const realMimeType = await FileType.fromFile(file.tempFilePath);
+		if (!realMimeType) {
+			return allowMimeNoMatch;
+		}
+		return supposedMimeType === realMimeType.mime;
 	},
 
 	image, animatedImage, video, audio, other

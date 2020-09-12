@@ -2,6 +2,7 @@
 
 const path = require('path')
 	, { remove, pathExists } = require('fs-extra')
+	, { checkRealMimeTypes } = require(__dirname+'/../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../helpers/files/mimetypes.js')
@@ -31,6 +32,20 @@ module.exports = async (req, res, next) => {
 				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
 				'redirect': redirect
 			});
+		}
+	}
+
+	// check for any mismatching supposed mimetypes from the actual file mimetype
+	if (checkRealMimeTypes) {
+		for (let i = 0; i < res.locals.numFiles; i++) {
+			if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
+				deleteTempFiles(req).catch(e => console.error);
+				return dynamicResponse(req, res, 400, 'message', {
+					'title': 'Bad request',
+					'message': `Mime type mismatch for file "${req.files.file[i].name}"`,
+					'redirect': redirect
+				});
+			}
 		}
 	}
 
