@@ -1,4 +1,4 @@
-form.form-post(action=`/forms/appeal`, enctype='application/x-www-form-urlencoded', method='POST')
+form.form-post(action=`/forms/appeal`, enctype='application/x-www-form-urlencoded', method='POST' data-captcha-preload='true')
 	include ./bantable.pug
 		for ban in bans
 			+ban(ban, true)
