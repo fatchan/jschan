@@ -33,7 +33,7 @@ block content
 					td 
 						span.left
 							if board.settings.sfw === true
-								span(title='SFW') &#x1F4BC;
+								span.help(title='SFW') &#x1F4BC;
 								|  
 							if board.settings.unlistedLocal === true
 								span(title='Unlisted') &#x1F441;&#xFE0F;
@@ -55,7 +55,7 @@ block content
 					td
 						span.left
 							if !board.nsfw
-								span(title='SFW') &#x1F4BC;
+								span.help(title='SFW') &#x1F4BC;
 								|  
 						a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
 					td #{board.subtitle || '-'}

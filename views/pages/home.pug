@@ -35,7 +35,7 @@ block content
 					td 
 						if board.settings.sfw === true
 							span.left
-								span(title='SFW') &#x1F4BC;
+								span.help(title='SFW') &#x1F4BC;
 								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
