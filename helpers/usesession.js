@@ -11,7 +11,7 @@ const session = require('express-session')
 module.exports = (req, res, next) => {
 
 	const proto = req.headers['x-forwarded-proto'];
-	return sessionMiddlewareCache[proto] || (sessionMiddlewareCache[proto] = session({
+	const sessionMiddleware = sessionMiddlewareCache[proto] || (sessionMiddlewareCache[proto] = session({
 			secret: cookieSecret,
 			store: new redisStore({
 				client: redisClient,
@@ -25,6 +25,7 @@ module.exports = (req, res, next) => {
 				sameSite: 'strict',
 				maxAge: DAY,
 			}
-	})(req, res, next));
+	}));
+	return sessionMiddleware(req, res, next);
 
 }
