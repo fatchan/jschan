@@ -8,7 +8,7 @@ section.form-wrapper.flex-center
 			input(type='hidden' name='_csrf' value=csrf)
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
 		section.row.jsonly
-			.noselect#dragHandle New Post
+			.noselect#dragHandle #{isThread ? 'New Reply' : 'New Thread'}
 		if board.settings.forceAnon && !modview
 			section.row
 				.label Sage
@@ -70,4 +70,4 @@ section.form-wrapper.flex-center
 			else
 				include ./captchaexpand.pug
 		input#submitpost(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)
-	a.toggle-summary.no-decoration(href='#postform') [New Post]
+	a.toggle-summary.no-decoration(href='#postform') [#{isThread ? 'New Reply' : 'New Thread'}]
