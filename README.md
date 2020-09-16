@@ -75,12 +75,20 @@ You may install Node.js yourself without nvm if you prefer.
 
 **6. Configure nginx**
 
-- Copy the example configs and edit accordingly
+- Copy the nginx.example config to the sites-eavailable folder, and create a symlink from sites-available -> sites-enabled
 ```bash
-$ sudo cp configs/nginx/nginx.example /etc/nginx/sites-available/YOURDOMAIN.COM
-$ sudo editor /etc/nginx/sites-available/YOURDOMAIN.COM #edit to your domain and desired settings
-$ sudo ln -s /etc/nginx/sites-available/YOURDOMAIN.COM /etc/nginx/sites-enabled/YOURDOMAIN.com
+$ sudo cp configs/nginx/nginx.example /etc/nginx/sites-available/DOMAIN.COM
+$ sudo ln -s /etc/nginx/sites-available/DOMAIN.COM /etc/nginx/sites-enabled/DOMAIN.COM
 ```
+
+Edit/replace the following in your nginx config:
+- "domain.com" with your domain name
+- "/path/to/jschan" with the path of your jschan root folder
+- If using .onion, uncomment the .onion block, and replace the example address with your .onion
+```bash
+$ sudo editor /etc/nginx/sites-available/DOMAIN.COM
+```
+
 - Make sure the sites enabled folder is included by `/etc/nginx/nginx.conf` (it is in debian nginx package)
 - Use [certbot](https://certbot.eff.org/) to get a free https certificate.
 - For post flags to work, [follow this guide](http://archive.is/2SMOb) to setup the [legacy GeoIP database](https://www.miyuru.lk/geoiplegacy) and add these directives to the http block in `/etc/nginx/nginx.conf`:
@@ -93,7 +101,7 @@ If your nginx doesn't have the necessary module by default, or is using v2 inste
 If you use cloudflare, please read [these](https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-Logging-visitor-IP-addresses-with-mod-cloudflare-) [articles](https://support.cloudflare.com/hc/en-us/articles/200168236-Configuring-Cloudflare-IP-Geolocation) to setup proper IP forwarding and geolocation headers. Similar steps would apply to other CDNs/reverse proxies.
 There are also 2 config entries in configs/main.js, `ipHeader` and `countryCodeHeader` that you can tweak for jschan to use different headers for country code or real visitor IP.
 
-A snippets folder is also included for advanced users to better organise and more easily customise the nginx configuration.
+Also included is an "nginx_advanced" config, and a snippets folder for advanced users who want to better organise and more easily customise the nginx configuration. It functions the same as the normal nginx.example, but you need to create the snippets folder in /etc/nginx/snippets, and copy the example snippets.
 
 **7. Clone this repo, browse to the folder and set some things up**
 
