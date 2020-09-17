@@ -8,13 +8,13 @@ module.exports = async (req, res, next) => {
 
 	let threads = (await cache.get('overboard')) || [];
 	if (!threads || threads.length === 0) {
-	    try {
+		try {
 			const listedBoards = await Boards.getLocalListed();
 			threads = await Posts.getRecent(listedBoards, 1, overboardLimit, false, false);
 			cache.set('overboard', threads, 60);
-	    } catch (err) {
-	        return next(err);
-	    }
+		} catch (err) {
+			return next(err);
+		}
 	}
 
 	res
