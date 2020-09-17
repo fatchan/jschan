@@ -49,7 +49,7 @@ module.exports = {
 		}).skip(offset).limit(limit).toArray();
 	},
 
-	getRecent: async (board, page, limit=10, getSensitive=false, getSticky=true) => {
+	getRecent: async (board, page, limit=10, getSensitive=false, sortSticky=true) => {
 		// get all thread posts (posts with null thread id)
 		const projection = {
 			'salt': 0,
@@ -62,10 +62,7 @@ module.exports = {
 		}
 		const threadsQuery = {
 			'thread': null,
-		}
-		if (!getSticky) {
-			threadsQuery['sticky'] = 0;
-		}
+		};
 		if (board) {
 			if (Array.isArray(board)) {
 				//array for overboard
@@ -76,12 +73,19 @@ module.exports = {
 				threadsQuery['board'] = board;
 			}
 		}
+		const threadsSort = {
+			'bumped': -1,
+		};
+		if (sortSticky === true) {
+			threadsSort['sticky'] = -1;
+		}
 		const threads = await db.find(threadsQuery, {
 			projection
-		}).sort({
-			'sticky': -1,
-			'bumped': -1,
-		}).skip(10*(page-1)).limit(limit).toArray();
+		})
+		.sort(threadsSort)
+		.skip(10*(page-1))
+		.limit(limit)
+		.toArray();
 
 		// add last n posts in reverse order to preview
 		await Promise.all(threads.map(async thread => {
