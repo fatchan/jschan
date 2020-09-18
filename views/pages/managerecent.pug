@@ -20,6 +20,10 @@ block content
 			- const ip = permLevel > ipHashPermLevel ? posts[0].ip.single.slice(-10) : posts[0].ip.raw;
 			if postId || (queryIp && queryIp === ip)
 				h4.no-m-p Post history for #{ip}
+					|
+					if permLevel < 2
+						|  
+						a(href=`/globalmanage/recent.html?ip=${encodeURIComponent(ip)}`) [See Global Post History]
 				hr(size=1)
 			for p in posts
 				.thread
