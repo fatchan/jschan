@@ -13,6 +13,7 @@ block content
 		p No posts.
 		hr(size=1)
 	for thread in threads
+		h4.no-m-p Thread from #[a(href=`/${thread.board}/index.html`) /#{thread.board}/]
 		.thread
 			+post(thread, true)
 			for post in thread.replies
