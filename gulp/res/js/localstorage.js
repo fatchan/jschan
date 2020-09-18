@@ -36,12 +36,12 @@ function setDefaultLocalStorage(key, value) {
 //todo: just make the localstorage name match the names of settings and put a loop
 setDefaultLocalStorage('volume', settings.defaultVolume);
 setDefaultLocalStorage('loop', settings.loop);
-setDefaultLocalStorage('imageloadingbars', settings.imageLoadingBard);
+setDefaultLocalStorage('imageloadingbars', settings.imageLoadingBars);
 setDefaultLocalStorage('live', settings.live);
 setDefaultLocalStorage('scroll', settings.sctollToPosts);
 setDefaultLocalStorage('localtime', settings.localTime);
 setDefaultLocalStorage('relative', settings.relativeTime);
-setDefaultLocalStorage('24hour', settings.hour24time);
+setDefaultLocalStorage('24hour', settings.hour24Time);
 setDefaultLocalStorage('notifications', settings.notificationsEnabled);
 setDefaultLocalStorage('notification-yous-only', settings.notificationsYousOnly);
 setDefaultLocalStorage('yous-setting', settings.showYous);
