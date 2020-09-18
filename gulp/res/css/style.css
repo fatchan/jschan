@@ -1251,6 +1251,13 @@ row.wrap.sb .col {
 	}
 }
 
+/*fuck off with mobile chromeshit*/
+@media only screen and (max-width: 920px) {
+	.w900 {
+		width: 100%
+	}
+}
+
 @media only screen and (max-width: 600px) {
 
 	.postmenu {
