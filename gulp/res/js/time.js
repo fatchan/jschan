@@ -50,13 +50,13 @@ const relativeTimeString = (date) => {
 
 const changeDateFormat = (date) => {
 	const options = {
-		hourCycle: hour24 ? 'h23' : 'h12',
 		hour12: !hour24
 	};
 	if (!localTime) {
 		options.timeZone = SERVER_TIMEZONE;
 	}
-	const dateString = new Date(date.dateTime).toLocaleString('en-US', options);
+	const locale = hour24 ? 'en-US-u-hc-h23' : 'en-US';
+	const dateString = new Date(date.dateTime).toLocaleString(locale, options);
 	if (relativeTime) {
 		date.innerText = relativeTimeString(date.dateTime);
 		date.title = dateString;

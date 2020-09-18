@@ -26,7 +26,7 @@ block content
 							p.no-m-p #{`${post.message.raw.substring(0,50)}${post.message.raw.length > 50 ? '...' : ''}`}
 						td
 							- const newsDate = new Date(post.date);
-							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hour12:false})}
+							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
 
 	if boards && boards.length > 0
 		include ../includes/boardtable.pug

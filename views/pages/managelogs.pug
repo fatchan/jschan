@@ -34,7 +34,7 @@ block content
 						for log in logs
 							tr
 								- const logDate = new Date(log.date);
-								td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hour12:false})}
+								td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hourCycle:'h23'})}
 								td
 									| #{log.user}
 									|   

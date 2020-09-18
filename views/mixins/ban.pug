@@ -15,9 +15,9 @@ mixin ban(ban, banpage)
 		td #{ban.type}
 		td #{ban.issuer}
 		- const banDate = new Date(ban.date);
-		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(undefined, {hour12:false})}
+		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(undefined, {hourCycle:'h23'})}
 		- const expireDate = new Date(ban.expireAt);
-		td: time.right.reltime(datetime=expireDate.toISOString()) #{expireDate.toLocaleString(undefined, {hour12:false})}
+		td: time.right.reltime(datetime=expireDate.toISOString()) #{expireDate.toLocaleString(undefined, {hourCycle:'h23'})}
 		td.banposts
 			if ban.posts && ban.posts.length > 0
 				| Hover to view
