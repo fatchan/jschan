@@ -73,11 +73,14 @@ module.exports = {
 				threadsQuery['board'] = board;
 			}
 		}
-		const threadsSort = {
+		let threadsSort = {
 			'bumped': -1,
 		};
 		if (sortSticky === true) {
-			threadsSort['sticky'] = -1;
+			threadsSort = {
+				'sticky': -1,
+				'bumped': -1
+			}
 		}
 		const threads = await db.find(threadsQuery, {
 			projection
@@ -471,7 +474,8 @@ module.exports = {
 				'board': board._id,
 				'replyposts': {
 					'$lt': early404Replies
-				}
+				},
+				'sticky': 0
 			}).skip(Math.ceil(board.settings.threadLimit/early404Fraction)).toArray();
 		}
 
