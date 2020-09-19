@@ -270,7 +270,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`${paths.scripts.src}/forms.js`,
 			`${paths.scripts.src}/*.js`,
 			`!${paths.scripts.src}/dragable.js`,
-			`!${paths.scripts.src}/hide.js`,
+			`!${paths.scripts.src}/filters.js`,
 			`!${paths.scripts.src}/yous.js`,
 			`!${paths.scripts.src}/catalog.js`,
 			`!${paths.scripts.src}/time.js`,
@@ -278,17 +278,17 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`!${paths.scripts.src}/timezone.js`,
 		])
 		.pipe(concat('all.js'))
-		.pipe(uglify({compress:false}))
+//		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
 			`${paths.scripts.src}/dragable.js`,
 			`${paths.scripts.src}/yous.js`,
-			`${paths.scripts.src}/hide.js`,
+			`${paths.scripts.src}/filters.js`,
 			`${paths.scripts.src}/catalog.js`,
 			`${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('render.js'))
-		.pipe(uglify({compress:false}))
+//		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 

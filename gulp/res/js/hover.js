@@ -190,7 +190,7 @@ window.addEventListener('settingsReady', function(e) {
 	const clearHoverCacheList = () => {
 		deleteStartsWith('hovercache');
 		hoverCacheList.value = '';
-		console.log('cleared hover cache');
+		console.log('cleared cache');
 	}
 	hoverCacheListClearButton.addEventListener('click', clearHoverCacheList, false);
 });

@@ -1,4 +1,3 @@
-
 const isCatalog = window.location.pathname.endsWith('catalog.html');
 const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
 const isModView = /\/\w+\/manage\/(thread\/)?(index|\d+).html/.test(window.location.pathname);
@@ -18,9 +17,9 @@ function appendLocalStorageArray(key, value) {
 	storedArray.push(value);
 	setLocalStorage(key, JSON.stringify(storedArray));
 }
-function deleteStartsWith(startString = 'hovercache') {
 
-	//clears hover cache when localstorage gets full
+function deleteStartsWith(startString='hovercache') {
+	//clears cache when localstorage gets full
 	const hoverCaches = Object.keys(localStorage).filter(k => k.startsWith(startString));
 	for(let i = 0; i < hoverCaches.length; i++) {
 		localStorage.removeItem(hoverCaches[i]);
@@ -48,7 +47,7 @@ setDefaultLocalStorage('yous-setting', settings.showYous);
 
 setDefaultLocalStorage('dragtop', null);
 setDefaultLocalStorage('dragleft', null);
-setDefaultLocalStorage('hidden', '[]');
+setDefaultLocalStorage('filters', '{"hiddenSingle":[],"filteredId":[],"filteredName":[],"filteredTripcode":[]}');
 setDefaultLocalStorage('yous', '[]');
 setDefaultLocalStorage('name', '');
 setDefaultLocalStorage('theme', 'default');

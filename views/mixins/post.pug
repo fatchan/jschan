@@ -1,7 +1,7 @@
 include ./report.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 	.anchor(id=post.postId)
-	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId)
+	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId data-name=post.name data-tripcode=post.tripcode)
 		- const postURL = `/${post.board}/${(modview || manage || globalmanage) ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info
 			span
@@ -54,9 +54,13 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						span.noselect: a(href=`${postURL}#postform`) [Reply]
 				|  
 				select.jsonly.postmenu
-					option Hide
+					option(value='hide') Hide
 					if post.userId
-						option Hide by ID
+						option(value='id') Filter ID
+					if post.name
+						option(value='name') Filter Name
+					if post.tripcode
+						option(value='tripcode') Filter Tripcode
 		.post-data
 			if post.files.length > 0
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))
