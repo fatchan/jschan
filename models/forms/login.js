@@ -37,6 +37,7 @@ module.exports = async (req, res, next) => {
 		req.session.user = account._id;
 
 		//successful login
+		await Accounts.updateLastActiveDate(username);
 		return res.redirect(goto);
 
 	}

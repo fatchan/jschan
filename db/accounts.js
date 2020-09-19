@@ -58,6 +58,16 @@ module.exports = {
 		return res;
 	},
 
+	updateLastActiveDate: (username) => {
+		return db.updateOne({
+			'_id': username
+		}, {
+			'$set': {
+				lastActiveDate: new Date()
+			}
+		})
+	},
+
 	find: (filter, skip=0, limit=0) => {
 		return db.find(filter, {
 			'projection': {

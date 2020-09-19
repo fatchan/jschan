@@ -12,6 +12,7 @@ module.exports = async (req, res, next) => {
 			if (!account) {
 				req.session.destroy();
 			} else {
+				await Accounts.updateLastActiveDate(req.session.user);
 				res.locals.user = {
 					'username': account._id,
 					'authLevel': account.authLevel,

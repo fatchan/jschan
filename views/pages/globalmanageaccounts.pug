@@ -32,6 +32,7 @@ block content
 							th Auth Level
 							th Own Boards
 							th Mod Boards
+							th Last Active
 						for account in accounts
 							tr
 								td: input(type='checkbox', name='checkedaccounts' value=account._id)
@@ -49,6 +50,11 @@ block content
 										for b in account.modBoards
 											a(href=`/${b}/index.html`) /#{b}/
 											|  
+									else
+										| -		
+								td
+									if account.lastActiveDate
+										time.reltime(datetime=account.lastActiveDate.toISOString()) #{account.lastActiveDate.toLocaleString(undefined, {hourCycle:'h23'})}
 									else
 										| -		
 				.pages.mv-5
