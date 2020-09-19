@@ -184,6 +184,8 @@ async function css() {
 	return gulp.src([
 			`${paths.styles.src}/locals.css`,
 			`${paths.styles.src}/style.css`,
+			`${paths.styles.src}/*.css`,
+			`!${paths.styles.src}/nscaptcha.css`,
 		])
 		.pipe(concat('style.css'))
 		.pipe(less())
@@ -278,7 +280,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`!${paths.scripts.src}/timezone.js`,
 		])
 		.pipe(concat('all.js'))
-//		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
 			`${paths.scripts.src}/dragable.js`,
@@ -288,7 +290,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('render.js'))
-//		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 
