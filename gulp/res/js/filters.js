@@ -78,10 +78,10 @@ const postMenuChange = function(e) {
 	const filterType = this.value;
 	const posts = getPostsByFilter(filterType, postContainer.dataset);
 	if (posts.length === 0) { return; }
-//TODO: unhiding
-	setFilterState(filterType, postContainer.dataset, true);
+	const hiding = !postContainer.classList.contains('hidden');
+	setFilterState(filterType, postContainer.dataset, hiding);
 	this.value = '';
-	togglePostsHidden(posts, true);
+	togglePostsHidden(posts, hiding);
 	updateSavedFilters();
 }
 
@@ -121,7 +121,6 @@ window.addEventListener('addPost', function(e) {
 	const menu = post.querySelector('.postmenu');
 	menu.value = '';
 	menu.addEventListener('change', postMenuChange, false);
-
 });
 
 window.addEventListener('settingsReady', function(e) {
