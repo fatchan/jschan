@@ -855,15 +855,12 @@ input:invalid, textarea:invalid {
 	position: relative;
 	top: 2px;
 	font-size: 9pt;
-}
-
-.postmenu {
-    border-bottom: .5em solid transparent;
-    border-right: .5em solid transparent;
-    border-left: calc(2 * .5em * 0.866) solid var(--font-color);
-    border-top: .5em solid transparent;
-    vertical-align: top;
-    margin-left: 3px;
+	border-bottom: .5em solid transparent;
+	border-right: .5em solid transparent;
+	border-left: calc(2 * .5em * 0.866) solid var(--font-color);
+	border-top: .5em solid transparent;
+	vertical-align: top;
+	margin-left: 3px;
 }
 
 .catalog-tile.hidden {
@@ -1109,7 +1106,7 @@ iframe.bypass {
 	font-size: 18px;
 	cursor: pointer;
 	text-shadow: rgb(0, 0, 0) 0px 0px 1px, rgb(0, 0, 0) 0px 0px 1px, rgb(0, 0, 0) 0px 0px 1px, rgb(0, 0, 0) 0px 0px 1px, rgb(0, 0, 0) 0px 0px 1px, rgb(0, 0, 0) 0px 0px 1px;
-    color: white;
+	color: white;
 }
 
 .label, .rlabel {
