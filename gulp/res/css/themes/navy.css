@@ -13,7 +13,7 @@
 	--darken: #ffffff08;
 	--highlighted-post-color: #44283e;
 	--highlighted-post-outline-color: #664e5c;
-	--board-title: #ff858a;
+	--board-title: #c10000;
 	--hr: #303030;
 	--font-color: #bfbfbf;
 	--name-color: #67b38d;
@@ -27,6 +27,6 @@
 	--input-background: #080c19;
 	--dice-color: darkorange;
 	--title-color: #d70000;
-	--greentext-color: green;
+	--greentext-color: #0a0;
 	--pinktext-color:#E0727F;
 }
