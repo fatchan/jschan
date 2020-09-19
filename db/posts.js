@@ -469,14 +469,32 @@ module.exports = {
 
 		let early404Threads = [];
 		if (board.settings.early404 === true) {
-			early404Threads = await db.find({
-				'thread': null,
-				'board': board._id,
-				'replyposts': {
-					'$lt': early404Replies
-				},
-				'sticky': 0
-			}).skip(Math.ceil(board.settings.threadLimit/early404Fraction)).toArray();
+			early404Threads = await db.aggregate([
+				{
+					//get all the threads for a board
+					'$match': {
+						'thread': null,
+						'board': board._id
+					}
+				}, {
+					//in bump date order
+					'$sort': {
+						'sticky': -1,
+						'bumped': -1
+					}
+				}, {
+					//skip the first (board.settings.threadLimit/early404Fraction)
+					'$skip': Math.ceil(board.settings.threadLimit/early404Fraction)
+				}, {
+					//then any that have less than early404Replies replies get matched again
+					'$match': {
+						'sticky':0,
+						'replyposts': {
+							'$lt': early404Replies
+						}
+					}
+				}
+			]).toArray();
 		}
 
 		return oldThreads.concat(early404Threads);
