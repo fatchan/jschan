@@ -11,7 +11,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const postId = this.hash.substring(1);
 		let jsonParts = this.pathname.replace(/\.html$/, '.json').split('/');
 		let jsonPath;
-		if (isModView && jsonParts.length === 5) {
+		if ((isManage || isModView) && jsonParts.length === 5) {
 			jsonParts.splice(2,1); //remove manage from json url
 		}
 		jsonPath = jsonParts.join('/');
