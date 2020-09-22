@@ -1,0 +1,114 @@
+:root {
+	--alt-label-color: #98E;
+	--alt-font-color: white;
+	--navbar-color: #D6DAF0;
+	--post-color: #182F3F;
+	--post-outline-color: #B7C5D9;
+	--label-color: #98E;
+	--box-border-color: #000;
+	--darken: #00000010;
+	--highlighted-post-color: #244860;
+	--highlighted-post-outline-color: #82CECE;
+	--board-title: #af0a0f;
+	--hr: lightgray;
+	--font-color: #ACACAC;
+	--name-color: #117743;
+	--capcode-color: #f00;
+	--subject-color: #0F0C5D;
+	--link-color: #34345C;
+	--post-link-color: #d00;
+	--link-hover: #d00;
+	--input-borders: #a9a9a9;
+	--input-color: #000;
+	--input-background: white;
+	--dice-color: darkorange;
+	--title-color: #d70000;
+	--greentext-color: #789922;
+	--pinktext-color: #E0727F;
+}
+
+body {
+	background: url(/file/mushroom.png);
+	color: #acacac;
+}
+
+.spoiler {
+	background: #4b4b4b;
+	color: #4b4b4b;
+	cursor: none;
+}
+
+.spoiler:hover,.spoiler:hover a {
+	color: #fff;
+}
+
+.spoiler:not(:hover) * {
+	color: #4b4b4b;
+	background: #4b4b4b!important;
+}
+
+a,a.post-name,a:visited {
+	color: #82cece;
+}
+
+.navbar {
+	background-color: #182f3f9e;
+	border-bottom: 1px solid #82cece;
+}
+
+table {
+	border: 1px solid #82cece;
+}
+
+#float .post-container,#livetext,#threadstats,.catalog-tile,.pages,.post-container,.stickynav,.toggle-summary {
+	border: 1px solid #82cece;
+}
+
+a.quote {
+	color: #82cece;
+}
+
+.label,.rlabel {
+	background: #182f3f;
+	border: 1px solid #82cece;
+}
+
+input[type=button],input[type=file],input[type=number],input[type=password],input[type=range],input[type=submit],input[type=text],select,textarea {
+	border: 1px solid #82cece;
+	background: #182f3f;
+	color: #acacac;
+}
+
+.postform-style {
+	border: 1px solid #82cece;
+	background: #182f3f;
+	color: #acacac;
+}
+
+.post-subject {
+	color: #46b5b5!important;
+}
+
+.post-name,.post-tripcode {
+	color: #a0ffff;
+}
+
+th {
+	background: #182f3f;
+}
+
+.alt {
+	background: #182f3f;
+}
+
+tr {
+	background: url(/file/mushroom.png);
+}
+
+.post-icons img {
+	filter: invert(15%) sepia(66%) saturate(7479%) hue-rotate(6deg) brightness(98%) contrast(124%);
+}
+
+.post-links a {
+	color: #acacac;
+}
