@@ -2,7 +2,7 @@ const ffmpeg = require('fluent-ffmpeg')
 	, { thumbSize } = require(__dirname+'/../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
-module.exports = (file, geometry, frames) => {
+module.exports = (file, geometry, timestamp) => {
 
 	return new Promise((resolve, reject) => {
 		ffmpeg(`${uploadDirectory}/file/${file.filename}`)
@@ -13,7 +13,7 @@ module.exports = (file, geometry, frames) => {
 			return reject(err);
 		})
 		.screenshots({
-			timestamps: [(frames === 'N/A' ? 0 : '1%')],//1% should remedy black first frames or fade-ins
+			timestamps: [timestamp],
 			count: 1,
 			filename: `thumb-${file.hash}${file.thumbextension}`,
 			folder: `${uploadDirectory}/file/`,

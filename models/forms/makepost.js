@@ -3,7 +3,7 @@
 const path = require('path')
 	, { createHash, randomBytes } = require('crypto')
 	, randomBytesAsync = require('util').promisify(randomBytes)
-	, { remove, pathExists } = require('fs-extra')
+	, { remove, pathExists, stat: fsStat } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Socketio = require(__dirname+'/../../socketio.js')
@@ -24,7 +24,8 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { checkRealMimeTypes, thumbSize, thumbExtension, postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
+	, { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
+		postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -274,7 +275,19 @@ module.exports = async (req, res, next) => {
 							await moveUpload(file, processedFile.filename, 'file');
 						}
 						if (!existsThumb) {
-							await videoThumbnail(processedFile, processedFile.geometry, videoData.streams[0].nb_frames);
+							const numFrames = videoData.streams[0].nb_frames;
+							if (numFrames === 'N/A' && subtype === 'webm') {
+								await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
+								let videoThumbStat = null;
+								try {
+									videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+								} catch (err) { /*ENOENT, the thumb failed to create. No need to handle this.*/	}
+								if (!videoThumbStat || videoThumbStat.size === 0) {
+									await videoThumbnail(processedFile, processedFile.geometry, 0);
+								}
+							} else {
+								await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
+							}
 						}
 						break;
 					}

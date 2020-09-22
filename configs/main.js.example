@@ -118,6 +118,9 @@ module.exports = {
 	//max thumb dimensions (square) in px. images smaller than this are not thumbnailed
 	thumbSize: 250,
 
+	//0-100 percent through a video to try taking video thumbnails from, to remedy black first frames or fade-ins
+	videoThumbPercentage: 5,
+
 	/* extra mime types for files to be uploaded as attachments (no thumbnails) e.g. text files/archives
 		NOTE: appropriate extensions will need to be added to nginx configuration, and uncommend the provided
 		"other files" section which includes an example configuration for .txt files to match this default config.
