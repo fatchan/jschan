@@ -50,8 +50,7 @@ module.exports = async (req, res, next) => {
 			maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
-	if (flags === true
-		&& res.locals.permLevel >= 4
+	if (res.locals.permLevel >= 4
 		&& res.locals.country
 		&& blockedCountries.includes(res.locals.country.code)) {
 		return dynamicResponse(req, res, 403, 'message', {
