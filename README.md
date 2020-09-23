@@ -117,7 +117,7 @@ $ cp views/custompages/rules.pug.example views/custompages/rules.pug
 $ npm install
 $ npm run-script setup
 
-# setup the database and folder structure, creates admin account admin:changeme
+# setup the database and folder structure, and creates the admin account. **The (random) password will be printed in the command line.**
 $ gulp reset 
 # NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything
 ```

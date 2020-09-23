@@ -16,6 +16,7 @@ const gulp = require('gulp')
 	, pug = require('pug')
 	, gulppug = require('gulp-pug')
 	, { migrateVersion } = require(__dirname+'/package.json')
+	, { randomBytes } = require('crypto')
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/',
@@ -104,7 +105,9 @@ async function wipe() {
 	await Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
-	await Accounts.insertOne('admin', 'admin', 'changeme', 0);
+	const randomPassword = randomBytes(20).toString('base64')
+	await Accounts.insertOne('admin', 'admin', randomPassword, 0);
+	console.log('\n\n=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 
 	await db.collection('version').replaceOne({
 		'_id': 'version'
