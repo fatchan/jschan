@@ -78,6 +78,14 @@ module.exports = {
 		}).skip(skip).limit(limit).toArray();
 	},
 
+	deleteOne: async (username) => {
+		const res = await db.deleteOne({
+			'_id': username
+		});
+		cache.del(`users:${username}`);
+		return res;
+	},
+
 	deleteMany: async (usernames) => {
 		const res = await db.deleteMany({
 			'_id': {

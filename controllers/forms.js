@@ -34,6 +34,7 @@ const express  = require('express')
 	, boardSettingsController = require(__dirname+'/forms/boardsettings.js')
 	, transferController = require(__dirname+'/forms/transfer.js')
 	, resignController = require(__dirname+'/forms/resign.js')
+	, deleteAccountController = require(__dirname+'/forms/deleteaccount.js')
 	, loginController = require(__dirname+'/forms/login.js')
 	, registerController = require(__dirname+'/forms/register.js')
 	, changePasswordController = require(__dirname+'/forms/changepassword.js')
@@ -88,6 +89,7 @@ router.post('/logout', useSession, logout);
 router.post('/register', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, calcPerms, registerController);
 router.post('/changepassword', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController);
 router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(3), paramConverter, resignController);
+router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, paramConverter, deleteAccountController);
 
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptcha);
