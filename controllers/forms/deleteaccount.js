@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'error': 'Missing confirmation',
-			'redirect': '/account.html'
+			'redirect': '/account.html',
 		});
 	}
 
@@ -18,7 +18,7 @@ module.exports = async (req, res, next) => {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'message': 'You cannot delete your account while you hold staff position on any board',
-			'redirect': `/account.html`
+			'redirect': '/account.html',
 		});
 	}
 
@@ -30,8 +30,8 @@ module.exports = async (req, res, next) => {
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
-		'message': 'Board deleted',
-		'redirect': req.params.board ? '/' : '/globalmanage/settings.html'
+		'message': 'Account deleted',
+		'redirect': '/',
 	});
 
 }
