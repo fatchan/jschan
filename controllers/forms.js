@@ -88,7 +88,7 @@ router.post('/login', useSession, loginController);
 router.post('/logout', useSession, logout);
 router.post('/register', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, calcPerms, registerController);
 router.post('/changepassword', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController);
-router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(3), paramConverter, resignController);
+router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(4), paramConverter, resignController);
 router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, paramConverter, deleteAccountController);
 
 //removes captcha cookie, for refreshing for noscript users
