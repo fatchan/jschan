@@ -1,4 +1,6 @@
 :root {
+	--background-top: #0d1a1d;	
+	--background-rest: #0d1a1d;	
 	--alt-label-color: #98E;
 	--alt-font-color: white;
 	--navbar-color: #D6DAF0;
@@ -28,7 +30,7 @@
 }
 
 body {
-	background: url(/file/mushroom.png);
+	background: var(--background-rest) url(/file/mushroom.png);
 	color: #acacac;
 }
 
