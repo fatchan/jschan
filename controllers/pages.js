@@ -19,7 +19,7 @@ const express  = require('express')
 	//page models
 	, { manageRecent, manageReports, manageBanners, manageSettings, manageBans,
 		manageBoard, manageThread, manageLogs, manageCatalog } = require(__dirname+'/../models/pages/manage/')
-	, { globalManageSettings, globalManageReports, globalManageBans,
+	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, create,
 		board, catalog, banners, randombanner, news, captchaPage, overboard,
@@ -61,6 +61,7 @@ router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, session
 router.get('/globalmanage/reports.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
 router.get('/globalmanage/bans.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBans);
 router.get('/globalmanage/recent.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageRecent);
+router.get('/globalmanage/boards.(html|json)', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), globalManageBoards);
 router.get('/globalmanage/globallogs.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageLogs);
 router.get('/globalmanage/news.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageNews);
 router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageAccounts);

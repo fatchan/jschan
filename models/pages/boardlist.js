@@ -9,7 +9,6 @@ const { enableWebring } = require(__dirname+'/../../configs/main.js')
 
 module.exports = async (req, res, next) => {
 
-	const isGlobalStaff = res.locals.permLevel <= 1;
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 	const direction = req.query.direction && req.query.direction === 'asc' ? 1 : -1;
 	const search = (typeof req.query.search === 'string' ? req.query.search : null);
@@ -45,9 +44,9 @@ module.exports = async (req, res, next) => {
 
 		try {
 			[ localBoards, localPages, webringBoards, webringPages ] = await Promise.all([
-				Boards.boardSort(offset, limit, sort, filter, isGlobalStaff),
-				Boards.count(filter, isGlobalStaff),
-				enableWebring ? Webring.boardSort(offset, limit, sort, filter, isGlobalStaff) : null,
+				Boards.boardSort(offset, limit, sort, filter),
+				Boards.count(filter),
+				enableWebring ? Webring.boardSort(offset, limit, sort, filter) : null,
 				enableWebring ? Webring.count(filter) : 0,
 			]);
 			localPages = Math.ceil(localPages / limit);
@@ -56,10 +55,7 @@ module.exports = async (req, res, next) => {
 		} catch (err) {
 			return next(err);
 		}
-
-		if (!isGlobalStaff) {
-			cache.set(`boardlist:${cacheQueryString}`, { localBoards, localPages, webringBoards, webringPages, maxPage }, 60);
-		}
+		cache.set(`boardlist:${cacheQueryString}`, { localBoards, localPages, webringBoards, webringPages, maxPage }, 60);
 	}
 
 	const now = new Date();
@@ -87,7 +83,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	res
-	.set('Cache-Control', `${isGlobalStaff ? 'private' : 'public'}, max-age=60`);
+	.set('Cache-Control', 'public, max-age=60');
 
 	if (req.path === '/boards.json') {
 		res.json({

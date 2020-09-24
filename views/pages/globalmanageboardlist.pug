@@ -1,15 +1,18 @@
 extends ../layout.pug
+include ../mixins/ban.pug
+include ../mixins/globalmanagenav.pug
 
 block head
-	title #{meta.siteName}
+	title Manage
 
 block content
-	h1.board-title Board List
-	h4.board-description
-		| or try the 
-		a(href='/all.html') overboard
+	h1.board-title Global Management
+	br
+	+globalmanagenav('boards')
+	hr(size=1)
+	h4.text-center.no-m-p Filter:
 	.flexcenter.mv-10
-		form.form-post(action='/boards.html' method='GET')
+		form.form-post(action='/globalmanage/boards.html' method='GET')
 			input(type='hidden' value=page)
 			.row
 				.label Search
@@ -26,7 +29,7 @@ block content
 					option(value='asc' selected=query.direction === 'asc') Ascending
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
-		h4.board-description Local Boards
+		h4.text-center.mv-10 Board List:
 		include ../includes/webringboardtable.pug
 			each board in localBoards
 				tr
@@ -38,30 +41,14 @@ block content
 							if board.settings.unlistedLocal === true
 								span.help(title='Unlisted') &#x1F441;&#xFE0F;
 								|  
+							if !board.owner && board.settings.moderators.length === 0
+								span.help(title='Abandoned') &#x1F3DA;&#xFE0F;
+								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}
 					td #{board.ips}
 					td #{board.sequence_value-1}
-					if board.lastPostTimestamp
-						td(style=`background-color: ${board.lastPostTimestamp.color}`) #{board.lastPostTimestamp.text}
-					else
-						td -
-	if webringBoards && webringBoards.length > 0
-		h4.board-description Webring Boards
-		include ../includes/webringboardtable.pug
-			each board in webringBoards
-				tr
-					td
-						span.left
-							if !board.nsfw
-								span.help(title='SFW') &#x1F4BC;
-								|  
-						a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
-					td #{board.subtitle || '-'}
-					td #{board.postsPerHour}
-					td #{board.uniqueUsers}
-					td #{board.totalPosts}
 					if board.lastPostTimestamp
 						td(style=`background-color: ${board.lastPostTimestamp.color}`) #{board.lastPostTimestamp.text}
 					else

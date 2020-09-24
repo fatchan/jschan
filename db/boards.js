@@ -150,8 +150,23 @@ module.exports = {
 
 	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}, showUnlisted=false) => {
 		const addedFilter = {};
+		const projection = {
+			'_id': 1,
+			'lastPostTimestamp': 1,
+			'sequence_value': 1,
+			'pph': 1,
+			'ips': 1,
+			'settings.sfw': 1,
+			'settings.description': 1,
+			'settings.name': 1,
+			'settings.tags': 1,
+			'settings.unlistedLocal': 1,
+		};
 		if (!showUnlisted) {
 			addedFilter['settings.unlistedLocal'] = false;
+		} else {
+			projection['settings.moderators'] = 1;
+			projection['owner'] = 1;
 		}
 		if (filter.search) {
 			addedFilter['$or'] = [
@@ -159,20 +174,7 @@ module.exports = {
 				{ '_id':  filter.search },
 			];
 		}
-		return db.find(addedFilter, {
-			'projection': {
-				'_id': 1,
-				'lastPostTimestamp': 1,
-				'sequence_value': 1,
-				'pph': 1,
-				'ips': 1,
-				'settings.sfw': 1,
-				'settings.description': 1,
-				'settings.name': 1,
-				'settings.tags': 1,
-				'settings.unlistedLocal': 1,
-			}
-		})
+		return db.find(addedFilter, { projection })
 		.sort(sort)
 		.skip(skip)
 		.limit(limit)
