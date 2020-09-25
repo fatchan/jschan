@@ -8,7 +8,8 @@ case captchaType
 		.jsonly.captcha(style='display:none;')
 		input.captchafield(type='text' name='captcha' autocomplete='off' placeholder='Captcha text' pattern=".{6}" required title='6 characters')
 	when 'grid'
-		a.text-center(href='/faq.html#captcha') Instructions
+		unless minimal
+			a.text-center(href='/faq.html#captcha') Instructions
 		.catalog
 			noscript.no-m-p
 				iframe.captcha(src='/captcha.html' width='150' height='150' scrolling='no' loading='lazy')
