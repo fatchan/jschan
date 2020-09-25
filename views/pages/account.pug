@@ -12,7 +12,24 @@ block content
 	h4.no-m-p General:
 	ul
 		if user.authLevel <= 1
-			li: a(href='/globalmanage/recent.html') Global management
+			li
+				a(href='/globalmanage/recent.html') Global management
+				|  -  
+				a(href=`/globalmanage/reports.html`) Reports
+				| ,  
+				a(href=`/globalmanage/bans.html`) Bans
+				| ,  
+				a(href=`/globalmanage/recent.html`) Recent
+				| ,  
+				a(href=`/globalmanage/boards.html`) Boards
+				| ,  
+				a(href=`/globalmanage/globallogs.html`) Logs
+				| ,  
+				a(href=`/globalmanage/accounts.html`) Accounts
+				| ,  
+				a(href=`/globalmanage/news.html`) News
+				| ,  
+				a(href=`/globalmanage/settings.html`) Settings
 		if enableUserBoardCreation || user.authLevel <= 1
 			li: a(href='/create.html') Create a board
 		if !enableUserAccountCreation && user.authLevel <= 1
