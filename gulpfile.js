@@ -225,23 +225,30 @@ function deletehtml() {
 }
 
 function custompages() {
-	return gulp.src([`${paths.pug.src}/custompages/*.pug`, `${paths.pug.src}/pages/404.pug`, `${paths.pug.src}/pages/502.pug`])
-		.pipe(gulppug({
-			locals: {
-				meta: configs.meta,
-				enableWebring: configs.enableWebring,
-				globalLimits: configs.globalLimits,
-				codeLanguages: configs.highlightOptions.languageSubset,
-				defaultTheme: configs.boardDefaults.theme,
-				defaultCodeTheme: configs.boardDefaults.codeTheme,
-				postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
-				captchaType: configs.captchaOptions.type,
-				googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
-				captchaGridSize: configs.captchaOptions.grid.size,
-				commit,
-			}
-		}))
-		.pipe(gulp.dest(paths.pug.dest));
+	return gulp.src([
+		`${paths.pug.src}/custompages/*.pug`,
+		`${paths.pug.src}/pages/404.pug`,
+		`${paths.pug.src}/pages/500.pug`,
+		`${paths.pug.src}/pages/502.pug`,
+		`${paths.pug.src}/pages/503.pug`,
+		`${paths.pug.src}/pages/504.pug`
+	])
+	.pipe(gulppug({
+		locals: {
+			meta: configs.meta,
+			enableWebring: configs.enableWebring,
+			globalLimits: configs.globalLimits,
+			codeLanguages: configs.highlightOptions.languageSubset,
+			defaultTheme: configs.boardDefaults.theme,
+			defaultCodeTheme: configs.boardDefaults.codeTheme,
+			postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
+			captchaType: configs.captchaOptions.type,
+			googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
+			captchaGridSize: configs.captchaOptions.grid.size,
+			commit,
+		}
+	}))
+	.pipe(gulp.dest(paths.pug.dest));
 }
 
 function scripts() {
