@@ -132,7 +132,7 @@ pre {
 	border-color: transparent!important;
 	width: 80px;
 }
-.fw {
+.fw, #filter-form {
 	width: 100%;
 }
 .pr-20 {
