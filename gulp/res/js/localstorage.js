@@ -48,7 +48,7 @@ setDefaultLocalStorage('yous-setting', settings.showYous);
 
 setDefaultLocalStorage('dragtop', null);
 setDefaultLocalStorage('dragleft', null);
-setDefaultLocalStorage('filters', '[]');
+setDefaultLocalStorage('filters1', '[]');
 setDefaultLocalStorage('yous', '[]');
 setDefaultLocalStorage('name', '');
 setDefaultLocalStorage('theme', 'default');

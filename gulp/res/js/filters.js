@@ -1,52 +1,64 @@
 const getFiltersFromLocalStorage = () => {
-	const savedFilters = JSON.parse(localStorage.getItem('filters'));
-	/* i havent actually checked if the serialization overhead is worth the improvement in filter speed, i only assumed.
-		So if it turns out this is slower, i'd accept a PR  to change it :^) */
+	const savedFilters = JSON.parse(localStorage.getItem('filters1'));
 	return savedFilters.reduce((acc, filter) => {
-		acc[filter.type].add(filter.type.endsWith('r') ? new RegExp(filter.val) : filter.val);
+		const regexFilter = filter.type.endsWith('r');
+		if (regexFilter) {
+			acc[filter.type].push(new RegExp(filter.val, 'i')); //todo: serialize flags? probs not necessary
+		} else {
+			acc[filter.type].add(filter.val);
+		}
 		return acc;
 	}, {
 		single: new Set(),
 		fid: new Set(),
 		fname: new Set(),
+		fsub: new Set(),
 		ftrip: new Set(),
-		fnamer: new Set(),
-		ftripr: new Set(),
+		fnamer: [],
+		ftripr: [],
+		fsubr: [],
 	});
 };
 
-let { single, fid, fname, ftrip, fnamer, ftripr } = getFiltersFromLocalStorage();
+let { single, fid, fname, ftrip, fsub, fnamer, ftripr, fsubr } = getFiltersFromLocalStorage();
 
 let filtersTable;
 const updateFiltersTable = () => {
-	[...filtersTable.children].slice(2).forEach(row => row.remove());
-	filtersTable.insertAdjacentHTML('beforeend', filters({filterArr: JSON.parse(localStorage.getItem('filters'))}))
+	[...filtersTable.children].slice(3).forEach(row => row.remove());
+	filtersTable.insertAdjacentHTML('beforeend', filters({filterArr: JSON.parse(localStorage.getItem('filters1'))}))
 	const closeButtons = filtersTable.querySelectorAll('.close');
 	for (let elem of closeButtons) {
-		const { type: closeType, data: closeData } = elem.dataset;
+		let { type: closeType, data: closeData } = elem.dataset;
+		if (closeType.endsWith('r')) {
+			closeData = new RegExp(closeData, 'i');
+		}
 		elem.addEventListener('click', () => { toggleFilter(closeType, closeData) });
 	}
 }
 
 const updateSavedFilters = () => {
-	setLocalStorage('filters', JSON.stringify([
+	setLocalStorage('filters1', JSON.stringify([
 		...([...single].map(x => ({type:'single', val:x}))),
 		...([...fid].map(x => ({type:'fid', val:x}))),
 		...([...ftrip].map(x => ({type:'ftrip', val:x}))),
 		...([...fname].map(x => ({type:'fname', val:x}))),
-		...([...fnamer].map(x => ({type:'fnamer', val:x.source.toString()}))),
-		...([...ftripr].map(x => ({type:'ftripr', val:x.source.toString()}))),
+		...([...fsub].map(x => ({type:'fsub', val:x}))),
+		...fnamer.map(x => ({type:'fnamer', val:x.source.toString()})),
+		...ftripr.map(x => ({type:'ftripr', val:x.source.toString()})),
+		...fsubr.map(x => ({type:'fsubr', val:x.source.toString()})),
 	]));
 	updateFiltersTable();
 };
 
 const anyFilterMatches = (filteringPost) => {
-	const { board, postId, userId, name, tripcode } = filteringPost.dataset;
+	const { board, postId, userId, name, subject, tripcode } = filteringPost.dataset;
 	return fid.has(userId)
 		|| fname.has(name)
 		|| ftrip.has(tripcode)
-//		|| fnamer.some(r => r.test(name))
-	//	|| ftripr.some(r => r.test(tripcode))
+		|| fsub.has(tripcode)
+		|| fnamer.some(r => r.test(name))
+		|| ftripr.some(r => r.test(tripcode))
+		|| fsubr.some(r => r.test(subject))
 }
 
 const togglePostsHidden = (posts, state) => {
@@ -63,8 +75,8 @@ const togglePostsHidden = (posts, state) => {
 const getPostsByRegex = (attribute, regex) => {
 	const matches = [];
 	for (let elem of document.querySelectorAll(`[${attribute}]`)) {
-		const value = element.getAttribute(attribute).toString();
-		if (regex.test(value)) {
+		const value = elem.getAttribute(attribute).toString();
+		if (regex.test(value) === true) {
 			matches.push(elem);
 		}
 	}
@@ -94,6 +106,12 @@ const getPostsByFilter = (type, data) => {
 		case 'ftripr':
 			posts = getPostsByRegex('data-tripcode', data);
 			break;
+		case 'fsub':
+			posts = document.querySelectorAll(`[data-subject="${CSS.escape(data)}"]`);
+			break;
+		case 'fsubr':
+			posts = getPostsByRegex('data-subject', data);
+			break;
 		default:
 			break;
 	}
@@ -113,13 +131,28 @@ const setFilterState = (type, data, state) => {
 			fname[addOrDelete](data);
 			break;
 		case 'fnamer':
-			fnamer[addOrDelete](data.source.toString());
+			fnamer = fnamer.filter(r => r.source != data.source);
+			if (state) {
+				fnamer.push(data);
+			}
 			break;
 		case 'ftrip':
 			ftrip[addOrDelete](data);
 			break;
 		case 'ftripr':
-			ftripr[addOrDelete](data.source.toString());
+			ftripr = ftripr.filter(r => r.source != data.source);
+			if (state) {
+				ftripr.push(data);
+			}
+			break;
+		case 'fsub':
+			fsub[addOrDelete](data);
+			break;
+		case 'fsubr':
+			fsubr = fsubr.filter(r => r.source != data.source);
+			if (state) {
+				fsubr.push(data);
+			}
 			break;
 		default:
 			break;
@@ -127,9 +160,7 @@ const setFilterState = (type, data, state) => {
 };
 
 const toggleFilter = (filterType, filterData, state) => {
-	//console.log('filtering', filterType, filterData, state);
 	const posts = getPostsByFilter(filterType, filterData);
-	if (posts.length === 0) { return; }
 	setFilterState(filterType, filterData, state);
 	togglePostsHidden(posts, state);
 	updateSavedFilters();
@@ -150,6 +181,9 @@ const postMenuChange = function(e) {
 			break;
 		case 'fname':
 			filterData = postDataset.name;
+			break;
+		case 'fsub':
+			filterData = postDataset.subject;
 			break;
 	}
 	toggleFilter(filterType, filterData, hiding);
@@ -172,17 +206,21 @@ const getHiddenElems = () => {
 	for (let name of fname) {
 		posts = posts.concat(getPostsByFilter('fname', name));
 	}
+	for (let subject of fsub) {
+		posts = posts.concat(getPostsByFilter('fsub', subject));
+	}
 	for (let tripcode of ftrip) {
 		posts = posts.concat(getPostsByFilter('ftrip', tripcode));
 	}
-
-//	for (let namer of fnamer) {
-//		posts = posts.concat(getPostsByFilter('fname', namer));
-//	}
-//	for (let tripcoder of ftripr) {
-//		posts = posts.concat(getPostsByFilter('ftrip', tripcoder));
-//	}
-
+	for (let namer of fnamer) {
+		posts = posts.concat(getPostsByFilter('fnamer', namer));
+	}
+	for (let tripcoder of ftripr) {
+		posts = posts.concat(getPostsByFilter('ftripr', tripcoder));
+	}
+	for (let subr of fsubr) {
+		posts = posts.concat(getPostsByFilter('fsubr', subr));
+	}
 	return posts;
 };
 
@@ -203,14 +241,26 @@ window.addEventListener('settingsReady', function(e) {
 	filtersTable = document.getElementById('advancedfilters');
 	updateFiltersTable();
 
+	const filtersForm = document.getElementById('filter-form');
+	filtersForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const isRegex = filtersForm.elements.regex.checked;
+		const type = `${filtersForm.elements.type.value}${isRegex ? 'r' : ''}`;
+		const val = isRegex ? new RegExp(filtersForm.elements.value.value, 'i') : filtersForm.elements.value.value;
+		console.log('adding filter', type, val);
+		toggleFilter(type, val, true);
+	})
+
 	const filterClearButton = document.getElementById('filters-clear');
 	const clearFilters = () => {
 		single = new Set(),
 		fid = new Set(),
 		fname = new Set(),
+		fsub = new Set(),
 		ftrip = new Set(),
-		fnamer = new Set(),
-		ftripr = new Set(),
+		fnamer = [],
+		ftripr = [],
+		fsubr = [],
 		updateFiltersTable();
 		togglePostsHidden(document.querySelectorAll('.post-container'), false);
 		updateSavedFilters();

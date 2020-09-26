@@ -1,7 +1,7 @@
 include ./report.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 	.anchor(id=post.postId)
-	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId data-name=post.name data-tripcode=post.tripcode)
+	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId data-name=post.name data-tripcode=post.tripcode data-subject=post.subject)
 		- const postURL = `/${post.board}/${(modview || manage || globalmanage) ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info
 			span
@@ -59,6 +59,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						option(value='fid') Filter ID
 					if post.name
 						option(value='fname') Filter Name
+					if post.subject
+						option(value='fsub') Filter Subject
 					if post.tripcode
 						option(value='ftrip') Filter Tripcode
 		.post-data

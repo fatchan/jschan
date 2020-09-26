@@ -140,11 +140,26 @@ mixin modal(data)
 						textarea#customcss-setting(rows=7)
 					.row
 						.table-container.text-center
-							table
-								tbody#advancedfilters
-									tr
-										th(colspan=3) Filters
-									tr
-										th Type
-										th Value
-										th: input.right#filters-clear(type='button' value='Clear')
+							form#filter-form
+								table
+									tbody#advancedfilters
+										tr
+											th Post Filters
+											th
+											th
+											th
+										tr
+											td Type
+											td Value
+											td Regex?
+											td: input.right#filters-clear(type='button' value='Clear')
+										tr
+											td: select(name='type')
+												option(value='fname') Name
+												option(value='ftrip') Tripcode
+												option(value='fsub') Subject
+											td
+												input#filter-value-input(required type='text' name='value')
+											td
+												input(type='checkbox' name='regex')
+											td: input.right(type='submit' value='Add')

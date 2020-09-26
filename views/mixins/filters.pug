@@ -1,7 +1,11 @@
 mixin filters(filterArr)
-	- const filterTypeMap = { single: 'single', fid: 'ID', fname: 'name', ftrip: 'tripcode', fnamer: 'name regex', ftripr: 'tripcode regex' }
-	each filter in filterArr
-		tr
-			td #{filterTypeMap[filter.type]}
-			td #{filter.val.toString()}
-			td: a.close(data-type=filter.type data-data=filter.val) X
+	- const filterTypeMap = { single: 'Single', fid: 'ID', fname: 'Name', ftrip: 'Tripcode', fnamer: 'Name', ftripr: 'Tripcode', fsub: 'Subject', fsubr: 'Subject' }
+	if filterArr.length > 0
+		each filter in filterArr
+			tr
+				td #{filterTypeMap[filter.type]}
+				td #{filter.val.toString()}
+				td: input(disabled type='checkbox' checked=filter.type.endsWith('r'))
+				td: a.right.close(data-type=filter.type data-data=filter.val) X
+	else
+		td(colspan=4) No Filters
