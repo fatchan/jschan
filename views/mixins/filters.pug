@@ -1,0 +1,7 @@
+mixin filters(filterArr)
+	- const filterTypeMap = { single: 'single', fid: 'ID', fname: 'name', ftrip: 'tripcode', fnamer: 'name regex', ftripr: 'tripcode regex' }
+	each filter in filterArr
+		tr
+			td #{filterTypeMap[filter.type]}
+			td #{filter.val.toString()}
+			td: a.close(data-type=filter.type data-data=filter.val) X

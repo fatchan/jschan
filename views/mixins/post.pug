@@ -54,13 +54,13 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						span.noselect: a(href=`${postURL}#postform`) [Reply]
 				|  
 				select.jsonly.postmenu
-					option(value='hide') Hide
+					option(value='single') Hide
 					if post.userId
-						option(value='id') Filter ID
+						option(value='fid') Filter ID
 					if post.name
-						option(value='name') Filter Name
+						option(value='fname') Filter Name
 					if post.tripcode
-						option(value='tripcode') Filter Tripcode
+						option(value='ftrip') Filter Tripcode
 		.post-data
 			if post.files.length > 0
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))

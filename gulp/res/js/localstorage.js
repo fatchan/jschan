@@ -48,7 +48,7 @@ setDefaultLocalStorage('yous-setting', settings.showYous);
 
 setDefaultLocalStorage('dragtop', null);
 setDefaultLocalStorage('dragleft', null);
-setDefaultLocalStorage('filters', '{"hiddenSingle":[],"filteredId":[],"filteredName":[],"filteredTripcode":[]}');
+setDefaultLocalStorage('filters', '[]');
 setDefaultLocalStorage('yous', '[]');
 setDefaultLocalStorage('name', '');
 setDefaultLocalStorage('theme', 'default');

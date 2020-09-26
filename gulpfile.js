@@ -263,6 +263,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
 		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
 		fs.writeFileSync('gulp/res/js/uploaditem.js', pug.compileFileClient(`${paths.pug.src}/includes/uploaditem.pug`, { compileDebug: false, debug: false, name: 'uploaditem' }));
+		fs.writeFileSync('gulp/res/js/pugfilters.js', pug.compileFileClient(`${paths.pug.src}/includes/filters.pug`, { compileDebug: false, debug: false, name: 'filters' }));
 		fs.writeFileSync('gulp/res/js/captchaformsection.js', pug.compileFileClient(`${paths.pug.src}/includes/captchaformsection.pug`, { compileDebug: false, debug: false, name: 'captchaformsection' }));
 		fs.symlinkSync(__dirname+'/node_modules/socket.io-client/dist/socket.io.slim.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
 	} catch (e) {
@@ -275,12 +276,14 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`${paths.scripts.src}/locals.js`,
 			`${paths.scripts.src}/localstorage.js`,
 			`${paths.scripts.src}/modal.js`,
+			`${paths.scripts.src}/pugfilters.js`,
 			`${paths.scripts.src}/post.js`,
 			`${paths.scripts.src}/settings.js`,
 			`${paths.scripts.src}/live.js`,
 			`${paths.scripts.src}/captcha.js`,
 			`${paths.scripts.src}/forms.js`,
 			`${paths.scripts.src}/*.js`,
+			`!${paths.scripts.src}/hidefileinput.js`,
 			`!${paths.scripts.src}/dragable.js`,
 			`!${paths.scripts.src}/filters.js`,
 			`!${paths.scripts.src}/yous.js`,
@@ -290,9 +293,10 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`!${paths.scripts.src}/timezone.js`,
 		])
 		.pipe(concat('all.js'))
-		.pipe(uglify({compress:false}))
+//		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
+			`${paths.scripts.src}/hidefileinput.js`,
 			`${paths.scripts.src}/dragable.js`,
 			`${paths.scripts.src}/yous.js`,
 			`${paths.scripts.src}/filters.js`,
@@ -300,7 +304,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('render.js'))
-		.pipe(uglify({compress:false}))
+//		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 

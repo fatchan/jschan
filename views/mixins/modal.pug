@@ -110,10 +110,6 @@ mixin modal(data)
 						input.mr-1#youslist-setting(type='text' readonly)
 						input#youslist-clear(type='button' value='Clear')
 					.row
-						.label Hidden posts
-						input.mr-1#hiddenpostslist-setting(type='text' readonly)
-						input#hiddenpostslist-clear(type='button' value='Clear')
-					.row
 						.label Cache
 						input.mr-1#hovercachelist-setting(type='text' readonly)
 						input#hovercachelist-clear(type='button' value='Clear')
@@ -142,3 +138,13 @@ mixin modal(data)
 					.row
 						.label Custom CSS
 						textarea#customcss-setting(rows=7)
+					.row
+						.table-container.text-center
+							table
+								tbody#advancedfilters
+									tr
+										th(colspan=3) Filters
+									tr
+										th Type
+										th Value
+										th: input.right#filters-clear(type='button' value='Clear')
