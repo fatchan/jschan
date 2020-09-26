@@ -50,7 +50,7 @@ module.exports = async (req, res, next) => {
 	const { filterBanDuration, filterMode, filters, blockedCountries, resetTrigger,
 			maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
-			captchaMode, lockMode, allowedFileTypes, flags } = res.locals.board.settings;
+			captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode } = res.locals.board.settings;
 	if (res.locals.permLevel >= 4
 		&& res.locals.country
 		&& blockedCountries.includes(res.locals.country.code)) {
@@ -161,6 +161,22 @@ module.exports = async (req, res, next) => {
 	let files = [];
 	// if we got a file
 	if (res.locals.numFiles > 0) {
+		if ((req.body.thread && fileR9KMode === 1) || fileR9KMode === 2) {
+			const filesHashes = req.files.file.map(f => f.sha256);
+			const postWithExistingFiles = await Posts.checkExistingFiles(res.locals.board._id, (fileR9KMode === 2 ? null : req.body.thread), filesHashes);
+			if (postWithExistingFiles != null) {
+				await deleteTempFiles(req).catch(e => console.error);
+				const conflictingFiles = req.files.file
+					.filter(f => postWithExistingFiles.files.some(fx => fx.hash === f.sha256))
+					.map(f => f.name)
+					.join(', ');
+				return dynamicResponse(req, res, 409, 'message', {
+					'title': 'Conflict',
+					'message': `Uploaded files must be unique ${fileR9KMode === 1 ? 'in this thread' : 'on this board'}.\nAt least the following file${conflictingFiles.length > 1 ? 's are': ' is'} not unique: ${conflictingFiles}`,
+					'redirect': redirect
+				});
+			}
+		}
 		// check all mime types before we try saving anything
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			if (!mimeTypes.allowed(req.files.file[i].mimetype, allowedFileTypes)) {

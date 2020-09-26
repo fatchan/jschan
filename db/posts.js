@@ -296,6 +296,27 @@ module.exports = {
 
 	},
 
+	checkExistingFiles: async (board, thread = null, hashes) => {
+		const query = {
+			'board': board,
+			'files.hash': {
+				'$in': hashes
+			}
+		}
+		if (thread !== null) {
+			query['$or'] = [
+				{ 'thread': thread },
+				{ 'postId': thread },
+			]
+		}
+		const postWithExistingFiles = await db.findOne(query, {
+			'projection': {
+				'files.hash': 1,
+			}
+		});
+		return postWithExistingFiles;
+	},
+
 	allBoardPosts: (board) => {
 		return db.find({
 			'board': board
