@@ -1,6 +1,8 @@
 # jschan
 Anonymous imageboard software.
 
+Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://http://qga4iyo7rp3kjhwvbkdo6vxeuo4r2suq4fygkwbsw7hve7cykwgrdpyd.onion)
+
 ## Goals
 - Oldschool look, newschool features
 - Work with javascript disabled
@@ -16,7 +18,7 @@ Anonymous imageboard software.
 - [x] Multi-select moderation actions
 - [x] Websocket update threads w/o polling
 - [x] Webring w/proxy support (compatible with [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
-- [x] Run as a tor hidden service ([demo](http://http://qga4iyo7rp3kjhwvbkdo6vxeuo4r2suq4fygkwbsw7hve7cykwgrdpyd.onion))
+- [x] Run as a tor hidden service
 
 ## Todo
 - More features
@@ -168,3 +170,7 @@ $ gulp
 #if something breaks, check and read the logs, they will help figure out what went wrong.
 $ pm2 logs
 ```
+
+## For generous people
+
+BTC address: `bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6`
