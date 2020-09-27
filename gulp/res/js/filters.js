@@ -61,12 +61,15 @@ const anyFilterMatches = (filteringPost) => {
 		|| fsubr.some(r => r.test(subject))
 }
 
-const togglePostsHidden = (posts, state) => {
+const togglePostsHidden = (posts, state, single) => {
 	for (let elem of posts) {
-		if (!state && !anyFilterMatches(elem)) { //possible fix for multiple filters & unhiding conflicts
+		const showHide = elem.querySelector('.postmenu').children[0];
+		if (!state && (!anyFilterMatches(elem) || single)) { //possible fix for multiple filters & unhiding conflicts
 			elem.classList['remove']('hidden');
+			showHide.textContent = 'Hide';
 		} else {
 			elem.classList['add']('hidden');
+			showHide.textContent = 'Show';
 		}
 	}
 };
@@ -162,7 +165,7 @@ const setFilterState = (type, data, state) => {
 const toggleFilter = (filterType, filterData, state) => {
 	const posts = getPostsByFilter(filterType, filterData);
 	setFilterState(filterType, filterData, state);
-	togglePostsHidden(posts, state);
+	togglePostsHidden(posts, state, filterType === 'single');
 	updateSavedFilters();
 }
 
