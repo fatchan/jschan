@@ -14,13 +14,15 @@ const getFiltersFromLocalStorage = () => {
 		fname: new Set(),
 		fsub: new Set(),
 		ftrip: new Set(),
+		fmsg: new Set(),
 		fnamer: [],
 		ftripr: [],
 		fsubr: [],
+		fmsgr: [],
 	});
 };
 
-let { single, fid, fname, ftrip, fsub, fnamer, ftripr, fsubr } = getFiltersFromLocalStorage();
+let { single, fid, fname, ftrip, fsub, fmsg, fnamer, ftripr, fsubr, fmsgr } = getFiltersFromLocalStorage();
 
 let filtersTable;
 const updateFiltersTable = () => {
@@ -43,22 +45,28 @@ const updateSavedFilters = () => {
 		...([...ftrip].map(x => ({type:'ftrip', val:x}))),
 		...([...fname].map(x => ({type:'fname', val:x}))),
 		...([...fsub].map(x => ({type:'fsub', val:x}))),
+		...([...fmsg].map(x => ({type:'fmsg', val:x}))),
 		...fnamer.map(x => ({type:'fnamer', val:x.source.toString()})),
 		...ftripr.map(x => ({type:'ftripr', val:x.source.toString()})),
 		...fsubr.map(x => ({type:'fsubr', val:x.source.toString()})),
+		...fmsgr.map(x => ({type:'fmsgr', val:x.source.toString()})),
 	]));
 	updateFiltersTable();
 };
 
 const anyFilterMatches = (filteringPost) => {
 	const { board, postId, userId, name, subject, tripcode } = filteringPost.dataset;
+	const postMessage = filteringPost.querySelector('.post-message');
+	const message = postMessage ? postMessage.textContent : null;
 	return fid.has(userId)
 		|| fname.has(name)
 		|| ftrip.has(tripcode)
 		|| fsub.has(tripcode)
+		|| fmsg.has(message)
 		|| fnamer.some(r => r.test(name))
 		|| ftripr.some(r => r.test(tripcode))
 		|| fsubr.some(r => r.test(subject))
+		|| fmsgr.some(r => r.test(message))
 }
 
 const togglePostsHidden = (posts, state, single) => {
@@ -85,6 +93,13 @@ const getPostsByRegex = (attribute, regex) => {
 	}
 	return matches;
 };
+
+const getPostsByMessage = (data, regex=false) => {
+	//you asked for this
+	const postMessages = [...document.querySelectorAll('.post-container .post-message')];
+	const matchingMessages = postMessages.filter(m => (regex ? data.test(m.textContent) : m.textContent.includes(data)));
+	return matchingMessages.map(m => m.closest('.post-container'));
+}
 
 const getPostsByFilter = (type, data) => {
 	let posts = [];
@@ -114,6 +129,12 @@ const getPostsByFilter = (type, data) => {
 			break;
 		case 'fsubr':
 			posts = getPostsByRegex('data-subject', data);
+			break;
+		case 'fmsg':
+			posts = getPostsByMessage(data);
+			break;
+		case 'fmsgr':
+			posts = getPostsByMessage(data, true);
 			break;
 		default:
 			break;
@@ -155,6 +176,14 @@ const setFilterState = (type, data, state) => {
 			fsubr = fsubr.filter(r => r.source != data.source);
 			if (state) {
 				fsubr.push(data);
+			}
+		case 'fmsg':
+			fmsg[addOrDelete](data);
+			break;
+		case 'fmsgr':
+			fmsgr = fmsgr.filter(r => r.source != data.source);
+			if (state) {
+				fmsgr.push(data);
 			}
 			break;
 		default:
@@ -212,6 +241,9 @@ const getHiddenElems = () => {
 	for (let subject of fsub) {
 		posts = posts.concat(getPostsByFilter('fsub', subject));
 	}
+	for (let message of fmsg) {
+		posts = posts.concat(getPostsByFilter('fmsg', message));
+	}
 	for (let tripcode of ftrip) {
 		posts = posts.concat(getPostsByFilter('ftrip', tripcode));
 	}
@@ -224,6 +256,9 @@ const getHiddenElems = () => {
 	for (let subr of fsubr) {
 		posts = posts.concat(getPostsByFilter('fsubr', subr));
 	}
+	for (let messager of fmsgr) {
+		posts = posts.concat(getPostsByFilter('fmsgr', messager));
+	}
 	return posts;
 };
 
@@ -234,9 +269,17 @@ window.addEventListener('addPost', function(e) {
 	if (anyFilterMatches(newPost)) {
 		newPost.classList.add('hidden');
 	}
+	if (e.detail.hover) { return; }
 	const menu = newPost.querySelector('.postmenu');
 	menu.value = '';
 	menu.addEventListener('change', postMenuChange, false);
+});
+
+window.addEventListener('updatePostMessage', function(e) {
+	const newPost = e.detail.post;
+	if (anyFilterMatches(newPost)) {
+		newPost.classList.add('hidden');
+	}
 });
 
 window.addEventListener('settingsReady', function(e) {
@@ -260,10 +303,12 @@ window.addEventListener('settingsReady', function(e) {
 		fid = new Set(),
 		fname = new Set(),
 		fsub = new Set(),
+		fmsg = new Set(),
 		ftrip = new Set(),
 		fnamer = [],
 		ftripr = [],
 		fsubr = [],
+		fmsgr = [],
 		updateFiltersTable();
 		togglePostsHidden(document.querySelectorAll('.post-container'), false);
 		updateSavedFilters();

@@ -1,5 +1,5 @@
 mixin filters(filterArr)
-	- const filterTypeMap = { single: 'Single', fid: 'ID', fname: 'Name', ftrip: 'Tripcode', fnamer: 'Name', ftripr: 'Tripcode', fsub: 'Subject', fsubr: 'Subject' }
+	- const filterTypeMap = { single: 'Single', fid: 'ID', fname: 'Name', ftrip: 'Tripcode', fnamer: 'Name', ftripr: 'Tripcode', fsub: 'Subject', fsubr: 'Subject', fmsg: 'Message', fmsgr: 'Message' }
 	if filterArr.length > 0
 		each filter in filterArr
 			tr
