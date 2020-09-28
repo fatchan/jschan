@@ -1424,6 +1424,10 @@ row.wrap.sb .col {
 		width: 100%;
 	}
 
+	#filter-value-input {
+		width: 100%;
+	}
+
 }
 
 .flag {
