@@ -214,6 +214,9 @@ const postMenuChange = function(e) {
 		case 'fname':
 			filterData = postDataset.name;
 			break;
+		case 'ftrip':
+			filterData = postDataset.tripcode;
+			break;
 		case 'fsub':
 			filterData = postDataset.subject;
 			break;
