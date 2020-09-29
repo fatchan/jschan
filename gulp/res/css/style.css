@@ -354,6 +354,8 @@ p {
 }
 
 .filelabel {
+	position: relative;
+	z-index: 1;
 	cursor: pointer;
 	border-style: dashed !important;
 	justify-content: center;
