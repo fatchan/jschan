@@ -26,14 +26,14 @@ module.exports = async (req, res, next) => {
 	if (globalLimits.postFiles.max !== 0 && res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0) {
 		if (!req.body.thread && res.locals.board.settings.forceThreadFile) {
 			errors.push('Threads must include a file');
-		} else if (res.locals.board.settings.forceReplyFile) {
+		} else if (req.body.thread && res.locals.board.settings.forceReplyFile) {
 			errors.push('Posts must include a file');
 		}
 	}
 	if (!req.body.message || req.body.message.length === 0) {
 		if (!req.body.thread && res.locals.board.settings.forceThreadMessage) {
 			errors.push('Threads must include a message');
-		} else if (res.locals.board.settings.forceReplyMessage) {
+		} else if (req.body.therad && res.locals.board.settings.forceReplyMessage) {
 			errors.push('Posts must include a message');
 		}
 	}
