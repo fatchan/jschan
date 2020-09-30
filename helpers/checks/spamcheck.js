@@ -3,6 +3,7 @@
 const Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts } = require(__dirname+'/../../db/')
 	, timeUtils = require(__dirname+'/../timeutils.js')
+	, { sameContentSameIp, sameContentAnyIp, anyContentSameIp } = require(__dirname+'/../../configs/main.js').floodTimers;
 
 module.exports = async (req, res) => {
 
@@ -10,10 +11,13 @@ module.exports = async (req, res) => {
 		return false;
 	}
 
+	if (sameContentSameIp === 0
+		&& sameContentAnyIp === 0
+		&& anyContentSameIp === 0) {
+		return false;
+	}
+
 	const now = Date.now();
-	const last120id = Mongo.ObjectId.createFromTime(Math.floor((now - (timeUtils.MINUTE*2))/1000));
-	const last30id = Mongo.ObjectId.createFromTime(Math.floor((now - (timeUtils.MINUTE*0.5))/1000));
-	const last5id = Mongo.ObjectId.createFromTime(Math.floor((now - 5000)/1000));
 	const ors = [];
 	const contentOr = [];
 	if (res.locals.numFiles > 0) {
@@ -32,28 +36,40 @@ module.exports = async (req, res) => {
 			'nomarkup':  req.body.message
 		})
 	}
-	//matching content from any IP in the past 30 seconds
-	ors.push({
-		'_id': {
-			'$gt': last30id
-		},
-		'$or': contentOr
-	});
-	//matching content from same IP in last 2 minutes
-	ors.push({
-		'_id': {
-			'$gt': last120id
-		},
-		'ip.single': res.locals.ip.single,
-		'$or': contentOr
-	});
-	//any posts from same IP in past 5 seconds TODO: make this just use a redis key of IP and expire after 5 seconds
-	ors.push({
-		'_id': {
-			'$gt': last5id
-		},
-		'ip.single': res.locals.ip.single
-	})
+
+	if (sameContentAnyIp) {
+		//matching content from any IP
+		const sameContentAnyIpMongoId = Mongo.ObjectId.createFromTime(Math.floor((now - sameContentAnyIp)/1000));
+		ors.push({
+			'_id': {
+				'$gt': sameContentAnyIpMongoId
+			},
+			'$or': contentOr
+		});
+	}
+
+	if (sameContentSameIp > 0) {
+		//matching content from same IP
+		const sameContentSameIpMongoId = Mongo.ObjectId.createFromTime(Math.floor((now - sameContentSameIp)/1000));
+		ors.push({
+			'_id': {
+				'$gt': sameContentSameIpMongoId
+			},
+			'ip.single': res.locals.ip.single,
+			'$or': contentOr
+		});
+	}
+
+	if (anyContentSameIp > 0) {
+		//any posts from same IP
+		const anyContentSameIpMongoId = Mongo.ObjectId.createFromTime(Math.floor((now - anyContentSameIp)/1000));
+		ors.push({
+			'_id': {
+				'$gt': anyContentSameIpMongoId
+			},
+			'ip.single': res.locals.ip.single
+		})
+	}
 
 	let flood = await Posts.db.find({
 		'$or': ors

@@ -66,6 +66,12 @@ module.exports = {
 		cacheTime: 3600 //in seconds, idk whats a good value
 	},
 
+	floodTimers: { //basic delays to stop flooding, in ms. 0 to disable
+		sameContentSameIp: 120000, //same message or any file from same ip
+		sameContentAnyIp: 30000, //same message or file from any ip
+		anyContentSameIp: 5000, //any post from the same ip
+	},
+
 	//block bypasses
 	blockBypass: {
 		enabled: false,
