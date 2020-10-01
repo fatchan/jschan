@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
 	const oldSettings = await cache.get('globalsettings');
 	const newSettings = {
 //		'captchaMode': typeof req.body.captcha_mode === 'number' && req.body.captcha_mode !== oldSettings.captchaMode ? req.body.captcha_mode : oldSettings.captchaMode,
-		'filters': req.body.filters !== null ? req.body.filters.split('\r\n').filter(n => n).slice(0,50) : oldSettings.filters,
+		'filters': req.body.filters !== null ? req.body.filters.split(/\r?\n/).filter(n => n) : oldSettings.filters,
 		'filterMode': typeof req.body.filter_mode === 'number' && req.body.filter_mode !== oldSettings.filterMode ? req.body.filter_mode : oldSettings.filterMode,
 		'filterBanDuration': typeof req.body.ban_duration === 'number' && req.body.ban_duration !== oldSettings.filterBanDuration ? req.body.ban_duration : oldSettings.filterBanDuration,
 	};
