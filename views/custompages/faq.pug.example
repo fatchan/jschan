@@ -224,9 +224,9 @@ block content
 						| apply a single ban for each unique IP of the selected posts.
 					b Time format in moderation interfaces
 					p
-						| Some moderation interfaces, for example the ban duration when moderating posts, or the ban duration for post filtering use a shorthand for times/length. This format supports years, months, weeks, days and hours.
-						| An input of "3m" would mean 3 months and "1y2m3w4d5h" would mean 1 year, 2 months, 3 weeks, 4 days and 5 hours. Units of time should be in descending order, so "2w1m" is invalid. 
-						| However you may use "6w" for example to input 6 weeks, and are not required to use "1m2w".
+						| Some moderation interfaces, for example the ban duration when moderating posts, or the ban duration for post filtering use a shorthand for times/length. This format supports years, months, weeks, days, hours, minutes and seconds.
+						| An input of "3mo" would mean 3 months and "1y2mo3w4d5h6m7s" would mean 1 year, 2 months, 3 weeks, 4 days, 5 hours, 6 minutes and 7 seconds. Units of time should be in descending order, so "2w1m" is invalid.
+						| However you may use "6w" for example to input 6 weeks, and are not required to use "1mo2w".
 	.table-container.flex-center.mv-5
 		.anchor#make-a-board
 		table
