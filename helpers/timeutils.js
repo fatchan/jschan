@@ -5,11 +5,12 @@ const YEAR = 31536000000
 	, WEEK = 604800000
 	, DAY = 86400000
 	, HOUR = 3600000
-	, MINUTE = 60000;
+	, MINUTE = 60000
+	, SECOND = 1000;
 
 module.exports = {
 
-	YEAR, MONTH, WEEK, DAY, HOUR, MINUTE,
+	YEAR, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND,
 
 	//ms until next hour
 	'nextHour': () => {

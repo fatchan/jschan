@@ -116,7 +116,7 @@ module.exports = async (req, res, next) => {
 	if (typeof req.body.filter_mode === 'number' && (req.body.filter_mode < 0 || req.body.filter_mode > 2)) {
 		errors.push('Invalid filter mode');
 	}
-	if (typeof req.body.ban_duration === 'number' && req.body.ban_duration <= 0) {
+	if (typeof req.body.ban_duration === 'number' && req.body.ban_duration < 0) {
 		errors.push('Invalid filter auto ban duration');
 	}
 	if (req.body.theme && !themes.includes(req.body.theme)) {
