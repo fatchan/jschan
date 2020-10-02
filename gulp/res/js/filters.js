@@ -71,13 +71,14 @@ const anyFilterMatches = (filteringPost) => {
 
 const togglePostsHidden = (posts, state, single) => {
 	for (let elem of posts) {
-		const showHide = elem.querySelector('.postmenu').children[0];
-		if (!state && (!anyFilterMatches(elem) || single)) { //possible fix for multiple filters & unhiding conflicts
+		const showing = (!state && (!anyFilterMatches(elem) || single));
+		if (showing) { //possible fix for multiple filters & unhiding conflicts
 			elem.classList['remove']('hidden');
-			showHide.textContent = 'Hide';
 		} else {
 			elem.classList['add']('hidden');
-			showHide.textContent = 'Show';
+		}
+		if (!isCatalog) {
+			elem.querySelector('.postmenu').children[0].textContent = (showing ? 'Hide' : 'Show');
 		}
 	}
 };
@@ -96,9 +97,9 @@ const getPostsByRegex = (attribute, regex) => {
 
 const getPostsByMessage = (data, regex=false) => {
 	//you asked for this
-	const postMessages = [...document.querySelectorAll('.post-container .post-message')];
+	const postMessages = [...document.querySelectorAll(`.${isCatalog ? 'catalog-tile': 'post-container' } .post-message`)];
 	const matchingMessages = postMessages.filter(m => (regex ? data.test(m.textContent) : m.textContent.includes(data)));
-	return matchingMessages.map(m => m.closest('.post-container'));
+	return matchingMessages.map(m => m.closest(`.${isCatalog ? 'catalog-tile': 'post-container' }`));
 }
 
 const getPostsByFilter = (type, data) => {
@@ -313,7 +314,7 @@ window.addEventListener('settingsReady', function(e) {
 		fsubr = [],
 		fmsgr = [],
 		updateFiltersTable();
-		togglePostsHidden(document.querySelectorAll('.post-container'), false);
+		togglePostsHidden(document.querySelectorAll(`.${isCatalog ? 'catalog-tile': 'post-container' }`), false);
 		updateSavedFilters();
 		console.log('cleared hidden posts');
 	}

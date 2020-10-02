@@ -1,6 +1,10 @@
 mixin catalogtile(board, post, index)
 	.catalog-tile(data-board=post.board
 		data-post-id=post.postId
+		data-user-id=post.userId
+		data-name=post.name
+		data-tripcode=post.tripcode
+		data-subject=post.subject
 		data-filter=((post.subject+post.nomarkup).toLowerCase() || '')
 		data-date=post.date
 		data-replies=post.replyposts
