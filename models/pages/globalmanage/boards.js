@@ -30,6 +30,9 @@ module.exports = async (req, res, next) => {
 			'search': search
 		}
 	}
+	filter.filter_sfw = req.query.filter_sfw != null;
+	filter.filter_abandoned = req.query.filter_abandoned != null;
+	filter.filter_unlisted = req.query.filter_unlisted != null;
 
 	let localBoards, pages, maxPage;
 	try {

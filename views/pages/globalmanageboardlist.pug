@@ -27,6 +27,18 @@ block content
 				select(name='direction')
 					option(value='desc') Descending
 					option(value='asc' selected=query.direction === 'asc') Ascending
+			.row
+				.label Unlisted
+				label.postform-style.ph-5
+					input(type='checkbox', name='filter_unlisted', value='1' checked=(query.filter_unlisted != null))
+			.row
+				.label SFW
+				label.postform-style.ph-5
+					input(type='checkbox', name='filter_sfw', value='1' checked=(query.filter_sfw != null))
+			.row
+				.label Abandoned
+				label.postform-style.ph-5
+					input(type='checkbox', name='filter_abandoned', value='1' checked=(query.filter_abandoned != null))
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
 		h4.text-center.mv-10 Board List:

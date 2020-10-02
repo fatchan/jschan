@@ -148,7 +148,7 @@ module.exports = {
 		return listedBoards;
 	},
 
-	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}, showUnlisted=false) => {
+	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}, showSensitive=false) => {
 		const addedFilter = {};
 		const projection = {
 			'_id': 1,
@@ -162,9 +162,19 @@ module.exports = {
 			'settings.tags': 1,
 			'settings.unlistedLocal': 1,
 		};
-		if (!showUnlisted) {
+		if (!showSensitive) {
 			addedFilter['settings.unlistedLocal'] = false;
 		} else {
+			if (filter.filter_sfw) {
+				addedFilter['settings.sfw'] = true;
+			}
+			if (filter.filter_unlisted) {
+				addedFilter['settings.unlistedLocal'] = true;
+			}
+			if (filter.filter_abandoned) {
+				addedFilter['owner'] = null;
+				addedFilter['settings.moderators'] = [];
+			}
 			projection['settings.moderators'] = 1;
 			projection['owner'] = 1;
 		}
@@ -199,10 +209,21 @@ module.exports = {
 		}).toArray();
 	},
 
-	count: (filter, showUnlisted=false) => {
+	count: (filter, showSensitive=false) => {
 		const addedFilter = {};
-		if (!showUnlisted) {
+		if (!showSensitive) {
 			addedFilter['settings.unlistedLocal'] = false;
+		} else {
+			if (filter.filter_sfw) {
+				addedFilter['settings.sfw'] = true;
+			}
+			if (filter.filter_unlisted) {
+				addedFilter['settings.unlistedLocal'] = true;
+			}
+			if (filter.filter_abandoned) {
+				addedFilter['owner'] = null;
+				addedFilter['settings.moderators'] = [];
+			}
 		}
 		if (filter.search) {
 			addedFilter['$or'] = [
