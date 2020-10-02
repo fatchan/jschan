@@ -1,7 +1,7 @@
 # jschan
 Anonymous imageboard software.
 
-Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://http://qga4iyo7rp3kjhwvbkdo6vxeuo4r2suq4fygkwbsw7hve7cykwgrdpyd.onion)
+Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://uupw57ljeuazndzwglfum2zrebucsk3vfprikus5rbyyelmh54lte5yd.onion/)
 
 ## Goals
 - Oldschool look, newschool features
