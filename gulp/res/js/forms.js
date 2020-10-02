@@ -214,7 +214,8 @@ class formHandler {
 							forceUpdate();
 						}
 					}
-					if (this.form.getAttribute('action') !== '/forms/editpost') { //dont reset on edit, keep the new values in there. todo: add exceptions/better handling for this situation
+					if (this.form.getAttribute('action') !== '/forms/editpost'
+						&& !this.form.getAttribute('action').endsWith('/settings')) { //dont reset on edit, keep the new values in there. todo: add exceptions/better handling for this situation
 						this.reset();
 					}
 				} else {
