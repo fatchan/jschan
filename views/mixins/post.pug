@@ -101,7 +101,12 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 						if (messageLines > 15) {
 							truncatedMessage = splitPost.slice(0, 15).join('\n');
 						} else if (post.message.length > 1500) {
-							truncatedMessage = post.message.substring(0,1500).replace(/<([\w]+)?([^>]*)?$/, '');
+							truncatedMessage = post.message.substring(0, 1500).replace(/<([\w]+)?([^>]*)?$/, '');
+							const lastAnchorOpen = truncatedMessage.lastIndexOf('<a');
+							const lastAnchorClose = truncatedMessage.lastIndexOf('</a>');
+							if (lastAnchorOpen >= 0 && (lastAnchorClose === -1 || lastAnchorClose < lastAnchorOpen)) {
+								truncatedMessage += '</a>';
+							}
 						}
 					pre.post-message !{truncatedMessage}
 				else
