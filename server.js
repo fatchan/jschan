@@ -18,6 +18,7 @@ const express = require('express')
 	, Socketio = require(__dirname+'/socketio.js')
 	, commit = require(__dirname+'/helpers/commit.js')
 	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
+	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
 	, CachePugTemplates = require('cache-pug-templates');
 
 (async () => {
