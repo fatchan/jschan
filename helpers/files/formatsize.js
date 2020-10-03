@@ -4,7 +4,7 @@ const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
 	, k = 1024;
 
 module.exports = (bytes) => {
-    if (bytes === 0)  {
+	if (bytes === 0)  {
 		return '0B';
 	}
 	const i = Math.floor(Math.log(bytes) / Math.log(k));

@@ -75,6 +75,7 @@ const express = require('express')
 	app.locals.commit = commit;
 	app.locals.meta = meta;
 	app.locals.captchaType = captchaOptions.type;
+	app.locals.postFilesSize = formatSize(globalLimits.postFilesSize.max);
 	switch (captchaOptions.type) {
 		case 'google':
 			app.locals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
