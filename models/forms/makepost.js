@@ -25,7 +25,7 @@ const path = require('path')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		postPasswordSecret, strictFiltering } = require(__dirname+'/../../configs/main.js')
+		postPasswordSecret, strictFiltering, animatedGifThumbnails } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -255,15 +255,23 @@ module.exports = async (req, res, next) => {
 						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						processedFile.geometry = imageData.size ;
 						processedFile.geometryString = imageData.Geometry;
+						const lteThumbSize = (processedFile.geometry.height <= thumbSize
+							&& processedFile.geometry.width <= thumbSize);
 						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
 							&& subtype !== 'png'
-							&& processedFile.geometry.height <= thumbSize
-							&& processedFile.geometry.width <= thumbSize);
+							&& lteThumbSize);
 						if (!existsFull) {
 							await moveUpload(file, processedFile.filename, 'file');
 						}
 						if (!existsThumb && processedFile.hasThumb) {
-							await imageThumbnail(processedFile);
+							let firstFrameOnly = true;
+							if (!lteThumbSize
+								&& file.mimetype === 'image/gif'
+								&& animatedGifThumbnails === true) {
+								firstFrameOnly = false;
+								processedFile.thumbextension = '.gif';
+							}
+							await imageThumbnail(processedFile, firstFrameOnly);
 						}
 						processedFile = fixGifs(processedFile);
 						break;

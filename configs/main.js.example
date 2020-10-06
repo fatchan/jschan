@@ -121,6 +121,9 @@ module.exports = {
 		in which case png is used. */
 	thumbExtension: '.jpg',
 
+	//gif images > thumbnail size will have animated thumbnails
+	animatedGifThumbnails: false,
+
 	//max thumb dimensions (square) in px. images smaller than this are not thumbnailed
 	thumbSize: 250,
 
