@@ -224,6 +224,7 @@ module.exports = async (req, res, next) => {
 				processedFile.thumbextension = thumbExtension;
 			}
 			let imageData;
+			let firstFrameOnly = true;
 			if (type === 'image') {
 				///detect images with opacity for PNG thumbnails, set thumbextension before increment
 				imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
@@ -232,6 +233,20 @@ module.exports = async (req, res, next) => {
 					if (opacityMaximum !== '0.00 (0.0000)') {
 						processedFile.thumbextension = '.png';
 					}
+				}
+				processedFile.geometry = imageData.size;
+				processedFile.geometryString = imageData.Geometry;
+				const lteThumbSize = (processedFile.geometry.height <= thumbSize
+					&& processedFile.geometry.width <= thumbSize);
+				processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
+					&& subtype !== 'png'
+					&& lteThumbSize);
+				if (processedFile.hasThumb
+					&& (!lteThumbSize
+					&& file.mimetype === 'image/gif'
+					&& animatedGifThumbnails === true)) {
+					firstFrameOnly = false;
+					processedFile.thumbextension = '.gif';
 				}
 			}
 
@@ -253,24 +268,10 @@ module.exports = async (req, res, next) => {
 				switch (type) {
 					case 'image': {
 						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
-						processedFile.geometry = imageData.size ;
-						processedFile.geometryString = imageData.Geometry;
-						const lteThumbSize = (processedFile.geometry.height <= thumbSize
-							&& processedFile.geometry.width <= thumbSize);
-						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
-							&& subtype !== 'png'
-							&& lteThumbSize);
 						if (!existsFull) {
 							await moveUpload(file, processedFile.filename, 'file');
 						}
-						if (!existsThumb && processedFile.hasThumb) {
-							let firstFrameOnly = true;
-							if (!lteThumbSize
-								&& file.mimetype === 'image/gif'
-								&& animatedGifThumbnails === true) {
-								firstFrameOnly = false;
-								processedFile.thumbextension = '.gif';
-							}
+						if (!existsThumb) {
 							await imageThumbnail(processedFile, firstFrameOnly);
 						}
 						processedFile = fixGifs(processedFile);

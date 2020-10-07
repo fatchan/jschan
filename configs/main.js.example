@@ -117,14 +117,14 @@ module.exports = {
 	//let all users register new accounts
 	enableUserAccountCreation: true,
 
-	/* extension for thumbnails. this value is used UNLESS the image contains transparency,
-		in which case png is used. */
+	//extension for thumbnails that do not contain transparency (png will be used)
 	thumbExtension: '.jpg',
-
-	//gif images > thumbnail size will have animated thumbnails
+	//.gif images > thumbnail size will have animated .gif thumbnails, overriding thumbExtension
 	animatedGifThumbnails: false,
+	//if animatedGifThumbnails is true, use ffmpeg for better animated gif thumbnailing. RECOMMENDED
+	ffmpegGifThumbnails: true,
 
-	//max thumb dimensions (square) in px. images smaller than this are not thumbnailed
+	//max thumb dimensions (square) in px
 	thumbSize: 250,
 
 	//0-100 percent through a video to try taking video thumbnails from, to remedy black first frames or fade-ins
