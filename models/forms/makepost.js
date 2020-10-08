@@ -241,10 +241,11 @@ module.exports = async (req, res, next) => {
 				processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
 					&& subtype !== 'png'
 					&& lteThumbSize);
-				if (processedFile.hasThumb
-					&& (!lteThumbSize
-					&& file.mimetype === 'image/gif'
-					&& animatedGifThumbnails === true)) {
+				if (processedFile.hasThumb //if it needs thumbnailing
+					&& (!lteThumbSize //and its big enough
+					&& file.mimetype === 'image/gif' //and its a gif
+					&& (imageData['Delay'] != null || imageData['Iterations'] != null) //and its not a static gif (naive check)
+					&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
 					firstFrameOnly = false;
 					processedFile.thumbextension = '.gif';
 				}
