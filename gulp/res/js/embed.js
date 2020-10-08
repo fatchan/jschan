@@ -56,7 +56,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 					const embedLink = document.createElement('a');
 					const closeBracket = document.createTextNode(']');
 					embedSpan.classList.add('ml-5', 'noselect', 'bold');
-					embedLink.classList.add('embed-link');
+					embedLink.classList.add('dummy-link');
 					embedLink.textContent = 'Embed';
 					embedSpan.appendChild(openBracket);
 					embedSpan.appendChild(embedLink);
@@ -79,7 +79,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 					//dont add for existing or during updatepostmessage
 					return !(link.nextSibling
 						&& link.nextSibling.classList
-						&& link.nextSibling.classList.contains('embed-link'));
+						&& link.nextSibling.classList.contains('dummy-link'));
 				});
 			addEmbedButtons(newlinks);
 		}

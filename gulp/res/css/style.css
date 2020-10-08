@@ -181,7 +181,7 @@ pre {
 	padding: 5px 0;
 }
 
-#settings, .embed-link {
+#settings, .dummy-link {
 	cursor: pointer;
 }
 #settings::after {
@@ -1081,6 +1081,7 @@ iframe.captcha {
 iframe.embed-video {
 	width: 500px;
 	height: 280px;
+	margin-top: 3px;
 }
 
 iframe.bypass {

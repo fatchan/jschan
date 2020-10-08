@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				}
 			}
 			//handle css thing for play icon on vid/audio
-			const close = thumb.nextSibling.innerText === 'Close' ? thumb.nextSibling : null;
+			const close = thumb.nextSibling.textContent === '[Close]' ? thumb.nextSibling : null;
 			if (close) {
 				expanded.loop = loopEnabled;
 				expanded.volume = volumeLevel/100;
@@ -66,7 +66,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					expanded.pause();
 				} else {
 					src.style.visibility = 'hidden';
-					close.style.display = '';
+					close.style.display = 'block';
 					expanded.play();
 				}
 			}
@@ -144,9 +144,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					case 'audio':
 						e.preventDefault();
 						expandedElement = document.createElement(type);
-						close = document.createElement('div');
-						close.innerText = 'Close';
-						close.addEventListener('click', function(e) {
+						const closeSpan = document.createElement('span');
+						const openBracket = document.createTextNode('[');
+						const closeLink = document.createElement('a');
+						const closeBracket = document.createTextNode(']');
+						closeSpan.classList.add('noselect', 'bold');
+						closeSpan.style.marginBottom = '3px';
+						closeSpan.style.display = 'block';
+						closeSpan.style.color = 'var(--font-color)';
+						closeLink.classList.add('dummy-link');
+						closeLink.textContent = 'Close';
+						closeSpan.appendChild(openBracket);
+						closeSpan.appendChild(closeLink);
+						closeSpan.appendChild(closeBracket);
+						closeSpan.addEventListener('click', function(e) {
 							e.preventDefault();
 							e.stopPropagation();
 							toggle(thumbElement, expandedElement, fileName, pfs);
@@ -157,7 +168,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						expandedElement.style.minWidth = fileAnchor.offsetWidth+'px';
 						expandedElement.style.minHeight = fileAnchor.offsetHeight+'px';
 						pfs.appendChild(expandedElement);
-						fileAnchor.appendChild(close);
+						fileAnchor.appendChild(closeSpan);
 						toggle(thumbElement, expandedElement, fileName, pfs);
 						source.src = fileHref;
 						break;
