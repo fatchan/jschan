@@ -227,7 +227,17 @@ module.exports = async (req, res, next) => {
 			let firstFrameOnly = true;
 			if (type === 'image') {
 				///detect images with opacity for PNG thumbnails, set thumbextension before increment
-				imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
+				try {
+					imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
+				} catch (e) {
+					await deleteTempFiles(req).catch(e => console.error);
+					return dynamicResponse(req, res, 400, 'message', {
+						'title': 'Bad request',
+						'message': `The server failed to process "${req.files.file[i].name}". Possible unsupported or corrupt file.`,
+						'redirect': redirect
+					});
+				}
+
 				if (imageData['Channel Statistics'] && imageData['Channel Statistics']['Opacity']) {//does this depend on GM version or anything?
 					const opacityMaximum = imageData['Channel Statistics']['Opacity']['Maximum'];
 					if (opacityMaximum !== '0.00 (0.0000)') {
