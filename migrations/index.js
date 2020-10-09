@@ -13,5 +13,6 @@ module.exports = {
 	'0.0.10': require(__dirname+'/migration-0.0.10.js'), //add links to modlog for new logs
 	'0.0.11': require(__dirname+'/migration-0.0.11.js'), //rename captcha "text" field to "answer" since we support multiple captcha types now
 	'0.0.12': require(__dirname+'/migration-0.0.12.js'), //yotsuba b -> yotsuba-b
-	'0.0.13': require(__dirname+'/migration-0.0.13.js'), //add r9k mode
+	'0.0.13': require(__dirname+'/migration-0.0.13.js'), //add r9k mode (files)
+	'0.0.14': require(__dirname+'/migration-0.0.14.js'), //add option for disable .onion file posts to board settings
 }

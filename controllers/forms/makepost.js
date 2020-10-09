@@ -3,7 +3,7 @@
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js')
+	, { globalLimits, disableOnionFilePosting } = require(__dirname+'/../../configs/main.js')
 	, { Files } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
@@ -13,6 +13,11 @@ module.exports = async (req, res, next) => {
 	// even if force file and message are off, the post must contain one of either.
 	if ((!req.body.message || req.body.message.length === 0) && res.locals.numFiles === 0) {
 		errors.push('Posts must include a message or file');
+	}
+	if (res.locals.tor
+		&& (disableOnionFilePosting || res.locals.board.settings.disableOnionFilePosting)
+		&& res.locals.numFiles > 0) {
+		errors.push(`Posting files through the .onion address has been disabled ${disableOnionFilePosting ? 'globally' : 'on this board'}`);
 	}
 	if (res.locals.numFiles > res.locals.board.settings.maxFiles) {
 		errors.push(`Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}`);

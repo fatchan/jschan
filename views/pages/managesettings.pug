@@ -226,6 +226,10 @@ block content
 						.label Blocked Countries
 						include ../includes/2charisocountries.pug
 					.row
+						.label Disable .onion file posting
+						label.postform-style.ph-5
+							input(type='checkbox', name='disable_onion_file_posting', value='true' checked=board.settings.disableOnionFilePosting)
+					.row
 						.label Filters
 						textarea(name='filters' placeholder='Newline separated, max 50') #{board.settings.filters.join('\n')}
 					.row
