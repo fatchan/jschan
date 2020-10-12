@@ -11,10 +11,10 @@ module.exports = async (req, res, next) => {
 	if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
 		errors.push('Must select 1-10 bans');
 	}
-	if (!req.body.message || req.body.message.length === 0) {
+	if (!req.body.message || res.locals.messageLength === 0) {
 		errors.push('Appeals must include a message');
 	}
-	if (req.body.message.length > globalLimits.fieldLength.message) {
+	if (res.locals.messageLength > globalLimits.fieldLength.message) {
 		errors.push('Appeal message must be 2000 characters or less');
 	}
 

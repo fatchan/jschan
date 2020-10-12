@@ -14,7 +14,7 @@ module.exports = async (req, res, next) => {
 		errors.push('Missing board and postId form data');
 	}
 	// message, subject, email, name, limited length
-	if (req.body.message && req.body.message.length > globalLimits.fieldLength.message) {
+	if (req.body.message && res.locals.messageLength > globalLimits.fieldLength.message) {
 		errors.push(`Message must be ${globalLimits.fieldLength.message} characters or less`);
 	}
 	if (req.body.name && req.body.name.length > globalLimits.fieldLength.name) {

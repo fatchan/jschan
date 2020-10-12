@@ -39,6 +39,11 @@ module.exports = (req, res, next) => {
 		}
 	}
 
+	//proper length check for CRLF vs just LF, because browsers dont count CRLF as 2 characters like the server does (and like it technically is)
+	if (req.body.message) {
+		res.locals.messageLength = req.body.message.replace(/\r\n/igm, '\n').length;
+	}
+
 	for (let i = 0; i < numberFields.length; i++) {
 		const field = numberFields[i];
 		if (req.body[field]) {

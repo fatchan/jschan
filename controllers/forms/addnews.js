@@ -7,10 +7,10 @@ module.exports = async (req, res, next) => {
 
 	const errors = [];
 
-	if (!req.body.message || req.body.message.length === 0) {
+	if (!req.body.message || res.locals.messageLength === 0) {
 		errors.push('Missing message');
 	}
-	if (req.body.message.length > 10000) {
+	if (res.locals.messageLength > 10000) {
 		errors.push('Message must be 10000 characters or less');
 	}
 	if (!req.body.title || req.body.title.length === 0) {

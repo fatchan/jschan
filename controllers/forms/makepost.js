@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
 	const errors = [];
 
 	// even if force file and message are off, the post must contain one of either.
-	if ((!req.body.message || req.body.message.length === 0) && res.locals.numFiles === 0) {
+	if ((!req.body.message || res.locals.messageLength === 0) && res.locals.numFiles === 0) {
 		errors.push('Posts must include a message or file');
 	}
 	if (res.locals.tor
@@ -35,7 +35,7 @@ module.exports = async (req, res, next) => {
 			errors.push('Posts must include a file');
 		}
 	}
-	if (!req.body.message || req.body.message.length === 0) {
+	if (!req.body.message || res.locals.messageLength === 0) {
 		if (!req.body.thread && res.locals.board.settings.forceThreadMessage) {
 			errors.push('Threads must include a message');
 		} else if (req.body.therad && res.locals.board.settings.forceReplyMessage) {
@@ -43,19 +43,19 @@ module.exports = async (req, res, next) => {
 		}
 	}
 	if (req.body.message) {
-		if (req.body.message.length > globalLimits.fieldLength.message) {
+		if (res.locals.messageLength > globalLimits.fieldLength.message) {
 			errors.push(`Message must be ${globalLimits.fieldLength.message} characters or less`);
 		} else if (!req.body.thread
 			&& res.locals.board.settings.maxThreadMessageLength
-			&& req.body.message.length > res.locals.board.settings.maxThreadMessageLength) {
+			&& res.locals.messageLength > res.locals.board.settings.maxThreadMessageLength) {
 			errors.push(`Thread messages must be ${res.locals.board.settings.maxThreadLength} characters or less`);
 		} else if (req.body.thread
 			&& res.locals.board.settings.maxReplyMessageLength
-			&& req.body.message.length > res.locals.board.settings.maxReplyMessageLength) {
+			&& res.locals.messageLength > res.locals.board.settings.maxReplyMessageLength) {
 			errors.push(`Reply messages must be ${res.locals.board.settings.maxReplyMessageLength} characters or less`);
-		} else if (!req.body.thread && req.body.message.length < res.locals.board.settings.minThreadMessageLength) {
+		} else if (!req.body.thread && res.locals.messageLength < res.locals.board.settings.minThreadMessageLength) {
 			errors.push(`Thread messages must be at least ${res.locals.board.settings.minThreadMessageLength} characters long`);
-		} else if (req.body.thread && req.body.message.length < res.locals.board.settings.minReplyMessageLength) {
+		} else if (req.body.thread && res.locals.messageLength < res.locals.board.settings.minReplyMessageLength) {
 			errors.push(`Reply messages must be at least ${res.locals.board.settings.minReplyMessageLength} characters long`);
 		}
 	}
