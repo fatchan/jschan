@@ -219,7 +219,7 @@ module.exports = async (req, res, next) => {
 		});
 	}
 	if (rebuildOther) {
-		//NOTE does not rebuild individual log pages they are stuck on old theme for now
+		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/logs/`));
 		buildQueue.push({
 			'task': 'buildModLogList',
 			'options': {
