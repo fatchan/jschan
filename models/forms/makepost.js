@@ -370,12 +370,12 @@ module.exports = async (req, res, next) => {
 		salt = (await randomBytesAsync(128)).toString('base64');
 	}
 	if (ids === true) {
-//		if (res.locals.country.code === 'TOR') {
-//			userId = '000000';
-//		} else {
+		if (res.locals.tor) {
+			userId = '000000';
+		} else {
 			const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.raw).digest('hex');
 			userId = fullUserIdHash.substring(fullUserIdHash.length-6);
-//		}
+		}
 	}
 	let country = null;
 	if (flags === true) {

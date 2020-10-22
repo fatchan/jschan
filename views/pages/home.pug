@@ -1,18 +1,40 @@
+
 extends ../layout.pug
 
 block head
 	title #{meta.siteName}
+	meta(property='og:site_name', value=meta.siteName)
+	meta(property='og:url', content=meta.url)
+	if recentNews && recentNews.length > 0
+		meta(property='og:description', content=recentNews[0].message.raw.substring(0,200))
 
 block content
 	h1.board-title #{meta.siteName}
 	.table-container.flex-center.mv-10.text-center
-		table
+		table(style='max-width:450px')
 			tr
 				th.alt Welcome
 			tr
 				td
 					pre.no-m-p
-						| The site administrator should edit views/pages/home.pug, then run "pm2 reload all" and "gulp html" to customise this page.
+						| Welcome to fatchan.
+						| 🌐 #[a(href='https://fatchan.org/') fatchan.org] (
+						a(href='https://fatchan.net') .net
+						| , 
+						a(href='https://fatchan.top') .top
+						| , 
+						a(href='https://fatchan.tw') .tw
+						| , 
+						a(href='https://fatchan.li') .li
+						| , 
+						a(href='https://fatchan.ru') .ru
+						| , 
+						a(href='https://fatchan.is') .is
+						| )
+						| 🧅 
+						a(href='http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/') .onion hidden service
+						| 
+						a(href='irc://irc.fatpeople.lol:+6697/fatchan') 💬 IRC
 	if recentNews && recentNews.length > 0
 		.table-container.flex-center.mv-5
 			table.newstable
