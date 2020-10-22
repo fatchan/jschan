@@ -1,6 +1,7 @@
 'use strict';
 
 const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
+	, { createHash } = require('crypto')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
@@ -73,6 +74,12 @@ todo: handle some more situations
 		}
 	}
 
+	//message hash
+	let messageHash = null;
+	if (req.body.message && req.body.message.length > 0) {
+		const noQuoteMessage = req.body.message.replace(/>>\d+/g, '').replace(/>>>\/\w+(\/\d*)?/gm, '').trim();
+		messageHash = createHash('sha256').update(noQuoteMessage).digest('base64');
+	}
 	//new name, trip and cap
 	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel,
 		board.settings, board.owner, res.locals.user ? res.locals.user.username : null);
@@ -130,6 +137,7 @@ todo: handle some more situations
 			},
 			nomarkup,
 			message,
+			'messagehash': messageHash || null,
 			quotes,
 			crossquotes,
 			name,

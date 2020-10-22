@@ -107,6 +107,7 @@ module.exports = async (req, res, next) => {
 		'maxThreadMessageLength': numberSetting(req.body.max_thread_message_length, oldSettings.maxThreadMessageLength),
 		'maxReplyMessageLength': numberSetting(req.body.max_reply_message_length, oldSettings.maxReplyMessageLength),
 		'lockMode': numberSetting(req.body.lock_mode, oldSettings.lockMode),
+		'messageR9KMode': numberSetting(req.body.message_r9k_mode, oldSettings.messageR9KMode),
 		'fileR9KMode': numberSetting(req.body.file_r9k_mode, oldSettings.fileR9KMode),
 		'filterMode': numberSetting(req.body.filter_mode, oldSettings.filterMode),
 		'filterBanDuration': numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),

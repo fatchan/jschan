@@ -296,6 +296,25 @@ module.exports = {
 
 	},
 
+	checkExistingMessage: async (board, thread = null, hash) => {
+		const query = {
+			'board': board,
+			'messagehash': hash,
+		}
+		if (thread !== null) {
+			query['$or'] = [
+				{ 'thread': thread },
+				{ 'postId': thread },
+			]
+		}
+		const postWithExistingMessage = await db.findOne(query, {
+			'projection': {
+				'messagehash': 1,
+			}
+		});
+		return postWithExistingMessage;
+	},
+
 	checkExistingFiles: async (board, thread = null, hashes) => {
 		const query = {
 			'board': board,

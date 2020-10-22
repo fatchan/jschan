@@ -302,7 +302,8 @@ module.exports = {
 		codeTheme: 'ir-black',
 		sfw: false, //safe for work board
 		lockMode: 0, //board lock mode
-		fileR9KMode: 0, //r9k for files, 0=off, 1=per thread, 2=whole board
+		fileR9KMode: 0, //enfore unique files, 0=off, 1=per thread, 2=whole board
+		messageR9KMode: 0, //enforce unique message, 0=off, 1=per thread, 2=whole board
 		unlistedLocal: false, //board hidden from on-site board list and frontpage
 		unlistedWebring: false, //board hidden from webring
 		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts

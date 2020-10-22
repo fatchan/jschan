@@ -50,7 +50,7 @@ module.exports = async (req, res, next) => {
 	const { filterBanDuration, filterMode, filters, blockedCountries, resetTrigger,
 			maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
-			captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode } = res.locals.board.settings;
+			captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
 	if (res.locals.permLevel >= 4
 		&& res.locals.country
 		&& blockedCountries.includes(res.locals.country.code)) {
@@ -158,10 +158,29 @@ module.exports = async (req, res, next) => {
 		}
 
 	}
+
+	//for r9k messages. usually i wouldnt process these if its not enabled e.g. flags and IDs but in this case I think its necessary
+	let messageHash = null;
+	if (req.body.message && req.body.message.length > 0) {
+		const noQuoteMessage = req.body.message.replace(/>>\d+/g, '').replace(/>>>\/\w+(\/\d*)?/gm, '').trim();
+		messageHash = createHash('sha256').update(noQuoteMessage).digest('base64');
+		if (res.locals.permLevel >= 4 && (req.body.thread && messageR9KMode === 1) || messageR9KMode === 2) {
+			const postWithExistingMessage = await Posts.checkExistingMessage(res.locals.board._id, (messageR9KMode === 2 ? null : req.body.thread), messageHash);
+			if (postWithExistingMessage != null) {
+				await deleteTempFiles(req).catch(e => console.error);
+				return dynamicResponse(req, res, 409, 'message', {
+					'title': 'Conflict',
+					'message': `Messages must be unique ${messageR9KMode === 1 ? 'in this thread' : 'on this board'}. Your message is not unique.`,
+					'redirect': redirect
+				});
+			}
+		}
+	}
+
 	let files = [];
 	// if we got a file
 	if (res.locals.numFiles > 0) {
-		if ((req.body.thread && fileR9KMode === 1) || fileR9KMode === 2) {
+		if (res.locals.permLevel >= 4 && (req.body.thread && fileR9KMode === 1) || fileR9KMode === 2) {
 			const filesHashes = req.files.file.map(f => f.sha256);
 			const postWithExistingFiles = await Posts.checkExistingFiles(res.locals.board._id, (fileR9KMode === 2 ? null : req.body.thread), filesHashes);
 			if (postWithExistingFiles != null) {
@@ -401,7 +420,7 @@ module.exports = async (req, res, next) => {
 	const nomarkup = prepareMarkdown(req.body.message, true);
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread);
 
-	//build post data for db
+	//build post data for db. for some reason all the property names are lower case :^)
 	const data = {
 		'date': new Date(),
 		name,
@@ -411,6 +430,7 @@ module.exports = async (req, res, next) => {
 		capcode,
 		subject,
 		'message': message || null,
+		'messagehash': messageHash || null,
 		'nomarkup': nomarkup || null,
 		'thread': req.body.thread || null,
 		password,

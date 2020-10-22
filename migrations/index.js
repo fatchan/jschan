@@ -15,4 +15,5 @@ module.exports = {
 	'0.0.12': require(__dirname+'/migration-0.0.12.js'), //yotsuba b -> yotsuba-b
 	'0.0.13': require(__dirname+'/migration-0.0.13.js'), //add r9k mode (files)
 	'0.0.14': require(__dirname+'/migration-0.0.14.js'), //add option for disable .onion file posts to board settings
+	'0.0.15': require(__dirname+'/migration-0.0.15.js'), //messages r9k option
 }
