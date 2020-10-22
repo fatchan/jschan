@@ -3,7 +3,7 @@
 const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
 	, { Posts } = require(__dirname+'/../../db/')
-	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
+	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
@@ -118,7 +118,7 @@ module.exports = async (req, res) => {
 			if (post.nomarkup && post.nomarkup.length > 0) {
 				//redo the markup
 				let message = markdown(post.nomarkup);
-				let { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(post.board, message, post.thread); // req.body.move_to_thread);
+				let { quotedMessage, threadQuotes, crossQuotes } = await quoteHandler.process(post.board, message, post.thread); // req.body.move_to_thread);
 //console.log(quotedMessage, threadQuotes, crossQuotes)
 				message = sanitize(quotedMessage, sanitizeOptions.after);
 				bulkWrites.push({

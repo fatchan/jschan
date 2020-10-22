@@ -4,7 +4,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, { remove } = require('fs-extra')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts, Files } = require(__dirname+'/../../db/')
-	, linkQuotes = require(__dirname+'/../../helpers/posting/quotes.js')
+	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, { pruneImmediately } = require(__dirname+'/../../configs/main.js')
 	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
@@ -119,7 +119,7 @@ module.exports = async (posts, board, all=false) => {
 				if (post.nomarkup && post.nomarkup.length > 0) { //is this check even necessary? how would it have a quote with no message
 					//redo the markup
 					let message = markdown(post.nomarkup);
-					const { quotedMessage, threadQuotes, crossQuotes } = await linkQuotes(post.board, message, post.thread);
+					const { quotedMessage, threadQuotes, crossQuotes } = await quoteHandler.process(post.board, message, post.thread);
 					message = sanitize(quotedMessage, sanitizeOptions.after);
 					bulkWrites.push({
 						'updateOne': {

@@ -162,11 +162,17 @@ block content
 							option(value='1', selected=board.settings.lockMode === 1) Lock thread creation
 							option(value='2', selected=board.settings.lockMode === 2) Lock board
 					.row
-						.label Unique Files
+						.label Enforce Unique Files
 						select(name='file_r9k_mode')
 							option(value='0', selected=board.settings.fileR9KMode === 0) Off
 							option(value='1', selected=board.settings.fileR9KMode === 1) Per Thread
 							option(value='2', selected=board.settings.fileR9KMode === 2) Board Wide
+					.row
+						.label Enforce Unique Messages
+						select(name='message_r9k_mode')
+							option(value='0', selected=board.settings.messageR9KMode === 0) Off
+							option(value='1', selected=board.settings.messageR9KMode === 1) Per Thread
+							option(value='2', selected=board.settings.messageR9KMode === 2) Board Wide
 					.row
 						.label Unlist locally
 						label.postform-style.ph-5
