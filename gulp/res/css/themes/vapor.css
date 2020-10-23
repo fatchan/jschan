@@ -1,0 +1,72 @@
+:root {
+    --icon-color: invert(17%) sepia(89%) saturate(7057%) hue-rotate(2deg) brightness(93%) contrast(120%);
+    --alt-label-color: #2d3351;
+    --alt-font-color: #9ac6c9;
+    --background-top: #232840;
+    --background-rest: #232840;
+    --navbar-color: #2d3351;
+    --post-color: #2d3351;
+    --post-outline-color: #232840;
+    --label-color: #2d3351;
+    --box-border-color: #232840;
+    --darken: #ffffff00;
+    --highlighted-post-color: #2d3351;
+    --highlighted-post-outline-color: #9ac6c9;
+    --board-title: #c5c8c6;
+    --hr: #2d3351;
+    --font-color: #9ac6c9;
+    --name-color: #c5c8c6;
+    --capcode-color: #f00;
+    --subject-color: #b294bb;
+    --link-color: #f649a7;
+    --post-link-color: #f649a7;
+    --link-hover: #f649a7;
+    --input-borders: #232840;
+    --input-color: #c5c8c6;
+    --input-background: #2d3351;
+    --dice-color: darkorange;
+    --title-color: #d70000;
+    --greentext-color: green;
+    --pinktext-color: #E0727F;
+}
+body {
+    font-family: monospace;
+}
+.highlighted {
+    border: 1px dashed var(--highlighted-post-outline-color)
+}
+a:hover {
+    position: relative;
+    text-shadow: 0 2px 10px rgba(246,73,167,.9);
+}
+a, .board-title {
+    text-decoration: none;
+    text-shadow: 0 2px 3px rgba(246,73,167,.5);
+    font-weight: 800;
+    transition: all .3s ease;
+    position: relative;
+}
+a:hover::before {
+    transform-origin: bottom left;
+    transform: scaleX(1);
+}
+a::before {
+    content: "";
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    height: 2px;
+    background-color: #f649a7;
+    transform-origin: bottom right;
+    transform: scaleX(0);
+    transition: transform .5s ease;
+    box-shadow: 0 2px 5px rgba(246,73,167,.6);
+    overflow: hidden;
+}
+a:active, a:hover {
+    outline-width: 0;
+}
+.captcha {
+    filter: invert(90%) sepia(100%) saturate(100) hue-rotate(194deg);
+}
