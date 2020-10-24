@@ -176,7 +176,7 @@ module.exports = {
 							'$cond': [
 								{ '$ne': [ '$email', 'sage' ] },
 								'$date',
-								0 //still need to improve this to ignore bumplocked or bumplimited threads
+								0 //still need to improve this to ignore bump limitthreads
 							]
 						}
 					}
@@ -544,18 +544,17 @@ module.exports = {
 		return db.aggregate([
 			{
 				'$match': {
+					//going to match against thread bump date instead
+					'thread': null,
 					'board': {
 						'$in': boards
 					},
-					'email': {
-						'$ne': 'sage'
-					}
 				}
 			}, {
 				'$group': {
 					'_id': '$board',
 					'lastPostTimestamp': {
-						'$max':'$date'
+						'$max':'$bumped'
 					}
 				}
 			}, {

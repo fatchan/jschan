@@ -381,93 +381,75 @@ module.exports = async (req, res, next) => {
 		}, {});
 
 		if (aggregateNeeded) {
-
-			//fix latest post timestamp on baords for webring/board list activity
-			await Posts.fixLatest(threadBoards);
-
 			//recalculate replies and image counts if necessary
 			const selectedPosts = res.locals.posts.filter(p => p.thread !== null);
 			if (selectedPosts.length > 0) {
-				let threadOrs = selectedPosts.map(p => {
-					return {
-						board: p.board,
-						thread: p.thread
-					}
-				});
-				//get replies, files, bump date, from threads
-				const threadAggregates = await Posts.getThreadAggregates(threadOrs);
-//TODO: change query to fetch threads and group into bumplocked/normal, and only reset bump date on non-bumplocked and ignore sages
+/* ignore
+                               let threadOrs = selectedPosts.map(p => ({ board: p.board, postId: p.thread }));
+                                let replyOrs = selectedPosts.map(p => ({ board: p.board, thread: p.thread }));
+                                const [ threads, threadReplyAggregates] = await Promise.all([
+                                        Posts.db.find({ '$or': threadOrs }), //i think this is in threadsEachBoard already
+                                        Posts.getThreadAggregates(threadOrs)
+                                ]);
+*/
+                                let replyOrs = selectedPosts.map(p => ({ board: p.board, thread: p.thread }));
+				const threadReplyAggregates = await Posts.getThreadAggregates(replyOrs);
 				const bulkWrites = [];
-				for (let i = 0; i < threadAggregates.length; i++) {
-					const threadAggregate = threadAggregates[i];
-					if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].oldest.bumped) {
-						threadBounds[threadAggregate._id.board].oldest = { bumped: threadAggregate.bumped };
-					} else if (threadAggregate.bumped < threadBounds[threadAggregate._id.board].newest.bumped) {
-						threadBounds[threadAggregate._id.board].newest = { bumped: threadAggregate.bumped };
-					}
-					/*
-						note: the aggregate will not return any replies if the thread had no remaining replies (e.g. they are all deleted)
-						so here we filter them out of the original list, then afterwards the ones left in the list are set to 0 or the OP post date
-					*/
-					threadOrs = threadOrs.filter(t => t.thread !== threadAggregate._id.thread && t.board !== threadAggregate._id.board);
-					//use results from first aggregate for threads with replies still existing
-					const aggregateSet = {
-						//todo here: check if thread bumplocked or beyond bump limit
-						'replyposts': threadAggregate.replyposts,
-						'replyfiles': threadAggregate.replyfiles,
-						'bumped': threadAggregate.bumped
-					}
-					bulkWrites.push({
-						'updateOne': {
-							'filter': {
-								'postId': threadAggregate._id.thread,
-								'board': threadAggregate._id.board
-							},
-							'update': {
-								'$set': aggregateSet,
-							}
-						}
-					});
-				}
-				if (threadOrs.length > 0) {
-					const threadOPOrs = threadOrs.map(t => {
-						return {
-							postId: t.thread,
-							board: t.board
-						};
-					});
-					//get post dates of OPS
-					const emptyThreadAggregates = await Posts.resetThreadAggregates(threadOPOrs);
-					if (emptyThreadAggregates.length > 0) {
-						for (let i = 0; i < emptyThreadAggregates.length; i++) {
-							const threadAggregate = emptyThreadAggregates[i];
-							if (threadAggregate.bumped < threadBounds[threadAggregate.board].oldest.bumped) {
-								threadBounds[threadAggregate.board].oldest = { bumped: threadAggregate.bumped };
-							} else if (threadAggregate.bumped < threadBounds[threadAggregate.board].newest.bumped) {
-								threadBounds[threadAggregate.board].newest = { bumped: threadAggregate.bumped };
-							}
-							//set them all
-							bulkWrites.push({
-								'updateOne': {
-									'filter': {
-										'_id': threadAggregate._id
+				const threads = threadsEachBoard;
+				for (let i = 0; i < threads.length; i++) {
+					const replyAggregate = threadReplyAggregates.find(ra => ra._id.thread === threads[i].postId && ra._id.board === threads[i].board);
+					if (!replyAggregate) {
+						//thread no longer has any reply post/files, set to 0 and reset bump date to post date.
+						//sage replies and bumplock wouldnt matter in that case
+						bulkWrites.push({
+							'updateOne': {
+								'filter': {
+									'postId': threads[i].postId,
+									'board': threads[i].board
+								},
+								'update': {
+									'$set': {
+										'replyposts': 0,
+										'replyfiles': 0,
+										'bumped': threads[i].date
 									},
-									'update': {
-						  				'$set': {
-											'replyposts': threadAggregate.replyposts,
-											'replyfiles': threadAggregate.replyfiles,
-											'bumped': threadAggregate.bumped
-										}
-									}
 								}
-							});
+							}
+						});
+						//threadbound already fixed for this
+					} else {
+						if (replyAggregate.bumped < threadBounds[replyAggregate._id.board].oldest.bumped) {
+							threadBounds[replyAggregate._id.board].oldest = { bumped: replyAggregate.bumped };
+						} else if (replyAggregate.bumped < threadBounds[replyAggregate._id.board].newest.bumped) {
+							threadBounds[replyAggregate._id.board].newest = { bumped: replyAggregate.bumped };
 						}
+						//use results from first aggregate for threads with replies still existing
+						const aggregateSet = {
+							'replyposts': replyAggregate.replyposts,
+							'replyfiles': replyAggregate.replyfiles,
+						}
+						if (!threads[i].bumplocked) {
+							aggregateSet['bumped'] = replyAggregate.bumped;
+						}
+						bulkWrites.push({
+							'updateOne': {
+								'filter': {
+									'postId': replyAggregate._id.thread,
+									'board': replyAggregate._id.board
+								},
+								'update': {
+									'$set': aggregateSet,
+								}
+							}
+						});
 					}
 				}
 				if (bulkWrites.length > 0) {
 					await Posts.db.bulkWrite(bulkWrites);
 				}
 			}
+			//afterwards, fix webring and board list latest post activity now. based on last bump date of a non bumplocked thread
+			await Posts.fixLatest(threadBoards);
 		}
 		for (let i = 0; i < threadBoards.length; i++) {
 			const boardName = threadBoards[i];
