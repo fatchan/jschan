@@ -394,11 +394,11 @@ module.exports = {
 	},
 
 	insertOne: async (board, data, thread) => {
-		let saged = data.email === 'sage' //if email is sage
-			|| (thread &&
-				(thread.bumplocked //or thread bumplocked
-				|| thread.replyposts >= board.settings.bumpLimit //or at bump limit
-			));
+		const sageEmail = data.email === 'sage';
+		const bumpLocked = thread && thread.bumplocked === 1;
+		const bumpLimited = thread && thread.replyposts >= board.settings.bumpLimit;
+		const cyclic = thread && thread.cyclic === 1;
+		const saged = sageEmail || bumpLocked || (bumpLimited && !cyclic);
 		if (data.thread !== null) {
 			const filter = {
 				'postId': data.thread,
@@ -412,9 +412,14 @@ module.exports = {
 				}
 			}
 			//if post email is not sage, and thread not bumplocked, set bump date
+			
 			if (!saged) {
 				query['$set'] = {
 					'bumped': new Date()
+				}
+			} else if (bumpLimited && !cyclic) {
+				query['$set'] = {
+					'bumplocked': 1
 				}
 			}
 			//update the thread
