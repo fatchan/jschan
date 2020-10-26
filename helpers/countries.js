@@ -7,8 +7,8 @@ const countries = require('i18n-iso-countries')
 
 //this dumb library conveniently includes 2 names for some countries...
 Object.entries(countryNamesMap)
-	.filter(e => Array.isArray(e[1]))
-	.forEach(c => countryNamesMap[0] = c[1][0]) //use the first name
+	.filter(e => Array.isArray(e[1])) //for any country with an array of names,
+	.forEach(c => countryNamesMap[c[0]] = c[1][0]) //use the first name
 
 countryNamesMap['XX'] = 'Unknown';
 countryNamesMap['T1'] = 'Tor Exit Node';
