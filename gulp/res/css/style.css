@@ -777,8 +777,8 @@ video, img {
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: contain; /* make it full */
-	height: 200px;
-	width: 200px;
+	height: var(--thumbnail-size);
+	width: var(--thumbnail-size);
 }
 .attachmentimg {
 	background-image: var(--attachment-img);
