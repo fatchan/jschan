@@ -23,7 +23,7 @@ server {
 
 	client_max_body_size 0;
 	#header will tell tor users accessing clearnet endpoint to use onion service
-	add_header onion-location 'http://xxxxxxxxxxx.onion';	
+	add_header onion-location 'http://xxxxxxxxxxx.onion$request_uri';
 
 	include /etc/nginx/snippets/security_headers.conf;
 	include /etc/nginx/snippets/error_pages.conf;
