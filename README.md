@@ -122,6 +122,11 @@ $ npm run-script setup
 # setup the database and folder structure, and creates the admin account. **The (random) password will be printed in the command line.**
 $ gulp reset 
 # NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything
+
+# make pm2 (process manager) start on server restart
+$ pm2 startup #and follow any promps
+# save the process list so jschan is started with pm2
+$ pm2 save
 ```
 
 Use https://realfavicongenerator.net/ to generate favicons how you want them to look and replace the files in gulp/res/icons/ with the icons from that package
