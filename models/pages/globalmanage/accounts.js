@@ -8,14 +8,14 @@ module.exports = async (req, res, next) => {
 
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 
-    let filter = {};
+	let filter = {};
 	const username = (typeof req.query.username === 'string' ? req.query.username : null);
-    if (username) {
-        filter['_id'] = username;
-    }
-	const uri = (typeof req.query.uri === 'string' ? req.queru.uri  : null);
-    if (uri) {
-        filter['$or'] = [
+	if (username) {
+		filter['_id'] = username;
+	}
+	const uri = (typeof req.query.uri === 'string' ? req.query.uri  : null);
+	if (uri) {
+		filter['$or'] = [
 			{
 				'ownedBoards': uri
 			},
@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
 				'modBoards': uri
 			},
 		];
-    }
+	}
 
 	let accounts, maxPage;
 	try {
