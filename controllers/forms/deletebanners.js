@@ -7,8 +7,8 @@ module.exports = async (req, res, next) => {
 
 	const errors = [];
 
-	if (!req.body.checkedbanners || req.body.checkedbanners.length === 0 || req.body.checkedbanners.length > 10) {
-		errors.push('Must select 1-10 banners to delete');
+	if (!req.body.checkedbanners || req.body.checkedbanners.length === 0) {
+		errors.push('Must select at least one banner to delete');
 	}
 
 	if (errors.length > 0) {

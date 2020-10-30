@@ -8,8 +8,8 @@ module.exports = async (req, res, next) => {
 
 	const errors = [];
 
-	if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
-		errors.push('Must select 1-10 bans')
+	if (!req.body.checkedbans || req.body.checkedbans.length === 0) {
+		errors.push('Must select at least one ban');
 	}
 	if (!req.body.option || (req.body.option !== 'unban' && req.body.option !== 'deny_appeal')) {
 		errors.push('Invalid ban action')
