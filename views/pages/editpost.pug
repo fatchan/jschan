@@ -8,6 +8,7 @@ block content
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/editpost' method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
+			input(type='hidden' name='referer' value=referer)
 			input(type='hidden' name='board' value=post.board)
 			input(type='hidden' name='postId' value=post.postId)
 			.anchor(id=post.postId)
