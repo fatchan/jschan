@@ -7,8 +7,8 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	let supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window;
 	const livecolor = document.getElementById('livecolor');
-	const livetext = isThread && document.getElementById('livetext') ? document.getElementById('livetext').childNodes[1] : null;
-	const updateButton = livetext ? livetext.nextSibling : null;
+	const livetext = (isThread || isGlobalRecent) && document.getElementById('livetext') ? document.getElementById('livetext').childNodes[1] : null;
+	const updateButton = document.getElementById('updatepostsbutton');
 	const updateLive = (message, color, showRelativeTime) => {
 		livecolor.style.backgroundColor = color;
 		livetext.nodeValue = `${message}`;
@@ -19,16 +19,27 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	if (anchors.length > 0) {
 		lastPostId = anchors[anchors.length - 1].id;
 	}
-	const thread = document.querySelector('.thread');
 
 	const newPost = (data) => {
+		//insert at end of thread, but insert at top for globalmanage
 		console.log('got new post');
 		lastPostId = data.postId;
 		const postData = data;
 		//create a new post
-		const postHtml = post({ post: postData, modview:isModView, upLevel:isThread });
-		//add it to the end of the thread
-		thread.insertAdjacentHTML('beforeend', postHtml);
+		const postHtml = post({ post: postData, modview:isModView, globalmanage:isGlobalRecent, upLevel:isThread });
+		let insertPoint;
+		if (isGlobalRecent) {
+			const firstHr = document.querySelector('hr');
+			const newHr = document.createElement('hr');
+			const threadWrapper = document.createElement('div');
+			threadWrapper.classList.add('thread');
+			insertPoint = threadWrapper;
+			firstHr.insertAdjacentElement('beforebegin', newHr);
+			newHr.insertAdjacentElement('afterend', threadWrapper);
+		} else {
+			insertPoint = document.querySelector('.thread');
+		}
+		insertPoint.insertAdjacentHTML('beforeend', postHtml);
 		for (let j = 0; j < postData.quotes.length; j++) {
 			const quoteData = postData.quotes[j];
 			//add backlink to quoted posts
@@ -221,7 +232,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	scrollSetting.checked = scrollEnabled;
 	scrollSetting.addEventListener('change', toggleScroll, false);
 
-	if (isThread) {
+	if (isThread || isGlobalRecent) {
 		updateButton.addEventListener('click', forceUpdate);
 		liveEnabled ? enableLive() : disableLive();
 	}

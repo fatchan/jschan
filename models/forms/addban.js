@@ -5,7 +5,7 @@ const { Bans, Modlogs } = require(__dirname+'/../../db/')
 	, hashIp = require(__dirname+'/../../helpers/dynamic.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { isIP } = require('net')
-	, { ipHashPermLevel, defaultBanDuration } = require(__dirname+'/../../configs/main.js');
+	, { defaultBanDuration } = require(__dirname+'/../../configs/main.js');
 
 module.exports = async (req, res, redirect) => {
 

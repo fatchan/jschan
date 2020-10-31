@@ -24,7 +24,7 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
+	, { ipHashPermLevel, checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
 		postPasswordSecret, strictFiltering, animatedGifThumbnails } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
@@ -48,9 +48,9 @@ module.exports = async (req, res, next) => {
 	let salt = null;
 	let thread = null;
 	const { filterBanDuration, filterMode, filters, blockedCountries, resetTrigger,
-			maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
-			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
-			captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
+		maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
+		threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
+		captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
 	if (res.locals.permLevel >= 4
 		&& res.locals.country
 		&& blockedCountries.includes(res.locals.country.code)) {
@@ -180,6 +180,8 @@ module.exports = async (req, res, next) => {
 	let files = [];
 	// if we got a file
 	if (res.locals.numFiles > 0) {
+
+		//unique files check
 		if (res.locals.permLevel >= 4 && (req.body.thread && fileR9KMode === 1) || fileR9KMode === 2) {
 			const filesHashes = req.files.file.map(f => f.sha256);
 			const postWithExistingFiles = await Posts.checkExistingFiles(res.locals.board._id, (fileR9KMode === 2 ? null : req.body.thread), filesHashes);
@@ -196,7 +198,8 @@ module.exports = async (req, res, next) => {
 				});
 			}
 		}
-		// check all mime types before we try saving anything
+
+		//basic mime type check
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			if (!mimeTypes.allowed(req.files.file[i].mimetype, allowedFileTypes)) {
 				await deleteTempFiles(req).catch(e => console.error);
@@ -207,7 +210,8 @@ module.exports = async (req, res, next) => {
 				});
 			}
 		}
-		// check for any mismatching supposed mimetypes from the actual file mimetype
+
+		//validate mime type properly
 		if (checkRealMimeTypes) {
 			for (let i = 0; i < res.locals.numFiles; i++) {
 				if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
@@ -220,7 +224,8 @@ module.exports = async (req, res, next) => {
 				}
 			}
 		}
-		// then upload, thumb, get metadata, etc.
+
+		//upload, create thumbnails, get metadata, etc.
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			const file = req.files.file[i];
 			let extension = path.extname(file.name) || file.name.substring(file.name.indexOf('.'));
@@ -590,6 +595,15 @@ module.exports = async (req, res, next) => {
 			'cyclic': data.cyclic,
 		}
 		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
+		const { raw, single, qrange, hrange } = data.ip;
+		const projectedWithIp = {
+			...projectedPost,
+			ip: {
+				single, qrange, hrange,
+				raw: null, //TODO: this would need to be thought about more because of ipHashPermLevel
+			}
+		}
+		Socketio.emitRoom('globalmanage-recent', 'newPost', projectedWithIp);
 	}
 
 	//now add other pages to be built in background
