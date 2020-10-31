@@ -79,6 +79,7 @@ module.exports = async (req, res, next) => {
 		return res.render('editpost', {
 			'post': res.locals.posts[0],
 			'csrf': req.csrfToken(),
+			'referer': (req.headers.referer || `/${res.locals.posts[0].board}/manage/thread/${res.locals.posts[0].thread || res.locals.posts[0].postId}.html`) + `#${res.locals.posts[0].postId}`,
 		});
 	}
 

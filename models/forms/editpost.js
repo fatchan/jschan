@@ -178,7 +178,7 @@ todo: handle some more situations
 	dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': 'Post edited successfully',
-		//redirect
+		'redirect': req.body.referer,
 	});
 	res.end();
 
