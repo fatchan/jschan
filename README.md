@@ -124,7 +124,7 @@ $ gulp reset
 # NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything
 
 # make pm2 (process manager) start on server restart
-$ pm2 startup #and follow any promps
+$ pm2 startup #and follow any prompts
 # save the process list so jschan is started with pm2
 $ pm2 save
 ```
