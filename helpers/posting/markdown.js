@@ -31,7 +31,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 		{ regex: spoilerRegex, cb: (match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
 		{ regex: monoRegex, cb: (match, mono) => `<span class='mono'>${mono}</span>` },
 		{ regex: linkRegex, cb: require(__dirname+'/linkmatch.js') },
-		{ regex: detectedRegex,  cb: (match, detected) => `<span class='detected'>${detected}</span>` },
+		{ regex: detectedRegex, cb: (match, detected) => `<span class='detected'>${detected}</span>` },
 		{ regex: diceroll.regexMarkdown, cb: diceroll.markdown },
 	];
 

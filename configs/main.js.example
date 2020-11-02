@@ -134,9 +134,9 @@ module.exports = {
 	videoThumbPercentage: 5,
 
 	/* extra mime types for files to be uploaded as attachments (no thumbnails) e.g. text files/archives
-		NOTE: appropriate extensions will need to be added to nginx configuration, and uncommend the provided
+		NOTE: appropriate extensions will need to be added to nginx configuration, and uncomment the provided
 		"other files" section which includes an example configuration for .txt files to match this default config.
-		mime types and file extention does not always correspond exactly this cant be done automatically. */
+		mime types and file extension does not always correspond exactly this cant be done automatically. */
 	otherMimeTypes: [
 		'text/plain',
 		'application/pdf'
@@ -153,7 +153,7 @@ module.exports = {
 	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
 	quoteLimit: 25,
 
-	//aply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
+	//apply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
 	strictFiltering: false,
 
 	//how many replies to show on index pages under each OP
@@ -327,7 +327,7 @@ module.exports = {
 		flags: false, //show geo flags, requires nginx setup
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
-		userPostUnlink: true, //alow user to unlink files fomr their post
+		userPostUnlink: true, //allow user to unlink files from their post
 		threadLimit: 200,
 		replyLimit: 500,
 		bumpLimit: 500,
