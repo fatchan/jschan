@@ -483,7 +483,7 @@ th {
 td, th {
 	padding: 5px;
 	/*word-break: break-all;*/
-	word-break: break-word;
+	overflow-wrap: break-word;
 }
 
 .flex-center {
@@ -955,6 +955,7 @@ input:invalid, textarea:invalid {
 	padding: 5px;
 	padding-left: 3px;
 	display:block;
+	overflow-wrap: break-word;
 }
 
 .post-container.op .post-info {
