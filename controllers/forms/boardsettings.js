@@ -11,8 +11,10 @@ module.exports = async (req, res, next) => {
 	const errors = [];
 
 //TODO: add helpers for different checks, passing name, min/max and return true with error if hit
-	if (req.body.description && (req.body.description.length < 1 || req.body.description.length > 50)) {
-		errors.push('Board description must be 1-50 characters');
+	if (req.body.description &&
+		(req.body.description.length < 1 ||
+		 req.body.description.length > globalLimits.fieldLength.description)) {
+		errors.push(`Board description must be 1-${globalLimits.fieldLength.description} characters`);
 	}
 	if (req.body.announcements && (req.body.announcements.length < 1 || req.body.announcements.length > 2000)) {
 		errors.push('Board announcements must be 1-2000 characters');
@@ -34,8 +36,10 @@ module.exports = async (req, res, next) => {
 	if (req.body.moderators && req.body.moderators.length > 500) {
 		errors.push('Moderators length must be 500 characters orless');
 	}
-	if (req.body.name && (req.body.name.length < 1 || req.body.name.length > 50)) {
-		errors.push('Board name must be 1-50 characters');
+	if (req.body.name &&
+		(req.body.name.length < 1 ||
+		 req.body.name.length > globalLimits.fieldLength.boardname)) {
+		errors.push(`Board name must be 1-${globalLimits.fieldLength.boardname} characters`);
 	}
 	if (req.body.default_name && (req.body.default_name.length < 1 || req.body.default_name.length > 50)) {
 		errors.push('Anon name must be 1-50 characters');
