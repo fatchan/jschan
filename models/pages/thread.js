@@ -6,10 +6,16 @@ module.exports = async (req, res, next) => {
 
 	let html, json;
 	try {
-		({ html, json } = await buildThread({
+		const buildThreadData = await buildThread({
 			threadId: res.locals.thread.postId,
 			board: res.locals.board
-		}));
+		});
+		/* unlikely, but postsExists middleware can be true, but this can be null if deleted. so just next() to 404
+		wont matter in the build-workers that call this because they dont destructure and never cause the bug */
+		if (!buildThreadData) {
+			return next();
+		}
+		({ html, json } = buildThreadData);
 	} catch (err) {
 		return next(err);
 	}
