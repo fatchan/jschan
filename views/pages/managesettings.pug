@@ -156,12 +156,6 @@ block content
 						label.postform-style.ph-5
 							input(type='checkbox', name='flags', value='true' checked=board.settings.flags)
 					.row
-						.label Lock Mode
-						select(name='lock_mode')
-							option(value='0', selected=board.settings.lockMode === 0) Unlocked
-							option(value='1', selected=board.settings.lockMode === 1) Lock thread creation
-							option(value='2', selected=board.settings.lockMode === 2) Lock board
-					.row
 						.label Enforce Unique Files
 						select(name='file_r9k_mode')
 							option(value='0', selected=board.settings.fileR9KMode === 0) Off
@@ -200,6 +194,12 @@ block content
 						.row
 							.label Custom CSS
 							textarea(name='custom_css' placeholder='Test first in top-right settings if you have javascript enabled' maxlength=globalLimits.customCss.max) #{board.settings.customCss}
+					.row
+						.label Lock Mode
+						select(name='lock_mode')
+							option(value='0', selected=board.settings.lockMode === 0) Unlocked
+							option(value='1', selected=board.settings.lockMode === 1) Lock thread creation
+							option(value='2', selected=board.settings.lockMode === 2) Lock board
 					.row
 						.label Captcha Mode
 						select(name='captcha_mode')
