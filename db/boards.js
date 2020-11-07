@@ -3,7 +3,7 @@
 const Mongo = require(__dirname+'/db.js')
 	, cache = require(__dirname+'/../redis.js')
 	, dynamicResponse = require(__dirname+'/../helpers/dynamic.js')
-	, db = Mongo.client.db('jschan').collection('boards');
+	, db = Mongo.db.collection('boards');
 
 module.exports = {
 
