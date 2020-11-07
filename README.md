@@ -152,7 +152,7 @@ $ gulp #run default gulp task
 
 EITHER:
 
-- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself)
+- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself). This is the easiest, free way to get a proxy setup and means you can also follow .onions in your webring list since requests will go through tor.
 - Use your own socks proxy
 
 Edit configs/webring.json with your proxy address and set enabled: true
