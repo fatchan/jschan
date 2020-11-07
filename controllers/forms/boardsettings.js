@@ -111,12 +111,6 @@ module.exports = async (req, res, next) => {
 	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {
 		errors.push('Invalid captcha mode');
 	}
-	if (typeof req.body.tph_trigger === 'number' && (req.body.tph_trigger < 0 || req.body.tph_trigger > 10000)) {
-		errors.push('Invalid tph trigger threshold');
-	}
-	if (typeof req.body.tph_trigger_action === 'number' && (req.body.tph_trigger_action < 0 || req.body.tph_trigger_action > 4)) {
-		errors.push('Invalid tph trigger action');
-	}
 	if (typeof req.body.filter_mode === 'number' && (req.body.filter_mode < 0 || req.body.filter_mode > 2)) {
 		errors.push('Invalid filter mode');
 	}
@@ -128,6 +122,25 @@ module.exports = async (req, res, next) => {
 	}
 	if (req.body.code_theme && !codeThemes.includes(req.body.code_theme)) {
 		errors.push('Invalid code theme');
+	}
+
+	if (typeof req.body.tph_trigger === 'number' && (req.body.tph_trigger < 0 || req.body.tph_trigger > 10000)) {
+		errors.push('Invalid tph trigger threshold');
+	}
+	if (typeof req.body.tph_trigger_action === 'number' && (req.body.tph_trigger_action < 0 || req.body.tph_trigger_action > 4)) {
+		errors.push('Invalid tph trigger action');
+	}
+	if (typeof req.body.pph_trigger === 'number' && (req.body.pph_trigger < 0 || req.body.pph_trigger > 10000)) {
+		errors.push('Invalid pph trigger threshold');
+	}
+	if (typeof req.body.pph_trigger_action === 'number' && (req.body.pph_trigger_action < 0 || req.body.pph_trigger_action > 4)) {
+		errors.push('Invalid pph trigger action');
+	}
+	if (typeof req.body.lock_reset === 'number' && (req.body.lock_reset < 0 || req.body.lock_reset > 2)) {
+		errors.push('Invalid trigger reset lock');
+	}
+	if (typeof req.body.captcha_reset === 'number' && (req.body.captcha_reset < 0 || req.body.captcha_reset > 2)) {
+		errors.push('Invalid trigger reset captcha');
 	}
 
 	if (errors.length > 0) {

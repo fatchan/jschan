@@ -316,10 +316,13 @@ module.exports = {
 		unlistedLocal: false, //board hidden from on-site board list and frontpage
 		unlistedWebring: false, //board hidden from webring
 		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts
-		tphTrigger: 0, //numebr of threads in an hour before trigger action is activated
-		pphTrigger: 0, //number of posts in an hour before ^
-		triggerAction: 0, //0=nothing, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
-		resetTrigger: false, //reset captcha/lock settings back to original at the end of hour
+		tphTrigger: 10, //numebr of threads in an hour before trigger action is activated
+		pphTrigger: 50, //number of posts in an hour before ^
+		//0=none, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
+		tphTriggerAction: 1,
+		pphTriggerAction: 2,
+		captchaReset: 0,
+		lockReset: 0,
 		forceAnon: false, //disable name and subject, only allow sage email
 		sageOnlyEmail: false, //only allow sage email
 		early404: true, //delete threads beyond the first 1/3 of pages with less than 5 replies

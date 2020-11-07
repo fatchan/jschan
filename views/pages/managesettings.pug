@@ -207,23 +207,39 @@ block content
 							option(value='1', selected=board.settings.captchaMode === 1) Captcha for new thread
 							option(value='2', selected=board.settings.captchaMode === 2) Captcha for all posts
 					.row
-						.label TPH Trigger Threshold
-						input(type='number', name='tph_trigger', value=board.settings.tphTrigger)
-					.row
 						.label PPH Trigger Threshold
 						input(type='number', name='pph_trigger', value=board.settings.pphTrigger)
 					.row
-						.label TPH/PPH Trigger Action
-						select(name='trigger_action')
-							option(value='0', selected=board.settings.triggerAction === 0) Do nothing
-							option(value='1', selected=board.settings.triggerAction === 1) Enable captcha for new thread
-							option(value='2', selected=board.settings.triggerAction === 2) Enable captcha for all posts
-							option(value='3', selected=board.settings.triggerAction === 3) Lock thread creation
-							option(value='4', selected=board.settings.triggerAction === 4) Lock board
+						.label PPH Trigger Action
+						select(name='pph_trigger_action')
+							option(value='0', selected=board.settings.pphTriggerAction === 0) Do nothing
+							option(value='1', selected=board.settings.pphTriggerAction === 1) Enable captcha for new thread
+							option(value='2', selected=board.settings.pphTriggerAction === 2) Enable captcha for all posts
+							option(value='3', selected=board.settings.pphTriggerAction === 3) Lock thread creation
+							option(value='4', selected=board.settings.pphTriggerAction === 4) Lock board
 					.row
-						.label Auto Reset Trigger
-						label.postform-style.ph-5
-							input(type='checkbox', name='reset_trigger', value='true' checked=board.settings.resetTrigger)
+						.label TPH Trigger Threshold
+						input(type='number', name='tph_trigger', value=board.settings.tphTrigger)
+					.row
+						.label TPH Trigger Action
+						select(name='tph_trigger_action')
+							option(value='0', selected=board.settings.tphTriggerAction === 0) Do nothing
+							option(value='1', selected=board.settings.tphTriggerAction === 1) Enable captcha for new thread
+							option(value='2', selected=board.settings.tphTriggerAction === 2) Enable captcha for all posts
+							option(value='3', selected=board.settings.tphTriggerAction === 3) Lock thread creation
+							option(value='4', selected=board.settings.tphTriggerAction === 4) Lock board
+					.row
+						.label Trigger Reset Lock Mode
+						select(name='lock_reset')
+							option(value='0', selected=board.settings.lockReset === 0) No change
+							option(value='1', selected=board.settings.lockReset === 1) Unlock board
+							option(value='2', selected=board.settings.lockReset === 2) Lock thread creation
+					.row
+						.label Trigger Reset Captcha Mode
+						select(name='captcha_reset')
+							option(value='0', selected=board.settings.captchaReset === 0) No change
+							option(value='1', selected=board.settings.captchaReset === 1) Captcha disbaled
+							option(value='2', selected=board.settings.captchaReset === 2) Captcha for new thread
 					.row
 						.label Early 404
 						label.postform-style.ph-5
