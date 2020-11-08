@@ -321,6 +321,7 @@ module.exports = {
 		//0=none, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
 		tphTriggerAction: 1,
 		pphTriggerAction: 2,
+		//0=dont change, 1=unlock board/disable captcha, 2=lock thread creation/enable captcha for thread creation
 		captchaReset: 0,
 		lockReset: 0,
 		forceAnon: false, //disable name and subject, only allow sage email
