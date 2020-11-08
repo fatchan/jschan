@@ -165,7 +165,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						expandedElement.controls = 'true';
 						source = document.createElement('source');
 						expandedElement.appendChild(source);
-						console.log(this);
 						if (type === 'audio' && thumbElement.nodeName === 'IMG') {
 							expandedElement.style.backgroundImage =
 								`url("${encodeURI(thumbElement.src)}")`;
