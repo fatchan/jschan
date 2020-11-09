@@ -362,12 +362,14 @@ module.exports = async (req, res, next) => {
 						if (!existsFull) {
 							await moveUpload(file, processedFile.filename, 'file');
 						}
-						if (audioThumbnails && !existsThumb) {
-							await audioThumbnail(processedFile);
+						if (audioThumbnails) {
 							// audio thumbnail is always thumbSize x thumbSize
 							processedFile.geometry = {
 								thumbwidth: thumbSize, thumbheight: thumbSize,
 							};
+							if (!existsThumb) {
+								await audioThumbnail(processedFile);
+							}
 						}
 						break;
 					}
