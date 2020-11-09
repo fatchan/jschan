@@ -25,6 +25,7 @@ const video = new Set([
 ]);
 
 const audio = new Set([
+	'audio/flac',
 	'audio/mp3',
 	'audio/mpeg',
 	'audio/ogg',

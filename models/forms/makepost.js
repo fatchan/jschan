@@ -17,6 +17,7 @@ const path = require('path')
 	, imageThumbnail = require(__dirname+'/../../helpers/files/imagethumbnail.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, videoThumbnail = require(__dirname+'/../../helpers/files/videothumbnail.js')
+	, audioThumbnail = require(__dirname+'/../../helpers/files/audiothumbnail.js')
 	, ffprobe = require(__dirname+'/../../helpers/files/ffprobe.js')
 	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
@@ -25,7 +26,8 @@ const path = require('path')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		postPasswordSecret, strictFiltering, animatedGifThumbnails } = require(__dirname+'/../../configs/main.js')
+		postPasswordSecret, strictFiltering, animatedGifThumbnails,
+		audioThumbnails } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -239,12 +241,11 @@ module.exports = async (req, res, next) => {
 
 			//type and subtype
 			const [type, subtype] = processedFile.mimetype.split('/');
-			if (type !== 'audio') { //audio doesnt need thumb
-				processedFile.thumbextension = thumbExtension;
-			}
 			let imageData;
 			let firstFrameOnly = true;
 			if (type === 'image') {
+				processedFile.thumbextension = thumbExtension;
+
 				///detect images with opacity for PNG thumbnails, set thumbextension before increment
 				try {
 					imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
@@ -278,6 +279,13 @@ module.exports = async (req, res, next) => {
 					firstFrameOnly = false;
 					processedFile.thumbextension = '.gif';
 				}
+			} else if (type === 'audio') {
+				if (audioThumbnails) {
+					// waveform has a transparent background, so force png
+					processedFile.thumbextension = '.png';
+				}
+			} else {
+				processedFile.thumbextension = thumbExtension;
 			}
 
 			//increment file count
@@ -295,9 +303,9 @@ module.exports = async (req, res, next) => {
 					await moveUpload(file, processedFile.filename, 'file');
 				}
 			} else {
+				const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 				switch (type) {
 					case 'image': {
-						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						if (!existsFull) {
 							await moveUpload(file, processedFile.filename, 'file');
 						}
@@ -308,7 +316,6 @@ module.exports = async (req, res, next) => {
 						break;
 					}
 					case 'video': {
-						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						//video metadata
 						const videoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
 						videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
@@ -351,9 +358,16 @@ module.exports = async (req, res, next) => {
 						const audioData = await ffprobe(req.files.file[i].tempFilePath, null, true);
 						processedFile.duration = audioData.format.duration;
 						processedFile.durationString = timeUtils.durationString(audioData.format.duration*1000);
-						processedFile.hasThumb = false;
+						processedFile.hasThumb = audioThumbnails;
 						if (!existsFull) {
 							await moveUpload(file, processedFile.filename, 'file');
+						}
+						if (audioThumbnails && !existsThumb) {
+							await audioThumbnail(processedFile);
+							// audio thumbnail is always thumbSize x thumbSize
+							processedFile.geometry = {
+								thumbWidth: thumbSize, thumbHeight: thumbSize,
+							};
 						}
 						break;
 					}
@@ -362,7 +376,7 @@ module.exports = async (req, res, next) => {
 				}
 			}
 
-			if (processedFile.hasThumb === true) {
+			if (processedFile.hasThumb === true && type !== 'audio') {
 				if (processedFile.geometry.width < thumbSize && processedFile.geometry.height < thumbSize) {
 					//dont scale up thumbnail for smaller images
 					processedFile.geometry.thumbwidth = processedFile.geometry.width;
