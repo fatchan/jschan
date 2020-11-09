@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, { blockBypass } = require(__dirname+'/../configs/main.js')
-	, db = Mongo.client.db('jschan').collection('bypass');
+	, db = Mongo.db.collection('bypass');
 
 module.exports = {
 

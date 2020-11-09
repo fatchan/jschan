@@ -2,6 +2,7 @@ module.exports = {
 
 	//mongodb connection string
 	dbURL: 'mongodb://username:password@localhost:27017',
+	dbName: 'jschan',
 
 	//redis connection info
 	redis: {

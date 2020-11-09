@@ -2,7 +2,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, db = Mongo.client.db('jschan').collection('bans');
+	, db = Mongo.db.collection('bans');
 
 module.exports = {
 
