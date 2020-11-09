@@ -366,7 +366,7 @@ module.exports = async (req, res, next) => {
 							await audioThumbnail(processedFile);
 							// audio thumbnail is always thumbSize x thumbSize
 							processedFile.geometry = {
-								thumbWidth: thumbSize, thumbHeight: thumbSize,
+								thumbwidth: thumbSize, thumbheight: thumbSize,
 							};
 						}
 						break;
