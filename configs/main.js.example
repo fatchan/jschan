@@ -2,6 +2,7 @@ module.exports = {
 
 	//mongodb connection string
 	dbURL: 'mongodb://username:password@localhost:27017',
+	dbName: 'jschan',
 
 	//redis connection info
 	redis: {
@@ -58,7 +59,7 @@ module.exports = {
 		distortion: 9,
 	},
 
-	/* dnsbl, will add a small delay for uncached requests. You could also install some 
+	/* dnsbl, will add a small delay for uncached requests. You could also install some
 		kind of dns cache e.g. unbound to improve performance. DNSBL only checked for posting */
 	dnsbl: {
 		enabled: false,
@@ -126,6 +127,9 @@ module.exports = {
 	animatedGifThumbnails: false,
 	//if animatedGifThumbnails is true, use ffmpeg for better animated gif thumbnailing. RECOMMENDED
 	ffmpegGifThumbnails: true,
+
+	//generate waveform thumbnails for audio
+	audioThumbnails: false,
 
 	//max thumb dimensions (square) in px
 	thumbSize: 250,

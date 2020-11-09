@@ -165,8 +165,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						expandedElement.controls = 'true';
 						source = document.createElement('source');
 						expandedElement.appendChild(source);
-						expandedElement.style.minWidth = fileAnchor.offsetWidth+'px';
-						expandedElement.style.minHeight = fileAnchor.offsetHeight+'px';
+						if (type === 'audio' && thumbElement.nodeName === 'IMG') {
+							expandedElement.style.backgroundImage =
+								`url("${encodeURI(thumbElement.src)}")`;
+							expandedElement.style.backgroundRepeat = 'no-repeat';
+							expandedElement.style.minWidth = thumbElement.width+'px';
+							expandedElement.style.minHeight = thumbElement.height+'px';
+						} else {
+							expandedElement.style.minWidth = fileAnchor.offsetWidth+'px';
+							expandedElement.style.minHeight = fileAnchor.offsetHeight+'px';
+						}
 						pfs.appendChild(expandedElement);
 						fileAnchor.appendChild(closeSpan);
 						toggle(thumbElement, expandedElement, fileName, pfs);

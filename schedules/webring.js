@@ -60,7 +60,7 @@ module.exports = async () => {
 
 	if (webringBoards.length > 0) {
 		//$out from temp collection to replace webring boards
-		const tempCollection = Mongo.client.db('jschan').collection('tempwebring');
+		const tempCollection = Mongo.db.collection('tempwebring');
 		await tempCollection.insertMany(webringBoards);
 		await tempCollection.aggregate([
 			{ $out : 'webring' }

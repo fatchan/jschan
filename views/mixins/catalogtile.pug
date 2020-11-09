@@ -28,12 +28,12 @@ mixin catalogtile(board, post, index)
 					- const file = post.files[0]
 					if post.spoiler || file.spoiler
 						div.spoilerimg.catalog-thumb
+					else if file.hasThumb
+						img.catalog-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` width=file.geometry.thumbwidth height=file.geometry.thumbheight loading='lazy')
 					else if file.attachment
 						div.attachmentimg.catalog-thumb
 					else if file.mimetype.startsWith('audio')
 						div.audioimg.catalog-thumb
-					else if file.hasThumb
-						img.catalog-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` width=file.geometry.thumbwidth height=file.geometry.thumbheight loading='lazy')
 					else
 						img.catalog-thumb(src=`/file/${file.filename}` width=file.geometry.width height=file.geometry.height loading='lazy')
 		if post.message
