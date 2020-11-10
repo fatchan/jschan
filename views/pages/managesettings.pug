@@ -210,12 +210,6 @@ block content
 							option(value='1', selected=board.settings.lockMode === 1) Lock thread creation
 							option(value='2', selected=board.settings.lockMode === 2) Lock board
 					.row
-						.label Lock Mode
-						select(name='lock_mode')
-							option(value='0', selected=board.settings.lockMode === 0) Unlocked
-							option(value='1', selected=board.settings.lockMode === 1) Lock thread creation
-							option(value='2', selected=board.settings.lockMode === 2) Lock board
-					.row
 						.label Captcha Mode
 						select(name='captcha_mode')
 							option(value='0', selected=board.settings.captchaMode === 0) No Captcha
@@ -253,7 +247,7 @@ block content
 						.label Trigger Reset Captcha Mode
 						select(name='captcha_reset')
 							option(value='0', selected=board.settings.captchaReset === 0) No change
-							option(value='1', selected=board.settings.captchaReset === 1) Captcha disbaled
+							option(value='1', selected=board.settings.captchaReset === 1) Captcha disabled
 							option(value='2', selected=board.settings.captchaReset === 2) Captcha for new thread
 					.row
 						.label Early 404

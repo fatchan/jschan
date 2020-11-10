@@ -236,7 +236,6 @@ module.exports = {
 		if (triggeredBoards.length === 0) {
 			return; //no label is no triggers
 		}
-//console.log(triggeredBoards);
 		await cache.del('triggered');
 		const triggerModes = await Boards.triggerModes(triggeredBoards);
 		const bulkWrites = triggerModes.map(p => {
@@ -249,19 +248,17 @@ module.exports = {
 						'$set': {
 							/* reset=0 is "no change", the options go from 0-2, and get reset to 0 or 1,
 							so if >0, we subtract 1 otherwise no change */
-							'settings.lockMode': (p.lockReset > 0 ? p.lockReset-1 : p.lockMode),
-							'settings.captchaMode': (p.captchaReset > 0 ? p.captchaReset-1 : p.captchaMode),
+							'settings.lockMode': (p.lockReset > 0 ? Math.min(p.lockReset-1, p.lockMode) : p.lockMode),
+							'settings.captchaMode': (p.captchaReset > 0 ? Math.min(p.captchaReset-1, p.captchaMode) : p.captchaMode),
 						}
 					}
 				}
 			}
 		});
-//console.log(bulkWrites);
 		await Boards.db.bulkWrite(bulkWrites);
 		const promises = [];
 		triggerModes.forEach(async (p) => {
 			await cache.del(`board:${p._id}`);
-//console.log(p, p.captchaReset > 0 && p.captchaReset-1 < p.captchaMode);
 			if (p.captchaReset > 0 && p.captchaReset-1 < p.captchaMode) {
 				if (p.captchaReset-1 <= 1) {
 					promises.push(remove(`${uploadDirectory}/html/${p._id}/thread/`));
