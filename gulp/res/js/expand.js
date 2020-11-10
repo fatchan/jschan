@@ -169,9 +169,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 							expandedElement.style.backgroundImage =
 								`url("${encodeURI(thumbElement.src)}")`;
 							expandedElement.style.backgroundRepeat = 'no-repeat';
+							expandedElement.style.backgroundPosition = 'top';
 							expandedElement.style.backgroundSize = 'contain';
 							expandedElement.style.minWidth = thumbElement.width+'px';
-							expandedElement.style.minHeight = thumbElement.height+'px';
+							expandedElement.style.paddingTop = thumbElement.height+'px';
 						} else {
 							expandedElement.style.minWidth = fileAnchor.offsetWidth+'px';
 							expandedElement.style.minHeight = fileAnchor.offsetHeight+'px';
