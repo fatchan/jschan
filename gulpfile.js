@@ -256,6 +256,7 @@ function scripts() {
 		const locals = `const themes = ['${themes.join("', '")}'];
 const codeThemes = ['${codeThemes.join("', '")}'];
 const captchaType = '${configs.captchaOptions.type}';
+const captchaGridSize = ${configs.captchaOptions.grid.size};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 `;
@@ -293,7 +294,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`!${paths.scripts.src}/timezone.js`,
 		])
 		.pipe(concat('all.js'))
-//		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
 			`${paths.scripts.src}/hidefileinput.js`,
@@ -304,7 +305,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('render.js'))
-//		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 
