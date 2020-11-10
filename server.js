@@ -105,16 +105,42 @@ const express = require('express')
 
 	// catch any unhandled errors
 	app.use((err, req, res, next) => {
+		let errStatus = 500;
+		let errMessage = 'Internal Server Error';
 		if (err.code === 'EBADCSRFTOKEN') {
-			return dynamicResponse(req, res, 403, 'message', {
-				'title': 'Forbidden',
-				'message': 'Invalid CSRF token'
-  			});
+			errMessage = 'Invalid CSRF token';
+			errStatus= 403;
 		}
-		console.error(err);
-		return dynamicResponse(req, res, 500, 'message', {
-			'title': 'Internal Server Error',
-			'error': 'Internal Server Error', //what to put here?
+		if (err.type != null) {
+			//body-parser errors
+			errStatus = err.status;
+			switch (err.type) {
+				case 'charset.unsupported':
+				case 'entity.parse.failed':
+				case 'entity.verify.failed':
+				case 'encoding.unsupported':
+				case 'request.size.invalid':
+				case 'parameters.too.many':
+					//no need to give an error for every one, since these will never happen to a legit user anyway
+					errMessage = 'Invalid request body';
+					break;
+				case 'request.aborted':
+					errMessage = 'Client aborted request';
+					break;
+				case 'entity.too.large':
+					errMessage = 'Your upload was too large';
+					break;
+				default:
+					break;
+			}
+		}
+		if (errStatus === 500 && errMessage ===  'Internal Server Error') {
+			//no specific/friendly error, probably something worth logging
+			console.error(err);
+		}
+		return dynamicResponse(req, res, errStatus, 'message', {
+			'title': errStatus === 500 ? 'Internal Server Error' : 'Bad Request',
+			'error': errMessage,
 			'redirect': req.headers.referer || '/'
 		});
 	})

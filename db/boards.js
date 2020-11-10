@@ -3,7 +3,7 @@
 const Mongo = require(__dirname+'/db.js')
 	, cache = require(__dirname+'/../redis.js')
 	, dynamicResponse = require(__dirname+'/../helpers/dynamic.js')
-	, db = Mongo.client.db('jschan').collection('boards');
+	, db = Mongo.db.collection('boards');
 
 module.exports = {
 
@@ -291,15 +291,11 @@ module.exports = {
 			}, {
 				'$project': {
 					'_id': 1,
-					'lockMode': {
-						'new': '$settings.lockMode',
-						'old': '$preTriggerMode.lockMode'
-					},
-					'captchaMode': {
-						'new': '$settings.captchaMode',
-						'old': '$preTriggerMode.captchaMode'
-					},
-					'threadLimit': '$settings.threadLimit'
+					'lockMode': '$settings.lockMode',
+					'lockReset': '$settings.lockReset',
+					'captchaMode': '$settings.captchaMode',
+					'captchaReset': '$settings.captchaReset',
+					'threadLimit': '$settings.threadLimit',
 				}
 			}
 		]).toArray();

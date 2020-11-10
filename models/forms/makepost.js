@@ -17,6 +17,7 @@ const path = require('path')
 	, imageThumbnail = require(__dirname+'/../../helpers/files/imagethumbnail.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, videoThumbnail = require(__dirname+'/../../helpers/files/videothumbnail.js')
+	, audioThumbnail = require(__dirname+'/../../helpers/files/audiothumbnail.js')
 	, ffprobe = require(__dirname+'/../../helpers/files/ffprobe.js')
 	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
@@ -25,7 +26,8 @@ const path = require('path')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		postPasswordSecret, strictFiltering, animatedGifThumbnails } = require(__dirname+'/../../configs/main.js')
+		postPasswordSecret, strictFiltering, animatedGifThumbnails,
+		audioThumbnails } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -47,9 +49,9 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const { filterBanDuration, filterMode, filters, blockedCountries, resetTrigger,
+	const { filterBanDuration, filterMode, filters, blockedCountries, threadLimit, ids, userPostSpoiler,
+			lockReset, captchaReset, pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
 			maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
-			threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
 			captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
 	if (res.locals.permLevel >= 4
 		&& res.locals.country
@@ -239,12 +241,11 @@ module.exports = async (req, res, next) => {
 
 			//type and subtype
 			const [type, subtype] = processedFile.mimetype.split('/');
-			if (type !== 'audio') { //audio doesnt need thumb
-				processedFile.thumbextension = thumbExtension;
-			}
 			let imageData;
 			let firstFrameOnly = true;
 			if (type === 'image') {
+				processedFile.thumbextension = thumbExtension;
+
 				///detect images with opacity for PNG thumbnails, set thumbextension before increment
 				try {
 					imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
@@ -278,6 +279,13 @@ module.exports = async (req, res, next) => {
 					firstFrameOnly = false;
 					processedFile.thumbextension = '.gif';
 				}
+			} else if (type === 'audio') {
+				if (audioThumbnails) {
+					// waveform has a transparent background, so force png
+					processedFile.thumbextension = '.png';
+				}
+			} else {
+				processedFile.thumbextension = thumbExtension;
 			}
 
 			//increment file count
@@ -295,9 +303,9 @@ module.exports = async (req, res, next) => {
 					await moveUpload(file, processedFile.filename, 'file');
 				}
 			} else {
+				const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 				switch (type) {
 					case 'image': {
-						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						if (!existsFull) {
 							await moveUpload(file, processedFile.filename, 'file');
 						}
@@ -308,7 +316,6 @@ module.exports = async (req, res, next) => {
 						break;
 					}
 					case 'video': {
-						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 						//video metadata
 						const videoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
 						videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
@@ -351,9 +358,18 @@ module.exports = async (req, res, next) => {
 						const audioData = await ffprobe(req.files.file[i].tempFilePath, null, true);
 						processedFile.duration = audioData.format.duration;
 						processedFile.durationString = timeUtils.durationString(audioData.format.duration*1000);
-						processedFile.hasThumb = false;
+						processedFile.hasThumb = audioThumbnails;
 						if (!existsFull) {
 							await moveUpload(file, processedFile.filename, 'file');
+						}
+						if (audioThumbnails) {
+							// audio thumbnail is always thumbSize x thumbSize
+							processedFile.geometry = {
+								thumbwidth: thumbSize, thumbheight: thumbSize,
+							};
+							if (!existsThumb) {
+								await audioThumbnail(processedFile);
+							}
 						}
 						break;
 					}
@@ -362,7 +378,7 @@ module.exports = async (req, res, next) => {
 				}
 			}
 
-			if (processedFile.hasThumb === true) {
+			if (processedFile.hasThumb === true && type !== 'audio') {
 				if (processedFile.geometry.width < thumbSize && processedFile.geometry.height < thumbSize) {
 					//dont scale up thumbnail for smaller images
 					processedFile.geometry.thumbwidth = processedFile.geometry.width;
@@ -463,41 +479,42 @@ module.exports = async (req, res, next) => {
 
 	const postId = await Posts.insertOne(res.locals.board, data, thread);
 
-	let enableCaptcha = false;
-	if (triggerAction > 0 //if trigger is enabled
-		&& (tphTrigger > 0 || pphTrigger > 0) //and has a threshold > 0
-		&& ((triggerAction < 3 && captchaMode < triggerAction) //and its triggering captcha and captcha isnt on
-			|| (triggerAction === 3 && lockMode < 1) //or triggering locking and board isnt locked
-			|| (triggerAction === 4 && lockMode < 2))) {
-		//read stats to check number threads in past hour
-		const hourPosts = await Stats.getHourPosts(res.locals.board._id);
-		if (hourPosts //if stats exist for this hour and its above either trigger
-			&& (tphTrigger > 0 && hourPosts.tph >= tphTrigger)
-				|| (pphTrigger > 0 && hourPosts.pph > pphTrigger)) {
-			//update in memory for other stuff done e.g. rebuilds
-			const update = {
-				'$set': {
-					'preTriggerMode': {
-						lockMode,
-						captchaMode
+	let enableCaptcha = false; //make this returned from some function, refactor and move the next section to another file
+	const pphTriggerActive = (pphTriggerAction > 0 && pphTrigger > 0);
+	const tphTriggerActive = (tphTriggerAction > 0 && tphTrigger > 0);
+	if (pphTriggerAction || tphTriggerActive) { //if a trigger is enabled
+		const triggerUpdate = {
+			'$set': {},
+		};
+		//and a setting needs to be updated
+		const pphTriggerUpdate = (pphTriggerAction < 3 && captchaMode < pphTriggerAction)
+			|| (pphTriggerAction === 3 && lockMode < 1)
+			|| (pphTriggerAction === 4 && lockMode < 2);
+		const tphTriggerUpdate = (tphTriggerAction < 3 && captchaMode < tphTriggerAction)
+			|| (tphTriggerAction === 3 && lockMode < 1)
+			|| (tphTriggerAction === 4 && lockMode < 2);
+		if (tphTriggerUpdate || pphTriggerUpdate) {
+			const hourPosts = await Stats.getHourPosts(res.locals.board._id);
+			const calcTriggerMode = (update, trigger, triggerAction, stat) => { //todo: move this somewhere else
+				if (trigger > 0 && stat >= trigger) {
+					//update in memory for other stuff done e.g. rebuilds
+					if (triggerAction < 3) {
+						res.locals.board.settings.captchaMode = triggerAction;
+						update['$set']['settings.captchaMode'] = triggerAction;
+						enableCaptcha = true; //todo make this also returned after moving/refactoring this
+					} else {
+						res.locals.board.settings.lockMode = triggerAction-2;
+						update['$set']['settings.lockMode'] = triggerAction-2;
 					}
+					return true;
 				}
-			};
-			if (triggerAction < 3) {
-				res.locals.board.settings.captchaMode = triggerAction;
-				update['$set']['settings.captchaMode'] = triggerAction;
-				enableCaptcha = true;
-			} else if (triggerAction === 3) {
-				res.locals.board.settings.lockMode = 1;
-				update['$set']['settings.lockMode'] = 1;
-			} else if (triggerAction === 4) {
-				res.locals.board.settings.lockMode = 2;
-				update['$set']['settings.lockMode'] = 2;
+				return false;
 			}
-			//set it in the db
-			await Boards.updateOne(res.locals.board._id, update);
-			if (resetTrigger) {
-				//mark the board as being triggered so we can return it to old mode after on schedule
+			const updatedPphTrigger = pphTriggerUpdate && calcTriggerMode(triggerUpdate, pphTrigger, pphTriggerAction, hourPosts.pph);
+			const updatedTphTrigger = tphTriggerUpdate && calcTriggerMode(triggerUpdate, tphTrigger, tphTriggerAction, hourPosts.tph);
+			if (updatedPphTrigger || updatedTphTrigger) {
+				//set it in the db
+				await Boards.updateOne(res.locals.board._id, triggerUpdate);
 				await cache.sadd('triggered', res.locals.board._id);
 			}
 		}

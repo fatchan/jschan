@@ -10,9 +10,11 @@ module.exports = async (req, res, next) => {
 
 	const errors = [];
 
-	//make sure they checked 1-10 posts
-	if (!req.body.globalcheckedposts || req.body.globalcheckedposts.length === 0 || req.body.globalcheckedposts.length > 100) {
-		errors.push('Must select <100 posts')
+	if (!req.body.globalcheckedposts || req.body.globalcheckedposts.length === 0) {
+		errors.push(`Must select at least one post`);
+	} else if (globalLimits.multiInputs.posts.staff
+		&& req.body.globalcheckedposts.length > globalLimits.multiInputs.posts.staff) {
+		errors.push(`Must not select >${globalLimits.multiInputs.posts.staff} posts per request`);
 	}
 
 	//checked reports
@@ -20,13 +22,13 @@ module.exports = async (req, res, next) => {
 		if (!req.body.global_report_ban) {
 			errors.push('Must select a report action if checked reports');
 		}
-		if (req.body.checkedreports.length > 50) {
-			//50 because checked posts is max 10 and 5 reports max per post
-			errors.push('Cannot check more than 50 reports');
+		if (req.body.checkedreports.length > req.body.globalcheckedposts.length*5) {
+			//5 reports max per post
+			errors.push('Invalid number of reports checked');
 		}
 	} else if (!req.body.checkedreports && req.body.global_report_ban) {
-        errors.push('Must select posts+reports to report ban');
-    }
+		errors.push('Must select posts+reports to report ban');
+	}
 
 	res.locals.actions = actionChecker(req);
 
@@ -77,6 +79,7 @@ module.exports = async (req, res, next) => {
 		return res.render('editpost', {
 			'post': res.locals.posts[0],
 			'csrf': req.csrfToken(),
+			'referer': (req.headers.referer || `/${res.locals.posts[0].board}/manage/thread/${res.locals.posts[0].thread || res.locals.posts[0].postId}.html`) + `#${res.locals.posts[0].postId}`,
 		});
 	}
 

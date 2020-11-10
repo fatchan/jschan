@@ -483,7 +483,7 @@ th {
 td, th {
 	padding: 5px;
 	/*word-break: break-all;*/
-	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .flex-center {
@@ -955,6 +955,7 @@ input:invalid, textarea:invalid {
 	padding: 5px;
 	padding-left: 3px;
 	display:block;
+	overflow-wrap: break-word;
 }
 
 .post-container.op .post-info {
@@ -1156,6 +1157,7 @@ table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
 table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
 table.boardtable td:nth-child(5), table.boardtable th:nth-child(5) {
 	word-break: keep-all;
+	overflow-wrap: break-word;
 }
 
 table.boardtable th:nth-child(6) {

@@ -2,6 +2,7 @@ module.exports = {
 
 	//mongodb connection string
 	dbURL: 'mongodb://username:password@localhost:27017',
+	dbName: 'jschan',
 
 	//redis connection info
 	redis: {
@@ -58,7 +59,7 @@ module.exports = {
 		distortion: 9,
 	},
 
-	/* dnsbl, will add a small delay for uncached requests. You could also install some 
+	/* dnsbl, will add a small delay for uncached requests. You could also install some
 		kind of dns cache e.g. unbound to improve performance. DNSBL only checked for posting */
 	dnsbl: {
 		enabled: false,
@@ -127,6 +128,9 @@ module.exports = {
 	//if animatedGifThumbnails is true, use ffmpeg for better animated gif thumbnailing. RECOMMENDED
 	ffmpegGifThumbnails: true,
 
+	//generate waveform thumbnails for audio
+	audioThumbnails: false,
+
 	//max thumb dimensions (square) in px
 	thumbSize: 250,
 
@@ -134,9 +138,9 @@ module.exports = {
 	videoThumbPercentage: 5,
 
 	/* extra mime types for files to be uploaded as attachments (no thumbnails) e.g. text files/archives
-		NOTE: appropriate extensions will need to be added to nginx configuration, and uncommend the provided
+		NOTE: appropriate extensions will need to be added to nginx configuration, and uncomment the provided
 		"other files" section which includes an example configuration for .txt files to match this default config.
-		mime types and file extention does not always correspond exactly this cant be done automatically. */
+		mime types and file extension does not always correspond exactly this cant be done automatically. */
 	otherMimeTypes: [
 		'text/plain',
 		'application/pdf'
@@ -153,7 +157,7 @@ module.exports = {
 	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
 	quoteLimit: 25,
 
-	//aply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
+	//apply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
 	strictFiltering: false,
 
 	//how many replies to show on index pages under each OP
@@ -236,8 +240,9 @@ module.exports = {
 		postFilesSize: { //in bytes, 10MB default
 			max: 10485760
 		},
-		bannerFiles: { //max number of banners uploadable at once
-			max: 10
+		bannerFiles: {
+			max: 10, //max number of banners uploadable at once
+			total: 100, //max number of banners for a board in total
 		},
 		bannerFilesSize: { //in bytes, 10MB default
 			max: 10485760
@@ -260,6 +265,14 @@ module.exports = {
 			uri: 50,
 			boardname: 50,
 			description: 100,
+		},
+		multiInputs: {
+			//limits on certain requests that have multi-select. set any to 0 for unlimited
+			posts: { //post actions (report, delete, spoiler, ban, etc).
+				anon: 20, //separate for non-staff to prevent performance issues or abuse e.g. user mass self-deleting or reporting posts with single captcha
+				staff: 100, //but to still allow mass moderation for staff
+			},
+			//note: room for more limits here if they are needed for other checkbox forms in future
 		},
 		customCss: {
 			enabled: true, //allow custom css by board owners
@@ -307,10 +320,14 @@ module.exports = {
 		unlistedLocal: false, //board hidden from on-site board list and frontpage
 		unlistedWebring: false, //board hidden from webring
 		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts
-		tphTrigger: 0, //numebr of threads in an hour before trigger action is activated
-		pphTrigger: 0, //number of posts in an hour before ^
-		triggerAction: 0, //0=nothing, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
-		resetTrigger: false, //reset captcha/lock settings back to original at the end of hour
+		tphTrigger: 10, //numebr of threads in an hour before trigger action is activated
+		pphTrigger: 50, //number of posts in an hour before ^
+		//0=none, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
+		tphTriggerAction: 1,
+		pphTriggerAction: 2,
+		//0=dont change, 1=unlock board/disable captcha, 2=lock thread creation/enable captcha for thread creation
+		captchaReset: 0,
+		lockReset: 0,
 		forceAnon: false, //disable name and subject, only allow sage email
 		sageOnlyEmail: false, //only allow sage email
 		early404: true, //delete threads beyond the first 1/3 of pages with less than 5 replies
@@ -318,7 +335,7 @@ module.exports = {
 		flags: false, //show geo flags, requires nginx setup
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
-		userPostUnlink: true, //alow user to unlink files fomr their post
+		userPostUnlink: true, //allow user to unlink files from their post
 		threadLimit: 200,
 		replyLimit: 500,
 		bumpLimit: 500,

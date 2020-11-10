@@ -93,11 +93,13 @@ module.exports = async (req, res, next) => {
 		'forceReplyFile': booleanSetting(req.body.force_reply_file),
 		'forceThreadSubject': booleanSetting(req.body.force_thread_subject),
 		'disableReplySubject': booleanSetting(req.body.disable_reply_subject),
-		'resetTrigger': booleanSetting(req.body.reset_trigger),
 		'captchaMode': numberSetting(req.body.captcha_mode, oldSettings.captchaMode),
 		'tphTrigger': numberSetting(req.body.tph_trigger, oldSettings.tphTrigger),
+		'tphTriggerAction': numberSetting(req.body.tph_trigger_action, oldSettings.tphTriggerAction),
 		'pphTrigger': numberSetting(req.body.pph_trigger, oldSettings.pphTrigger),
-		'triggerAction': numberSetting(req.body.trigger_action, oldSettings.triggerAction),
+		'pphTriggerAction': numberSetting(req.body.pph_trigger_action, oldSettings.pphTriggerAction),
+		'captchaReset': numberSetting(req.body.captcha_reset, oldSettings.captchaReset),
+		'lockReset': numberSetting(req.body.lock_reset, oldSettings.lockReset),
 		'threadLimit': numberSetting(req.body.thread_limit, oldSettings.threadLimit),
 		'replyLimit': numberSetting(req.body.reply_limit, oldSettings.replyLimit),
 		'bumpLimit': numberSetting(req.body.bump_limit, oldSettings.bumpLimit),
@@ -134,10 +136,6 @@ module.exports = async (req, res, next) => {
 	await Boards.updateOne(req.params.board, {
 		'$set':  {
 			'settings': newSettings,
-			'preTriggerMode': {
-				'lockMode': newSettings.lockMode,
-				'captchaMode': newSettings.captchaMode
-			}
 		}
 	});
 
@@ -188,7 +186,9 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	if (newSettings.theme !== oldSettings.theme
+	if (newSettings.name !== oldSettings.name
+		|| newSettings.description !== oldSettings.description
+		|| newSettings.theme !== oldSettings.theme
 		|| newSettings.codeTheme !== oldSettings.codeTheme
 		|| newSettings.announcement.raw !== oldSettings.announcement.raw
 		|| newSettings.customCss !== oldSettings.customCss) {

@@ -1,7 +1,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, db = Mongo.client.db('jschan').collection('accounts')
+	, db = Mongo.db.collection('accounts')
 	, bcrypt = require('bcrypt')
 	, cache = require(__dirname+'/../redis.js');
 

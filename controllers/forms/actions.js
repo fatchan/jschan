@@ -12,23 +12,25 @@ module.exports = async (req, res, next) => {
 
 	//make sure they checked 1-10 posts
 	if (!req.body.checkedposts || req.body.checkedposts.length === 0) {
-		errors.push("You didn't check any posts");
-	} else if (res.locals.permLevel >= 4 && req.body.checkedposts.length > 10) {
-		errors.push('Must select <10 posts per action');
-	} else if (req.body.checkedposts.length > 50) {
-		errors.push('Must select <50 posts per action');
+		errors.push('Must select at least one post');
+	} else if (res.locals.permLevel >= 4 && globalLimits.multiInputs.posts.anon
+		&& req.body.checkedposts.length > globalLimits.multiInputs.posts.anon) {
+		errors.push(`Must not select >${globalLimits.multiInputs.posts.anon} posts per request`);
+	} else if (globalLimits.multiInputs.posts.staff
+		&& req.body.checkedposts.length > globalLimits.multiInputs.posts.staff) {
+		errors.push(`Must not select >${globalLimits.multiInputs.posts.staff} posts per request`);
 	}
 	//checked reports
 	if (req.body.checkedreports) {
 		if (!req.body.report_ban) {
 			errors.push('Must select a report action if checked reports');
 		}
-		if (req.body.checkedreports.length > 50) {
-			//50 because checked posts is max 10 and 5 reports max per post
-			errors.push('Cannot check more than 50 reports');
+		if (req.body.checkedreports.length > req.body.checkedposts.length*5) {
+			//5 reports max per post
+			errors.push('Invalid number of reports checked');
 		}
 	} else if (!req.body.checkedreports && req.body.report_ban) {
-		errors.push('Must select posts+reports to report ban');
+		errors.push('Must select post and reports to ban reporter');
 	}
 
 	res.locals.actions = actionChecker(req);
@@ -111,6 +113,7 @@ module.exports = async (req, res, next) => {
 		return res.render('editpost', {
 			'post': res.locals.posts[0],
 			'csrf': req.csrfToken(),
+			'referer': (req.headers.referer || `/${res.locals.posts[0].board}/manage/thread/${res.locals.posts[0].thread || res.locals.posts[0].postId}.html`) + `#${res.locals.posts[0].postId}`,
 		});
 	} else if (req.body.move) {
 		res.locals.posts = res.locals.posts.filter(p => {

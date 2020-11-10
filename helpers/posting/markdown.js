@@ -25,13 +25,13 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 		{ regex: greentextRegex, cb: (match, greentext) => `<span class='greentext'>&gt;${greentext}</span>` },
 		{ regex: boldRegex, cb: (match, bold) => `<span class='bold'>${bold}</span>` },
 		{ regex: underlineRegex, cb: (match, underline) => `<span class='underline'>${underline}</span>` },
-		{ regex: strikeRegex,cb: (match, strike) => `<span class='strike'>${strike}</span>` },
+		{ regex: strikeRegex, cb: (match, strike) => `<span class='strike'>${strike}</span>` },
 		{ regex: titleRegex, cb: (match, title) => `<span class='title'>${title}</span>` },
 		{ regex: italicRegex, cb: (match, italic) => `<span class='em'>${italic}</span>` },
 		{ regex: spoilerRegex, cb: (match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
 		{ regex: monoRegex, cb: (match, mono) => `<span class='mono'>${mono}</span>` },
 		{ regex: linkRegex, cb: require(__dirname+'/linkmatch.js') },
-		{ regex: detectedRegex,  cb: (match, detected) => `<span class='detected'>${detected}</span>` },
+		{ regex: detectedRegex, cb: (match, detected) => `<span class='detected'>${detected}</span>` },
 		{ regex: diceroll.regexMarkdown, cb: diceroll.markdown },
 	];
 

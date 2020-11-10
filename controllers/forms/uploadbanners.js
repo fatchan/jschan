@@ -12,9 +12,9 @@ module.exports = async (req, res, next) => {
 	if (res.locals.numFiles === 0) {
 		errors.push('Must provide a file');
 	} else if (res.locals.numFiles > globalLimits.bannerFiles.max) {
-		errors.push(`Exceeded max banner uploads in one request of ${globalLimits.bannerFiles.max}`)
-	} else if (res.locals.board.banners.length+res.locals.numFiles > 100) {
-		errors.push('Number of uploads would exceed 100 banner limit');
+		errors.push(`Exceeded max banner uploads in one request of ${globalLimits.bannerFiles.max}`);
+	} else if (res.locals.board.banners.length+res.locals.numFiles > globalLimits.bannerFiles.total) {
+		errors.push(`Total number of banners would exceed global limit of ${globalLimits.bannerFiles.total}`);
 	}
 
 	if (errors.length > 0) {

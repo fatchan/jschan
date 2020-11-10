@@ -124,7 +124,7 @@ $ gulp reset
 # NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything
 
 # make pm2 (process manager) start on server restart
-$ pm2 startup #and follow any promps
+$ pm2 startup #and follow any prompts
 # save the process list so jschan is started with pm2
 $ pm2 save
 ```
@@ -152,7 +152,7 @@ $ gulp #run default gulp task
 
 EITHER:
 
-- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself)
+- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself). This is the easiest, free way to get a proxy setup and means you can also follow .onions in your webring list since requests will go through tor.
 - Use your own socks proxy
 
 Edit configs/webring.json with your proxy address and set enabled: true

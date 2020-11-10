@@ -3,7 +3,7 @@
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, formatSize = require(__dirname+'/../helpers/files/formatsize.js')
-	, db = Mongo.client.db('jschan').collection('files')
+	, db = Mongo.db.collection('files')
 
 module.exports = {
 

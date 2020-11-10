@@ -45,7 +45,7 @@ async function wipe() {
 	const Mongo = require(__dirname+'/db/db.js')
 	const Redis = require(__dirname+'/redis.js')
 	await Mongo.connect();
-	const db = Mongo.client.db('jschan');
+	const db = Mongo.db;
 
 	//make these because mongo is dumb and doesnt make them automatically
 	await db.createCollection('accounts');
@@ -256,6 +256,7 @@ function scripts() {
 		const locals = `const themes = ['${themes.join("', '")}'];
 const codeThemes = ['${codeThemes.join("', '")}'];
 const captchaType = '${configs.captchaOptions.type}';
+const captchaGridSize = ${configs.captchaOptions.grid.size};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 `;
@@ -293,7 +294,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`!${paths.scripts.src}/timezone.js`,
 		])
 		.pipe(concat('all.js'))
-//		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
 			`${paths.scripts.src}/hidefileinput.js`,
@@ -304,7 +305,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('render.js'))
-//		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 
@@ -313,7 +314,7 @@ async function migrate() {
 	const Mongo = require(__dirname+'/db/db.js')
 	const Redis = require(__dirname+'/redis.js')
 	await Mongo.connect();
-	const db = Mongo.client.db('jschan');
+	const db = Mongo.db;
 
 	//get current version from db if present (set in 'reset' task in recent versions)
 	let currentVersion = await db.collection('version').findOne({

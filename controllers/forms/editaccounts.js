@@ -7,9 +7,9 @@ module.exports = async (req, res, next) => {
 
 	const errors = [];
 
-	if (!req.body.checkedaccounts || req.body.checkedaccounts.length === 0 || req.body.checkedaccounts.length > 10) {
-        errors.push('Must select 1-10 accounts');
-    }
+	if (!req.body.checkedaccounts || req.body.checkedaccounts.length === 0) {
+		errors.push('Must select at least one account');
+	}
 	if (typeof req.body.auth_level !== 'number' && !req.body.delete_account) {
 		errors.push('Missing auth level or delete action');
 	}

@@ -20,7 +20,7 @@ block content
 		.pages
 			include ../includes/boardpages.pug
 			+boardnav(null, false, false)
-	form(target='_blank' action=`/forms/board/${board._id}/${modview ? 'mod' : ''}actions` method='POST' enctype='application/x-www-form-urlencoded')
+	form(action=`/forms/board/${board._id}/${modview ? 'mod' : ''}actions` method='POST' enctype='application/x-www-form-urlencoded')
 		if modview
 			input(type='hidden' name='_csrf' value=csrf)
 		hr(size=1)
