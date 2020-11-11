@@ -31,7 +31,7 @@ mixin catalogtile(board, post, index)
 					else if file.hasThumb
 						img.catalog-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` width=file.geometry.thumbwidth height=file.geometry.thumbheight loading='lazy')
 					else if file.attachment
-						div.attachmentimg.catalog-thumb
+						div.attachmentimg.catalog-thumb(data-mimetype=file.mimetype)
 					else if file.mimetype.startsWith('audio')
 						div.audioimg.catalog-thumb
 					else
