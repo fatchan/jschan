@@ -86,7 +86,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 									else if file.hasThumb
 										img.file-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` height=file.geometry.thumbheight width=file.geometry.thumbwidth loading='lazy')
 									else if file.attachment
-										div.attachmentimg.file-thumb
+										div.attachmentimg.file-thumb(data-mimetype=file.mimetype)
 									else if type === 'audio'
 										div.audioimg.file-thumb
 									else
