@@ -30,6 +30,7 @@ block content
 					ul.mv-0
 						li: a(href='#make-a-board') How do I make my own board?
 						li: a(href='#staff-and-permissions') How do staff, users and permissions work?
+						li: a(href='#antispam') What do the board settings for antispam do?
 	.table-container.flex-center.mv-5
 		.anchor#whats-an-imageboard
 		table
@@ -265,6 +266,29 @@ block content
 						| Level 2 and 3 are usually only aplicable to users when on a board they are owner or moderator. However, level 2 or 3 can be assigned manually to create global board owners or global board moderators
 						| who have board owner or moderation permissions on all boards, but without access to the global moderation interfaces. If assigning global boad owners (level 2), they will have access to the board settings
 						| and the ability to reassign board owners.
+	.table-container.flex-center.mv-5
+		.anchor#antispam
+		table
+			tr
+				th: a(href='#antispam') What do the board settings for antispam do?
+			tr
+				td
+					p Lock Mode: Choose to lock posting new threads or all posts.
+					p Captcha Mode: Choose to enforce captchas for posting threads or all posts.
+					p PPH Trigger Threshold: Trigger an action after a certain amount of PPH.
+					p PPH Trigger Action: The action to trigger.
+					p TPH Trigger Threshold: Trigger an action after a certain amount of TPH.
+					p TPH Trigger Action: The action to trigger.
+					p Trigger Reset Lock Mode: If a trigger threshold was reached, reset the lock mode to this at the end of the hour.
+					p Trigger Reset Captcha Mode: If a trigger threshold was reached, reset the captcha mode to this at the end of the hour.
+					p Early 404: When a new thread is posted, delete any existing threads with less than #{early404Replies} replies beyond the first 1/#{early404Fraction} of threads.
+					p Disable .onion file posting: Prevent users posting through a .onion hidden service posting images.
+					p Blocked Countries: Block country codes (based on geo Ip data) from posting.
+					p Filters: Newline separated list of words or phrases to match in posts. Checks name, message, filenames, subject, and filenames.
+					p Strict Filtering: More aggressively match filters, by normalising the input compared against the filters.
+					p Filter Mode: What to do when a post matches a filter.
+					p Filter Auto Ban Duration: How long to automatically ban for when filter mode is set to ban. Input the duration in time format described in the #[a(href='#moderation') moderation section].
+
 	.table-container.flex-center.mv-5
 		.anchor#contact
 		table

@@ -235,6 +235,8 @@ function custompages() {
 	])
 	.pipe(gulppug({
 		locals: {
+			early404Fraction: configs.early404Fraction,
+			early404Replies: configs.early404Replies,
 			meta: configs.meta,
 			enableWebring: configs.enableWebring,
 			globalLimits: configs.globalLimits,
