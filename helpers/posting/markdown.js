@@ -12,8 +12,8 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
 	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
 	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
-	, includeSplitRegex = /(```[\s\S]+?```)/gm
-	, splitRegex = /```([\s\S]+?)```/gm
+	, includeSplitRegex = /(\[code\][\s\S]+?\[\/code\])/gm
+	, splitRegex = /\[code\]([\s\S]+?)\[\/code\]/gm
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, escape = require(__dirname+'/escape.js')
@@ -83,7 +83,7 @@ module.exports = {
 			const { value } = highlight(lang, trimFix, true);
 			return `<span class='code hljs'><small>language: ${lang}</small>\n${value}</span>`;
 		} else if (lang === 'aa') {
-			return `<span class='code aa'>${escape(matches.groups.code)}</span>`;
+			return `<span class='aa'>${escape(matches.groups.code)}</span>`;
 		}
 		return `<span class='code'>${escape(trimFix)}</span>`;
 	},
