@@ -117,13 +117,13 @@ module.exports = async (req, res, next) => {
 		});
 	} else if (req.body.move) {
 		res.locals.posts = res.locals.posts.filter(p => {
-			//filter to remove any posts already in the thread (or the OP) of move destionation
+			//filter to remove any posts already in the thread (or the OP) of move destination
 			return p.postId !== req.body.move_to_thread && p.thread !== req.body.move_to_thread;
 		});
 		if (res.locals.posts.length === 0) {
 			return dynamicResponse(req, res, 429, 'message', {
 				'title': 'Conflict',
-				'error': 'Destionation thread cannot match source thread for move action',
+				'error': 'Destination thread cannot match source thread for move action',
 				'redirect': `/${req.params.board}/`
 			});
 		}

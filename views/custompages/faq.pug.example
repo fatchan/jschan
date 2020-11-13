@@ -185,7 +185,8 @@ block content
 			tr
 				td(colspan=2)
 					| The "language" of code blocks is optional. Without it, automatic language detection is used. 
-					| If the language is "plain", highlighting is disabled for the code block. Not all languages are supported, a subset of popular languages is used. 
+					| If the language is "plain", highlighting is disabled for the code block. If "aa" is used, the font will be adjusted for Japanaese Shift JIS art. 
+					| Not all programming languages are supported, a subset of popular languages is used. 
 					| If the language is not in the supported list, the code block will be rendered like "plain" with no highlighting.
 					| Languages supported: #{codeLanguages.join(', ')}
 	.table-container.flex-center.mv-5
