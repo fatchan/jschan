@@ -153,6 +153,14 @@ block content
 				td
 					span.detected (((detected)))
 			tr
+				td
+					| [aa]∧＿∧
+					| ( ・ω・) Let's try that again.[&#x2F;aa]
+				td
+					pre.aa
+						| ∧＿∧
+						| ( ・ω・) Let's try that again.
+			tr
 				td ##2d9+3
 				td
 					img(src='/file/dice.png' height='16' width='16')
@@ -175,13 +183,24 @@ block content
 					span.mono inline monospace
 			tr
 				td
-					| ```language
+					| [code]language
 					br
-					| code block
+					| int main() {...}
 					br
-					| ```
+					| [/code]
 				td
-					span.code code block
+					span.code int main() {...}
+			tr
+				td
+					pre
+						| [code]aa
+						| ∧＿∧
+						| ( ・ω・) Let's try that again.
+						| [&#x2F;code]
+				td
+					pre.aa
+						| ∧＿∧
+						| ( ・ω・) Let's try that again.
 			tr
 				td(colspan=2)
 					| The "language" of code blocks is optional. Without it, automatic language detection is used. 
