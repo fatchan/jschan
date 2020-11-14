@@ -138,15 +138,17 @@ async function wipe() {
 async function css() {
 	try {
 		//a little more configurable
-		let bypassHeight = configs.captchaOptions.type === 'google' ? 500
-			: configs.captchaOptions.type === 'grid' ? 330
-			: 235;
+		let bypassHeight = (configs.captchaOptions.type === 'google' || configs.captchaOptions.type === 'hcaptcha')
+			? 500
+			: configs.captchaOptions.type === 'grid'
+				? 330
+				: 235;
 		let captchaHeight = configs.captchaOptions.type === 'text' ? 80
 			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
-			: 200; //'google' doesnt need this set
+			: 200; //google/hcaptcha doesnt need this set
 		let captchaWidth = configs.captchaOptions.type === 'text' ? 210
 			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
-			: 200; //'google' doesnt need this set
+			: 200; //google/hcaptcha doesnt need this set
 		const cssLocals = `:root {
     --attachment-img: url('/file/attachment.png');
     --spoiler-img: url('/file/spoiler.png');
@@ -246,6 +248,7 @@ function custompages() {
 			postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
 			captchaType: configs.captchaOptions.type,
 			googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
+			hRecaptchaSiteKey: configs.captchaOptions.hcaptcha.siteKey,
 			captchaGridSize: configs.captchaOptions.grid.size,
 			commit,
 		}

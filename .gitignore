@@ -12,3 +12,4 @@ gulp/res/js/locals.js
 gulp/res/js/post.js
 gulp/res/js/modal.js
 tmp/
+.idea/
