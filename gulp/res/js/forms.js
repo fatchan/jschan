@@ -125,7 +125,7 @@ class formHandler {
 	formSubmit(e) {
 		const xhr = new XMLHttpRequest();
 		let postData;
-		const captchaResponse = recaptchaResponse || hcaptchaResponse;
+		const captchaResponse = recaptchaResponse;
 		if (this.enctype === 'multipart/form-data') {
 			this.fileInput && (this.fileInput.disabled = true);
 			postData = new FormData(this.form);
