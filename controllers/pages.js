@@ -68,7 +68,7 @@ router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
 
 //captcha
-if (captchaOptions.type !== 'google') {
+if (captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha') {
 	router.get('/captcha', geoAndTor, processIp, captcha); //get captcha image and cookie
 }
 router.get('/captcha.html', captchaPage); //iframed for noscript users

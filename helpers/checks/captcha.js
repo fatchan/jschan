@@ -16,7 +16,7 @@ module.exports = async (captchaInput, captchaId) => {
 	}
 
 	//make sure they have captcha cookie and its 24 chars
-	if (captchaOptions.type !== 'google'
+	if ((captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha')
 		&& (!captchaId || captchaId.length !== 24)) {
 		throw 'Captcha expired';
 	}

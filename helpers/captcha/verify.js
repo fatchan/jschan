@@ -45,7 +45,7 @@ module.exports = async (req, res, next) => {
 	//it was correct, so mark as solved for other middleware
 	res.locals.solvedCaptcha = true;
 
-	if (captchaOptions.type !== 'google') {
+	if (captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha') {
 		//for builtin captchas, clear captchaid cookie, delete file and reset quota
 		res.clearCookie('captchaid');
 		await Promise.all([
