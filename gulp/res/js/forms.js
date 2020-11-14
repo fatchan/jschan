@@ -67,14 +67,13 @@ let recaptchaResponse = null;
 function recaptchaCallback(response) {
 	recaptchaResponse = response;
 }
-
 class formHandler {
 
 	constructor(form) {
 		this.form = form;
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message');
-		this.captchaField = form.querySelector('.captchafield') || form.querySelector('.g-recaptcha');
+		this.captchaField = form.querySelector('.captchafield') || form.querySelector('.g-recaptcha') || form.querySelector('.h-captcha');
 		
 		this.submit = form.querySelector('input[type="submit"]');
 		if (this.submit) {
@@ -126,11 +125,12 @@ class formHandler {
 	formSubmit(e) {
 		const xhr = new XMLHttpRequest();
 		let postData;
+		const captchaResponse = recaptchaResponse || hcaptchaResponse;
 		if (this.enctype === 'multipart/form-data') {
 			this.fileInput && (this.fileInput.disabled = true);
 			postData = new FormData(this.form);
-			if (recaptchaResponse) {
-				postData.append('captcha', recaptchaResponse);
+			if (captchaResponse) {
+				postData.append('captcha', captchaResponse);
 			}
 			this.fileInput && (this.fileInput.disabled = false);
 			if (this.files && this.files.length > 0) {
@@ -141,8 +141,8 @@ class formHandler {
 			}
 		} else {
 			postData = new URLSearchParams([...(new FormData(this.form))]);
-			if (recaptchaResponse) {
-				postData.set('captcha', recaptchaResponse);
+			if (captchaResponse) {
+				postData.set('captcha', captchaResponse);
 			}
 		}
 		if (this.banned
@@ -169,8 +169,10 @@ class formHandler {
 		}
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
-				if (recaptchaResponse && grecaptcha) {
+				if (captchaResponse && grecaptcha) {
 					grecaptcha.reset();
+				} else if(captchaResponse && hcaptcha) {
+					hcaptcha.reset();
 				}
 				this.submit.disabled = false;
 				this.submit.value = this.originalSubmitText;

@@ -81,6 +81,9 @@ const express = require('express')
 		case 'google':
 			app.locals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
 			break;
+		case 'hcaptcha':
+			app.locals.hcaptchaSiteKey = captchaOptions.hcaptcha.siteKey;
+			break;
 		case 'grid':
 			app.locals.captchaGridSize = captchaOptions.grid.size;
 			break;

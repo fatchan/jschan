@@ -69,6 +69,24 @@ module.exports = async (captchaInput, captchaId) => {
 				throw 'Incorrect captcha answer';
 			}
 			break;
+		case 'hcaptcha':
+			let hcaptchaResponse;
+			try {
+				const form = new FormData();
+				form.append('secret', captchaOptions.hcaptcha.secretKey);
+				form.append('sitekey', captchaOptions.hcaptcha.siteKey);
+				form.append('response', captchaInput[0]);
+				hcaptchaResponse = await fetch('https://hcaptcha.com/siteverify', {
+					method: 'POST',
+					body: form,
+				}).then(res => res.json());
+			} catch (e) {
+				throw 'Captcha error occurred';
+			}
+			if (!hcaptchaResponse || !hcaptchaResponse.success) {
+				throw 'Incorrect captcha answer';
+			}
+			break;
 		default:
 			throw 'Captcha config error';
 			break;

@@ -29,6 +29,9 @@ switch (captchaOptions.type) {
 	case 'google':
 		renderLocals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
 		break;
+	case 'hcaptcha':
+		renderLocals.hcaptchaSitekey = captchaOptions.hcaptcha.siteKey;
+		break;
 	case 'grid':
 		renderLocals.captchaGridSize = captchaOptions.grid.size;
 		break;

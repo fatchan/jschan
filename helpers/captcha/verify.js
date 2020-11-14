@@ -25,7 +25,7 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	const captchaInput = req.body.captcha || req.body['g-recaptcha-response'];
+	const captchaInput = req.body.captcha || req.body['g-recaptcha-response'] || req.body["h-captcha-response"];
 	const captchaId = req.cookies.captchaid;
 	try {
 		await checkCaptcha(captchaInput, captchaId);
