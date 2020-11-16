@@ -49,10 +49,10 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				a.noselect.no-decoration(href=`${postURL}#${post.postId}`) No.
 				span.post-quoters
 					a.no-decoration(href=`${postURL}#postform`) #{post.postId}
-					if !post.thread
-						|  
-						span.noselect: a(href=`${postURL}#postform`) [Reply]
 				|  
+				if !post.thread && (truncate || manage || globalmanage)
+					|  
+					span.noselect: a(href=`${postURL}`) [Open]
 				select.jsonly.postmenu
 					option(value='single') Hide
 					if post.userId

@@ -80,6 +80,16 @@ class CaptchaController {
 		xhr.send(null);
 	}
 
+	removeCaptcha() {
+		const postForm = document.getElementById('postform');
+		const captchaField = postForm.querySelector('.captcha');
+		if (captchaField) {
+			//delete the whole row
+			const captchaRow = captchaField.closest('.row');
+			captchaRow.remove();
+		}
+	}
+
 	addMissingCaptcha() {
 		const postSubmitButton = document.getElementById('submitpost');
 		const captchaFormSectionHtml = captchaformsection({ captchaGridSize });

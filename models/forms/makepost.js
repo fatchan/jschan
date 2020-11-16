@@ -553,6 +553,9 @@ module.exports = async (req, res, next) => {
 		'board': res.locals.board
 	};
 
+	//let frontend script know if captcha is still enabled
+	res.set('x-captcha-enabled', captchaMode > 0);
+
 	if (req.headers['x-using-live'] != null && data.thread) {
 		//defer build and post will come live
 		res.json({
