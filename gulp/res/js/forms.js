@@ -74,7 +74,6 @@ class formHandler {
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message');
 		this.captchaField = form.querySelector('.captchafield') || form.querySelector('.g-recaptcha') || form.querySelector('.h-captcha');
-		
 		this.submit = form.querySelector('input[type="submit"]');
 		if (this.submit) {
 			this.originalSubmitText = this.submit.value;
@@ -173,6 +172,11 @@ class formHandler {
 					grecaptcha.reset();
 				} else if(captchaResponse && hcaptcha) {
 					hcaptcha.reset();
+				}
+				if (xhr.getResponseHeader('x-captcha-enabled') === 'false') {
+					//remove captcha if it got disabled after you opened the page
+					captchaController.removeCaptcha();
+					this.captchaField = null;
 				}
 				this.submit.disabled = false;
 				this.submit.value = this.originalSubmitText;
