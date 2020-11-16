@@ -54,7 +54,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	const quote = function(e) {
-		const quoteNum = this.textContent.replace('[Reply]', '').split(' ')[0].trim();
+		const quoteNum = this.textContent.trim();
 		if (isThread && !e.ctrlKey) {
 			addQuote(quoteNum);
 		} else {
