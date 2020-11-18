@@ -28,7 +28,9 @@ module.exports = async () => {
 				headers: {
 					'User-Agent':''
 				}
-			}).then(res => res.json()).catch(e => console.error);
+			})
+			.then(res => res.json())
+			.catch(e => {});
 		}));
 		for (let i = 0; i < rings.length; i++) {
 			const ring = rings[i];
