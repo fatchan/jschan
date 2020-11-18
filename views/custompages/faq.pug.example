@@ -153,14 +153,6 @@ block content
 				td
 					span.detected (((detected)))
 			tr
-				td
-					| [aa]∧＿∧
-					| ( ・ω・) Let's try that again.[&#x2F;aa]
-				td
-					pre.aa
-						| ∧＿∧
-						| ( ・ω・) Let's try that again.
-			tr
 				td ##2d9+3
 				td
 					img(src='/file/dice.png' height='16' width='16')
