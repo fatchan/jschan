@@ -98,7 +98,7 @@ block content
 								"postId" : 123
 							}	
 						+post(examplePost)
-					p The name appears bold in the top left, followed by the tripcode in regular weight with a !! prefix, then the capcode in a different color, bold and with a ## prefix. The colours may vary between themes but are generally distinct from eachother
+					p The name appears bold in the top left, followed by the tripcode in regular weight with a !! prefix, then the capcode in a different color, bold and with a ## prefix. The colours may vary between themes but are generally distinct from each other
 
 					b Name
 					p The name is simply what name you want to be shown alongside your post. Other users can post with the same name so there is nothing preventing impersonation. This is not related to your username (for registered users).
@@ -196,7 +196,7 @@ block content
 			tr
 				td(colspan=2)
 					| The "language" of code blocks is optional. Without it, automatic language detection is used. 
-					| If the language is "plain", highlighting is disabled for the code block. If "aa" is used, the font will be adjusted for Japanaese Shift JIS art. 
+					| If the language is "plain", highlighting is disabled for the code block. If "aa" is used, the font will be adjusted for Japanese Shift JIS art. 
 					| Not all programming languages are supported, a subset of popular languages is used. 
 					| If the language is not in the supported list, the code block will be rendered like "plain" with no highlighting.
 					| Languages supported: #{codeLanguages.join(', ')}
@@ -275,8 +275,8 @@ block content
 							li Board moderator: All below, move/merge, ban, delete-by-ip, sticky/sage/lock/cycle
 							li Regular user: Reports, and post spoiler/delete/unlink if the board has them enabled
 						| Administrators have the ability to assign a permission level directly to users through the global management page. Typically a user is level 4 (regular user), 1 (global staff) or 0 (administrator).
-						| Level 2 and 3 are usually only aplicable to users when on a board they are owner or moderator. However, level 2 or 3 can be assigned manually to create global board owners or global board moderators
-						| who have board owner or moderation permissions on all boards, but without access to the global moderation interfaces. If assigning global boad owners (level 2), they will have access to the board settings
+						| Level 2 and 3 are usually only applicable to users when on a board they are owner or moderator. However, level 2 or 3 can be assigned manually to create global board owners or global board moderators
+						| who have board owner or moderation permissions on all boards, but without access to the global moderation interfaces. If assigning global board owners (level 2), they will have access to the board settings
 						| and the ability to reassign board owners.
 	.table-container.flex-center.mv-5
 		.anchor#antispam
