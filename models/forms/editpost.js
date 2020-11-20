@@ -3,7 +3,6 @@
 const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, { createHash } = require('crypto')
 	, Mongo = require(__dirname+'/../../db/db.js')
-	, getTripCode = require(__dirname+'/../../helpers/posting/tripcode.js')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')

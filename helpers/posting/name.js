@@ -1,7 +1,7 @@
 'use strict';
 
-const getTripCode = require(__dirname+'/tripcode.js')
-	, nameRegex = /^(?<name>(?!##).*?)?(?:##(?<tripcode>[^ ]{1}.*?))?(?<capcode>##(?<capcodetext> .*?)?)?$/
+const { getInsecureTrip, getSecureTrip } = require(__dirname+'/tripcode.js')
+	, nameRegex = /^(?<name>(?!##|#).*?)?(?:(?<secure>##|#)(?<tripcode>[^# ].+?))?(?<capcode>##(?<capcodetext> .*?)?)?$/
 	, staffLevels = ['Admin', 'Global Staff', 'Board Owner', 'Board Mod']
 	, staffLevelsRegex = new RegExp(`(${staffLevels.join('|')})+`, 'igm')
 
@@ -17,6 +17,7 @@ module.exports = async (inputName, permLevel, boardSettings, boardOwner, usernam
 	if ((permLevel < 4 || !forceAnon) && inputName && inputName.length > 0) {
 		// get matches with named groups for name, trip and capcode in 1 regex
 		const matches = inputName.match(nameRegex);
+console.log(matches, matches.groups)
 		if (matches && matches.groups) {
 			const groups = matches.groups;
 			//name
@@ -25,7 +26,11 @@ module.exports = async (inputName, permLevel, boardSettings, boardOwner, usernam
 			}
 			//tripcode
 			if (groups.tripcode) {
-				tripcode = `!!${(await getTripCode(groups.tripcode))}`;
+				if (groups.secure.length === 1) {
+					tripcode = `!${getInsecureTrip(groups.tripcode)}`;
+				} else {
+					tripcode = `!!${(await getSecureTrip(groups.tripcode))}`;
+				}
 			}
 			//capcode
 			if (permLevel < 4 && groups.capcode) {
