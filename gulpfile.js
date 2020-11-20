@@ -218,6 +218,8 @@ async function cache() {
 		Redis.deletePattern('banners:*'),
 		Redis.deletePattern('users:*'),
 		Redis.deletePattern('blacklisted:*'),
+		Redis.deletePattern('overboard'),
+		Redis.deletePattern('catalog'),
 	]);
 	Redis.redisClient.quit();
 }

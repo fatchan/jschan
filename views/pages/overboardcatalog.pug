@@ -1,0 +1,29 @@
+extends ../layout.pug
+include ../mixins/catalogtile.pug
+
+block head
+	title Catalog
+
+
+block content
+	.board-header
+		h1.board-title Overboard Catalog
+		h4.board-description Recently bumped threads from all listed boards
+		a(href='/overboard.html') Index View
+	include ../includes/stickynav.pug
+	.wrapbar
+		.pages.jsonly
+			input#catalogfilter(type='text' placeholder='Filter')
+			select.ml-5.right#catalogsort
+				option(value="" disabled selected hidden) Sort by
+				option(value="bump") Bump order
+				option(value="date") Creation date
+				option(value="replies") Reply count
+	hr(size=1)
+	if threads.length === 0
+		p No posts.
+	else 
+		.catalog
+			for thread, i in threads
+				+catalogtile(thread, false)
+	hr(size=1)
