@@ -64,22 +64,27 @@ block content
 					p 
 						| Names should be input like: 
 						input(disabled='true' spellcheck='false' type='text' value='Name##Tripcode## Capcode')
-						| . Tripcode and capcode are optional components. Tripcodes and capcodes may not contain "##" and the whitespace before capcodes is significant.
+						| . Tripcode and capcode are optional components. Tripcodes and capcodes may not contain "#" and the whitespace before capcodes is significant. 
 					p Valid examples: 
 					ol.mv-0
-						li Name
-						li Name##tripcode
-						li Name## capcode
-						li Name##tripcode## capcode
-						li ##tripcode## capcode
+						li name
+						li #tripcode
 						li ##tripcode
 						li ## capcode
-					p The capcode can also be left blank to display just your role.
-					p From the examples, you can see that all components can be used in combination or independently. In a post number 4 would look like:
+						li name#tripcode
+						li name##tripcode
+						li name## capcode
+						li name#tripcode## capcode
+						li name##tripcode## capcode
+						li #tripcode## capcode
+						li ##tripcode## capcode
+						li ##
+					p The last example is considered a blank capcode and can be used as a shortcut to display your role.
+					p Each component can be used in combination or independently. In a post number 9 would look like:
 						-
 							const examplePost = {
 								"date" : new Date("2019-08-02T09:48:44.180Z"),
-								"name" : "Name",
+								"name" : "name",
 								"board" : "example",
 								"tripcode" : "!!X8NXmAS44=",
 								"capcode" : "##Board Owner capcode",
@@ -104,7 +109,7 @@ block content
 					p The name is simply what name you want to be shown alongside your post. Other users can post with the same name so there is nothing preventing impersonation. This is not related to your username (for registered users).
 
 					b Tripcode
-					p A tripcode is a password of sorts, which users can provide in the tripcode component of their name. This tripcode is used in conjunction with a server-known secret to generate a unique* tripcode portion of the name. Long, unique tripcodes can be used as a form of identity. It is important that you keep tripcodes secret if you use them for some form of identity. A compromised tripcode can be used for impersonation and cannot be revoked in any way.
+					p A tripcode is a password of sorts, which users can provide in the tripcode component of their name. This tripcode is used in conjunction with a server-known secret to generate a unique* tripcode portion of the name. Long, unique tripcodes can be used as a form of identity. It is important that you keep tripcodes secret if you use them for some form of identity. A compromised tripcode can be used for impersonation and cannot be revoked in any way. Single # before tripcodes will use the traditional (what is now sometimes known as "insecure") tripcode algorithm shared by many imageboard softwares and websites. Double # before tripcodes will use a sha256 hash with server-side secret for a more secure, non-portable tripcode.
 
 					b Capcode
 					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. If there is no text after the ##, the role will be displayed alone. Leaving a space and putting custom text will be prefixed by the role name. This way, the role is always shown to prevent role impersonation.
