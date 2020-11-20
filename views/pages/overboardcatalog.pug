@@ -6,10 +6,14 @@ block head
 
 
 block content
-	.board-header
+	.board-header.mb-5
 		h1.board-title Overboard Catalog
 		h4.board-description Recently bumped threads from all listed boards
-		a(href='/overboard.html') Index View
+			|  
+			| (
+			a(href='/overboard.html') Index View
+			| )
+	br
 	include ../includes/stickynav.pug
 	.wrapbar
 		.pages.jsonly
