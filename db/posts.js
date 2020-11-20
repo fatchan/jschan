@@ -250,13 +250,32 @@ module.exports = {
 		}).toArray();
 	},
 
-	getCatalog: (board) => {
+	getCatalog: (board, sortSticky=true, catalogLimit=0) => {
 
+		const threadsQuery = {
+			thread: null,
+		}
+		if (board) {
+			if (Array.isArray(board)) {
+				//array for overboard catalog
+				threadsQuery['board'] = {
+					'$in': board
+				}
+			} else {
+				threadsQuery['board'] = board;
+			}
+		}
+		let threadsSort = {
+			'bumped': -1,
+		};
+		if (sortSticky === true) {
+			threadsSort = {
+				'sticky': -1,
+				'bumped': -1
+			}
+		}
 		// get all threads for catalog
-		return db.find({
-			'thread': null,
-			'board': board
-		}, {
+		return db.find(threadsQuery, {
 			'projection': {
 				'salt': 0,
 				'password': 0,
@@ -264,10 +283,10 @@ module.exports = {
 				'reports': 0,
 				'globalreports': 0,
 			}
-		}).sort({
-			'sticky': -1,
-			'bumped': -1,
-		}).toArray();
+		})
+		.limit(catalogLimit)
+		.sort(threadsSort)
+		.toArray();
 
 	},
 

@@ -6,8 +6,9 @@ block head
 
 block content
 	.board-header
-		h1.board-title Overboard
+		h1.board-title Overboard Index
 		h4.board-description Recently bumped threads from all listed boards
+		a(href='/catalog.html') Catalog View
 	hr(size=1)
 	if threads.length === 0
 		p No posts.
