@@ -11,7 +11,12 @@ mixin catalogtile(post, index)
 		data-bump=post.bumped)
 		- const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.postId}.html#${post.postId}`
 		.post-info
-			input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
+			if !index
+				div
+					| Thread from 
+					a.no-decoration.post-subject(href=`/${post.board}/`) /#{post.board}/
+			else
+				input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
 			if modview
 				a.left.ml-5.bold(href=`recent.html?postid=${post.postId}`) [+]
 			include ../includes/posticons.pug
