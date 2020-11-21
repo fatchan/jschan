@@ -1,16 +1,17 @@
 include ./report.pug
-mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
+mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboard=false)
 	.anchor(id=post.postId)
 	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId data-name=post.name data-tripcode=post.tripcode data-subject=post.subject)
 		- const postURL = `/${post.board}/${(modview || manage || globalmanage) ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info
 			span
 				label
-					if globalmanage
-						input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
-					else if !ban
-						input.post-check(type='checkbox', name='checkedposts' value=post.postId)
-					| 
+					if !overboard
+						if globalmanage
+							input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
+						else if !ban
+							input.post-check(type='checkbox', name='checkedposts' value=post.postId)
+						| 
 					if manage
 						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.raw;
 						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]
