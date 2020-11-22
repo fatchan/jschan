@@ -250,7 +250,7 @@ function custompages() {
 			postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
 			captchaType: configs.captchaOptions.type,
 			googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
-			hRecaptchaSiteKey: configs.captchaOptions.hcaptcha.siteKey,
+			hcaptchaSitekey: configs.captchaOptions.hcaptcha.siteKey,
 			captchaGridSize: configs.captchaOptions.grid.size,
 			commit,
 		}
