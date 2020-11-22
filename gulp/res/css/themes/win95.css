@@ -65,7 +65,7 @@ font-weight: bold
 .navbar a {
 color:black;
 }
-.anchor:target+.post-container .post-info, .post-container.highlighted .post-info, .anchor:target+table tbody tr th  {
+.anchor:target+.post-container .post-info, .post-container.highlighted .post-info, .post-container.hoverhighlighted .post-info, .anchor:target+table tbody tr th  {
 background: darkblue!important;
 color: white!important;
 }
