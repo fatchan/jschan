@@ -138,15 +138,17 @@ async function wipe() {
 async function css() {
 	try {
 		//a little more configurable
-		let bypassHeight = configs.captchaOptions.type === 'google' ? 500
-			: configs.captchaOptions.type === 'grid' ? 330
-			: 235;
+		let bypassHeight = (configs.captchaOptions.type === 'google' || configs.captchaOptions.type === 'hcaptcha')
+			? 500
+			: configs.captchaOptions.type === 'grid'
+				? 330
+				: 235;
 		let captchaHeight = configs.captchaOptions.type === 'text' ? 80
 			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
-			: 200; //'google' doesnt need this set
+			: 200; //google/hcaptcha doesnt need this set
 		let captchaWidth = configs.captchaOptions.type === 'text' ? 210
 			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
-			: 200; //'google' doesnt need this set
+			: 200; //google/hcaptcha doesnt need this set
 		const cssLocals = `:root {
     --attachment-img: url('/file/attachment.png');
     --spoiler-img: url('/file/spoiler.png');
@@ -216,6 +218,8 @@ async function cache() {
 		Redis.deletePattern('banners:*'),
 		Redis.deletePattern('users:*'),
 		Redis.deletePattern('blacklisted:*'),
+		Redis.deletePattern('overboard'),
+		Redis.deletePattern('catalog'),
 	]);
 	Redis.redisClient.quit();
 }
@@ -235,6 +239,8 @@ function custompages() {
 	])
 	.pipe(gulppug({
 		locals: {
+			early404Fraction: configs.early404Fraction,
+			early404Replies: configs.early404Replies,
 			meta: configs.meta,
 			enableWebring: configs.enableWebring,
 			globalLimits: configs.globalLimits,
@@ -244,6 +250,7 @@ function custompages() {
 			postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
 			captchaType: configs.captchaOptions.type,
 			googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
+			hcaptchaSitekey: configs.captchaOptions.hcaptcha.siteKey,
 			captchaGridSize: configs.captchaOptions.grid.size,
 			commit,
 		}

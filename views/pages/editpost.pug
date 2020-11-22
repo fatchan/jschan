@@ -41,9 +41,6 @@ block content
 						a.noselect.no-decoration(href=`${postURL}#${post.postId}`) No.
 						span.post-quoters
 							a.no-decoration(href=`${postURL}#postform`) #{post.postId}
-							if !post.thread
-								|  
-								span.noselect: a(href=`${postURL}#postform`) [Reply]
 				.post-data
 					pre.post-message
 						textarea.edit.fw(name='message' rows='15' placeholder='Message') #{post.nomarkup}

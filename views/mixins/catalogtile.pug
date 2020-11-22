@@ -1,4 +1,4 @@
-mixin catalogtile(board, post, index)
+mixin catalogtile(post, index)
 	.catalog-tile(data-board=post.board
 		data-post-id=post.postId
 		data-user-id=post.userId
@@ -9,9 +9,14 @@ mixin catalogtile(board, post, index)
 		data-date=post.date
 		data-replies=post.replyposts
 		data-bump=post.bumped)
-		- const postURL = `/${board._id}/${modview ? 'manage/' : ''}thread/${post.postId}.html#${post.postId}`
+		- const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.postId}.html#${post.postId}`
 		.post-info
-			input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
+			if !index
+				div
+					| Thread from 
+					a.no-decoration.post-subject(href=`/${post.board}/`) /#{post.board}/
+			else
+				input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
 			if modview
 				a.left.ml-5.bold(href=`recent.html?postid=${post.postId}`) [+]
 			include ../includes/posticons.pug
@@ -20,8 +25,9 @@ mixin catalogtile(board, post, index)
 			span(title='Replies') R: #{post.replyposts}
 			|  / 
 			span(title='Files') F: #{post.replyfiles}
-			|  / 
-			span(title='Page') P: #{Math.ceil(index/10)}
+			if index
+				|  / 
+				span(title='Page') P: #{Math.ceil(index/10)}
 		if post.files.length > 0
 			.post-file-src
 				a(href=postURL)
@@ -31,7 +37,7 @@ mixin catalogtile(board, post, index)
 					else if file.hasThumb
 						img.catalog-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` width=file.geometry.thumbwidth height=file.geometry.thumbheight loading='lazy')
 					else if file.attachment
-						div.attachmentimg.catalog-thumb
+						div.attachmentimg.catalog-thumb(data-mimetype=file.mimetype)
 					else if file.mimetype.startsWith('audio')
 						div.audioimg.catalog-thumb
 					else

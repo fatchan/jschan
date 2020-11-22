@@ -2,7 +2,9 @@
 
 const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 	, { secureCookies, rateLimitCost, captchaOptions } = require(__dirname+'/../../configs/main.js')
-	, generateCaptcha = captchaOptions.type !== 'google' ? require(__dirname+`/../../helpers/captcha/generators/${captchaOptions.type}.js`) : null
+	, generateCaptcha = (captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha')
+		? require(__dirname+`/../../helpers/captcha/generators/${captchaOptions.type}.js`)
+		: null
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {

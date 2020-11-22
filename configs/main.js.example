@@ -41,12 +41,16 @@ module.exports = {
 
 	//settings for captchas
 	captchaOptions: {
-		type: 'grid', //"text", "grid" or "google". If using google, make sure your CSP header in nginx config allows the google domain.
+		type: 'grid', //"text", "grid", "hcaptcha" or "google". If using google/hcaptcha, make sure your CSP header in nginx config allows the google/hcaptcha domain.
 		generateLimit: 1000, //max number of captchas to have generated at any time, prevent mass unsolved captcha spam, especially on TOR.
 		google: { //options for google captcha, when captcha type is google
 			siteKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
 			secretKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
 		},
+        hcaptcha: {
+            siteKey: "10000000-ffff-ffff-ffff-000000000001",
+            secretKey: "0x0000000000000000000000000000000000000000"
+        },
 		grid: {
 			size: 4,
 			imageSize: 120,
@@ -97,8 +101,10 @@ module.exports = {
 		editPost: 30,
 	},
 
-	//how many threads to show on overboard
+	//how many threads to show on overboard index view
 	overboardLimit: 20,
+	//how many threads to show on overboard catalog view
+	overboardCatalogLimit: 50,
 
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,

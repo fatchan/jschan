@@ -22,7 +22,7 @@ const express  = require('express')
 	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, create,
-		board, catalog, banners, randombanner, news, captchaPage, overboard,
+		board, catalog, banners, randombanner, news, captchaPage, overboard, overboardCatalog,
 		captcha, thread, modlog, modloglist, account, boardlist } = require(__dirname+'/../models/pages/');
 
 //homepage
@@ -41,7 +41,8 @@ router.get('/:board/catalog.(html|json)', Boards.exists, catalog); //catalog
 router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
 router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
 router.get('/:board/banners.html', Boards.exists, banners); //banners
-router.get('/all.html', overboard); //overboard
+router.get('/overboard.html', overboard); //overboard
+router.get('/catalog.html', overboardCatalog); //overboard catalog view
 router.get('/create.html', useSession, sessionRefresh, isLoggedIn, create); //create new board
 router.get('/randombanner', randombanner); //random banner
 
@@ -68,7 +69,7 @@ router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
 
 //captcha
-if (captchaOptions.type !== 'google') {
+if (captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha') {
 	router.get('/captcha', geoAndTor, processIp, captcha); //get captcha image and cookie
 }
 router.get('/captcha.html', captchaPage); //iframed for noscript users

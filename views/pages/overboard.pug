@@ -6,8 +6,12 @@ block head
 
 block content
 	.board-header
-		h1.board-title Overboard
+		h1.board-title Overboard Index
 		h4.board-description Recently bumped threads from all listed boards
+			|  
+			| (
+			a(href='/catalog.html') Catalog View
+			| )
 	hr(size=1)
 	if threads.length === 0
 		p No posts.
@@ -15,7 +19,7 @@ block content
 	for thread in threads
 		h4.no-m-p Thread from #[a(href=`/${thread.board}/index.html`) /#{thread.board}/]
 		.thread
-			+post(thread, true)
+			+post(thread, true, false, false, false, true)
 			for post in thread.replies
-				+post(post, true)
+				+post(post, true, false, false, false, true)
 		hr(size=1)
