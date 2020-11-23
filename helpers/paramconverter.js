@@ -91,7 +91,7 @@ module.exports = (req, res, next) => {
 				if (!groups[key]) {
 					continue;
 				}
-				const mult = +groups[key].substring(0,groups[key].length-1); //remove the d, m, y, etc from end of the value
+				const mult = +groups[key].replace(/\D+/, ''); //remove the unit
 				if (Number.isSafeInteger(mult) //if the multiplier is safe int
 					&& Number.isSafeInteger(mult*timeUtils[key]) //and multiplying it is safe int
 					&& Number.isSafeInteger((mult*timeUtils[key])+banDuration)) { //and adding it to the total is safe
