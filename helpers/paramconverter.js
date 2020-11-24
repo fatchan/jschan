@@ -5,7 +5,7 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 		'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts', 'countries']) //only these should be arrays, since express bodyparser can output arrays
 	, trimFields = ['tags', 'uri', 'moderators', 'filters', 'announcement', 'description', 'message',
 		'name', 'subject', 'email', 'postpassword', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message', 'custom_css'] //trim if we dont want filed with whitespace
-	, numberFields = ['lock_reset', 'captcha_reset', 'filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode',
+	, numberFields = ['sticky', 'lock_reset', 'captcha_reset', 'filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode',
 		'tph_trigger', 'pph_trigger', 'pph_trigger_action', 'tph_trigger_action', 'bump_limit', 'reply_limit', 'move_to_thread', 'postId',
 		'max_files', 'thread_limit', 'thread', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length', 'min_reply_message_length', 'auth_level'] //convert these to numbers before they hit our routes
 	, banDurationRegex = /^(?<YEAR>[\d]+y)?(?<MONTH>[\d]+mo)?(?<WEEK>[\d]+w)?(?<DAY>[\d]+d)?(?<HOUR>[\d]+h)?(?<MINUTE>[\d]+m)?(?<SECOND>[\d]+s)?$/
@@ -47,7 +47,7 @@ module.exports = (req, res, next) => {
 
 	for (let i = 0; i < numberFields.length; i++) {
 		const field = numberFields[i];
-		if (req.body[field]) {
+		if (req.body[field] != null) {
 			const num = parseInt(req.body[field]);
 			if (Number.isSafeInteger(num)) {
 				req.body[field] = num;

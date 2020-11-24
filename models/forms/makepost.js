@@ -468,8 +468,9 @@ module.exports = async (req, res, next) => {
 		Object.assign(data, {
 			'replyposts': 0,
 			'replyfiles': 0,
-			//NOTE: these are numbers because we XOR them for toggling in action handler
+			//NOTE: sticky is a number, 0 = not sticky, higher numbers are a priority and will be sorted in descending order
 			'sticky': Mongo.NumberInt(0),
+			//NOTE: these are numbers because we XOR them for toggling in action handler
 			'locked': Mongo.NumberInt(0),
 			'bumplocked': Mongo.NumberInt(0),
 			'cyclic': Mongo.NumberInt(0),
