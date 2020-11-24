@@ -208,8 +208,8 @@ module.exports = async (req, res, next) => {
 			}
 			messages.push(message);
 		}
-		if (req.body.sticky) {
-			const { message, action, query } = stickyPosts(res.locals.posts);
+		if (req.body.sticky != null) {
+			const { message, action, query } = stickyPosts(res.locals.posts, req.body.sticky);
 			if (action) {
 				modlogActions.push('Sticky');
 				combinedQuery[action] = { ...combinedQuery[action], ...query}

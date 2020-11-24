@@ -34,8 +34,8 @@ module.exports = (req, res) => {
 
 	for (let i = 0; i < actions.length; i++) {
 		const action = actions[i];
-		const bodyHasAction = req.body[action.name];
-		if (bodyHasAction) {
+		const bodyAction = req.body[action.name];
+		if (bodyAction != null) {
 			validActions.push(action.name);
 			if (action.global) {
 				numGlobal++;
