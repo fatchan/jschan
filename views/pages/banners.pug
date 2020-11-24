@@ -18,7 +18,6 @@ block content
 				img.board-banner(src=`/banner/${board._id}/${banner}` width='300' height='100' loading='lazy')
 	else
 		p Board has no custom banners.
-	include ../includes/stickynav.pug
 	hr(size=1)
 	.pages
 		+boardnav('banners', true, false)
