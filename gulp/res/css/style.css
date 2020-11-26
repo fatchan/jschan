@@ -494,6 +494,10 @@ td, th {
 	overflow-wrap: anywhere;
 }
 
+td pre {
+    overflow-wrap: anywhere;
+}
+
 .flex-center {
 	align-items: center;
 }
