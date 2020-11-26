@@ -898,6 +898,7 @@ input:invalid, textarea:invalid {
 }
 
 .anchor:target + .post-container,
+.anchor:target + .catalog-tile,
 .post-container.highlighted,
 .post-container.hoverhighlighted,
 .anchor:target + table tbody tr th,
