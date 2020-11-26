@@ -83,6 +83,7 @@ module.exports = {
 	//block bypasses
 	blockBypass: {
 		enabled: false,
+		forceOnion: true, //option to override blockbypass setting for .onion users
 		expireAfterUses: 40, //however many (attempted) posts per block bypass captcha
 		expireAfterTime: 86400000, //expiry in ms regardless if the limit was reached, default 1 day
 		bypassDnsbl: false,
