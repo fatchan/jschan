@@ -92,7 +92,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 										div.audioimg.file-thumb
 									else
 										img.file-thumb(src=`/file/${file.filename}` height=file.geometry.height width=file.geometry.width loading='lazy')
-			- if (post.message && modview) { post.message = post.message.replace(new RegExp(`<a class="quote" href="/${post.board}`, 'g'), `<a class="quote" href="/${post.board}/manage`); } //quick & dirty solution to a bigger problem/design issue
+			- if (post.message && modview) { post.message = post.message.replace(new RegExp(`<a class="quote" href="/${post.board}/`, 'g'), `<a class="quote" href="/${post.board}/manage/`); } //its either this, a subdomain, or nothing.
 			- let truncatedMessage = post.message;
 			if post.message
 				if truncate

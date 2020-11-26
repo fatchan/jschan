@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 
 	let bypassId = req.signedCookies.bypassid;
 
-	if (blockBypass.enabled) {
+	if (blockBypass.enabled || blockBypass.forceOnion) {
 		const input = req.body.captcha;
 		const captchaId = req.cookies.captchaid;
 		if (input && !bypassId) {
@@ -44,7 +44,7 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	if (res.locals.solvedCaptcha || !blockBypass.enabled) {
+	if (res.locals.solvedCaptcha || (!blockBypass.enabled && !blockBypass.forceOnion)) {
 		//give bypass ("ip") to tor user if they solved captcha or blockbypass is disabled
 		const newBypass = await Bypass.getBypass();
 		const newBypassId = newBypass.insertedId;
