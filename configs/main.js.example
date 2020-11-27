@@ -1,3 +1,4 @@
+ffmpeg
 module.exports = {
 
 	//mongodb connection string
@@ -132,7 +133,8 @@ module.exports = {
 	thumbExtension: '.jpg',
 	//.gif images > thumbnail size will have animated .gif thumbnails, overriding thumbExtension
 	animatedGifThumbnails: false,
-	//if animatedGifThumbnails is true, use ffmpeg for better animated gif thumbnailing. RECOMMENDED
+	/* Recommended if animatedGifThumbnails is true. Uses ffmpeg for faster animated gif thumbnailing. Requires ffmpeg
+		>=4.3.x	to handle transparent gifs properly. You can install from debian testing repo, or compile from source. */
 	ffmpegGifThumbnails: true,
 
 	//generate waveform thumbnails for audio
