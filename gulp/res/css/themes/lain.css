@@ -31,7 +31,7 @@
 	--pinktext-color:#E0727F;
 }
 .post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
-    border-width: 1px;
+	border-width: 1px;
 }
 .captcha {
 	filter: invert(90%);
