@@ -478,7 +478,7 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-	const postId = await Posts.insertOne(res.locals.board, data, thread);
+	const postId = await Posts.insertOne(res.locals.board, data, thread, res.locals.tor);
 
 	let enableCaptcha = false; //make this returned from some function, refactor and move the next section to another file
 	const pphTriggerActive = (pphTriggerAction > 0 && pphTrigger > 0);
