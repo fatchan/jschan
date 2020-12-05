@@ -495,7 +495,7 @@ td, th {
 }
 
 td pre {
-    overflow-wrap: anywhere;
+	overflow-wrap: anywhere;
 }
 
 .flex-center {
