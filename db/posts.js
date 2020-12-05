@@ -474,6 +474,36 @@ module.exports = {
 
 	},
 
+	getBoardReportCounts: (boards) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'board': {
+						'$in': boards
+					},
+					'reports.0': {
+						'$exists': true
+					},
+				}
+			}, {
+				'$group': {
+					'_id': '$board',
+					'count': {
+						'$sum': 1
+					}
+				}
+			}
+		]).toArray();
+	},
+
+	getGlobalReportsCount: () => {
+		return db.countDocuments({
+			'globalreports.0': {
+				'$exists': true
+			}
+		})
+	},
+
 	getReports: (board) => {
 		return db.find({
 			'reports.0': {
