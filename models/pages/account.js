@@ -4,27 +4,28 @@ const Posts = require(__dirname+'/../../db/posts.js');
 
 module.exports = async (req, res, next) => {
 
-	const userBoards = res.locals.user.ownedBoards.concat(res.locals.user.modBoards);
-	let boardReportCountMap = {};
-	let globalReportCount = 0;
+	let boardReportCountMap = {}; //map of board to open report count
+	let globalReportCount = 0; //number of open global reports
 
-	if (userBoards.length > 0) {
-		let boardReportCounts;
-		try {
-			([boardReportCounts, globalReportCount] = await Promise.all([
-				Posts.getBoardReportCounts(userBoards),
-				res.locals.user.authLevel <= 1 ? Posts.getGlobalReportsCount() : 0
-			]));
-		} catch (err) {
-			return next(err)
-		}
+	let boardReportCounts;
+	try {
+		const userBoards = res.locals.user.ownedBoards.concat(res.locals.user.modBoards);
+		([boardReportCounts, globalReportCount] = await Promise.all([
+			//if user owns or mods any boards, get the open report count for them
+			userBoards.length > 0 ? Posts.getBoardReportCounts(userBoards) : [],
+			//if user is global staff get the open global report count
+			res.locals.user.authLevel <= 1 ? Posts.getGlobalReportsCount() : 0
+		]));
+	} catch (err) {
+		return next(err)
+	}
 
-		if (boardReportCounts && boardReportCounts.length > 0) {
-			boardReportCountMap = boardReportCounts.reduce((acc, val) => {
-				acc[val._id] = val.count;
-				return acc;
-			}, boardReportCountMap);
-		}
+	if (boardReportCounts && boardReportCounts.length > 0) {
+		//make the aggregate array from mongodb to a map
+		boardReportCountMap = boardReportCounts.reduce((acc, val) => {
+			acc[val._id] = val.count;
+			return acc;
+		}, boardReportCountMap);
 	}
 
 	res
