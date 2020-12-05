@@ -51,7 +51,7 @@ textarea,
 padding: 2px
 }
 .nav-item {
-line-height: 1.75em;
+line-height: 1.75em!important;
 margin: 2px;
 }
 .nav-item, .close, input[type=submit], .filelabel {
@@ -135,9 +135,6 @@ padding-bottom: 3em;
     padding-right: 5px;
   }
 }
-.rainbow {
-display: inline
-}
-.nav-item:nth-of-type(3) {
-line-height: 1.75em
+.nav-item .rainbow {
+display: inline;
 }
