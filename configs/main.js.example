@@ -1,4 +1,3 @@
-ffmpeg
 module.exports = {
 
 	//mongodb connection string
@@ -74,6 +73,9 @@ module.exports = {
 
 	//disable file posting over .onion globally, overrides any board setting.
 	disableOnionFilePosting: false,
+
+	//count .onion posters as "users" in stats. if set to false, all .onion is counted as a single user. doesnt affect pph stat.
+	statsCountOnionUsers: true,
 
 	floodTimers: { //basic delays to stop flooding, in ms. 0 to disable
 		sameContentSameIp: 120000, //same message or any file from same ip
@@ -329,7 +331,7 @@ module.exports = {
 		unlistedLocal: false, //board hidden from on-site board list and frontpage
 		unlistedWebring: false, //board hidden from webring
 		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts
-		tphTrigger: 10, //numebr of threads in an hour before trigger action is activated
+		tphTrigger: 10, //number of threads in an hour before trigger action is activated
 		pphTrigger: 50, //number of posts in an hour before ^
 		//0=none, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
 		tphTriggerAction: 1,

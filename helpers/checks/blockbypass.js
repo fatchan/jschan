@@ -43,7 +43,9 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	if (bypass && bypass.uses < blockBypass.expireAfterUses) {
+	if (bypass //if they have a valid bypass
+		&& (bypass.uses < blockBypass.expireAfterUses //and its not overused
+			|| (res.locals.tor && !blockBypass.forceOnion))) { //OR its disabled for .onion, which ignores usage check
 		return next();
 	}
 
