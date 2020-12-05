@@ -16,6 +16,8 @@ block content
 				a(href='/globalmanage/recent.html') Global management
 				|  -  
 				a(href=`/globalmanage/reports.html`) Reports
+					if globalReportCount > 0
+						b  (#{globalReportCount})
 				| ,  
 				a(href=`/globalmanage/bans.html`) Bans
 				| ,  
@@ -52,6 +54,8 @@ block content
 					a(href=`/${b}/manage/recent.html`) Recent
 					| ,  
 					a(href=`/${b}/manage/reports.html`) Reports
+						if boardReportCountMap[b]
+							b  (#{boardReportCountMap[b]})
 					| ,  
 					a(href=`/${b}/manage/bans.html`) Bans
 					| ,  
@@ -77,6 +81,8 @@ block content
 					a(href=`/${b}/manage/recent.html`) Recent
 					| ,  
 					a(href=`/${b}/manage/reports.html`) Reports
+						if boardReportCountMap[b]
+							b  (#{boardReportCountMap[b]})
 					| ,  
 					a(href=`/${b}/manage/bans.html`) Bans
 					| ,  
