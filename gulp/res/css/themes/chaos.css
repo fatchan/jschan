@@ -69,10 +69,8 @@ a:hover {
 	border-bottom: none;
 }
 @media only screen and (max-width: 600px) {
-
 	.post-info{
 		background: none;
 		border-bottom: none;
 	}
-
 }
