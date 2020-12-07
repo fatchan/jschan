@@ -29,7 +29,8 @@ module.exports = {
 	},
 
 	getInsecureTrip: (password) => {
-		const encoded = encode(password, 'SHIFT_JIS');
+		const encoded = encode(password, 'SHIFT_JIS')
+			.toString('latin1');
 		let salt = `${encoded}H..`
 			.substring(1, 3)
 			.replace(/[^.-z]/g, '.');
