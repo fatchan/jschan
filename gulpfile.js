@@ -50,6 +50,7 @@ async function wipe() {
 	//make these because mongo is dumb and doesnt make them automatically
 	await db.createCollection('accounts');
 	await db.createCollection('bans');
+	await db.createCollection('custompages');
 	await db.createCollection('boards');
 	await db.createCollection('captcha');
 	await db.createCollection('files');
@@ -94,6 +95,8 @@ async function wipe() {
 	await Ratelimits.db.dropIndexes()
 	await Posts.db.dropIndexes()
 	await Modlogs.db.dropIndexes()
+	await Custompages.db.dropIndexes()
+	await Custompages.db.createIndex({ 'board': 1, 'url': 1 }, { unique: true })
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
 	await Bans.db.createIndex({ 'ip.single': 1 , 'board': 1 })

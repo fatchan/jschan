@@ -1,0 +1,16 @@
+mixin custompage(page, manage=false)
+	.table-container.flex-center.mv-5
+		table
+			tr
+				th
+					if manage === true
+						input.left.post-check(type='checkbox', name='checkedcustompages' value=page.page)  
+						a.left(href=`/${board._id}/custompage/${page.page}.html`) #{page.title}
+					- const pageDate = new Date(page.date);
+					time.right.reltime(datetime=pageDate.toISOString()) #{pageDate.toLocaleString(undefined, {hourCycle:'h23'})}
+			tr
+				td
+					if manage === true
+						p.no-m-p #{`${page.message.raw.substring(0,50)}...`}
+					else
+						pre.post-message.no-m-p !{page.message.markdown}
