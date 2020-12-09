@@ -5,7 +5,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
 	, { debugLogs, pruneModlogs, pruneAfterDays, enableWebring, maxRecentNews } = require(__dirname+'/../configs/main.js')
-	, { Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
+	, { CustomPages, Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, cache = require(__dirname+'/../redis.js')
 	, render = require(__dirname+'/render.js')
 	, buildQueue = require(__dirname+'/../queue.js')
@@ -132,6 +132,27 @@ module.exports = {
 		const news = await News.find();
 		const { html } = await render('news.html', 'news.pug', {
 			news
+		});
+		const end = process.hrtime(start);
+		debugLogs && console.log(timeDiffString(label, end));
+		return html;
+	},
+
+	buildCustomPage: async (options) => {
+		const label = `/${options.board._id || options.board}/custompage/${options.page}.html`;
+		const start = process.hrtime();
+		if (!options.customPage) {
+			const customPage = await CustomPages.findOne(options.board._id || options.board, options.page);
+			if (!customPage) {
+				return;
+			}
+			options.customPage = customPage;
+		}
+		if (!options.board._id) {
+			options.board = await Boards.findOne(options.board);
+		}
+		const { html } = await render(label, 'custompage.pug', {
+			...options,
 		});
 		const end = process.hrtime(start);
 		debugLogs && console.log(timeDiffString(label, end));

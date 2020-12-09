@@ -1,7 +1,7 @@
 'use strict';
 
 const { ObjectId } = require(__dirname+'/../db/db.js')
-	, allowedArrays = new Set(['captcha', 'checkednews', 'checkedposts', 'globalcheckedposts', 'spoiler', 'strip_filename',
+	, allowedArrays = new Set(['captcha', 'checkedcustompages', 'checkednews', 'checkedposts', 'globalcheckedposts', 'spoiler', 'strip_filename',
 		'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts', 'countries']) //only these should be arrays, since express bodyparser can output arrays
 	, trimFields = ['tags', 'uri', 'moderators', 'filters', 'announcement', 'description', 'message',
 		'name', 'subject', 'email', 'postpassword', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message', 'custom_css'] //trim if we dont want filed with whitespace

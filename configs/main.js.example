@@ -293,12 +293,16 @@ module.exports = {
 				'@',
 				'url(',
 			]
+		},
+		customPages: {
+			max: 5, //max number of custom pages per board
+			maxLength: 10000, //max number of characters to allow per page
 		}
 	},
 
 	//default frontend script settings
 	frontendScriptDefault: {
-		heightUnlimit: false, //allow images [M -1taller than window height
+		heightUnlimit: false, //allow images to expand taller than window height
 		hideRecursive: true, //hide replies to hidden OPs
 		crispImages: false, //use crisp/pixelated image rendering
 		hideThumbnails: false, //hide thumbnails
