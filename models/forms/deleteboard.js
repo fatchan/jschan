@@ -1,6 +1,6 @@
 'use strict';
 
-const { Custompages, Accounts, Boards, Stats, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
+const { CustomPages, Accounts, Boards, Stats, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { remove } = require('fs-extra');
@@ -21,7 +21,7 @@ module.exports = async (uri, board) => {
 		Modlogs.deleteBoard(uri), //modlogs for the board
 		Bans.deleteBoard(uri), //bans for the board
 		Stats.deleteBoard(uri), //stats for the board
-		Custompages.deleteBoard(uri), //custom pages for the board
+		CustomPages.deleteBoard(uri), //custom pages for the board
 		remove(`${uploadDirectory}/html/${uri}/`), //html
 		remove(`${uploadDirectory}/json/${uri}/`), //json
 		remove(`${uploadDirectory}/banner/${uri}/`) //banners
