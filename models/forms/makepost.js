@@ -106,7 +106,8 @@ module.exports = async (req, res, next) => {
 		let hitGlobalFilter = false
 			, hitLocalFilter = false
 			, ban;
-		let concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase();
+		let concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|\
+${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).join('|') : ''}`.toLowerCase();
 		let allContents = concatContents;
 		if (strictFiltering || res.locals.board.settings.strictFiltering) { //strict filtering adds a few transformations of the text to try and match filters when sers use techniques like zalgo, ZWS, markdown, multi-line, etc.
 			allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); //removing diacritics

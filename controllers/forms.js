@@ -11,6 +11,7 @@ const express  = require('express')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, numFiles = require(__dirname+'/../helpers/numfiles.js')
+	, imageHashes = require(__dirname+'/../helpers/imagehash.js')
 	, banCheck = require(__dirname+'/../helpers/checks/bancheck.js')
 	, isLoggedIn = require(__dirname+'/../helpers/checks/isloggedin.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captcha/verify.js')
@@ -51,7 +52,7 @@ const express  = require('express')
 
 //make new post
 router.post('/board/:board/post', geoAndTor, handlePostFilesEarlyTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, handlePostFiles,
-	paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, makePostController);
+	paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, imageHashes, makePostController);
 router.post('/board/:board/modpost', geoAndTor, handlePostFilesEarlyTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), handlePostFiles,
 	paramConverter, csrf, numFiles, blockBypassCheck, dnsblCheck, makePostController); //mod post has token instead of captcha
 
