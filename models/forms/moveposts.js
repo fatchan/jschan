@@ -5,6 +5,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, { Posts } = require(__dirname+'/../../db/')
 	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
+	, { createHash } = require('crypto')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
 
@@ -115,11 +116,16 @@ module.exports = async (req, res) => {
 	if (backlinkRebuilds.size > 0) {
 		const remarkupPosts = await Posts.globalGetPosts([...backlinkRebuilds]);
 		await Promise.all(remarkupPosts.map(async post => { //doing these all at once
-			if (post.nomarkup && post.nomarkup.length > 0) {
-				//redo the markup
+			const postUpdate = {};
+			if (post.userId) {
+				let userId = createHash('sha256').update(res.locals.destinationThread.salt + post.ip.raw).digest('hex');
+				userId = userId.substring(userId.length-6);
+				postUpdate.userId = userId;
+			}
+			//update post message and/or id
+			if (post.nomarkup && post.nomarkup.length > 0 || post.userId) {
 				let message = markdown(post.nomarkup);
 				let { quotedMessage, threadQuotes, crossQuotes } = await quoteHandler.process(post.board, message, post.thread); // req.body.move_to_thread);
-//console.log(quotedMessage, threadQuotes, crossQuotes)
 				message = sanitize(quotedMessage, sanitizeOptions.after);
 				bulkWrites.push({
 					'updateMany': {
@@ -135,17 +141,18 @@ module.exports = async (req, res) => {
 						}
 					}
 				});
+				postUpdate.quotes = threadQuotes;
+				postUpdate.crossquotes = crossQuotes;
+				postUpdate.message = message;
+			}
+			if (Object.keys(postUpdate).length > 0) {
 				bulkWrites.push({
 					'updateOne': {
 						'filter': {
 							'_id': post._id
 						},
 						'update': {
-							'$set': {
-								'quotes': threadQuotes,
-								'crossquotes': crossQuotes,
-								'message': message
-							}
+							'$set': postUpdate
 						}
 					}
 				});

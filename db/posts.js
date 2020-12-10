@@ -660,7 +660,8 @@ module.exports = {
 		}, {
 			'projection': {
 				'_id': 1,
-				'postId': 1
+				'postId': 1,
+				'salt': 1,
 			}
 		});
 	},
