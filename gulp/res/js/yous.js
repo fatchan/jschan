@@ -68,10 +68,14 @@ const handleNewYous = (e) => {
 		}
 		try {
 			console.log('attempting to send notification', postYou);
+			const postData = e.detail.json;
 			new Notification(`${quotesYou ? 'New quote in: ' : ''}${document.title}`, {
 				body: postData.nomarkup ? postData.nomarkup.substring(0,100) : ''
 			});
-		} catch (e) { /* notification cant send for some reason -- user revoked perms in browser? */ }
+		} catch (e) {
+			// notification cant send for some reason -- user revoked perms in browser?
+			console.log('failed to send notification', e);
+		}
 	}
 }
 
