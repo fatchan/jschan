@@ -82,6 +82,8 @@ module.exports = async (req, res, next) => {
 			const destinationThread = await Posts.threadExists(req.params.board, req.body.move_to_thread);
 			if (!destinationThread) {
 				errors.push('Destination thread for move does not exist');
+			} else {
+				res.locals.destinationThread = destinationThread;
 			}
 		}
 	}
