@@ -241,139 +241,110 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 			};
 
 			//type and subtype
-			const [type, subtype] = processedFile.mimetype.split('/');
-			let imageData;
-			let firstFrameOnly = true;
-			if (type === 'image') {
-				processedFile.thumbextension = thumbExtension;
-
-				///detect images with opacity for PNG thumbnails, set thumbextension before increment
-				try {
-					imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
-				} catch (e) {
-					await deleteTempFiles(req).catch(e => console.error);
-					return dynamicResponse(req, res, 400, 'message', {
-						'title': 'Bad request',
-						'message': `The server failed to process "${req.files.file[i].name}". Possible unsupported or corrupt file.`,
-						'redirect': redirect
-					});
-				}
-
-				if (imageData['Channel Statistics'] && imageData['Channel Statistics']['Opacity']) {//does this depend on GM version or anything?
-					const opacityMaximum = imageData['Channel Statistics']['Opacity']['Maximum'];
-					if (opacityMaximum !== '0.00 (0.0000)') {
-						processedFile.thumbextension = '.png';
-					}
-				}
-				processedFile.geometry = imageData.size;
-				processedFile.geometryString = imageData.Geometry;
-				const lteThumbSize = (processedFile.geometry.height <= thumbSize
-					&& processedFile.geometry.width <= thumbSize);
-				processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
-					&& subtype !== 'png'
-					&& lteThumbSize);
-				if (processedFile.hasThumb //if it needs thumbnailing
-					&& (!lteThumbSize //and its big enough
-					&& file.mimetype === 'image/gif' //and its a gif
-					&& (imageData['Delay'] != null || imageData['Iterations'] != null) //and its not a static gif (naive check)
-					&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
-					firstFrameOnly = false;
-					processedFile.thumbextension = '.gif';
-				}
-			} else if (type === 'audio') {
-				if (audioThumbnails) {
-					// waveform has a transparent background, so force png
-					processedFile.thumbextension = '.png';
-				}
-			} else {
-				processedFile.thumbextension = thumbExtension;
-			}
-
-			//increment file count
-			await Files.increment(processedFile);
-			req.files.file[i].inced = true;
+			let [type, subtype] = processedFile.mimetype.split('/');
 			//check if already exists
 			const existsFull = await pathExists(`${uploadDirectory}/file/${processedFile.filename}`);
 			processedFile.sizeString = formatSize(processedFile.size)
-
+			const saveFull = async () => {
+				if (!existsFull) {
+					await Files.increment(processedFile);
+					req.files.file[i].inced = true;
+					await moveUpload(file, processedFile.filename, 'file');
+				}
+			}
 			if (mimeTypes.other.has(processedFile.mimetype)) {
 				//"other" mimes from config, overrides main type to avoid codec issues in browser or ffmpeg for unsupported filetypes
 				processedFile.hasThumb = false;
 				processedFile.attachment = true;
-				if (!existsFull) {
-					await moveUpload(file, processedFile.filename, 'file');
-				}
+				await saveFull();
 			} else {
 				const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 				switch (type) {
 					case 'image': {
-						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'file');
+						processedFile.thumbextension = thumbExtension;
+						///detect images with opacity for PNG thumbnails, set thumbextension before increment
+						let imageData;
+						try {
+							imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
+						} catch (e) {
+							await deleteTempFiles(req).catch(e => console.error);
+							return dynamicResponse(req, res, 400, 'message', {
+								'title': 'Bad request',
+								'message': `The server failed to process "${req.files.file[i].name}". Possible unsupported or corrupt file.`,
+								'redirect': redirect
+							});
 						}
+						if (imageData['Channel Statistics'] && imageData['Channel Statistics']['Opacity']) {
+							//does this depend on GM version or anything?
+							const opacityMaximum = imageData['Channel Statistics']['Opacity']['Maximum'];
+							if (opacityMaximum !== '0.00 (0.0000)') {
+								processedFile.thumbextension = '.png';
+							}
+						}
+						processedFile.geometry = imageData.size;
+						processedFile.geometryString = imageData.Geometry;
+						const lteThumbSize = (processedFile.geometry.height <= thumbSize
+							&& processedFile.geometry.width <= thumbSize);
+						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
+							&& subtype !== 'png'
+							&& lteThumbSize);
+						let firstFrameOnly = true;
+						if (processedFile.hasThumb //if it needs thumbnailing
+							&& (!lteThumbSize //and its big enough
+							&& file.mimetype === 'image/gif' //and its a gif
+							&& (imageData['Delay'] != null || imageData['Iterations'] != null) //and its not a static gif (naive check)
+							&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
+							firstFrameOnly = false;
+							processedFile.thumbextension = '.gif';
+						}
+						await saveFull();
 						if (!existsThumb) {
 							await imageThumbnail(processedFile, firstFrameOnly);
 						}
 						processedFile = fixGifs(processedFile);
 						break;
 					}
-					case 'video': {
+					case 'audio':
+					case 'video':
 						//video metadata
-						const videoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
-						videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
-						if (videoData.streams.length <= 0) {
-							//corrupt, or audio only?
-							await deleteTempFiles(req).catch(e => console.error);
-							return dynamicResponse(req, res, 400, 'message', {
-								'title': 'Bad request',
-								'message': 'Audio only video file not supported',
-								'redirect': redirect
-							});
-						}
-						processedFile.duration = videoData.format.duration;
-						processedFile.durationString = timeUtils.durationString(videoData.format.duration*1000);
-						processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height};
-						processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`
-						processedFile.hasThumb = true;
-						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'file');
-						}
-						if (!existsThumb) {
-							const numFrames = videoData.streams[0].nb_frames;
-							if (numFrames === 'N/A' && subtype === 'webm') {
-								await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
-								let videoThumbStat = null;
-								try {
-									videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
-								} catch (err) { /*ENOENT, the thumb failed to create. No need to handle this.*/	}
-								if (!videoThumbStat || videoThumbStat.size === 0) {
-									await videoThumbnail(processedFile, processedFile.geometry, 0);
+						const audioVideoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
+						processedFile.duration = audioVideoData.format.duration;
+						processedFile.durationString = timeUtils.durationString(audioVideoData.format.duration*1000);
+						const videoStreams = audioVideoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
+						if (videoStreams.length > 0) {
+							processedFile.thumbextension = thumbExtension;
+							processedFile.geometry = {width: videoStreams[0].coded_width, height: videoStreams[0].coded_height};
+							processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`
+							processedFile.hasThumb = true;
+							await saveFull();
+							if (!existsThumb) {
+								const numFrames = videoStreams[0].nb_frames;
+								if (numFrames === 'N/A' && subtype === 'webm') {
+									await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
+									let videoThumbStat = null;
+									try {
+										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+									} catch (err) { /*ENOENT, the thumb failed to create. No need to handle this.*/	}
+									if (!videoThumbStat || videoThumbStat.size === 0) {
+										await videoThumbnail(processedFile, processedFile.geometry, 0);
+									}
+								} else {
+									await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
 								}
-							} else {
-								await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
 							}
-						}
-						break;
-					}
-					case 'audio': {
-						//audio metadata
-						const audioData = await ffprobe(req.files.file[i].tempFilePath, null, true);
-						processedFile.duration = audioData.format.duration;
-						processedFile.durationString = timeUtils.durationString(audioData.format.duration*1000);
-						processedFile.hasThumb = audioThumbnails;
-						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'file');
-						}
-						if (audioThumbnails) {
-							// audio thumbnail is always thumbSize x thumbSize
-							processedFile.geometry = {
-								thumbwidth: thumbSize, thumbheight: thumbSize,
-							};
+						} else {
+							//audio file, or video with only audio streams
+							type = 'audio';
+							processedFile.mimetype = `audio/${subtype}`;
+							processedFile.thumbextension = '.png';
+							processedFile.hasThumb = audioThumbnails;
+							processedFile.geometry = { thumbwidth: thumbSize, thumbheight: thumbSize };
+							await saveFull();
 							if (!existsThumb) {
 								await audioThumbnail(processedFile);
 							}
 						}
 						break;
-					}
 					default:
 						throw new Error(`invalid file mime type: ${processedFile}`);
 				}
