@@ -62,7 +62,7 @@ async function wipe() {
 	await db.createCollection('webring');
 	await db.createCollection('bypass');
 
-	const { Webring, Boards, Posts, Captchas, Ratelimits, News,
+	const { Webring, Boards, Posts, Captchas, Ratelimits, News, CustomPages,
 		Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
 
 	//wipe db shit
@@ -95,8 +95,8 @@ async function wipe() {
 	await Ratelimits.db.dropIndexes()
 	await Posts.db.dropIndexes()
 	await Modlogs.db.dropIndexes()
-	await Custompages.db.dropIndexes()
-	await Custompages.db.createIndex({ 'board': 1, 'url': 1 }, { unique: true })
+	await CustomPages.db.dropIndexes()
+	await CustomPages.db.createIndex({ 'board': 1, 'url': 1 }, { unique: true })
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
 	await Bans.db.createIndex({ 'ip.single': 1 , 'board': 1 })
