@@ -26,12 +26,13 @@ block content
 				a(href=`/globalmanage/boards.html`) Boards
 				| ,  
 				a(href=`/globalmanage/globallogs.html`) Logs
-				| ,  
-				a(href=`/globalmanage/accounts.html`) Accounts
-				| ,  
-				a(href=`/globalmanage/news.html`) News
-				| ,  
-				a(href=`/globalmanage/settings.html`) Settings
+				if user.authLevel < 1
+					| ,  
+					a(href=`/globalmanage/accounts.html`) Accounts
+					| ,  
+					a(href=`/globalmanage/news.html`) News
+					| ,  
+					a(href=`/globalmanage/settings.html`) Settings
 		if enableUserBoardCreation || user.authLevel <= 1
 			li: a(href='/create.html') Create a board
 		if !enableUserAccountCreation && user.authLevel <= 1
@@ -64,6 +65,8 @@ block content
 					a(href=`/${b}/manage/settings.html`) Settings
 					| ,  
 					a(href=`/${b}/manage/banners.html`) Banners
+					| ,  
+					a(href=`/${b}/manage/custompages.html`) Custom PAges
 	else
 		p None
 	hr(size=1)
