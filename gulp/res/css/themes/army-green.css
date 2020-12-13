@@ -1,4 +1,4 @@
-body {
+:root {
 	--icon-color:invert(17%) sepia(89%) saturate(7057%) hue-rotate(2deg) brightness(93%) contrast(120%);
 	--alt-label-color:#98E;
 	--alt-font-color:black;
@@ -27,5 +27,5 @@ body {
 	--dice-color:darkorange;
 	--title-color:#fd0;
 	--greentext-color:#de6;
-	--pinktext-color:#E0727F
+	--pinktext-color:#E0727F;
 }
