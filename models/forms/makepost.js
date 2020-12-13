@@ -246,9 +246,9 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 			const existsFull = await pathExists(`${uploadDirectory}/file/${processedFile.filename}`);
 			processedFile.sizeString = formatSize(processedFile.size)
 			const saveFull = async () => {
+				await Files.increment(processedFile);
+				req.files.file[i].inced = true;
 				if (!existsFull) {
-					await Files.increment(processedFile);
-					req.files.file[i].inced = true;
 					await moveUpload(file, processedFile.filename, 'file');
 				}
 			}
