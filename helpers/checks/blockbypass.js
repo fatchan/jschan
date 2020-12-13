@@ -9,7 +9,10 @@ const { Bypass } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	if (res.locals.preFetchedBypassId || !blockBypass.enabled && !res.locals.tor) { //for now, tor MUST solve a bypass
+	if (res.locals.preFetchedBypassId //if they already have a bypass
+		|| (!blockBypass.enabled //or if block bypass isnt enabled
+			&& (!blockBypass.forceOnion //and we dont force it for .onion
+			|| !res.locals.tor))) { //or they arent a .onion
 		return next();
 	}
 
@@ -40,7 +43,9 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	if (bypass && bypass.uses < blockBypass.expireAfterUses) {
+	if (bypass //if they have a valid bypass
+		&& (bypass.uses < blockBypass.expireAfterUses //and its not overused
+			|| (res.locals.tor && !blockBypass.forceOnion))) { //OR its disabled for .onion, which ignores usage check
 		return next();
 	}
 

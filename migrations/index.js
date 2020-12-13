@@ -17,4 +17,5 @@ module.exports = {
 	'0.0.14': require(__dirname+'/migration-0.0.14.js'), //add option for disable .onion file posts to board settings
 	'0.0.15': require(__dirname+'/migration-0.0.15.js'), //messages r9k option
 	'0.0.16': require(__dirname+'/migration-0.0.16.js'), //separate tph/pph triggers
+	'0.0.17': require(__dirname+'/migration-0.0.17.js'), //add custompages collection
 }

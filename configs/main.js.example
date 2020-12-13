@@ -74,6 +74,9 @@ module.exports = {
 	//disable file posting over .onion globally, overrides any board setting.
 	disableOnionFilePosting: false,
 
+	//count .onion posters as "users" in stats. if set to false, all .onion is counted as a single user. doesnt affect pph stat.
+	statsCountOnionUsers: true,
+
 	floodTimers: { //basic delays to stop flooding, in ms. 0 to disable
 		sameContentSameIp: 120000, //same message or any file from same ip
 		sameContentAnyIp: 30000, //same message or file from any ip
@@ -83,6 +86,7 @@ module.exports = {
 	//block bypasses
 	blockBypass: {
 		enabled: false,
+		forceOnion: true, //option to override blockbypass setting for .onion users
 		expireAfterUses: 40, //however many (attempted) posts per block bypass captcha
 		expireAfterTime: 86400000, //expiry in ms regardless if the limit was reached, default 1 day
 		bypassDnsbl: false,
@@ -131,7 +135,8 @@ module.exports = {
 	thumbExtension: '.jpg',
 	//.gif images > thumbnail size will have animated .gif thumbnails, overriding thumbExtension
 	animatedGifThumbnails: false,
-	//if animatedGifThumbnails is true, use ffmpeg for better animated gif thumbnailing. RECOMMENDED
+	/* Recommended if animatedGifThumbnails is true. Uses ffmpeg for faster animated gif thumbnailing. Requires ffmpeg
+		>=4.3.x	to handle transparent gifs properly. You can install from debian testing repo, or compile from source. */
 	ffmpegGifThumbnails: true,
 
 	//generate waveform thumbnails for audio
@@ -288,12 +293,16 @@ module.exports = {
 				'@',
 				'url(',
 			]
+		},
+		customPages: {
+			max: 5, //max number of custom pages per board
+			maxLength: 10000, //max number of characters to allow per page
 		}
 	},
 
 	//default frontend script settings
 	frontendScriptDefault: {
-		heightUnlimit: false, //allow images [M -1taller than window height
+		heightUnlimit: false, //allow images to expand taller than window height
 		hideRecursive: true, //hide replies to hidden OPs
 		crispImages: false, //use crisp/pixelated image rendering
 		hideThumbnails: false, //hide thumbnails
@@ -326,7 +335,7 @@ module.exports = {
 		unlistedLocal: false, //board hidden from on-site board list and frontpage
 		unlistedWebring: false, //board hidden from webring
 		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts
-		tphTrigger: 10, //numebr of threads in an hour before trigger action is activated
+		tphTrigger: 10, //number of threads in an hour before trigger action is activated
 		pphTrigger: 50, //number of posts in an hour before ^
 		//0=none, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
 		tphTriggerAction: 1,

@@ -38,7 +38,7 @@ Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://cimi
 - Nginx - webserver/proxy, serve static files, handle https, GeoIP lookup
 - Certbot/letsencrypt - to get a free https certificate
 - Graphicsmagick+Imagemagick - identify and thumbnail images, generate captchas
-- Ffmpeg - identify and thumbnail audio and video
+- Ffmpeg - identify and thumbnail audio, video and gifs
 
 -----
 
@@ -49,7 +49,7 @@ Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://cimi
 
 **2. Install dependencies.**
 
-NOTE: You may need to add sources depending on your distro.
+NOTE: You may need to add sources depending on your distro. If you intent to have animated gif thumbnails, ffmpeg 4.3.x is recommended. For debian, it can be found in the testing repos or compiled from source.
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick

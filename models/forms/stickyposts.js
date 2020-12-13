@@ -2,7 +2,7 @@
 
 const { NumberInt } = require(__dirname+'/../../db/db.js')
 
-module.exports = (posts) => {
+module.exports = (posts, sticky) => {
 
 	const filteredposts = posts.filter(post => {
 		return !post.thread
@@ -14,13 +14,13 @@ module.exports = (posts) => {
 		};
 	}
 
+	const stickyValue = NumberInt(sticky);
+
 	return {
-		message: `Toggled sticky for ${filteredposts.length} thread(s)`,
-		action: '$bit',
+		message: `Set sticky for ${filteredposts.length} thread(s) to ${sticky}`,
+		action: '$set',
 		query: {
-			'sticky': {
-				'xor': NumberInt(1)
-			},
+			'sticky': stickyValue,
 		}
 	};
 

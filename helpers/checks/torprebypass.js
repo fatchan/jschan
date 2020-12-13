@@ -12,37 +12,43 @@ const { Bypass } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	//early byapss is only needed for tor users
+	//early bypass is only needed for tor users
 	if (!res.locals.tor) {
 		return next();
 	}
 
-	const input = req.body.captcha;
-	const captchaId = req.cookies.captchaid;
 	let bypassId = req.signedCookies.bypassid;
-	if (input && !bypassId) {
-		// try to get the captcha from the DB
-		try {
-			await checkCaptcha(input, captchaId);
-		} catch (err) {
-			deleteTempFiles(req).catch(e => console.error);
-			if (err instanceof Error) {
-				return next(err);
+
+	if (blockBypass.enabled || blockBypass.forceOnion) {
+		const input = req.body.captcha;
+		const captchaId = req.cookies.captchaid;
+		if (input && !bypassId) {
+			// try to get the captcha from the DB
+			try {
+				await checkCaptcha(input, captchaId);
+			} catch (err) {
+				deleteTempFiles(req).catch(e => console.error);
+				if (err instanceof Error) {
+					return next(err);
+				}
+				const page = (req.body.minimal || req.path === '/blockbypass' ? 'bypass' : 'message');
+				return dynamicResponse(req, res, 403, page, {
+					'title': 'Forbidden',
+					'message': err,
+					'redirect': req.headers.referer,
+				});
 			}
-			const page = (req.body.minimal || req.path === '/blockbypass' ? 'bypass' : 'message');
-			return dynamicResponse(req, res, 403, page, {
-				'title': 'Forbidden',
-				'message': err,
-				'redirect': req.headers.referer,
-			});
+			res.locals.solvedCaptcha = true;
+			res.clearCookie('captchaid');
+			remove(`${uploadDirectory}/captcha/${captchaId}.jpg`).catch(e => { console.error(e) });
 		}
-		res.locals.solvedCaptcha = true;
-		res.clearCookie('captchaid');
-		remove(`${uploadDirectory}/captcha/${captchaId}.jpg`).catch(e => { console.error(e) });
 	}
 
-	if (res.locals.solvedCaptcha) {
-		//they dont have a valid bypass, but just solved a captcha, so give them a new one
+	if (res.locals.solvedCaptcha //if they just solved a captcha
+		|| (!blockBypass.enabled //OR blockbypass isnt enabled
+			&& !blockBypass.forceOnion //AND its not forced for .onion
+			&& !bypassId)) { //AND they dont already have one,
+		//then give the user a bypass id
 		const newBypass = await Bypass.getBypass();
 		const newBypassId = newBypass.insertedId;
 		bypassId = newBypassId.toString();

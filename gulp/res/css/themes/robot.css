@@ -36,6 +36,6 @@
 	color:black
 }
 .post-info, .post-container:target .post-info, .post-container.highlighted .post-info {
-    background:none!important;border:none!important
+	background:none!important;border:none!important
 }
 

@@ -41,8 +41,8 @@
 .post-container.highlighted,
 .anchor:target + table tbody tr th,
 .anchor:target + table {
-/*    border-style: dashed var(--highlighted-post-outline-color);*/
+/*	border-style: dashed var(--highlighted-post-outline-color);*/
 }
 .post-info, .post-container:target .post-info, .post-container.highlighted .post-info {
-    background:none!important;border:none!important
+	background:none!important;border:none!important
 }

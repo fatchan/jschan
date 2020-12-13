@@ -1,67 +1,67 @@
 :root {
---label-color: #1DA1F2;
---alt-label-color: #1DA1F2;
---background-top: #E6ECF0;
---background-rest: #E6ECF0;
---navbar-color: white;
---post-color: white;
---highlighted-post-color: white;
---highlighted-post-outline-color: #1DA1F2;
---link-color: #1da1f2;
---board-title: #1DA1F2;
---font-color: black;
+	--label-color: #1DA1F2;
+	--alt-label-color: #1DA1F2;
+	--background-top: #E6ECF0;
+	--background-rest: #E6ECF0;
+	--navbar-color: white;
+	--post-color: white;
+	--highlighted-post-color: white;
+	--highlighted-post-outline-color: #1DA1F2;
+	--link-color: #1da1f2;
+	--board-title: #1DA1F2;
+	--font-color: black;
 }
 body, .navbar {
-font-size: unset;
-margin: 0 auto;
+	font-size: unset;
+	margin: 0 auto;
 }
 @media screen and (min-width: 800px) {
-body, .navbar {
-width: 50vw;
-}
+	body, .navbar {
+		width: 50vw;
+	}
 }
 .post-container.op {
-background:var(--post-color);
+	background:var(--post-color);
 }
 .stickynav{display:none}
 .post-container, .pages {
-padding: 10px;
-width: 100%;
+	padding: 10px;
+	width: 100%;
 }
 .post-name::before {
-content:"👤";
-font-size: 30px;
-justify-content: center;
-align-items: center;
-display: inline-flex;
-width: 70px;
-height: 70px;
-background: lightgray;
-border-radius: 50%;
-margin: 10px
+	content:"👤";
+	font-size: 30px;
+	justify-content: center;
+	align-items: center;
+	display: inline-flex;
+	width: 70px;
+	height: 70px;
+	background: lightgray;
+	border-radius: 50%;
+	margin: 10px
 }
 .post-icons, .post-subject, .post-check, .board-banner, .postmenu, .user-id, .flag {
-display: none;
+	display: none;
 }
 .post-container, .catalog-tile, .navbar, .pages, .toggle-summary, #threadstats, #livetext  {
-border: none;
-border-radius: 10px;
+	border: none;
+	border-radius: 10px;
 }
 .highlighted, .hoverhighlighted {
-border: 1px solid var(--highlighted-post-outline-color)!important;
+	border: 1px solid var(--highlighted-post-outline-color)!important;
 }
 .anchor{
-background: var(--post-color);
-height: 30px;
-width: 10px;
-margin-left: 50px;
-margin-top: 0
+	background: var(--post-color);
+	height: 30px;
+	width: 10px;
+	margin-left: 50px;
+	margin-top: 0
 }
 #float  {
-pointer-events: none;
-border: none;
-box-shadow: none;
+	pointer-events: none;
+	border: none;
+	box-shadow: none;
 }
 .label, .rlabel, table {
-border:none;
+	border:none;
 }

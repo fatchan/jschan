@@ -4,7 +4,7 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.db.collection('posts')
-	, { quoteLimit, previewReplies, stickyPreviewReplies
+	, { quoteLimit, previewReplies, stickyPreviewReplies, statsCountOnionUsers
 		, early404Replies, early404Fraction } = require(__dirname+'/../configs/main.js');
 
 module.exports = {
@@ -412,7 +412,7 @@ module.exports = {
 		}).toArray();
 	},
 
-	insertOne: async (board, data, thread) => {
+	insertOne: async (board, data, thread, tor) => {
 		const sageEmail = data.email === 'sage';
 		const bumpLocked = thread && thread.bumplocked === 1;
 		const bumpLimited = thread && thread.replyposts >= board.settings.bumpLimit;
@@ -454,7 +454,8 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		await Stats.updateOne(board._id, data.ip.single, data.thread == null);
+		const statsIp = (statsCountOnionUsers === false && res.locals.tor === true) ? null : data.ip.single;
+		await Stats.updateOne(board._id, statsIp, data.thread == null);
 
 		//add backlinks to the posts this post quotes
 		if (data.thread && data.quotes.length > 0) {
@@ -471,6 +472,36 @@ module.exports = {
 
 		return postId;
 
+	},
+
+	getBoardReportCounts: (boards) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'board': {
+						'$in': boards
+					},
+					'reports.0': {
+						'$exists': true
+					},
+				}
+			}, {
+				'$group': {
+					'_id': '$board',
+					'count': {
+						'$sum': 1
+					}
+				}
+			}
+		]).toArray();
+	},
+
+	getGlobalReportsCount: () => {
+		return db.countDocuments({
+			'globalreports.0': {
+				'$exists': true
+			}
+		})
 	},
 
 	getReports: (board) => {
@@ -629,7 +660,8 @@ module.exports = {
 		}, {
 			'projection': {
 				'_id': 1,
-				'postId': 1
+				'postId': 1,
+				'salt': 1,
 			}
 		});
 	},

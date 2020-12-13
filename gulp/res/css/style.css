@@ -494,6 +494,10 @@ td, th {
 	overflow-wrap: anywhere;
 }
 
+td pre {
+	overflow-wrap: anywhere;
+}
+
 .flex-center {
 	align-items: center;
 }
@@ -898,6 +902,7 @@ input:invalid, textarea:invalid {
 }
 
 .anchor:target + .post-container,
+.anchor:target + .catalog-tile,
 .post-container.highlighted,
 .post-container.hoverhighlighted,
 .anchor:target + table tbody tr th,
@@ -978,6 +983,10 @@ input:invalid, textarea:invalid {
 	padding-left: 10px;
 	padding-right: 10px;
 	text-align: center;
+}
+
+.nav-item.short-nav {
+	line-height: 1.5em;
 }
 
 .left {

@@ -11,6 +11,7 @@ const express  = require('express')
 	, hasPerms = require(__dirname+'/../helpers/checks/haspermsmiddleware.js')
 	, paramConverter = require(__dirname+'/../helpers/paramconverter.js')
 	, numFiles = require(__dirname+'/../helpers/numfiles.js')
+	, imageHashes = require(__dirname+'/../helpers/imagehash.js')
 	, banCheck = require(__dirname+'/../helpers/checks/bancheck.js')
 	, isLoggedIn = require(__dirname+'/../helpers/checks/isloggedin.js')
 	, verifyCaptcha = require(__dirname+'/../helpers/captcha/verify.js')
@@ -27,6 +28,8 @@ const express  = require('express')
 	, globalActionController = require(__dirname+'/forms/globalactions.js')
 	, actionController = require(__dirname+'/forms/actions.js')
 //	, addBanController = require(__dirname+'/forms/addban.js')
+	, addCustomPageController = require(__dirname+'/forms/addcustompage.js')
+	, deleteCustomPageController = require(__dirname+'/forms/deletecustompage.js')
 	, addNewsController = require(__dirname+'/forms/addnews.js')
 	, deleteNewsController = require(__dirname+'/forms/deletenews.js')
 	, uploadBannersController = require(__dirname+'/forms/uploadbanners.js')
@@ -49,7 +52,7 @@ const express  = require('express')
 
 //make new post
 router.post('/board/:board/post', geoAndTor, handlePostFilesEarlyTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, handlePostFiles,
-	paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, makePostController);
+	paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, imageHashes, makePostController);
 router.post('/board/:board/modpost', geoAndTor, handlePostFilesEarlyTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), handlePostFiles,
 	paramConverter, csrf, numFiles, blockBypassCheck, dnsblCheck, makePostController); //mod post has token instead of captcha
 
@@ -67,6 +70,8 @@ router.post('/board/:board/transfer', /*geoAndTor, torPreBypassCheck, processIp,
 router.post('/board/:board/settings', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
 router.post('/board/:board/addbanners', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, handleBannerFiles, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
 router.post('/board/:board/deletebanners', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
+router.post('/board/:board/addcustompages', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, addCustomPageController); //add banners
+router.post('/board/:board/deletecustompages', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteCustomPageController); //delete banners
 //router.post('/board/:board/addban', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), paramConverter, addBanController); //add ban manually without post
 router.post('/board/:board/editbans', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
 router.post('/board/:board/deleteboard', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteBoardController); //delete board

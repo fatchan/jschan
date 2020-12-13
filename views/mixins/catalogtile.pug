@@ -1,4 +1,10 @@
 mixin catalogtile(post, index)
+	- let anchorSubject = post.subject;
+	if post.subject
+		- const subjectAnchorMatch = post.subject.match(/^\/\w+\//);
+		if subjectAnchorMatch
+			- anchorSubject = subjectAnchorMatch[0]
+	.anchor(id=`${post.board}-${anchorSubject}`)
 	.catalog-tile(data-board=post.board
 		data-post-id=post.postId
 		data-user-id=post.userId
