@@ -234,7 +234,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				spoiler: (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler && req.body.spoiler.includes(file.name),
 				hash: file.sha256,
 				filename: file.filename, //could probably remove since we have hash and extension
-				originalFilename: req.body.strip_filename && req.body.strip_filename.includes(file.name) ? file.filename : file.name,
+				originalFilename: req.body.strip_filename && req.body.strip_filename.includes(file.sha256) ? file.filename : file.name,
 				mimetype: file.mimetype,
 				size: file.size,
 				extension,

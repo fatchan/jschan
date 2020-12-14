@@ -294,14 +294,25 @@ class formHandler {
 		this.updateFilesText();
 	}
 
-	addFile(file) {
+	async addFile(file) {
 		if (this.fileRequired) { //prevent drag+drop issues by removing required
 			this.fileInput.removeAttribute('required');
 		}
 		this.files.push(file);
+		console.log('got file', file.name, );
+		let fileHash;
+		if (window.crypto.subtle) {
+			const fileBuffer = await file.arrayBuffer();
+			const fileDigest = await window.crypto.subtle.digest('SHA-256', fileBuffer);
+			fileHash = Array.from(new Uint8Array(fileDigest))
+				.map(c => c.toString(16).padStart(2, '0'))
+				.join('');
+			console.log('file hash', fileHash);
+		}
 		const item = {
 			spoilers: this.fileUploadList.dataset.spoilers === 'true',
-			name: file.name
+			name: file.name,
+			hash: fileHash,
 		}
 		switch (file.type.split('/')[0]) {
 			case 'image':
