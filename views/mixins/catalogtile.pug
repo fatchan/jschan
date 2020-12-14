@@ -15,7 +15,7 @@ mixin catalogtile(post, index)
 		data-date=post.date
 		data-replies=post.replyposts
 		data-bump=post.bumped)
-		- const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.postId}.html#${post.postId}`
+		- const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.postId}.html`
 		.post-info
 			if !index
 				div
@@ -36,7 +36,7 @@ mixin catalogtile(post, index)
 				span(title='Page') P: #{Math.ceil(index/10)}
 		if post.files.length > 0
 			.post-file-src
-				a(href=postURL)
+				a(href=`${postURL}#${post.postId}`)
 					- const file = post.files[0]
 					if post.spoiler || file.spoiler
 						div.spoilerimg.catalog-thumb
