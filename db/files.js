@@ -28,17 +28,34 @@ module.exports = {
 	},
 
 	decrement: (fileNames) => {
-		return db.updateMany({
-			'_id': {
-				'$in': fileNames
-			}
-		}, {
-			'$inc': {
-				'count': -1
-			}
-		}, {
-			'upsert': true //probably not necessary
-		});
+		const fileCounts = fileNames
+			.reduce((acc, f) => {
+				acc[f] = (acc[f] || 0) + 1;
+				return acc;
+			}, {});
+		const commonCounts = Object.entries(fileCounts)
+			.reduce((acc, entry) => {
+				acc[entry[1]] = (acc[entry[1]] || []).concat(entry[0]);
+				return acc;
+			}, {});
+		const bulkWrites = Object.entries(commonCounts)
+			.map(entry => {
+				return ({
+					'updateMany': {
+						'filter': {
+							'_id': {
+								'$in': entry[1]
+							}
+						},
+						'update': {
+							'$inc': {
+								'count': -entry[0]
+							}
+						}
+					}
+				})
+			});
+		return db.bulkWrite(bulkWrites);
 	},
 
 	activeContent: () => {
