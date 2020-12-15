@@ -1,11 +1,12 @@
-mixin catalogtile(post, index)
+mixin catalogtile(post, index, overboard=false)
 	- let anchorSubject = post.subject;
 	if post.subject
 		- const subjectAnchorMatch = post.subject.match(/^\/\w+\//);
 		if subjectAnchorMatch
 			- anchorSubject = subjectAnchorMatch[0]
 	.anchor(id=`${post.board}-${anchorSubject}`)
-	.catalog-tile(data-board=post.board
+	.catalog-tile(tabindex=index
+		data-board=post.board
 		data-post-id=post.postId
 		data-user-id=post.userId
 		data-name=post.name
@@ -17,7 +18,7 @@ mixin catalogtile(post, index)
 		data-bump=post.bumped)
 		- const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.postId}.html`
 		.post-info
-			if !index
+			if overboard
 				div
 					| Thread from 
 					a.no-decoration.post-subject(href=`/${post.board}/`) /#{post.board}/
@@ -31,7 +32,7 @@ mixin catalogtile(post, index)
 			span(title='Replies') R: #{post.replyposts}
 			|  / 
 			span(title='Files') F: #{post.replyfiles}
-			if index
+			if !overboard
 				|  / 
 				span(title='Page') P: #{Math.ceil(index/10)}
 		if post.files.length > 0
