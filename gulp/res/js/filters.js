@@ -178,6 +178,7 @@ const setFilterState = (type, data, state) => {
 			if (state) {
 				fsubr.push(data);
 			}
+			break;
 		case 'fmsg':
 			fmsg[addOrDelete](data);
 			break;
