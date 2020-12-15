@@ -11,17 +11,15 @@ module.exports = async (req, res, next) => {
 	const message = prepareMarkdown(req.body.message, false);
 	const { message: markdownNews } = await messageHandler(message, null, null);
 
-	const post = {
-		'title': req.body.title,
-		'message': {
-			'raw': message,
-			'markdown': markdownNews
-		},
-		'date': new Date(),
-		'edited': null,
-	};
+	const updated = await News.updateOne(req.body.news_id, req.body.title, message, markdownNews).then(r => r.matchedCount);
 
-	await News.insertOne(post);
+	if (updated === 0) {
+		return dynamicResponse(req, res, 400, 'message', {
+			'title': 'Bad request',
+			'errors': 'News post does not exist',
+			'redirect': req.headers.referer || '/globalmanage/news.html'
+		});
+	}
 
 	buildQueue.push({
 		'task': 'buildNews',
@@ -30,7 +28,7 @@ module.exports = async (req, res, next) => {
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
-		'message': 'Added newspost',
+		'message': 'Updated newspost',
 		'redirect': '/globalmanage/news.html'
 	});
 

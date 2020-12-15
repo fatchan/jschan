@@ -16,6 +16,25 @@ module.exports = {
 		.toArray();
 	},
 
+	findOne: (id) => {
+		return db.findOne({
+			'_id': id,
+		});
+	},
+
+	updateOne: (id, title, raw, markdown) => {
+		return db.updateOne({
+			'_id': id,
+		}, {
+			'$set': {
+				'title': title,
+				'message.raw': raw,
+				'message.markdown': markdown,
+				'edited': new Date(),
+			}
+		});
+	},
+
 	insertOne: (news) => {
 		return db.insertOne(news);
 	},

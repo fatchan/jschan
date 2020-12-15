@@ -104,6 +104,13 @@ module.exports = (req, res, next) => {
 		}
 	}
 
+	//ids for newspost editing
+	if (req.params.newsid) {
+		req.params.newsid = ObjectId(req.params.newsid);
+	}
+	if (req.body.news_id) {
+		req.body.news_id = ObjectId(req.body.news_id);
+	}
 	//thread id
 	if (req.params.id) {
 		req.params.id = +req.params.id;
