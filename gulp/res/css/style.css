@@ -264,7 +264,7 @@ object {
 	max-width: 250px;
 }
 
-.catalog-tile:hover {
+.catalog-tile:focus {
 	overflow-y: auto;
 }
 
