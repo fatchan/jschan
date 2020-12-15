@@ -8,6 +8,7 @@ mixin newspost(post, globalmanage=false)
 						input.left.post-check(type='checkbox', name='checkednews' value=post._id)  
 					a.left(href=`#${post._id}`) #{post.title}
 					- const newsDate = new Date(post.date);
+					a.right.ml-5(href=`/editnews/${post._id}.html`) [Edit]
 					time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
 			tr
 				td
@@ -15,3 +16,9 @@ mixin newspost(post, globalmanage=false)
 						p.no-m-p #{`${post.message.raw.substring(0,50)}...`}
 					else
 						pre.post-message.no-m-p !{post.message.markdown}
+
+					if post.edited
+						small.right.cb.edited
+							| Last edited  
+							- const newsEditDate = new Date(post.edited);
+							time.reltime(datetime=newsEditDate.toISOString()) #{newsEditDate.toLocaleString(undefined, {hourCycle:'h23'})}
