@@ -1,4 +1,5 @@
 extends ../layout.pug
+include ../mixins/boardtable.pug
 
 block head
 	title #{meta.siteName}
@@ -29,7 +30,7 @@ block content
 							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
 
 	if boards && boards.length > 0
-		include ../includes/boardtable.pug
+		+boardtable(true, false)
 			each board in boards
 				tr
 					td 
@@ -40,6 +41,7 @@ block content
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}
+					td #{board.ppd}
 					td #{board.ips}
 					td #{board.sequence_value-1}
 			if totalStats.total-totalStats.unlisted > boards.length
@@ -53,6 +55,5 @@ block content
 				tr
 					td
 						pre.no-m-p
-							| There are currently #[span.bold #{totalStats.total-totalStats.unlisted}] public boards, #[span.bold #{totalStats.total}] in total.
-							| Sitewide, #[span.bold #{totalStats.pph}] post#{totalStats.pph === 1 ? ' has' : 's have'} been made in the last hour, #[span.bold #{totalStats.posts}] in total.
+							| There are currently #[span.bold #{totalStats.total-totalStats.unlisted}] public boards, #[span.bold #{totalStats.total}] in total. Sitewide, #[span.bold #{totalStats.ppd}] post#{totalStats.ppd === 1 ? ' has' : 's have'} been made in the last day, #[span.bold #{totalStats.pph}] in the last hour, #[span.bold #{totalStats.posts}] in total.
 							| #[span.bold #{fileStats.count}] file#{fileStats.count === 1 ? ' is' : 's are'} being served, totaling #[span.bold #{fileStats.totalSizeString}].

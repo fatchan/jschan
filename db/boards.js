@@ -155,6 +155,7 @@ module.exports = {
 			'lastPostTimestamp': 1,
 			'sequence_value': 1,
 			'pph': 1,
+			'ppd': 1,
 			'ips': 1,
 			'settings.sfw': 1,
 			'settings.description': 1,
@@ -200,6 +201,7 @@ module.exports = {
 				'lastPostTimestamp': 1,
 				'sequence_value': 1,
 				'pph': 1,
+				//'ppd': 1,
 				'ips': 1,
 				'settings.sfw': 1,
 				'settings.description': 1,
@@ -244,6 +246,9 @@ module.exports = {
 					},
 					'pph': {
 						'$sum': '$pph'
+					},
+					'ppd': {
+						'$sum': '$ppd'
 					},
 					'total': {
 						'$sum': 1
