@@ -29,27 +29,21 @@
 	--greentext-color: #789922;
 	--pinktext-color: #e0727f;
 }
-
 body {
-	background-image: url("/file/mushroom.png");
+	background: var(--background-rest) url("/file/mushroom.png");
 }
-
 a.post-name {
 	color: #a0ffff;
 }
-
 a.quote {
 	color: #81a2be;
 }
-
 table {
 	border: 1px solid var(--box-border-color);
 }
-
 tr {
-	background-image: url("/file/mushroom.png");
+	background: var(--background-rest) url("/file/mushroom.png");
 }
-
 .captcha {
 	filter: invert(90%);
 }
