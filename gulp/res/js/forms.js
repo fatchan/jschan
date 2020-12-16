@@ -302,7 +302,20 @@ class formHandler {
 		console.log('got file', file.name, );
 		let fileHash;
 		if (window.crypto.subtle) {
-			const fileBuffer = await file.arrayBuffer();
+			let fileBuffer;
+			if (file.arryaBuffer) {
+				fileBuffer = await file.arrayBuffer();
+			} else {
+				//can old browsers just fuck off please?
+				const bufferFileReader = new FileReader();
+				await new Promise((res, rej) => {
+					bufferFileReader.addEventListener('loadend', res);
+					bufferFileReader.readAsArrayBuffer(file);
+				});
+				if (bufferFileReader.result) {
+					fileBuffer = bufferFileReader.result;
+				}
+			}
 			const fileDigest = await window.crypto.subtle.digest('SHA-256', fileBuffer);
 			fileHash = Array.from(new Uint8Array(fileDigest))
 				.map(c => c.toString(16).padStart(2, '0'))
