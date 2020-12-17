@@ -29,7 +29,8 @@ module.exports = {
 		wait_ready: true,
 		kill_timeout: 5000,
 		env: {
-			NODE_ENV: 'development'
+			NODE_ENV: 'development',
+			FFMPEG_PATH: '/snap/bin/ffmpeg',
 		},
 		env_production: {
 			NODE_ENV: 'production'
