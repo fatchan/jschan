@@ -5,7 +5,6 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "@tohru/gm": "git+https://gitgud.io/fatchan/gm.git",
     "bcrypt": "^5.0.0",
     "bull": "^3.20.0",
     "cache-pug-templates": "^2.0.3",
@@ -15,7 +14,7 @@
     "del": "^6.0.0",
     "dnsbl": "^3.2.0",
     "express": "^4.17.1",
-    "express-fileupload": "git+https://gitgud.io/fatchan/express-fileupload.git#f6ca9cdc400bfd4ee94b6c1011a7007546469f94",
+    "express-fileupload": "git+https://gitgud.io/fatchan/express-fileupload.git#6f472bc3123d1f7e6371b9242145164fb4a5e706",
     "express-session": "^1.17.0",
     "file-type": "^15.0.1",
     "fluent-ffmpeg": "^2.1.2",
