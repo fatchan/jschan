@@ -69,7 +69,7 @@ block content
 					if globalLimits.customCss.enabled
 						.row
 							.label Custom CSS
-							textarea(name='custom_css' placeholder='Test first in top-right settings if you have javascript enabled' maxlength=globalLimits.customCss.max) #{board.settings.customCss}
+							textarea(rows=10 name='custom_css' placeholder='Test first in top-right settings if you have javascript enabled' maxlength=globalLimits.customCss.max) #{board.settings.customCss}
 					.row
 						.label IDs
 						label.postform-style.ph-5
@@ -265,7 +265,7 @@ block content
 						include ../includes/2charisocountries.pug
 					.row
 						.label Filters
-						textarea(name='filters' placeholder='Newline separated') #{board.settings.filters.join('\n')}
+						textarea(rows=10 name='filters' placeholder='Newline separated') #{board.settings.filters.join('\n')}
 					.row
 						.label Strict Filtering
 						label.postform-style.ph-5
