@@ -31,6 +31,7 @@ const express  = require('express')
 	, addCustomPageController = require(__dirname+'/forms/addcustompage.js')
 	, deleteCustomPageController = require(__dirname+'/forms/deletecustompage.js')
 	, addNewsController = require(__dirname+'/forms/addnews.js')
+	, editNewsController = require(__dirname+'/forms/editnews.js')
 	, deleteNewsController = require(__dirname+'/forms/deletenews.js')
 	, uploadBannersController = require(__dirname+'/forms/uploadbanners.js')
 	, deleteBannersController = require(__dirname+'/forms/deletebanners.js')
@@ -82,6 +83,7 @@ router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isL
 //router.post('/global/addban', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, addBanController); //add ban manually without post
 router.post('/global/deleteboard', useSession, sessionRefresh, csrf, paramConverter, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board
 router.post('/global/addnews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
+router.post('/global/editnews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, editNewsController); //add new newspost
 router.post('/global/deletenews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news
 router.post('/global/editaccounts', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, editAccountsController); //account editing
 router.post('/global/settings', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, globalSettingsController); //global settings

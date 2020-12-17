@@ -264,7 +264,7 @@ object {
 	max-width: 250px;
 }
 
-.catalog-tile:hover {
+.catalog-tile:focus {
 	overflow-y: auto;
 }
 
@@ -1172,15 +1172,16 @@ tr:nth-child(odd) {
 
 table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
 table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
-table.boardtable td:nth-child(5), table.boardtable th:nth-child(5) {
+table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
+table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
 	word-break: keep-all;
 	overflow-wrap: break-word;
 }
 
-table.boardtable th:nth-child(6) {
+table.boardtable.w900 th:last-child {
 	min-width: 100px;
 }
-table.boardtable td:nth-child(6) {
+table.boardtable.w900 td:last-child {
 	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
 	color: white;
 }
@@ -1330,7 +1331,8 @@ row.wrap.sb .col {
 	table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
 	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
 	table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
-	table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
+	table.boardtable td:nth-child(6), table.boardtable th:nth-child(6),
+	table.boardtable td:nth-child(7), table.boardtable th:nth-child(7) {
 		display: none;
 	}
 

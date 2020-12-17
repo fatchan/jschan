@@ -1,0 +1,14 @@
+mixin boardtable(ppd=false, activity=false)
+	.table-container.flex-center.mv-10.text-center
+		table(class=`boardtable${activity ? ' w900' : ''}`)
+			tr
+				th Board
+				th Description
+				th PPH
+				if ppd
+					th PPD
+				th Users
+				th Posts
+				if activity
+					th Last Activity
+			block

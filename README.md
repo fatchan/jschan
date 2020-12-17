@@ -145,6 +145,7 @@ $ pm2 reload all #reload all backend processes
 # gulp is used for various jobs like minifying and compiling scripts
 $ gulp --tasks #list available gulp tasks
 $ gulp migrate #check for and run db migrations
+$ gulp password #reset the admin account password if you forgot it
 $ gulp #run default gulp task
 ```
 

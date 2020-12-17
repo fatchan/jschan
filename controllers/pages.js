@@ -21,7 +21,7 @@ const express  = require('express')
 		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
-	, { changePassword, blockBypass, home, register, login, create,
+	, { changePassword, blockBypass, home, register, login, create, editNews,
 		board, catalog, banners, randombanner, news, captchaPage, overboard, overboardCatalog,
 		captcha, thread, modlog, modloglist, account, boardlist, customPage } = require(__dirname+'/../models/pages/');
 
@@ -68,6 +68,11 @@ router.get('/globalmanage/globallogs.html', useSession, sessionRefresh, isLogged
 router.get('/globalmanage/news.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageNews);
 router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageAccounts);
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
+
+//edit pages
+router.get('/editnews/:newsid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, paramConverter, editNews);
+//TODO: edit post get endpoint
+//TODO: edit board custom page get endpoint
 
 //captcha
 if (captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha') {

@@ -40,6 +40,24 @@ const gulp = require('gulp')
 		}
 	};
 
+
+async function password() {
+
+	const Mongo = require(__dirname+'/db/db.js')
+	const Redis = require(__dirname+'/redis.js')
+	await Mongo.connect();
+
+	const { Accounts } = require(__dirname+'/db/');
+
+	const randomPassword = randomBytes(20).toString('base64')
+	await Accounts.changePassword('admin', randomPassword);
+	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
+
+	Redis.redisClient.quit();
+	return Mongo.client.close();
+
+}
+
 async function wipe() {
 
 	const Mongo = require(__dirname+'/db/db.js')
@@ -47,20 +65,13 @@ async function wipe() {
 	await Mongo.connect();
 	const db = Mongo.db;
 
-	//make these because mongo is dumb and doesnt make them automatically
-	await db.createCollection('accounts');
-	await db.createCollection('bans');
-	await db.createCollection('custompages');
-	await db.createCollection('boards');
-	await db.createCollection('captcha');
-	await db.createCollection('files');
-	await db.createCollection('modlog');
-	await db.createCollection('news');
-	await db.createCollection('posts');
-	await db.createCollection('poststats');
-	await db.createCollection('ratelimit');
-	await db.createCollection('webring');
-	await db.createCollection('bypass');
+	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
+		'modlog','news', 'posts', 'poststats', 'ratelimit', 'webring', 'bypass'];
+	for (const name of collectionNames) {
+		//drop collection so gulp reset can be run again. ignores error of dropping non existing collection first time
+		await db.dropCollection(name).catch(e => {});
+		await db.createCollection(name);
+	}
 
 	const { Webring, Boards, Posts, Captchas, Ratelimits, News, CustomPages,
 		Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
@@ -108,9 +119,10 @@ async function wipe() {
 	await Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
+
 	const randomPassword = randomBytes(20).toString('base64')
 	await Accounts.insertOne('admin', 'admin', randomPassword, 0);
-	console.log('\n\n=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
+	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 
 	await db.collection('version').replaceOne({
 		'_id': 'version'
@@ -380,5 +392,6 @@ module.exports = {
 	wipe,
 	cache,
 	migrate,
+	password,
 	default: build,
 };
