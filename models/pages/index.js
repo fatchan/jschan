@@ -11,6 +11,7 @@ module.exports = {
 	board: require(__dirname+'/board.js'),
 	catalog: require(__dirname+'/catalog.js'),
 	banners: require(__dirname+'/banners.js'),
+	customPage: require(__dirname+'/custompage.js'),
 	randombanner: require(__dirname+'/randombanner.js'),
 	news: require(__dirname+'/news.js'),
 	captchaPage: require(__dirname+'/captchapage.js'),
@@ -20,4 +21,6 @@ module.exports = {
 	modloglist: require(__dirname+'/modloglist.js'),
 	boardlist: require(__dirname+'/boardlist.js'),
 	overboard: require(__dirname+'/overboard.js'),
+	overboardCatalog: require(__dirname+'/overboardcatalog.js'),
+	editNews: require(__dirname+'/editnews.js'),
 }

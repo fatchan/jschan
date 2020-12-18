@@ -18,6 +18,7 @@ module.exports = async (req, res, next) => {
 			'markdown': markdownNews
 		},
 		'date': new Date(),
+		'edited': null,
 	};
 
 	await News.insertOne(post);

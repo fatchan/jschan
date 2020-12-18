@@ -1,6 +1,7 @@
 extends ../layout.pug
 include ../mixins/ban.pug
 include ../mixins/globalmanagenav.pug
+include ../mixins/boardtable.pug
 
 block head
 	title Manage
@@ -42,7 +43,7 @@ block content
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
 		h4.text-center.mv-10 Board List:
-		include ../includes/webringboardtable.pug
+		+boardtable(true, true)
 			each board in localBoards
 				tr
 					td 
@@ -59,6 +60,7 @@ block content
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
 					td #{board.pph}
+					td #{board.ppd}
 					td #{board.ips}
 					td #{board.sequence_value-1}
 					if board.lastPostTimestamp

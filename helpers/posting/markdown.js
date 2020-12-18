@@ -1,6 +1,6 @@
 'use strict';
 
-const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
+const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#&#x2F;).*)/gm
 	, pinktextRegex = /^&lt;(.+)/gm
 	, boldRegex = /&#39;&#39;(.+?)&#39;&#39;/gm
 	, titleRegex = /&#x3D;&#x3D;(.+?)&#x3D;&#x3D;/gm
@@ -12,8 +12,8 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
 	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
 	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
-	, includeSplitRegex = /(```[\s\S]+?```)/gm
-	, splitRegex = /```([\s\S]+?)```/gm
+	, includeSplitRegex = /(\[code\][\s\S]+?\[\/code\])/gm
+	, splitRegex = /\[code\]([\s\S]+?)\[\/code\]/gm
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
 	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, escape = require(__dirname+'/escape.js')
@@ -31,7 +31,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?).*)/gm
 		{ regex: spoilerRegex, cb: (match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
 		{ regex: monoRegex, cb: (match, mono) => `<span class='mono'>${mono}</span>` },
 		{ regex: linkRegex, cb: require(__dirname+'/linkmatch.js') },
-		{ regex: detectedRegex,  cb: (match, detected) => `<span class='detected'>${detected}</span>` },
+		{ regex: detectedRegex, cb: (match, detected) => `<span class='detected'>${detected}</span>` },
 		{ regex: diceroll.regexMarkdown, cb: diceroll.markdown },
 	];
 
@@ -82,6 +82,8 @@ module.exports = {
 		} else if (lang !== 'plain' && highlightOptions.languageSubset.includes(lang)) {
 			const { value } = highlight(lang, trimFix, true);
 			return `<span class='code hljs'><small>language: ${lang}</small>\n${value}</span>`;
+		} else if (lang === 'aa') {
+			return `<span class='aa'>${escape(matches.groups.code)}</span>`;
 		}
 		return `<span class='code'>${escape(trimFix)}</span>`;
 	},

@@ -3,7 +3,8 @@
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { globalLimits, disableOnionFilePosting } = require(__dirname+'/../../configs/main.js')
+	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
+	, { pruneImmediately, globalLimits, disableOnionFilePosting } = require(__dirname+'/../../configs/main.js')
 	, { Files } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
@@ -88,7 +89,10 @@ module.exports = async (req, res, next) => {
 	} catch (err) {
 		await deleteTempFiles(req).catch(e => console.error);
 		if (res.locals.numFiles > 0) {
-			await Files.decrement(req.files.file.filter(x => x.inced === true && x.filename != null).map(x => x.filename)).catch(e => console.error);
+			const incedFiles = req.files.file.filter(x => x.inced === true && x.filename != null);
+			const incedFileNames = incedFiles.map(x => x.filename);
+			await Files.decrement(incedFileNames).catch(e => console.error);
+			await pruneFiles(incedFileNames);
 		}
 		return next(err);
 	}

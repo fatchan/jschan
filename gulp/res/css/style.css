@@ -116,6 +116,14 @@ pre {
 	white-space: pre;
 }
 
+.aa {
+	font-family: Monapo, Mona, 'MS Pgothic', 'MS P繧ｴ繧ｷ繝�け', IPAMonaPGothic, 'IPA 繝｢繝翫� P繧ｴ繧ｷ繝�け', submona !important;
+	font-size: 16px;
+	display: block;
+	overflow-x: auto;
+	white-space: pre;
+}
+
 .code:not(.hljs) {
 	white-space: unset;
 }
@@ -256,7 +264,7 @@ object {
 	max-width: 250px;
 }
 
-.catalog-tile:hover {
+.catalog-tile:focus {
 	overflow-y: auto;
 }
 
@@ -483,7 +491,11 @@ th {
 td, th {
 	padding: 5px;
 	/*word-break: break-all;*/
-	word-break: break-word;
+	overflow-wrap: anywhere;
+}
+
+td pre {
+	overflow-wrap: anywhere;
 }
 
 .flex-center {
@@ -890,6 +902,7 @@ input:invalid, textarea:invalid {
 }
 
 .anchor:target + .post-container,
+.anchor:target + .catalog-tile,
 .post-container.highlighted,
 .post-container.hoverhighlighted,
 .anchor:target + table tbody tr th,
@@ -955,6 +968,7 @@ input:invalid, textarea:invalid {
 	padding: 5px;
 	padding-left: 3px;
 	display:block;
+	overflow-wrap: break-word;
 }
 
 .post-container.op .post-info {
@@ -969,6 +983,10 @@ input:invalid, textarea:invalid {
 	padding-left: 10px;
 	padding-right: 10px;
 	text-align: center;
+}
+
+.nav-item.short-nav {
+	line-height: 1.5em;
 }
 
 .left {
@@ -1154,14 +1172,16 @@ tr:nth-child(odd) {
 
 table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
 table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
-table.boardtable td:nth-child(5), table.boardtable th:nth-child(5) {
+table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
+table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
 	word-break: keep-all;
+	overflow-wrap: break-word;
 }
 
-table.boardtable th:nth-child(6) {
+table.boardtable.w900 th:last-child {
 	min-width: 100px;
 }
-table.boardtable td:nth-child(6) {
+table.boardtable.w900 td:last-child {
 	text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
 	color: white;
 }
@@ -1311,7 +1331,8 @@ row.wrap.sb .col {
 	table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
 	table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
 	table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
-	table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
+	table.boardtable td:nth-child(6), table.boardtable th:nth-child(6),
+	table.boardtable td:nth-child(7), table.boardtable th:nth-child(7) {
 		display: none;
 	}
 

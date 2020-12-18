@@ -2,7 +2,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, db = Mongo.client.db('jschan').collection('poststats');
+	, db = Mongo.db.collection('poststats');
 
 module.exports = {
 
@@ -39,34 +39,76 @@ module.exports = {
 	},
 
 	updateBoards: () => {
-//todo: improve this query
-		return db.aggregate([{
-		    '$unwind': {
-		        'path': '$ips',
-		        'preserveNullAndEmptyArrays': true
-		    }
-		}, {
-		    '$group': {
-		        '_id': '$board',
-		        'pph': {
-		            '$max': '$pph' //use max since only one will have a value until we do a multi facet system that can $merge (dunno if even possible)
-		        },
-		        'ips': {
-		            '$addToSet': '$ips'
-		        }
-		    }
-		}, {
-		    '$project': {
-		        'ips': {
-		            '$size': '$ips'
-		        },
-		        'pph': 1
-		    }
-		}, {
-		    '$merge': {
-		        'into': 'boards'
-		    }
-		}]).toArray();
+		return db.aggregate([
+			{
+				'$group': {
+					'_id': '$board',
+					'ppd': {
+						'$sum': '$pph'
+					},
+					'pph': {
+						'$push': { hour: '$hour', pph: '$pph' },
+					},
+					'ips': {
+						'$addToSet': '$ips'
+					}
+				}
+			}, {
+				'$project': {
+					'board': '$_id',
+					'ips': 1,
+					'ppd': 1,
+					'pph': {
+						$first: {
+							$filter: {
+							input: '$pph',
+							as: 'hr',
+								cond: {
+									$eq: [ '$$hr.hour', (new Date().getHours()||24)-1 ]
+								},
+							}
+						}
+					}
+				}
+			}, {
+				'$unwind': {
+					'path': '$ips',
+					'preserveNullAndEmptyArrays': true
+				}
+			}, {
+				'$unwind': {
+					'path': '$ips',
+					'preserveNullAndEmptyArrays': true
+				}
+			}, {
+				'$group': {
+					'_id': '$_id',
+					'ppd': {
+						'$first': '$ppd'
+					},
+					'pph': {
+						'$first': '$pph'
+					},
+					'ips': {
+						'$addToSet': '$ips'
+					}
+				}
+			}, {
+				'$project': {
+					'ips': {
+						'$size': '$ips'
+					},
+					'ppd': 1,
+					'pph': {
+						'$ifNull': ['$pph.pph', 0]
+					}
+				}
+			}, {
+				'$merge': {
+					'into': 'boards'
+				}
+			}
+		]).toArray();
 	},
 
 	//reset stats, used at start of each hour
@@ -77,12 +119,8 @@ module.exports = {
 			}, {
 				'$set': {
 					'ips': [],
-				}
-			}),
-			db.updateMany({}, {
-				'$set': {
 					'pph': 0,
-					'tph': 0
+					'tph': 0,
 				}
 			}),
 		]);

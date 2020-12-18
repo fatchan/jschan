@@ -1,7 +1,7 @@
 'use strict';
 
 const express  = require('express')
-	, router = express.Router()
+	, router = express.Router({ caseSensitive: true })
 	, Boards = require(__dirname+'/../db/boards.js')
 	, Posts = require(__dirname+'/../db/posts.js')
 	, { captchaOptions } = require(__dirname+'/../configs/main.js')
@@ -18,12 +18,12 @@ const express  = require('express')
 	, setMinimal = require(__dirname+'/../helpers/setminimal.js')
 	//page models
 	, { manageRecent, manageReports, manageBanners, manageSettings, manageBans,
-		manageBoard, manageThread, manageLogs, manageCatalog } = require(__dirname+'/../models/pages/manage/')
+		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
-	, { changePassword, blockBypass, home, register, login, create,
-		board, catalog, banners, randombanner, news, captchaPage, overboard,
-		captcha, thread, modlog, modloglist, account, boardlist } = require(__dirname+'/../models/pages/');
+	, { changePassword, blockBypass, home, register, login, create, editNews,
+		board, catalog, banners, randombanner, news, captchaPage, overboard, overboardCatalog,
+		captcha, thread, modlog, modloglist, account, boardlist, customPage } = require(__dirname+'/../models/pages/');
 
 //homepage
 router.get('/index.html', home);
@@ -40,8 +40,10 @@ router.get('/:board/thread/:id([1-9][0-9]{0,}).(html|json)', Boards.exists, para
 router.get('/:board/catalog.(html|json)', Boards.exists, catalog); //catalog
 router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
 router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
+router.get('/:board/custompage/:page.html', Boards.exists, customPage); //board custom page
 router.get('/:board/banners.html', Boards.exists, banners); //banners
-router.get('/all.html', overboard); //overboard
+router.get('/overboard.html', overboard); //overboard
+router.get('/catalog.html', overboardCatalog); //overboard catalog view
 router.get('/create.html', useSession, sessionRefresh, isLoggedIn, create); //create new board
 router.get('/randombanner', randombanner); //random banner
 
@@ -52,7 +54,7 @@ router.get('/:board/manage/bans.html', useSession, sessionRefresh, isLoggedIn, B
 router.get('/:board/manage/logs.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageLogs);
 router.get('/:board/manage/settings.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
 router.get('/:board/manage/banners.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
-// if (mod view enabled) {
+router.get('/:board/manage/custompages.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageCustomPages);
 router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageCatalog);
 router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
 router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
@@ -68,8 +70,13 @@ router.get('/globalmanage/news.html', useSession, sessionRefresh, isLoggedIn, ca
 router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageAccounts);
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
 
+//edit pages
+router.get('/editnews/:newsid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, paramConverter, editNews);
+//TODO: edit post get endpoint
+//TODO: edit board custom page get endpoint
+
 //captcha
-if (captchaOptions.type !== 'google') {
+if (captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha') {
 	router.get('/captcha', geoAndTor, processIp, captcha); //get captcha image and cookie
 }
 router.get('/captcha.html', captchaPage); //iframed for noscript users

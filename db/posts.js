@@ -3,8 +3,8 @@
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
-	, db = Mongo.client.db('jschan').collection('posts')
-	, { quoteLimit, previewReplies, stickyPreviewReplies
+	, db = Mongo.db.collection('posts')
+	, { quoteLimit, previewReplies, stickyPreviewReplies, statsCountOnionUsers
 		, early404Replies, early404Fraction } = require(__dirname+'/../configs/main.js');
 
 module.exports = {
@@ -250,13 +250,32 @@ module.exports = {
 		}).toArray();
 	},
 
-	getCatalog: (board) => {
+	getCatalog: (board, sortSticky=true, catalogLimit=0) => {
 
+		const threadsQuery = {
+			thread: null,
+		}
+		if (board) {
+			if (Array.isArray(board)) {
+				//array for overboard catalog
+				threadsQuery['board'] = {
+					'$in': board
+				}
+			} else {
+				threadsQuery['board'] = board;
+			}
+		}
+		let threadsSort = {
+			'bumped': -1,
+		};
+		if (sortSticky === true) {
+			threadsSort = {
+				'sticky': -1,
+				'bumped': -1
+			}
+		}
 		// get all threads for catalog
-		return db.find({
-			'thread': null,
-			'board': board
-		}, {
+		return db.find(threadsQuery, {
 			'projection': {
 				'salt': 0,
 				'password': 0,
@@ -264,10 +283,10 @@ module.exports = {
 				'reports': 0,
 				'globalreports': 0,
 			}
-		}).sort({
-			'sticky': -1,
-			'bumped': -1,
-		}).toArray();
+		})
+		.limit(catalogLimit)
+		.sort(threadsSort)
+		.toArray();
 
 	},
 
@@ -393,7 +412,7 @@ module.exports = {
 		}).toArray();
 	},
 
-	insertOne: async (board, data, thread) => {
+	insertOne: async (board, data, thread, tor) => {
 		const sageEmail = data.email === 'sage';
 		const bumpLocked = thread && thread.bumplocked === 1;
 		const bumpLimited = thread && thread.replyposts >= board.settings.bumpLimit;
@@ -435,7 +454,8 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		await Stats.updateOne(board._id, data.ip.single, data.thread == null);
+		const statsIp = (statsCountOnionUsers === false && res.locals.tor === true) ? null : data.ip.single;
+		await Stats.updateOne(board._id, statsIp, data.thread == null);
 
 		//add backlinks to the posts this post quotes
 		if (data.thread && data.quotes.length > 0) {
@@ -452,6 +472,36 @@ module.exports = {
 
 		return postId;
 
+	},
+
+	getBoardReportCounts: (boards) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'board': {
+						'$in': boards
+					},
+					'reports.0': {
+						'$exists': true
+					},
+				}
+			}, {
+				'$group': {
+					'_id': '$board',
+					'count': {
+						'$sum': 1
+					}
+				}
+			}
+		]).toArray();
+	},
+
+	getGlobalReportsCount: () => {
+		return db.countDocuments({
+			'globalreports.0': {
+				'$exists': true
+			}
+		})
 	},
 
 	getReports: (board) => {
@@ -610,7 +660,8 @@ module.exports = {
 		}, {
 			'projection': {
 				'_id': 1,
-				'postId': 1
+				'postId': 1,
+				'salt': 1,
 			}
 		});
 	},

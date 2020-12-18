@@ -22,9 +22,11 @@ const video = new Set([
 	'video/mp4',
 	'video/webm',
 	'video/x-matroska',
+	'video/ogg',
 ]);
 
 const audio = new Set([
+	'audio/flac',
 	'audio/mp3',
 	'audio/mpeg',
 	'audio/ogg',

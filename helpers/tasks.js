@@ -5,7 +5,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
 	, { debugLogs, pruneModlogs, pruneAfterDays, enableWebring, maxRecentNews } = require(__dirname+'/../configs/main.js')
-	, { Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
+	, { CustomPages, Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, cache = require(__dirname+'/../redis.js')
 	, render = require(__dirname+'/render.js')
 	, buildQueue = require(__dirname+'/../queue.js')
@@ -138,6 +138,27 @@ module.exports = {
 		return html;
 	},
 
+	buildCustomPage: async (options) => {
+		const label = `/${options.board._id || options.board}/custompage/${options.page}.html`;
+		const start = process.hrtime();
+		if (!options.customPage) {
+			const customPage = await CustomPages.findOne(options.board._id || options.board, options.page);
+			if (!customPage) {
+				return;
+			}
+			options.customPage = customPage;
+		}
+		if (!options.board._id) {
+			options.board = await Boards.findOne(options.board);
+		}
+		const { html } = await render(label, 'custompage.pug', {
+			...options,
+		});
+		const end = process.hrtime(start);
+		debugLogs && console.log(timeDiffString(label, end));
+		return html;
+	},
+
 	buildModLog: async (options) => {
 		if (!options.startDate || !options.endDate) {
 			const d = new Date();
@@ -246,22 +267,24 @@ module.exports = {
 					},
 					'update': {
 						'$set': {
-							'settings.lockMode': p.lockMode.old,
-							'settings.captchaMode': p.captchaMode.old
+							/* reset=0 is "no change", the options go from 0-2, and get reset to 0 or 1,
+							so if >0, we subtract 1 otherwise no change */
+							'settings.lockMode': (p.lockReset > 0 ? Math.min(p.lockReset-1, p.lockMode) : p.lockMode),
+							'settings.captchaMode': (p.captchaReset > 0 ? Math.min(p.captchaReset-1, p.captchaMode) : p.captchaMode),
 						}
 					}
 				}
 			}
-		})
+		});
 		await Boards.db.bulkWrite(bulkWrites);
 		const promises = [];
 		triggerModes.forEach(async (p) => {
 			await cache.del(`board:${p._id}`);
-			if (p.captchaMode.old < p.captchaMode.new) {
-				if (p.captchaMode.old === 2) {
+			if (p.captchaReset > 0 && p.captchaReset-1 < p.captchaMode) {
+				if (p.captchaReset-1 <= 1) {
 					promises.push(remove(`${uploadDirectory}/html/${p._id}/thread/`));
 				}
-				if (p.captchaMode.old === 0) {
+				if (p.captchaReset-1 === 0) {
 					buildQueue.push({
 						'task': 'buildBoardMultiple',
 						'options': {
@@ -282,7 +305,6 @@ module.exports = {
 		await Promise.all(promises);
 		const end = process.hrtime(start);
 		debugLogs && console.log(timeDiffString(label, end));
-
 	},
 
 	buildChangePassword: async () => {

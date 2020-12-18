@@ -2,6 +2,7 @@ module.exports = {
 
 	//mongodb connection string
 	dbURL: 'mongodb://username:password@localhost:27017',
+	dbName: 'jschan',
 
 	//redis connection info
 	redis: {
@@ -40,12 +41,16 @@ module.exports = {
 
 	//settings for captchas
 	captchaOptions: {
-		type: 'grid', //"text", "grid" or "google". If using google, make sure your CSP header in nginx config allows the google domain.
+		type: 'grid', //"text", "grid", "hcaptcha" or "google". If using google/hcaptcha, make sure your CSP header in nginx config allows the google/hcaptcha domain.
 		generateLimit: 1000, //max number of captchas to have generated at any time, prevent mass unsolved captcha spam, especially on TOR.
 		google: { //options for google captcha, when captcha type is google
 			siteKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
 			secretKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
 		},
+        hcaptcha: {
+            siteKey: "10000000-ffff-ffff-ffff-000000000001",
+            secretKey: "0x0000000000000000000000000000000000000000"
+        },
 		grid: {
 			size: 4,
 			imageSize: 120,
@@ -58,7 +63,7 @@ module.exports = {
 		distortion: 9,
 	},
 
-	/* dnsbl, will add a small delay for uncached requests. You could also install some 
+	/* dnsbl, will add a small delay for uncached requests. You could also install some
 		kind of dns cache e.g. unbound to improve performance. DNSBL only checked for posting */
 	dnsbl: {
 		enabled: false,
@@ -69,6 +74,9 @@ module.exports = {
 	//disable file posting over .onion globally, overrides any board setting.
 	disableOnionFilePosting: false,
 
+	//count .onion posters as "users" in stats. if set to false, all .onion is counted as a single user. doesnt affect pph stat.
+	statsCountOnionUsers: true,
+
 	floodTimers: { //basic delays to stop flooding, in ms. 0 to disable
 		sameContentSameIp: 120000, //same message or any file from same ip
 		sameContentAnyIp: 30000, //same message or file from any ip
@@ -78,6 +86,7 @@ module.exports = {
 	//block bypasses
 	blockBypass: {
 		enabled: false,
+		forceOnion: true, //option to override blockbypass setting for .onion users
 		expireAfterUses: 40, //however many (attempted) posts per block bypass captcha
 		expireAfterTime: 86400000, //expiry in ms regardless if the limit was reached, default 1 day
 		bypassDnsbl: false,
@@ -96,8 +105,10 @@ module.exports = {
 		editPost: 30,
 	},
 
-	//how many threads to show on overboard
+	//how many threads to show on overboard index view
 	overboardLimit: 20,
+	//how many threads to show on overboard catalog view
+	overboardCatalogLimit: 50,
 
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
@@ -124,8 +135,12 @@ module.exports = {
 	thumbExtension: '.jpg',
 	//.gif images > thumbnail size will have animated .gif thumbnails, overriding thumbExtension
 	animatedGifThumbnails: false,
-	//if animatedGifThumbnails is true, use ffmpeg for better animated gif thumbnailing. RECOMMENDED
+	/* Recommended if animatedGifThumbnails is true. Uses ffmpeg for faster animated gif thumbnailing. Requires ffmpeg
+		>=4.3.x	to handle transparent gifs properly. You can install from debian testing repo, or compile from source. */
 	ffmpegGifThumbnails: true,
+
+	//generate waveform thumbnails for audio
+	audioThumbnails: false,
 
 	//max thumb dimensions (square) in px
 	thumbSize: 250,
@@ -134,9 +149,9 @@ module.exports = {
 	videoThumbPercentage: 5,
 
 	/* extra mime types for files to be uploaded as attachments (no thumbnails) e.g. text files/archives
-		NOTE: appropriate extensions will need to be added to nginx configuration, and uncommend the provided
+		NOTE: appropriate extensions will need to be added to nginx configuration, and uncomment the provided
 		"other files" section which includes an example configuration for .txt files to match this default config.
-		mime types and file extention does not always correspond exactly this cant be done automatically. */
+		mime types and file extension does not always correspond exactly this cant be done automatically. */
 	otherMimeTypes: [
 		'text/plain',
 		'application/pdf'
@@ -153,7 +168,7 @@ module.exports = {
 	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
 	quoteLimit: 25,
 
-	//aply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
+	//apply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
 	strictFiltering: false,
 
 	//how many replies to show on index pages under each OP
@@ -278,12 +293,16 @@ module.exports = {
 				'@',
 				'url(',
 			]
+		},
+		customPages: {
+			max: 5, //max number of custom pages per board
+			maxLength: 10000, //max number of characters to allow per page
 		}
 	},
 
 	//default frontend script settings
 	frontendScriptDefault: {
-		heightUnlimit: false, //allow images [M -1taller than window height
+		heightUnlimit: false, //allow images to expand taller than window height
 		hideRecursive: true, //hide replies to hidden OPs
 		crispImages: false, //use crisp/pixelated image rendering
 		hideThumbnails: false, //hide thumbnails
@@ -316,10 +335,14 @@ module.exports = {
 		unlistedLocal: false, //board hidden from on-site board list and frontpage
 		unlistedWebring: false, //board hidden from webring
 		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts
-		tphTrigger: 0, //numebr of threads in an hour before trigger action is activated
-		pphTrigger: 0, //number of posts in an hour before ^
-		triggerAction: 0, //0=nothing, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
-		resetTrigger: false, //reset captcha/lock settings back to original at the end of hour
+		tphTrigger: 10, //number of threads in an hour before trigger action is activated
+		pphTrigger: 50, //number of posts in an hour before ^
+		//0=none, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
+		tphTriggerAction: 1,
+		pphTriggerAction: 2,
+		//0=dont change, 1=unlock board/disable captcha, 2=lock thread creation/enable captcha for thread creation
+		captchaReset: 0,
+		lockReset: 0,
 		forceAnon: false, //disable name and subject, only allow sage email
 		sageOnlyEmail: false, //only allow sage email
 		early404: true, //delete threads beyond the first 1/3 of pages with less than 5 replies
@@ -327,7 +350,7 @@ module.exports = {
 		flags: false, //show geo flags, requires nginx setup
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
-		userPostUnlink: true, //alow user to unlink files fomr their post
+		userPostUnlink: true, //allow user to unlink files from their post
 		threadLimit: 200,
 		replyLimit: 500,
 		bumpLimit: 500,

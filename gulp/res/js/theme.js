@@ -1,4 +1,5 @@
 let customCSSString = localStorage.getItem('customcss');
+let disableBoardCss = localStorage.getItem('disableboardcss') == 'true';
 
 window.addEventListener('settingsReady', function(event) {
 
@@ -29,12 +30,35 @@ window.addEventListener('settingsReady', function(event) {
     customCSSSetting.value = customCSSString;
     customCSSSetting.addEventListener('input', editCustomCSS, false);
 
+	//for main theme
+	const disableBoardCssInput = document.getElementById('disableboardcss-setting');
+	disableBoardCssInput.addEventListener('change', () => {
+		disableBoardCss = !disableBoardCss;
+		setLocalStorage('disableboardcss', disableBoardCss);
+		console.log('toggling disable board custom css', disableBoardCss);
+		toggleBoardCss();
+	}, false);
+	disableBoardCssInput.checked = localStorage.getItem('disableboardcss') == 'true';
+
 });
 
 const customCSSLink = document.createElement('style');
 customCSSLink.rel = 'stylesheet';
 customCSSLink.id = 'customcss';
 document.head.appendChild(customCSSLink);
+
+toggleBoardCss();
+
+function toggleBoardCss() {
+	const boardCssLink = document.getElementById('board-customcss');
+	if (boardCssLink) {
+		if (disableBoardCss) {
+			boardCssLink.setAttribute('media', 'screen and (max-width: 1px)');
+		} else {
+			boardCssLink.removeAttribute('media');
+		}
+	}
+}
 
 function changeTheme(type) {
 	switch(type) {

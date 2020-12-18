@@ -80,9 +80,19 @@ class CaptchaController {
 		xhr.send(null);
 	}
 
+	removeCaptcha() {
+		const postForm = document.getElementById('postform');
+		const captchaField = postForm.querySelector('.captcha');
+		if (captchaField) {
+			//delete the whole row
+			const captchaRow = captchaField.closest('.row');
+			captchaRow.remove();
+		}
+	}
+
 	addMissingCaptcha() {
 		const postSubmitButton = document.getElementById('submitpost');
-		const captchaFormSectionHtml = captchaformsection();
+		const captchaFormSectionHtml = captchaformsection({ captchaGridSize });
 		postSubmitButton.insertAdjacentHTML('beforebegin', captchaFormSectionHtml);
 		const captchaFormSection = postSubmitButton.previousSibling;
 		const captchaField = captchaFormSection.querySelector('.captchafield');
@@ -100,10 +110,14 @@ class CaptchaController {
 		refreshDiv.classList.add('captcharefresh', 'noselect');
 		refreshDiv.addEventListener('click', (e) => this.refreshCaptchas(e), true);
 		refreshDiv.textContent = '↻';
-		field.placeholder = 'loading';
+		if (captchaType === 'text') {
+			field.placeholder = 'loading';
+		}
 		captchaImg.src = '/captcha';
 		captchaImg.onload = () => {
-			field.placeholder = 'Captcha text';
+			if (captchaType === 'text') {
+				field.placeholder = 'Captcha text';
+			}
 			captchaDiv.appendChild(captchaImg);
 			captchaDiv.appendChild(refreshDiv);
 			this.startRefreshTimer();

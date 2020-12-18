@@ -1,11 +1,11 @@
 unless minimal
 	nav.navbar
 		a.nav-item(href='/index.html') Home
-		//a.nav-item(href='/all.html') Overboard
-		a.nav-item(href='/boards.html' style=(enableWebring ? 'line-height: 1.5em' : null))
+		a(href='/boards.html' class=`nav-item ${enableWebring ? 'short-nav' : ''}`)
 			| Boards 
 			if enableWebring
 				.rainbow +Webring
+		a.nav-item(href='/overboard.html') Overboard
 		a.nav-item(href='/account.html') Account
 		if board
 			a.nav-item(href=`/${board._id}/manage/reports.html`) Manage

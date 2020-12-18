@@ -38,7 +38,7 @@ Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://cimi
 - Nginx - webserver/proxy, serve static files, handle https, GeoIP lookup
 - Certbot/letsencrypt - to get a free https certificate
 - Graphicsmagick+Imagemagick - identify and thumbnail images, generate captchas
-- Ffmpeg - identify and thumbnail audio and video
+- Ffmpeg - identify and thumbnail audio, video and gifs
 
 -----
 
@@ -49,7 +49,7 @@ Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://cimi
 
 **2. Install dependencies.**
 
-NOTE: You may need to add sources depending on your distro.
+NOTE: You may need to add sources depending on your distro. If you intent to have animated gif thumbnails, ffmpeg 4.3.x is recommended. For debian, it can be found in the testing repos or compiled from source.
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick
@@ -124,7 +124,7 @@ $ gulp reset
 # NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything
 
 # make pm2 (process manager) start on server restart
-$ pm2 startup #and follow any promps
+$ pm2 startup #and follow any prompts
 # save the process list so jschan is started with pm2
 $ pm2 save
 ```
@@ -145,6 +145,7 @@ $ pm2 reload all #reload all backend processes
 # gulp is used for various jobs like minifying and compiling scripts
 $ gulp --tasks #list available gulp tasks
 $ gulp migrate #check for and run db migrations
+$ gulp password #reset the admin account password if you forgot it
 $ gulp #run default gulp task
 ```
 
@@ -152,7 +153,7 @@ $ gulp #run default gulp task
 
 EITHER:
 
-- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself)
+- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself). This is the easiest, free way to get a proxy setup and means you can also follow .onions in your webring list since requests will go through tor.
 - Use your own socks proxy
 
 Edit configs/webring.json with your proxy address and set enabled: true

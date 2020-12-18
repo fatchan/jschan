@@ -14,11 +14,11 @@ module.exports = {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		});
+		module.exports.db = module.exports.client.db(configs.dbName);
 	},
 
 	checkVersion: async() => {
-		const currentVersion = await module.exports.client
-			.db('jschan')
+		const currentVersion = await module.exports.db
 			.collection('version')
 			.findOne({ '_id': 'version' })
 			.then(res => res.version);

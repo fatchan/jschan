@@ -10,4 +10,5 @@ module.exports = {
 	manageBoard: require(__dirname+'/board.js'),
 	manageCatalog: require(__dirname+'/catalog.js'),
 	manageThread: require(__dirname+'/thread.js'),
+	manageCustomPages: require(__dirname+'/custompages.js'),
 }

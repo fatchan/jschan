@@ -67,15 +67,13 @@ let recaptchaResponse = null;
 function recaptchaCallback(response) {
 	recaptchaResponse = response;
 }
-
 class formHandler {
 
 	constructor(form) {
 		this.form = form;
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message');
-		this.captchaField = form.querySelector('.captchafield') || form.querySelector('.g-recaptcha');
-		
+		this.captchaField = form.querySelector('.captchafield') || form.querySelector('.g-recaptcha') || form.querySelector('.h-captcha');
 		this.submit = form.querySelector('input[type="submit"]');
 		if (this.submit) {
 			this.originalSubmitText = this.submit.value;
@@ -126,11 +124,12 @@ class formHandler {
 	formSubmit(e) {
 		const xhr = new XMLHttpRequest();
 		let postData;
+		const captchaResponse = recaptchaResponse;
 		if (this.enctype === 'multipart/form-data') {
 			this.fileInput && (this.fileInput.disabled = true);
 			postData = new FormData(this.form);
-			if (recaptchaResponse) {
-				postData.append('captcha', recaptchaResponse);
+			if (captchaResponse) {
+				postData.append('captcha', captchaResponse);
 			}
 			this.fileInput && (this.fileInput.disabled = false);
 			if (this.files && this.files.length > 0) {
@@ -141,8 +140,8 @@ class formHandler {
 			}
 		} else {
 			postData = new URLSearchParams([...(new FormData(this.form))]);
-			if (recaptchaResponse) {
-				postData.set('captcha', recaptchaResponse);
+			if (captchaResponse) {
+				postData.set('captcha', captchaResponse);
 			}
 		}
 		if (this.banned
@@ -169,8 +168,15 @@ class formHandler {
 		}
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
-				if (recaptchaResponse && grecaptcha) {
+				if (captchaResponse && grecaptcha) {
 					grecaptcha.reset();
+				} else if(captchaResponse && hcaptcha) {
+					hcaptcha.reset();
+				}
+				if (xhr.getResponseHeader('x-captcha-enabled') === 'false') {
+					//remove captcha if it got disabled after you opened the page
+					captchaController.removeCaptcha();
+					this.captchaField = null;
 				}
 				this.submit.disabled = false;
 				this.submit.value = this.originalSubmitText;
@@ -288,14 +294,38 @@ class formHandler {
 		this.updateFilesText();
 	}
 
-	addFile(file) {
+	async addFile(file) {
 		if (this.fileRequired) { //prevent drag+drop issues by removing required
 			this.fileInput.removeAttribute('required');
 		}
 		this.files.push(file);
+		console.log('got file', file.name, );
+		let fileHash;
+		if (window.crypto.subtle) {
+			let fileBuffer;
+			if (file.arryaBuffer) {
+				fileBuffer = await file.arrayBuffer();
+			} else {
+				//can old browsers just fuck off please?
+				const bufferFileReader = new FileReader();
+				await new Promise((res, rej) => {
+					bufferFileReader.addEventListener('loadend', res);
+					bufferFileReader.readAsArrayBuffer(file);
+				});
+				if (bufferFileReader.result) {
+					fileBuffer = bufferFileReader.result;
+				}
+			}
+			const fileDigest = await window.crypto.subtle.digest('SHA-256', fileBuffer);
+			fileHash = Array.from(new Uint8Array(fileDigest))
+				.map(c => c.toString(16).padStart(2, '0'))
+				.join('');
+			console.log('file hash', fileHash);
+		}
 		const item = {
 			spoilers: this.fileUploadList.dataset.spoilers === 'true',
-			name: file.name
+			name: file.name,
+			hash: fileHash,
 		}
 		switch (file.type.split('/')[0]) {
 			case 'image':

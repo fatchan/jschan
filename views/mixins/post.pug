@@ -1,16 +1,17 @@
 include ./report.pug
-mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
+mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboard=false)
 	.anchor(id=post.postId)
 	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId data-name=post.name data-tripcode=post.tripcode data-subject=post.subject)
 		- const postURL = `/${post.board}/${(modview || manage || globalmanage) ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info
 			span
 				label
-					if globalmanage
-						input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
-					else if !ban
-						input.post-check(type='checkbox', name='checkedposts' value=post.postId)
-					| 
+					if !overboard
+						if globalmanage
+							input.post-check(type='checkbox', name='globalcheckedposts' value=post._id)
+						else if !ban
+							input.post-check(type='checkbox', name='checkedposts' value=post.postId)
+						| 
 					if manage
 						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.raw;
 						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]
@@ -49,10 +50,10 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 				a.noselect.no-decoration(href=`${postURL}#${post.postId}`) No.
 				span.post-quoters
 					a.no-decoration(href=`${postURL}#postform`) #{post.postId}
-					if !post.thread
-						|  
-						span.noselect: a(href=`${postURL}#postform`) [Reply]
 				|  
+				if !post.thread && (truncate || manage || globalmanage)
+					|  
+					span.noselect: a(href=`${postURL}`) [Open]
 				select.jsonly.postmenu
 					option(value='single') Hide
 					if post.userId
@@ -83,15 +84,15 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false)
 								a(target='_blank' href=`/file/${file.filename}`)
 									if post.spoiler || file.spoiler
 										div.spoilerimg.file-thumb
-									else if file.attachment
-										div.attachmentimg.file-thumb
-									else if type === 'audio'
-										div.audioimg.file-thumb
 									else if file.hasThumb
 										img.file-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` height=file.geometry.thumbheight width=file.geometry.thumbwidth loading='lazy')
+									else if file.attachment
+										div.attachmentimg.file-thumb(data-mimetype=file.mimetype)
+									else if type === 'audio'
+										div.audioimg.file-thumb
 									else
 										img.file-thumb(src=`/file/${file.filename}` height=file.geometry.height width=file.geometry.width loading='lazy')
-			- if (post.message && modview) { post.message = post.message.replace(new RegExp(`<a class="quote" href="/${post.board}`, 'g'), `<a class="quote" href="/${post.board}/manage`); } //quick & dirty solution to a bigger problem/design issue
+			- if (post.message && modview) { post.message = post.message.replace(new RegExp(`<a class="quote" href="/${post.board}/`, 'g'), `<a class="quote" href="/${post.board}/manage/`); } //its either this, a subdomain, or nothing.
 			- let truncatedMessage = post.message;
 			if post.message
 				if truncate

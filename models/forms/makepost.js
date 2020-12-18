@@ -17,6 +17,7 @@ const path = require('path')
 	, imageThumbnail = require(__dirname+'/../../helpers/files/imagethumbnail.js')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, videoThumbnail = require(__dirname+'/../../helpers/files/videothumbnail.js')
+	, audioThumbnail = require(__dirname+'/../../helpers/files/audiothumbnail.js')
 	, ffprobe = require(__dirname+'/../../helpers/files/ffprobe.js')
 	, formatSize = require(__dirname+'/../../helpers/files/formatsize.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
@@ -25,7 +26,8 @@ const path = require('path')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, { ipHashPermLevel, checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		postPasswordSecret, strictFiltering, animatedGifThumbnails } = require(__dirname+'/../../configs/main.js')
+		postPasswordSecret, strictFiltering, animatedGifThumbnails,
+		audioThumbnails } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -47,9 +49,9 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
-	const { filterBanDuration, filterMode, filters, blockedCountries, resetTrigger,
+	const { filterBanDuration, filterMode, filters, blockedCountries, threadLimit, ids, userPostSpoiler,
+		lockReset, captchaReset, pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
 		maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
-		threadLimit, ids, userPostSpoiler, pphTrigger, tphTrigger, triggerAction,
 		captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
 	if (res.locals.permLevel >= 4
 		&& res.locals.country
@@ -104,7 +106,8 @@ module.exports = async (req, res, next) => {
 		let hitGlobalFilter = false
 			, hitLocalFilter = false
 			, ban;
-		let concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase();
+		let concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|\
+${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).join('|') : ''}`.toLowerCase();
 		let allContents = concatContents;
 		if (strictFiltering || res.locals.board.settings.strictFiltering) { //strict filtering adds a few transformations of the text to try and match filters when sers use techniques like zalgo, ZWS, markdown, multi-line, etc.
 			allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); //removing diacritics
@@ -236,138 +239,123 @@ module.exports = async (req, res, next) => {
 				spoiler: (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler && req.body.spoiler.includes(file.name),
 				hash: file.sha256,
 				filename: file.filename, //could probably remove since we have hash and extension
-				originalFilename: req.body.strip_filename && req.body.strip_filename.includes(file.name) ? file.filename : file.name,
+				originalFilename: req.body.strip_filename && req.body.strip_filename.includes(file.sha256) ? file.filename : file.name,
 				mimetype: file.mimetype,
 				size: file.size,
 				extension,
 			};
 
 			//type and subtype
-			const [type, subtype] = processedFile.mimetype.split('/');
-			if (type !== 'audio') { //audio doesnt need thumb
-				processedFile.thumbextension = thumbExtension;
-			}
-			let imageData;
-			let firstFrameOnly = true;
-			if (type === 'image') {
-				///detect images with opacity for PNG thumbnails, set thumbextension before increment
-				try {
-					imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
-				} catch (e) {
-					await deleteTempFiles(req).catch(e => console.error);
-					return dynamicResponse(req, res, 400, 'message', {
-						'title': 'Bad request',
-						'message': `The server failed to process "${req.files.file[i].name}". Possible unsupported or corrupt file.`,
-						'redirect': redirect
-					});
-				}
-
-				if (imageData['Channel Statistics'] && imageData['Channel Statistics']['Opacity']) {//does this depend on GM version or anything?
-					const opacityMaximum = imageData['Channel Statistics']['Opacity']['Maximum'];
-					if (opacityMaximum !== '0.00 (0.0000)') {
-						processedFile.thumbextension = '.png';
-					}
-				}
-				processedFile.geometry = imageData.size;
-				processedFile.geometryString = imageData.Geometry;
-				const lteThumbSize = (processedFile.geometry.height <= thumbSize
-					&& processedFile.geometry.width <= thumbSize);
-				processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
-					&& subtype !== 'png'
-					&& lteThumbSize);
-				if (processedFile.hasThumb //if it needs thumbnailing
-					&& (!lteThumbSize //and its big enough
-					&& file.mimetype === 'image/gif' //and its a gif
-					&& (imageData['Delay'] != null || imageData['Iterations'] != null) //and its not a static gif (naive check)
-					&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
-					firstFrameOnly = false;
-					processedFile.thumbextension = '.gif';
-				}
-			}
-
-			//increment file count
-			await Files.increment(processedFile);
-			req.files.file[i].inced = true;
+			let [type, subtype] = processedFile.mimetype.split('/');
 			//check if already exists
 			const existsFull = await pathExists(`${uploadDirectory}/file/${processedFile.filename}`);
 			processedFile.sizeString = formatSize(processedFile.size)
-
+			const saveFull = async () => {
+				await Files.increment(processedFile);
+				req.files.file[i].inced = true;
+				if (!existsFull) {
+					await moveUpload(file, processedFile.filename, 'file');
+				}
+			}
 			if (mimeTypes.other.has(processedFile.mimetype)) {
 				//"other" mimes from config, overrides main type to avoid codec issues in browser or ffmpeg for unsupported filetypes
 				processedFile.hasThumb = false;
 				processedFile.attachment = true;
-				if (!existsFull) {
-					await moveUpload(file, processedFile.filename, 'file');
-				}
+				await saveFull();
 			} else {
+				const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
 				switch (type) {
 					case 'image': {
-						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
-						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'file');
+						processedFile.thumbextension = thumbExtension;
+						///detect images with opacity for PNG thumbnails, set thumbextension before increment
+						let imageData;
+						try {
+							imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
+						} catch (e) {
+							await deleteTempFiles(req).catch(e => console.error);
+							return dynamicResponse(req, res, 400, 'message', {
+								'title': 'Bad request',
+								'message': `The server failed to process "${req.files.file[i].name}". Possible unsupported or corrupt file.`,
+								'redirect': redirect
+							});
 						}
+						if (imageData['Channel Statistics'] && imageData['Channel Statistics']['Opacity']) {
+							//does this depend on GM version or anything?
+							const opacityMaximum = imageData['Channel Statistics']['Opacity']['Maximum'];
+							if (opacityMaximum !== '0.00 (0.0000)') {
+								processedFile.thumbextension = '.png';
+							}
+						}
+						processedFile.geometry = imageData.size;
+						processedFile.geometryString = imageData.Geometry;
+						const lteThumbSize = (processedFile.geometry.height <= thumbSize
+							&& processedFile.geometry.width <= thumbSize);
+						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
+							&& subtype !== 'png'
+							&& lteThumbSize);
+						let firstFrameOnly = true;
+						if (processedFile.hasThumb //if it needs thumbnailing
+							&& (!lteThumbSize //and its big enough
+							&& file.mimetype === 'image/gif' //and its a gif
+							&& (imageData['Delay'] != null || imageData['Iterations'] != null) //and its not a static gif (naive check)
+							&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
+							firstFrameOnly = false;
+							processedFile.thumbextension = '.gif';
+						}
+						await saveFull();
 						if (!existsThumb) {
 							await imageThumbnail(processedFile, firstFrameOnly);
 						}
 						processedFile = fixGifs(processedFile);
 						break;
 					}
-					case 'video': {
-						const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+					case 'audio':
+					case 'video':
 						//video metadata
-						const videoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
-						videoData.streams = videoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
-						if (videoData.streams.length <= 0) {
-							//corrupt, or audio only?
-							await deleteTempFiles(req).catch(e => console.error);
-							return dynamicResponse(req, res, 400, 'message', {
-								'title': 'Bad request',
-								'message': 'Audio only video file not supported',
-								'redirect': redirect
-							});
-						}
-						processedFile.duration = videoData.format.duration;
-						processedFile.durationString = timeUtils.durationString(videoData.format.duration*1000);
-						processedFile.geometry = {width: videoData.streams[0].coded_width, height: videoData.streams[0].coded_height};
-						processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`
-						processedFile.hasThumb = true;
-						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'file');
-						}
-						if (!existsThumb) {
-							const numFrames = videoData.streams[0].nb_frames;
-							if (numFrames === 'N/A' && subtype === 'webm') {
-								await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
-								let videoThumbStat = null;
-								try {
-									videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
-								} catch (err) { /*ENOENT, the thumb failed to create. No need to handle this.*/	}
-								if (!videoThumbStat || videoThumbStat.size === 0) {
-									await videoThumbnail(processedFile, processedFile.geometry, 0);
+						const audioVideoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
+						processedFile.duration = audioVideoData.format.duration;
+						processedFile.durationString = timeUtils.durationString(audioVideoData.format.duration*1000);
+						const videoStreams = audioVideoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
+						if (videoStreams.length > 0) {
+							processedFile.thumbextension = thumbExtension;
+							processedFile.geometry = {width: videoStreams[0].coded_width, height: videoStreams[0].coded_height};
+							processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`
+							processedFile.hasThumb = true;
+							await saveFull();
+							if (!existsThumb) {
+								const numFrames = videoStreams[0].nb_frames;
+								if (numFrames === 'N/A' && subtype === 'webm') {
+									await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
+									let videoThumbStat = null;
+									try {
+										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+									} catch (err) { /*ENOENT, the thumb failed to create. No need to handle this.*/	}
+									if (!videoThumbStat || videoThumbStat.size === 0) {
+										await videoThumbnail(processedFile, processedFile.geometry, 0);
+									}
+								} else {
+									await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
 								}
-							} else {
-								await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
+							}
+						} else {
+							//audio file, or video with only audio streams
+							type = 'audio';
+							processedFile.mimetype = `audio/${subtype}`;
+							processedFile.thumbextension = '.png';
+							processedFile.hasThumb = audioThumbnails;
+							processedFile.geometry = { thumbwidth: thumbSize, thumbheight: thumbSize };
+							await saveFull();
+							if (!existsThumb) {
+								await audioThumbnail(processedFile);
 							}
 						}
 						break;
-					}
-					case 'audio': {
-						//audio metadata
-						const audioData = await ffprobe(req.files.file[i].tempFilePath, null, true);
-						processedFile.duration = audioData.format.duration;
-						processedFile.durationString = timeUtils.durationString(audioData.format.duration*1000);
-						processedFile.hasThumb = false;
-						if (!existsFull) {
-							await moveUpload(file, processedFile.filename, 'file');
-						}
-						break;
-					}
 					default:
 						throw new Error(`invalid file mime type: ${processedFile}`);
 				}
 			}
 
-			if (processedFile.hasThumb === true) {
+			if (processedFile.hasThumb === true && type !== 'audio') {
 				if (processedFile.geometry.width < thumbSize && processedFile.geometry.height < thumbSize) {
 					//dont scale up thumbnail for smaller images
 					processedFile.geometry.thumbwidth = processedFile.geometry.width;
@@ -457,8 +445,9 @@ module.exports = async (req, res, next) => {
 		Object.assign(data, {
 			'replyposts': 0,
 			'replyfiles': 0,
-			//NOTE: these are numbers because we XOR them for toggling in action handler
+			//NOTE: sticky is a number, 0 = not sticky, higher numbers are a priority and will be sorted in descending order
 			'sticky': Mongo.NumberInt(0),
+			//NOTE: these are numbers because we XOR them for toggling in action handler
 			'locked': Mongo.NumberInt(0),
 			'bumplocked': Mongo.NumberInt(0),
 			'cyclic': Mongo.NumberInt(0),
@@ -466,43 +455,44 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-	const postId = await Posts.insertOne(res.locals.board, data, thread);
+	const postId = await Posts.insertOne(res.locals.board, data, thread, res.locals.tor);
 
-	let enableCaptcha = false;
-	if (triggerAction > 0 //if trigger is enabled
-		&& (tphTrigger > 0 || pphTrigger > 0) //and has a threshold > 0
-		&& ((triggerAction < 3 && captchaMode < triggerAction) //and its triggering captcha and captcha isnt on
-			|| (triggerAction === 3 && lockMode < 1) //or triggering locking and board isnt locked
-			|| (triggerAction === 4 && lockMode < 2))) {
-		//read stats to check number threads in past hour
-		const hourPosts = await Stats.getHourPosts(res.locals.board._id);
-		if (hourPosts //if stats exist for this hour and its above either trigger
-			&& (tphTrigger > 0 && hourPosts.tph >= tphTrigger)
-				|| (pphTrigger > 0 && hourPosts.pph > pphTrigger)) {
-			//update in memory for other stuff done e.g. rebuilds
-			const update = {
-				'$set': {
-					'preTriggerMode': {
-						lockMode,
-						captchaMode
+	let enableCaptcha = false; //make this returned from some function, refactor and move the next section to another file
+	const pphTriggerActive = (pphTriggerAction > 0 && pphTrigger > 0);
+	const tphTriggerActive = (tphTriggerAction > 0 && tphTrigger > 0);
+	if (pphTriggerAction || tphTriggerActive) { //if a trigger is enabled
+		const triggerUpdate = {
+			'$set': {},
+		};
+		//and a setting needs to be updated
+		const pphTriggerUpdate = (pphTriggerAction < 3 && captchaMode < pphTriggerAction)
+			|| (pphTriggerAction === 3 && lockMode < 1)
+			|| (pphTriggerAction === 4 && lockMode < 2);
+		const tphTriggerUpdate = (tphTriggerAction < 3 && captchaMode < tphTriggerAction)
+			|| (tphTriggerAction === 3 && lockMode < 1)
+			|| (tphTriggerAction === 4 && lockMode < 2);
+		if (tphTriggerUpdate || pphTriggerUpdate) {
+			const hourPosts = await Stats.getHourPosts(res.locals.board._id);
+			const calcTriggerMode = (update, trigger, triggerAction, stat) => { //todo: move this somewhere else
+				if (trigger > 0 && stat >= trigger) {
+					//update in memory for other stuff done e.g. rebuilds
+					if (triggerAction < 3) {
+						res.locals.board.settings.captchaMode = triggerAction;
+						update['$set']['settings.captchaMode'] = triggerAction;
+						enableCaptcha = true; //todo make this also returned after moving/refactoring this
+					} else {
+						res.locals.board.settings.lockMode = triggerAction-2;
+						update['$set']['settings.lockMode'] = triggerAction-2;
 					}
+					return true;
 				}
-			};
-			if (triggerAction < 3) {
-				res.locals.board.settings.captchaMode = triggerAction;
-				update['$set']['settings.captchaMode'] = triggerAction;
-				enableCaptcha = true;
-			} else if (triggerAction === 3) {
-				res.locals.board.settings.lockMode = 1;
-				update['$set']['settings.lockMode'] = 1;
-			} else if (triggerAction === 4) {
-				res.locals.board.settings.lockMode = 2;
-				update['$set']['settings.lockMode'] = 2;
+				return false;
 			}
-			//set it in the db
-			await Boards.updateOne(res.locals.board._id, update);
-			if (resetTrigger) {
-				//mark the board as being triggered so we can return it to old mode after on schedule
+			const updatedPphTrigger = pphTriggerUpdate && calcTriggerMode(triggerUpdate, pphTrigger, pphTriggerAction, hourPosts.pph);
+			const updatedTphTrigger = tphTriggerUpdate && calcTriggerMode(triggerUpdate, tphTrigger, tphTriggerAction, hourPosts.tph);
+			if (updatedPphTrigger || updatedTphTrigger) {
+				//set it in the db
+				await Boards.updateOne(res.locals.board._id, triggerUpdate);
 				await cache.sadd('triggered', res.locals.board._id);
 			}
 		}
@@ -540,6 +530,9 @@ module.exports = async (req, res, next) => {
 		'threadId': data.thread || postId,
 		'board': res.locals.board
 	};
+
+	//let frontend script know if captcha is still enabled
+	res.set('x-captcha-enabled', captchaMode > 0);
 
 	if (req.headers['x-using-live'] != null && data.thread) {
 		//defer build and post will come live

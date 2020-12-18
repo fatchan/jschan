@@ -2,7 +2,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, db = Mongo.client.db('jschan').collection('news');
+	, db = Mongo.db.collection('news');
 
 module.exports = {
 
@@ -14,6 +14,25 @@ module.exports = {
 		})
 		.limit(limit)
 		.toArray();
+	},
+
+	findOne: (id) => {
+		return db.findOne({
+			'_id': id,
+		});
+	},
+
+	updateOne: (id, title, raw, markdown) => {
+		return db.updateOne({
+			'_id': id,
+		}, {
+			'$set': {
+				'title': title,
+				'message.raw': raw,
+				'message.markdown': markdown,
+				'edited': new Date(),
+			}
+		});
 	},
 
 	insertOne: (news) => {

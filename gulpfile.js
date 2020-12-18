@@ -40,28 +40,40 @@ const gulp = require('gulp')
 		}
 	};
 
+
+async function password() {
+
+	const Mongo = require(__dirname+'/db/db.js')
+	const Redis = require(__dirname+'/redis.js')
+	await Mongo.connect();
+
+	const { Accounts } = require(__dirname+'/db/');
+
+	const randomPassword = randomBytes(20).toString('base64')
+	await Accounts.changePassword('admin', randomPassword);
+	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
+
+	Redis.redisClient.quit();
+	return Mongo.client.close();
+
+}
+
 async function wipe() {
 
 	const Mongo = require(__dirname+'/db/db.js')
 	const Redis = require(__dirname+'/redis.js')
 	await Mongo.connect();
-	const db = Mongo.client.db('jschan');
+	const db = Mongo.db;
 
-	//make these because mongo is dumb and doesnt make them automatically
-	await db.createCollection('accounts');
-	await db.createCollection('bans');
-	await db.createCollection('boards');
-	await db.createCollection('captcha');
-	await db.createCollection('files');
-	await db.createCollection('modlog');
-	await db.createCollection('news');
-	await db.createCollection('posts');
-	await db.createCollection('poststats');
-	await db.createCollection('ratelimit');
-	await db.createCollection('webring');
-	await db.createCollection('bypass');
+	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
+		'modlog','news', 'posts', 'poststats', 'ratelimit', 'webring', 'bypass'];
+	for (const name of collectionNames) {
+		//drop collection so gulp reset can be run again. ignores error of dropping non existing collection first time
+		await db.dropCollection(name).catch(e => {});
+		await db.createCollection(name);
+	}
 
-	const { Webring, Boards, Posts, Captchas, Ratelimits, News,
+	const { Webring, Boards, Posts, Captchas, Ratelimits, News, CustomPages,
 		Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
 
 	//wipe db shit
@@ -94,6 +106,8 @@ async function wipe() {
 	await Ratelimits.db.dropIndexes()
 	await Posts.db.dropIndexes()
 	await Modlogs.db.dropIndexes()
+	await CustomPages.db.dropIndexes()
+	await CustomPages.db.createIndex({ 'board': 1, 'url': 1 }, { unique: true })
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
 	await Bans.db.createIndex({ 'ip.single': 1 , 'board': 1 })
@@ -105,9 +119,10 @@ async function wipe() {
 	await Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 })
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
+
 	const randomPassword = randomBytes(20).toString('base64')
 	await Accounts.insertOne('admin', 'admin', randomPassword, 0);
-	console.log('\n\n=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
+	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 
 	await db.collection('version').replaceOne({
 		'_id': 'version'
@@ -138,15 +153,17 @@ async function wipe() {
 async function css() {
 	try {
 		//a little more configurable
-		let bypassHeight = configs.captchaOptions.type === 'google' ? 500
-			: configs.captchaOptions.type === 'grid' ? 330
-			: 235;
+		let bypassHeight = (configs.captchaOptions.type === 'google' || configs.captchaOptions.type === 'hcaptcha')
+			? 500
+			: configs.captchaOptions.type === 'grid'
+				? 330
+				: 235;
 		let captchaHeight = configs.captchaOptions.type === 'text' ? 80
 			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
-			: 200; //'google' doesnt need this set
+			: 200; //google/hcaptcha doesnt need this set
 		let captchaWidth = configs.captchaOptions.type === 'text' ? 210
 			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
-			: 200; //'google' doesnt need this set
+			: 200; //google/hcaptcha doesnt need this set
 		const cssLocals = `:root {
     --attachment-img: url('/file/attachment.png');
     --spoiler-img: url('/file/spoiler.png');
@@ -216,6 +233,8 @@ async function cache() {
 		Redis.deletePattern('banners:*'),
 		Redis.deletePattern('users:*'),
 		Redis.deletePattern('blacklisted:*'),
+		Redis.deletePattern('overboard'),
+		Redis.deletePattern('catalog'),
 	]);
 	Redis.redisClient.quit();
 }
@@ -235,6 +254,8 @@ function custompages() {
 	])
 	.pipe(gulppug({
 		locals: {
+			early404Fraction: configs.early404Fraction,
+			early404Replies: configs.early404Replies,
 			meta: configs.meta,
 			enableWebring: configs.enableWebring,
 			globalLimits: configs.globalLimits,
@@ -244,6 +265,7 @@ function custompages() {
 			postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
 			captchaType: configs.captchaOptions.type,
 			googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
+			hcaptchaSitekey: configs.captchaOptions.hcaptcha.siteKey,
 			captchaGridSize: configs.captchaOptions.grid.size,
 			commit,
 		}
@@ -256,6 +278,7 @@ function scripts() {
 		const locals = `const themes = ['${themes.join("', '")}'];
 const codeThemes = ['${codeThemes.join("', '")}'];
 const captchaType = '${configs.captchaOptions.type}';
+const captchaGridSize = ${configs.captchaOptions.grid.size};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 `;
@@ -293,7 +316,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`!${paths.scripts.src}/timezone.js`,
 		])
 		.pipe(concat('all.js'))
-//		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
 			`${paths.scripts.src}/hidefileinput.js`,
@@ -304,7 +327,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('render.js'))
-//		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 
@@ -313,7 +336,7 @@ async function migrate() {
 	const Mongo = require(__dirname+'/db/db.js')
 	const Redis = require(__dirname+'/redis.js')
 	await Mongo.connect();
-	const db = Mongo.client.db('jschan');
+	const db = Mongo.db;
 
 	//get current version from db if present (set in 'reset' task in recent versions)
 	let currentVersion = await db.collection('version').findOne({
@@ -369,5 +392,6 @@ module.exports = {
 	wipe,
 	cache,
 	migrate,
+	password,
 	default: build,
 };

@@ -3,18 +3,20 @@
 const Posts = require(__dirname+'/../../db/posts.js')
 	, Boards = require(__dirname+'/../../db/boards.js')
 	, quoteRegex = /&gt;&gt;(?<quotenum>\d+)/g
-	, crossQuoteRegex = /&gt;&gt;&gt;&#x2F;(?<board>\w+)(?:&#x2F;(?<quotenum>\d*))?/gm;
+	, crossQuoteRegex = /&gt;&gt;&gt;&#x2F;(?<board>\w+)(?:&#x2F;(?<quotenum>\d*))?/gm
+	, catalogSearchQuoteRegex = /&gt;&gt;&gt;#&#x2F;(?<search>\w+)&#x2F;/gm;
 
 module.exports = {
 
-	quoteRegex, crossQuoteRegex,
+	quoteRegex, crossQuoteRegex, catalogSearchQuoteRegex,
 
 	process: async (board, text, thread) => {
 
 		//get the matches
 		const quotes = text.match(quoteRegex);
 		const crossQuotes = text.match(crossQuoteRegex);
-		if (!quotes && !crossQuotes) {
+		const catalogSearchQuotes = text.match(catalogSearchQuoteRegex);
+		if (!quotes && !crossQuotes && !catalogSearchQuotes) {
 			return { quotedMessage: text, threadQuotes: [], crossQuotes: [] };
 		}
 
@@ -65,27 +67,29 @@ module.exports = {
 
 		//get all the posts from quotes
 		const postThreadIdMap = {};
-		const [ posts, boards ] = await Promise.all([
-			postQueryOrs.length > 0 ? Posts.getPostsForQuotes(postQueryOrs) : [],
-			boardQueryIns.length > 0 ? Boards.db.find({ '_id': { '$in': boardQueryIns } }, { projection: { '_id': 1 } }).toArray() : []
-		]);
+		if (crossQuotes || quotes) {
+			const [ posts, boards ] = await Promise.all([
+				postQueryOrs.length > 0 ? Posts.getPostsForQuotes(postQueryOrs) : [],
+				boardQueryIns.length > 0 ? Boards.db.find({ '_id': { '$in': boardQueryIns } }, { projection: { '_id': 1 } }).toArray() : []
+			]);
 
-		//turn the result into a map of postId => threadId/postId
-		for (let i = 0; i < posts.length; i++) {
-			const post = posts[i];
-			if (!postThreadIdMap[post.board]) {
-				postThreadIdMap[post.board] = {};
+			//turn the result into a map of postId => threadId/postId
+			for (let i = 0; i < posts.length; i++) {
+				const post = posts[i];
+				if (!postThreadIdMap[post.board]) {
+					postThreadIdMap[post.board] = {};
+				}
+				postThreadIdMap[post.board][post.postId] = {
+					'_id': post._id,
+					'thread': post.thread || post.postId,
+					'postId': post.postId
+				};
 			}
-			postThreadIdMap[post.board][post.postId] = {
-				'_id': post._id,
-				'thread': post.thread || post.postId,
-				'postId': post.postId
-			};
-		}
-		for (let i = 0; i < boards.length; i++) {
-			const boardName = boards[i]._id;
-			if (!postThreadIdMap[boardName]) {
-				postThreadIdMap[boardName] = {};
+			for (let i = 0; i < boards.length; i++) {
+				const boardName = boards[i]._id;
+				if (!postThreadIdMap[boardName]) {
+					postThreadIdMap[boardName] = {};
+				}
 			}
 		}
 
@@ -115,6 +119,11 @@ module.exports = {
 					}
 				}
 				return `<span class='invalid-quote'>&gt;&gt;&gt;/${quoteboard}/${quotenum || ''}</span>`;
+			});
+		}
+		if (catalogSearchQuotes) {
+			text = text.replace(catalogSearchQuoteRegex, (match, search) => {
+				return `<a href='/${board}/catalog.html#${board}-/${search}/'>&gt;&gt;&gt;#/${search}/</a>`;
 			});
 		}
 

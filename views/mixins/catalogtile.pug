@@ -1,5 +1,12 @@
-mixin catalogtile(board, post, index)
-	.catalog-tile(data-board=post.board
+mixin catalogtile(post, index, overboard=false)
+	- let anchorSubject = post.subject;
+	if post.subject
+		- const subjectAnchorMatch = post.subject.match(/^\/\w+\//);
+		if subjectAnchorMatch
+			- anchorSubject = subjectAnchorMatch[0]
+	.anchor(id=`${post.board}-${anchorSubject}`)
+	.catalog-tile(tabindex=index
+		data-board=post.board
 		data-post-id=post.postId
 		data-user-id=post.userId
 		data-name=post.name
@@ -9,9 +16,14 @@ mixin catalogtile(board, post, index)
 		data-date=post.date
 		data-replies=post.replyposts
 		data-bump=post.bumped)
-		- const postURL = `/${board._id}/${modview ? 'manage/' : ''}thread/${post.postId}.html#${post.postId}`
+		- const postURL = `/${post.board}/${modview ? 'manage/' : ''}thread/${post.postId}.html`
 		.post-info
-			input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
+			if overboard
+				div
+					| Thread from 
+					a.no-decoration.post-subject(href=`/${post.board}/`) /#{post.board}/
+			else
+				input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
 			if modview
 				a.left.ml-5.bold(href=`recent.html?postid=${post.postId}`) [+]
 			include ../includes/posticons.pug
@@ -20,20 +32,21 @@ mixin catalogtile(board, post, index)
 			span(title='Replies') R: #{post.replyposts}
 			|  / 
 			span(title='Files') F: #{post.replyfiles}
-			|  / 
-			span(title='Page') P: #{Math.ceil(index/10)}
+			if !overboard
+				|  / 
+				span(title='Page') P: #{Math.ceil(index/10)}
 		if post.files.length > 0
 			.post-file-src
-				a(href=postURL)
+				a(href=`${postURL}#${post.postId}`)
 					- const file = post.files[0]
 					if post.spoiler || file.spoiler
 						div.spoilerimg.catalog-thumb
-					else if file.attachment
-						div.attachmentimg.catalog-thumb
-					else if file.mimetype.startsWith('audio')
-						div.audioimg.catalog-thumb
 					else if file.hasThumb
 						img.catalog-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` width=file.geometry.thumbwidth height=file.geometry.thumbheight loading='lazy')
+					else if file.attachment
+						div.attachmentimg.catalog-thumb(data-mimetype=file.mimetype)
+					else if file.mimetype.startsWith('audio')
+						div.audioimg.catalog-thumb
 					else
 						img.catalog-thumb(src=`/file/${file.filename}` width=file.geometry.width height=file.geometry.height loading='lazy')
 		if post.message

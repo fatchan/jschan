@@ -1,11 +1,12 @@
 'use strict';
 
 const { ObjectId } = require(__dirname+'/../db/db.js')
-	, allowedArrays = new Set(['captcha', 'checkednews', 'checkedposts', 'globalcheckedposts', 'spoiler', 'strip_filename',
+	, allowedArrays = new Set(['captcha', 'checkedcustompages', 'checkednews', 'checkedposts', 'globalcheckedposts', 'spoiler', 'strip_filename',
 		'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts', 'countries']) //only these should be arrays, since express bodyparser can output arrays
 	, trimFields = ['tags', 'uri', 'moderators', 'filters', 'announcement', 'description', 'message',
 		'name', 'subject', 'email', 'postpassword', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message', 'custom_css'] //trim if we dont want filed with whitespace
-	, numberFields = ['filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode', 'tph_trigger', 'pph_trigger', 'trigger_action', 'bump_limit', 'reply_limit', 'move_to_thread',, 'postId',
+	, numberFields = ['sticky', 'lock_reset', 'captcha_reset', 'filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode',
+		'tph_trigger', 'pph_trigger', 'pph_trigger_action', 'tph_trigger_action', 'bump_limit', 'reply_limit', 'move_to_thread', 'postId',
 		'max_files', 'thread_limit', 'thread', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length', 'min_reply_message_length', 'auth_level'] //convert these to numbers before they hit our routes
 	, banDurationRegex = /^(?<YEAR>[\d]+y)?(?<MONTH>[\d]+mo)?(?<WEEK>[\d]+w)?(?<DAY>[\d]+d)?(?<HOUR>[\d]+h)?(?<MINUTE>[\d]+m)?(?<SECOND>[\d]+s)?$/
 	, timeUtils = require(__dirname+'/timeutils.js')
@@ -46,7 +47,7 @@ module.exports = (req, res, next) => {
 
 	for (let i = 0; i < numberFields.length; i++) {
 		const field = numberFields[i];
-		if (req.body[field]) {
+		if (req.body[field] != null) {
 			const num = parseInt(req.body[field]);
 			if (Number.isSafeInteger(num)) {
 				req.body[field] = num;
@@ -90,7 +91,7 @@ module.exports = (req, res, next) => {
 				if (!groups[key]) {
 					continue;
 				}
-				const mult = +groups[key].substring(0,groups[key].length-1); //remove the d, m, y, etc from end of the value
+				const mult = +groups[key].replace(/\D+/, ''); //remove the unit
 				if (Number.isSafeInteger(mult) //if the multiplier is safe int
 					&& Number.isSafeInteger(mult*timeUtils[key]) //and multiplying it is safe int
 					&& Number.isSafeInteger((mult*timeUtils[key])+banDuration)) { //and adding it to the total is safe
@@ -103,6 +104,13 @@ module.exports = (req, res, next) => {
 		}
 	}
 
+	//ids for newspost editing
+	if (req.params.newsid) {
+		req.params.newsid = ObjectId(req.params.newsid);
+	}
+	if (req.body.news_id) {
+		req.body.news_id = ObjectId(req.body.news_id);
+	}
 	//thread id
 	if (req.params.id) {
 		req.params.id = +req.params.id;
