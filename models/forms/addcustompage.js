@@ -30,6 +30,7 @@ module.exports = async (req, res, next) => {
 		'task': 'buildCustomPage',
 		'options': {
 			'board': res.locals.board,
+			'page': post.page,
 			'customPage': post,
 		}
 	});
