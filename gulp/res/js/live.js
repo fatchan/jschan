@@ -7,7 +7,9 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	let supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window;
 	const livecolor = document.getElementById('livecolor');
-	const livetext = (isThread || isGlobalRecent) && document.getElementById('livetext') ? document.getElementById('livetext').childNodes[1] : null;
+	const liveElem = document.getElementById('livetext');
+	const livetext = (isThread || isGlobalRecent) && liveElem ? liveElem.childNodes[1] : null;
+	let room = liveElem && liveElem.dataset.room;
 	const updateButton = document.getElementById('updatepostsbutton');
 	const updateLive = (message, color, showRelativeTime) => {
 		livecolor.style.backgroundColor = color;
@@ -22,7 +24,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	const newPost = (data) => {
 		//insert at end of thread, but insert at top for globalmanage
-		console.log('got new post');
+		console.log('got new post', data);
 		lastPostId = data.postId;
 		const postData = data;
 		//create a new post
@@ -59,7 +61,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			}
 			const newReply = document.createElement('a');
 			const space = document.createTextNode(' ');
-			newReply.href = `${window.location.pathname}#${postData.postId}`;
+			newReply.href = `/${postData.board}/${(isModView || isGlobalRecent) ? 'manage/' : ''}thread/${postData.thread || postData.postId}.html#${postData.postId}`;
 			newReply.textContent = `>>${postData.postId}`;
 			newReply.classList.add('quote');
 			replies.appendChild(newReply);
@@ -68,7 +70,11 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		const newPostAnchor = document.getElementById(postData.postId);
 		const newPost = newPostAnchor.nextSibling;
 		if (scrollEnabled) {
-			newPostAnchor.scrollIntoView(); //scroll to post if enabled;
+			if (globalManageRecent) {
+				window.scrollTo(0, 0); //recent pages are reverse sort, so just go to top
+			} else {
+				newPostAnchor.scrollIntoView(); //scroll to post if enabled;
+			} l
 		}
 		const newPostEvent = new CustomEvent('addPost', {
 			detail: {
@@ -140,8 +146,10 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	const enableLive = () => {
 		if (supportsWebSockets) {
 			updateButton.style.display = 'none';
-			const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
-			const room = `${roomParts[1]}-${roomParts[roomParts.length-1]}`;
+			if (!room) {
+				const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
+				room = `${roomParts[1]}-${roomParts[roomParts.length-1]}`;
+			}
 			socket = io({
 				transports: ['websocket'],
 				reconnectionAttempts: 3,

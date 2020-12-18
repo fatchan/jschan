@@ -10,7 +10,7 @@ block content
 	br
 	.wrapbar
 		+globalmanagenav('recent')
-		.jsonly#livetext
+		.jsonly#livetext(data-room=`globalmanage-recent-${permLevel > ipHashPermLevel ? 'hashed' : 'raw'}`)
 			.dot#livecolor
 			|  Connecting... 
 			input.postform-style.ml-5.di#updatepostsbutton(type='button' value='Update')

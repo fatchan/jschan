@@ -588,15 +588,9 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 			'cyclic': data.cyclic,
 		}
 		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
-		const { raw, single, qrange, hrange } = data.ip;
-		const projectedWithIp = {
-			...projectedPost,
-			ip: {
-				single, qrange, hrange,
-				raw: null, //TODO: this would need to be thought about more because of ipHashPermLevel
-			}
-		}
-		Socketio.emitRoom('globalmanage-recent', 'newPost', projectedWithIp);
+		const { raw, single } = data.ip;
+		Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { single, raw: null } });
+		Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single, raw } });
 	}
 
 	//now add other pages to be built in background
