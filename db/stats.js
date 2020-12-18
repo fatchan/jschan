@@ -41,11 +41,6 @@ module.exports = {
 	updateBoards: () => {
 		return db.aggregate([
 			{
-				'$unwind': {
-					'path': '$ips',
-					'preserveNullAndEmptyArrays': true
-				}
-			}, {
 				'$group': {
 					'_id': '$board',
 					'ppd': {
@@ -60,9 +55,8 @@ module.exports = {
 				}
 			}, {
 				'$project': {
-					'ips': {
-						'$size': '$ips'
-					},
+					'board': '$_id',
+					'ips': 1,
 					'ppd': 1,
 					'pph': {
 						$first: {
@@ -77,10 +71,37 @@ module.exports = {
 					}
 				}
 			}, {
+				'$unwind': {
+					'path': '$ips',
+					'preserveNullAndEmptyArrays': true
+				}
+			}, {
+				'$unwind': {
+					'path': '$ips',
+					'preserveNullAndEmptyArrays': true
+				}
+			}, {
+				'$group': {
+					'_id': '$_id',
+					'ppd': {
+						'$first': '$ppd'
+					},
+					'pph': {
+						'$first': '$pph'
+					},
+					'ips': {
+						'$addToSet': '$ips'
+					}
+				}
+			}, {
 				'$project': {
-					'ips': 1,
+					'ips': {
+						'$size': '$ips'
+					},
 					'ppd': 1,
-					'pph': '$pph.pph'
+					'pph': {
+						'$ifNull': ['$pph.pph', 0]
+					}
 				}
 			}, {
 				'$merge': {
