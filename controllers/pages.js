@@ -1,7 +1,7 @@
 'use strict';
 
 const express  = require('express')
-	, router = express.Router()
+	, router = express.Router({ caseSensitive: true })
 	, Boards = require(__dirname+'/../db/boards.js')
 	, Posts = require(__dirname+'/../db/posts.js')
 	, { captchaOptions } = require(__dirname+'/../configs/main.js')

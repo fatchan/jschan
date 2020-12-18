@@ -1,7 +1,7 @@
 'use strict';
 
 const express  = require('express')
-	, router = express.Router()
+	, router = express.Router({ caseSensitive: true })
 	, Boards = require(__dirname+'/../db/boards.js')
 	//middlewares
 	, torPreBypassCheck = require(__dirname+'/../helpers/checks/torprebypass.js')
