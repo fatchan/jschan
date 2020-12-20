@@ -8,7 +8,13 @@ block head
 block content
 	h1.board-title Global Management
 	br
-	+globalmanagenav('recent')
+	.wrapbar
+		+globalmanagenav('recent')
+		if page === 1
+			.jsonly#livetext(data-perm-level=permLevel data-room=`globalmanage-recent-${permLevel > ipHashPermLevel ? 'hashed' : 'raw'}`)
+				.dot#livecolor
+				|  Connecting... 
+				input.postform-style.ml-5.di#updatepostsbutton(type='button' value='Update')
 	form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if posts.length === 0

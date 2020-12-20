@@ -1,6 +1,8 @@
 'use strict';
 
-const configs = require(__dirname+'/configs/main.js');
+const { redis: redisConfig, ipHashPermLevel } = require(__dirname+'/configs/main.js')
+	, hasPerms = require(__dirname+'/helpers/checks/hasperms.js')
+	, roomRegex = /^(?<roomBoard>[a-z0-9]+)-(?<roomName>[a-z0-9-]+)$/i;
 
 module.exports = {
 
@@ -9,10 +11,13 @@ module.exports = {
 	connect: (server, sessionMiddleware) => {
 		const io = require('socket.io')(server);
 		const redisAdapter = require('socket.io-redis');
-		io.adapter(redisAdapter({ ...configs.redis }));
+		const sessionRefresh = require(__dirname+'/helpers/sessionrefresh.js');
+		io.adapter(redisAdapter({ ...redisConfig }));
 		io.use((socket, next) => {
-			//make session available in socket.request.session
 			sessionMiddleware(socket.request, socket.request, next);
+		});
+		io.use((socket, next) => {
+			sessionRefresh(socket.request, socket.request, next);
 		});
 		module.exports.io = io;
 		module.exports.startRooms();
@@ -20,10 +25,42 @@ module.exports = {
 
 	startRooms: () => {
 		module.exports.io.on('connection', socket => {
-//TODO: if we need authed socket endpoints (e.g. modview pages), we can use socket.request.session
 			socket.on('room', room => {
-				socket.join(room);
-				socket.send('joined');
+				const roomMatch = room.match(roomRegex);
+				if (roomMatch && roomMatch.groups) {
+					const { roomBoard, roomName } = roomMatch.groups;
+					const { user } = socket.request.locals;
+					let requiredAuth = 4; //default level is 4, anyone cos of public rooms
+					let authLevel = user ? user.authLevel : 4;
+					/* todo: maybe this could be a bit more flexible to support
+						other *-hashed/raw pages, but its good for now */
+					if (room === 'globalmanage-recent-raw'
+						|| room === 'globalmanage-recent-hashed') {
+						//if its globalmanage, level 1 required
+						requiredAuth = 1;
+					} else if (roomName === 'manage-recent-hashed'
+						|| roomName === 'manage-recent-raw') {
+						requiredAuth = 3; //board mod minimum
+						if (user && authLevel === 4) {
+							if (user.ownedBoards.includes(board)) {
+								authLevel = 2; //user is BO
+							} else if (user.modBoards.includes(board)) {
+								authLevel = 3; //user is mod
+							}
+						}
+					}
+					if (room.endsWith('-raw')) {
+						//if its a -raw room, prioritise ipHashPermLevel
+						requiredAuth = Math.min(requiredAuth, ipHashPermLevel);
+					}
+					if (authLevel <= requiredAuth) {
+						//user has perms to join
+						socket.join(room);
+						return socket.send('joined');
+					}
+				}
+				//otherwise just disconnect them
+				socket.disconnect(true);
 			});
 		});
 	},

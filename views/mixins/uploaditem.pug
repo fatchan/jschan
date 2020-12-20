@@ -4,12 +4,12 @@ mixin uploaditem(item)
 			img.upload-thumb(src=item.url)
 			p #{item.name}
 			a.close X
-		.row.sb
-			if item.spoilers
-				label
-					input(type='checkbox', name='spoiler', value=item.name)
-					| Spoiler
-			if item.hash
+		if item.hash
+			.row.sb
+				if item.spoilers
+					label
+						input(type='checkbox', name='spoiler', value=item.hash)
+						| Spoiler
 				label
 					input(type='checkbox', name='strip_filename', value=item.hash)
 					| Strip Filename

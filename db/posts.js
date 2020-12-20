@@ -4,8 +4,8 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.db.collection('posts')
-	, { quoteLimit, previewReplies, stickyPreviewReplies, statsCountOnionUsers
-		, early404Replies, early404Fraction } = require(__dirname+'/../configs/main.js');
+	, { quoteLimit, previewReplies, stickyPreviewReplies, statsCountOnionUsers,
+		ipHashPermLevel, early404Replies, early404Fraction } = require(__dirname+'/../configs/main.js');
 
 module.exports = {
 
@@ -22,29 +22,49 @@ module.exports = {
 		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
 	},
 
-	getGlobalRecent: (offset=0, limit=20, ip) => {
+	getGlobalRecent: (offset=0, limit=20, ip, permLevel) => {
 		//global recent posts for recent section of global manage page
 		const query = {};
-		if (ip instanceof RegExp) {
-			query['ip.single'] = ip;
-		} else if (typeof ip === 'string') {
-			query['ip.raw'] = ip;
-		}
-		return db.find(query).sort({
-			'_id': -1
-		}).skip(offset).limit(limit).toArray();
-	},
-
-	getBoardRecent: (offset=0, limit=20, ip, board) => {
-		const query = {
-			board
+		const projection = {
+			'salt': 0,
+			'password': 0,
+			'reports': 0,
 		};
 		if (ip instanceof RegExp) {
 			query['ip.single'] = ip;
 		} else if (typeof ip === 'string') {
 			query['ip.raw'] = ip;
 		}
-		return db.find(query).sort({
+		if (permLevel > ipHashPermLevel) {
+			projection['ip.raw'] = 0;
+		}
+		return db.find(query, {
+			projection
+		}).sort({
+			'_id': -1
+		}).skip(offset).limit(limit).toArray();
+	},
+
+	getBoardRecent: (offset=0, limit=20, ip, board, permLevel) => {
+		const query = {
+			board
+		};
+		const projection = {
+			'salt': 0,
+			'password': 0,
+			'globalreports': 0,
+		};
+		if (ip instanceof RegExp) {
+			query['ip.single'] = ip;
+		} else if (typeof ip === 'string') {
+			query['ip.raw'] = ip;
+		}
+		if (permLevel > ipHashPermLevel) {
+			projection['ip.raw'] = 0;
+		}
+		return db.find(query, {
+			projection
+		}).sort({
 			'_id': -1
 		}).skip(offset).limit(limit).toArray();
 	},

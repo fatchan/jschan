@@ -19,20 +19,23 @@ module.exports = async (req, res, next) => {
 
 	let posts;
 	try {
-		posts = await Posts.getBoardRecent(offset, limit, ip, req.params.board);
+		posts = await Posts.getBoardRecent(offset, limit, ip, req.params.board, res.locals.permLevel);
 	} catch (err) {
 		return next(err)
 	}
 
-	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('managerecent', {
-		csrf: req.csrfToken(),
-		posts,
-		page,
-		postId,
-		queryIp: ip ? req.query.ip : null,
-		queryString,
-	});
+	res.set('Cache-Control', 'private, max-age=5');
 
+	if (req.path.endsWith('.json')) {
+		res.json(posts.reverse());
+	} else {
+		res.render('managerecent', {
+			csrf: req.csrfToken(),
+			posts,
+			page,
+			postId,
+			queryIp: ip ? req.query.ip : null,
+			queryString,
+		});
+	}
 }

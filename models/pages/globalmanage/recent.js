@@ -12,19 +12,22 @@ module.exports = async (req, res, next) => {
 
 	let posts;
 	try {
-		posts = await Posts.getGlobalRecent(offset, limit, ipMatch);
+		posts = await Posts.getGlobalRecent(offset, limit, ipMatch, res.locals.permLevel);
 	} catch (err) {
 		return next(err)
 	}
 
-	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('globalmanagerecent', {
-		csrf: req.csrfToken(),
-		posts,
-		page,
-		ip: ipMatch ? req.query.ip : null,
-		queryString,
-	});
+	res.set('Cache-Control', 'private, max-age=5');
 
+	if (req.path.endsWith('.json')) {
+		res.json(posts.reverse());
+	} else {
+		res.render('globalmanagerecent', {
+			csrf: req.csrfToken(),
+			posts,
+			page,
+			ip: ipMatch ? req.query.ip : null,
+			queryString,
+		});
+	}
 }
