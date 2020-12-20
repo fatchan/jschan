@@ -236,7 +236,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 
 			//get metadata
 			let processedFile = {
-				spoiler: (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler && req.body.spoiler.includes(file.name),
+				spoiler: (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler && req.body.spoiler.includes(file.sha256),
 				hash: file.sha256,
 				filename: file.filename, //could probably remove since we have hash and extension
 				originalFilename: req.body.strip_filename && req.body.strip_filename.includes(file.sha256) ? file.filename : file.name,
