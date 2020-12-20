@@ -7,28 +7,53 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	let supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window;
 	const livecolor = document.getElementById('livecolor');
-	const livetext = isThread && document.getElementById('livetext') ? document.getElementById('livetext').childNodes[1] : null;
-	const updateButton = livetext ? livetext.nextSibling : null;
+	const liveElem = document.getElementById('livetext');
+	const livetext = (isThread || isRecent) && liveElem ? liveElem.childNodes[1] : null;
+	let room = liveElem && liveElem.dataset.room;
+	const permLevel = liveElem ? liveElem.dataset.permLevel : 4;
+	const updateButton = document.getElementById('updatepostsbutton');
 	const updateLive = (message, color, showRelativeTime) => {
 		livecolor.style.backgroundColor = color;
 		livetext.nodeValue = `${message}`;
 	}
-	let lastPostId;
+	let lastPostIds = {};
 	let liveTimeout;
-	const anchors = document.getElementsByClassName('anchor');
-	if (anchors.length > 0) {
-		lastPostId = anchors[anchors.length - 1].id;
+	const postContainers = document.getElementsByClassName('post-container');
+	for (let i = 0; i < postContainers.length; i++) {
+		const postContainer = postContainers[i];
+		const { board, postId } = postContainer.dataset;
+		lastPostIds[board] = Math.max((lastPostIds[board] || 0), postId);
 	}
-	const thread = document.querySelector('.thread');
+console.log(lastPostIds)
 
 	const newPost = (data) => {
-		console.log('got new post');
-		lastPostId = data.postId;
+		//insert at end of thread, but insert at top for globalmanage
+		console.log('got new post', data);
 		const postData = data;
+		lastPostIds[postData.board] = postData.postId;
 		//create a new post
-		const postHtml = post({ post: postData, modview:isModView, upLevel:isThread });
-		//add it to the end of the thread
-		thread.insertAdjacentHTML('beforeend', postHtml);
+		const postHtml = post({
+			ipHashPermLevel,
+			permLevel,
+			post: postData,
+			modview: isModView,
+			manage: (isRecent && !isGlobalRecent),
+			globalmanage: isGlobalRecent,
+			upLevel: isThread
+		});
+		let insertPoint;
+		if (isRecent) {
+			const firstHr = document.querySelector('hr');
+			const newHr = document.createElement('hr');
+			const threadWrapper = document.createElement('div');
+			threadWrapper.classList.add('thread');
+			insertPoint = threadWrapper;
+			firstHr.insertAdjacentElement('beforebegin', newHr);
+			newHr.insertAdjacentElement('afterend', threadWrapper);
+		} else {
+			insertPoint = document.querySelector('.thread');
+		}
+		insertPoint.insertAdjacentHTML('beforeend', postHtml);
 		for (let j = 0; j < postData.quotes.length; j++) {
 			const quoteData = postData.quotes[j];
 			//add backlink to quoted posts
@@ -48,7 +73,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			}
 			const newReply = document.createElement('a');
 			const space = document.createTextNode(' ');
-			newReply.href = `${window.location.pathname}#${postData.postId}`;
+			newReply.href = `/${postData.board}/${(isModView || isRecent) ? 'manage/' : ''}thread/${postData.thread || postData.postId}.html#${postData.postId}`;
 			newReply.textContent = `>>${postData.postId}`;
 			newReply.classList.add('quote');
 			replies.appendChild(newReply);
@@ -57,7 +82,11 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		const newPostAnchor = document.getElementById(postData.postId);
 		const newPost = newPostAnchor.nextSibling;
 		if (scrollEnabled) {
-			newPostAnchor.scrollIntoView(); //scroll to post if enabled;
+			if (globalManageRecent) {
+				window.scrollTo(0, 0); //recent pages are reverse sort, so just go to top
+			} else {
+				newPostAnchor.scrollIntoView(); //scroll to post if enabled;
+			} l
 		}
 		const newPostEvent = new CustomEvent('addPost', {
 			detail: {
@@ -88,8 +117,11 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		} catch (e) {
 			console.error(e);
 		}
-		if (json && json.replies && json.replies.length > 0) {
-			newPosts = json.replies.filter(r => r.postId > lastPostId); //filter to only newer posts
+		const postsList = (json && json.replies) ? json.replies : json;
+		if (postsList && Array.isArray(postsList) && postsList.length > 0) {
+			newPosts = postsList.filter(r => {
+				return r.postId > (lastPostIds[r.board] || 0);
+			}); //filter to only newer posts
 			if (newPosts.length > 0) {
 				for (let i = 0; i < newPosts.length; i++) {
 					newPost(newPosts[i]);
@@ -129,8 +161,10 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	const enableLive = () => {
 		if (supportsWebSockets) {
 			updateButton.style.display = 'none';
-			const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
-			const room = `${roomParts[1]}-${roomParts[roomParts.length-1]}`;
+			if (!room) {
+				const roomParts = window.location.pathname.replace(/\.html$/, '').split('/');
+				room = `${roomParts[1]}-${roomParts[roomParts.length-1]}`;
+			}
 			socket = io({
 				transports: ['websocket'],
 				reconnectionAttempts: 3,
@@ -221,7 +255,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	scrollSetting.checked = scrollEnabled;
 	scrollSetting.addEventListener('change', toggleScroll, false);
 
-	if (isThread) {
+	if (isThread || isRecent) {
 		updateButton.addEventListener('click', forceUpdate);
 		liveEnabled ? enableLive() : disableLive();
 	}

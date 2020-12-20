@@ -25,7 +25,7 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
+	, { ipHashPermLevel, checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
 		postPasswordSecret, strictFiltering, animatedGifThumbnails,
 		audioThumbnails } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
@@ -50,9 +50,9 @@ module.exports = async (req, res, next) => {
 	let salt = null;
 	let thread = null;
 	const { filterBanDuration, filterMode, filters, blockedCountries, threadLimit, ids, userPostSpoiler,
-			lockReset, captchaReset, pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
-			maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
-			captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
+		lockReset, captchaReset, pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
+		maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
+		captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
 	if (res.locals.permLevel >= 4
 		&& res.locals.country
 		&& blockedCountries.includes(res.locals.country.code)) {
@@ -183,6 +183,8 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	let files = [];
 	// if we got a file
 	if (res.locals.numFiles > 0) {
+
+		//unique files check
 		if (res.locals.permLevel >= 4 && (req.body.thread && fileR9KMode === 1) || fileR9KMode === 2) {
 			const filesHashes = req.files.file.map(f => f.sha256);
 			const postWithExistingFiles = await Posts.checkExistingFiles(res.locals.board._id, (fileR9KMode === 2 ? null : req.body.thread), filesHashes);
@@ -199,7 +201,8 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				});
 			}
 		}
-		// check all mime types before we try saving anything
+
+		//basic mime type check
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			if (!mimeTypes.allowed(req.files.file[i].mimetype, allowedFileTypes)) {
 				await deleteTempFiles(req).catch(e => console.error);
@@ -210,7 +213,8 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				});
 			}
 		}
-		// check for any mismatching supposed mimetypes from the actual file mimetype
+
+		//validate mime type properly
 		if (checkRealMimeTypes) {
 			for (let i = 0; i < res.locals.numFiles; i++) {
 				if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
@@ -223,7 +227,8 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				}
 			}
 		}
-		// then upload, thumb, get metadata, etc.
+
+		//upload, create thumbnails, get metadata, etc.
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			const file = req.files.file[i];
 			let extension = path.extname(file.name) || file.name.substring(file.name.indexOf('.'));
@@ -552,38 +557,44 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		}
 	}
 
+	const projectedPost = {
+		'date': data.date,
+		'name': data.name,
+		'country': data.country,
+		'board': req.params.board,
+		'tripcode': data.tripcode,
+		'capcode': data.capcode,
+		'subject': data.subject,
+		'message': data.message,
+		'nomarkup': data.nomarkup,
+		'thread': data.thread,
+		'postId': postId,
+		'email': data.email,
+		'spoiler': data.spoiler,
+		'banmessage': null,
+		'userId': data.userId,
+		'files': data.files,
+		'reports': [],
+		'globalreports': [],
+		'quotes': data.quotes,
+		'backlinks': [],
+		'replyposts': 0,
+		'replyfiles': 0,
+		'sticky': data.sticky,
+		'locked': data.locked,
+		'bumplocked': data.bumplocked,
+		'cyclic': data.cyclic,
+	}
 	if (data.thread) {
-		//only emit for replies and with some omissions
-		const projectedPost = {
-			'date': data.date,
-			'name': data.name,
-			'country': data.country,
-			'board': req.params.board,
-			'tripcode': data.tripcode,
-			'capcode': data.capcode,
-			'subject': data.subject,
-			'message': data.message,
-			'nomarkup': data.nomarkup,
-			'thread': data.thread,
-			'postId': postId,
-			'email': data.email,
-			'spoiler': data.spoiler,
-			'banmessage': null,
-			'userId': data.userId,
-			'files': data.files,
-			'reports': [],
-			'globalreports': [],
-			'quotes': data.quotes,
-			'backlinks': [],
-			'replyposts': 0,
-			'replyfiles': 0,
-			'sticky': data.sticky,
-			'locked': data.locked,
-			'bumplocked': data.bumplocked,
-			'cyclic': data.cyclic,
-		}
+		//dont emit thread to this socket, because the room onyl exists when the thread is open
 		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
 	}
+	const { raw, single } = data.ip;
+	//but emit it to manage pages because they need to get all posts through socket including thread
+	Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { single, raw: null } });
+	Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single, raw } });
+	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-hashed`, 'newPost', { ...projectedPost, ip: { single, raw: null } });
+	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { single, raw } });
 
 	//now add other pages to be built in background
 	if (enableCaptcha) {

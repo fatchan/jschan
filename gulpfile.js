@@ -280,6 +280,7 @@ const codeThemes = ['${codeThemes.join("', '")}'];
 const captchaType = '${configs.captchaOptions.type}';
 const captchaGridSize = ${configs.captchaOptions.grid.size};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
+const ipHashPermLevel = ${configs.ipHashPermLevel};
 const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);

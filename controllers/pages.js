@@ -49,7 +49,7 @@ router.get('/randombanner', randombanner); //random banner
 
 //board manage pages
 router.get('/:board/manage/reports.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageReports);
-router.get('/:board/manage/recent.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageRecent);
+router.get('/:board/manage/recent.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageRecent);
 router.get('/:board/manage/bans.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageBans);
 router.get('/:board/manage/logs.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageLogs);
 router.get('/:board/manage/settings.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
@@ -62,7 +62,7 @@ router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, session
 //global manage pages
 router.get('/globalmanage/reports.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
 router.get('/globalmanage/bans.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageBans);
-router.get('/globalmanage/recent.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageRecent);
+router.get('/globalmanage/recent.(html|json)', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageRecent);
 router.get('/globalmanage/boards.(html|json)', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), globalManageBoards);
 router.get('/globalmanage/globallogs.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageLogs);
 router.get('/globalmanage/news.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageNews);
