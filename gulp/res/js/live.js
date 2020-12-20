@@ -24,7 +24,6 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		const { board, postId } = postContainer.dataset;
 		lastPostIds[board] = Math.max((lastPostIds[board] || 0), postId);
 	}
-console.log(lastPostIds)
 
 	const newPost = (data) => {
 		//insert at end of thread, but insert at top for globalmanage
