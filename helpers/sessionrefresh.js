@@ -9,7 +9,6 @@ module.exports = async (req, res, next) => {
 			res.locals = {};
 		}
 		res.locals.user = await cache.get(`users:${req.session.user}`);
-
 		if (!res.locals.user) {
 			const account = await Accounts.findOne(req.session.user);
 			if (!account) {

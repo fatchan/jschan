@@ -557,41 +557,44 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		}
 	}
 
-	if (data.thread) {
-		//only emit for replies and with some omissions
-		const projectedPost = {
-			'date': data.date,
-			'name': data.name,
-			'country': data.country,
-			'board': req.params.board,
-			'tripcode': data.tripcode,
-			'capcode': data.capcode,
-			'subject': data.subject,
-			'message': data.message,
-			'nomarkup': data.nomarkup,
-			'thread': data.thread,
-			'postId': postId,
-			'email': data.email,
-			'spoiler': data.spoiler,
-			'banmessage': null,
-			'userId': data.userId,
-			'files': data.files,
-			'reports': [],
-			'globalreports': [],
-			'quotes': data.quotes,
-			'backlinks': [],
-			'replyposts': 0,
-			'replyfiles': 0,
-			'sticky': data.sticky,
-			'locked': data.locked,
-			'bumplocked': data.bumplocked,
-			'cyclic': data.cyclic,
-		}
-		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
-		const { raw, single } = data.ip;
-		Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { single, raw: null } });
-		Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single, raw } });
+	const projectedPost = {
+		'date': data.date,
+		'name': data.name,
+		'country': data.country,
+		'board': req.params.board,
+		'tripcode': data.tripcode,
+		'capcode': data.capcode,
+		'subject': data.subject,
+		'message': data.message,
+		'nomarkup': data.nomarkup,
+		'thread': data.thread,
+		'postId': postId,
+		'email': data.email,
+		'spoiler': data.spoiler,
+		'banmessage': null,
+		'userId': data.userId,
+		'files': data.files,
+		'reports': [],
+		'globalreports': [],
+		'quotes': data.quotes,
+		'backlinks': [],
+		'replyposts': 0,
+		'replyfiles': 0,
+		'sticky': data.sticky,
+		'locked': data.locked,
+		'bumplocked': data.bumplocked,
+		'cyclic': data.cyclic,
 	}
+	if (data.thread) {
+		//dont emit thread to this socket, because the room onyl exists when the thread is open
+		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
+	}
+	const { raw, single } = data.ip;
+	//but emit it to manage pages because they need to get all posts through socket including thread
+	Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { single, raw: null } });
+	Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single, raw } });
+	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-hashed`, 'newPost', { ...projectedPost, ip: { single, raw: null } });
+	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { single, raw } });
 
 	//now add other pages to be built in background
 	if (enableCaptcha) {

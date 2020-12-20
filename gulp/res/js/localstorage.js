@@ -3,6 +3,7 @@ const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
 const isModView = /\/\w+\/manage\/(thread\/)?(index|\d+).html/.test(window.location.pathname);
 const isManage = /\/(\w+\/manage|globalmanage)\/(recent|reports|bans|boards|logs|settings|banners|accounts|news).html/.test(window.location.pathname);
 const isGlobalRecent = window.location.pathname === '/globalmanage/recent.html';
+const isRecent = isGlobalRecent || window.location.pathname.endsWith('/manage/recent.html');
 
 function setLocalStorage(key, value) {
 	try {

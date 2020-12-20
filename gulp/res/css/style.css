@@ -213,6 +213,10 @@ pre {
 	flex-flow: row wrap;
 }
 
+.wrapbar + form hr:first-of-type {
+	margin-top: 1px;
+}
+
 .pages, #livetext, #threadstats {
 	box-sizing: border-box;
 	padding: 10px;
@@ -220,6 +224,10 @@ pre {
 	width: max-content;
 	max-width: 100%;
 	margin-bottom: 5px;
+}
+
+.pages.jsonly {
+	padding: 8px;
 }
 
 a, a:visited, a.post-name {
@@ -350,6 +358,7 @@ p {
 	background: black;
 	color: black;
 	cursor: none;
+	padding: 0 1px;
 }
 
 .spoiler:hover, .spoiler:hover a {

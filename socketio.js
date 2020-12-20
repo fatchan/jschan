@@ -1,12 +1,8 @@
 'use strict';
 
 const { redis: redisConfig, ipHashPermLevel } = require(__dirname+'/configs/main.js')
-	, roomRegex = /[a-z0-9]+-\d+/i
-	, roomPermsMap = {
-		'globalmanage-recent-hashed': 1,
-		'globalmanage-recent-raw': ipHashPermLevel,
-	}
-	, authedRooms = new Set(Object.keys(roomPermsMap));
+	, hasPerms = require(__dirname+'/helpers/checks/hasperms.js')
+	, roomRegex = /^(?<roomBoard>[a-z0-9]+)-(?<roomName>[a-z0-9-]+)$/i;
 
 module.exports = {
 
@@ -30,13 +26,41 @@ module.exports = {
 	startRooms: () => {
 		module.exports.io.on('connection', socket => {
 			socket.on('room', room => {
-				if ((!roomRegex.test(room) && !authedRooms.has(room)) //if not a valid room name
-					|| (authedRooms.has(room) && (!socket.request.locals.user //or the room requires auth and no session
-					|| socket.request.locals.user.authLevel > roomPermsMap[room]))) { //or not enough perms for that room
-					return socket.disconnect(true); //disconnect them
+				const roomMatch = room.match(roomRegex);
+				if (roomMatch && roomMatch.groups) {
+					const { roomBoard, roomName } = roomMatch.groups;
+					const { user } = socket.request.locals;
+					let requiredAuth = 4; //default level is 4, anyone cos of public rooms
+					let authLevel = user ? user.authLevel : 4;
+					/* todo: maybe this could be a bit more flexible to support
+						other *-hashed/raw pages, but its good for now */
+					if (room === 'globalmanage-recent-raw'
+						|| room === 'globalmanage-recent-hashed') {
+						//if its globalmanage, level 1 required
+						requiredAuth = 1;
+					} else if (roomName === 'manage-recent-hashed'
+						|| roomName === 'manage-recent-raw') {
+						requiredAuth = 3; //board mod minimum
+						if (user && authLevel === 4) {
+							if (user.ownedBoards.includes(board)) {
+								authLevel = 2; //user is BO
+							} else if (user.modBoards.includes(board)) {
+								authLevel = 3; //user is mod
+							}
+						}
+					}
+					if (room.endsWith('-raw')) {
+						//if its a -raw room, prioritise ipHashPermLevel
+						requiredAuth = Math.min(requiredAuth, ipHashPermLevel);
+					}
+					if (authLevel <= requiredAuth) {
+						//user has perms to join
+						socket.join(room);
+						return socket.send('joined');
+					}
 				}
-				socket.join(room); //otherwise join the room
-				socket.send('joined'); //send joined so frontend knows to show "connected"
+				//otherwise just disconnect them
+				socket.disconnect(true);
 			});
 		});
 	},
