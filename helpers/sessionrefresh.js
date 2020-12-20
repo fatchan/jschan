@@ -4,10 +4,10 @@ const { Accounts } = require(__dirname+'/../db/')
 	, cache = require(__dirname+'/../redis.js');
 
 module.exports = async (req, res, next) => {
+	if (!res.locals) {
+		res.locals = {};
+	}
 	if (req.session && req.session.user) {
-		if (!res.locals) {
-			res.locals = {};
-		}
 		res.locals.user = await cache.get(`users:${req.session.user}`);
 		if (!res.locals.user) {
 			const account = await Accounts.findOne(req.session.user);
