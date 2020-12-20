@@ -53,6 +53,15 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			insertPoint = document.querySelector('.thread');
 		}
 		insertPoint.insertAdjacentHTML('beforeend', postHtml);
+		if (isRecent) {
+			//cap the recent pages to 20 posts so they dont grow to infinity
+			Array.from(document.querySelectorAll('.thread'))
+				.slice(20)
+				.forEach(el => {
+					el.previousSibling.remove();
+					el.remove();
+				});
+		}
 		for (let j = 0; j < postData.quotes.length; j++) {
 			const quoteData = postData.quotes[j];
 			//add backlink to quoted posts
@@ -85,7 +94,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				window.scrollTo(0, 0); //recent pages are reverse sort, so just go to top
 			} else {
 				newPostAnchor.scrollIntoView(); //scroll to post if enabled;
-			} l
+			}
 		}
 		const newPostEvent = new CustomEvent('addPost', {
 			detail: {
@@ -254,7 +263,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	scrollSetting.checked = scrollEnabled;
 	scrollSetting.addEventListener('change', toggleScroll, false);
 
-	if (isThread || isRecent) {
+	if ((isThread || isRecent) && updateButton) {
 		updateButton.addEventListener('click', forceUpdate);
 		liveEnabled ? enableLive() : disableLive();
 	}
