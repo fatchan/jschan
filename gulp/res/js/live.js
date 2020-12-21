@@ -62,30 +62,32 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 					el.remove();
 				});
 		}
+		//add backlink to quoted posts
 		for (let j = 0; j < postData.quotes.length; j++) {
 			const quoteData = postData.quotes[j];
-			//add backlink to quoted posts
-			const quotedPost = document.getElementById(quoteData.postId).nextSibling;
-			let replies = quotedPost.querySelector('.replies');
-			if (!replies) {
-				const quotedPostData = quotedPost.querySelector('.post-data');
-				const newRepliesDiv = document.createElement('div');
-				newRepliesDiv.textContent = 'Replies: ';
-				newRepliesDiv.classList.add('replies', 'mt-5', 'ml-5');
-				quotedPostData.appendChild(newRepliesDiv);
-				replies = newRepliesDiv;
+			const quotedPost = document.querySelector(`.post-container[data-post-id="${quoteData.postId}"][data-board="${postData.board}"]`);
+			if (quotedPost) { //check if exists, it wont necessarily, e.g. global/manage recent pages
+				let replies = quotedPost.querySelector('.replies');
+				if (!replies) {
+					const quotedPostData = quotedPost.querySelector('.post-data');
+					const newRepliesDiv = document.createElement('div');
+					newRepliesDiv.textContent = 'Replies: ';
+					newRepliesDiv.classList.add('replies', 'mt-5', 'ml-5');
+					quotedPostData.appendChild(newRepliesDiv);
+					replies = newRepliesDiv;
+				}
+				if (new RegExp(`>>${postData.postId}(\s|$)`).test(replies.innerText)) {
+					//reply link already exists (probably from a late catch up)
+					continue;
+				}
+				const newReply = document.createElement('a');
+				const space = document.createTextNode(' ');
+				newReply.href = `/${postData.board}/${(isModView || isRecent) ? 'manage/' : ''}thread/${postData.thread || postData.postId}.html#${postData.postId}`;
+				newReply.textContent = `>>${postData.postId}`;
+				newReply.classList.add('quote');
+				replies.appendChild(newReply);
+				replies.appendChild(space);
 			}
-			if (new RegExp(`>>${postData.postId}(\s|$)`).test(replies.innerText)) {
-				//reply link already exists (probably from a late catch up)
-				continue;
-			}
-			const newReply = document.createElement('a');
-			const space = document.createTextNode(' ');
-			newReply.href = `/${postData.board}/${(isModView || isRecent) ? 'manage/' : ''}thread/${postData.thread || postData.postId}.html#${postData.postId}`;
-			newReply.textContent = `>>${postData.postId}`;
-			newReply.classList.add('quote');
-			replies.appendChild(newReply);
-			replies.appendChild(space);
 		}
 		const newPostAnchor = document.getElementById(postData.postId);
 		const newPost = newPostAnchor.nextSibling;
