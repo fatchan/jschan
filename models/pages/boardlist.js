@@ -55,31 +55,30 @@ module.exports = async (req, res, next) => {
 		} catch (err) {
 			return next(err);
 		}
+		const now = new Date();
+		if (localBoards) {
+			for (let i = 0; i < localBoards.length; i++) {
+				if (localBoards[i].lastPostTimestamp) {
+					const lastPostDate = new Date(localBoards[i].lastPostTimestamp);
+					localBoards[i].lastPostTimestamp = {
+						text: relativeString(now, lastPostDate),
+						color: relativeColor(now, lastPostDate)
+					}
+				}
+			}
+		}
+		if (webringBoards) {
+			for (let i = 0; i < webringBoards.length; i++) {
+				if (webringBoards[i].lastPostTimestamp) {
+					const lastPostDate = new Date(webringBoards[i].lastPostTimestamp);
+					webringBoards[i].lastPostTimestamp = {
+						text: relativeString(now, lastPostDate),
+						color: relativeColor(now, lastPostDate)
+					}
+				}
+			}
+		}
 		cache.set(`boardlist:${cacheQueryString}`, { localBoards, localPages, webringBoards, webringPages, maxPage }, 60);
-	}
-
-	const now = new Date();
-	if (localBoards) {
-		for (let i = 0; i < localBoards.length; i++) {
-			if (localBoards[i].lastPostTimestamp) {
-				const lastPostDate = new Date(localBoards[i].lastPostTimestamp);
-				localBoards[i].lastPostTimestamp = {
-					text: relativeString(now, lastPostDate),
-					color: relativeColor(now, lastPostDate)
-				}
-			}
-		}
-	}
-	if (webringBoards) {
-		for (let i = 0; i < webringBoards.length; i++) {
-			if (webringBoards[i].lastPostTimestamp) {
-				const lastPostDate = new Date(webringBoards[i].lastPostTimestamp);
-				webringBoards[i].lastPostTimestamp = {
-					text: relativeString(now, lastPostDate),
-					color: relativeColor(now, lastPostDate)
-				}
-			}
-		}
 	}
 
 	res
