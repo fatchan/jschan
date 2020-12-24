@@ -230,6 +230,7 @@ async function cache() {
 	await Promise.all([
 		Redis.deletePattern('boards:listed'),
 		Redis.deletePattern('board:*'),
+		Redis.deletePattern('boardlist:*'),
 		Redis.deletePattern('banners:*'),
 		Redis.deletePattern('users:*'),
 		Redis.deletePattern('blacklisted:*'),
