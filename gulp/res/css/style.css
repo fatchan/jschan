@@ -188,7 +188,9 @@ pre {
 .pv-5 {
 	padding: 5px 0;
 }
-
+.vh {
+	visibility: hidden!important;
+}
 #settings, .dummy-link {
 	cursor: pointer;
 }

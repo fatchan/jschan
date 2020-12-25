@@ -4,7 +4,7 @@ let yousEnabled = localStorage.getItem('yous-setting') == 'true';
 let savedYous = new Set(JSON.parse(localStorage.getItem('yous')));
 let yousList;
 
-const toggleAll = (state) => savedYous.forEach(y => toggleOne(y, state));
+const toggleAllYous = (state) => savedYous.forEach(y => toggleOne(y, state));
 
 const toggleQuotes = (quotes, state) => {
 	quotes.forEach(q => {
@@ -28,7 +28,7 @@ const toggleOne = (you, state) => {
 }
 
 if (yousEnabled) {
-	toggleAll(yousEnabled);
+	toggleAllYous(yousEnabled);
 }
 
 const handleNewYous = (e) => {
@@ -89,7 +89,7 @@ window.addEventListener('settingsReady', () => {
 	const yousListClearButton = document.getElementById('youslist-clear');
 	const clearYousList = () => {
 		if (yousEnabled) {
-			toggleAll(false);
+			toggleAllYous(false);
 		}
 		savedYous = new Set();
 		yousList.value = '';
@@ -102,7 +102,7 @@ window.addEventListener('settingsReady', () => {
 	const toggleYousSetting = () => {
 		yousEnabled = !yousEnabled;
 		setLocalStorage('yous-setting', yousEnabled);
-		toggleAll(yousEnabled);
+		toggleAllYous(yousEnabled);
 		console.log('toggling yous', yousEnabled);
 	}
 	yousSetting.checked = yousEnabled;

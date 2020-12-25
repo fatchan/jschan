@@ -72,8 +72,12 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 							span.post-file-info
 								span: a(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? 'Spoiler File' : file.originalFilename}
 								br
+								span.jsonly
+									b [
+									a.dummy-link.hide-image(data-src=`/file/thumb-${file.hash}${file.thumbextension}`) Hide
+									b ]
 								span 
-									| (#{file.sizeString}
+									|  (#{file.sizeString}
 									if file.geometryString
 										| , #{file.geometryString}
 									if file.durationString

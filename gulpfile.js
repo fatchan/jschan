@@ -311,6 +311,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 			`!${paths.scripts.src}/hidefileinput.js`,
 			`!${paths.scripts.src}/dragable.js`,
 			`!${paths.scripts.src}/filters.js`,
+			`!${paths.scripts.src}/hideimages.js`,
 			`!${paths.scripts.src}/yous.js`,
 			`!${paths.scripts.src}/catalog.js`,
 			`!${paths.scripts.src}/time.js`,
@@ -323,6 +324,7 @@ const settings = ${JSON.stringify(configs.frontendScriptDefault)};
 	return gulp.src([
 			`${paths.scripts.src}/hidefileinput.js`,
 			`${paths.scripts.src}/dragable.js`,
+			`${paths.scripts.src}/hideimages.js`,
 			`${paths.scripts.src}/yous.js`,
 			`${paths.scripts.src}/filters.js`,
 			`${paths.scripts.src}/catalog.js`,
