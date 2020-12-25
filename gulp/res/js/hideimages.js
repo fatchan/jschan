@@ -1,4 +1,5 @@
 let imageSources = new Set(JSON.parse(localStorage.getItem('hiddenimages')));
+let imageSourcesList;
 
 const toggleAllHidden = (state) => imageSources.forEach(i => toggleSource(i, state));
 
@@ -13,6 +14,7 @@ const toggleHandler = (e) => {
 	const thumbSource = e.target.dataset.src
 	const hidden = imageSources.has(thumbSource);
 	imageSources[hidden?'delete':'add'](thumbSource);
+	imageSourcesList.value = [...imageSources];
 	setLocalStorage('hiddenimages', JSON.stringify([...imageSources]));
 	toggleSource(thumbSource, !hidden);
 }
