@@ -355,7 +355,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				}
 			}
 
-			if (processedFile.hasThumb === true && type !== 'audio') {
+			if (processedFile.hasThumb === true) {
 				if (processedFile.geometry.width < thumbSize && processedFile.geometry.height < thumbSize) {
 					//dont scale up thumbnail for smaller images
 					processedFile.geometry.thumbwidth = processedFile.geometry.width;
