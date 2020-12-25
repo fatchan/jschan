@@ -92,7 +92,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		const newPostAnchor = document.getElementById(postData.postId);
 		const newPost = newPostAnchor.nextSibling;
 		if (scrollEnabled) {
-			if (globalManageRecent) {
+			if (isGlobalRecent) {
 				window.scrollTo(0, 0); //recent pages are reverse sort, so just go to top
 			} else {
 				newPostAnchor.scrollIntoView(); //scroll to post if enabled;
