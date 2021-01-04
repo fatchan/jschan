@@ -33,7 +33,7 @@ Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://cimi
 ##### Requirements
 - Linux - Debian used in this example
 - Node.js - the application runtime
-- MongoDB - the database
+- MongoDB >= 4.4 - the database
 - Redis - session store, task queue, locks, caching, websocket message arbiter
 - Nginx - webserver/proxy, serve static files, handle https, GeoIP lookup
 - Certbot/letsencrypt - to get a free https certificate
