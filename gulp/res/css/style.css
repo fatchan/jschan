@@ -122,6 +122,7 @@ pre {
 	display: block;
 	overflow-x: auto;
 	white-space: pre;
+	max-width: calc(100vw - 50px);
 }
 
 .code:not(.hljs) {
