@@ -504,6 +504,7 @@ td, th {
 	padding: 5px;
 	/*word-break: break-all;*/
 	overflow-wrap: anywhere;
+	width: 15%; /*Fixes log tables when large actions are taken*/
 }
 
 td pre {
