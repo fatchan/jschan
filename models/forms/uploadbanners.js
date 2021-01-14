@@ -2,7 +2,7 @@
 
 const path = require('path')
 	, { remove, pathExists } = require('fs-extra')
-	, { checkRealMimeTypes } = require(__dirname+'/../../configs/main.js')
+	, { globalLimits, checkRealMimeTypes } = require(__dirname+'/../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../helpers/files/mimetypes.js')
@@ -74,11 +74,14 @@ module.exports = async (req, res, next) => {
 		}
 
 		//make sure its 300x100 banner
-		if (geometry.width !== 300 || geometry.height !== 100) {
+		if (geometry.width > globalLimits.bannerFiles.width
+			|| geometry.height > globalLimits.bannerFiles.height
+			|| (globalLimits.bannerFiles.forceAspectRatio === true
+				&& (geometry.width/geometry.height !== 3))) {
 			await deleteTempFiles(req).catch(e => console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
-				'message': `Invalid file ${file.name}. Banners must be 300x100.`,
+				'message': `Invalid file ${file.name}. Max banner dimensions are ${globalLimits.bannerFiles.width}x${globalLimits.bannerFiles.height}${globalLimits.bannerFiles.forceAspectRatio === true ? ' and must be a 3:1 aspect ratio' : '' }.`,
 				'redirect': redirect
 			});
 		}
