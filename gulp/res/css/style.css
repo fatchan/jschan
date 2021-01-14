@@ -500,6 +500,10 @@ th {
 	color: var(--alt-font-color, --font-color)
 }
 
+.fw td, .fw th {
+    width: 15%; /*Fixes log tables when large actions are taken*/
+}
+
 td, th {
 	padding: 5px;
 	/*word-break: break-all;*/
