@@ -1492,6 +1492,9 @@ row.wrap.sb .col {
 .flag.flag-tor, .flag.flag-t1 { /* t1 is cloudflare tor exit node */
 	background-position:-64px -165px;
 }
+.flag.flag-loki {
+	background-position:-80px -165px;
+}
 
 /*!
  * Generated with CSS Flag Sprite generator (https://www.flag-sprites.com/) -
