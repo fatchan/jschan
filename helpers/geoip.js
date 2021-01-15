@@ -5,7 +5,7 @@ const { countryNamesMap } = require(__dirname+'/countries.js')
 
 module.exports = (req, res, next) => {
 	const code = req.headers[countryCodeHeader] || 'XX';
-	res.locals.tor = code === 'TOR' || code === 'LOKI';
+	res.locals.tor = code === 'TOR' || code === 'LOKI'; //NOTE: for ticket #312 change this to use a single x-anonymizer header
 	res.locals.country = {
 		code,
 		name: countryNamesMap[code],
