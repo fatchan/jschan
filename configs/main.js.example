@@ -95,6 +95,9 @@ module.exports = {
 	// permission level required to see UNHASHED ips. -1 for ips to be hashed even for root user. not recommended to change after installation
 	ipHashPermLevel: 0,
 
+	// permission level required to delete boards
+	deleteBoardPermLevel: 2,
+
 	/* delete files immediately rather than pruning later. usually disabled to prevent re-thumbnailing and processing commonly
 		uploaded files, but deleting immediately is better if you are concerned about "deleted" content not being immediately removed */
 	pruneImmediately: false,
@@ -252,6 +255,9 @@ module.exports = {
 			max: 10485760
 		},
 		bannerFiles: {
+			width: 300, //banner image max width in px
+			height: 100, //banner image max height in px
+			forceAspectRatio: true, //enforce 3:1 aspect ratio
 			max: 10, //max number of banners uploadable at once
 			total: 100, //max number of banners for a board in total
 		},

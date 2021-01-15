@@ -25,7 +25,7 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { ipHashPermLevel, checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
+	, { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
 		postPasswordSecret, strictFiltering, animatedGifThumbnails,
 		audioThumbnails } = require(__dirname+'/../../configs/main.js')
 	, buildQueue = require(__dirname+'/../../queue.js')

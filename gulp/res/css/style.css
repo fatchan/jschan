@@ -852,8 +852,8 @@ input:invalid, textarea:invalid {
 	margin: 10px;
 	max-width: 100%;
 	border: 1px solid var(--post-outline-color);
-	width: 300px;
-	height: 100px;
+	min-width: 300px;
+	min-height: 100px;
 }
 
 .board-description {
@@ -1356,6 +1356,11 @@ row.wrap.sb .col {
 		display: none;
 	}
 
+	.board-banner {
+		object-fit: contain;
+		height: unset;
+	}
+
 	.modal {
 		top: 5px;
 		max-height: calc(100% - 10px);
@@ -1486,6 +1491,9 @@ row.wrap.sb .col {
 }
 .flag.flag-tor, .flag.flag-t1 { /* t1 is cloudflare tor exit node */
 	background-position:-64px -165px;
+}
+.flag.flag-loki {
+	background-position:-80px -165px;
 }
 
 /*!
