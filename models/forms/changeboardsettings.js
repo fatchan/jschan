@@ -116,7 +116,7 @@ module.exports = async (req, res, next) => {
 		'tags': arraySetting(req.body.tags, oldSettings.tags, 10),
 		'filters': arraySetting(req.body.filters, oldSettings.filters, 50),
 		'blockedCountries': req.body.countries || [],
-		'disableOnionFilePosting': booleanSetting(req.body.disable_onion_file_posting),
+		'disableAnonymizerFilePosting': booleanSetting(req.body.disable_anonymizer_file_posting),
 		'strictFiltering': booleanSetting(req.body.strict_filtering),
 		'customCss': globalLimits.customCss.enabled ? (req.body.custom_css !== null ? req.body.custom_css : oldSettings.customCss) : null,
 		'announcement': {
