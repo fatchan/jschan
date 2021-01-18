@@ -2,8 +2,11 @@
 
 const countries = require('i18n-iso-countries')
 	, countryNamesMap = countries.getNames('en')
-	, countryCodes = ['EU', 'XX', 'T1', 'TOR', 'LOKI']
-		.concat(Object.keys(countryNamesMap));
+	, extraCountryCodes = ['EU', 'XX', 'T1']
+	, anonymizerCountryCodes = ['TOR', 'LOKI']
+	, anonymizerCountryCodesSet = new Set(anonymizerCountryCodes)
+	, countryCodes = Object.keys(countryNamesMap)
+		.concat(extraCountryCodes, anonymizerCountryCodes);
 
 //this dumb library conveniently includes 2 names for some countries...
 Object.entries(countryNamesMap)
@@ -19,4 +22,7 @@ countryNamesMap['LOKI'] = 'Lokinet SNApp';
 module.exports = {
 	countryNamesMap,
 	countryCodes,
+	isAnonymizer: (code) => {
+		return anonymizerCountryCodesSet.has(code);
+	},
 }

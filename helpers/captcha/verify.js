@@ -12,7 +12,7 @@ const { Ratelimits } = require(__dirname+'/../../db/')
 module.exports = async (req, res, next) => {
 
 	//already solved in pre stage for getting bypassID for "ip"
-	if (res.locals.tor && res.locals.solvedCaptcha) {
+	if (res.locals.anonymizer && res.locals.solvedCaptcha) {
 		return next();
 	}
 
@@ -49,7 +49,7 @@ module.exports = async (req, res, next) => {
 		//for builtin captchas, clear captchaid cookie, delete file and reset quota
 		res.clearCookie('captchaid');
 		await Promise.all([
-			!res.locals.tor && Ratelimits.resetQuota(res.locals.ip.single, 'captcha'),
+			!res.locals.anonymizer && Ratelimits.resetQuota(res.locals.ip.single, 'captcha'),
 			remove(`${uploadDirectory}/captcha/${captchaId}.jpg`)
 		]);
 	}
