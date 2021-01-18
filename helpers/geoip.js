@@ -1,7 +1,7 @@
 'use strict'
 
-const { countryNamesMap } = require(__dirname+'/countries.js')
-	, { countryCodeHeader, isAnonymizer } = require(__dirname+'/../configs/main.js')
+const { countryNamesMap, isAnonymizer } = require(__dirname+'/countries.js')
+	, { countryCodeHeader } = require(__dirname+'/../configs/main.js')
 
 module.exports = (req, res, next) => {
 	const code = req.headers[countryCodeHeader] || 'XX';
