@@ -501,7 +501,7 @@ th {
 }
 
 .fw td, .fw th {
-    width: 15%; /*Fixes log tables when large actions are taken*/
+    width: 8%; /*Fixes log tables when large actions are taken*/
 }
 
 td, th {
