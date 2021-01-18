@@ -455,7 +455,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		});
 	}
 
-	const postId = await Posts.insertOne(res.locals.board, data, thread, res.locals.tor);
+	const postId = await Posts.insertOne(res.locals.board, data, thread, res.locals.anonymizer);
 
 	let enableCaptcha = false; //make this returned from some function, refactor and move the next section to another file
 	const pphTriggerActive = (pphTriggerAction > 0 && pphTrigger > 0);

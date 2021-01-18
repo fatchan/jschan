@@ -72,10 +72,10 @@ module.exports = {
 	},
 
 	//disable file posting over .onion globally, overrides any board setting.
-	disableOnionFilePosting: false,
+	disableAnonymizerFilePosting: false,
 
 	//count .onion posters as "users" in stats. if set to false, all .onion is counted as a single user. doesnt affect pph stat.
-	statsCountOnionUsers: true,
+	statsCountAnonymizers: true,
 
 	floodTimers: { //basic delays to stop flooding, in ms. 0 to disable
 		sameContentSameIp: 120000, //same message or any file from same ip
@@ -86,7 +86,7 @@ module.exports = {
 	//block bypasses
 	blockBypass: {
 		enabled: false,
-		forceOnion: true, //option to override blockbypass setting for .onion users
+		forceAnonymizers: true, //option to override blockbypass setting for .onion users
 		expireAfterUses: 40, //however many (attempted) posts per block bypass captcha
 		expireAfterTime: 86400000, //expiry in ms regardless if the limit was reached, default 1 day
 		bypassDnsbl: false,
@@ -374,7 +374,7 @@ module.exports = {
 		defaultName: 'Anon',
 		customCSS: null,
 		blockedCountries: [], //2 char ISO country codes to block
-		disableOnionFilePosting: false,
+		disableAnonymizerFilePosting: false,
 		filters: [], //words/phrases to block
 		filterMode: 0, //0=nothing, 1=prevent post, 2=auto ban
 		filterBanDuration: 0, //duration (in ms) to ban if filter mode=2

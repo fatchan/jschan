@@ -4,7 +4,7 @@ const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
-	, { pruneImmediately, globalLimits, disableOnionFilePosting } = require(__dirname+'/../../configs/main.js')
+	, { pruneImmediately, globalLimits, disableAnonymizerFilePosting } = require(__dirname+'/../../configs/main.js')
 	, { Files } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
@@ -15,10 +15,10 @@ module.exports = async (req, res, next) => {
 	if ((!req.body.message || res.locals.messageLength === 0) && res.locals.numFiles === 0) {
 		errors.push('Posts must include a message or file');
 	}
-	if (res.locals.tor
-		&& (disableOnionFilePosting || res.locals.board.settings.disableOnionFilePosting)
+	if (res.locals.anonymizer
+		&& (disableAnonymizerFilePosting || res.locals.board.settings.disableAnonymizerFilePosting)
 		&& res.locals.numFiles > 0) {
-		errors.push(`Posting files through the .onion address has been disabled ${disableOnionFilePosting ? 'globally' : 'on this board'}`);
+		errors.push(`Posting files through the .onion address has been disabled ${disableAnonymizerFilePosting ? 'globally' : 'on this board'}`);
 	}
 	if (res.locals.numFiles > res.locals.board.settings.maxFiles) {
 		errors.push(`Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}`);

@@ -11,8 +11,8 @@ module.exports = async (req, res, next) => {
 
 	if (res.locals.preFetchedBypassId //if they already have a bypass
 		|| (!blockBypass.enabled //or if block bypass isnt enabled
-			&& (!blockBypass.forceOnion //and we dont force it for .onion
-			|| !res.locals.tor))) { //or they arent a .onion
+			&& (!blockBypass.forceAnonymizers //and we dont force it for anonymizer
+			|| !res.locals.anonymizer))) { //or they arent a .onion
 		return next();
 	}
 
@@ -45,7 +45,7 @@ module.exports = async (req, res, next) => {
 
 	if (bypass //if they have a valid bypass
 		&& (bypass.uses < blockBypass.expireAfterUses //and its not overused
-			|| (res.locals.tor && !blockBypass.forceOnion))) { //OR its disabled for .onion, which ignores usage check
+			|| (res.locals.anonymizer && !blockBypass.forceOnion))) { //OR its disabled for .onion, which ignores usage check
 		return next();
 	}
 

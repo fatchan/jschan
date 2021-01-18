@@ -59,6 +59,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		clone.appendChild(post.cloneNode(true));
 		document.body.appendChild(clone);
 		setFloatPos(quote, clone, xpos, ypos);
+		return clone;
 	};
 
 	const toggleHighlightPost = async function (e) {
@@ -136,7 +137,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			hoveredPost = wrap.firstChild.nextSibling;
 		}
 		if (hovering && !isVisible(hoveredPost)) {
-			floatPost(this, hoveredPost, e.clientX, e.clientY);
+			hoveredPost = floatPost(this, hoveredPost, e.clientX, e.clientY);
 		} else {
 			hovering ? hoveredPost.classList.add('hoverhighlighted') : hoveredPost.classList.remove('hoverhighlighted');
 		}

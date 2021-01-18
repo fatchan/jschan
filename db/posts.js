@@ -4,7 +4,7 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.db.collection('posts')
-	, { quoteLimit, previewReplies, stickyPreviewReplies, statsCountOnionUsers,
+	, { quoteLimit, previewReplies, stickyPreviewReplies, statsCountAnonymizers,
 		ipHashPermLevel, early404Replies, early404Fraction } = require(__dirname+'/../configs/main.js');
 
 module.exports = {
@@ -475,7 +475,7 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		const statsIp = (statsCountOnionUsers === false && res.locals.tor === true) ? null : data.ip.single;
+		const statsIp = (statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.single;
 		await Stats.updateOne(board._id, statsIp, data.thread == null);
 
 		//add backlinks to the posts this post quotes
