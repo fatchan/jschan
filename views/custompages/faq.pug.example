@@ -299,7 +299,7 @@ block content
 					p Trigger Reset Lock Mode: If a trigger threshold was reached, reset the lock mode to this at the end of the hour.
 					p Trigger Reset Captcha Mode: If a trigger threshold was reached, reset the captcha mode to this at the end of the hour.
 					p Early 404: When a new thread is posted, delete any existing threads with less than #{early404Replies} replies beyond the first 1/#{early404Fraction} of threads.
-					p Disable .onion file posting: Prevent users posting through a .onion hidden service posting images.
+					p Disable anonymizer file posting: Prevent users posting images through anonymizers such as Tor hidden services, lokinet SNApps or i2p eepsites.
 					p Blocked Countries: Block country codes (based on geo Ip data) from posting.
 					p Filters: Newline separated list of words or phrases to match in posts. Checks name, message, filenames, subject, and filenames.
 					p Strict Filtering: More aggressively match filters, by normalising the input compared against the filters.

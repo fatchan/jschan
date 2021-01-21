@@ -71,10 +71,11 @@ module.exports = {
 		cacheTime: 3600 //in seconds, idk whats a good value
 	},
 
-	//disable file posting over .onion globally, overrides any board setting.
+	//disable file posting over anonymizers globally, overrides any board setting.
 	disableAnonymizerFilePosting: false,
 
-	//count .onion posters as "users" in stats. if set to false, all .onion is counted as a single user. doesnt affect pph stat.
+	/* count "IP"s (bypass ids) for anonymizers as "users" in stats. if set to false, anonymous users are counted as a single user. doesnt affect pph stat.
+		you can use this setting to prevent spam over anonymizers from inflating user stats */
 	statsCountAnonymizers: true,
 
 	floodTimers: { //basic delays to stop flooding, in ms. 0 to disable

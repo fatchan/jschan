@@ -18,7 +18,7 @@ module.exports = async (req, res, next) => {
 	if (res.locals.anonymizer
 		&& (disableAnonymizerFilePosting || res.locals.board.settings.disableAnonymizerFilePosting)
 		&& res.locals.numFiles > 0) {
-		errors.push(`Posting files through the .onion address has been disabled ${disableAnonymizerFilePosting ? 'globally' : 'on this board'}`);
+		errors.push(`Posting files through anonymizers has been disabled ${disableAnonymizerFilePosting ? 'globally' : 'on this board'}`);
 	}
 	if (res.locals.numFiles > res.locals.board.settings.maxFiles) {
 		errors.push(`Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}`);
