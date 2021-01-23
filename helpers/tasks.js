@@ -4,7 +4,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, timeUtils = require(__dirname+'/timeutils.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
-	, { debugLogs, pruneModlogs, pruneAfterDays, enableWebring, maxRecentNews } = require(__dirname+'/../configs/main.js')
+	, { debugLogs, pruneModlogs, enableWebring, maxRecentNews } = require(__dirname+'/../configs/main.js')
 	, { CustomPages, Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, cache = require(__dirname+'/../redis.js')
 	, render = require(__dirname+'/render.js')
@@ -188,9 +188,9 @@ module.exports = {
 		const label = `/${options.board._id}/logs.html`;
 		const start = process.hrtime();
 		let dates = await Modlogs.getDates(options.board);
-		if (pruneModlogs === true) {
+		if (pruneModlogs) {
 			const pruneLogs = [];
-			const pruneAfter = new Date(Date.now()-timeUtils.DAY*pruneAfterDays);
+			const pruneAfter = new Date(Date.now()-timeUtils.DAY*pruneModlogs);
 			dates = dates.filter(date => {
 				const { year, month, day } = date.date;
 				if (new Date(year, month-1, day) > pruneAfter) { //-1 for 0-index months

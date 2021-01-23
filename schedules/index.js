@@ -6,7 +6,7 @@ process
 
 const timeUtils = require(__dirname+'/../helpers/timeutils.js')
 	, Mongo = require(__dirname+'/../db/db.js')
-	, { pruneImmediately, debugLogs, enableWebring } = require(__dirname+'/../configs/main.js')
+	, { pruneIps, pruneImmediately, debugLogs, enableWebring } = require(__dirname+'/../configs/main.js')
 	, doInterval = require(__dirname+'/../helpers/dointerval.js');
 
 (async () => {
@@ -35,6 +35,11 @@ const timeUtils = require(__dirname+'/../helpers/timeutils.js')
 	if (!pruneImmediately) {
 		const pruneFiles = require(__dirname+'/prune.js');
 		doInterval(pruneFiles, timeUtils.DAY, true);
+	}
+
+	if (pruneIps) {
+		const ipSchedule = require(__dirname+'/ips.js');
+		doInterval(ipSchedule, timeUtils.DAY, true);
 	}
 
 	//update the webring
