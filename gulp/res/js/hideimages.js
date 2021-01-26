@@ -38,7 +38,10 @@ const handleHiddenImages = (e) => {
 	});
 	//add the hide toggle link and event listener
 	if (!e.detail.hover) {
-		e.detail.post.querySelector('.hide-image').addEventListener('click', toggleHandler, false);
+		const hideButtons = e.detail.post.querySelectorAll('.hide-image');
+		for (let i = 0; i < hideButtons.length; i++) {
+			hideButtons[i].addEventListener('click', toggleHandler, false);
+		}
 	}
 }
 
