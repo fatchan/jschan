@@ -4,6 +4,7 @@ configs/*.json
 configs/*.js
 static/*
 !static/file/no-cd/*.txt
+!static/js/check.js
 gulp/res/js/socket.io.js
 /gulp/res/css/codethemes
 gulp/res/css/locals.css
