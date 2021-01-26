@@ -3,11 +3,10 @@ backup.sh
 configs/*.json
 configs/*.js
 static/*
+!static/file/no-cd/*.txt
 gulp/res/js/socket.io.js
-views/custompages/*.pug
 /gulp/res/css/codethemes
 gulp/res/css/locals.css
-gulp/res/css/custom.css
 gulp/res/js/locals.js
 gulp/res/js/post.js
 gulp/res/js/modal.js

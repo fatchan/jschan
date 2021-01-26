@@ -1,0 +1,17 @@
+.catalog-tile, .post-container {
+    transition: background-color 80ms, border-color 80ms;
+}
+a {
+    transition: color 100ms;
+}
+table.boardtable th:nth-child(1) {
+	min-width: 150px;
+}
+.footer {
+	line-height: 1.5em;
+}
+@media only screen and (max-width: 480px) {
+	.footer {
+		padding-bottom: 3em;
+	}
+}
