@@ -1,0 +1,27 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Hi,
+
+As of 23-12-2020 (we put dates in the correct order over in Australia)
+Fatchan has received no request for information or any gag orders.
+
+Regards,
+Tom
+
+latest bitcoin block hash at time of writing:
+0000000000000000000e55f5537b67903d1fad4681ae6f6d4eefdc9d08112176
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCAAdFiEE9/vuBNwQh8OAtFnjESiEqlffQLEFAl/ixTgACgkQESiEqlff
+QLEy1Qv/d/RzS6q0ER/RBHICZT5VVaeZI3dAfJJHNzu/zn+8wQ1AAd6nCmk7BsBZ
+0Lo26eHHHkGLPbRHxncMwN9J2CQW/UWNYde+wNtqbLzLAh0N5pU4ho3x7Gc470xP
+/FjXC5z8igewYYJC5M3bgOWS1gRRMBeYC/oCQA+pmgv8IXVeQgFdn3SWE9RFaFxx
+0m8w/4hLlsUrO0ioYEkZ0AXs2gIV2533fdySgpNG1l9NpQXT1SQhRN+kjPnFVru1
+F5jefH3shPn3aYYSxG/qmAm7EWmMrdRTXR/JySl+aHiiAJpc9B9hZzArHYSZxiHT
+EPEpLeRpqHtqfv/e6nzW2sVTKL0uHf85jSNo1FWsoNcdhHJcxSldBsAoMzOR0K+R
+mxAZ6d6EdyAwsM/pbj0gtTDxBLr9f3YNFA2NldeKVFhUsH1buQr7bvXj9CLUm8xZ
+pyKksUdNHKY5TlMZlCBEvddIVxipD/Ctq1YHMuq2FUoAcffFRqk27fyim7z0pHHb
+BkL6/tkG
+=iImu
+-----END PGP SIGNATURE-----
