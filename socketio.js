@@ -42,9 +42,9 @@ module.exports = {
 						|| roomName === 'manage-recent-raw') {
 						requiredAuth = 3; //board mod minimum
 						if (user && authLevel === 4) {
-							if (user.ownedBoards.includes(board)) {
+							if (user.ownedBoards.includes(roomBoard)) {
 								authLevel = 2; //user is BO
-							} else if (user.modBoards.includes(board)) {
+							} else if (user.modBoards.includes(roomBoard)) {
 								authLevel = 3; //user is mod
 							}
 						}
