@@ -117,7 +117,7 @@ async function wipe() {
 	await Posts.db.dropIndexes()
 	await Modlogs.db.dropIndexes()
 	await CustomPages.db.dropIndexes()
-	await CustomPages.db.createIndex({ 'board': 1, 'url': 1 }, { unique: true })
+	await CustomPages.db.createIndex({ 'board': 1, 'page': 1 }, { unique: true })
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
 	await Bans.db.createIndex({ 'ip.single': 1 , 'board': 1 })
