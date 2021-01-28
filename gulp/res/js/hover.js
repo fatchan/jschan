@@ -59,6 +59,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		clone.appendChild(post.cloneNode(true));
 		document.body.appendChild(clone);
 		setFloatPos(quote, clone, xpos, ypos);
+		return clone;
 	};
 
 	const toggleHighlightPost = async function (e) {
@@ -85,13 +86,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		lastHover = loading;
 		const hash = this.hash.substring(1);
 		const anchor = document.getElementById(hash);
-		let hoveredPost;
+		let hoveredPost, postJson;
 		if (anchor
 			&& jsonPath.split('/')[1] === anchor.nextSibling.dataset.board) {
 			hoveredPost = anchor.nextSibling;
 		} else {
 			let hovercache = localStorage.getItem(`hovercache-${jsonPath}`);
-			let postJson;
 			if (hovercache) {
 				hovercache = JSON.parse(hovercache);
 				if (hovercache.postId == hash) {
@@ -135,6 +135,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			const wrap = document.createElement('div');
 			wrap.innerHTML = postHtml;
 			hoveredPost = wrap.firstChild.nextSibling;
+		}
+		if (hovering && !isVisible(hoveredPost)) {
+			hoveredPost = floatPost(this, hoveredPost, e.clientX, e.clientY);
+		} else {
+			hovering ? hoveredPost.classList.add('hoverhighlighted') : hoveredPost.classList.remove('hoverhighlighted');
+		}
+		if (postJson) {
 			//need this event so handlers like post hiding still apply to hover introduced posts
 			const newPostEvent = new CustomEvent('addPost', {
 	 		   detail: {
@@ -147,11 +154,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			window.dispatchEvent(newPostEvent);
 		}
 		toggleDottedUnderlines(hoveredPost, thisId);
-		if (hovering && !isVisible(hoveredPost)) {
-			floatPost(this, hoveredPost, e.clientX, e.clientY);
-		} else {
-			hovering ? hoveredPost.classList.add('hoverhighlighted') : hoveredPost.classList.remove('hoverhighlighted');
-		}
 	}
 
 	for (let i = 0; i < quotes.length; i++) {

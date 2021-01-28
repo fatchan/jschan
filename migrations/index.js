@@ -18,4 +18,6 @@ module.exports = {
 	'0.0.15': require(__dirname+'/migration-0.0.15.js'), //messages r9k option
 	'0.0.16': require(__dirname+'/migration-0.0.16.js'), //separate tph/pph triggers
 	'0.0.17': require(__dirname+'/migration-0.0.17.js'), //add custompages collection
+	'0.0.18': require(__dirname+'/migration-0.0.18.js'), //disable onion file posting to disable anonymizer file posting
+	'0.0.19': require(__dirname+'/migration-0.0.19.js'), //fix incorrect index causing duplicate key error
 }

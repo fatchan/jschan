@@ -4,7 +4,7 @@ let imageSourcesList;
 const toggleAllHidden = (state) => imageSources.forEach(i => toggleSource(i, state));
 
 const toggleSource = (source, state) => {
-	const images = document.querySelectorAll(`img.file-thumb[src="${source}"]`);
+	const images = document.querySelectorAll(`img.file-thumb[src="${source}"], img.catalog-thumb[src="${source}"]`);
 	images.forEach(i => i.classList[state?'add':'remove']('vh'));
 }
 
@@ -26,13 +26,22 @@ document.querySelectorAll('.hide-image').forEach(el => {
 const handleHiddenImages = (e) => {
 	//hide any images from this post that should already be hidden
 	const hasHiddenImages = e.detail.json.files.forEach(f => {
-		if (imageSources.has(f.filename)) {
-			toggleSource(f.filename, true);
+		let hideFilename = '/file/';
+		if (f.hasThumb) {
+			hideFilename += `thumb-${f.hash}${f.thumbextension}`
+		} else {
+			hideFilename += f.filename;
+		}
+		if (imageSources.has(hideFilename)) {
+			toggleSource(hideFilename, true);
 		}
 	});
 	//add the hide toggle link and event listener
 	if (!e.detail.hover) {
-		e.detail.post.querySelector('.hide-image').addEventListener('click', toggleHandler, false);
+		const hideButtons = e.detail.post.querySelectorAll('.hide-image');
+		for (let i = 0; i < hideButtons.length; i++) {
+			hideButtons[i].addEventListener('click', toggleHandler, false);
+		}
 	}
 }
 

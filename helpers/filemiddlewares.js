@@ -63,14 +63,14 @@ module.exports = {
 	}),
 
 	handlePostFilesEarlyTor:  (req, res, next) => {
-		if (res.locals.tor) {
+		if (res.locals.anonymizer) {
 			return postFiles(req, res, next);
 		}
 		return next();
 	},
 
 	handlePostFiles: (req, res, next) => {
-		if (res.locals.tor) {
+		if (res.locals.anonymizer) {
 			return next();
 		}
 		return postFiles(req, res, next);
