@@ -94,7 +94,8 @@ $ sudo editor /etc/nginx/sites-available/DOMAIN.COM
 `sed` can be used to automate this process:
 ```bash
 $ sudo sed -i 's|/path/to/jschan|/path/to/your/install|g' /etc/nginx/sites-available/DOMAIN.COM
-sudo sed -i 's/domain.com/your.domain.com/g' /etc/nginx/sites-available/DOMAIN.COM
+$ sudo sed -i 's/domain.com/your.domain.com/g' /etc/nginx/sites-available/DOMAIN.COM
+```
 
 - Make sure the sites enabled folder is included by `/etc/nginx/nginx.conf` (it is in debian nginx package)
 - Use [certbot](https://certbot.eff.org/) to get a free https certificate.
