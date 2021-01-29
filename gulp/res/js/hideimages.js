@@ -28,7 +28,7 @@ const handleHiddenImages = (e) => {
 	const hasHiddenImages = e.detail.json.files.forEach(f => {
 		let hideFilename = '/file/';
 		if (f.hasThumb) {
-			hideFilename += `thumb-${f.hash}${f.thumbextension}`
+			hideFilename += `thumb/${f.hash}${f.thumbextension}`
 		} else {
 			hideFilename += f.filename;
 		}

@@ -263,7 +263,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				processedFile.attachment = true;
 				await saveFull();
 			} else {
-				const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+				const existsThumb = await pathExists(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
 				switch (type) {
 					case 'image': {
 						processedFile.thumbextension = thumbExtension;
@@ -328,7 +328,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 									await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
 									let videoThumbStat = null;
 									try {
-										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
 									} catch (err) { /*ENOENT, the thumb failed to create. No need to handle this.*/	}
 									if (!videoThumbStat || videoThumbStat.size === 0) {
 										await videoThumbnail(processedFile, processedFile.geometry, 0);

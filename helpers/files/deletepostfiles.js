@@ -9,7 +9,7 @@ module.exports = (files) => {
 	return Promise.all(files.map(async file => {
 		return Promise.all([
 			remove(`${uploadDirectory}/file/${file.filename}`),
-			file.hasThumb ? remove(`${uploadDirectory}/file/thumb-${file.hash}${file.thumbextension}`) : void 0,
+			file.hasThumb ? remove(`${uploadDirectory}/file/thumb/${file.hash}${file.thumbextension}`) : void 0,
 		]).catch(e => console.error);
 	}));
 

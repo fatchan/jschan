@@ -75,7 +75,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								if file.hasThumb && !(post.spoiler || file.spoiler)
 									span.jsonly
 										b [
-										a.dummy-link.hide-image(data-src=`/file/thumb-${file.hash}${file.thumbextension}`) Hide
+										a.dummy-link.hide-image(data-src=`/file/thumb/${file.hash}${file.thumbextension}`) Hide
 										b ]
 								span 
 									|  (#{file.sizeString}
@@ -90,7 +90,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 									if post.spoiler || file.spoiler
 										div.spoilerimg.file-thumb
 									else if file.hasThumb
-										img.file-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` height=file.geometry.thumbheight width=file.geometry.thumbwidth loading='lazy')
+										img.file-thumb(src=`/file/thumb/${file.hash}${file.thumbextension}` height=file.geometry.thumbheight width=file.geometry.thumbwidth loading='lazy')
 									else if file.attachment
 										div.attachmentimg.file-thumb(data-mimetype=file.mimetype)
 									else if type === 'audio'
