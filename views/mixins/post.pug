@@ -75,7 +75,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								if file.hasThumb && !(post.spoiler || file.spoiler)
 									span.jsonly
 										b [
-										a.dummy-link.hide-image(data-src=`/file/thumb/${file.hash}${file.thumbextension}`) Hide
+										a.dummy-link.hide-image.noselect(data-src=`/file/thumb/${file.hash}${file.thumbextension}`) Hide
 										b ]
 								span 
 									|  (#{file.sizeString}
