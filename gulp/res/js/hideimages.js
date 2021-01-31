@@ -6,6 +6,8 @@ const toggleAllHidden = (state) => imageSources.forEach(i => toggleSource(i, sta
 const toggleSource = (source, state) => {
 	const images = document.querySelectorAll(`img.file-thumb[src="${source}"], img.catalog-thumb[src="${source}"]`);
 	images.forEach(i => i.classList[state?'add':'remove']('vh'));
+	const buttons = document.querySelectorAll(`a.hide-image[data-src="${source}"]`);
+	buttons.forEach(b => b.textContent = state ? 'Show' : 'Hide');
 }
 
 toggleAllHidden(true);
@@ -28,7 +30,7 @@ const handleHiddenImages = (e) => {
 	const hasHiddenImages = e.detail.json.files.forEach(f => {
 		let hideFilename = '/file/';
 		if (f.hasThumb) {
-			hideFilename += `thumb-${f.hash}${f.thumbextension}`
+			hideFilename += `thumb/${f.hash}${f.thumbextension}`
 		} else {
 			hideFilename += f.filename;
 		}

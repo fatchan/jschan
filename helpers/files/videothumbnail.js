@@ -20,14 +20,14 @@ module.exports = (file, geometry, timestamp) => {
 			.outputOptions([
 				`-vf scale=${geometry.width > geometry.height ? thumbSize + ':-2' : '-2:' + thumbSize}`
 			])
-			.output(`${uploadDirectory}/file/thumb-${file.hash}${file.thumbextension}`)
+			.output(`${uploadDirectory}/file/thumb/${file.hash}${file.thumbextension}`)
 			.run();
 		} else {
 			command.screenshots({
 				timestamps: [timestamp],
 				count: 1,
-				filename: `thumb-${file.hash}${file.thumbextension}`,
-				folder: `${uploadDirectory}/file/`,
+				filename: `${file.hash}${file.thumbextension}`,
+				folder: `${uploadDirectory}/file/thumb/`,
 				size: geometry.width > geometry.height ? `${thumbSize}x?` : `?x${thumbSize}`
 				//keep aspect ratio, but also making sure taller/wider thumbs dont exceed thumbSize in either dimension
 			});

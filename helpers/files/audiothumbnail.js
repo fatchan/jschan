@@ -16,7 +16,7 @@ module.exports = (file) => {
 			filter: 'showwavespic',
 			options: { split_channels: 1, s: `${thumbSize}x${thumbSize}` }
 		}])
-		.save(`${uploadDirectory}/file/thumb-${file.hash}${file.thumbextension}`);
+		.save(`${uploadDirectory}/file/thumb/${file.hash}${file.thumbextension}`);
 	});
 
 };
