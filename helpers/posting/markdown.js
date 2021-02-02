@@ -10,16 +10,16 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 	, italicRegex = /\*\*(.+?)\*\*/gm
 	, spoilerRegex = /\|\|([\s\S]+?)\|\|/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
-	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
+	, linkRegex = /\[([^\[][^\]]*?)\]\((https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^)]+)\)|(https\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+)/g
 	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
 	, includeSplitRegex = /(\[code\][\s\S]+?\[\/code\])/gm
 	, splitRegex = /\[code\]([\s\S]+?)\[\/code\]/gm
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
-	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, escape = require(__dirname+'/escape.js')
 	, { highlight, highlightAuto } = require('highlight.js')
 	, { highlightOptions } = require(__dirname+'/../../configs/main.js')
 	, diceroll = require(__dirname+'/diceroll.js')
+	, linkmatch = require(__dirname+'/linkmatch.js')
 	, replacements = [
 		{ regex: pinktextRegex, cb: (match, pinktext) => `<span class='pinktext'>&lt;${pinktext}</span>` },
 		{ regex: greentextRegex, cb: (match, greentext) => `<span class='greentext'>&gt;${greentext}</span>` },
@@ -30,7 +30,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 		{ regex: italicRegex, cb: (match, italic) => `<span class='em'>${italic}</span>` },
 		{ regex: spoilerRegex, cb: (match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
 		{ regex: monoRegex, cb: (match, mono) => `<span class='mono'>${mono}</span>` },
-		{ regex: linkRegex, cb: require(__dirname+'/linkmatch.js') },
+		{ regex: linkRegex, cb: linkmatch },
 		{ regex: detectedRegex, cb: (match, detected) => `<span class='detected'>${detected}</span>` },
 		{ regex: diceroll.regexMarkdown, cb: diceroll.markdown },
 	];
