@@ -1,6 +1,6 @@
 'use strict';
 
-const { readdirSync } = require('fs')
+const { readdirSync } = require('fs-extra')
 	, { themes, codeThemes } = require(__dirname+'/../configs/main.js');
 
 module.exports = {
