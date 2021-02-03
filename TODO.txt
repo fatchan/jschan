@@ -1,0 +1,19 @@
+big changes in globalmanagesettings model
+update global manage settings pug template
+update paramconverter for mass of new number/trim/array fields, etc for the form
+
+---
+
+call gulp tasks for images, captcha, css, html, (e.g. change captcha type, clear html) etc from within chan or build-worker probs build worker
+
+need to add update method to commit config and make it a getter, as hash could change
+
+add getConfig calls for perms level in route middlewares
+
+ability to update extra mime tyrpes, need access to add then filter  other mimetypes set
+
+make perm levels everywhere into an enum (if they dont exist just freeze an object)
+
+ability to reload themes, add some init() method so it can just be called again
+
+allow updates to renderLocals in helpers.render for captchatype, some method to update locals from getConfig or whatever it will be called. same as a few other places
