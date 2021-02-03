@@ -62,7 +62,7 @@ async function ips() {
 	const Mongo = require(__dirname+'/db/db.js')
 	await Mongo.connect();
 	const Redis = require(__dirname+'/redis.js')
-	const ipSchedule = require(__dirname+'/schedules/ips.js');
+	const { func: ipSchedule } = require(__dirname+'/schedules/tasks/ips.js');
 	await ipSchedule();
 	Redis.redisClient.quit();
 	return Mongo.client.close();

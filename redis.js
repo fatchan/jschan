@@ -2,89 +2,92 @@
 
 const Redis = require('ioredis')
 	, configs = require(__dirname+'/configs/main.js')
-	, client = new Redis(configs.redis)
-	, publisher = new Redis(configs.redis);
+	, sharedClient = new Redis(configs.redis)
+	, subscriber = new Redis(configs.redis)
+	, publisher = new Redis(configs.redis)
+	, messageCallbacks = {
+		'config': [], //others in future?
+	}
 
-client.subscribe('config', (err, count) => {
+subscriber.subscribe('config', (err, count) => {
 	if (err) {
 		return console.error(err);
 	}
 	console.log(`Redis subscribed to ${count} channels`);
 });
 
-client.on("message", (channel, message) => {
-	switch (channel) {
-		case 'config':
-			//TODO: something, change the configs import to a new config handler class/module
-			void 0;
-			break;
-		default:
-			console.error(`Unhandled pubsub channel ${channel} message: ${message}`);
-			break;
-	}
+subscriber.on("message", (channel, message) => {
+	messageCallbacks[channel].forEach(cb => {
+		cb(message);
+	})
 });
 
 module.exports = {
 
-	redisClient: client,
+	redisClient: sharedClient,
+	redisSubsriber: subscriber,
 	redisPublisher: publisher,
+
+	addCallback: (channel, cb) => {
+		messageCallbacks[channel].push(cb);
+	},
 
 	//get a value with key
 	get: (key) => {
-		return client.get(key).then(res => { return JSON.parse(res) });
+		return sharedClient.get(key).then(res => { return JSON.parse(res) });
 	},
 
 	//set a value on key
 	set: (key, value, ttl) => {
 		if (ttl) {
-			return client.set(key, JSON.stringify(value), 'EX', ttl);
+			return sharedClient.set(key, JSON.stringify(value), 'EX', ttl);
 		} else {
-			return client.set(key, JSON.stringify(value));
+			return sharedClient.set(key, JSON.stringify(value));
 		}
 	},
 
 	//set a value on key if not exist
 	setnx: (key, value) => {
-		return client.setnx(key, JSON.stringify(value));
+		return sharedClient.setnx(key, JSON.stringify(value));
 	},
 
 	//add items to a set
 	sadd: (key, value) => {
-		return client.sadd(key, value);
+		return sharedClient.sadd(key, value);
 	},
 
 	//get all members of a set
 	sgetall: (key) => {
-		return client.smembers(key);
+		return sharedClient.smembers(key);
 	},
 
 	//remove an item from a set
 	srem: (key, value) => {
-		return client.srem(key, value);
+		return sharedClient.srem(key, value);
 	},
 
 	//get random item from set
 	srand: (key) => {
-		return client.srandmember(key);
+		return sharedClient.srandmember(key);
 	},
 
 	//delete value with key
 	del: (keyOrKeys) => {
 		if (Array.isArray(keyOrKeys))	{
-			return client.del(...keyOrKeys);
+			return sharedClient.del(...keyOrKeys);
 		} else {
-			return client.del(keyOrKeys);
+			return sharedClient.del(keyOrKeys);
 		}
 	},
 
 	deletePattern: (pattern) => {
 		return new Promise((resolve, reject) => {
-			const stream = client.scanStream({
+			const stream = sharedClient.scanStream({
 				match: pattern
 			});
 			stream.on('data', (keys) => {
 				if (keys.length > 0) {
-					const pipeline = client.pipeline();
+					const pipeline = sharedClient.pipeline();
 					for (let i = 0; i < keys.length; i++) {
 						pipeline.del(keys[i]);
 					}

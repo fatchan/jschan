@@ -1,8 +1,8 @@
 'use strict';
 
-const { MongoClient, ObjectId, Int32 } = require('mongodb')
+const configs = require(__dirname+'/../getconfig.js')()
+	, { MongoClient, ObjectId, Int32 } = require('mongodb')
 	, { migrateVersion } = require(__dirname+'/../package.json')
-	, configs = require(__dirname+'/../configs/main.js');
 
 module.exports = {
 

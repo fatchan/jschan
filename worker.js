@@ -4,7 +4,7 @@ process
 	.on('uncaughtException', console.error)
 	.on('unhandledRejection', console.error);
 
-const { debugLogs } = require(__dirname+'/configs/main.js')
+const { debugLogs } = require(__dirname+'/getconfig.js')()
 	, Mongo = require(__dirname+'/db/db.js');
 
 (async () => {

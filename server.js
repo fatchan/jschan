@@ -4,20 +4,18 @@ process
 	.on('uncaughtException', console.error)
 	.on('unhandledRejection', console.error);
 
-const express = require('express')
+const getConfig = require(__dirname+'/getconfig.js')
+	, express = require('express')
 	, path = require('path')
 	, app = express()
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
-	, { cacheTemplates, boardDefaults, globalLimits, captchaOptions,
-		enableUserBoardCreation, enableUserAccountCreation, cookieSecret,
-		debugLogs, ipHashPermLevel, meta, port, enableWebring } = require(__dirname+'/configs/main.js')
+	, { port, cookieSecret, debugLogs } = getConfig()
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
-	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, Mongo = require(__dirname+'/db/db.js')
 	, Socketio = require(__dirname+'/socketio.js')
-	, commit = require(__dirname+'/helpers/commit.js')
 	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
+	, commit = require(__dirname+'/helpers/commit.js')
 	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
 	, CachePugTemplates = require('cache-pug-templates');
 
@@ -25,7 +23,7 @@ const express = require('express')
 
 	const env = process.env.NODE_ENV;
 	const production = env === 'production';
-	debugLogs && console.log('STARTING IN MODE:', env);
+	debugLogs && console.log('process.env.NODE_ENV =', env);
 
 	// connect to mongodb
 	debugLogs && console.log('CONNECTING TO MONGODB');
@@ -34,7 +32,7 @@ const express = require('express')
 
 	// connect to redis
 	debugLogs && console.log('CONNECTING TO REDIS');
-	const { redisClient } = require(__dirname+'/redis.js');
+	const { redisClient, addCallback } = require(__dirname+'/redis.js');
 
 	// disable useless express header
 	app.disable('x-powered-by');
@@ -60,36 +58,40 @@ const express = require('express')
 	const views = path.join(__dirname, 'views/pages');
 	app.set('view engine', 'pug');
 	app.set('views', views);
-	//cache loaded templates
-	if (cacheTemplates === true) {
-		app.enable('view cache');
-	}
 
-	//default settings
-	app.locals.enableUserAccountCreation = enableUserAccountCreation;
-	app.locals.enableUserBoardCreation = enableUserBoardCreation;
-	app.locals.defaultTheme = boardDefaults.theme;
-	app.locals.defaultCodeTheme = boardDefaults.codeTheme;
-	app.locals.globalLimits = globalLimits;
-	app.locals.ipHashPermLevel = ipHashPermLevel;
-	app.locals.enableWebring = enableWebring;
-	app.locals.commit = commit;
-	app.locals.meta = meta;
-	app.locals.captchaType = captchaOptions.type;
-	app.locals.postFilesSize = formatSize(globalLimits.postFilesSize.max);
-	switch (captchaOptions.type) {
-		case 'google':
-			app.locals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
-			break;
-		case 'hcaptcha':
-			app.locals.hcaptchaSiteKey = captchaOptions.hcaptcha.siteKey;
-			break;
-		case 'grid':
-			app.locals.captchaGridSize = captchaOptions.grid.size;
-			break;
-		default:
-			break;
+	const loadAppLocals = () => {
+		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions,
+			enableUserBoardCreation, enableUserAccountCreation, cookieSecret,
+			debugLogs, ipHashPermLevel, meta, enableWebring } = getConfig();
+		//cache loaded templates
+		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
+		//default settings
+		app.locals.enableUserAccountCreation = enableUserAccountCreation;
+		app.locals.enableUserBoardCreation = enableUserBoardCreation;
+		app.locals.defaultTheme = boardDefaults.theme;
+		app.locals.defaultCodeTheme = boardDefaults.codeTheme;
+		app.locals.globalLimits = globalLimits;
+		app.locals.ipHashPermLevel = ipHashPermLevel;
+		app.locals.enableWebring = enableWebring;
+		app.locals.commit = commit;
+		app.locals.meta = meta;
+		app.locals.captchaType = captchaOptions.type;
+		app.locals.postFilesSize = formatSize(globalLimits.postFilesSize.max);
+		switch (captchaOptions.type) {
+			case 'google':
+				app.locals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
+				break;
+			case 'hcaptcha':
+				app.locals.hcaptchaSiteKey = captchaOptions.hcaptcha.siteKey;
+				break;
+			case 'grid':
+				app.locals.captchaGridSize = captchaOptions.grid.size;
+				break;
+			default:
+				break;
+		}
 	}
+	loadAppLocals(); //todo: make this repeat on config changes
 
 	// routes
 	if (!production) {
