@@ -3,7 +3,7 @@
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
+	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
 	, { pruneImmediately, globalLimits, disableAnonymizerFilePosting } = require(__dirname+'/../../configs/main.js')
 	, { Files } = require(__dirname+'/../../db/');
 

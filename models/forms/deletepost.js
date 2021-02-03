@@ -7,7 +7,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, { pruneImmediately } = require(__dirname+'/../../configs/main.js')
-	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
+	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
 
