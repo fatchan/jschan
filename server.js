@@ -60,10 +60,12 @@ const getConfig = require(__dirname+'/getconfig.js')
 	app.set('views', views);
 
 	const loadAppLocals = () => {
+console.log('loadapplocals')
 		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions,
 			enableUserBoardCreation, enableUserAccountCreation, cookieSecret,
 			debugLogs, ipHashPermLevel, meta, enableWebring } = getConfig();
 		//cache loaded templates
+		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
 		//default settings
 		app.locals.enableUserAccountCreation = enableUserAccountCreation;
@@ -91,7 +93,8 @@ const getConfig = require(__dirname+'/getconfig.js')
 				break;
 		}
 	}
-	loadAppLocals(); //todo: make this repeat on config changes
+	loadAppLocals();
+	addCallback('config', loadAppLocals);
 
 	// routes
 	if (!production) {
