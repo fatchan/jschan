@@ -30,6 +30,7 @@ module.exports = {
 				console.log(`Redis subscribed to ${count} channels`);
 			});
 			subscriber.on("message", (channel, message) => {
+				console.log(`Redis subscriber message from channel ${channel}`);
 				const data = JSON.parse(message);
 				messageCallbacks[channel].forEach(cb => {
 					cb(data);
