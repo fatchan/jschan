@@ -32,7 +32,7 @@ const getConfig = require(__dirname+'/getconfig.js')
 
 	// connect to redis
 	debugLogs && console.log('CONNECTING TO REDIS');
-	const { redisClient, addCallback } = require(__dirname+'/redis.js');
+	const redis = require(__dirname+'/redis.js');
 
 	// disable useless express header
 	app.disable('x-powered-by');
@@ -60,7 +60,6 @@ const getConfig = require(__dirname+'/getconfig.js')
 	app.set('views', views);
 
 	const loadAppLocals = () => {
-console.log('loadapplocals')
 		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions,
 			enableUserBoardCreation, enableUserAccountCreation, cookieSecret,
 			debugLogs, ipHashPermLevel, meta, enableWebring } = getConfig();
@@ -94,7 +93,7 @@ console.log('loadapplocals')
 		}
 	}
 	loadAppLocals();
-	addCallback('config', loadAppLocals);
+	redis.addCallback('config', loadAppLocals);
 
 	// routes
 	if (!production) {
@@ -180,7 +179,7 @@ console.log('loadapplocals')
 			Mongo.client.close();
 			//close redis connection
 			debugLogs && console.log('DISCONNECTING REDIS')
-			redisClient.quit();
+			redis.close();
 			// now close without error
 			process.exit(0);
 		});

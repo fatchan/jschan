@@ -9,27 +9,34 @@ const Redis = require('ioredis')
 		'config': [], //others in future?
 	}
 
-subscriber.subscribe('config', (err, count) => {
-	if (err) {
-		return console.error(err);
-	}
-	console.log(`Redis subscribed to ${count} channels`);
-});
-
-subscriber.on("message", (channel, message) => {
-	messageCallbacks[channel].forEach(cb => {
-		cb(message);
-	})
-});
-
 module.exports = {
 
 	redisClient: sharedClient,
 	redisSubsriber: subscriber,
 	redisPublisher: publisher,
 
+	close: () => {
+		sharedClient.quit();
+		publisher.quit();
+		subscriber.quit();
+	},
+
 	addCallback: (channel, cb) => {
-		messageCallbacks[channel].push(cb);
+		if (messageCallbacks.length == 0) {
+			subscriber.subscribe('config', (err, count) => {
+				if (err) {
+					return console.error(err);
+				}
+				console.log(`Redis subscribed to ${count} channels`);
+			});
+			subscriber.on("message", (channel, message) => {
+				const data = JSON.parse(message);
+				messageCallbacks[channel].forEach(cb => {
+					cb(data);
+				})
+			});
+		}
+		messageCallbacks[channel].push();
 	},
 
 	//get a value with key

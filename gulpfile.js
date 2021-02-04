@@ -53,7 +53,7 @@ async function password() {
 	await Accounts.changePassword('admin', randomPassword);
 	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 
-	Redis.redisClient.quit();
+	Redis.close();
 	return Mongo.client.close();
 
 }
@@ -64,7 +64,7 @@ async function ips() {
 	const Redis = require(__dirname+'/redis.js')
 	const { func: ipSchedule } = require(__dirname+'/schedules/tasks/ips.js');
 	await ipSchedule();
-	Redis.redisClient.quit();
+	Redis.close();
 	return Mongo.client.close();
 }
 
@@ -144,7 +144,7 @@ async function wipe() {
 	});
 
 	await Mongo.client.close();
-	Redis.redisClient.quit();
+	Redis.close();
 
 	//delete all the static files
 	return Promise.all([
@@ -247,7 +247,7 @@ async function cache() {
 		Redis.deletePattern('overboard'),
 		Redis.deletePattern('catalog'),
 	]);
-	Redis.redisClient.quit();
+	Redis.close();
 }
 
 function deletehtml() {
@@ -387,7 +387,7 @@ async function migrate() {
 	}
 
 	await Mongo.client.close();
-	Redis.redisClient.quit();
+	Redis.close();
 
 }
 
