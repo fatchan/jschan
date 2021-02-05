@@ -1,8 +1,16 @@
-big changes in globalmanagesettings model
-update global manage settings pug template
+update globalmanagesettings model
+update globalmanagesettings controller
+update global manage settings pug template (idea: show names of perm levels)
 update paramconverter for mass of new number/trim/array fields, etc for the form
 
+^^^ ok this is so fucking annoying, the controllers need refactoring. so im gonna make some generic handler for that, maybe it could even be made to a module
+
 ---
+
+uhhh, need to make the defaults built into the db, i guess part of gulp reset,
+AND a migration for existing sites to import from configs/main (since the options structure not changing yet)
+
+go through every import/require of configs/main and replace with getconfig and destructures of the return
 
 call gulp tasks for images, captcha, css, html, (e.g. change captcha type, clear html) etc from within chan or build-worker probs build worker
 
