@@ -4,7 +4,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
-	, { redisPublisher } = require(__dirname+'/../../redis.js')
+	, redis = require(__dirname+'/../../redis.js')
 	, getConfig = require(__dirname+'/../../getconfig.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
 	, { remove } = require('fs-extra');
@@ -15,8 +15,10 @@ module.exports = async (req, res, next) => {
 	const oldSettings = getConfig();
 
 	const newSettings = {
-		secureCookies: booleanSetting(req.body.secure_cookies),
-		refererCheck: booleanSetting(req.body.referrer_check),
+		...oldSettings,
+		filters: arraySetting(req.body.filters, oldSettings.filters),
+		filterMode: numberSetting(req.body.filter_mode, oldSettings.filterMode),
+		filterBanDuration: numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
 		allowedHosts: arraySetting(req.body.allowed_hosts, oldSettings.allowedHosts),
 		countryCodeHeader: trimSetting(req.body.country_code_header, oldSettings.countryCodeHeader),
 		ipHeader: trimSetting(req.body.ip_header, oldSettings.ipHeader),
@@ -27,14 +29,6 @@ module.exports = async (req, res, next) => {
 		captchaOptions: {
 			type: trimSetting(req.body.captcha_options_type, oldSettings.captchaOptions.type),
 			generateLimit: trimSetting(req.body.captcha_options_generate_limit, oldSettings.captchaOptions.generateLimit),
-			google: {
-				siteKey: trimSetting(req.body.captcha_options_google_site_key, oldSettings.captchaOptions.google.siteKey),
-				secretKey: trimSetting(req.body.captcha_options_google_secret_key, oldSettings.captchaOptions.google.secretKey),
-			},
-			hcaptcha: {
-				siteKey: trimSetting(req.body.captcha_options_hcaptcha_site_key, oldSettings.captchaOptions.hcaptcha.siteKey),
-				secretKey: trimSetting(req.body.captcha_option_hcaptcha_secret_key, oldSettings.captchaOptions.hcaptcha.secretKey),
-			},
 			grid: {
 				size: trimSetting(req.body.captcha_options_grid_size, oldSettings.captchaOptions.grid.size),
 				imageSize: trimSetting(req.body.captcha_options_grid_image_size, oldSettings.captchaOptions.grid.imageSize),
@@ -46,6 +40,10 @@ module.exports = async (req, res, next) => {
 			},
 			distortion: numberSetting(req.body.captcha_options_distortion, oldSettings.captchaOptions.distortion),
 		},
+		
+/*
+		secureCookies: booleanSetting(req.body.secure_cookies),
+		refererCheck: booleanSetting(req.body.referrer_check),
 		dnsbl: {
 			enabled: booleanSetting(req.body.dnsbl_enabled),
 			blacklists: arraySetting(req.body.dnsbl_blacklists, oldSettings.dnsbl.blacklists),
@@ -249,12 +247,11 @@ module.exports = async (req, res, next) => {
 				other: booleanSetting(req.body.board_defaults_allowed_file_types_other, oldSettings.boardDefaults.allowedFileTypes.other)
 			}
 		},
-		filters: arraySetting(req.body.filters, oldSettings.filters),
-		filterMode: numberSetting(req.body.filter_mode, oldSettings.filterMode),
-		filterBanDuration: numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
+
+*/
 	};
 
-	cache.set('globalsettings', newSettings);
+	redis.set('globalsettings', newSettings);
 
 /*
 //todo: implement removing pages/rebuilding for all affected boards i.e. query for ones with settings.catchaMode < newSettings.captchaMode
@@ -301,7 +298,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	//publish to redis so running processes get updated config
-	redisPublisher.publish('config', JSON.stringify(newSettings));
+	redis.redisPublisher.publish('config', JSON.stringify(newSettings));
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',

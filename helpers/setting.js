@@ -14,7 +14,7 @@ module.exports = {
 		if (setting !== null) {
 			const split = setting
 				.split(/\r?\n/)
-				.fitler(n => n);
+				.filter(n => n);
 			return split
 				.slice(0, limit || split.length);
 		}

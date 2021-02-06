@@ -10,7 +10,7 @@ const getConfig = require(__dirname+'/getconfig.js')
 	, app = express()
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
-	, { port, cookieSecret, debugLogs } = getConfig()
+	, { port, cookieSecret, debugLogs, google, hcaptcha } = require(__dirname+'/configs/secrets.js')
 	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, Mongo = require(__dirname+'/db/db.js')
 	, Socketio = require(__dirname+'/socketio.js')
@@ -78,19 +78,9 @@ const getConfig = require(__dirname+'/getconfig.js')
 		app.locals.meta = meta;
 		app.locals.captchaType = captchaOptions.type;
 		app.locals.postFilesSize = formatSize(globalLimits.postFilesSize.max);
-		switch (captchaOptions.type) {
-			case 'google':
-				app.locals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
-				break;
-			case 'hcaptcha':
-				app.locals.hcaptchaSiteKey = captchaOptions.hcaptcha.siteKey;
-				break;
-			case 'grid':
-				app.locals.captchaGridSize = captchaOptions.grid.size;
-				break;
-			default:
-				break;
-		}
+		app.locals.googleRecaptchaSiteKey = google.siteKey;
+		app.locals.hcaptchaSiteKey = hcaptcha.siteKey;
+		app.locals.captchaGridSize = captchaOptions.grid.size;
 	}
 	loadAppLocals();
 	redis.addCallback('config', loadAppLocals);

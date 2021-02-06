@@ -1,15 +1,12 @@
 'use strict';
 
-const { addCallback } = require(__dirname+'/redis.js');
-
-let config = require(__dirname+'/configs/main.js');
+const redis = require(__dirname+'/redis.js');
 
 const loadConfig = (message) => {
-	delete require.cache[__dirname+'/configs/main.js'];
-	config = /*message*/ require(__dirname+'/configs/main.js');
+	config = message || redis.get('globalsettings');
 }
 
 loadConfig();
-addCallback('config', loadConfig);
+redis.addCallback('config', loadConfig);
 
 module.exports = () => { return config };

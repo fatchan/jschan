@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
 	//at some point in future the schemas can stored in a common place and updated along with config in redis sub 
 	const schema = [
 		{ result: lengthBody(req.body.filters, 0, 5000), expected: false, error: 'Filter text cannot exceed 5000 characters' },
-		{ result: numberBody(req.body.req.body.filter_mode, 0, 2), expected: false, error: 'Filter mode must be a number from 0-2' },
+		{ result: numberBody(req.body.filter_mode, 0, 2), expected: false, error: 'Filter mode must be a number from 0-2' },
 		{ result: numberBody(req.body.ban_duration), expected: false, error: 'Invalid filter auto ban duration' },
 		{ result: lengthBody(req.body.allowed_hosts, 0, 100), expected: false, error: 'Allowed hosts must not exceed 100 entries' },
 		{ result: lengthBody(req.body.country_code_header, 0, 100), expected: false, error: 'Country code header length must not exceed 100 characters' },
@@ -31,16 +31,15 @@ module.exports = async (req, res, next) => {
 		{ result: numberBody(req.body.captcha_options_generate_limit, 1), expected: false, error: 'Captcha options generate limit must be a number > 0' },
 		{ result: numberBody(req.body.captcha_options_grid_size, 2, 6), expected: false, error: 'Captcha options grid size must be a number from 2-8' },
 		{ result: numberBody(req.body.captcha_options_image_size, 50, 500), expected: false, error: 'Captcha options image size must be a number from 50-500' },
-//		{ result: xx, expected: false, error: 'xx' },
+		{ result: numberBody(req.body.captcha_options_grid_icon_y_offset, 0, 50), expected: false, error: 'Captcha options icon y offset must be a number from 0-50' },
+		{ result: numberBody(req.body.captcha_options_num_distorts_min, 0, 10), expected: false, error: 'Captcha options min distorts must be a number from 0-10' },
+		{ result: numberBody(req.body.captcha_options_num_distorts_max, 0, 10), expected: false, error: 'Captcha options max distorts must be a number from 0-10' },
+		{ result: minmaxBody(req.body.captcha_options_num_distorts_min, req.body.captcha_options_num_distorts_max), expected: false, error: 'Captcha options distorts min must be less than max' },
+		{ result: numberBody(req.body.captcha_options_distortion, 0, 50), expected: false, error: 'Captcha options distortion must be a number from 0-50' },
 	];
 
 /*
 		captchaOptions: {
-			grid: {
-				size: trimSetting(req.body.captcha_options_grid_size, oldSettings.captchaOptions.grid.size),
-				imageSize: trimSetting(req.body.captcha_options_grid_image_size, oldSettings.captchaOptions.grid.imageSize),
-				iconYOffset: trimSetting(req.body.captcha_options_grid_icon_y_offset, oldSettings.captchaOptions.grid.iconYOffset),
-			},
 			numDistorts: {
 				min: numberSetting(req.body.captcha_options_num_distorts_min, oldSettings.captchaOptions.numDistorts.min),
 				max: numberSetting(req.body.captcha_options_num_distorts_max, oldSettings.captchaOptions.numDistorts.max),
@@ -181,7 +180,7 @@ module.exports = async (req, res, next) => {
 	};
 */
 
-	const errors = checkSchema(settingSchema)
+	const errors = checkSchema(schema);
 
 	if (errors.length > 0) {
 		return dynamicResponse(req, res, 400, 'message', {

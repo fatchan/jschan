@@ -1,10 +1,10 @@
 'use strict';
 
 const Redis = require('ioredis')
-	, configs = require(__dirname+'/configs/main.js')
-	, sharedClient = new Redis(configs.redis)
-	, subscriber = new Redis(configs.redis)
-	, publisher = new Redis(configs.redis)
+	, secrets = require(__dirname+'/configs/secrets.js')
+	, sharedClient = new Redis(secrets.redis)
+	, subscriber = new Redis(secrets.redis)
+	, publisher = new Redis(secrets.redis)
 	, messageCallbacks = {
 		'config': [], //others in future?
 	}
@@ -12,7 +12,7 @@ const Redis = require('ioredis')
 module.exports = {
 
 	redisClient: sharedClient,
-	redisSubsriber: subscriber,
+	redisSubscriber: subscriber,
 	redisPublisher: publisher,
 
 	close: () => {

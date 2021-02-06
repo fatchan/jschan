@@ -38,4 +38,49 @@ block content
 			.row
 				.label Filter Auto Ban Duration
 				input(type='text' name='ban_duration' placeholder='e.g. 1w' value=settings.filterBanDuration)
+			.row
+				.label Allowed Hosts
+				textarea(name='allowed_hosts' placeholder='Newline separated') #{settings.allowedHosts.join('\n')}
+			.row
+				.label Country Code Header
+				input(type='text' name='country_code_header' value=settings.countryCodeHeader)
+			.row
+				.label IP Header
+				input(type='text' name='ip_header' value=settings.ipHeader)
+			.row
+				.label Meta Site Name
+				input(type='text' name='meta_site_name' value=settings.meta.siteName)
+			.row
+				.label Meta URL
+				input(type='text' name='meta_url' value=settings.meta.url)
+			.row
+				h4.mv-5 Captcha
+			.row
+				.label Type
+				select(name='captcha_options_type')
+					option(value='text', selected=settings.captchaOptions.type === 'text') Text
+					option(value='grid', selected=settings.captchaOptions.type === 'grid') Grid
+					option(value='google', selected=settings.captchaOptions.type === 'google') Google
+					option(value='hcaptcha', selected=settings.captchaOptions.type === 'hcaptcha') Hcaptcha
+			.row
+				.label Generate Limit
+				input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
+			.row
+				.label Image Size
+				input(type='number' name='captcha_options_image_size' value=settings.captchaOptions.grid.imageSize)
+			.row
+				.label Grid Size
+				input(type='number' name='captcha_options_grid_size' value=settings.captchaOptions.grid.size)
+			.row
+				.label Grid Icon Offset
+				input(type='number' name='captcha_options_grid_icon_y_offset' value=settings.captchaOptions.grid.iconYOffset)
+			.row
+				.label Minimum Distortions
+				input(type='number' name='captcha_options_num_distorts_min' value=settings.captchaOptions.numDistorts.min)
+			.row
+				.label Maximum Distortions
+				input(type='number' name='captcha_options_num_distorts_max' value=settings.captchaOptions.numDistorts.max)
+			.row
+				.label Distortion Intensity
+				input(type='number' name='captcha_options_distortion' value=settings.captchaOptions.distortion)
 			input(type='submit', value='save settings')
