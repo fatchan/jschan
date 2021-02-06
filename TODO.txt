@@ -1,27 +1,21 @@
-update globalmanagesettings model
-update globalmanagesettings controller
-update global manage settings pug template (idea: show names of perm levels)
-update paramconverter for mass of new number/trim/array fields, etc for the form
 
-^^^ ok this is so fucking annoying, the controllers need refactoring. so im gonna make some generic handler for that, maybe it could even be made to a module
+update global manage settings pug template (idea: show names of perm levels)
 
 ---
+
+callback for perms level check to delete board
+
+call gulp tasks for images, captcha, css, html, (e.g. change captcha type, clear html) etc from within chan or build-worker probs build worker. in the globalmanagesettings model? actually DUH just make the gulp tasks exported as a map then pass a build task with task name
 
 uhhh, need to make the defaults built into the db, i guess part of gulp reset,
 AND a migration for existing sites to import from configs/main (since the options structure not changing yet)
 
-go through every import/require of configs/main and replace with getconfig and destructures of the return
-
-call gulp tasks for images, captcha, css, html, (e.g. change captcha type, clear html) etc from within chan or build-worker probs build worker
-
-need to add update method to commit config and make it a getter, as hash could change
-
-add getConfig calls for perms level in route middlewares
-
-ability to update extra mime tyrpes, need access to add then filter  other mimetypes set
+set max, min, maxlength, etc in views/pages/globalmanagesettings
 
 make perm levels everywhere into an enum (if they dont exist just freeze an object)
 
-ability to reload themes, add some init() method so it can just be called again
+proper validation for dnsbl URL/ips
 
-allow updates to renderLocals in helpers.render for captchatype, some method to update locals from getConfig or whatever it will be called. same as a few other places
+proper validation for extra mimetypes < probably kinda important
+
+refactor every controller to the new format.. holy FUCK

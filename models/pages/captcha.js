@@ -7,9 +7,11 @@ const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 module.exports = async (req, res, next) => {
 
 	const { secureCookies, rateLimitCost, captchaOptions } = config.get;
-	const  generateCaptcha = (captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha')
-			? require(__dirname+`/../../helpers/captcha/generators/${captchaOptions.type}.js`)
-			: null;
+	if (!['grid', 'text'].includes(captchaOptions.type)) {
+		return next(); //only grid and text captcha continue
+	}
+
+	const generateCaptcha = require(__dirname+`/../../helpers/captcha/generators/${captchaOptions.type}.js`);
 
 	if (!production && req.cookies['captchaid'] != null) {
 		return res.redirect(`/captcha/${req.cookies['captchaid']}.jpg`);

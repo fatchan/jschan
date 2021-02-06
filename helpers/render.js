@@ -1,9 +1,6 @@
 'use strict';
 
-const { enableUserBoardCreation, enableUserAccountCreation,
-	lockWait, globalLimits, boardDefaults, cacheTemplates,
-	meta, enableWebring, captchaOptions } = require(__dirname+'/../config.js').get
-	, { outputFile } = require('fs-extra')
+const { outputFile } = require('fs-extra')
 	, formatSize = require(__dirname+'/files/formatsize.js')
 	, pug = require('pug')
 	, path = require('path')
@@ -11,8 +8,20 @@ const { enableUserBoardCreation, enableUserAccountCreation,
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { hcaptcha, google } = require(__dirname+'/../configs/secrets.js')
 	, redlock = require(__dirname+'/../redlock.js')
+	, { addCallback } = require(__dirname+'/../redis.js')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
-	, renderLocals = {
+	, config = require(__dirname+'/../config.js');
+
+let { enableUserBoardCreation, enableUserAccountCreation,
+		lockWait, globalLimits, boardDefaults, cacheTemplates,
+		meta, enableWebring, captchaOptions } = config.get
+	, renderLocals = null;
+
+const  updateLocals = () => {
+	({ enableUserBoardCreation, enableUserAccountCreation,
+		lockWait, globalLimits, boardDefaults, cacheTemplates,
+		meta, enableWebring, captchaOptions } = config.get);
+	renderLocals = {
 		cache: cacheTemplates,
 		meta,
 		commit,
@@ -23,22 +32,15 @@ const { enableUserBoardCreation, enableUserAccountCreation,
 		enableUserBoardCreation,
 		globalLimits,
 		enableWebring,
-		captchaType: captchaOptions.type
-	}
+		captchaType: captchaOptions.type,
+		googleRecaptchaSiteKey: google.siteKey,
+		hcaptchaSitekey: hcaptcha.siteKey,
+		captchaGridSize: captchaOptions.grid.size,
+	};
+};
 
-switch (captchaOptions.type) {
-	case 'google':
-		renderLocals.googleRecaptchaSiteKey = google.siteKey;
-		break;
-	case 'hcaptcha':
-		renderLocals.hcaptchaSitekey = hcaptcha.siteKey;
-		break;
-	case 'grid':
-		renderLocals.captchaGridSize = captchaOptions.grid.size;
-		break;
-	default:
-		break;
-}
+updateLocals();
+addCallback('config', updateLocals);
 
 module.exports = async (htmlName, templateName, options, json=null) => {
 	const html = pug.renderFile(`${templateDirectory}${templateName}`, {

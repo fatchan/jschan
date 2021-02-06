@@ -2,22 +2,15 @@
 
 const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobalsettings.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, themeHelper = require(__dirname+'/../../helpers/themes.js')
+	, config = require(__dirname+'/../../config.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody,
 		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
 module.exports = async (req, res, next) => {
 
-/*
-{
-	result: <check function, either predefined, some other check like isAlphaNumeric, or a custom callback>,
-	expected: <true or false>
-	error: <error text>,
-	permLevel: [optional perm level],
-}
-*/
+	const { globalLimits } = config.get;
 
-	//not declared at topf of file because values could change, so maybe a lil slower.
-	//at some point in future the schemas can stored in a common place and updated along with config in redis sub 
 	const schema = [
 		{ result: lengthBody(req.body.filters, 0, 5000), expected: false, error: 'Filter text cannot exceed 5000 characters' },
 		{ result: numberBody(req.body.filter_mode, 0, 2), expected: false, error: 'Filter mode must be a number from 0-2' },
@@ -36,155 +29,95 @@ module.exports = async (req, res, next) => {
 		{ result: numberBody(req.body.captcha_options_num_distorts_max, 0, 10), expected: false, error: 'Captcha options max distorts must be a number from 0-10' },
 		{ result: minmaxBody(req.body.captcha_options_num_distorts_min, req.body.captcha_options_num_distorts_max), expected: true, error: 'Captcha options distorts min must be less than max' },
 		{ result: numberBody(req.body.captcha_options_distortion, 0, 50), expected: false, error: 'Captcha options distortion must be a number from 0-50' },
+		{ result: numberBody(req.body.dnsbl_cache_time), expected: false, error: 'Invalid dnsbl cache time' },
+		{ result: numberBody(req.body.flood_timers_same_content_same_ip), expected: false, error: 'Invalid flood time same content same ip' },
+		{ result: numberBody(req.body.flood_timers_same_content_any_ip), expected: false, error: 'Invalid flood time same contenet any ip' },
+		{ result: numberBody(req.body.flood_timers_any_content_same_ip), expected: false, error: 'Invalid flood time any content same ip' },
+		{ result: numberBody(req.body.block_bypass_expire_after_uses), expected: false, error: 'Block bypass expire after uses must be a number > 0' },
+		{ result: numberBody(req.body.block_bypass_expire_after_time), expected: false, error: 'Invalid block bypass expire after time' },
+		{ result: numberBody(req.body.ip_hash_perm_level), expected: false, error: 'Invalid ip hash perm level' },
+		{ result: numberBody(req.body.delete_board_perm_level), expected: false, error: 'Invalid delete board perm level' },
+		{ result: numberBody(req.body.rate_limit_cost_captcha, 1, 100), expected: false, error: 'Rate limit cost captcha must be a number from 1-100' },
+		{ result: numberBody(req.body.rate_limit_cost_board_settings, 1, 100), expected: false, error: 'Rate limit cost board settings must be a number from 1-100' },
+		{ result: numberBody(req.body.rate_limit_cost_edit_post, 1, 100), expected: false, error: 'Rate limit cost edit post must be a number from 1-100' },
+		{ result: numberBody(req.body.overboard_limit), expected: false, error: 'Invalid overboard limit' },
+		{ result: numberBody(req.body.overboard_catalog_limit), expected: false, error: 'Invalid overboard catalog limit' },
+		{ result: numberBody(req.body.lock_wait), expected: false, error: 'Invalid lock wait' },
+		{ result: numberBody(req.body.prune_modlogs), expected: false, error: 'Prune modlogs must be a number of days' },
+		{ result: numberBody(req.body.prune_ips), expected: false, error: 'Prune ips must be a number of days' },
+		{ result: lengthBody(req.body.thumb_extension, 1), expected: false, error: 'Thumbnail extension must be at least 1 character' },
+		{ result: numberBody(req.body.thumb_size), expected: false, error: 'Invalid thumbnail size' },
+		{ result: numberBody(req.body.video_thumb_percentage, 0, 100), expected: false, error: 'Video thumbnail percentage must be a number from 1-100' },
+		{ result: numberBody(req.body.default_ban_duration), expected: false, error: 'Invalid default ban duration' },
+		{ result: numberBody(req.body.quote_limit), expected: false, error: 'Quote limit must be a number' },
+		{ result: numberBody(req.body.preview_replies), expected: false, error: 'Preview replies must be a number' },
+		{ result: numberBody(req.body.sticky_preview_replies), expected: false, error: 'Sticky preview replies must be a number' },
+		{ result: numberBody(req.body.early_404_fraction), expected: false, error: 'Early 404 fraction must be a number' },
+		{ result: numberBody(req.body.early_404_replies), expected: false, error: 'Early 404 fraction must be a number' },
+		{ result: numberBody(req.body.max_recent_news), expected: false, error: 'Max recent news must be a number' },
+		{ result: numberBody(req.body.space_file_name_replacement, 1, 1), expected: false, error: 'Space file name replacement must be 1 character' },
+		{ result: lengthBody(req.body.highlight_options_language_subset, 0, 10000), expected: false, error: 'Highlight options language subset' },
+		{ result: lengthBody(req.body.highlight_options_language_threshold), expected: false, error: 'Highlight options threshold must be a number' },
+		{ result: numberBody(req.body.global_limits_thread_limit_min), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_thread_limit_max), expected: false, error: '' },
+		{ result: minmaxBody(req.body.global_limits_thread_limit_min, req.body.global_limits_thread_limit_max), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_reply_limit_min), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_reply_limit_max), expected: false, error: '' },
+		{ result: minmaxBody(req.body.global_limits_reply_limit_min, req.body.global_limits_reply_limit_max), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_bump_limit_min), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_bump_limit_max), expected: false, error: '' },
+		{ result: minmaxBody(req.body.global_limits_bump_limit_min, req.body.global_limits_bump_limit_max), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_post_files_max), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_post_files_size_max), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_banner_files_size), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_banner_files_width, 1), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_banner_files_height, 1), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_banner_files_max), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_banner_files_total), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_name), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_email), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_subject), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_postpassword), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_message), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_report_reason), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_ban_reason), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_log_message), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_uri), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_boardname), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_field_length_description), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_multi_input_posts_anon), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_multi_input_posts_staff), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_custom_css_max), expected: false, error: '' },
+		{ result: lengthBody(req.body.global_limits_custom_css_filters, 0, 10000), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_custom_pages_max), expected: false, error: '' },
+		{ result: numberBody(req.body.global_limits_custom_pages_max_length), expected: false, error: '' },
+		{ result: inArrayBody(req.body.board_defaults_theme, themeHelper.themes), expected: false, error: '' },
+		{ result: inArrayBody(req.body.board_defaults_code_theme, themeHelper.codeThemes), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_lock_mode, 0, 2), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_file_r9k_mode, 0, 2), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_message_r9k_mode, 0, 2), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_captcha_mode, 0, 2), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_tph_trigger), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_pph_trigger), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_pph_trigger_action, 0, 4), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_tph_trigger_action, 0, 4), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_captcha_reset, 0, 2), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_lock_reset, 0, 2), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_reply_limit, globalLimits.replyLimit.min, globalLimits.replyLimit.max), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_thread_limit, globalLimits.threadLimit.min, globalLimits.threadLimit.max), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_bump_limit, globalLimits.bumpLimit.min, globalLimits.bumpLimit.max), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_max_files, 0, globalLimits.postFiles.max), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_min_thread_message_length), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_min_reply_message_length), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_max_thread_message_length, 0, globalLimits.fieldLength.message), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_max_reply_message_length, 0, globalLimits.fieldLength.message), expected: false, error: '' },
+		{ result: minmaxBody(req.body.board_defaults_min_thread_message_length, req.body.board_defaults_max_thread_message_length), expected: false, error: '' },
+		{ result: minmaxBody(req.body.board_defaults_min_reply_message_length, req.body.board_defaults_max_reply_message_length), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_filter_mode, 0, 2), expected: false, error: '' },
+		{ result: numberBody(req.body.board_defaults_filter_ban_duration), expected: false, error: '' },
 	];
 
-console.log(schema)
-
-/*
-		captchaOptions: {
-			numDistorts: {
-				min: numberSetting(req.body.captcha_options_num_distorts_min, oldSettings.captchaOptions.numDistorts.min),
-				max: numberSetting(req.body.captcha_options_num_distorts_max, oldSettings.captchaOptions.numDistorts.max),
-			},
-			distortion: numberSetting(req.body.captcha_options_distortion, oldSettings.captchaOptions.distortion),
-		},
-		dnsbl: {
-			blacklists: arraySetting(req.body.dnsbl_blacklists, oldSettings.dnsbl.blacklists),
-			cacheTime: numberSetting(req.body.dnsbl_cache_time, oldSettings.dnsbl.cacheTime),
-		},
-		floodTimers: {
-			sameContentSameIp: numberSetting(req.body.flood_timers_same_content_same_ip, oldSettings.floodTimers.sameContentSameIp),
-			sameContentAnyIp: numberSetting(req.body.flood_timers_same_content_any_ip, oldSettings.floodTimers.sameContentAnyIp),
-			anyContentSameIp: numberSetting(req.body.flood_timers_any_content_same_ip, oldSettings.floodTimers.anyContentSameIp),
-		},
-		blockBypass: {
-			expireAfterUses: numberSetting(req.body.block_bypass_expire_after_uses, oldSettings.blockBypass.expireAfterUses),
-			expireAfterTime: numberSetting(req.body.block_bypass_expire_after_time, oldSettings.blockBypass.expireAfterTime),
-		},
-		ipHashPermLevel: numberSetting(req.body.ip_hash_perm_level, oldSettings.ipHashPermLevel),
-		deleteBoardPermLevel: numberSetting(req.body.delete_board_perm_level, oldSettings.deleteBoardPermLevel),
-		rateLimitCost: {
-			captcha: numberSetting(req.body.rate_limit_cost_captcha, oldSettings.rateLimitCost.captcha),
-			boardSettings: numberSetting(req.body.rate_limit_cost_board_settings, oldSettings.rateLimitCost.boardSettings),
-			editPost: numberSetting(req.body.rate_limit_cost_edit_post, oldSettings.rateLimitCost.editPost),
-		},
-		overboardLimit: numberSetting(req.body.overboard_limit, oldSettings.overboardLimit),
-		overboardCatalogLimit: numberSetting(req.body.overboard_catalog_limit, oldSettings.overboardCatalogLimit),
-		lockWait: numberSetting(req.body.lock_wait, oldSettings.lockWait),
-		pruneModlogs: numberSetting(req.body.prune_modlogs, oldSettings.pruneModlogs),
-		thumbExtension: trimSetting(req.body.thumb_extension, oldSettings.thumbExtension),
-		thumbSize: numberSetting(req.body.thumb_size, oldSettings.thumbSize),
-		videoThumbPercentage: numberSetting(req.body.video_thumb_percentage, oldSettings.videoThumbPercentage),
-		otherMimeTypes: arraySetting(req.body.other_mime_types, oldSettings.otherMimeTypes),
-		defaultBanDuration: numberSetting(req.body.default_ban_duration, oldSettings.defaultBanDuration),
-		quoteLimit: numberSetting(req.body.quote_limit, oldSettings.quoteLimit),
-		previewReplies: numberSetting(req.body.preview_replies, oldSettings.previewReplies),
-		stickyPreviewReplies: numberSetting(req.body.sticky_preview_replies, oldSettings.stickyPreviewReplies),
-		early404Fraction: numberSetting(req.body.early_404_fraction, oldSettings.early404Fraction),
-		early404Replies: numberSetting(req.body.early_404_replies, oldSettings.early404Replies),
-		maxRecentNews: numberSetting(req.body.max_recent_news, oldSettings.maxRecentNews),
-		spaceFileNameReplacement: trimSetting(req.body.space_file_name_replacement, oldSettings.spaceFileNameReplacement),
-		highlightOptions: {
-			languageSubset: arraySetting(req.body.highlight_options_language_subset, oldSettings.highlightOptions.languageSubset),
-			threshold: numberSetting(req.body.highlight_options_threshold, oldSettings.highlightOptions.threshold),
-
-		},
-		themes: arraySetting(req.body.themes, oldSettings.themes),
-		codeThemes: arraySetting(req.body.code_themes, oldSettings.codeThemes),
-		globalLimits:  {
-			threadLimit: {
-				min: numberSetting(req.body.global_limits_thread_limit_min, oldSettings.globalLimits.threadLimit.min),
-				max: numberSetting(req.body.global_limits_thread_limit_max, oldSettings.globalLimits.threadLimit.max),
-			},
-			replyLimit: {
-				min: numberSetting(req.body.global_limits_reply_limit_min, oldSettings.globalLimits.replyLimit.min),
-				max: numberSetting(req.body.global_limits_reply_limit_max, oldSettings.globalLimits.replyLimit.max),
-			},
-			bumpLimit: {
-				min: numberSetting(req.body.global_limits_bump_limit_min, oldSettings.globalLimits.bumpLimit.min),
-				max: numberSetting(req.body.global_limits_bump_limit_max, oldSettings.globalLimits.bumpLimit.max),
-			},
-			postFiles: {
-				max: numberSetting(req.body.global_limits_post_files_max, oldSettings.globalLimits.postFiles.max),
-			},
-			postFilesSize: {
-				max: numberSetting(req.body.global_limits_post_files_size_max, oldSettings.globalLimits.postFilesSize.max),
-			},
-			bannerFiles: {
-				width: numberSetting(req.body.global_limits_banner_files_width, oldSettings.globalLimits.bannerFiles.width),
-				height: numberSetting(req.body.global_limits_banner_files_height, oldSettings.globalLimits.bannerFiles.height),
-				max: numberSetting(req.body.global_limits_banner_files_max, oldSettings.globalLimits.bannerFiles.max),
-				total: numberSetting(req.body.global_limits_banner_files_total, oldSettings.globalLimits.bannerFiles.total),
-			},
-			bannerFilesSize: {
-				max: numberSetting(req.body.global_limits_banner_files_size_max, oldSettings.globalLimits.bannerFilesSize.max),
-			},
-			fieldLength: {
-				name: numberSetting(req.body.global_limits_field_length_name, oldSettings.globalLimits.fieldLength.name),
-				email: numberSetting(req.body.global_limits_field_length_email, oldSettings.globalLimits.fieldLength.email),
-				subject: numberSetting(req.body.global_limits_field_length_subject, oldSettings.globalLimits.fieldLength.subject),
-				postpassword: numberSetting(req.body.global_limits_field_length_postpassword, oldSettings.globalLimits.fieldLength.postpassword),
-				message: numberSetting(req.body.global_limits_field_length_message, oldSettings.globalLimits.fieldLength.message),
-				report_reason: numberSetting(req.body.global_limits_field_length_report_reason, oldSettings.globalLimits.fieldLength.report_reason),
-				ban_reason: numberSetting(req.body.global_limits_field_length_ban_reason, oldSettings.globalLimits.fieldLength.ban_reason),
-				log_message: numberSetting(req.body.global_limits_field_length_log_message, oldSettings.globalLimits.fieldLength.log_message),
-				uri: numberSetting(req.body.global_limits_field_length_uri, oldSettings.globalLimits.fieldLength.uri),
-				boardname: numberSetting(req.body.global_limits_field_length_boardname, oldSettings.globalLimits.fieldLength.boardname),
-				description: numberSetting(req.body.global_limits_field_length_description, oldSettings.globalLimits.fieldLength.description),
-			},
-			multiInputs: {
-				posts: {
-					anon: numberSetting(req.body.global_limits_multi_input_posts_anon, oldSettings.globalLimits.multiInputs.posts.anon),
-					staff: numberSetting(req.body.global_limits_multi_input_posts_staff, oldSettings.globalLimits.multiInputs.posts.staff),
-				},
-			},
-			customCss: {
-				max: numberSetting(req.body.global_limits_custom_css_max, oldSettings.globalLimits.customCss.max),
-				filters: arraySetting(req.body.global_limits_custom_css_filters, oldSettings.globalLimits.customCss.filters),
-			},
-			customPages: {
-				max: numberSetting(req.body.global_limits_custom_pages_max, oldSettings.globalLimits.customPages.max),
-				maxLength: numberSetting(req.body.global_limits_custom_pages_max_length, oldSettings.globalLimits.customPages.maxLength),
-			}
-		},
-		boardDefaults: {
-			theme: trimSetting(req.body.board_defaults_theme, oldSettings.boardDefaults.theme),
-			codeTheme: trimSetting(req.body.board_defaults_code_theme, oldSettings.boardDefaults.codeTheme),
-			lockMode: numberSetting(req.body.board_defaults_lock_mode, oldSettings.boardDefaults.lockMode),
-			fileR9KMode: numberSetting(req.body.board_defaults_file_r9k_mode, oldSettings.boardDefaults.fileR9KMode),
-			messageR9KMode: numberSetting(req.body.board_defaults_message_r9k_mode, oldSettings.boardDefaults.messageR9KMode),
-			captchaMode: numberSetting(req.body.board_defaults_captcha_mode, oldSettings.boardDefaults.captchaMode),
-			tphTrigger: numberSetting(req.body.board_defaults_tph_trigger, oldSettings.boardDefaults.tphTrigger),
-			pphTrigger: numberSetting(req.body.board_defaults_pph_trigger, oldSettings.boardDefaults.pphTrigger),
-			tphTriggerAction: numberSetting(req.body.board_defaults_tph_trigger_action, oldSettings.boardDefaults.tphTriggerAction),
-			pphTriggerAction: numberSetting(req.body.board_defaults_pph_trigger_action, oldSettings.boardDefaults.pphTriggerAction),
-			captchaReset: numberSetting(req.body.board_defaults_captcha_reset, oldSettings.boardDefaults.captchaReset),
-			lockReset: numberSetting(req.body.board_defaults_lock_reset, oldSettings.boardDefaults.lockReset),
-			threadLimit: numberSetting(req.body.board_defaults_thread_limit, oldSettings.boardDefaults.threadLimit),
-			replyLimit: numberSetting(req.body.board_defaults_reply_limit, oldSettings.boardDefaults.replyLimit),
-			bumpLimit: numberSetting(req.body.board_defaults_bump_limit, oldSettings.boardDefaults.bumpLimit),
-			maxFiles: numberSetting(req.body.board_defaults_max_files, oldSettings.boardDefaults.maxFiles),
-			minThreadMessageLength: numberSetting(req.body.board_defaults_min_thread_message_length, oldSettings.boardDefaults.minThreadMessageLength),
-			minReplyMessageLength: numberSetting(req.body.board_defaults_min_reply_message_length, oldSettings.boardDefaults.minReplyMessageLength),
-			maxThreadMessageLength: numberSetting(req.body.board_defaults_max_thread_message_length, oldSettings.boardDefaults.maxThreadMessageLength),
-			maxReplyMessageLength: numberSetting(req.body.board_defaults_max_reply_message_length, oldSettings.boardDefaults.maxReplyMessageLength),
-			defaultName: trimSetting(req.body.board_defaults_default_name, oldSettings.boardDefaults.defaultName),
-			customCSS: null,
-			blockedCountries: [],
-			filters: arraySetting(req.body.board_defaults_filters, oldSettings.boardDefaults.filters),
-			filterMode: numberSetting(req.body.board_defaults_filter_mode, oldSettings.boardDefaults.filterMode),
-			filterBanDuration: numberSetting(req.body.board_defaults_filter_ban_duration, oldSettings.boardDefaults.filterBanDuration),
-			announcement: {
-				raw: null,
-				markdown: null
-			},
-		},
-	};
-*/
-
 	const errors = await checkSchema(schema);
-
-console.log(errors)
 
 	if (errors.length > 0) {
 		return dynamicResponse(req, res, 400, 'message', {

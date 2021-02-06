@@ -10,10 +10,10 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 	, numberFields = ['sticky', 'lock_reset', 'captcha_reset', 'filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode',
 		'tph_trigger', 'pph_trigger', 'pph_trigger_action', 'tph_trigger_action', 'bump_limit', 'reply_limit', 'move_to_thread', 'postId',
 		'max_files', 'thread_limit', 'thread', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length', 'min_reply_message_length', 'auth_level',
-		'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max', 'captcha_options_distortion', 'dnsbl_cache_time', 'flood_timers_same_content_same_ip',
-		'flood_timers_same_content_any_ip', 'flood_timers_any_content_same_ip', 'block_bypass_expire_after_uses', 'block_bypass_expire_after_time', 'ip_hash_perm_level',
+		'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max', 'captcha_options_distortion', 'flood_timers_same_content_same_ip',
+		'flood_timers_same_content_any_ip', 'flood_timers_any_content_same_ip', 'block_bypass_expire_after_uses', 'ip_hash_perm_level',
 		'delete_board_perm_level', 'rate_limit_cost_captcha', 'rate_limit_cost_board_settings', 'rate_limit_cost_edit_post', 'overboard_limit', 'overboard_catalog_limit',
-		'lock_wait', 'prune_modlogs', 'thumb_size', 'video_thumb_percentage', 'default_ban_duration', 'quote_limit', 'preview_replies', 'sticky_preview_replies',
+		'lock_wait', 'prune_modlogs', 'thumb_size', 'video_thumb_percentage', 'quote_limit', 'preview_replies', 'sticky_preview_replies',
 		'early_404_fraction', 'early_404_replies', 'max_recent_news', 'highlight_options_threshold', 'global_limits_thread_limit_min', 'global_limits_thread_limit_max',
 		'global_limits_reply_limit_min', 'global_limits_reply_limit_max', 'global_limits_bump_limit_min', 'global_limits_bump_limit_max', 'global_limits_post_files_max',
 		'global_limits_post_files_size_max', 'global_limits_banner_files_width', 'global_limits_banner_files_height', 'global_limits_banner_files_max',
@@ -26,8 +26,9 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 		'board_defaults_tph_trigger_action', 'board_defaults_pph_trigger_action', 'board_defaults_captcha_reset', 'board_defaults_lock_reset', 'board_defaults_thread_limit',
 		'board_defaults_reply_limit', 'board_defaults_bump_limit', 'board_defaults_max_files', 'board_defaults_min_thread_message_length',
 		'board_defaults_min_reply_message_length', 'board_defaults_max_thread_message_length', 'board_defaults_max_reply_message_length', 'board_defaults_filter_mode',
-		'board_defaults_filter_ban_duration', 'ban_duration'] //convert these to numbers before they hit our routes
-	, banDurationRegex = /^(?<YEAR>[\d]+y)?(?<MONTH>[\d]+mo)?(?<WEEK>[\d]+w)?(?<DAY>[\d]+d)?(?<HOUR>[\d]+h)?(?<MINUTE>[\d]+m)?(?<SECOND>[\d]+s)?$/
+		] //convert these to numbers before they hit our routes
+	, timeFields = ['ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time']
+	, timeFieldRegex = /^(?<YEAR>[\d]+y)?(?<MONTH>[\d]+mo)?(?<WEEK>[\d]+w)?(?<DAY>[\d]+d)?(?<HOUR>[\d]+h)?(?<MINUTE>[\d]+m)?(?<SECOND>[\d]+s)?$/
 	, timeUtils = require(__dirname+'/timeutils.js')
 	, dynamicResponse = require(__dirname+'/dynamic.js')
 	, makeArrayIfSingle = (obj) => !Array.isArray(obj) ? [obj] : obj;
@@ -99,28 +100,31 @@ module.exports = (req, res, next) => {
 	}
 */
 
-	//ban duration convert to ban time in ms
-	if (req.body.ban_duration) {
-		const matches = req.body.ban_duration.match(banDurationRegex);
-		if (matches && matches.groups) {
-			const groups = matches.groups;
-			let banDuration = 0;
-			const groupKeys = Object.keys(groups);
-			for (let i = 0; i < groupKeys.length; i++) {
-				const key = groupKeys[i];
-				if (!groups[key]) {
-					continue;
+	//convert duration string to time in ms
+	for (let i = 0; i < timeFields.length; i++) {
+		const field = timeFields[i];
+		if (req.body[field] != null) {
+			const matches = req.body[field].match(timeFieldRegex);
+			if (matches && matches.groups) {
+				const groups = matches.groups;
+				let duration = 0;
+				const groupKeys = Object.keys(groups);
+				for (let i = 0; i < groupKeys.length; i++) {
+					const key = groupKeys[i];
+					if (!groups[key]) {
+						continue;
+					}
+					const mult = +groups[key].replace(/\D+/, ''); //remove the unit
+					if (Number.isSafeInteger(mult) //if the multiplier is safe int
+						&& Number.isSafeInteger(mult*timeUtils[key]) //and multiplying it is safe int
+						&& Number.isSafeInteger((mult*timeUtils[key])+duration)) { //and adding it to the total is safe
+						duration += mult*timeUtils[key];
+					}
 				}
-				const mult = +groups[key].replace(/\D+/, ''); //remove the unit
-				if (Number.isSafeInteger(mult) //if the multiplier is safe int
-					&& Number.isSafeInteger(mult*timeUtils[key]) //and multiplying it is safe int
-					&& Number.isSafeInteger((mult*timeUtils[key])+banDuration)) { //and adding it to the total is safe
-					banDuration += mult*timeUtils[key];
-				}
+				req.body[field] = duration;
+			} else {
+				req.body[field] = null;
 			}
-			req.body.ban_duration = banDuration;
-		} else {
-			req.body.ban_duration = null;
 		}
 	}
 

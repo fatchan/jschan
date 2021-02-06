@@ -40,8 +40,6 @@ module.exports = async (req, res, next) => {
 			},
 			distortion: numberSetting(req.body.captcha_options_distortion, oldSettings.captchaOptions.distortion),
 		},
-		
-/*
 		secureCookies: booleanSetting(req.body.secure_cookies),
 		refererCheck: booleanSetting(req.body.referrer_check),
 		dnsbl: {
@@ -49,8 +47,9 @@ module.exports = async (req, res, next) => {
 			blacklists: arraySetting(req.body.dnsbl_blacklists, oldSettings.dnsbl.blacklists),
 			cacheTime: numberSetting(req.body.dnsbl_cache_time, oldSettings.dnsbl.cacheTime),
 		},
-		disableAnonymizerFilePosting: booleanSetting(req.body.disable_anonymizer_file_software, oldSettings.disableAnonymizerFilePosting),
+		disableAnonymizerFilePosting: booleanSetting(req.body.disable_anonymizer_file_posting, oldSettings.disableAnonymizerFilePosting),
 		statsCountAnonymizers: booleanSetting(req.body.stats_count_anonymizers, oldSettings.statsCountAnonymizers),
+
 		floodTimers: {
 			sameContentSameIp: numberSetting(req.body.flood_timers_same_content_same_ip, oldSettings.floodTimers.sameContentSameIp),
 			sameContentAnyIp: numberSetting(req.body.flood_timers_same_content_any_ip, oldSettings.floodTimers.sameContentAnyIp),
@@ -74,6 +73,7 @@ module.exports = async (req, res, next) => {
 		},
 		overboardLimit: numberSetting(req.body.overboard_limit, oldSettings.overboardLimit),
 		overboardCatalogLimit: numberSetting(req.body.overboard_catalog_limit, oldSettings.overboardCatalogLimit),
+/*
 		cacheTemplates: booleanSetting(req.body.cache_templates, oldSettings.cacheTemplates),
 		debugLogs: booleanSetting(req.body.debug_logs, oldSettings.debugLogs),
 		lockWait: numberSetting(req.body.lock_wait, oldSettings.lockWait),
@@ -231,7 +231,7 @@ module.exports = async (req, res, next) => {
 			customCSS: null,
 			blockedCountries: [],
 			disableAnonymizerFilePosting: booleanSetting(req.body.board_defaults_disable_anonymizer_file_posting, oldSettings.boardDefaults.disableAnonymizerFilePosting),
-			filters: arraySetting(req.body.board_defaults_filters, oldSettings.boardDefaults.filters),
+			filters: [],
 			filterMode: numberSetting(req.body.board_defaults_filter_mode, oldSettings.boardDefaults.filterMode),
 			filterBanDuration: numberSetting(req.body.board_defaults_filter_ban_duration, oldSettings.boardDefaults.filterBanDuration),
 			strictFiltering: booleanSetting(req.body.board_defaults_strict_filtering, oldSettings.boardDefaults.strictFiltering),
