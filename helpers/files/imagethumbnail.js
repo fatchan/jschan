@@ -1,10 +1,11 @@
 const gm = require('gm')
 	, ffmpeg = require('fluent-ffmpeg')
-	, { thumbSize, ffmpegGifThumbnails } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (file, firstFrameOnly=true) => {
 
+	const { thumbSize, ffmpegGifThumbnails } = config.get;
 	return new Promise((resolve, reject) => {
 		if (ffmpegGifThumbnails && !firstFrameOnly) {
 			const thumbSizeFilter = file.geometry.width > file.geometry.height ? `${thumbSize}:-1` : `-1:${thumbSize}`;

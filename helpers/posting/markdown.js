@@ -17,7 +17,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
 	, escape = require(__dirname+'/escape.js')
 	, { highlight, highlightAuto } = require('highlight.js')
-	, { highlightOptions } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, diceroll = require(__dirname+'/diceroll.js')
 	, linkmatch = require(__dirname+'/linkmatch.js')
 	, replacements = [
@@ -54,6 +54,7 @@ module.exports = {
 
 	markdown: (text) => {
 		const chunks = text.split(splitRegex);
+		const { highlightOptions } = config.get;
 		for (let i = 0; i < chunks.length; i++) {
 			//every other chunk will be a code block
 			if (i % 2 === 0) {
@@ -61,13 +62,13 @@ module.exports = {
 				const newlineFix = escaped.replace(/^\r?\n/,''); //fix ending newline because of codeblock
 				chunks[i] = module.exports.processRegularChunk(newlineFix);
 			} else {
-				chunks[i] = module.exports.processCodeChunk(chunks[i]);
+				chunks[i] = module.exports.processCodeChunk(chunks[i], highlightOptions);
 			}
 		}
 		return chunks.join('');
 	},
 
-	processCodeChunk: (text) => {
+	processCodeChunk: (text, highlightOptions) => {
 		const matches = text.match(codeRegex);
 		const trimFix = matches.groups.code.replace(trimNewlineRegex, '');
 		let lang;

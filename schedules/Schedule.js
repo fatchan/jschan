@@ -1,6 +1,6 @@
 'use strict';
 
-const getConfig = require(__dirname+'/../getconfig.js');
+const config = require(__dirname+'/../config.js');
 
 module.exports = class Schedule {
 
@@ -31,7 +31,7 @@ module.exports = class Schedule {
 
 	//check config and either start or stop
 	update () {
-		if (!this.condition || getConfig()[this.condition]) {
+		if (!this.condition || config.get[this.condition]) {
 			this.start();
 		} else {
 			this.stop();

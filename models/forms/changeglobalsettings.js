@@ -5,14 +5,14 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, redis = require(__dirname+'/../../redis.js')
-	, getConfig = require(__dirname+'/../../getconfig.js')
+	, config = require(__dirname+'/../../config.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
 	, { remove } = require('fs-extra');
 
 module.exports = async (req, res, next) => {
 
 	const promises = [];
-	const oldSettings = getConfig();
+	const oldSettings = config.get;
 
 	const newSettings = {
 		...oldSettings,

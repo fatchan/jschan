@@ -22,22 +22,20 @@ module.exports = {
 	},
 
 	addCallback: (channel, cb) => {
-		if (messageCallbacks.length == 0) {
+		if (messageCallbacks[channel].length === 0) {
 			subscriber.subscribe('config', (err, count) => {
 				if (err) {
 					return console.error(err);
 				}
-				console.log(`Redis subscribed to ${count} channels`);
 			});
 			subscriber.on("message", (channel, message) => {
-				console.log(`Redis subscriber message from channel ${channel}`);
 				const data = JSON.parse(message);
 				messageCallbacks[channel].forEach(cb => {
 					cb(data);
-				})
+				});
 			});
 		}
-		messageCallbacks[channel].push();
+		messageCallbacks[channel].push(cb);
 	},
 
 	//get a value with key

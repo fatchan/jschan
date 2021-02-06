@@ -1,7 +1,7 @@
 'use strict';
 
 const FileType = require('file-type')
-	, { allowMimeNoMatch } = require(__dirname+'/../../configs/main.js');
+	, { allowMimeNoMatch } = require(__dirname+'/../../configs/secrets.js');
 
 const image = new Set([
 	'image/jpeg',
@@ -34,7 +34,7 @@ const audio = new Set([
 	'audio/wav',
 ]);
 
-const other = new Set(require(__dirname+'/../../configs/main.js').otherMimeTypes);
+const other = new Set(require(__dirname+'/../../configs/secrets.js').otherMimeTypes);
 
 module.exports = {
 
@@ -50,7 +50,7 @@ module.exports = {
 		const supposedMimeType = file.mimetype;
 		const realMimeType = await FileType.fromFile(file.tempFilePath);
 		if (!realMimeType) {
-			return allowMimeNoMatch;
+			return getconfig.allowMimeNoMatch;
 		}
 		return supposedMimeType === realMimeType.mime;
 	},

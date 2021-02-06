@@ -107,7 +107,6 @@ geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 If your nginx doesn't have the necessary module by default, or is using v2 instead, find your own guide.
 
 If you use cloudflare, please read [these](https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-Logging-visitor-IP-addresses-with-mod-cloudflare-) [articles](https://support.cloudflare.com/hc/en-us/articles/200168236-Configuring-Cloudflare-IP-Geolocation) to setup proper IP forwarding and geolocation headers. Similar steps would apply to other CDNs/reverse proxies.
-There are also 2 config entries in configs/main.js, `ipHeader` and `countryCodeHeader` that you can tweak for jschan to use different headers for country code or real visitor IP.
 
 Also included is an "nginx_advanced" config, and a snippets folder for advanced users who want to better organise and more easily customise the nginx configuration. It functions the same as the normal nginx.example, but you need to create the snippets folder in /etc/nginx/snippets, and copy the example snippets.
 
@@ -115,7 +114,7 @@ Also included is an "nginx_advanced" config, and a snippets folder for advanced 
 
 ```bash
 # copy example config file and edit it
-$ cp configs/main.js.example configs/main.js && editor configs/main.js
+$ cp configs/secrets.js.example configs/secrets.js && editor configs/secrets.js
 
 # copy example custompages for rules and faq and edit
 $ cp views/custompages/faq.pug.example views/custompages/faq.pug
@@ -172,7 +171,7 @@ $ git pull
 #install dependencies again in case any have updated or changed
 $ npm install
 #diff the config files to see if anything changed and edit accordingly. OR backup your config, replace it with the fresh example, and update it with whatever settings you want to keep from your backup.
-$ diff configs/main.js configs/main.js.example
+$ diff configs/secrets.js configs/secrets.js.example
 #run the migrate task to update your database
 $ gulp migrate
 #reload jschan backend

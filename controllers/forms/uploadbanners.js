@@ -3,10 +3,11 @@
 const uploadBanners = require(__dirname+'/../../models/forms/uploadbanners.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js');
+	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res, next) => {
 
+	const { globalLimits } = config.get;
 	const errors = [];
 
 	if (res.locals.numFiles === 0) {

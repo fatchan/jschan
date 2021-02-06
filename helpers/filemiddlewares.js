@@ -1,6 +1,7 @@
 'use strict';
 
-const { globalLimits, debugLogs, filterFileNames, spaceFileNameReplacement } = require(__dirname+'/../configs/main.js')
+const { debugLogs } = require(__dirname+'/../configs/secrets.js')
+	, { globalLimits,  filterFileNames, spaceFileNameReplacement } = require(__dirname+'/../config.js').get
 	, dynamicResponse = require(__dirname+'/dynamic.js')
 	, uploadLimitFunction = (req, res, next) => {
 		return dynamicResponse(req, res, 413, 'message', {

@@ -3,9 +3,11 @@
 const Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts } = require(__dirname+'/../../db/')
 	, timeUtils = require(__dirname+'/../timeutils.js')
-	, { sameContentSameIp, sameContentAnyIp, anyContentSameIp } = require(__dirname+'/../../configs/main.js').floodTimers;
+	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res) => {
+
+	const { sameContentSameIp, sameContentAnyIp, anyContentSameIp } = config.get.floodTimers;
 
 	if (res.locals.permLevel <= 1) { //global staff bypass spam check
 		return false;

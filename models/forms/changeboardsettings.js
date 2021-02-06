@@ -2,7 +2,7 @@
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { remove } = require('fs-extra')
@@ -14,6 +14,8 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, validCountryCodes = new Set(countryCodes);
 
 module.exports = async (req, res, next) => {
+
+	const { globalLimits } = config.get;
 
 	//oldsettings before changes
 	const oldSettings = res.locals.board.settings;

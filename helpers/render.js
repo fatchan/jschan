@@ -2,13 +2,14 @@
 
 const { enableUserBoardCreation, enableUserAccountCreation,
 	lockWait, globalLimits, boardDefaults, cacheTemplates,
-	meta, enableWebring, captchaOptions } = require(__dirname+'/../configs/main.js')
+	meta, enableWebring, captchaOptions } = require(__dirname+'/../config.js').get
 	, { outputFile } = require('fs-extra')
 	, formatSize = require(__dirname+'/files/formatsize.js')
 	, pug = require('pug')
 	, path = require('path')
 	, commit = require(__dirname+'/commit.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
+	, { hcaptcha, google } = require(__dirname+'/../configs/secrets.js')
 	, redlock = require(__dirname+'/../redlock.js')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
 	, renderLocals = {
@@ -27,10 +28,10 @@ const { enableUserBoardCreation, enableUserAccountCreation,
 
 switch (captchaOptions.type) {
 	case 'google':
-		renderLocals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
+		renderLocals.googleRecaptchaSiteKey = google.siteKey;
 		break;
 	case 'hcaptcha':
-		renderLocals.hcaptchaSitekey = captchaOptions.hcaptcha.siteKey;
+		renderLocals.hcaptchaSitekey = hcaptcha.siteKey;
 		break;
 	case 'grid':
 		renderLocals.captchaGridSize = captchaOptions.grid.size;

@@ -1,10 +1,11 @@
 'use strict';
 
 const { Bans } = require(__dirname+'/../../db/')
-	, { defaultBanDuration } = require(__dirname+'/../../configs/main.js');
+	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res, next) => {
 
+	const { defaultBanDuration } = config.get;
 	const banDate = new Date();
 	const banExpiry = new Date(banDate.getTime() + (req.body.ban_duration || defaultBanDuration)); //uses config default if missing or malformed
 	const banReason = req.body.ban_reason || req.body.log_message || 'No reason specified';

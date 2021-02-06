@@ -4,7 +4,8 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, timeUtils = require(__dirname+'/timeutils.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
-	, { debugLogs, pruneModlogs, enableWebring, maxRecentNews } = require(__dirname+'/../configs/main.js')
+	, config = require(__dirname+'/../config.js')
+	, { debugLogs } = require(__dirname+'/../configs/secrets.js')
 	, { CustomPages, Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, cache = require(__dirname+'/../redis.js')
 	, render = require(__dirname+'/render.js')
@@ -188,6 +189,7 @@ module.exports = {
 		const label = `/${options.board._id}/logs.html`;
 		const start = process.hrtime();
 		let dates = await Modlogs.getDates(options.board);
+		const { pruneModlogs } = config.get;
 		if (pruneModlogs) {
 			const pruneLogs = [];
 			const pruneAfter = new Date(Date.now()-timeUtils.DAY*pruneModlogs);
@@ -218,6 +220,7 @@ module.exports = {
 	},
 
 	buildHomepage: async () => {
+		const { maxRecentNews } = config.get;
 		const label = '/index.html';
 		const start = process.hrtime();
 		let [ totalStats, boards, fileStats, recentNews ] = await Promise.all([

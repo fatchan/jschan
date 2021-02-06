@@ -25,14 +25,15 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		postPasswordSecret, strictFiltering, animatedGifThumbnails,
-		audioThumbnails } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
+
+	const { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
+		postPasswordSecret, strictFiltering, animatedGifThumbnails, audioThumbnails } = config.get;
 
 	//spam/flood check
 	const flood = await spamCheck(req, res);

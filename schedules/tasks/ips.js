@@ -3,14 +3,13 @@
 const Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts } = require(__dirname+'/../../db/')
 	, { createHash, randomBytes } = require('crypto')
-	, { pruneIps } = require(__dirname+'/../../configs/main.js')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js');
 
 module.exports = {
 
 	func: async (days) => {
 		const beforeDate = new Date();
-		beforeDate.setDate(beforeDate.getDate() - days);
+		beforeDate.setDate(beforeDate.getDate() - (days || getconfig.pruneIps));
 		const beforeDateMongoId = Mongo.ObjectId.createFromTime(Math.floor(beforeDate.getTime()/1000));
 		const tempIpHashSecret = randomBytes(20).toString('base64');
 		const bulkWrites = [];

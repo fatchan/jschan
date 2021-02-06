@@ -3,11 +3,12 @@
 const cache = require(__dirname+'/../../redis.js')
 	, dynamicResponse = require(__dirname+'/../dynamic.js')
 	, deleteTempFiles = require(__dirname+'/../files/deletetempfiles.js')
-	, { ipHeader, dnsbl, blockBypass } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, { batch } = require('dnsbl');
 
 module.exports = async (req, res, next) => {
 
+	const { ipHeader, dnsbl, blockBypass } = config.get;
 	if (dnsbl.enabled && dnsbl.blacklists.length > 0 //if dnsbl enabled and has more than 0 blacklists
 		&& !res.locals.anonymizer //anonymizers cant be dnsbl'd
 		&& (!res.locals.blockBypass || !blockBypass.bypassDnsbl)) { //and there is no valid block bypass, or they do not bypass dnsbl

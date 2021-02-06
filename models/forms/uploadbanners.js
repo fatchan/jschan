@@ -2,7 +2,7 @@
 
 const path = require('path')
 	, { remove, pathExists } = require('fs-extra')
-	, { globalLimits, checkRealMimeTypes } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../helpers/files/mimetypes.js')
@@ -14,7 +14,8 @@ const path = require('path')
 
 module.exports = async (req, res, next) => {
 
-	const redirect = `/${req.params.board}/manage/banners.html`
+	const { globalLimits, checkRealMimeTypes } = config.get;
+	const redirect = `/${req.params.board}/manage/banners.html`;
 
 	// check all mime types before we try saving anything
 	for (let i = 0; i < res.locals.numFiles; i++) {

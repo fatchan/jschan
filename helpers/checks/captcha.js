@@ -2,12 +2,14 @@
 
 const { Captchas } = require(__dirname+'/../../db/')
     , { ObjectId } = require(__dirname+'/../../db/db.js')
-    , { captchaOptions } = require(__dirname+'/../../configs/main.js')
+    , { hcaptcha, google } = require(__dirname+'/../../configs/secrets.js')
 	, FormData = require('form-data')
 	, fetch = require('node-fetch')
 	, { timingSafeEqual } = require('crypto')
 
 module.exports = async (captchaInput, captchaId) => {
+
+	const { captchaOptions } = config.get;
 
 	//check if captcha field in form is valid
 	if (!captchaInput
@@ -56,7 +58,7 @@ module.exports = async (captchaInput, captchaId) => {
 			let recaptchaResponse;
 			try {
 				const form = new FormData();
-				form.append('secret', captchaOptions.google.secretKey);
+				form.append('secret', google.secretKey);
 				form.append('response', captchaInput[0]);
 				recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
 					method: 'POST',
@@ -73,8 +75,8 @@ module.exports = async (captchaInput, captchaId) => {
 			let hcaptchaResponse;
 			try {
 				const form = new FormData();
-				form.append('secret', captchaOptions.hcaptcha.secretKey);
-				form.append('sitekey', captchaOptions.hcaptcha.siteKey);
+				form.append('secret', hcaptcha.secretKey);
+				form.append('sitekey', hcaptcha.siteKey);
 				form.append('response', captchaInput[0]);
 				hcaptchaResponse = await fetch('https://hcaptcha.com/siteverify', {
 					method: 'POST',

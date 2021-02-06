@@ -4,7 +4,7 @@ process
 	.on('uncaughtException', console.error)
 	.on('unhandledRejection', console.error);
 
-const getConfig = require(__dirname+'/getconfig.js')
+const config = require(__dirname+'/config.js')
 	, express = require('express')
 	, path = require('path')
 	, app = express()
@@ -29,6 +29,7 @@ const getConfig = require(__dirname+'/getconfig.js')
 	debugLogs && console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
 	await Mongo.checkVersion();
+	await config.load();
 
 	// connect to redis
 	debugLogs && console.log('CONNECTING TO REDIS');
@@ -61,8 +62,8 @@ const getConfig = require(__dirname+'/getconfig.js')
 
 	const loadAppLocals = () => {
 		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions,
-			enableUserBoardCreation, enableUserAccountCreation, cookieSecret,
-			debugLogs, ipHashPermLevel, meta, enableWebring } = getConfig();
+			enableUserBoardCreation, enableUserAccountCreation,
+			debugLogs, ipHashPermLevel, meta, enableWebring } = config.get;
 		//cache loaded templates
 		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');

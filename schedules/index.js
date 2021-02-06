@@ -4,12 +4,14 @@ process
 	.on('uncaughtException', console.error)
 	.on('unhandledRejection', console.error);
 
-const Mongo = require(__dirname+'/../db/db.js');
+const Mongo = require(__dirname+'/../db/db.js')
+	, config = require(__dirname+'/../config.js');
 
 (async () => {
 
 	await Mongo.connect();
 	await Mongo.checkVersion();
+	await config.load();
 
 	//start all the scheduled tasks
 	require(__dirname+'/tasks/index.js');

@@ -1,8 +1,9 @@
 'use strict';
 
 const fetch = require('node-fetch')
-	, { debugLogs, meta } = require(__dirname+'/../../configs/main.js')
+	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, { logo, following, blacklist, proxy } = require(__dirname+'/../../configs/webring.json')
+	, config = require(__dirname+'/../../config.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Boards, Webring } = require(__dirname+'/../../db/')
 	, { outputFile } = require('fs-extra')
@@ -15,6 +16,9 @@ const fetch = require('node-fetch')
 module.exports = {
 
 	func: async () => {
+
+return
+		const { meta } = config.get;
 		const label = `updating webring`;
 		const start = process.hrtime();
 

@@ -1,12 +1,11 @@
 'use strict';
 
-const gulp = require('gulp')
+const config = require(__dirname+'/config.js')
+	, { hcaptcha, google } = require(__dirname+'/configs/secrets.js')
+	, gulp = require('gulp')
 	, fs = require('fs-extra')
 	, semver = require('semver')
-	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
 	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
-	, secrets = require(__dirname+'/configs/secrets.js')
-	, { themes, codeThemes } = require(__dirname+'/helpers/themes.js')
 	, commit = require(__dirname+'/helpers/commit.js')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
@@ -17,6 +16,7 @@ const gulp = require('gulp')
 	, gulppug = require('gulp-pug')
 	, { migrateVersion } = require(__dirname+'/package.json')
 	, { randomBytes } = require('crypto')
+	, Redis = require(__dirname+'/redis.js')
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/',
@@ -161,24 +161,25 @@ async function wipe() {
 
 //update the css file
 async function css() {
+	await config.load();
 	try {
 		//a little more configurable
-		let bypassHeight = (configs.captchaOptions.type === 'google' || configs.captchaOptions.type === 'hcaptcha')
+		let bypassHeight = (config.get.captchaOptions.type === 'google' || config.get.captchaOptions.type === 'hcaptcha')
 			? 500
-			: configs.captchaOptions.type === 'grid'
+			: config.get.captchaOptions.type === 'grid'
 				? 330
 				: 235;
-		let captchaHeight = configs.captchaOptions.type === 'text' ? 80
-			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
+		let captchaHeight = config.get.captchaOptions.type === 'text' ? 80
+			: config.get.captchaOptions.type === 'grid' ? config.get.captchaOptions.grid.imageSize+30
 			: 200; //google/hcaptcha doesnt need this set
-		let captchaWidth = configs.captchaOptions.type === 'text' ? 210
-			: configs.captchaOptions.type === 'grid' ? configs.captchaOptions.grid.imageSize+30
+		let captchaWidth = config.get.captchaOptions.type === 'text' ? 210
+			: config.get.captchaOptions.type === 'grid' ? config.get.captchaOptions.grid.imageSize+30
 			: 200; //google/hcaptcha doesnt need this set
 		const cssLocals = `:root {
     --attachment-img: url('/file/attachment.png');
     --spoiler-img: url('/file/spoiler.png');
     --audio-img: url('/file/audio.png');
-    --thumbnail-size: ${configs.thumbSize}px;
+    --thumbnail-size: ${config.get.thumbSize}px;
     --captcha-w: ${captchaWidth}px;
     --captcha-h: ${captchaHeight}px;
     --bypass-height: ${bypassHeight}px;
@@ -254,7 +255,9 @@ function deletehtml() {
 	return del([ 'static/html/*' ]);
 }
 
-function custompages() {
+async function custompages() {
+	await config.load();
+	const formatSize = require(__dirname+'/helpers/files/formatsize.js');
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/404.pug`,
@@ -265,34 +268,36 @@ function custompages() {
 	])
 	.pipe(gulppug({
 		locals: {
-			early404Fraction: configs.early404Fraction,
-			early404Replies: configs.early404Replies,
-			meta: configs.meta,
-			enableWebring: configs.enableWebring,
-			globalLimits: configs.globalLimits,
-			codeLanguages: configs.highlightOptions.languageSubset,
-			defaultTheme: configs.boardDefaults.theme,
-			defaultCodeTheme: configs.boardDefaults.codeTheme,
-			postFilesSize: formatSize(configs.globalLimits.postFilesSize.max),
-			captchaType: configs.captchaOptions.type,
-			googleRecaptchaSiteKey: configs.captchaOptions.google.siteKey,
-			hcaptchaSitekey: configs.captchaOptions.hcaptcha.siteKey,
-			captchaGridSize: configs.captchaOptions.grid.size,
+			early404Fraction: config.get.early404Fraction,
+			early404Replies: config.get.early404Replies,
+			meta: config.get.meta,
+			enableWebring: config.get.enableWebring,
+			globalLimits: config.get.globalLimits,
+			codeLanguages: config.get.highlightOptions.languageSubset,
+			defaultTheme: config.get.boardDefaults.theme,
+			defaultCodeTheme: config.get.boardDefaults.codeTheme,
+			postFilesSize: formatSize(config.get.globalLimits.postFilesSize.max),
+			captchaType: config.get.captchaOptions.type,
+			googleRecaptchaSiteKey: google.siteKey,
+			hcaptchaSitekey: hcaptcha.siteKey,
+			captchaGridSize: config.get.captchaOptions.grid.size,
 			commit,
 		}
 	}))
 	.pipe(gulp.dest(paths.pug.dest));
 }
 
-function scripts() {
+async function scripts() {
+	await config.load();
+	const { themes, codeThemes } = require(__dirname+'/helpers/themes.js');
 	try {
 		const locals = `const themes = ['${themes.join("', '")}'];
 const codeThemes = ['${codeThemes.join("', '")}'];
-const captchaType = '${configs.captchaOptions.type}';
-const captchaGridSize = ${configs.captchaOptions.grid.size};
+const captchaType = '${config.get.captchaOptions.type}';
+const captchaGridSize = ${config.get.captchaOptions.grid.size};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
-const ipHashPermLevel = ${configs.ipHashPermLevel};
-const settings = ${JSON.stringify(configs.frontendScriptDefault)};
+const ipHashPermLevel = ${config.get.ipHashPermLevel};
+const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
@@ -391,18 +396,22 @@ async function migrate() {
 
 }
 
-const build = gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages));
-const reset = gulp.series(wipe, build);
-const html = gulp.series(deletehtml, custompages);
+async function closeRedis() {
+	Redis.close();
+}
+
+const build = gulp.series(gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages)), closeRedis);
+const reset = gulp.series(wipe, build, closeRedis);
+const html = gulp.series(deletehtml, custompages, closeRedis);
 
 module.exports = {
 	html,
-	css,
+	css: gulp.series(css, closeRedis),
 	images,
 	icons,
 	reset,
-	custompages,
-	scripts,
+	custompages: gulp.series(custompages, closeRedis),
+	scripts: gulp.series(scripts, closeRedis),
 	wipe,
 	cache,
 	migrate,

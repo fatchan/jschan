@@ -1,8 +1,9 @@
 const ffmpeg = require('fluent-ffmpeg')
-	, { thumbSize } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (file, geometry, timestamp) => {
+	const { thumbSize } = config.get;
 	return new Promise((resolve, reject) => {
 		const command = ffmpeg(`${uploadDirectory}/file/${file.filename}`)
 		.on('end', () => {

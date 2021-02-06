@@ -5,9 +5,11 @@ const { Bans, Modlogs } = require(__dirname+'/../../db/')
 	, hashIp = require(__dirname+'/../../helpers/dynamic.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { isIP } = require('net')
-	, { defaultBanDuration } = require(__dirname+'/../../configs/main.js');
+	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res, redirect) => {
+
+	const { defaultBanDuration } = config.get;
 
 	const actionDate = new Date();
 

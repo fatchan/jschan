@@ -6,7 +6,7 @@ const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
-	, { previewReplies, strictFiltering } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, cache = require(__dirname+'/../../redis.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
@@ -22,6 +22,7 @@ todo: handle some more situations
 - allow for regular users (OP ONLY) and option for staff to disable in board settings
 */
 
+	const { previewReplies, strictFiltering } = config.get;
 	const { board, post } = res.locals;
 
 	//filters

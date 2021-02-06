@@ -1,7 +1,7 @@
 'use strict';
 
 const { readdirSync } = require('fs-extra')
-	, { themes, codeThemes } = require(__dirname+'/../configs/main.js');
+	, { themes, codeThemes } = require(__dirname+'/../config.js').get;
 
 module.exports = {
 
