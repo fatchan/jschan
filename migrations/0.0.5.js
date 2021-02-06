@@ -6,7 +6,7 @@ module.exports = async(db, redis) => {
 	console.log('Adding bumplimit field to boards on posts');
 	await db.collection('boards').updateMany({}, {
 		'$set': {
-			'settings.bumpLimit': getconfig.globalLimits.bumpLimit.max,
+			'settings.bumpLimit': config.get.globalLimits.bumpLimit.max,
 		}
 	});
 	console.log('Cleared boards cache');

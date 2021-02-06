@@ -34,7 +34,7 @@ module.exports = {
 		} else if (typeof ip === 'string') {
 			query['ip.raw'] = ip;
 		}
-		if (permLevel > getconfig.ipHashPermLevel) {
+		if (permLevel > config.get.ipHashPermLevel) {
 			projection['ip.raw'] = 0;
 		}
 		return db.find(query, {
@@ -58,7 +58,7 @@ module.exports = {
 		} else if (typeof ip === 'string') {
 			query['ip.raw'] = ip;
 		}
-		if (permLevel > getconfig.ipHashPermLevel) {
+		if (permLevel > config.get.ipHashPermLevel) {
 			projection['ip.raw'] = 0;
 		}
 		return db.find(query, {
@@ -475,7 +475,7 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		const statsIp = (getconfig.statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.single;
+		const statsIp = (config.get.statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.single;
 		await Stats.updateOne(board._id, statsIp, data.thread == null);
 
 		//add backlinks to the posts this post quotes
@@ -599,13 +599,13 @@ module.exports = {
 					}
 				}, {
 					//skip the first (board.settings.threadLimit/early404Fraction)
-					'$skip': Math.ceil(board.settings.threadLimit/getconfig.early404Fraction)
+					'$skip': Math.ceil(board.settings.threadLimit/config.get.early404Fraction)
 				}, {
 					//then any that have less than early404Replies replies get matched again
 					'$match': {
 						'sticky':0,
 						'replyposts': {
-							'$lt': getconfig.early404Replies
+							'$lt': config.get.early404Replies
 						}
 					}
 				}

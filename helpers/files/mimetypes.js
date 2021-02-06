@@ -1,7 +1,7 @@
 'use strict';
 
 const FileType = require('file-type')
-	, { allowMimeNoMatch } = require(__dirname+'/../../configs/secrets.js');
+	, config = require(__dirname+'/../../config.js');
 
 const image = new Set([
 	'image/jpeg',
@@ -50,7 +50,7 @@ module.exports = {
 		const supposedMimeType = file.mimetype;
 		const realMimeType = await FileType.fromFile(file.tempFilePath);
 		if (!realMimeType) {
-			return getconfig.allowMimeNoMatch;
+			return config.get.allowMimeNoMatch;
 		}
 		return supposedMimeType === realMimeType.mime;
 	},
