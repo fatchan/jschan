@@ -29,6 +29,7 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 		'board_defaults_filter_ban_duration', 'ban_duration'] //convert these to numbers before they hit our routes
 	, banDurationRegex = /^(?<YEAR>[\d]+y)?(?<MONTH>[\d]+mo)?(?<WEEK>[\d]+w)?(?<DAY>[\d]+d)?(?<HOUR>[\d]+h)?(?<MINUTE>[\d]+m)?(?<SECOND>[\d]+s)?$/
 	, timeUtils = require(__dirname+'/timeutils.js')
+	, dynamicResponse = require(__dirname+'/dynamic.js')
 	, makeArrayIfSingle = (obj) => !Array.isArray(obj) ? [obj] : obj;
 
 module.exports = (req, res, next) => {
@@ -42,7 +43,7 @@ module.exports = (req, res, next) => {
 			expect, to prevent issues when validating/using them later on.
 		*/
 		if (!allowedArrays.has(key) && Array.isArray(val)) {
-			return res.status(400).render('message', {
+			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': 'Malformed input'
 			});
