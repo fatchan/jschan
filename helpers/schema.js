@@ -2,16 +2,22 @@
 
 /* planned schema would be array of smth like this:
 {
-	func: <check function, either predefined, some other check like isAlphaNumeric, or a custom callback>,
+	result: <check function, either predefined, some other check like isAlphaNumeric, or a custom callback>,
 	expected: <true or false>
 	error: <error text>,
 	permLevel: [optional perm level],
 }
+lengthBody, numberBody, minmaxBody, inArrayBody, arrayInBody, checkSchema
 */
 
 module.exports = {
 
 //TODO: move some other checks here? like isAlphaNumeric would be a good example
+
+	//just whether it exists, for stuff like checkboxes where the value doesnt matter
+	existsBody: (data) => {
+		return data != null;
+	},
 
 	//check length of string or array
 	lengthBody: (data, minlength=0, maxlength=Infinity) => {
@@ -44,8 +50,9 @@ module.exports = {
 		//filter check if my perm level is lower than the requirement. e.g. bypass filters checks
 		const filteredSchema = schema.filter(c => c.permLevel > permLevel);
 		for (check of filteredSchema) {
-			const result = await check.func();
-			if (result !== check.expected) {
+			const result = await check.result;
+			const expected = (check.expected || false);
+			if (result !== expected) {
 				errors.push(check.error);
 			}
 		}
