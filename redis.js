@@ -29,6 +29,7 @@ module.exports = {
 				}
 			});
 			subscriber.on("message", (channel, message) => {
+				secrets.debugLogs && console.log(`Subscriber message from channel ${channel}`);
 				const data = JSON.parse(message);
 				messageCallbacks[channel].forEach(cb => {
 					cb(data);

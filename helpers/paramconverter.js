@@ -13,7 +13,7 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 		'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max', 'captcha_options_distortion', 'flood_timers_same_content_same_ip',
 		'flood_timers_same_content_any_ip', 'flood_timers_any_content_same_ip', 'block_bypass_expire_after_uses', 'ip_hash_perm_level',
 		'delete_board_perm_level', 'rate_limit_cost_captcha', 'rate_limit_cost_board_settings', 'rate_limit_cost_edit_post', 'overboard_limit', 'overboard_catalog_limit',
-		'lock_wait', 'prune_modlogs', 'thumb_size', 'video_thumb_percentage', 'quote_limit', 'preview_replies', 'sticky_preview_replies',
+		'lock_wait', 'prune_modlogs', 'prune_ips', 'thumb_size', 'video_thumb_percentage', 'quote_limit', 'preview_replies', 'sticky_preview_replies',
 		'early_404_fraction', 'early_404_replies', 'max_recent_news', 'highlight_options_threshold', 'global_limits_thread_limit_min', 'global_limits_thread_limit_max',
 		'global_limits_reply_limit_min', 'global_limits_reply_limit_max', 'global_limits_bump_limit_min', 'global_limits_bump_limit_max', 'global_limits_post_files_max',
 		'global_limits_post_files_size_max', 'global_limits_banner_files_width', 'global_limits_banner_files_height', 'global_limits_banner_files_max',
