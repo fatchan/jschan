@@ -417,5 +417,6 @@ module.exports = {
 	migrate,
 	password,
 	ips,
+	rebuild: [deletehtml, css, scripts, custompages],
 	default: build,
 };

@@ -10,9 +10,22 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, cache = require(__dirname+'/../redis.js')
 	, render = require(__dirname+'/render.js')
 	, buildQueue = require(__dirname+'/../queue.js')
+	, gulp = require('gulp')
+	, { rebuild } = require(__dirname+'/../gulpfile.js')
 	, timeDiffString = require(__dirname+'/timediffstring.js');
 
 module.exports = {
+
+	gulp: async () => {
+		/* TODO: calculate differences in oldsettings vsnewsettings in globalmanagesettings model
+			and send task options with list of tasks instead of always doing all */
+		const label = `gulp tasks [${rebuild.map(x => x.name).join(', ')}] after global config change`;
+		const start = process.hrtime();
+		gulp.series(rebuild, () => {
+			const end = process.hrtime(start);
+			debugLogs && console.log(timeDiffString(label, end));
+		})();
+	},
 
 	buildBanners: async (options) => {
 		const label = `/${options.board._id}/banners.html`;
