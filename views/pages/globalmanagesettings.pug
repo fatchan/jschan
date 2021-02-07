@@ -27,7 +27,7 @@ block content
 		form.form-post(action=`/forms/global/settings`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row.wrap.sb
-				.col
+				.col.mr-5
 
 					.row
 						h4.mv-5 Security
@@ -101,11 +101,11 @@ block content
 						h4.mv-5 Permissions
 					.row
 						.label Raw IP Perm Level
-						select(name='ip_hash_perm_leve')
-							option(value='0', selected=settings.deleteBoardPermLevel === 0) Admin
-							option(value='1', selected=settings.deleteBoardPermLevel === 1) Global Staff
-							option(value='2', selected=settings.deleteBoardPermLevel === 2) Board Owner
-							option(value='3', selected=settings.deleteBoardPermLevel === 3) Board Mod
+						select(name='ip_hash_perm_level')
+							option(value='0', selected=settings.ipHashPermLevel === 0) Admin
+							option(value='1', selected=settings.ipHashPermLevel === 1) Global Staff
+							option(value='2', selected=settings.ipHashPermLevel === 2) Board Owner
+							option(value='3', selected=settings.ipHashPermLevel === 3) Board Mod
 					.row
 						.label Delete Board Perm Level
 						select(name='delete_board_perm_level')
@@ -121,8 +121,29 @@ block content
 						.label Allow User Board Creation
 						label.postform-style.ph-5
 							input(type='checkbox', name='enable_user_board_creation' value='true' checked=settings.enableUserBoardCreation)
+					.row
+						.label Default Ban Duration
+						input(type='number', name='default_ban_duration',  placeholder='e.g. 1w', value=settings.defaultBanDuration)
+					.row
+						.label Quote Limit
+						input(type='number', name='quote_limit', value=settings.quoteLimit)
+					.row
+						.label Preview Replies
+						input(type='number', name='preview_replies', value=settings.previewReplies)
+					.row
+						.label Sticky Preview Replies
+						input(type='number', name='sticky_preview_replies', value=settings.stickyPreviewReplies)
+					.row
+						.label Early 404 Fraction
+						input(type='number', name='early_404_fraction', value=settings.early404Fraction)
+					.row
+						.label Early 404 Replies
+						input(type='number', name='early_404_replies', value=settings.early404Replies)
+					.row
+						.label Max Homepage News Entries
+						input(type='number', name='max_recent_news', value=settings.maxRecentNews)
 
-				.col
+				.col.mr-5
 
 					.row
 						h4.mv-5 Captcha
@@ -182,6 +203,10 @@ block content
 						.label Filters
 						textarea(name='filters' placeholder='Newline separated') #{settings.filters.join('\n')}
 					.row
+						.label Strict Filtering
+						label.postform-style.ph-5
+							input(type='checkbox', name='strict_filtering', value='true', checked=settings.strictFiltering)
+					.row
 						.label Filter Mode
 						select(name='filter_mode')
 							option(value='0', selected=settings.filterMode === 0) Do nothing
@@ -213,7 +238,19 @@ block content
 						.label Cache Time
 						input(type='number' name='dnsbl_cache_time' value=settings.dnsbl.cacheTime)
 
-				.col
+					.row
+						h4.mv-5 Ratelimit Costs
+					.row
+						.label Generate Captcha
+						input(type='number' name='rate_limit_cost_captcha' value=settings.rateLimitCost.captcha)
+					.row
+						.label Change Board Settings
+						input(type='number' name='rate_limit_cost_board_settings' value=settings.rateLimitCost.boardSettings)
+					.row
+						.label Edit Post
+						input(type='number' name='rate_limit_cost_edit_post' value=settings.rateLimitCost.editPost)
+
+				.col.mr-5
 
 					.row
 						h4.mv-5 Code Highlighting
@@ -267,29 +304,48 @@ block content
 						input(type='number' name='global_limits_custom_css_max' value=settings.globalLimits.customCss.max)
 
 					.row
-						h4.mv-5 Webring
+						h4.mv-5 Field Length Limits
 					.row
-						.label Enable
-						label.postform-style.ph-5
-							input(type='checkbox', name='enable_webring' value='true' checked=settings.enableWebring)
+						.label Name
+						input(type='number', name='global_limits_field_length_name' value=settings.globalLimits.fieldLength.name)
 					.row
-						p other webring options coming soon
+						.label Email
+						input(type='number', name='global_limits_field_length_email' value=settings.globalLimits.fieldLength.email)
+					.row
+						.label Subject
+						input(type='number', name='global_limits_field_length_subject' value=settings.globalLimits.fieldLength.subject)
+					.row
+						.label Post Password
+						input(type='number', name='global_limits_field_length_postpassword' value=settings.globalLimits.fieldLength.postpassword)
+					.row
+						.label Message
+						input(type='number', name='global_limits_field_length_message' value=settings.globalLimits.fieldLength.message)
+					.row
+						.label Report Reason
+						input(type='number', name='global_limits_field_length_report_reason' value=settings.globalLimits.fieldLength.report_reason)
+					.row
+						.label Ban Reason
+						input(type='number', name='global_limits_field_length_ban_reason' value=settings.globalLimits.fieldLength.ban_reason)
+					.row
+						.label Log Messages
+						input(type='number', name='global_limits_field_length_log_mesage' value=settings.globalLimits.fieldLength.log_message)
+					.row
+						.label Boar URI
+						input(type='number', name='global_limits_field_length_uri' value=settings.globalLimits.fieldLength.uri)
+					.row
+						.label Board Name
+						input(type='number', name='global_limits_field_length_boardname' value=settings.globalLimits.fieldLength.boardname)
+					.row
+						.label Board Description
+						input(type='number', name='global_limits_field_length_description' value=settings.globalLimits.fieldLength.description)
+					.row
+						.label Multi Input Form Anon
+						input(type='number', name='global_limits_multi_input_posts_anon' value=settings.globalLimits.multiInputs.posts.anon)
+					.row
+						.label Multi Input Form Staff
+						input(type='number', name='global_limits_multi_input_posts_staff' value=settings.globalLimits.multiInputs.posts.staff)
 
-					.row
-						h4.mv-5 Ratelimit Costs
-					.row
-						.label Generate Captcha
-						input(type='number' name='rate_limit_cost_captcha' value=settings.rateLimitCost.captcha)
-					.row
-						.label Change Board Settings
-						input(type='number' name='rate_limit_cost_board_settings' value=settings.rateLimitCost.boardSettings)
-					.row
-						.label Edit Post
-						input(type='number' name='rate_limit_cost_edit_post' value=settings.rateLimitCost.editPost)
-
-			.row.wrap.sb
-				.col
-
+				.col.mr-5
 					.row
 						h4.mv-5 Frontend Script Defaults
 					.row
@@ -372,12 +428,102 @@ block content
 						label.postform-style.ph-5
 							input(type='checkbox', name='frontend_script_default_notifications_yous_only', value='true' checked=settings.frontendScriptDefault.notificationsYousOnly)
 
-				.col
 					.row
-						h4.mv-5 more shit
+						h4.mv-5 Files & Thumbnails
+					.row
+						.label Animated .gif Thumbnails
+						label.postform-style.ph-5
+							input(type='checkbox', name='animated_gif_thumbnails', value='true' checked=settings.animatedGifThumbnails)
+					.row
+						.label Audio Thumbnails
+						label.postform-style.ph-5
+							input(type='checkbox', name='audio_thumbnails', value='true' checked=settings.audioThumbnails)
+					.row
+						.label Use ffmpeg For .gif Thumbnails
+						label.postform-style.ph-5
+							input(type='checkbox', name='ffmpeg_gif_thumbnails', value='true' checked=settings.ffmpegGifThumbnails)
+					.row
+						.label Thumbnail Dimensions
+						input(type='number', name='thumb_size', value=settings.thumbSize)
+					.row
+						.label Video Thumbnail Percentage
+						input(type='number', name='video_thumb_percentage', value=settings.videoThumbPercentage)
+					.row
+						.label Other Mime Types
+						textarea(name='other_mime_types' placeholder='Newline separated') #{settings.otherMimeTypes.join('\n')}
+					.row
+						.label Validate Mime Types
+						label.postform-style.ph-5
+							input(type='checkbox', name='check_real_mime_types', value='true' checked=settings.checkRealMimeTypes)
+					.row
+						.label Unknown Types Pass Validation
+						label.postform-style.ph-5
+							input(type='checkbox', name='allow_mime_no_match', value='true' checked=settings.allowMimeNoMatch)
+					.row
+						.label Space File Name Replacement
+						input(type='text', name='space_file_name_replacement', value=settings.spaceFileNameReplacement)
 
-				.col
+				.col.mr-5
+
 					.row
-						h4.mv-5 even more shit
+						h4.mv-5 Global Limits
+					.row
+						.label Reply Limit Min
+						input(type='number' name='global_limits_reply_limit_min' value=settings.globalLimits.replyLimit.min)
+					.row
+						.label Reply Limit Max
+						input(type='number' name='global_limits_reply_limit_max' value=settings.globalLimits.replyLimit.max)
+					.row
+						.label Thread Limit Min
+						input(type='number' name='global_limits_thread_limit_min' value=settings.globalLimits.threadLimit.min)
+					.row
+						.label Thread Limit Max
+						input(type='number' name='global_limits_thread_limit_max' value=settings.globalLimits.threadLimit.max)
+					.row
+						.label Bump Limit Min
+						input(type='number' name='global_limits_bump_limit_min' value=settings.globalLimits.bumpLimit.min)
+					.row
+						.label Bump Limit Max
+						input(type='number' name='global_limits_bump_limit_max' value=settings.globalLimits.bumpLimit.max)
+					.row
+						.label Files Per Post Max
+						input(type='number' name='global_limits_post_files_max' value=settings.globalLimits.postFiles.max)
+					.row
+						.label Post File Size Max
+						input(type='number' name='global_limits__post_files_size_max' value=settings.globalLimits.postFilesSize.max)
+					.row
+						.label Custom Pages Max Characters
+						input(type='number' name='global_limits_custom_pages_max_length' value=settings.globalLimits.customPages.maxLength)
+					.row
+						.label Total Custom Pages Per Board
+						input(type='number' name='global_limits_custom_pages_max' value=settings.globalLimits.customPages.max)
+					.row
+						.label Banner Width Max
+						input(type='number' name='global_limits_banner_files_width' value=settings.globalLimits.bannerFiles.width)
+					.row
+						.label Banner Height Max
+						input(type='number' name='global_limits_banner_files_height' value=settings.globalLimits.bannerFiles.height)
+					.row
+						.label Force 3:1 Banner Aspect Ratio
+						label.postform-style.ph-5
+							input(type='checkbox', name='global_limits_banner_files_force_aspect_ratio' value='true' checked=settings.globalLimits.bannerFiles.forceAspectRatio)
+					.row
+						.label Banner File Size Max
+						input(type='number' name='global_limits_banner_files_size_max' value=settings.globalLimits.bannerFilesSize.max)
+					.row
+						.label Banners Per Upload Max
+						input(type='number' name='global_limits_banner_files_max' value=settings.globalLimits.bannerFiles.max)
+					.row
+						.label Total Banners Per Board
+						input(type='number' name='global_limits_banner_files_total' value=settings.globalLimits.bannerFiles.total)
+
+					.row
+						h4.mv-5 Webring
+					.row
+						.label Enable
+						label.postform-style.ph-5
+							input(type='checkbox', name='enable_webring' value='true' checked=settings.enableWebring)
+					.row
+						p other webring options coming soon
 
 			input.row(type='submit', value='save settings')

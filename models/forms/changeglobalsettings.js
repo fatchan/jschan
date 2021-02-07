@@ -15,9 +15,9 @@ module.exports = async (req, res, next) => {
 	const oldSettings = config.get;
 
 	const newSettings = {
-		...oldSettings,
 		filters: arraySetting(req.body.filters, oldSettings.filters),
 		filterMode: numberSetting(req.body.filter_mode, oldSettings.filterMode),
+		strictFiltering: booleanSetting(req.body.strict_filtering, oldSettings.strictFiltering),
 		filterBanDuration: numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
 		allowedHosts: arraySetting(req.body.allowed_hosts, oldSettings.allowedHosts),
 		countryCodeHeader: trimSetting(req.body.country_code_header, oldSettings.countryCodeHeader),
@@ -49,7 +49,6 @@ module.exports = async (req, res, next) => {
 		},
 		disableAnonymizerFilePosting: booleanSetting(req.body.disable_anonymizer_file_posting, oldSettings.disableAnonymizerFilePosting),
 		statsCountAnonymizers: booleanSetting(req.body.stats_count_anonymizers, oldSettings.statsCountAnonymizers),
-
 		floodTimers: {
 			sameContentSameIp: numberSetting(req.body.flood_timers_same_content_same_ip, oldSettings.floodTimers.sameContentSameIp),
 			sameContentAnyIp: numberSetting(req.body.flood_timers_same_content_any_ip, oldSettings.floodTimers.sameContentAnyIp),
@@ -87,6 +86,45 @@ module.exports = async (req, res, next) => {
 		},
 		themes: arraySetting(req.body.themes, oldSettings.themes),
 		codeThemes: arraySetting(req.body.code_themes, oldSettings.codeThemes),
+		frontendScriptDefault: {
+			embedsEnabled: booleanSetting(req.body.frontend_script_default_embeds_enabled, oldSettings.frontendScriptDefault.embedsEnabled),
+			heightUnlimit: booleanSetting(req.body.frontend_script_default_height_unlimit, oldSettings.frontendScriptDefault.heightUnlimit),
+			hideRecursive: booleanSetting(req.body.frontend_script_default_hide_recursive, oldSettings.frontendScriptDefault.hideRecursive),
+			crispImages: booleanSetting(req.body.frontend_script_default_crisp_images, oldSettings.frontendScriptDefault.crispImages),
+			hideThumbnails: booleanSetting(req.body.frontend_script_default_hide_thumbnails, oldSettings.frontendScriptDefault.hideThumbnails),
+			nonColorIds: booleanSetting(req.body.frontend_script_default_non_color_ids, oldSettings.frontendScriptDefault.nonColorIds),
+			alwaysShowSpoilers: booleanSetting(req.body.frontend_script_default_always_show_spoilers, oldSettings.frontendScriptDefault.alwaysShowSpoilers),
+			hidePostStubs: booleanSetting(req.body.frontend_script_default_hide_post_stubs, oldSettings.frontendScriptDefault.hidePostStubs),
+			smoothScrolling: booleanSetting(req.body.frontend_script_default_smooth_scrolling, oldSettings.frontendScriptDefault.smoothScrolling),
+			defaultVolume: numberSetting(req.body.frontend_script_default_volume, oldSettings.frontendScriptDefault.defaultVolume),
+			loop: booleanSetting(req.body.frontend_script_default_loop, oldSettings.frontendScriptDefault.loop),
+			imageLoadingBars: booleanSetting(req.body.frontend_script_default_image_loading_bars, oldSettings.frontendScriptDefault.imageLoadingBars),
+			live: booleanSetting(req.body.frontend_script_default_live, oldSettings.frontendScriptDefault.live),
+			scrollToPosts: booleanSetting(req.body.frontend_script_default_scroll_to_posts, oldSettings.frontendScriptDefault.scrollToPosts),
+			localTime: booleanSetting(req.body.frontend_script_default_local_time, oldSettings.frontendScriptDefault.localTime),
+			hour24Time: booleanSetting(req.body.frontend_script_default_hour_24_time, oldSettings.frontendScriptDefault.hour24Time),
+			relativeTime: booleanSetting(req.body.frontend_script_default_relative_time, oldSettings.frontendScriptDefault.relativeTime),
+			notificationsEnabled: booleanSetting(req.body.frontend_script_default_notifications_embed, oldSettings.frontendScriptDefault.notificationsEnabled),
+			notificationsYousOnly: booleanSetting(req.body.frontend_script_default_notifications_yous_only, oldSettings.frontendScriptDefault.notificationsYousOnly),
+			showYous: booleanSetting(req.body.frontend_script_default_show_yous, oldSettings.frontendScriptDefault.showYous),
+		},
+		animatedGifThumbnails: booleanSetting(req.body.animated_gif_thumbnails, oldSettings.animatedGifThumbnails),
+		audioThumbnails: booleanSetting(req.body.audio_thumbnails, oldSettings.audioThumbnails),
+		ffmpegGifThumbnails: booleanSetting(req.body.ffmpeg_gif_thumbnails, oldSettings.ffmpegGifThumbnails),
+		thumbSize: numberSetting(req.body.thumb_size, oldSettings.thumbSize),
+		videoThumbPercentage: numberSetting(req.body.video_thumb_percentage, oldSettings.videoThumbPercentage),
+		otherMimeTypes: arraySetting(req.body.other_mime_types, oldSettings.otherMimeTypes),
+		checkRealMimeTypes: booleanSetting(req.body.check_real_mime_types, oldSettings.checkRealMimeTypes),
+		allowMimeNoMatch: booleanSetting(req.body.allow_mime_no_match, oldSettings.allowMimeNoMatch),
+		defaultBanDuration: numberSetting(req.body.default_ban_duration, oldSettings.defaultBanDuration),
+		quoteLimit: numberSetting(req.body.quote_limit, oldSettings.quoteLimit),
+		previewReplies: numberSetting(req.body.preview_replies, oldSettings.previewReplies),
+		stickyPreviewReplies: numberSetting(req.body.sticky_preview_replies, oldSettings.stickyPreviewReplies),
+		early404Fraction: numberSetting(req.body.early_404_fraction, oldSettings.early404Fraction),
+		early404Replies: numberSetting(req.body.early_404_replies, oldSettings.early404Replies),
+		maxRecentNews: numberSetting(req.body.max_recent_news, oldSettings.maxRecentNews),
+		filterFileNames: booleanSetting(req.body.filter_file_names, oldSettings.filterFileNames),
+		spaceFileNameReplacement: trimSetting(req.body.space_file_name_replacement, oldSettings.spaceFileNameReplacement),
 		globalLimits:  {
 			...oldSettings.globalLimits,
 			customCss: {
@@ -95,15 +133,6 @@ module.exports = async (req, res, next) => {
 				strict: booleanSetting(req.body.global_limits_custom_css_strict, oldSettings.globalLimits.customCss.strict),
 				filters: arraySetting(req.body.global_limits_custom_css_filters, oldSettings.globalLimits.customCss.filters),
 			},
-		},
-		boardDefaults: {
-			...oldSettings.boardDefaults,
-			theme: trimSetting(req.body.board_defaults_theme, oldSettings.boardDefaults.theme),
-			codeTheme: trimSetting(req.body.board_defaults_code_theme, oldSettings.boardDefaults.codeTheme),
-		}
-
-/*
-		globalLimits: {
 			threadLimit: {
 				min: numberSetting(req.body.global_limits_thread_limit_min, oldSettings.globalLimits.threadLimit.min),
 				max: numberSetting(req.body.global_limits_thread_limit_max, oldSettings.globalLimits.threadLimit.max),
@@ -156,46 +185,13 @@ module.exports = async (req, res, next) => {
 				maxLength: numberSetting(req.body.global_limits_custom_pages_max_length, oldSettings.globalLimits.customPages.maxLength),
 			}
 		},
-		animatedGifThumbnails: booleanSetting(req.body.animated_gif_thumbnails, oldSettings.animatedGifThumbnails),
-		audioThumbnails: booleanSetting(req.body.audio_thumbnails, oldSettings.audioThumbnails),
-		ffmpegGifThumbnails: booleanSetting(req.body.ffmpeg_gif_thumbnails, oldSettings.ffmpegGifThumbnails),
-		thumbSize: numberSetting(req.body.thumb_size, oldSettings.thumbSize),
-		videoThumbPercentage: numberSetting(req.body.video_thumb_percentage, oldSettings.videoThumbPercentage),
-		otherMimeTypes: arraySetting(req.body.other_mime_types, oldSettings.otherMimeTypes),
-		checkRealMimeTypes: booleanSetting(req.body.check_real_mime_types, oldSettings.checkRealMimeTypes),
-		allowMimeNoMatch: booleanSetting(req.body.allow_mime_no_match, oldSettings.allowMimeNoMatch),
-		defaultBanDuration: numberSetting(req.body.default_ban_duration, oldSettings.defaultBanDuration),
-		quoteLimit: numberSetting(req.body.quote_limit, oldSettings.quoteLimit),
-		strictFiltering: booleanSetting(req.body.strict_filtering, oldSettings.strictFiltering),
-		previewReplies: numberSetting(req.body.preview_replies, oldSettings.previewReplies),
-		stickyPreviewReplies: numberSetting(req.body.sticky_preview_replies, oldSettings.stickyPreviewReplies),
-		early404Fraction: numberSetting(req.body.early_404_fraction, oldSettings.early404Fraction),
-		early404Replies: numberSetting(req.body.early_404_replies, oldSettings.early404Replies),
-		maxRecentNews: numberSetting(req.body.max_recent_news, oldSettings.maxRecentNews),
-		filterFileNames: booleanSetting(req.body.filter_file_names, oldSettings.filterFileNames),
-		spaceFileNameReplacement: trimSetting(req.body.space_file_name_replacement, oldSettings.spaceFileNameReplacement),
-		frontendScriptDefault: {
-			embedsEnabled: booleanSetting(req.body.frontend_script_default_embeds_enabled, oldSettings.frontendScriptDefault.embedsEnabled),
-			heightUnlimit: booleanSetting(req.body.frontend_script_default_height_unlimit, oldSettings.frontendScriptDefault.heightUnlimit),
-			hideRecursive: booleanSetting(req.body.frontend_script_default_hide_recursive, oldSettings.frontendScriptDefault.hideRecursive),
-			crispImages: booleanSetting(req.body.frontend_script_default_crisp_images, oldSettings.frontendScriptDefault.crispImages),
-			hideThumbnails: booleanSetting(req.body.frontend_script_default_hide_thumbnails, oldSettings.frontendScriptDefault.hideThumbnails),
-			nonColorIds: booleanSetting(req.body.frontend_script_default_non_color_ids, oldSettings.frontendScriptDefault.nonColorIds),
-			alwaysShowSpoilers: booleanSetting(req.body.frontend_script_default_always_show_spoilers, oldSettings.frontendScriptDefault.alwaysShowSpoilers),
-			hidePostStubs: booleanSetting(req.body.frontend_script_default_hide_post_stubs, oldSettings.frontendScriptDefault.hidePostStubs),
-			smoothScrolling: booleanSetting(req.body.frontend_script_default_smooth_scrolling, oldSettings.frontendScriptDefault.smoothScrolling),
-			defaultVolume: numberSetting(req.body.frontend_script_default_volume, oldSettings.frontendScriptDefault.defaultVolume),
-			loop: booleanSetting(req.body.frontend_script_default_loop, oldSettings.frontendScriptDefault.loop),
-			imageLoadingBars: booleanSetting(req.body.frontend_script_default_image_loading_bars, oldSettings.frontendScriptDefault.imageLoadingBars),
-			live: booleanSetting(req.body.frontend_script_default_live, oldSettings.frontendScriptDefault.live),
-			scrollToPosts: booleanSetting(req.body.frontend_script_default_scroll_to_posts, oldSettings.frontendScriptDefault.scrollToPosts),
-			localTime: booleanSetting(req.body.frontend_script_default_local_time, oldSettings.frontendScriptDefault.localTime),
-			hour24Time: booleanSetting(req.body.frontend_script_default_hour_24_time, oldSettings.frontendScriptDefault.hour24Time),
-			relativeTime: booleanSetting(req.body.frontend_script_default_relative_time, oldSettings.frontendScriptDefault.relativeTime),
-			notificationsEnabled: booleanSetting(req.body.frontend_script_default_notifications_embed, oldSettings.frontendScriptDefault.notificationsEnabled),
-			notificationsYousOnly: booleanSetting(req.body.frontend_script_default_notifications_yous_only, oldSettings.frontendScriptDefault.notificationsYousOnly),
-			showYous: booleanSetting(req.body.frontend_script_default_show_yous, oldSettings.frontendScriptDefault.showYous),
-		},
+		boardDefaults: {
+			...oldSettings.boardDefaults,
+			theme: trimSetting(req.body.board_defaults_theme, oldSettings.boardDefaults.theme),
+			codeTheme: trimSetting(req.body.board_defaults_code_theme, oldSettings.boardDefaults.codeTheme),
+		}
+
+/*
 		boardDefaults: {
 			sfw: booleanSetting(req.body.board_defaults_sfw, oldSettings.boardDefaults.sfw),
 			lockMode: numberSetting(req.body.board_defaults_lock_mode, oldSettings.boardDefaults.lockMode),
@@ -252,8 +248,8 @@ module.exports = async (req, res, next) => {
 				other: booleanSetting(req.body.board_defaults_allowed_file_types_other, oldSettings.boardDefaults.allowedFileTypes.other)
 			}
 		},
-
 */
+
 	};
 
 	redis.set('globalsettings', newSettings);
