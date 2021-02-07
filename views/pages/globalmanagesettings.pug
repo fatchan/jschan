@@ -490,7 +490,7 @@ block content
 						input(type='number' name='global_limits_post_files_max' value=settings.globalLimits.postFiles.max)
 					.row
 						.label Post File Size Max
-						input(type='number' name='global_limits__post_files_size_max' value=settings.globalLimits.postFilesSize.max)
+						input(type='number' name='global_limits_post_files_size_max' value=settings.globalLimits.postFilesSize.max)
 					.row
 						.label Custom Pages Max Characters
 						input(type='number' name='global_limits_custom_pages_max_length' value=settings.globalLimits.customPages.maxLength)
@@ -525,5 +525,201 @@ block content
 							input(type='checkbox', name='enable_webring' value='true' checked=settings.enableWebring)
 					.row
 						p other webring options coming soon
+
+
+				.col.mr-5
+
+					.row
+						h4.mv-5 Board Defaults
+					.row
+						.label SFW
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_sfw' value='true' checked=settings.boardDefaults.sfw)
+					.row
+						.label Unlisted Locally
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_unlisted_local' value='true' checked=settings.boardDefaults.unlistedLocal)
+					.row
+						.label Unlisted From Webring
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_unlisted_webring' value='true' checked=settings.boardDefaults.unlistedWebring)
+					.row
+						.label Unique Message Enforcement
+						select(name='board_defaults_message_r9k_mode')
+							option(value='0', selected=settings.boardDefaults.messageR9KMode === 0) Off
+							option(value='1', selected=settings.boardDefaults.messageR9KMode === 1) Per Thread
+							option(value='2', selected=settings.boardDefaults.messageR9KMode === 2) Board Wide
+					.row
+						.label Unique File Enforcement
+						select(name='board_defaults_file_r9k_mode')
+							option(value='0', selected=settings.boardDefaults.fileR9KMode === 0) Off
+							option(value='1', selected=settings.boardDefaults.fileR9KMode === 1) Per Thread
+							option(value='2', selected=settings.boardDefaults.fileR9KMode === 2) Board Wide
+					.row
+						.label Lock Mode
+						select(name='board_defaults_lock_mode')
+							option(value='0', selected=settings.boardDefaults.lockMode === 0) Unlocked
+							option(value='1', selected=settings.boardDefaults.lockMode === 1) Lock Thread Creation
+							option(value='2', selected=settings.boardDefaults.lockMode === 2) Board Locked
+					.row
+						.label Captcha Mode
+						select(name='board_defaults_captcha_mode')
+							option(value='0', selected=settings.boardDefaults.captchaMode === 0) No Captcha
+							option(value='1', selected=settings.boardDefaults.captchaMode === 1) Captcha for new thread
+							option(value='2', selected=settings.boardDefaults.captchaMode === 2) Captcha for all posts
+					.row
+						.label PPH Trigger Threshold
+						input(type='number', name='board_defaults_pph_trigger', value=settings.boardDefaults.pphTrigger)
+					.row
+						.label PPH Trigger Action
+						select(name='board_defaults_pph_trigger_action')
+							option(value='0', selected=settings.boardDefaults.pphTriggerAction === 0) Do nothing
+							option(value='1', selected=settings.boardDefaults.pphTriggerAction === 1) Enable captcha for new thread
+							option(value='2', selected=settings.boardDefaults.pphTriggerAction === 2) Enable captcha for all posts
+							option(value='3', selected=settings.boardDefaults.pphTriggerAction === 3) Lock thread creation
+							option(value='4', selected=settings.boardDefaults.pphTriggerAction === 4) Lock board
+					.row
+						.label TPH Trigger Threshold
+						input(type='number', name='board_defaults_tph_trigger', value=settings.boardDefaults.tphTrigger)
+					.row
+						.label TPH Trigger Action
+						select(name='board_defaults_tph_trigger_action')
+							option(value='0', selected=settings.boardDefaults.tphTriggerAction === 0) Do nothing
+							option(value='1', selected=settings.boardDefaults.tphTriggerAction === 1) Enable captcha for new thread
+							option(value='2', selected=settings.boardDefaults.tphTriggerAction === 2) Enable captcha for all posts
+							option(value='3', selected=settings.boardDefaults.tphTriggerAction === 3) Lock thread creation
+							option(value='4', selected=settings.boardDefaults.tphTriggerAction === 4) Lock board
+					.row
+						.label Trigger Reset Lock Mode
+						select(name='board_defaults_lock_reset')
+							option(value='0', selected=settings.boardDefaults.lockReset === 0) No change
+							option(value='1', selected=settings.boardDefaults.lockReset === 1) Unlock board
+							option(value='2', selected=settings.boardDefaults.lockReset === 2) Lock thread creation
+					.row
+						.label Trigger Reset Captcha Mode
+						select(name='board_defaults_captcha_reset')
+							option(value='0', selected=settings.boardDefaults.captchaReset === 0) No change
+							option(value='1', selected=settings.boardDefaults.captchaReset === 1) Captcha disabled
+							option(value='2', selected=settings.boardDefaults.captchaReset === 2) Captcha for new thread
+					.row
+						.label Anon Name
+						input(type='text' name='board_defaults_default_name' value=settings.boardDefaults.defaultName)
+					.row
+						.label Force Anon
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_force_anon', value='true' checked=settings.boardDefaults.forceAnon)
+					.row
+						.label Sage Only Email
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_sage_only_email', value='true' checked=settings.boardDefaults.sageOnlyEmail)
+					.row
+						.label Early 404
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_early404', value='true' checked=settings.boardDefaults.early404)
+					.row
+						.label IDs
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_ids', value='true' checked=settings.boardDefaults.ids)
+					.row
+						.label Geo Flags
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_flags', value='true' checked=settings.boardDefaults.flags)
+					.row
+						.label User Post Deletion
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_user_post_delete', value='true' checked=settings.boardDefaults.userPostDelete)
+					.row
+						.label User File Spoilering
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_user_post_spoiler', value='true' checked=settings.boardDefaults.userPostSpoiler)
+					.row
+						.label User File Unlinking
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_user_post_unlink', value='true' checked=settings.boardDefaults.userPostUnlink)
+					.row
+						.label Thread Limit
+						input(type='number' name='board_defaults_thread_limit' value=settings.boardDefaults.threadLimit)
+					.row
+						.label Reply Limit
+						input(type='number' name='board_defaults_reply_limit' value=settings.boardDefaults.replyLimit)
+					.row
+						.label Bump Limit
+						input(type='number' name='board_defaults_bump_limit' value=settings.boardDefaults.bumpLimit)
+					.row
+						.label Max Files
+						input(type='number' name='board_defaults_max_files' value=settings.boardDefaults.maxFiles)
+					.row
+						.label Force Thread Subject
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_force_thread_subject', value='true' checked=settings.boardDefaults.forceThreadSubject)
+					.row
+						.label Force Thread Message
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_force_thread_message', value='true' checked=settings.boardDefaults.forceThreadMessage)
+					.row
+						.label Force Thread File
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_force_thread_file', value='true' checked=settings.boardDefaults.forceThreadFile)
+					.row
+						.label Force Reply Message
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_force_reply_message', value='true' checked=settings.boardDefaults.forceReplyMessage)
+					.row
+						.label Force Reply File
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_force_reply_file', value='true' checked=settings.boardDefaults.forceReplyFile)
+					.row
+						.label Disable Reply Subject
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_disable_reply_subject', value='true' checked=settings.boardDefaults.disableReplySubject)
+					.row
+						.label Min Thread Message Length
+						input(type='number' name='board_defaults_min_thread_message_length' value=settings.boardDefaults.minThreadMessageLength)
+					.row
+						.label Min Reply Message Length
+						input(type='number' name='board_defaults_min_reply_message_length' value=settings.boardDefaults.minReplyMessageLength)
+					.row
+						.label Max Thread Message Length
+						input(type='number' name='board_defaults_max_thread_message_length' value=settings.boardDefaults.maxThreadMessageLength)
+					.row
+						.label Max Reply Message Length
+						input(type='number' name='board_defaults_max_reply_message_length' value=settings.boardDefaults.maxReplyMessageLength)
+					.row
+						.label Disable anonymizer file posting
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_disable_anonymizer_file_posting', value='true' checked=settings.boardDefaults.disableAnonymizerFilePosting)
+					.row
+						.label Strict Filtering
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_strict_filtering', value='true' checked=settings.boardDefaults.strictFiltering)
+					.row
+						.label Filter Mode
+						select(name='board_defaults_filter_mode')
+							option(value='0', selected=settings.boardDefaults.filterMode === 0) Do nothing
+							option(value='1', selected=settings.boardDefaults.filterMode === 1) Block post
+							option(value='2', selected=settings.boardDefaults.filterMode === 2) Ban
+					.row
+						.label Filter Auto Ban Duration
+						input(type='text' name='board_defaults_ban_duration' placeholder='e.g. 1w' value=settings.boardDefaults.filterBanDuration)
+					.row
+						.label Allow Video Files
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_allowed_file_types_video', value='true' checked=settings.boardDefaults.allowedFileTypes.video)
+					.row
+						.label Allow Image Files
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_allowed_file_types_image', value='true' checked=settings.boardDefaults.allowedFileTypes.image)
+					.row
+						.label Allow Animated Image Files
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_allowed_file_types_animated_image', value='true' checked=settings.boardDefaults.allowedFileTypes.animatedImage)
+					.row
+						.label Allow Audio Files
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_allowed_file_types_audio', value='true' checked=settings.boardDefaults.allowedFileTypes.audio)
+					.row
+						.label Allow Other Files
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_allowed_file_types_other', value='true' checked=settings.boardDefaults.allowedFileTypes.other)
 
 			input.row(type='submit', value='save settings')

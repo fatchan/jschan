@@ -126,7 +126,6 @@ module.exports = async (req, res, next) => {
 		filterFileNames: booleanSetting(req.body.filter_file_names, oldSettings.filterFileNames),
 		spaceFileNameReplacement: trimSetting(req.body.space_file_name_replacement, oldSettings.spaceFileNameReplacement),
 		globalLimits:  {
-			...oldSettings.globalLimits,
 			customCss: {
 				enabled: booleanSetting(req.body.global_limits_custom_css_enabled, oldSettings.globalLimits.customCss.enabled),
 				max: numberSetting(req.body.global_limits_custom_css_max, oldSettings.globalLimits.customCss.max),
@@ -186,13 +185,8 @@ module.exports = async (req, res, next) => {
 			}
 		},
 		boardDefaults: {
-			...oldSettings.boardDefaults,
 			theme: trimSetting(req.body.board_defaults_theme, oldSettings.boardDefaults.theme),
 			codeTheme: trimSetting(req.body.board_defaults_code_theme, oldSettings.boardDefaults.codeTheme),
-		}
-
-/*
-		boardDefaults: {
 			sfw: booleanSetting(req.body.board_defaults_sfw, oldSettings.boardDefaults.sfw),
 			lockMode: numberSetting(req.body.board_defaults_lock_mode, oldSettings.boardDefaults.lockMode),
 			fileR9KMode: numberSetting(req.body.board_defaults_file_r9k_mode, oldSettings.boardDefaults.fileR9KMode),
@@ -206,6 +200,7 @@ module.exports = async (req, res, next) => {
 			pphTriggerAction: numberSetting(req.body.board_defaults_pph_trigger_action, oldSettings.boardDefaults.pphTriggerAction),
 			captchaReset: numberSetting(req.body.board_defaults_captcha_reset, oldSettings.boardDefaults.captchaReset),
 			lockReset: numberSetting(req.body.board_defaults_lock_reset, oldSettings.boardDefaults.lockReset),
+			defaultName: trimSetting(req.body.board_defaults_default_name, oldSettings.boardDefaults.defaultName),
 			forceAnon: booleanSetting(req.body.board_defaults_force_anon, oldSettings.boardDefaults.forceAnon),
 			sageOnlyEmail: booleanSetting(req.body.board_defaults_sage_only_email, oldSettings.boardDefaults.sageOnlyEmail),
 			early404: booleanSetting(req.body.board_defaults_early_404, oldSettings.boardDefaults.early404),
@@ -228,14 +223,13 @@ module.exports = async (req, res, next) => {
 			minReplyMessageLength: numberSetting(req.body.board_defaults_min_reply_message_length, oldSettings.boardDefaults.minReplyMessageLength),
 			maxThreadMessageLength: numberSetting(req.body.board_defaults_max_thread_message_length, oldSettings.boardDefaults.maxThreadMessageLength),
 			maxReplyMessageLength: numberSetting(req.body.board_defaults_max_reply_message_length, oldSettings.boardDefaults.maxReplyMessageLength),
-			defaultName: trimSetting(req.body.board_defaults_default_name, oldSettings.boardDefaults.defaultName),
-			customCSS: null,
-			blockedCountries: [],
 			disableAnonymizerFilePosting: booleanSetting(req.body.board_defaults_disable_anonymizer_file_posting, oldSettings.boardDefaults.disableAnonymizerFilePosting),
-			filters: [],
 			filterMode: numberSetting(req.body.board_defaults_filter_mode, oldSettings.boardDefaults.filterMode),
 			filterBanDuration: numberSetting(req.body.board_defaults_filter_ban_duration, oldSettings.boardDefaults.filterBanDuration),
 			strictFiltering: booleanSetting(req.body.board_defaults_strict_filtering, oldSettings.boardDefaults.strictFiltering),
+			customCSS: null,
+			blockedCountries: [],
+			filters: [],
 			announcement: {
 				raw: null,
 				markdown: null
@@ -248,50 +242,9 @@ module.exports = async (req, res, next) => {
 				other: booleanSetting(req.body.board_defaults_allowed_file_types_other, oldSettings.boardDefaults.allowedFileTypes.other)
 			}
 		},
-*/
-
 	};
 
 	redis.set('globalsettings', newSettings);
-
-/*
-//todo: implement removing pages/rebuilding for all affected boards i.e. query for ones with settings.catchaMode < newSettings.captchaMode
-	let rebuildThreads = false
-		, rebuildBoard = false
-		, rebuildCatalog = false;
-	if (newSettings.captchaMode > oldSettings.captchaMode) {
-		rebuildBoard = true;
-		rebuildCatalog = true;
-		if (newSettings.captchaMode == 2) {
-			rebuildThreads = true; //thread captcha enabled, removes threads
-		}
-		const affectedBoards = //query here
-		for (let i = 0; i < affectedBoards.length; i++) {
-			const board = affectedBoards[i];
-			if (rebuildThreads) {
-				promises.push(remove(`${uploadDirectory}/html/${board._id}/thread/`));
-			}
-			if (rebuildBoard) {
-				buildQueue.push({
-					'task': 'buildBoardMultiple',
-					'options': {
-						board,
-						'startpage': 1,
-						'endpage': null //no endpage will use whatver maxpage of board is
-					}
-				});
-			}
-			if (rebuildCatalog) {
-				buildQueue.push({
-					'task': 'buildCatalog',
-					'options': {
-						board,
-					}
-				});
-			}
-		}
-	}
-*/
 
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {
@@ -300,6 +253,10 @@ module.exports = async (req, res, next) => {
 
 	//publish to redis so running processes get updated config
 	redis.redisPublisher.publish('config', JSON.stringify(newSettings));
+
+	buildQueue.push({
+		'task': 'gulp'
+	});
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
