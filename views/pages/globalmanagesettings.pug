@@ -287,4 +287,97 @@ block content
 						.label Edit Post
 						input(type='number' name='rate_limit_cost_edit_post' value=settings.rateLimitCost.editPost)
 
+			.row.wrap.sb
+				.col
+
+					.row
+						h4.mv-5 Frontend Script Defaults
+					.row
+						.label Embeds Enabled
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_embeds_enabled', value='true' checked=settings.frontendScriptDefault.embedsEnabled)
+					.row
+						.label Unlimit Media Height
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_height_unlimit', value='true' checked=settings.frontendScriptDefault.heightUnlimit)
+					.row
+						.label Recursive Post Hiding
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_hide_recursive', value='true' checked=settings.frontendScriptDefault.hideRecursive)
+					.row
+						.label Crisp Image Rendering
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_crisp_images', value='true' checked=settings.frontendScriptDefault.crispImages)
+					.row
+						.label Hide Thumbnails
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_hide_thumbnails', value='true' checked=settings.frontendScriptDefault.hideThumbnails)
+					.row
+						.label Non-Color IDs
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_non_color_ids', value='true' checked=settings.frontendScriptDefault.nonColorIds)
+					.row
+						.label Always Reveal Spoiler Markdown
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_always_show_spoilers', value='true' checked=settings.frontendScriptDefault.alwaysShowSpoilers)
+					.row
+						.label Hide Post Stubs
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_hide_post_stubs', value='true' checked=settings.frontendScriptDefault.hidePostStubs)
+					.row
+						.label Smooth Scrolling
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_smooth_scrolling', value='true' checked=settings.frontendScriptDefault.smoothScrolling)
+					.row
+						.label Default Volume
+						input(type='number', name='frontend_script_default_volume' value=settings.frontendScriptDefault.defaultVolume)
+					.row
+						.label Loop Audio/Video
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_loop', value='true' checked=settings.frontendScriptDefault.loop)
+					.row
+						.label Image Loading Bars
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_image_loading_bars', value='true' checked=settings.frontendScriptDefault.imageLoadingBars)
+					.row
+						.label Live Posts
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_live', value='true' checked=settings.frontendScriptDefault.live)
+					.row
+						.label Scroll To New Posts
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_scroll_to_posts', value='true' checked=settings.frontendScriptDefault.scrollToPosts)
+					.row
+						.label Local Time
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_local_time', value='true' checked=settings.frontendScriptDefault.localTime)
+					.row
+						.label 24 Hour Time
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_hour_24_time', value='true' checked=settings.frontendScriptDefault.hour24Time)
+					.row
+						.label Use Relative Time
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_relative_time', value='true' checked=settings.frontendScriptDefault.relativeTime)
+					.row
+						.label Notifications
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_notifications', value='true' checked=settings.frontendScriptDefault.notificationsEnabled)
+					.row
+						.label Show (You)s
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_show_yous', value='true' checked=settings.frontendScriptDefault.showYous)
+					.row
+						.label Only Notify (You)s
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_notifications_yous_only', value='true' checked=settings.frontendScriptDefault.notificationsYousOnly)
+
+				.col
+					.row
+						h4.mv-5 more shit
+
+				.col
+					.row
+						h4.mv-5 even more shit
+
 			input.row(type='submit', value='save settings')
