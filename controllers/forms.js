@@ -3,6 +3,7 @@
 const express  = require('express')
 	, router = express.Router({ caseSensitive: true })
 	, Boards = require(__dirname+'/../db/boards.js')
+	, config = require(__dirname+'/../config.js')
 //middlewares
 	, torPreBypassCheck = require(__dirname+'/../helpers/checks/torprebypass.js')
 	, geoAndTor = require(__dirname+'/../helpers/geoip.js')
@@ -72,15 +73,12 @@ router.post('/board/:board/addbanners', /*geoAndTor, torPreBypassCheck, processI
 router.post('/board/:board/deletebanners', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
 router.post('/board/:board/addcustompages', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, addCustomPageController); //add banners
 router.post('/board/:board/deletecustompages', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteCustomPageController); //delete banners
-//router.post('/board/:board/addban', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), paramConverter, addBanController); //add ban manually without post
 router.post('/board/:board/editbans', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
-router.post('/board/:board/deleteboard', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(), deleteBoardController); //delete board
+router.post('/board/:board/deleteboard', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(config.get.deleteBoardPermLevel), deleteBoardController); //delete board
 
 //global management forms
 router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, editBansController); //remove bans
-//commented out for now, because we cant add a manual ban based on a non existing hash suffix (or fetch the full hash from a non existing post), and the user wouldnt know if it the post didn't exist so its pointless anyway. 
-//router.post('/global/addban', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, addBanController); //add ban manually without post
-router.post('/global/deleteboard', useSession, sessionRefresh, csrf, paramConverter, calcPerms, isLoggedIn, hasPerms(1), deleteBoardController); //delete board from global management panel
+router.post('/global/deleteboard', useSession, sessionRefresh, csrf, paramConverter, calcPerms, isLoggedIn, hasPerms(Math.min(config.get.deleteBoardPermLevel, 1)), deleteBoardController); //delete board from global management panel
 router.post('/global/addnews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), addNewsController); //add new newspost
 router.post('/global/editnews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, editNewsController); //add new newspost
 router.post('/global/deletenews', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(0), paramConverter, deleteNewsController); //delete news
