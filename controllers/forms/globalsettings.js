@@ -103,7 +103,7 @@ module.exports = async (req, res, next) => {
 		{ result: numberBody(req.body.board_defaults_tph_trigger_action, 0, 4), expected: false, error: 'Board default tph trigger action must be a number from 0-4' },
 		{ result: numberBody(req.body.board_defaults_captcha_reset, 0, 2), expected: false, error: 'Board defaults captcha reset must be a number from 0-2' },
 		{ result: numberBody(req.body.board_defaults_lock_reset, 0, 2), expected: false, error: 'Board defaults lock reset must be a number from 0-2' },
-		//todo: make these boundd by new values it updating both
+		//todo: make these bound by new values it updating both
 		{ result: numberBody(req.body.board_defaults_reply_limit, globalLimits.replyLimit.min, globalLimits.replyLimit.max), expected: false, error: `Board defaults reply limit must be a number from ${globalLimits.replyLimit.min}-${globalLimits.replyLimit.max}` },
 		{ result: numberBody(req.body.board_defaults_thread_limit, globalLimits.threadLimit.min, globalLimits.threadLimit.max), expected: false, error: `Board defaults thread limit must be a number from ${globalLimits.threadLimit.min}-${globalLimits.threadLimit.max}` },
 		{ result: numberBody(req.body.board_defaults_bump_limit, globalLimits.bumpLimit.min, globalLimits.bumpLimit.max), expected: false, error: `Board defaults bump limit must be a number from ${globalLimits.bumpLimit.min}-${globalLimits.bumpLimit.max}` },
@@ -113,8 +113,8 @@ module.exports = async (req, res, next) => {
 		//
 		{ result: numberBody(req.body.board_defaults_min_thread_message_length), expected: false, error: 'Board defaults min thread message length must be a number' },
 		{ result: numberBody(req.body.board_defaults_min_reply_message_length), expected: false, error: 'Board defaults min reply message length must be a number' },
-		{ result: minmaxBody(req.body.board_defaults_min_thread_message_length, req.body.board_defaults_max_thread_message_length), expected: false, error: 'Board defaults thread message length min must be less than max' },
-		{ result: minmaxBody(req.body.board_defaults_min_reply_message_length, req.body.board_defaults_max_reply_message_length), expected: false, error: 'Board defaults reply message length min must be less than max' },
+		{ result: minmaxBody(req.body.board_defaults_min_thread_message_length, req.body.board_defaults_max_thread_message_length), expected: true, error: 'Board defaults thread message length min must be less than max' },
+		{ result: minmaxBody(req.body.board_defaults_min_reply_message_length, req.body.board_defaults_max_reply_message_length), expected: true, error: 'Board defaults reply message length min must be less than max' },
 		{ result: numberBody(req.body.board_defaults_filter_mode, 0, 2), expected: false, error: 'Board defaults filter most must be a number from 0-2' },
 		{ result: numberBody(req.body.board_defaults_filter_ban_duration), expected: false, error: 'Board defaults filter ban duration must be a number' },
 	];
