@@ -26,162 +26,265 @@ block content
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/global/settings`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
-			.row
-				.label Filters
-				textarea(name='filters' placeholder='Newline separated') #{settings.filters.join('\n')}
-			.row
-				.label Filter Mode
-				select(name='filter_mode')
-					option(value='0', selected=settings.filterMode === 0) Do nothing
-					option(value='1', selected=settings.filterMode === 1) Block post
-					option(value='2', selected=settings.filterMode === 2) Ban
-			.row
-				.label Filter Auto Ban Duration
-				input(type='text' name='ban_duration' placeholder='e.g. 1w' value=settings.filterBanDuration)
-			.row
-				.label Referer Check
-				label.postform-style.ph-5
-					input(type='checkbox', name='referrer_check', value='true' checked=settings.refererCheck)
-			.row
-				.label Allowed Hosts
-				textarea(name='allowed_hosts' placeholder='Newline separated') #{settings.allowedHosts.join('\n')}
-			.row
-				.label Country Code Header
-				input(type='text' name='country_code_header' value=settings.countryCodeHeader)
-			.row
-				.label IP Header
-				input(type='text' name='ip_header' value=settings.ipHeader)
-			.row
-				.label Meta Site Name
-				input(type='text' name='meta_site_name' value=settings.meta.siteName)
-			.row
-				.label Meta URL
-				input(type='text' name='meta_url' value=settings.meta.url)
-			.row
-				.label Secure Cookies
-				label.postform-style.ph-5
-					input(type='checkbox', name='secure_cookies', value='true' checked=settings.secureCookies)
-			.row
-				.label Disable Anonymizer File Posting
-				label.postform-style.ph-5
-					input(type='checkbox', name='disable_anonymizer_file_posting', value='true' checked=settings.disableAnonymizerFilePosting)
-			.row
-				.label Stats Count Anonymizers
-				label.postform-style.ph-5
-					input(type='checkbox', name='stats_count_anonymizers', value='true' checked=settings.statsCountAnonymizers)
-			.row
-				.label Prune Files Immediately
-				label.postform-style.ph-5
-					input(type='checkbox', name='prune_immediately', value='true' checked=settings.pruneImmediately)
-			.row
-				.label Hash Images
-				label.postform-style.ph-5
-					input(type='checkbox', name='hash images' value='true' checked=settings.hashImages)
-			.row
-				.label IP Hash Perm Level
-				input(type='number' name='ip_hash_perm_level' value=settings.ipHashPermLevel)
-			.row
-				.label Delete Board Perm Level
-				input(type='number' name='delete_board_perm_level' value=settings.deleteBoardPermLevel)
-			.row
-				.label Overboard Index Thread Limit
-				input(type='number' name='overboard_limit' value=settings.overboardLimit)
-			.row
-				.label Overboard Catalog Thread Limit
-				input(type='number' name='overboard_catalog_limit' value=settings.overboardCatalogLimit)
+			.row.wrap.sb
+				.col
 
+					.row
+						h4.mv-5 Security
+					.row
+						.label Referer Check
+						label.postform-style.ph-5
+							input(type='checkbox', name='referrer_check', value='true' checked=settings.refererCheck)
+					.row
+						.label Allowed Hosts
+						textarea(name='allowed_hosts' placeholder='Newline separated') #{settings.allowedHosts.join('\n')}
+					.row
+						.label Secure Cookies
+						label.postform-style.ph-5
+							input(type='checkbox', name='secure_cookies', value='true' checked=settings.secureCookies)
 
+					.row
+						h4.mv-5 Server
+					.row
+						.label Country Code Header
+						input(type='text' name='country_code_header' value=settings.countryCodeHeader)
+					.row
+						.label IP Header
+						input(type='text' name='ip_header' value=settings.ipHeader)
+					.row
+						.label Meta Site Name
+						input(type='text' name='meta_site_name' value=settings.meta.siteName)
+					.row
+						.label Meta URL
+						input(type='text' name='meta_url' value=settings.meta.url)
+					.row
+						.label Disable Anonymizer File Posting
+						label.postform-style.ph-5
+							input(type='checkbox', name='disable_anonymizer_file_posting', value='true' checked=settings.disableAnonymizerFilePosting)
+					.row
+						.label Stats Count Anonymizers
+						label.postform-style.ph-5
+							input(type='checkbox', name='stats_count_anonymizers', value='true' checked=settings.statsCountAnonymizers)
+					.row
+						.label Prune Files Immediately
+						label.postform-style.ph-5
+							input(type='checkbox', name='prune_immediately', value='true' checked=settings.pruneImmediately)
+					.row
+						.label Thumbnail File Extension
+						input(type='text' name='thumb_extension' value=settings.thumbExtension)
+					.row
+						.label Hash Images
+						label.postform-style.ph-5
+							input(type='checkbox', name='hash_images' value='true' checked=settings.hashImages)
+					.row
+						.label Template Cache
+						label.postform-style.ph-5
+							input(type='checkbox', name='cache_templates' value='true' checked=settings.cacheTemplates)
+					.row
+						.label Template Generation Lock Time
+						input(type='number' name='lock_wait' value=settings.lockWait)
+					.row
+						.label Overboard Index Thread Limit
+						input(type='number' name='overboard_limit' value=settings.overboardLimit)
+					.row
+						.label Overboard Catalog Thread Limit
+						input(type='number' name='overboard_catalog_limit' value=settings.overboardCatalogLimit)
+					.row
+						.label Prune Modlogs Days
+						input(type='number', name='prune_modlogs' value=settings.pruneModlogs)
+					.row
+						.label Prune IPs Days
+						input(type='number', name='prune_ips' value=settings.pruneIps)
 
-			.row
-				h4.mv-5 Ratelimit Costs
-			.row
-				.label Captcha
-				input(type='number' name='rate_limit_cost_captcha' value=settings.rateLimitCost.captcha)
-			.row
-				.label Change Board Settings
-				input(type='number' name='rate_limit_cost_board_settings' value=settings.rateLimitCost.boardSettings)
-			.row
-				.label Edit Post
-				input(type='number' name='rate_limit_cost_edit_post' value=settings.rateLimitCost.editPost)
+					.row
+					row
+						h4.mv-5 Permissions
+					.row
+						.label Raw IP Perm Level
+						select(name='ip_hash_perm_leve')
+							option(value='0', selected=settings.deleteBoardPermLevel === 0) Admin
+							option(value='1', selected=settings.deleteBoardPermLevel === 1) Global Staff
+							option(value='2', selected=settings.deleteBoardPermLevel === 2) Board Owner
+							option(value='3', selected=settings.deleteBoardPermLevel === 3) Board Mod
+					.row
+						.label Delete Board Perm Level
+						select(name='delete_board_perm_level')
+							option(value='0', selected=settings.deleteBoardPermLevel === 0) Admin
+							option(value='1', selected=settings.deleteBoardPermLevel === 1) Global Staff
+							option(value='2', selected=settings.deleteBoardPermLevel === 2) Board Owner
+							option(value='3', selected=settings.deleteBoardPermLevel === 3) Board Mod
+					.row
+						.label Allow User Account Creation
+						label.postform-style.ph-5
+							input(type='checkbox', name='enable_user_account_creation' value='true' checked=settings.enableUserAccountCreation)
+					.row
+						.label Allow User Board Creation
+						label.postform-style.ph-5
+							input(type='checkbox', name='enable_user_board_creation' value='true' checked=settings.enableUserBoardCreation)
 
+				.col
 
-			.row
-				h4.mv-5 Flood Timers
-			.row
-				.label Same Content Same IP/ID
-				input(type='number' name='flood_timers_same_content_same_ip' value=settings.floodTimers.sameContentSameIp)
-			.row
-				.label Same Content Any IP/ID
-				input(type='number' name='flood_timers_same_content_any_ip' value=settings.floodTimers.sameContentAnyIp)
-			.row
-				.label Any Content Same IP/ID
-				input(type='number' name='flood_timers_any_content_same_ip' value=settings.floodTimers.anyContentSameIp)
+					.row
+						h4.mv-5 Captcha
+					.row
+						.label Type
+						select(name='captcha_options_type')
+							option(value='text', selected=settings.captchaOptions.type === 'text') Text
+							option(value='grid', selected=settings.captchaOptions.type === 'grid') Grid
+							option(value='google', selected=settings.captchaOptions.type === 'google') Google
+							option(value='hcaptcha', selected=settings.captchaOptions.type === 'hcaptcha') Hcaptcha
+					.row
+						.label Generate Limit
+						input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
+					.row
+						.label Image Size
+						input(type='number' name='captcha_options_image_size' value=settings.captchaOptions.grid.imageSize)
+					.row
+						.label Grid Size
+						input(type='number' name='captcha_options_grid_size' value=settings.captchaOptions.grid.size)
+					.row
+						.label Grid Icon Offset
+						input(type='number' name='captcha_options_grid_icon_y_offset' value=settings.captchaOptions.grid.iconYOffset)
+					.row
+						.label Minimum Distortions
+						input(type='number' name='captcha_options_num_distorts_min' value=settings.captchaOptions.numDistorts.min)
+					.row
+						.label Maximum Distortions
+						input(type='number' name='captcha_options_num_distorts_max' value=settings.captchaOptions.numDistorts.max)
+					.row
+						.label Distortion Intensity
+						input(type='number' name='captcha_options_distortion' value=settings.captchaOptions.distortion)
 
+					.row
+						h4.mv-5 Block Bypass
+					.row
+						.label Enabled
+						label.postform-style.ph-5
+							input(type='checkbox', name='block_bypass_enabled', value='true' checked=settings.blockBypass.enabled)
+					.row
+						.label Force Anonymizers
+						label.postform-style.ph-5
+							input(type='checkbox', name='block_bypass_force_anonymizers', value='true' checked=settings.blockBypass.forceAnonymizers)
+					.row
+						.label Bypass DNSBL
+						label.postform-style.ph-5
+							input(type='checkbox', name='block_bypass_bypass_dnsbl', value='true' checked=settings.blockBypass.bypassDnsbl)
+					.row
+						.label Expire After Uses
+						input(type='number' name='captcha_options_expire_after_uses' value=settings.blockBypass.expireAfterUses)
+					.row
+						.label Expire After Time
+						input(type='number' name='captcha_options_expire_after_time' value=settings.blockBypass.expireAfterTime)
 
-			.row
-				h4.mv-5 Block Bypass
-			.row
-				.label Enabled
-				label.postform-style.ph-5
-					input(type='checkbox', name='block_bypass_enabled', value='true' checked=settings.blockBypass.enabled)
-			.row
-				.label Force Anonymizers
-				label.postform-style.ph-5
-					input(type='checkbox', name='block_bypass_force_anonymizers', value='true' checked=settings.blockBypass.forceAnonymizers)
-			.row
-				.label Bypass DNSBL
-				label.postform-style.ph-5
-					input(type='checkbox', name='block_bypass_bypass_dnsbl', value='true' checked=settings.blockBypass.bypassDnsbl)
-			.row
-				.label Expire After Uses
-				input(type='number' name='captcha_options_expire_after_uses' value=settings.expireAfterUses)
-			.row
-				.label Expire After Time
-				input(type='number' name='captcha_options_expire_after_time' value=settings.captchaOptions.expireAfterTime)
+					.row
+						h4.mv-5 Antispam
+					.row
+						.label Filters
+						textarea(name='filters' placeholder='Newline separated') #{settings.filters.join('\n')}
+					.row
+						.label Filter Mode
+						select(name='filter_mode')
+							option(value='0', selected=settings.filterMode === 0) Do nothing
+							option(value='1', selected=settings.filterMode === 1) Block post
+							option(value='2', selected=settings.filterMode === 2) Ban
+					.row
+						.label Filter Auto Ban Duration
+						input(type='text' name='ban_duration' placeholder='e.g. 1w' value=settings.filterBanDuration)
+					.row
+						.label Same Content Same IP/ID
+						input(type='number' name='flood_timers_same_content_same_ip' value=settings.floodTimers.sameContentSameIp)
+					.row
+						.label Same Content Any IP/ID
+						input(type='number' name='flood_timers_same_content_any_ip' value=settings.floodTimers.sameContentAnyIp)
+					.row
+						.label Any Content Same IP/ID
+						input(type='number' name='flood_timers_any_content_same_ip' value=settings.floodTimers.anyContentSameIp)
 
+					.row
+						h4.mv-5 DNSBL
+					.row
+						.label Enabled
+						label.postform-style.ph-5
+							input(type='checkbox', name='dnsbl_enabled', value='true' checked=settings.dnsbl.enabled)
+					.row
+						.label DNSBL Addresses
+						textarea(name='dnsbl_blacklists' placeholder='Newline separated') #{settings.dnsbl.blacklists.join('\n')}
+					.row
+						.label Cache Time
+						input(type='number' name='dnsbl_cache_time' value=settings.dnsbl.cacheTime)
 
-			.row
-				h4.mv-5 DNSBL
-			.row
-				.label Use DNSBLs
-				label.postform-style.ph-5
-					input(type='checkbox', name='dnsbl_enabled', value='true' checked=settings.dnsbl.enabled)
-			.row
-				.label DNSBL Addresses
-				textarea(name='dnsbl_blacklists' placeholder='Newline separated') #{settings.dnsbl.blacklists.join('\n')}
-			.row
-				.label Cache Time
-				input(type='number' name='dnsbl_cache_time' value=settings.dnsbl.cacheTime)
+				.col
 
+					.row
+						h4.mv-5 Code Highlighting
+					.row
+						.label
+							| Code Highlighting Languages
+							|
+							small
+								| (
+								a(href='https://github.com/highlightjs/highlight.js/blob/master/SUPPORTED_LANGUAGES.md') Supported Languages
+								| )
+						textarea(name='highlight_options_language_subset' placeholder='Newline separated') #{settings.highlightOptions.languageSubset.join('\n')}
+					.row
+						.label Code Highlight Language Detect Threshold
+						input(type='number' name='highlight_options_threshold' value=settings.highlightOptions.threshold)
 
-			.row
-				h4.mv-5 Captcha
-			.row
-				.label Type
-				select(name='captcha_options_type')
-					option(value='text', selected=settings.captchaOptions.type === 'text') Text
-					option(value='grid', selected=settings.captchaOptions.type === 'grid') Grid
-					option(value='google', selected=settings.captchaOptions.type === 'google') Google
-					option(value='hcaptcha', selected=settings.captchaOptions.type === 'hcaptcha') Hcaptcha
-			.row
-				.label Generate Limit
-				input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
-			.row
-				.label Image Size
-				input(type='number' name='captcha_options_image_size' value=settings.captchaOptions.grid.imageSize)
-			.row
-				.label Grid Size
-				input(type='number' name='captcha_options_grid_size' value=settings.captchaOptions.grid.size)
-			.row
-				.label Grid Icon Offset
-				input(type='number' name='captcha_options_grid_icon_y_offset' value=settings.captchaOptions.grid.iconYOffset)
-			.row
-				.label Minimum Distortions
-				input(type='number' name='captcha_options_num_distorts_min' value=settings.captchaOptions.numDistorts.min)
-			.row
-				.label Maximum Distortions
-				input(type='number' name='captcha_options_num_distorts_max' value=settings.captchaOptions.numDistorts.max)
-			.row
-				.label Distortion Intensity
-				input(type='number' name='captcha_options_distortion' value=settings.captchaOptions.distortion)
-			input(type='submit', value='save settings')
+					.row
+						h4.mv-5 Themes
+					.row
+						.label Allowed Themes
+						textarea(name='themes' placeholder='Newline separated') #{settings.themes.join('\n')}
+					.row
+						.label Allowed Code Themes
+						textarea(name='code_themes' placeholder='Newline separated') #{settings.codeThemes.join('\n')}
+					.row
+						.label Default Theme
+						select(name='board_defaults_theme')
+							each theme in themes
+								option(value=theme selected=settings.boardDefaults.theme === theme) #{theme}
+					.row
+						.label Default Code Theme
+						select(name='board_defaults_code_theme')
+							each theme in codeThemes
+								option(value=theme selected=settings.boardDefaults.codeTheme === theme) #{theme}
+
+					.row
+						h4.mv-5 Custom CSS
+					.row
+						.label Enable
+						label.postform-style.ph-5
+							input(type='checkbox', name='global_limits_custom_css_enabled' value='true' checked=settings.globalLimits.customCss.enabled)
+					.row
+						.label Filters
+						textarea(name='global_limits_custom_css_filters' placeholder='Newline separated') #{settings.globalLimits.customCss.filters.join('\n')}
+					.row
+						.label Strict Filtering
+						label.postform-style.ph-5
+							input(type='checkbox', name='global_limits_custom_css_strict' value='true' checked=settings.globalLimits.customCss.strict)
+					.row
+						.label Max Length
+						input(type='number' name='global_limits_custom_css_max' value=settings.globalLimits.customCss.max)
+
+					.row
+						h4.mv-5 Webring
+					.row
+						.label Enable
+						label.postform-style.ph-5
+							input(type='checkbox', name='enable_webring' value='true' checked=settings.enableWebring)
+					.row
+						p other webring options coming soon
+
+					.row
+						h4.mv-5 Ratelimit Costs
+					.row
+						.label Generate Captcha
+						input(type='number' name='rate_limit_cost_captcha' value=settings.rateLimitCost.captcha)
+					.row
+						.label Change Board Settings
+						input(type='number' name='rate_limit_cost_board_settings' value=settings.rateLimitCost.boardSettings)
+					.row
+						.label Edit Post
+						input(type='number' name='rate_limit_cost_edit_post' value=settings.rateLimitCost.editPost)
+
+			input.row(type='submit', value='save settings')
