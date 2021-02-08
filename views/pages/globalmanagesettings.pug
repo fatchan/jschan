@@ -102,6 +102,7 @@ block content
 					.row
 						.label Raw IP Perm Level
 						select(name='ip_hash_perm_level')
+							option(value='0', selected=settings.ipHashPermLevel === 0) Nobody
 							option(value='0', selected=settings.ipHashPermLevel === 0) Admin
 							option(value='1', selected=settings.ipHashPermLevel === 1) Global Staff
 							option(value='2', selected=settings.ipHashPermLevel === 2) Board Owner

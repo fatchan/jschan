@@ -35,7 +35,7 @@ module.exports = async (req, res, next) => {
 		{ result: numberBody(req.body.flood_timers_any_content_same_ip), expected: false, error: 'Invalid flood time any content same ip' },
 		{ result: numberBody(req.body.block_bypass_expire_after_uses), expected: false, error: 'Block bypass expire after uses must be a number > 0' },
 		{ result: numberBody(req.body.block_bypass_expire_after_time), expected: false, error: 'Invalid block bypass expire after time' },
-		{ result: numberBody(req.body.ip_hash_perm_level), expected: false, error: 'Invalid ip hash perm level' },
+		{ result: numberBody(req.body.ip_hash_perm_level, -1), expected: false, error: 'Invalid ip hash perm level' },
 		{ result: numberBody(req.body.delete_board_perm_level), expected: false, error: 'Invalid delete board perm level' },
 		{ result: numberBody(req.body.rate_limit_cost_captcha, 1, 100), expected: false, error: 'Rate limit cost captcha must be a number from 1-100' },
 		{ result: numberBody(req.body.rate_limit_cost_board_settings, 1, 100), expected: false, error: 'Rate limit cost board settings must be a number from 1-100' },
