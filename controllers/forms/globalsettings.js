@@ -12,6 +12,22 @@ module.exports = async (req, res, next) => {
 	const { globalLimits } = config.get;
 
 	const schema = [
+		{ result: () => {
+			if (req.body.thumb_extension)
+				return req.body.thumb_extension.match(/\.[a-z0-9]+/i);
+			}
+			return true;
+		}, expected: true, error: 'Filter text cannot exceed 5000 characters' },
+		{ result: () => {
+			if (req.body.other_mime_types)
+				return req.body.other_mime_types
+					.split('\n')
+					.some(m => {
+						!m.match(/\w+\/\w+/i);
+					});
+			}
+			return false;
+		}, expected: false, error: 'Filter text cannot exceed 5000 characters' },
 		{ result: lengthBody(req.body.filters, 0, 5000), expected: false, error: 'Filter text cannot exceed 5000 characters' },
 		{ result: numberBody(req.body.filter_mode, 0, 2), expected: false, error: 'Filter mode must be a number from 0-2' },
 		{ result: numberBody(req.body.ban_duration), expected: false, error: 'Invalid filter auto ban duration' },
