@@ -2,6 +2,7 @@
 
 const { Captchas } = require(__dirname+'/../../db/')
     , { ObjectId } = require(__dirname+'/../../db/db.js')
+    , config = require(__dirname+'/../../config.js')
     , { hcaptcha, google } = require(__dirname+'/../../configs/secrets.js')
 	, FormData = require('form-data')
 	, fetch = require('node-fetch')
