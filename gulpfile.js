@@ -143,9 +143,6 @@ async function wipe() {
 		upsert: true
 	});
 
-	await Mongo.client.close();
-	Redis.close();
-
 	//delete all the static files
 	return Promise.all([
 		del([ 'static/html/*' ]),
@@ -405,14 +402,13 @@ async function init() {
 	const defaultConfig = require(__dirname+'/configs/template.js.example');
 	const Redis = require(__dirname+'/redis.js')
 	const globalSettings = await Redis.get('globalsettings');
-console.log(globalSettings)
 	if (!globalSettings) {
 		await Redis.set('globalsettings', defaultConfig);
 	}
 }
 
 const build = gulp.series(init, gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages)), closeRedis);
-const reset = gulp.series(wipe, build, closeRedis);
+const reset = gulp.series(wipe, build);
 const html = gulp.series(deletehtml, custompages, closeRedis);
 
 module.exports = {
@@ -423,7 +419,7 @@ module.exports = {
 	reset,
 	custompages: gulp.series(custompages, closeRedis),
 	scripts: gulp.series(scripts, closeRedis),
-	wipe,
+	wipe: gulp.series(wipe, closeRedis),
 	cache,
 	migrate,
 	password,
