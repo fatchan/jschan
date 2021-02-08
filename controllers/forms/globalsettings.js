@@ -13,25 +13,25 @@ module.exports = async (req, res, next) => {
 
 	const schema = [
 		{ result: () => {
-			if (req.body.thumb_extension)
-				return req.body.thumb_extension.match(/\.[a-z0-9]+/i);
+			if (req.body.thumb_extension) {
+				return /\.[a-z0-9]+/i.test(req.body.thumb_extension);
 			}
-			return true;
-		}, expected: true, error: 'Filter text cannot exceed 5000 characters' },
+			return false;
+		}, expected: true, error: 'Thumb extension must be like .xxx' },
 		{ result: () => {
-			if (req.body.other_mime_types)
+			if (req.body.other_mime_types) {
 				return req.body.other_mime_types
 					.split('\n')
 					.some(m => {
-						!m.match(/\w+\/\w+/i);
+						return !m.match(/\w+\/\w+/i);
 					});
 			}
 			return false;
-		}, expected: false, error: 'Filter text cannot exceed 5000 characters' },
+		}, expected: false, error: 'Extra mime types must be like type/subtype' },
 		{ result: lengthBody(req.body.filters, 0, 5000), expected: false, error: 'Filter text cannot exceed 5000 characters' },
 		{ result: numberBody(req.body.filter_mode, 0, 2), expected: false, error: 'Filter mode must be a number from 0-2' },
 		{ result: numberBody(req.body.ban_duration), expected: false, error: 'Invalid filter auto ban duration' },
-		{ result: lengthBody(req.body.allowed_hosts, 0, 10000), expected: false, error: 'Allowed hosts must not exceed 100 entries' },
+		{ result: lengthBody(req.body.allowed_hosts, 0, 10000), expected: false, error: 'Allowed hosts must not exceed 10000 characters' },
 		{ result: lengthBody(req.body.country_code_header, 0, 100), expected: false, error: 'Country code header length must not exceed 100 characters' },
 		{ result: lengthBody(req.body.ip_header, 0, 100), expected: false, error: 'IP header length must not exceed 100 characters' },
 		{ result: lengthBody(req.body.meta_site_name, 0, 100), expected: false, error: 'Meta site name must not exceed 100 characters' },

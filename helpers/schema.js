@@ -21,7 +21,11 @@ module.exports = {
 
 	//check length of input, for strings or multi-select options
 	lengthBody: (data, minlength=0, maxlength=Infinity) => {
-		return data && (data.length < minlength || data.length > maxlength);
+		if (!data) {
+			return minlength > 0;
+		} else {
+			return (data.length < minlength || data.length > maxlength);
+		}
 	},
 
 	//checks if data is a number and within a range
@@ -50,7 +54,7 @@ module.exports = {
 		//filter check if my perm level is lower than the requirement. e.g. bypass filters checks
 		const filteredSchema = schema.filter(c => c.permLevel == null || c.permLevel > permLevel);
 		for (let check of filteredSchema) {
-			const result = await check.result;
+			const result = await (typeof check.result === 'function' ? check.result() : check.result);
 			const expected = (check.expected || false);
 			if (result !== expected) {
 				errors.push(check.error);
