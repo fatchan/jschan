@@ -46,6 +46,9 @@ block content
 					.row
 						h4.mv-5 Server
 					.row
+						.label Global Announcement
+						textarea(name='global_announcement') #{settings.globalAnnouncement.raw}
+					.row
 						.label Country Code Header
 						input(type='text' name='country_code_header' value=settings.countryCodeHeader)
 					.row

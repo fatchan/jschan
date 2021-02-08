@@ -6,6 +6,8 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, redis = require(__dirname+'/../../redis.js')
 	, config = require(__dirname+'/../../config.js')
+	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
+	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
 	, { remove } = require('fs-extra');
 
@@ -13,6 +15,12 @@ module.exports = async (req, res, next) => {
 
 	const promises = [];
 	const oldSettings = config.get;
+
+	const announcement = req.body.global_announcement === null ? null : prepareMarkdown(req.body.global_announcement, false);
+	let markdownAnnouncement = oldSettings.globalAnnouncement.markdown;
+	if (announcement !== oldSettings.globalAnnouncement.raw) {
+		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null))
+	}
 
 	const newSettings = {
 		filters: arraySetting(req.body.filters, oldSettings.filters),
@@ -22,6 +30,10 @@ module.exports = async (req, res, next) => {
 		allowedHosts: arraySetting(req.body.allowed_hosts, oldSettings.allowedHosts),
 		countryCodeHeader: trimSetting(req.body.country_code_header, oldSettings.countryCodeHeader),
 		ipHeader: trimSetting(req.body.ip_header, oldSettings.ipHeader),
+		globalAnnouncement: {
+			raw: trimSetting(announcement, oldSettings.globalAnnouncement.raw),
+			markdown: trimSetting(markdownAnnouncement, oldSettings.globalAnnouncement.markdown),
+		},
 		meta: {
 			siteName: trimSetting(req.body.meta_site_name, oldSettings.meta.siteName),
 			url: trimSetting(req.body.meta_url, oldSettings.meta.url),

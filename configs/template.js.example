@@ -1,5 +1,10 @@
 module.exports = {
 
+	globalAnnouncement: {
+		markdown: '',
+		raw: '',
+	},
+
 	secureCookies: true,
 
 	//check referrer to prevent some CSRF attack

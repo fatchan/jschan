@@ -14,13 +14,13 @@ const { outputFile } = require('fs-extra')
 
 let { enableUserBoardCreation, enableUserAccountCreation,
 		lockWait, globalLimits, boardDefaults, cacheTemplates,
-		meta, enableWebring, captchaOptions } = config.get
+		meta, enableWebring, captchaOptions, globalAnnouncement } = config.get
 	, renderLocals = null;
 
 const  updateLocals = () => {
 	({ enableUserBoardCreation, enableUserAccountCreation,
 		lockWait, globalLimits, boardDefaults, cacheTemplates,
-		meta, enableWebring, captchaOptions } = config.get);
+		meta, enableWebring, captchaOptions, globalAnnouncement } = config.get);
 	renderLocals = {
 		cache: cacheTemplates,
 		meta,
@@ -36,6 +36,7 @@ const  updateLocals = () => {
 		googleRecaptchaSiteKey: google.siteKey,
 		hcaptchaSitekey: hcaptcha.siteKey,
 		captchaGridSize: captchaOptions.grid.size,
+		globalAnnouncement,
 	};
 };
 
