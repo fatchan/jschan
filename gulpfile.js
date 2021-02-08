@@ -400,7 +400,18 @@ async function closeRedis() {
 	Redis.close();
 }
 
-const build = gulp.series(gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages)), closeRedis);
+async function init() {
+	//puts default configs into redis during setup
+	const defaultConfig = require(__dirname+'/configs/template.js.example');
+	const Redis = require(__dirname+'/redis.js')
+	const globalSettings = await Redis.get('globalsettings');
+console.log(globalSettings)
+	if (!globalSettings) {
+		await Redis.set('globalsettings', defaultConfig);
+	}
+}
+
+const build = gulp.series(init, gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages)), closeRedis);
 const reset = gulp.series(wipe, build, closeRedis);
 const html = gulp.series(deletehtml, custompages, closeRedis);
 

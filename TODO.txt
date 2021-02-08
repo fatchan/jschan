@@ -1,21 +1,12 @@
 
-update global manage settings pug template (idea: show names of perm levels)
-
----
-
-callback for perms level check to delete board
-
-call gulp tasks for images, captcha, css, html, (e.g. change captcha type, clear html) etc from within chan or build-worker probs build worker. in the globalmanagesettings model? actually DUH just make the gulp tasks exported as a map then pass a build task with task name
-
-uhhh, need to make the defaults built into the db, i guess part of gulp reset,
-AND a migration for existing sites to import from configs/main (since the options structure not changing yet)
-
-set max, min, maxlength, etc in views/pages/globalmanagesettings
-
-make perm levels everywhere into an enum (if they dont exist just freeze an object)
-
 proper validation for dnsbl URL/ips
 
 proper validation for extra mimetypes < probably kinda important
 
-refactor every controller to the new format.. holy FUCK
+proper validation for thumbnail file extension
+
+allow regex for filterFileNames
+
+refactor every controller to the new format.. holy FUCK. The schema could be mate even shorter, 2 ideas:
+  1. dont include expected if its false, since thats the default
+  2. make the errors smartly generated to a point, and the 'error' can be provided optional for special cases

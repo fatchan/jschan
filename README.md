@@ -113,7 +113,7 @@ Also included is an "nginx_advanced" config, and a snippets folder for advanced 
 **7. Clone this repo, browse to the folder and set some things up**
 
 ```bash
-# copy example config file and edit it
+# copy example secrets file and edit it
 $ cp configs/secrets.js.example configs/secrets.js && editor configs/secrets.js
 
 # copy example custompages for rules and faq and edit
@@ -159,6 +159,7 @@ $ gulp #run default gulp task
 EITHER:
 
 - Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself). This is the easiest, free way to get a proxy setup and means you can also follow .onions in your webring list since requests will go through tor.
+- Use the socks proxy already provided by the tor daemon
 - Use your own socks proxy
 
 Edit configs/webring.json with your proxy address and set enabled: true
@@ -170,8 +171,6 @@ Edit configs/webring.json with your proxy address and set enabled: true
 $ git pull
 #install dependencies again in case any have updated or changed
 $ npm install
-#diff the config files to see if anything changed and edit accordingly. OR backup your config, replace it with the fresh example, and update it with whatever settings you want to keep from your backup.
-$ diff configs/secrets.js configs/secrets.js.example
 #run the migrate task to update your database
 $ gulp migrate
 #reload jschan backend
