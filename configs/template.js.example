@@ -19,6 +19,11 @@ module.exports = {
 		url: ''
 	},
 
+	filters: [],
+	strictFiltering: false,
+	filterMode: 0,
+	filterBanDuration: 0,
+
 	//settings for captchas
 	captchaOptions: {
 		type: 'text',

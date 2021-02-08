@@ -143,6 +143,8 @@ async function wipe() {
 		upsert: true
 	});
 
+	await Mongo.client.close();
+
 	//delete all the static files
 	return Promise.all([
 		del([ 'static/html/*' ]),

@@ -11,6 +11,8 @@ module.exports = async(db, redis) => {
 	//and a few more that arent in the root
 	delete oldSettings.captchaOptions.google;
 	delete oldSettings.captchaOptions.hcaptcha;
+	const templateSettings = require(__dirname+'/../configs/template.js.example');
+	const newSettings = { ...templateSettings, ...oldSettings };
 	//set default settings into redis instead
-	redis.set('globalsettings', oldSettings);
+	redis.set('globalsettings', newSettings);
 };
