@@ -376,4 +376,13 @@ module.exports = {
 		}
 	},
 
+	following: [],
+	blacklist: [],
+	logo: [],
+	proxy: {
+		enabled: false,
+		address: ''
+	}
+
+
 };

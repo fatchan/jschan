@@ -7,21 +7,20 @@ const fetch = require('node-fetch')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Boards, Webring } = require(__dirname+'/../../db/')
 	, { outputFile } = require('fs-extra')
+	, SocksProxyAgent = require('socks-proxy-agent')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, timeDiffString = require(__dirname+'/../../helpers/timediffstring.js')
-	, SocksProxyAgent = proxy.enabled && require('socks-proxy-agent')
-	, agent = SocksProxyAgent ? new SocksProxyAgent(require('url').parse(proxy.address)) : null
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js');
 
 module.exports = {
 
 	func: async () => {
 
-return
-		const { meta } = config.get;
+		const { meta, logo, following, blacklist, proxy } = config.get;
 		const label = `updating webring`;
 		const start = process.hrtime();
 
+		const agent = proxy.enabled ? new SocksProxyAgent(require('url').parse(proxy.address)) : null;
 		const visited = new Map();
 		let known = new Set(following);
 		let webringBoards = []; //list of webring boards

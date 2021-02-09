@@ -528,7 +528,21 @@ block content
 						label.postform-style.ph-5
 							input(type='checkbox', name='enable_webring' value='true' checked=settings.enableWebring)
 					.row
-						p other webring options coming soon
+						.label Use Socks Proxy
+						label.postform-style.ph-5
+							input(type='checkbox', name='webring_proxy_enabled', value='true' checked=settings.proxy.enabled)
+					.row
+						.label Proxy Address
+						input(type='text', name='webring_proxy_address', value=settings.proxy.address)
+					.row
+						.label Following
+						textarea(name='webring_following' placeholder='Newline separated') #{settings.following.join('\n')}
+					.row
+						.label Logo URLs
+						textarea(name='webring_logos' placeholder='Newline separated') #{settings.logo.join('\n')}
+					.row
+						.label Blacklist
+						textarea(name='webring_blacklist' placeholder='Newline separated') #{settings.blacklist.join('\n')}
 
 
 				.col.mr-5

@@ -134,6 +134,9 @@ module.exports = async (req, res, next) => {
 		{ result: minmaxBody(req.body.board_defaults_min_reply_message_length, req.body.board_defaults_max_reply_message_length), expected: true, error: 'Board defaults reply message length min must be less than max' },
 		{ result: numberBody(req.body.board_defaults_filter_mode, 0, 2), expected: false, error: 'Board defaults filter most must be a number from 0-2' },
 		{ result: numberBody(req.body.board_defaults_filter_ban_duration), expected: false, error: 'Board defaults filter ban duration must be a number' },
+		{ result: lengthBody(req.body.webring_following, 0, 10000), expected: false, error: 'Webring following list must not exceed 10000 characters' },
+		{ result: lengthBody(req.body.webring_blacklist, 0, 10000), expected: false, error: 'Webring blacklist must not exceed 10000 characters' },
+		{ result: lengthBody(req.body.webring_logos, 0, 10000), expected: false, error: 'Webring logos list must not exceed 10000 characters' },
 	];
 
 	const errors = await checkSchema(schema);

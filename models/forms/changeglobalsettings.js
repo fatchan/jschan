@@ -89,6 +89,13 @@ module.exports = async (req, res, next) => {
 		pruneModlogs: numberSetting(req.body.prune_modlogs, oldSettings.pruneModlogs),
 		pruneIps: numberSetting(req.body.prune_ips, oldSettings.pruneIps),
 		enableWebring: booleanSetting(req.body.enable_webring, oldSettings.enableWebring),
+		following: arraySetting(req.body.webring_following, oldSettings.following),
+		blacklist: arraySetting(req.body.webring_blacklist, oldSettings.blacklist),
+		logo: arraySetting(req.body.webring_logos, oldSettings.logo),
+		proxy: {
+			enabled: booleanSetting(req.body.webring_proxy_enabled, oldSettings.proxy.enabled),
+			address: trimSetting(req.body.webring_proxy_address, oldSettings.proxy.address),
+		},
 		enableUserBoardCreation: booleanSetting(req.body.enable_user_board_creation, oldSettings.enableUserBoardCreation),
 		enableUserAccountCreation: booleanSetting(req.body.enable_user_account_creation, oldSettings.enableUserAccountCreation),
 		thumbExtension: trimSetting(req.body.thumb_extension, oldSettings.thumbExtension),
