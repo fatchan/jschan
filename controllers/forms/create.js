@@ -26,10 +26,6 @@ module.exports = async (req, res, next) => {
 	if (!req.body.name || req.body.name.length <= 0) {
 		errors.push('Missing name');
 	}
-	if (!req.body.description || req.body.description.length <= 0) {
-		errors.push('Missing description');
-	}
-
 	//other validation
 	if (req.body.uri) {
 		if (req.body.uri.length > globalLimits.fieldLength.uri) {
