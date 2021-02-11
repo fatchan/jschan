@@ -7,6 +7,7 @@ const config = require(__dirname+'/config.js')
 	, semver = require('semver')
 	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
 	, commit = require(__dirname+'/helpers/commit.js')
+	, replace = require('gulp-replace')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
 	, cleanCSS = require('gulp-clean-css')
@@ -200,9 +201,15 @@ async function css() {
 	await gulp.src([
 			`${paths.styles.src}/codethemes/*.css`,
 		])
+		.pipe(replace('url(./', 'url(/file/'))
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
+	await gulp.src([
+			`${paths.styles.src}/codethemes/*`,
+			`!${paths.styles.src}/codethemes/*.css`,
+		])
+		.pipe(gulp.dest(paths.images.dest));
 	await gulp.src([
 			`${paths.styles.src}/locals.css`,
 			`${paths.styles.src}/nscaptcha.css`,
