@@ -28,6 +28,7 @@ module.exports = {
 		log_date_format: 'YYYY-MM-DD HH:mm:ss.SSS',
 		wait_ready: true,
 		kill_timeout: 5000,
+		exec_mode: 'fork',
 		env: {
 			NODE_ENV: 'development',
 			FFMPEG_PATH: '/snap/bin/ffmpeg',
