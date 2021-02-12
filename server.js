@@ -16,6 +16,7 @@ const config = require(__dirname+'/config.js')
 	, Socketio = require(__dirname+'/socketio.js')
 	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
 	, commit = require(__dirname+'/helpers/commit.js')
+	, { version } = require(__dirname+'/package.json')
 	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
 	, CachePugTemplates = require('cache-pug-templates');
 
@@ -63,7 +64,7 @@ const config = require(__dirname+'/config.js')
 	const loadAppLocals = () => {
 		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions,
 			enableUserBoardCreation, enableUserAccountCreation,
-			debugLogs, ipHashPermLevel, meta, enableWebring } = config.get;
+			debugLogs, ipHashPermLevel, meta, enableWebring, globalAnnouncement } = config.get;
 		//cache loaded templates
 		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
@@ -82,6 +83,7 @@ const config = require(__dirname+'/config.js')
 		app.locals.googleRecaptchaSiteKey = google.siteKey;
 		app.locals.hcaptchaSiteKey = hcaptcha.siteKey;
 		app.locals.captchaGridSize = captchaOptions.grid.size;
+		app.locals.globalAnnouncement = globalAnnouncement;
 	}
 	loadAppLocals();
 	redis.addCallback('config', loadAppLocals);
