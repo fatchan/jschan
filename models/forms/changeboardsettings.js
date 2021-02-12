@@ -26,7 +26,7 @@ module.exports = async (req, res, next) => {
 	const announcement = req.body.announcement === null ? null : prepareMarkdown(req.body.announcement, false);
 	let markdownAnnouncement = oldSettings.announcement.markdown;
 	if (announcement !== oldSettings.announcement.raw) {
-		({ message: markdownAnnouncement } = await messageHandler(announcement, req.params.board, null))
+		({ message: markdownAnnouncement } = await messageHandler(announcement, req.params.board, null, true))
 	}
 
 	let moderators = req.body.moderators != null ? req.body.moderators.split(/\r?\n/).filter(n => n && !(n == res.locals.board.owner)).slice(0,10) : [];

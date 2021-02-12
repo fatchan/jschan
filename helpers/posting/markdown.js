@@ -10,7 +10,8 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 	, italicRegex = /\*\*(.+?)\*\*/gm
 	, spoilerRegex = /\|\|([\s\S]+?)\|\|/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
-	, linkRegex = /\[([^\[][^\]]*?)\]\((https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^)]+)\)|(https\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+)/g
+	, linkRegex = /(https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
+	, aLinkRegex = /\[([^\[][^\]]*?)\]\((https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^)]+)\)|(https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+)/g
 	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
 	, includeSplitRegex = /(\[code\][\s\S]+?\[\/code\])/gm
 	, splitRegex = /\[code\]([\s\S]+?)\[\/code\]/gm
@@ -30,7 +31,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 		{ regex: italicRegex, cb: (match, italic) => `<span class='em'>${italic}</span>` },
 		{ regex: spoilerRegex, cb: (match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
 		{ regex: monoRegex, cb: (match, mono) => `<span class='mono'>${mono}</span>` },
-		{ regex: linkRegex, cb: linkmatch },
+		{ regex: linkRegex, aRegex: aLinkRegex, cb: linkmatch },
 		{ regex: detectedRegex, cb: (match, detected) => `<span class='detected'>${detected}</span>` },
 		{ regex: diceroll.regexMarkdown, cb: diceroll.markdown },
 	];
@@ -52,7 +53,7 @@ module.exports = {
 		return chunks.join('');
 	},
 
-	markdown: (text) => {
+	markdown: (text, allowAdvanced=false) => {
 		const chunks = text.split(splitRegex);
 		const { highlightOptions } = config.get;
 		for (let i = 0; i < chunks.length; i++) {
@@ -60,7 +61,7 @@ module.exports = {
 			if (i % 2 === 0) {
 				const escaped = escape(chunks[i]);
 				const newlineFix = escaped.replace(/^\r?\n/,''); //fix ending newline because of codeblock
-				chunks[i] = module.exports.processRegularChunk(newlineFix);
+				chunks[i] = module.exports.processRegularChunk(newlineFix, allowAdvanced);
 			} else {
 				chunks[i] = module.exports.processCodeChunk(chunks[i], highlightOptions);
 			}
@@ -89,9 +90,11 @@ module.exports = {
 		return `<span class='code'>${escape(trimFix)}</span>`;
 	},
 
-	processRegularChunk: (text) => {
+	processRegularChunk: (text, allowAdvanced) => {
 		for (let i = 0; i < replacements.length; i++) {
-			text = text.replace(replacements[i].regex, replacements[i].cb);
+			//if allowAdvanced is true, use aRegex if available
+			const replaceRegex = allowAdvanced === true && replacements[i].aRegex || replacements[i].regex;
+			text = text.replace(replaceRegex, replacements[i].cb);
 		}
 		return text;
 	},
