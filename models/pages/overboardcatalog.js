@@ -2,9 +2,11 @@
 
 const { Posts, Boards } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../redis.js')
-	, { overboardCatalogLimit } = require(__dirname+'/../../configs/main.js');
+	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res, next) => {
+
+	const { overboardCatalogLimit } = config.get;
 
 	let threads = (await cache.get('catalog')) || [];
 	if (!threads || threads.length === 0) {

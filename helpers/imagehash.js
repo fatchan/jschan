@@ -1,9 +1,10 @@
 'use strict';
 
 const imageHash = require('node-image-hash').hash
-	, { hashImages } = require(__dirname+'/../configs/main.js');
+	, config = require(__dirname+'/../config.js');
 
 module.exports = async (req, res, next) => {
+	const { hashImages } = config.get;
 	if (hashImages && res.locals.numFiles > 0 && res.locals.permLevel > 1) {
 		const hashPromises = [];
 		for (let i = 0; i < res.locals.numFiles; i++) {

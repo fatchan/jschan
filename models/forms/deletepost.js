@@ -6,12 +6,14 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, { Posts, Files } = require(__dirname+'/../../db/')
 	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, { pruneImmediately } = require(__dirname+'/../../configs/main.js')
-	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
+	, config = require(__dirname+'/../../config.js')
+	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
 	, sanitize = require('sanitize-html')
 	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
 
 module.exports = async (posts, board, all=false) => {
+
+	const { pruneImmediately } = config.get;
 
 	//filter to threads
 	const threads = posts.filter(x => x.thread == null);

@@ -1,5 +1,4 @@
 const gm = require('gm')
-	, configs = require(__dirname+'/../../configs/main.js')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (filename, folder, temp) => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const { ipHeader, ipHashPermLevel } = require(__dirname+'/../configs/main.js')
+const config = require(__dirname+'/../config.js')
 	, { parse } = require('ip6addr')
 	, deleteTempFiles = require(__dirname+'/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/dynamic.js')
@@ -21,6 +21,7 @@ module.exports = (req, res, next) => {
 	}
 
 	//ip for normal user
+	const { ipHeader, ipHashPermLevel } = config.get;
 	const ip = req.headers[ipHeader] || req.connection.remoteAddress;
 	try {
 		const ipParsed = parse(ip);

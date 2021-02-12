@@ -4,14 +4,14 @@ process
 	.on('uncaughtException', console.error)
 	.on('unhandledRejection', console.error);
 
-const { debugLogs } = require(__dirname+'/configs/main.js')
-	, Mongo = require(__dirname+'/db/db.js');
+const Mongo = require(__dirname+'/db/db.js')
+	, config = require(__dirname+'/config.js');
 
 (async () => {
 
-	debugLogs && console.log('CONNECTING TO MONGODB');
 	await Mongo.connect();
 	await Mongo.checkVersion();
+	await config.load();
 
 	const tasks = require(__dirname+'/helpers/tasks.js')
 		, { queue } = require(__dirname+'/queue.js')

@@ -3,7 +3,7 @@
 const { Ratelimits } = require(__dirname+'/../../db/')
 	, { ObjectId } = require(__dirname+'/../../db/db.js')
 	, checkCaptcha = require(__dirname+'/../checks/captcha.js')
-	, { captchaOptions } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, remove = require('fs-extra').remove
 	, dynamicResponse = require(__dirname+'/../dynamic.js')
 	, deleteTempFiles = require(__dirname+'/../files/deletetempfiles.js')
@@ -45,6 +45,7 @@ module.exports = async (req, res, next) => {
 	//it was correct, so mark as solved for other middleware
 	res.locals.solvedCaptcha = true;
 
+	const { captchaOptions } = config.get;
 	if (captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha') {
 		//for builtin captchas, clear captchaid cookie, delete file and reset quota
 		res.clearCookie('captchaid');

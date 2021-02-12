@@ -1,9 +1,10 @@
 'use strict'
 
 const { countryNamesMap, isAnonymizer } = require(__dirname+'/countries.js')
-	, { countryCodeHeader } = require(__dirname+'/../configs/main.js')
+	, config = require(__dirname+'/../config.js')
 
 module.exports = (req, res, next) => {
+	const { countryCodeHeader } = config.get;
 	const code = req.headers[countryCodeHeader] || 'XX';
 	res.locals.anonymizer = isAnonymizer(code);
 	res.locals.country = {

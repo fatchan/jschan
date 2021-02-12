@@ -1,8 +1,8 @@
 'use strict';
 
-const { MongoClient, ObjectId, Int32 } = require('mongodb')
+const secrets = require(__dirname+'/../configs/secrets.js')
+	, { MongoClient, ObjectId, Int32 } = require('mongodb')
 	, { migrateVersion } = require(__dirname+'/../package.json')
-	, configs = require(__dirname+'/../configs/main.js');
 
 module.exports = {
 
@@ -10,11 +10,11 @@ module.exports = {
 		if (module.exports.client) {
 			throw new Error('Mongo already connected');
 		}
-		module.exports.client = await MongoClient.connect(configs.dbURL, {
+		module.exports.client = await MongoClient.connect(secrets.dbURL, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		});
-		module.exports.db = module.exports.client.db(configs.dbName);
+		module.exports.db = module.exports.client.db(secrets.dbName);
 	},
 
 	checkVersion: async() => {

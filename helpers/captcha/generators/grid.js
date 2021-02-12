@@ -4,18 +4,19 @@ const gm = require('gm').subClass({ imageMagick: true })
 	, { promisify } = require('util')
 	, randomBytes = promisify(require('crypto').randomBytes)
 	, { Captchas } = require(__dirname+'/../../../db/')
-	, { captchaOptions } = require(__dirname+'/../../../configs/main.js')
+	, config = require(__dirname+'/../../../config.js')
 	, uploadDirectory = require(__dirname+'/../../files/uploadDirectory.js')
 	, randomRange = require(__dirname+'/../../randomrange.js')
 	, padding = 30
-	, width = captchaOptions.grid.imageSize+padding
-	, height = captchaOptions.grid.imageSize+padding
-	, gridSize = captchaOptions.grid.size
 	, zeros = ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧']
 	, ones = ['●','■','♞','♦','▼','▲','♜','✦','♚','♞','♛','♝','♟','♣']
 	, colors = ['#FF8080', '#80FF80', '#8080FF', '#FF80FF', '#FFFF80', '#80FFFF']
 
 module.exports = async () => {
+	const { captchaOptions } = config.get;
+	const gridSize = captchaOptions.grid.size
+	const width = captchaOptions.grid.imageSize+padding;
+	const height = captchaOptions.grid.imageSize+padding;
 	//number of inputs in grid
 	const numInputs = gridSize**2;
 	//random buffer to get true/false for grid from

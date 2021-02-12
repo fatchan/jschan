@@ -2,10 +2,12 @@
 
 const createBoard = require(__dirname+'/../../models/forms/create.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { enableUserBoardCreation, globalLimits } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
 
 module.exports = async (req, res, next) => {
+
+	const { enableUserBoardCreation, globalLimits } = config.get;
 
 	if (enableUserBoardCreation === false && res.locals.permLevel > 1) {
 		return dynamicResponse(req, res, 400, 'message', {
@@ -24,10 +26,6 @@ module.exports = async (req, res, next) => {
 	if (!req.body.name || req.body.name.length <= 0) {
 		errors.push('Missing name');
 	}
-	if (!req.body.description || req.body.description.length <= 0) {
-		errors.push('Missing description');
-	}
-
 	//other validation
 	if (req.body.uri) {
 		if (req.body.uri.length > globalLimits.fieldLength.uri) {

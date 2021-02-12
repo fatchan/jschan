@@ -1,7 +1,8 @@
 'use strict';
 
-const { redis: redisConfig, ipHashPermLevel } = require(__dirname+'/configs/main.js')
+const { redis: redisConfig } = require(__dirname+'/configs/secrets.js')
 	, hasPerms = require(__dirname+'/helpers/checks/hasperms.js')
+	, config = require(__dirname+'/config.js')
 	, roomRegex = /^(?<roomBoard>[a-z0-9]+)-(?<roomName>[a-z0-9-]+)$/i;
 
 module.exports = {
@@ -51,7 +52,7 @@ module.exports = {
 					}
 					if (room.endsWith('-raw')) {
 						//if its a -raw room, prioritise ipHashPermLevel
-						requiredAuth = Math.min(requiredAuth, ipHashPermLevel);
+						requiredAuth = Math.min(requiredAuth, config.get.ipHashPermLevel);
 					}
 					if (authLevel <= requiredAuth) {
 						//user has perms to join

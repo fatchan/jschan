@@ -3,10 +3,11 @@
 const addCustomPage = require(__dirname+'/../../models/forms/addcustompage.js')
 	, { CustomPages } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js');
+	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res, next) => {
 
+	const { globalLimits } = config.get;
 	const errors = [];
 
 	if (!req.body.message || res.locals.messageLength === 0) {

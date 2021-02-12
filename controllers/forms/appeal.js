@@ -1,12 +1,13 @@
 'use strict';
 
 const appealBans = require(__dirname+'/../../models/forms/appeal.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { Bans } = require(__dirname+'/../../db');
 
 module.exports = async (req, res, next) => {
 
+	const { globalLimits } = config.get;
 	const errors = [];
 	if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
 		errors.push('Must select 1-10 bans');

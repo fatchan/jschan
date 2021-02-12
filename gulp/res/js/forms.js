@@ -226,7 +226,6 @@ class formHandler {
 					}
 				} else {
 					if (xhr.status === 413) {
-						this.clearFiles();
 						//not json, must be nginx response
 						doModal({
 							'title': 'Payload Too Large',

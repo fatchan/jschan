@@ -5,9 +5,11 @@ const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, restrictedURIs = new Set(['captcha', 'forms', 'randombanner', 'all'])
 	, { ensureDir } = require('fs-extra')
-	, { boardDefaults } = require(__dirname+'/../../configs/main.js');
+	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res, next) => {
+
+	const { boardDefaults } = config.get;
 
 	const { name, description } = req.body
 		, uri = req.body.uri.toLowerCase()

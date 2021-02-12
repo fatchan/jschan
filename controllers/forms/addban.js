@@ -1,12 +1,13 @@
 'use strict';
 
-const { globalLimits, ipHashPermLevel } = require(__dirname+'/../../configs/main.js')
+const config = require(__dirname+'/../../config.js')
 	, addBan = require(__dirname+'/../../models/forms/addban.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { isIP } = require('net');
 
 module.exports = async (req, res, next) => {
 
+	const { globalLimits, ipHashPermLevel } = config.get;
 	const errors = [];
 
 	if (!req.body.ip || req.body.ip.length === 0) {

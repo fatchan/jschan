@@ -4,8 +4,7 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, db = Mongo.db.collection('posts')
-	, { quoteLimit, previewReplies, stickyPreviewReplies, statsCountAnonymizers,
-		ipHashPermLevel, early404Replies, early404Fraction } = require(__dirname+'/../configs/main.js');
+	, config = require(__dirname+'/../config.js');
 
 module.exports = {
 
@@ -35,7 +34,7 @@ module.exports = {
 		} else if (typeof ip === 'string') {
 			query['ip.raw'] = ip;
 		}
-		if (permLevel > ipHashPermLevel) {
+		if (permLevel > config.get.ipHashPermLevel) {
 			projection['ip.raw'] = 0;
 		}
 		return db.find(query, {
@@ -59,7 +58,7 @@ module.exports = {
 		} else if (typeof ip === 'string') {
 			query['ip.raw'] = ip;
 		}
-		if (permLevel > ipHashPermLevel) {
+		if (permLevel > config.get.ipHashPermLevel) {
 			projection['ip.raw'] = 0;
 		}
 		return db.find(query, {
@@ -112,6 +111,7 @@ module.exports = {
 
 		// add last n posts in reverse order to preview
 		await Promise.all(threads.map(async thread => {
+			const { stickyPreviewReplies, previewReplies } = config.get;
 			const previewRepliesLimit = thread.sticky ? stickyPreviewReplies : previewReplies;
 			const replies = previewRepliesLimit === 0 ? [] : await db.find({
 				'thread': thread.postId,
@@ -412,6 +412,7 @@ module.exports = {
 
 	// get only thread and post id for use in quotes
 	getPostsForQuotes: (queryOrs) => {
+		const { quoteLimit } = config.get;
 		return db.find({
 			'$or': queryOrs
 		}, {
@@ -475,7 +476,7 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		const statsIp = (statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.single;
+		const statsIp = (config.get.statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.single;
 		await Stats.updateOne(board._id, statsIp, data.thread == null);
 
 		//add backlinks to the posts this post quotes
@@ -599,13 +600,13 @@ module.exports = {
 					}
 				}, {
 					//skip the first (board.settings.threadLimit/early404Fraction)
-					'$skip': Math.ceil(board.settings.threadLimit/early404Fraction)
+					'$skip': Math.ceil(board.settings.threadLimit/config.get.early404Fraction)
 				}, {
 					//then any that have less than early404Replies replies get matched again
 					'$match': {
 						'sticky':0,
 						'replyposts': {
-							'$lt': early404Replies
+							'$lt': config.get.early404Replies
 						}
 					}
 				}

@@ -2,7 +2,7 @@
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { remove } = require('fs-extra')
@@ -10,21 +10,12 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, { countryCodes } = require(__dirname+'/../../helpers/countries.js')
-	, validCountryCodes = new Set(countryCodes)
-	, trimSetting = (setting, oldSetting) => {
-		return setting && setting.trim().length > 0 ? setting : oldSetting;
-	}
-	, numberSetting = (setting, oldSetting) => {
-		return typeof setting === 'number' && setting !== oldSetting ? setting : oldSetting;
-	}
-	, booleanSetting = (setting) => {
-		return setting != null;
-	}
-	, arraySetting = (setting, oldSetting, limit) => {
-		return setting !== null ? setting.split(/\r?\n/).filter(n => n).slice(0,limit) : oldSettings;
-	};
+	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
+	, validCountryCodes = new Set(countryCodes);
 
 module.exports = async (req, res, next) => {
+
+	const { globalLimits } = config.get;
 
 	//oldsettings before changes
 	const oldSettings = res.locals.board.settings;

@@ -8,7 +8,7 @@ if isBoard
 		meta(name='keywords' content=board.settings.tags.join(','))
 noscript
 	style .jsonly { display: none!important; }
-link(rel='stylesheet' href=`/css/style.css?v=${commit}`)
+link(rel='stylesheet' href=`/css/style.css?v=${commit}&ct=${captchaType}`)
 - const theme = isBoard ? board.settings.theme : defaultTheme;
 - const codeTheme = isBoard ? board.settings.codeTheme : defaultCodeTheme;
 link#theme(rel='stylesheet' data-theme=theme href=`/css/themes/${theme}.css`)
@@ -16,7 +16,7 @@ if isBoard && board.settings.customCss
 	style#board-customcss #{board.settings.customCss}
 link#codetheme(rel='stylesheet' data-theme=codeTheme href=`/css/codethemes/${codeTheme}.css`)
 include ./favicon.pug
-script(src=`/js/all.js?v=${commit}`)
+script(src=`/js/all.js?v=${commit}&ct=${captchaType}`)
 
 if captchaType === 'google'
 	script(src='https://www.google.com/recaptcha/api.js' async defer)

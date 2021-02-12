@@ -1,15 +1,16 @@
 const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/';
 const generatePassword = () => {
-	if (window.crypto) {
-		const buf = new Uint8Array(20); //8 keeps charcodes within range
-		window.crypto.getRandomValues(buf);
-		return btoa(String.fromCharCode.apply(null, buf));
-	} else {
-		return new Array(20)
-			.fill(null)
-			.map(x => charset[Math.floor(Math.random()*charset.length)])
-			.join('');
-	}
+	try {
+		if (window.crypto) {
+			const buf = new Uint8Array(20); //8 keeps charcodes within range
+			window.crypto.getRandomValues(buf);
+			return btoa(String.fromCharCode.apply(null, buf));
+		}
+	} catch (e) { /* Uncaught DOMException: The operation failed for an operation-specific reason, thanks firefox */ }
+	return new Array(20)
+		.fill(null)
+		.map(x => charset[Math.floor(Math.random()*charset.length)])
+		.join('');
 }
 
 setDefaultLocalStorage('postpassword', generatePassword());

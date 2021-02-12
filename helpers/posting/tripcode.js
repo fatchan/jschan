@@ -1,6 +1,6 @@
 'use strict';
 
-const { tripcodeSecret } = require(__dirname+'/../../configs/main.js')
+const { tripcodeSecret } = require(__dirname+'/../../configs/secrets.js')
     , { createHash } = require('crypto')
 	, { encode } = require('iconv-lite')
 	, crypt = require('unix-crypt-td-js')

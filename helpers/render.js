@@ -1,20 +1,32 @@
 'use strict';
 
-const { enableUserBoardCreation, enableUserAccountCreation,
-	lockWait, globalLimits, boardDefaults, cacheTemplates,
-	meta, enableWebring, captchaOptions } = require(__dirname+'/../configs/main.js')
-	, { outputFile } = require('fs-extra')
+const { outputFile } = require('fs-extra')
 	, formatSize = require(__dirname+'/files/formatsize.js')
 	, pug = require('pug')
 	, path = require('path')
 	, commit = require(__dirname+'/commit.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
+	, { hcaptcha, google } = require(__dirname+'/../configs/secrets.js')
 	, redlock = require(__dirname+'/../redlock.js')
+	, { addCallback } = require(__dirname+'/../redis.js')
+	, { version } = require(__dirname+'/../package.json')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
-	, renderLocals = {
+	, config = require(__dirname+'/../config.js');
+
+let { enableUserBoardCreation, enableUserAccountCreation,
+		lockWait, globalLimits, boardDefaults, cacheTemplates,
+		meta, enableWebring, captchaOptions, globalAnnouncement } = config.get
+	, renderLocals = null;
+
+const  updateLocals = () => {
+	({ enableUserBoardCreation, enableUserAccountCreation,
+		lockWait, globalLimits, boardDefaults, cacheTemplates,
+		meta, enableWebring, captchaOptions, globalAnnouncement } = config.get);
+	renderLocals = {
 		cache: cacheTemplates,
 		meta,
 		commit,
+		version,
 		defaultTheme: boardDefaults.theme,
 		defaultCodeTheme: boardDefaults.codeTheme,
 		postFilesSize: formatSize(globalLimits.postFilesSize.max),
@@ -22,22 +34,16 @@ const { enableUserBoardCreation, enableUserAccountCreation,
 		enableUserBoardCreation,
 		globalLimits,
 		enableWebring,
-		captchaType: captchaOptions.type
-	}
+		captchaType: captchaOptions.type,
+		googleRecaptchaSiteKey: google.siteKey,
+		hcaptchaSitekey: hcaptcha.siteKey,
+		captchaGridSize: captchaOptions.grid.size,
+		globalAnnouncement,
+	};
+};
 
-switch (captchaOptions.type) {
-	case 'google':
-		renderLocals.googleRecaptchaSiteKey = captchaOptions.google.siteKey;
-		break;
-	case 'hcaptcha':
-		renderLocals.hcaptchaSitekey = captchaOptions.hcaptcha.siteKey;
-		break;
-	case 'grid':
-		renderLocals.captchaGridSize = captchaOptions.grid.size;
-		break;
-	default:
-		break;
-}
+updateLocals();
+addCallback('config', updateLocals);
 
 module.exports = async (htmlName, templateName, options, json=null) => {
 	const html = pug.renderFile(`${templateDirectory}${templateName}`, {

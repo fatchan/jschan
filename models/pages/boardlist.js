@@ -1,6 +1,6 @@
 'use strict';
 
-const { enableWebring } = require(__dirname+'/../../configs/main.js')
+const config = require(__dirname+'/../../config.js')
 	, { Boards, Webring } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../redis.js')
 	, { relativeColor, relativeString } = require(__dirname+'/../../helpers/timeutils.js')
@@ -9,6 +9,7 @@ const { enableWebring } = require(__dirname+'/../../configs/main.js')
 
 module.exports = async (req, res, next) => {
 
+	const { enableWebring } = config.get;
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 	const direction = req.query.direction && req.query.direction === 'asc' ? 1 : -1;
 	const search = (typeof req.query.search === 'string' ? req.query.search : null);
