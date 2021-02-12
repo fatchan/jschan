@@ -4,7 +4,7 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, themeHelper = require(__dirname+'/../../helpers/themes.js')
 	, config = require(__dirname+'/../../config.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody,
+	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
 module.exports = async (req, res, next) => {
@@ -120,14 +120,12 @@ module.exports = async (req, res, next) => {
 		{ result: numberBody(req.body.board_defaults_tph_trigger_action, 0, 4), expected: false, error: 'Board default tph trigger action must be a number from 0-4' },
 		{ result: numberBody(req.body.board_defaults_captcha_reset, 0, 2), expected: false, error: 'Board defaults captcha reset must be a number from 0-2' },
 		{ result: numberBody(req.body.board_defaults_lock_reset, 0, 2), expected: false, error: 'Board defaults lock reset must be a number from 0-2' },
-		//todo: make these bound by new values it updating both
-		{ result: numberBody(req.body.board_defaults_reply_limit, globalLimits.replyLimit.min, globalLimits.replyLimit.max), expected: false, error: `Board defaults reply limit must be a number from ${globalLimits.replyLimit.min}-${globalLimits.replyLimit.max}` },
-		{ result: numberBody(req.body.board_defaults_thread_limit, globalLimits.threadLimit.min, globalLimits.threadLimit.max), expected: false, error: `Board defaults thread limit must be a number from ${globalLimits.threadLimit.min}-${globalLimits.threadLimit.max}` },
-		{ result: numberBody(req.body.board_defaults_bump_limit, globalLimits.bumpLimit.min, globalLimits.bumpLimit.max), expected: false, error: `Board defaults bump limit must be a number from ${globalLimits.bumpLimit.min}-${globalLimits.bumpLimit.max}` },
-		{ result: numberBody(req.body.board_defaults_max_files, 0, globalLimits.postFiles.max), expected: false, error: `Board defaults max files must be a number from 0-${globalLimits.postFiles.max}` },
-		{ result: numberBody(req.body.board_defaults_max_thread_message_length, 0, globalLimits.fieldLength.message), expected: false, error: `Board defaults max thread message length must be a number from 0-${globalLimits.fieldLength.message}` },
-		{ result: numberBody(req.body.board_defaults_max_reply_message_length, 0, globalLimits.fieldLength.message), expected: false, error: `Board defaults max reply message length must be a number from 0-${globalLimits.fieldLength.message}` },
-		//
+		{ result: numberBodyVariable(req.body.board_defaults_reply_limit, req.body.global_limits_reply_limit_min, globalLimits.replyLimit.min, req.body.global_limits_reply_limit_max, globalLimits.replyLimit.max), expected: false, error: `Board defaults reply limit must be within global limits` },
+		{ result: numberBodyVariable(req.body.board_defaults_thread_limit, req.body.global_limits_thread_limit_min, globalLimits.threadLimit.min, req.body.global_limits_thread_limit_max, globalLimits.threadLimit.max), expected: false, error: `Board defaults thread limit must be within global limits` },
+		{ result: numberBodyVariable(req.body.board_defaults_bump_limit, req.body.global_limits_bump_limit_min, globalLimits.bumpLimit.min, req.body.global_limits_bump_limit_max, globalLimits.bumpLimit.max), expected: false, error: `Board defaults bump limit must be within global limits` },
+		{ result: numberBodyVariable(req.body.board_defaults_max_files, 0, 0, req.body.global_limits_post_files_max, globalLimits.postFiles.max), expected: false, error: `Board defaults max files must be within global limits` },
+		{ result: numberBodyVariable(req.body.board_defaults_max_thread_message_length, 0, 0, req.body.global_limits_field_length_message, globalLimits.fieldLength.message), expected: false, error: `Board defaults max thread message length must be within global limits` },
+		{ result: numberBodyVariable(req.body.board_defaults_max_reply_message_length, 0, 0, req.body.global_limits_field_length_message, globalLimits.fieldLength.message), expected: false, error: `Board defaults max reply message length must be within global limits` },
 		{ result: numberBody(req.body.board_defaults_min_thread_message_length), expected: false, error: 'Board defaults min thread message length must be a number' },
 		{ result: numberBody(req.body.board_defaults_min_reply_message_length), expected: false, error: 'Board defaults min reply message length must be a number' },
 		{ result: minmaxBody(req.body.board_defaults_min_thread_message_length, req.body.board_defaults_max_thread_message_length), expected: true, error: 'Board defaults thread message length min must be less than max' },

@@ -33,6 +33,19 @@ module.exports = {
 		return typeof data === 'number' && (data < min || data > max);
 	},
 
+	//same, but with old/new fallbacks for settings that can adjust a dependency at same time
+	numberBodyVariable: (data, minOld, minNew, maxOld, maxNew) => {
+		if (!minNew) {
+			minNew = minOld;
+		}
+		if (!maxNew) {
+			maxNew = maxOld;
+		}
+		const varMin = Math.min(minOld, minNew) || minOld;
+		const varMax = Math.max(maxOld, maxNew) || maxOld;
+		return typeof data === 'number' && (data < varMin || data > varMax);
+	},
+
 	//check 2 number values, that one is less than the other, usually for setings with a min and max that they dont violate eachother
 	minmaxBody: (minData, maxData) => {
 		return typeof minData === 'number' && typeof maxData === 'number' && minData < maxData;
