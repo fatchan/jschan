@@ -2,11 +2,11 @@
 
 const parenPairRegex = /\((?:[^)(]+|\((?:[^)(]+|\([^)(]\))*\))*\)/g
 
-module.exports = (match, label, url, urlOnly) => {
-	let trimmedMatch;
-	let excess = '';
-	if (urlOnly) {
+module.exports = (match, p1, p2, p3, offset, string, groups) => {
+	let url, label, urlOnly, excess = '';
+	if (!groups) {
 		const parensPairs = match.match(parenPairRegex);
+		let trimmedMatch;
 		//naive solution to conflict with detected markdown
 		if (parensPairs) {
 			const lastMatch = parensPairs[parensPairs.length-1];
@@ -22,9 +22,11 @@ module.exports = (match, label, url, urlOnly) => {
 		trimmedMatch = trimmedMatch
 			.replace(/\(/g, '%28')
 			.replace(/\)/g, '%29');
+		url = trimmedMatch;
+	} else {
+		({ url, label, urlOnly } = groups);
+		url = url || urlOnly;
 	}
-	let href = url || trimmedMatch
-	const aLabel = label || trimmedMatch;
 	//TODO: if the link domain is one of the site domains, remove the domain and make it an absolute link, for users on different domains or anonymizers
-	return `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${href}'>${aLabel}</a>${excess}`;
+	return `<a rel='nofollow' referrerpolicy='same-origin' target='_blank' href='${url}'>${label || url}</a>${excess}`;
 };
