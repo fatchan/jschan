@@ -9,6 +9,7 @@ const { outputFile } = require('fs-extra')
 	, { hcaptcha, google } = require(__dirname+'/../configs/secrets.js')
 	, redlock = require(__dirname+'/../redlock.js')
 	, { addCallback } = require(__dirname+'/../redis.js')
+	, { version } = require(__dirname+'/../package.json')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
 	, config = require(__dirname+'/../config.js');
 
@@ -25,6 +26,7 @@ const  updateLocals = () => {
 		cache: cacheTemplates,
 		meta,
 		commit,
+		version,
 		defaultTheme: boardDefaults.theme,
 		defaultCodeTheme: boardDefaults.codeTheme,
 		postFilesSize: formatSize(globalLimits.postFilesSize.max),
