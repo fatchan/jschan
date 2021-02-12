@@ -77,6 +77,7 @@ const config = require(__dirname+'/config.js')
 		app.locals.ipHashPermLevel = ipHashPermLevel;
 		app.locals.enableWebring = enableWebring;
 		app.locals.commit = commit;
+		app.locals.version = version;
 		app.locals.meta = meta;
 		app.locals.captchaType = captchaOptions.type;
 		app.locals.postFilesSize = formatSize(globalLimits.postFilesSize.max);
