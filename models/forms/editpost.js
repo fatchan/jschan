@@ -85,7 +85,7 @@ todo: handle some more situations
 		board.settings, board.owner, res.locals.user ? res.locals.user.username : null);
 	//new message and quotes
 	const nomarkup = prepareMarkdown(req.body.message, false);
-	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread);
+	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread, true);
 	//todo: email and subject (probably dont need any transformation since staff bypass limits on forceanon, and it doesnt have to account for sage/etc
 
 	//intersection/difference of quotes sets for linking and unlinking

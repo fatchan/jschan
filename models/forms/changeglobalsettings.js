@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 	const announcement = req.body.global_announcement === null ? null : prepareMarkdown(req.body.global_announcement, false);
 	let markdownAnnouncement = oldSettings.globalAnnouncement.markdown;
 	if (announcement !== oldSettings.globalAnnouncement.raw) {
-		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null))
+		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null, true))
 	}
 
 	const newSettings = {
