@@ -2,7 +2,7 @@
 
 module.exports = {
 	trimSetting: (setting, oldSetting) => {
-		return setting && setting.trim().length > 0 ? setting : oldSetting;
+		return setting != null ? setting.trim() : oldSetting;
 	},
 	numberSetting: (setting, oldSetting) => {
 		return typeof setting === 'number' && setting !== oldSetting ? setting : oldSetting;

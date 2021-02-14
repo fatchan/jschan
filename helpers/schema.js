@@ -30,7 +30,7 @@ module.exports = {
 
 	//checks if data is a number and within a range
 	numberBody: (data, min=0, max=Infinity) => {
-		return typeof data === 'number' && (data < min || data > max);
+		return typeof data === 'number' && (min <= data && max >= data);
 	},
 
 	//same, but with old/new fallbacks for settings that can adjust a dependency at same time
@@ -43,7 +43,7 @@ module.exports = {
 		}
 		const varMin = Math.min(minOld, minNew) || minOld;
 		const varMax = Math.max(maxOld, maxNew) || maxOld;
-		return typeof data === 'number' && (data < varMin || data > varMax);
+		return typeof data === 'number' && (varMin <= data && varMax >= data);
 	},
 
 	//check 2 number values, that one is less than the other, usually for setings with a min and max that they dont violate eachother

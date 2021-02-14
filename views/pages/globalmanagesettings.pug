@@ -196,10 +196,10 @@ block content
 							input(type='checkbox', name='block_bypass_bypass_dnsbl', value='true' checked=settings.blockBypass.bypassDnsbl)
 					.row
 						.label Expire After Uses
-						input(type='number' name='captcha_options_expire_after_uses' value=settings.blockBypass.expireAfterUses)
+						input(type='number' name='block_bypass_expire_after_uses' value=settings.blockBypass.expireAfterUses)
 					.row
 						.label Expire After Time
-						input(type='number' name='captcha_options_expire_after_time' value=settings.blockBypass.expireAfterTime)
+						input(type='number' name='block_bypass_expire_after_time' value=settings.blockBypass.expireAfterTime)
 
 					.row
 						h4.mv-5 Antispam
@@ -332,7 +332,7 @@ block content
 						input(type='number', name='global_limits_field_length_ban_reason' value=settings.globalLimits.fieldLength.ban_reason)
 					.row
 						.label Log Messages
-						input(type='number', name='global_limits_field_length_log_mesage' value=settings.globalLimits.fieldLength.log_message)
+						input(type='number', name='global_limits_field_length_log_message' value=settings.globalLimits.fieldLength.log_message)
 					.row
 						.label Boar URI
 						input(type='number', name='global_limits_field_length_uri' value=settings.globalLimits.fieldLength.uri)
@@ -718,7 +718,7 @@ block content
 							option(value='2', selected=settings.boardDefaults.filterMode === 2) Ban
 					.row
 						.label Filter Auto Ban Duration
-						input(type='text' name='board_defaults_ban_duration' placeholder='e.g. 1w' value=settings.boardDefaults.filterBanDuration)
+						input(type='text' name='board_defaults_filter_ban_duration' placeholder='e.g. 1w' value=settings.boardDefaults.filterBanDuration)
 					.row
 						.label Allow Video Files
 						label.postform-style.ph-5

@@ -10,13 +10,14 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 	, numberFields = ['sticky', 'lock_reset', 'captcha_reset', 'filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode',
 		'tph_trigger', 'pph_trigger', 'pph_trigger_action', 'tph_trigger_action', 'bump_limit', 'reply_limit', 'move_to_thread', 'postId',
 		'max_files', 'thread_limit', 'thread', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length', 'min_reply_message_length', 'auth_level',
-		'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max', 'captcha_options_distortion', 'flood_timers_same_content_same_ip',
+		'captcha_options_generate_limit', 'captcha_options_grid_size',  'captcha_options_image_size', 'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max',
+		'captcha_options_distortion', 'captcha_options_grid_icon_y_offset', '', 'flood_timers_same_content_same_ip',
 		'flood_timers_same_content_any_ip', 'flood_timers_any_content_same_ip', 'block_bypass_expire_after_uses', 'ip_hash_perm_level',
 		'delete_board_perm_level', 'rate_limit_cost_captcha', 'rate_limit_cost_board_settings', 'rate_limit_cost_edit_post', 'overboard_limit', 'overboard_catalog_limit',
 		'lock_wait', 'prune_modlogs', 'prune_ips', 'thumb_size', 'video_thumb_percentage', 'quote_limit', 'preview_replies', 'sticky_preview_replies',
 		'early_404_fraction', 'early_404_replies', 'max_recent_news', 'highlight_options_threshold', 'global_limits_thread_limit_min', 'global_limits_thread_limit_max',
 		'global_limits_reply_limit_min', 'global_limits_reply_limit_max', 'global_limits_bump_limit_min', 'global_limits_bump_limit_max', 'global_limits_post_files_max',
-		'global_limits_post_files_size_max', 'global_limits_banner_files_width', 'global_limits_banner_files_height', 'global_limits_banner_files_max',
+		'global_limits_post_files_size_max', 'global_limits_banner_files_width', 'global_limits_banner_files_height', 'global_limits_banner_files_max', 'global_limits_banner_files_total',
 		'global_alimits_banner_files_total', 'global_limits_banner_files_size_max', 'global_limits_field_length_name', 'global_limits_field_length_email',
 		'global_limits_field_length_subject', 'global_limits_field_length_postpassword', 'global_limits_field_length_message', 'global_limits_field_length_report_reason',
 		'global_limits_field_length_ban_reason', 'global_limits_field_length_log_message', 'global_limits_field_length_uri', 'global_limits_field_length_boardname',
@@ -123,7 +124,12 @@ module.exports = (req, res, next) => {
 				}
 				req.body[field] = duration;
 			} else {
-				req.body[field] = null;
+				const num = parseInt(req.body[field]);
+				if (Number.isSafeInteger(num)) {
+					req.body[field] = num;
+				} else {
+					req.body[field] = null;
+				}
 			}
 		}
 	}

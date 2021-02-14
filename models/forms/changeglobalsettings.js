@@ -40,11 +40,11 @@ module.exports = async (req, res, next) => {
 		},
 		captchaOptions: {
 			type: trimSetting(req.body.captcha_options_type, oldSettings.captchaOptions.type),
-			generateLimit: trimSetting(req.body.captcha_options_generate_limit, oldSettings.captchaOptions.generateLimit),
+			generateLimit: numberSetting(req.body.captcha_options_generate_limit, oldSettings.captchaOptions.generateLimit),
 			grid: {
-				size: trimSetting(req.body.captcha_options_grid_size, oldSettings.captchaOptions.grid.size),
-				imageSize: trimSetting(req.body.captcha_options_grid_image_size, oldSettings.captchaOptions.grid.imageSize),
-				iconYOffset: trimSetting(req.body.captcha_options_grid_icon_y_offset, oldSettings.captchaOptions.grid.iconYOffset),
+				size: numberSetting(req.body.captcha_options_grid_size, oldSettings.captchaOptions.grid.size),
+				imageSize: numberSetting(req.body.captcha_options_grid_image_size, oldSettings.captchaOptions.grid.imageSize),
+				iconYOffset: numberSetting(req.body.captcha_options_grid_icon_y_offset, oldSettings.captchaOptions.grid.iconYOffset),
 			},
 			numDistorts: {
 				min: numberSetting(req.body.captcha_options_num_distorts_min, oldSettings.captchaOptions.numDistorts.min),
