@@ -1,7 +1,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, { blockBypass } = require(__dirname+'/../configs/main.js')
+	, config = require(__dirname+'/../config.js')
 	, db = Mongo.db.collection('bypass');
 
 module.exports = {
@@ -9,6 +9,7 @@ module.exports = {
 	db,
 
 	checkBypass: (id) => {
+		const { blockBypass } = config.get;
 		return db.findOneAndUpdate({
 			'_id': id,
 			'uses': {
@@ -22,6 +23,7 @@ module.exports = {
 	},
 
 	getBypass: () => {
+		const { blockBypass } = config.get;
 		return db.insertOne({
 			'uses': 0,
 			'expireAt': new Date(Date.now() + blockBypass.expireAfterTime)

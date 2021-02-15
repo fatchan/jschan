@@ -1,6 +1,6 @@
 'use strict';
 
-const { refererCheck, allowedHosts } = require(__dirname+'/../configs/main.js')
+const { refererCheck, allowedHosts } = require(__dirname+'/../configs/secrets.js')
 	, dynamicResponse = require(__dirname+'/dynamic.js')
 	, allowedHostSet = new Set(allowedHosts);
 

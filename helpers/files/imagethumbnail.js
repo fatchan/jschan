@@ -1,10 +1,11 @@
 const gm = require('gm')
 	, ffmpeg = require('fluent-ffmpeg')
-	, { thumbSize, ffmpegGifThumbnails } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (file, firstFrameOnly=true) => {
 
+	const { thumbSize, ffmpegGifThumbnails } = config.get;
 	return new Promise((resolve, reject) => {
 		if (ffmpegGifThumbnails && !firstFrameOnly) {
 			const thumbSizeFilter = file.geometry.width > file.geometry.height ? `${thumbSize}:-1` : `-1:${thumbSize}`;
@@ -21,7 +22,7 @@ module.exports = (file, firstFrameOnly=true) => {
 					return reject(err);
 				})
 				.complexFilter(complexFilters)
-				.save(`${uploadDirectory}/file/thumb-${file.hash}${file.thumbextension}`);
+				.save(`${uploadDirectory}/file/thumb/${file.hash}${file.thumbextension}`);
 		} else {
 			//[0] for first frame (gifs, etc)
 			const thumbnailing = gm(`${uploadDirectory}/file/${file.filename}${firstFrameOnly ? '[0]' : ''}`);
@@ -30,7 +31,7 @@ module.exports = (file, firstFrameOnly=true) => {
 				thumbnailing.coalesce();
 			}
 			thumbnailing.resize(Math.min(thumbSize, file.geometry.width), Math.min(thumbSize, file.geometry.height))
-			.write(`${uploadDirectory}/file/thumb-${file.hash}${file.thumbextension}`, function (err) {
+			.write(`${uploadDirectory}/file/thumb/${file.hash}${file.thumbextension}`, function (err) {
 				if (err) {
 					return reject(err);
 				}

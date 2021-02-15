@@ -10,16 +10,17 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 	, italicRegex = /\*\*(.+?)\*\*/gm
 	, spoilerRegex = /\|\|([\s\S]+?)\|\|/gm
 	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
-	, linkRegex = /https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+/g
+	, linkRegex = /(https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+)/g
+	, aLinkRegex = /\[(?<label>[^\[][^\]]*?)\]\((?<url>https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^)]+)\)|(?<urlOnly>https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+)/g
 	, codeRegex = /(?:(?<language>[a-z+]{1,10})\r?\n)?(?<code>[\s\S]+)/i
 	, includeSplitRegex = /(\[code\][\s\S]+?\[\/code\])/gm
 	, splitRegex = /\[code\]([\s\S]+?)\[\/code\]/gm
 	, trimNewlineRegex = /^\s*(\r?\n)*|(\r?\n)*$/g
-	, getDomain = (string) => string.split(/\/\/|\//)[1] //unused atm
 	, escape = require(__dirname+'/escape.js')
 	, { highlight, highlightAuto } = require('highlight.js')
-	, { highlightOptions } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, diceroll = require(__dirname+'/diceroll.js')
+	, linkmatch = require(__dirname+'/linkmatch.js')
 	, replacements = [
 		{ regex: pinktextRegex, cb: (match, pinktext) => `<span class='pinktext'>&lt;${pinktext}</span>` },
 		{ regex: greentextRegex, cb: (match, greentext) => `<span class='greentext'>&gt;${greentext}</span>` },
@@ -30,7 +31,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 		{ regex: italicRegex, cb: (match, italic) => `<span class='em'>${italic}</span>` },
 		{ regex: spoilerRegex, cb: (match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
 		{ regex: monoRegex, cb: (match, mono) => `<span class='mono'>${mono}</span>` },
-		{ regex: linkRegex, cb: require(__dirname+'/linkmatch.js') },
+		{ regex: linkRegex, aRegex: aLinkRegex, cb: linkmatch },
 		{ regex: detectedRegex, cb: (match, detected) => `<span class='detected'>${detected}</span>` },
 		{ regex: diceroll.regexMarkdown, cb: diceroll.markdown },
 	];
@@ -52,22 +53,23 @@ module.exports = {
 		return chunks.join('');
 	},
 
-	markdown: (text) => {
+	markdown: (text, allowAdvanced=false) => {
 		const chunks = text.split(splitRegex);
+		const { highlightOptions } = config.get;
 		for (let i = 0; i < chunks.length; i++) {
 			//every other chunk will be a code block
 			if (i % 2 === 0) {
 				const escaped = escape(chunks[i]);
 				const newlineFix = escaped.replace(/^\r?\n/,''); //fix ending newline because of codeblock
-				chunks[i] = module.exports.processRegularChunk(newlineFix);
+				chunks[i] = module.exports.processRegularChunk(newlineFix, allowAdvanced);
 			} else {
-				chunks[i] = module.exports.processCodeChunk(chunks[i]);
+				chunks[i] = module.exports.processCodeChunk(chunks[i], highlightOptions);
 			}
 		}
 		return chunks.join('');
 	},
 
-	processCodeChunk: (text) => {
+	processCodeChunk: (text, highlightOptions) => {
 		const matches = text.match(codeRegex);
 		const trimFix = matches.groups.code.replace(trimNewlineRegex, '');
 		let lang;
@@ -88,9 +90,11 @@ module.exports = {
 		return `<span class='code'>${escape(trimFix)}</span>`;
 	},
 
-	processRegularChunk: (text) => {
+	processRegularChunk: (text, allowAdvanced) => {
 		for (let i = 0; i < replacements.length; i++) {
-			text = text.replace(replacements[i].regex, replacements[i].cb);
+			//if allowAdvanced is true, use aRegex if available
+			const replaceRegex = allowAdvanced === true && replacements[i].aRegex || replacements[i].regex;
+			text = text.replace(replaceRegex, replacements[i].cb);
 		}
 		return text;
 	},

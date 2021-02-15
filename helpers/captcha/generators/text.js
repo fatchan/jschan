@@ -2,7 +2,7 @@
 
 const gm = require('gm').subClass({ imageMagick: true })
 	, { Captchas } = require(__dirname+'/../../../db/')
-	, { captchaOptions } = require(__dirname+'/../../../configs/main.js')
+	, config = require(__dirname+'/../../../config.js')
 	, uploadDirectory = require(__dirname+'/../../files/uploadDirectory.js')
 	, characterWidth = (char) => {
 		switch (char) {
@@ -27,7 +27,6 @@ const gm = require('gm').subClass({ imageMagick: true })
 	}
 	, width = 210
 	, height = 80
-	, distortion = captchaOptions.distortion
 	, minVal = parseInt('1000000', 36)
 	, maxVal = parseInt('1zzzzzz', 36)
 	, randomRange = require(__dirname+'/../../randomrange.js');
@@ -35,6 +34,8 @@ const gm = require('gm').subClass({ imageMagick: true })
 module.exports = async () => {
 	// generate between 1000000 and 1zzzzzz and not 0 and zzzzzz, so toString
 	// will have enough characters
+	const { captchaOptions } = config.get;
+	const distortion = captchaOptions.distortion
 	const textInt = await randomRange(minVal, maxVal);
 	const text = textInt.toString(36).substr(-6, 6);
 	const captchaId = await Captchas.insertOne(text).then(r => r.insertedId);

@@ -1,13 +1,14 @@
 'use strict';
 
 const { Posts } = require(__dirname+'/../../db/')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, actionChecker = require(__dirname+'/../../helpers/checks/actionchecker.js');
 
 module.exports = async (req, res, next) => {
 
+	const { globalLimits } = config.get;
 	const errors = [];
 
 	//make sure they checked 1-10 posts

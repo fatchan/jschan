@@ -4,10 +4,11 @@ const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardse
 	, { themes, codeThemes } = require(__dirname+'/../../helpers/themes.js')
 	, { Ratelimits } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { globalLimits, rateLimitCost } = require(__dirname+'/../../configs/main.js');
+	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res, next) => {
 
+	const { globalLimits, rateLimitCost } = config.get;
 	const errors = [];
 
 //TODO: add helpers for different checks, passing name, min/max and return true with error if hit

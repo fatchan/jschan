@@ -42,7 +42,7 @@ mixin catalogtile(post, index, overboard=false)
 					if post.spoiler || file.spoiler
 						div.spoilerimg.catalog-thumb
 					else if file.hasThumb
-						img.catalog-thumb(src=`/file/thumb-${file.hash}${file.thumbextension}` width=file.geometry.thumbwidth height=file.geometry.thumbheight loading='lazy')
+						img.catalog-thumb(src=`/file/thumb/${file.hash}${file.thumbextension}` width=file.geometry.thumbwidth height=file.geometry.thumbheight loading='lazy')
 					else if file.attachment
 						div.attachmentimg.catalog-thumb(data-mimetype=file.mimetype)
 					else if file.mimetype.startsWith('audio')

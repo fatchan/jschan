@@ -9,7 +9,7 @@ const { News } = require(__dirname+'/../../db/')
 module.exports = async (req, res, next) => {
 
 	const message = prepareMarkdown(req.body.message, false);
-	const { message: markdownNews } = await messageHandler(message, null, null);
+	const { message: markdownNews } = await messageHandler(message, null, null, true);
 
 	const updated = await News.updateOne(req.body.news_id, req.body.title, message, markdownNews).then(r => r.matchedCount);
 

@@ -1,40 +1,44 @@
 'use strict';
 
 const FileType = require('file-type')
-	, { allowMimeNoMatch } = require(__dirname+'/../../configs/main.js');
+	, config = require(__dirname+'/../../config.js')
+	, { addCallback } = require(__dirname+'/../../redis.js')
+	, image = new Set([
+		'image/jpeg',
+		'image/pjpeg',
+		'image/png',
+		'image/bmp',
+	])
+	, animatedImage = new Set([
+		'image/gif',
+		'image/webp',
+		'image/apng',
+	])
+	, video = new Set([
+		'video/mpeg',
+		'video/quicktime',
+		'video/mp4',
+		'video/webm',
+		'video/x-matroska',
+		'video/ogg',
+	])
+	, audio = new Set([
+		'audio/flac',
+		'audio/mp3',
+		'audio/mpeg',
+		'audio/ogg',
+		'audio/wave',
+		'audio/wav',
+	]);
 
-const image = new Set([
-	'image/jpeg',
-	'image/pjpeg',
-	'image/png',
-	'image/bmp',
-]);
+let other;
 
-const animatedImage = new Set([
-	'image/gif',
-	'image/webp',
-	'image/apng',
-]);
+const updateOtherMimes = () => {
+	other = new Set(config.get.otherMimeTypes);
+};
 
-const video = new Set([
-	'video/mpeg',
-	'video/quicktime',
-	'video/mp4',
-	'video/webm',
-	'video/x-matroska',
-	'video/ogg',
-]);
-
-const audio = new Set([
-	'audio/flac',
-	'audio/mp3',
-	'audio/mpeg',
-	'audio/ogg',
-	'audio/wave',
-	'audio/wav',
-]);
-
-const other = new Set(require(__dirname+'/../../configs/main.js').otherMimeTypes);
+updateOtherMimes();
+addCallback('config', updateOtherMimes);
 
 module.exports = {
 
@@ -50,7 +54,7 @@ module.exports = {
 		const supposedMimeType = file.mimetype;
 		const realMimeType = await FileType.fromFile(file.tempFilePath);
 		if (!realMimeType) {
-			return allowMimeNoMatch;
+			return config.get.allowMimeNoMatch;
 		}
 		return supposedMimeType === realMimeType.mime;
 	},

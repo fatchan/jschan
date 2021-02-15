@@ -25,14 +25,15 @@ const path = require('path')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
-	, { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		postPasswordSecret, strictFiltering, animatedGifThumbnails,
-		audioThumbnails } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
+
+	const { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
+		postPasswordSecret, strictFiltering, animatedGifThumbnails, audioThumbnails } = config.get;
 
 	//spam/flood check
 	const flood = await spamCheck(req, res);
@@ -263,7 +264,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				processedFile.attachment = true;
 				await saveFull();
 			} else {
-				const existsThumb = await pathExists(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+				const existsThumb = await pathExists(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
 				switch (type) {
 					case 'image': {
 						processedFile.thumbextension = thumbExtension;
@@ -328,7 +329,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 									await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
 									let videoThumbStat = null;
 									try {
-										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb-${processedFile.hash}${processedFile.thumbextension}`);
+										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
 									} catch (err) { /*ENOENT, the thumb failed to create. No need to handle this.*/	}
 									if (!videoThumbStat || videoThumbStat.size === 0) {
 										await videoThumbnail(processedFile, processedFile.geometry, 0);
@@ -411,7 +412,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		res.locals.board.settings, res.locals.board.owner, res.locals.user ? res.locals.user.username : null);
 	//get message, quotes and crossquote array
 	const nomarkup = prepareMarkdown(req.body.message, true);
-	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread);
+	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread, res.locals.permLevel < 4);
 
 	//build post data for db. for some reason all the property names are lower case :^)
 	const data = {

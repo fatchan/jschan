@@ -1,11 +1,13 @@
 'use strict';
 
 const { Files } = require(__dirname+'/../../db/')
-	, { pruneImmediately } = require(__dirname+'/../../configs/main.js')
-	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
+	, config = require(__dirname+'/../../config.js')
+	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
 	, deletePostFiles = require(__dirname+'/../../helpers/files/deletepostfiles.js');
 
 module.exports = async (posts, unlinkOnly) => {
+
+	const { pruneImmediately } = config.get;
 
 	//get filenames from all the posts
 	let files = [];

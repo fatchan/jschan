@@ -164,7 +164,7 @@ server {
 
 	# "Other" Files for custom type uploads, uses content-disposition to prevent rendering
 	# inline in browser and will present a "save" dialog box. make sure these file 
-	# extensions match for mimes defined in configs/main.js "otherMimeTypes"
+	# extensions match for mimes defined in global settings
 #	location ~* \.(txt)$ {
 #		access_log off;
 #		expires max;
@@ -366,7 +366,7 @@ server {
 #
 #	# "Other" Files for custom type uploads, uses content-disposition to prevent rendering
 #	# inline in browser and will present a "save" dialog box. make sure these file 
-#	# extensions match for mimes defined in configs/main.js "otherMimeTypes"
+#	# extensions match for mimes defined in global settings
 #	location ~* \.(txt)$ {
 #		access_log off;
 #		expires max;

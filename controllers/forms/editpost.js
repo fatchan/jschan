@@ -2,11 +2,12 @@
 
 const editPost = require(__dirname+'/../../models/forms/editpost.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { rateLimitCost, globalLimits } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, { Ratelimits, Posts, Boards } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
 
+	const { rateLimitCost, globalLimits } = config.get;
 	const errors = [];
 
 	if ((!req.body.board || req.body.board.length === 0)

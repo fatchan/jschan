@@ -4,14 +4,28 @@ const Mongo = require(__dirname+'/../db/db.js')
 	, timeUtils = require(__dirname+'/timeutils.js')
 	, uploadDirectory = require(__dirname+'/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
-	, { debugLogs, pruneModlogs, enableWebring, maxRecentNews } = require(__dirname+'/../configs/main.js')
+	, config = require(__dirname+'/../config.js')
+	, { debugLogs } = require(__dirname+'/../configs/secrets.js')
 	, { CustomPages, Stats, Posts, Files, Boards, News, Modlogs } = require(__dirname+'/../db/')
 	, cache = require(__dirname+'/../redis.js')
 	, render = require(__dirname+'/render.js')
 	, buildQueue = require(__dirname+'/../queue.js')
+	, gulp = require('gulp')
+	, { rebuild } = require(__dirname+'/../gulpfile.js')
 	, timeDiffString = require(__dirname+'/timediffstring.js');
 
 module.exports = {
+
+	gulp: async () => {
+		/* TODO: calculate differences in oldsettings vsnewsettings in globalmanagesettings model
+			and send task options with list of tasks instead of always doing all */
+		const label = `gulp tasks [${rebuild.map(x => x.name).join(', ')}] after global config change`;
+		const start = process.hrtime();
+		gulp.series(rebuild, () => {
+			const end = process.hrtime(start);
+			debugLogs && console.log(timeDiffString(label, end));
+		})();
+	},
 
 	buildBanners: async (options) => {
 		const label = `/${options.board._id}/banners.html`;
@@ -188,6 +202,7 @@ module.exports = {
 		const label = `/${options.board._id}/logs.html`;
 		const start = process.hrtime();
 		let dates = await Modlogs.getDates(options.board);
+		const { pruneModlogs } = config.get;
 		if (pruneModlogs) {
 			const pruneLogs = [];
 			const pruneAfter = new Date(Date.now()-timeUtils.DAY*pruneModlogs);
@@ -218,6 +233,7 @@ module.exports = {
 	},
 
 	buildHomepage: async () => {
+		const { maxRecentNews } = config.get;
 		const label = '/index.html';
 		const start = process.hrtime();
 		let [ totalStats, boards, fileStats, recentNews ] = await Promise.all([

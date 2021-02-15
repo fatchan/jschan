@@ -18,7 +18,7 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, getAffectedBoards = require(__dirname+'/../../helpers/affectedboards.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
-	, { postPasswordSecret } = require(__dirname+'/../../configs/main.js')
+	, { postPasswordSecret } = require(__dirname+'/../../configs/secrets.js')
 	, threadRegex = /\/[a-z0-9]+\/(?:manage\/)?thread\/(\d+)\.html/i
 	, { createHash, timingSafeEqual } = require('crypto');
 

@@ -1,12 +1,12 @@
 # jschan
 Anonymous imageboard software.
 
-Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/)
+Demo/test instance: [Clearnet](https://fatchan.org),  [Tor hidden service](http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/), [Lokinet SNApp](http://e8zhrn4ideccyy6wfs8gyytdgz8xmcn11f1y5o557z3g8a18gf4y.loki/)
 
 ## Goals
 - Oldschool look, newschool features
 - Work with javascript disabled
-- Support running as a hidden service
+- Support using anonymizers such as Tor, Lokinet or I2P
 - Be usable on mobile
 - Simple static file serving
 
@@ -17,18 +17,16 @@ Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://cimi
 - [x] Read-only JSON api
 - [x] Multi-select moderation actions
 - [x] Websocket update threads w/o polling
-- [x] Webring w/proxy support (compatible with [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
-- [x] Run as a tor hidden service
+- [x] Webring w/proxy support (compatible with [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring) versions)
+- [x] Manage everything from the web panel
+- [x] Works properly with anonymizer networks
 
-## Todo
-- More features
-- Mobile app integration
-- Improve installation instructions
+## Wants
+- docker-compose file, use docker volumes and networks for super easy installation, backup and migration
+- Mobile app integration (somebody pls)
 
 ## Setup
-##### Please note:
-#### 🚨 jschan is not production-ready. There may be bugs and WILL be breaking changes. 🚨
-##### If you insist on running your own instance, do not expect help when something breaks. Please read everything including the update section thoroughly. These instructions are NOT step-by-step or complete, and assume you have some experience with software setup, servers, networking, etc.
+##### These instructions are not for the uninitiated and assume you have a brain. Follow them carefully and you will have a nice working imageboard by the end.
 
 ##### Requirements
 - Linux - Debian used in this example
@@ -42,14 +40,16 @@ Demo/test site: [clearnet](https://fatchan.org) [tor hidden service](http://cimi
 
 -----
 
+**0. Read the LICENSE**
+
 **1. Setup server with some basics**
 
 - Separate, non-root user to run the application
-- Basic security like ssh root login disabled, key login only, firewall all ports besides http/s and ssh.
+- Basic security like ssh root login disabled, key login only, firewall (ufw works) deny all incoming on ports besides http/s and ssh.
 
 **2. Install dependencies.**
 
-NOTE: You may need to add sources depending on your distro. If you intent to have animated gif thumbnails, ffmpeg 4.3.x is recommended. For debian, it can be found in the testing repos or compiled from source.
+NOTE: You may need to add sources depending on your distro. If you want animated gif thumbnails, ffmpeg ?=4.3.x is recommended. For debian, it can be found in the testing repos or compiled from source.
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick
@@ -65,7 +65,7 @@ $ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick
 
 **5. Install Node.js**
 
-For easy installation, use [node version manager](https://github.com/nvm-sh/nvm) "nvm". 
+For easy installation, use [node version manager](https://github.com/nvm-sh/nvm) "nvm".
 Install nvm then run the following commands to get the LTS version of nodejs.
 ```bash
 $ nvm install --lts
@@ -99,23 +99,24 @@ $ sudo sed -i 's/domain.com/your.domain.com/g' /etc/nginx/sites-available/DOMAIN
 
 - Make sure the sites enabled folder is included by `/etc/nginx/nginx.conf` (it is in debian nginx package)
 - Use [certbot](https://certbot.eff.org/) to get a free https certificate.
+
 - For post flags to work, [follow this guide](http://archive.is/2SMOb) to setup the [legacy GeoIP database](https://www.miyuru.lk/geoiplegacy) and add these directives to the http block in `/etc/nginx/nginx.conf`:
 ```
 geoip_country /usr/share/GeoIP/GeoIP.dat;
-geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 ```
 If your nginx doesn't have the necessary module by default, or is using v2 instead, find your own guide.
 
 If you use cloudflare, please read [these](https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-Logging-visitor-IP-addresses-with-mod-cloudflare-) [articles](https://support.cloudflare.com/hc/en-us/articles/200168236-Configuring-Cloudflare-IP-Geolocation) to setup proper IP forwarding and geolocation headers. Similar steps would apply to other CDNs/reverse proxies.
-There are also 2 config entries in configs/main.js, `ipHeader` and `countryCodeHeader` that you can tweak for jschan to use different headers for country code or real visitor IP.
 
 Also included is an "nginx_advanced" config, and a snippets folder for advanced users who want to better organise and more easily customise the nginx configuration. It functions the same as the normal nginx.example, but you need to create the snippets folder in /etc/nginx/snippets, and copy the example snippets.
+
+- Use https://realfavicongenerator.net/ to generate favicons how you want them to look and replace the files in gulp/res/icons/ with the icons from that package.
 
 **7. Clone this repo, browse to the folder and set some things up**
 
 ```bash
-# copy example config file and edit it
-$ cp configs/main.js.example configs/main.js && editor configs/main.js
+# copy example secrets file and edit it to fill out the details
+$ cp configs/secrets.js.example configs/secrets.js && editor configs/secrets.js
 
 # copy example custompages for rules and faq and edit
 $ cp views/custompages/faq.pug.example views/custompages/faq.pug
@@ -126,18 +127,14 @@ $ npm install
 $ npm run-script setup
 
 # setup the database and folder structure, and creates the admin account. **The (random) password will be printed in the command line.**
-$ gulp reset 
+$ gulp reset
 # NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything
 
 # make pm2 (process manager) start on server restart
 $ pm2 startup #and follow any prompts
 # save the process list so jschan is started with pm2
 $ pm2 save
-```
 
-Use https://realfavicongenerator.net/ to generate favicons how you want them to look and replace the files in gulp/res/icons/ with the icons from that package
-
-```bash
 # start all the backend processes
 $ npm run-script start
 $ gulp
@@ -149,6 +146,7 @@ $ pm2 logs #see logs
 $ pm2 reload all #reload all backend processes
 
 # gulp is used for various jobs like minifying and compiling scripts
+# the build-worker process may also run some of these for certain operations e.g. editing global settings in the web panel
 $ gulp --tasks #list available gulp tasks
 $ gulp migrate #check for and run db migrations
 $ gulp password #reset the admin account password if you forgot it
@@ -159,10 +157,11 @@ $ gulp #run default gulp task
 
 EITHER:
 
-- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself). This is the easiest, free way to get a proxy setup and means you can also follow .onions in your webring list since requests will go through tor.
+- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself).
+- Use the socks proxy provided by a non-docker tor daemon, which is probably already setup on port 9050 if you have a tor installed for hidden service.
 - Use your own socks proxy
 
-Edit configs/webring.json with your proxy address and set enabled: true
+Then update the proxy address in global settings. The first 2 will allow you to follow .onions in your webring follow list.
 
 ## Updating
 
@@ -171,15 +170,15 @@ Edit configs/webring.json with your proxy address and set enabled: true
 $ git pull
 #install dependencies again in case any have updated or changed
 $ npm install
-#diff the config files to see if anything changed and edit accordingly. OR backup your config, replace it with the fresh example, and update it with whatever settings you want to keep from your backup.
-$ diff configs/main.js configs/main.js.example
-#run the migrate task to update your database
+#run the gulp migrate task. this will update things such as your database schema
 $ gulp migrate
-#reload jschan backend
-$ pm2 reload all
-#run the default gulp task, updates scripts, css, icons, images and deletes old html
+#stop the jschan backend
+$ pm2 stop all
+#run the default gulp task to update, scripts, css, icons, images and delete old html
 $ gulp
-#if something breaks, check and read the logs, they will help figure out what went wrong.
+#start the backend again
+$ pm2 restart all
+#if something breaks, check and read the logs, they will help figure out what went wrong
 $ pm2 logs
 ```
 

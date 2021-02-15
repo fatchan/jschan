@@ -2,12 +2,13 @@
 
 const { Posts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { globalLimits } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
 	, actionChecker = require(__dirname+'/../../helpers/checks/actionchecker.js');
 
 module.exports = async (req, res, next) => {
 
+	const { globalLimits } = config.get;
 	const errors = [];
 
 	if (!req.body.globalcheckedposts || req.body.globalcheckedposts.length === 0) {

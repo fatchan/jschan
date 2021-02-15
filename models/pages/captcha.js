@@ -1,13 +1,17 @@
 'use strict';
 
 const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
-	, { secureCookies, rateLimitCost, captchaOptions } = require(__dirname+'/../../configs/main.js')
-	, generateCaptcha = (captchaOptions.type !== 'google' && captchaOptions.type !== 'hcaptcha')
-		? require(__dirname+`/../../helpers/captcha/generators/${captchaOptions.type}.js`)
-		: null
+	, config = require(__dirname+'/../../config.js')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {
+
+	const { secureCookies, rateLimitCost, captchaOptions } = config.get;
+	if (!['grid', 'text'].includes(captchaOptions.type)) {
+		return next(); //only grid and text captcha continue
+	}
+
+	const generateCaptcha = require(__dirname+`/../../helpers/captcha/generators/${captchaOptions.type}.js`);
 
 	if (!production && req.cookies['captchaid'] != null) {
 		return res.redirect(`/captcha/${req.cookies['captchaid']}.jpg`);

@@ -2,10 +2,12 @@
 
 const alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { enableUserAccountCreation } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, registerAccount = require(__dirname+'/../../models/forms/register.js');
 
 module.exports = async (req, res, next) => {
+
+	const { enableUserAccountCreation } = config.get;
 
 	if (enableUserAccountCreation === false && res.locals.permLevel > 1) {
 		return dynamicResponse(req, res, 400, 'message', {

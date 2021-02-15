@@ -1,32 +1,17 @@
 module.exports = {
 
-	//mongodb connection string
-	dbURL: 'mongodb://username:password@localhost:27017',
-	dbName: 'jschan',
-
-	//redis connection info
-	redis: {
-		host: '127.0.0.1',
-		port: '6379',
-		password: 'long random string'
+	globalAnnouncement: {
+		markdown: '',
+		raw: '',
 	},
 
-	//backend webserver port
-	port: 7000,
-
-	//secrets/salts for various things
-	cookieSecret: 'long random string',
-	tripcodeSecret: 'long random string',
-	ipHashSecret: 'long random string',
-	postPasswordSecret: 'long random string',
-
-	//enable secure cookies, only use with https/not tor
 	secureCookies: true,
 
 	//check referrer to prevent some CSRF attack
-	refererCheck: true,
+	refererCheck: false,
+
 	//list of allowed host for checking referrer
-	allowedHosts: ['domain.com', 'www.domain.com'],
+	allowedHosts: [],
 
 	//header for country codes
 	countryCodeHeader: 'x-country-code',
@@ -35,35 +20,32 @@ module.exports = {
 
 	//data used in opengraph meta tags. used to generate link previews in e.g. discord, twitter, etc
 	meta: {
-		siteName: 'imageboard',
-		url: 'https://domain.com'
+		siteName: '',
+		url: ''
 	},
+
+	filters: [],
+	strictFiltering: false,
+	filterMode: 0,
+	filterBanDuration: 0,
 
 	//settings for captchas
 	captchaOptions: {
-		type: 'grid', //"text", "grid", "hcaptcha" or "google". If using google/hcaptcha, make sure your CSP header in nginx config allows the google/hcaptcha domain.
-		generateLimit: 1000, //max number of captchas to have generated at any time, prevent mass unsolved captcha spam, especially on TOR.
-		google: { //options for google captcha, when captcha type is google
-			siteKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
-			secretKey: 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
-		},
-        hcaptcha: {
-            siteKey: "10000000-ffff-ffff-ffff-000000000001",
-            secretKey: "0x0000000000000000000000000000000000000000"
-        },
+		type: 'text',
+		generateLimit: 250,
 		grid: {
 			size: 4,
 			imageSize: 120,
 			iconYOffset: 15,
 		},
 		numDistorts: {
-			min: 3,
-			max: 4
+			min: 2,
+			max: 3
 		},
-		distortion: 9,
+		distortion: 7,
 	},
 
-	/* dnsbl, will add a small delay for uncached requests. You could also install some
+	/* dnsbl, will add a small delay for uncached requests. You could also install some 
 		kind of dns cache e.g. unbound to improve performance. DNSBL only checked for posting */
 	dnsbl: {
 		enabled: false,
@@ -74,8 +56,7 @@ module.exports = {
 	//disable file posting over anonymizers globally, overrides any board setting.
 	disableAnonymizerFilePosting: false,
 
-	/* count "IP"s (bypass ids) for anonymizers as "users" in stats. if set to false, anonymous users are counted as a single user. doesnt affect pph stat.
-		you can use this setting to prevent spam over anonymizers from inflating user stats */
+	//count anon posters (e.g. loki, tor .onion) as "users" in stats. if set to false, all .onion is counted as a single user. doesnt affect pph stat.
 	statsCountAnonymizers: true,
 
 	floodTimers: { //basic delays to stop flooding, in ms. 0 to disable
@@ -86,9 +67,9 @@ module.exports = {
 
 	//block bypasses
 	blockBypass: {
-		enabled: false,
-		forceAnonymizers: true, //option to override blockbypass setting for .onion users
-		expireAfterUses: 40, //however many (attempted) posts per block bypass captcha
+		enabled: true,
+		forceAnonymizers: true,
+		expireAfterUses: 50, //however many (attempted) posts per block bypass captcha
 		expireAfterTime: 86400000, //expiry in ms regardless if the limit was reached, default 1 day
 		bypassDnsbl: false,
 	},
@@ -101,7 +82,10 @@ module.exports = {
 
 	/* delete files immediately rather than pruning later. usually disabled to prevent re-thumbnailing and processing commonly
 		uploaded files, but deleting immediately is better if you are concerned about "deleted" content not being immediately removed */
-	pruneImmediately: false,
+	pruneImmediately: true,
+
+	//do not use
+	hashImages: false,
 
 	rateLimitCost: { //Cost out of 100 per minute e.g. cost of 25 means 4 per minute. Cost is separate for each.
 		captcha: 10,
@@ -112,28 +96,25 @@ module.exports = {
 	//how many threads to show on overboard index view
 	overboardLimit: 20,
 	//how many threads to show on overboard catalog view
-	overboardCatalogLimit: 50,
+	overboardCatalogLimit: 100,
 
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
 
-	//log extra info for debugging
-	debugLogs: true,
-
 	//max wait time in ms for obtaining locks for saving files
 	lockWait: 3000,
 
-	//optionally prune modlog entries older than x days, false to disable (prunes when newer modlog entries are generated i.e. dead boards wont have older logs pruned)
+	//optionally prune modlog entries older than x days
 	pruneModlogs: 30,
 
-	//option to prune ips on posts older than x days, false to disable
-	pruneIps: false,
+	//option to prune ips on posts older than x days
+	pruneIps: 0,
 
 	//enable the webring (also copy configs/webring.json.example -> configs/webring.json and edit)
 	enableWebring: false,
 
 	//let all users create new boards
-	enableUserBoardCreation: true,
+	enableUserBoardCreation: false,
 	//let all users register new accounts
 	enableUserAccountCreation: true,
 
@@ -141,12 +122,11 @@ module.exports = {
 	thumbExtension: '.jpg',
 	//.gif images > thumbnail size will have animated .gif thumbnails, overriding thumbExtension
 	animatedGifThumbnails: false,
-	/* Recommended if animatedGifThumbnails is true. Uses ffmpeg for faster animated gif thumbnailing. Requires ffmpeg
-		>=4.3.x	to handle transparent gifs properly. You can install from debian testing repo, or compile from source. */
-	ffmpegGifThumbnails: true,
-
 	//generate waveform thumbnails for audio
-	audioThumbnails: false,
+	audioThumbnails: true,
+	/* if animatedGifThumbnails is true, use ffmpeg for better animated gif thumbnailing. Recommended.
+		requires ffmpeg >=4.3.x. You can install from debian testing repo, or compile from source. */
+	ffmpegGifThumbnails: true,
 
 	//max thumb dimensions (square) in px
 	thumbSize: 250,
@@ -155,12 +135,12 @@ module.exports = {
 	videoThumbPercentage: 5,
 
 	/* extra mime types for files to be uploaded as attachments (no thumbnails) e.g. text files/archives
-		NOTE: appropriate extensions will need to be added to nginx configuration, and uncomment the provided
+		NOTE: appropriate extensions will need to be added to nginx configuration, and uncommend the provided
 		"other files" section which includes an example configuration for .txt files to match this default config.
-		mime types and file extension does not always correspond exactly this cant be done automatically. */
+		mime types and file extention does not always correspond exactly this cant be done automatically. */
 	otherMimeTypes: [
 		'text/plain',
-		'application/pdf'
+		'application/pdf',
 	],
 
 	//check the real mime type of uploaded files
@@ -174,8 +154,8 @@ module.exports = {
 	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
 	quoteLimit: 25,
 
-	//apply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
-	strictFiltering: false,
+	//aply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
+	strictFiltering: true,
 
 	//how many replies to show on index pages under each OP
 	previewReplies: 5,
@@ -189,7 +169,7 @@ module.exports = {
 	early404Replies: 5,
 
 	//how many of the most recent newsposts to show on the homepage
-	maxRecentNews: 3,
+	maxRecentNews: 5,
 
 	/* filter filenames on posts and banners
 		false=no filtering
@@ -245,14 +225,14 @@ module.exports = {
 		},
 		replyLimit: { //number of replies to a thread, thread is locked after this limit is reached
 			min: 10,
-			max: 500
+			max: 1000
 		},
 		bumpLimit: { //number of replies to a thread before it wont get bumped anymore
 			min: 10,
-			max: 500
+			max: 1000
 		},
 		postFiles: { //number of files in a post
-			max: 3
+			max: 5
 		},
 		postFilesSize: { //in bytes, 10MB default
 			max: 10485760
@@ -261,8 +241,8 @@ module.exports = {
 			width: 300, //banner image max width in px
 			height: 100, //banner image max height in px
 			forceAspectRatio: true, //enforce 3:1 aspect ratio
-			max: 10, //max number of banners uploadable at once
-			total: 100, //max number of banners for a board in total
+			max: 10, //number of banners uploadable in one request
+			total: 100, //max number of banners for a board
 		},
 		bannerFilesSize: { //in bytes, 10MB default
 			max: 10485760
@@ -276,7 +256,7 @@ module.exports = {
 			email: 100,
 			subject: 100,
 			postpassword: 100,
-			message: 4000,
+			message: 20000,
 			//reports/post actions
 			report_reason: 100,
 			ban_reason: 100,
@@ -304,21 +284,22 @@ module.exports = {
 			]
 		},
 		customPages: {
-			max: 5, //max number of custom pages per board
+			max: 10, //max number of custom pages per board
 			maxLength: 10000, //max number of characters to allow per page
 		}
 	},
 
 	//default frontend script settings
 	frontendScriptDefault: {
-		heightUnlimit: false, //allow images to expand taller than window height
+		embedsEnabled: true, //show [embed] toggle next to embeddable video links
+		heightUnlimit: false, //allow images taller than window height
 		hideRecursive: true, //hide replies to hidden OPs
 		crispImages: false, //use crisp/pixelated image rendering
 		hideThumbnails: false, //hide thumbnails
 		nonColorIds: false, //dont color ids
 		alwaysShowSpoilers: false , //always reveal spoiler text
 		hidePostStubs: false, //hide hidden posts completely, dont even show it minimized
-		smoothScrolling: false, //smooth scrolling. annoying for chrome users on long threads
+		smoothScrolling: true, //smooth scrolling. annoying for chrome users on long threads
 		defaultVolume: 100, //default video/audio volume
 		loop: true, //looping video/audio
 		imageLoadingBars: true, //show loading bar for images, changes behaviour of right click save/open
@@ -335,7 +316,7 @@ module.exports = {
 
 	//default board settings when a board is created
 	boardDefaults: {
-		theme: 'lain',
+		theme: 'yotsuba-b',
 		codeTheme: 'ir-black',
 		sfw: false, //safe for work board
 		lockMode: 0, //board lock mode
@@ -344,7 +325,7 @@ module.exports = {
 		unlistedLocal: false, //board hidden from on-site board list and frontpage
 		unlistedWebring: false, //board hidden from webring
 		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts
-		tphTrigger: 10, //number of threads in an hour before trigger action is activated
+		tphTrigger: 10, //numebr of threads in an hour before trigger action is activated
 		pphTrigger: 50, //number of posts in an hour before ^
 		//0=none, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
 		tphTriggerAction: 1,
@@ -359,11 +340,11 @@ module.exports = {
 		flags: false, //show geo flags, requires nginx setup
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
-		userPostUnlink: true, //allow user to unlink files from their post
+		userPostUnlink: true, //alow user to unlink files fomr their post
 		threadLimit: 200,
-		replyLimit: 500,
+		replyLimit: 1000,
 		bumpLimit: 500,
-		maxFiles: 1,
+		maxFiles: 5,
 		forceReplyMessage: false,
 		forceReplyFile: false,
 		forceThreadMessage: false,
@@ -372,8 +353,8 @@ module.exports = {
 		disableReplySubject: false,
 		minThreadMessageLength: 0,
 		minReplyMessageLength: 0,
-		maxThreadMessageLength: 4000,
-		maxReplyMessageLength: 4000,
+		maxThreadMessageLength: 20000,
+		maxReplyMessageLength: 20000,
 		defaultName: 'Anon',
 		customCSS: null,
 		blockedCountries: [], //2 char ISO country codes to block
@@ -394,5 +375,14 @@ module.exports = {
 			other: false
 		}
 	},
+
+	following: [],
+	blacklist: [],
+	logo: [],
+	proxy: {
+		enabled: false,
+		address: ''
+	}
+
 
 };

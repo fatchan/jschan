@@ -2,13 +2,14 @@
 
 const { Bypass } = require(__dirname+'/../../db/')
 	, { ObjectId } = require(__dirname+'/../../db/db.js')
-	, { secureCookies, blockBypass } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, deleteTempFiles = require(__dirname+'/../files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../dynamic.js')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {
 
+	const { secureCookies, blockBypass } = config.get;
 	if (res.locals.preFetchedBypassId //if they already have a bypass
 		|| (!blockBypass.enabled //or if block bypass isnt enabled
 			&& (!blockBypass.forceAnonymizers //and we dont force it for anonymizer

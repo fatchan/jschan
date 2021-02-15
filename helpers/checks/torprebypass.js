@@ -2,7 +2,7 @@
 
 const { Bypass } = require(__dirname+'/../../db/')
 	, { ObjectId } = require(__dirname+'/../../db/db.js')
-	, { secureCookies, blockBypass } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, checkCaptcha = require(__dirname+'/../checks/captcha.js')
 	, remove = require('fs-extra').remove
 	, uploadDirectory = require(__dirname+'/../files/uploadDirectory.js')
@@ -19,6 +19,7 @@ module.exports = async (req, res, next) => {
 
 	let bypassId = req.signedCookies.bypassid;
 
+	const { secureCookies, blockBypass } = config.get;
 	if (blockBypass.enabled || blockBypass.forceAnonymizers) {
 		const input = req.body.captcha;
 		const captchaId = req.cookies.captchaid;

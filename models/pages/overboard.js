@@ -2,10 +2,11 @@
 
 const { Posts, Boards } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../redis.js')
-	, { overboardLimit } = require(__dirname+'/../../configs/main.js');
+	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res, next) => {
 
+	const { overboardLimit } = config.get;
 	let threads = (await cache.get('overboard')) || [];
 	if (!threads || threads.length === 0) {
 		try {

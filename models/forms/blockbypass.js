@@ -2,11 +2,12 @@
 
 const { Bypass } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { secureCookies, blockBypass } = require(__dirname+'/../../configs/main.js')
+	, config = require(__dirname+'/../../config.js')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {
 
+	const { secureCookies, blockBypass } = config.get;
 	const bypass = await Bypass.getBypass();
 	const bypassId = bypass.insertedId;
 	res.locals.blockBypass = bypass.ops[0];

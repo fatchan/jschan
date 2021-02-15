@@ -3,12 +3,13 @@
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, pruneFiles = require(__dirname+'/../../schedules/prune.js')
-	, { pruneImmediately, globalLimits, disableAnonymizerFilePosting } = require(__dirname+'/../../configs/main.js')
+	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
+	, config = require(__dirname+'/../../config.js')
 	, { Files } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
 
+	const { pruneImmediately, globalLimits, disableAnonymizerFilePosting } = config.get;
 	const errors = [];
 
 	// even if force file and message are off, the post must contain one of either.
