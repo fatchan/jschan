@@ -10,6 +10,12 @@ table.boardtable th:nth-child(1) {
 .footer {
 	line-height: 1.5em;
 }
+.corner-logo {
+	background-image : url(/file/mascotcorner.png);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: bottom right;
+}
 @media only screen and (max-width: 480px) {
 	.footer {
 		padding-bottom: 3em;
