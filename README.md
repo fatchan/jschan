@@ -103,7 +103,6 @@ $ sudo sed -i 's/domain.com/your.domain.com/g' /etc/nginx/sites-available/DOMAIN
 - For post flags to work, [follow this guide](http://archive.is/2SMOb) to setup the [legacy GeoIP database](https://www.miyuru.lk/geoiplegacy) and add these directives to the http block in `/etc/nginx/nginx.conf`:
 ```
 geoip_country /usr/share/GeoIP/GeoIP.dat;
-geoip_city /usr/share/GeoIP/GeoIPCity.dat;
 ```
 If your nginx doesn't have the necessary module by default, or is using v2 instead, find your own guide.
 
