@@ -2,7 +2,7 @@
 
 const secrets = require(__dirname+'/../configs/secrets.js')
 	, { MongoClient, ObjectId, Int32 } = require('mongodb')
-	, { migrateVersion } = require(__dirname+'/../package.json')
+	, { version } = require(__dirname+'/../package.json')
 
 module.exports = {
 
@@ -22,7 +22,7 @@ module.exports = {
 			.collection('version')
 			.findOne({ '_id': 'version' })
 			.then(res => res.version);
-		if (currentVersion < migrateVersion) {
+		if (currentVersion < version) {
 			console.error('Your migration version is out-of-date. Run `gulp migrate` to update.');
 			process.exit(1);
 		}

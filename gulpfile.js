@@ -15,7 +15,7 @@ const config = require(__dirname+'/config.js')
 	, del = require('del')
 	, pug = require('pug')
 	, gulppug = require('gulp-pug')
-	, { migrateVersion } = require(__dirname+'/package.json')
+	, { version } = require(__dirname+'/package.json')
 	, { randomBytes } = require('crypto')
 	, Redis = require(__dirname+'/redis.js')
 	, paths = {
@@ -139,7 +139,7 @@ async function wipe() {
 		'_id': 'version'
 	}, {
 		'_id': 'version',
-		'version': migrateVersion
+		'version': version
 	}, {
 		upsert: true
 	});
@@ -368,7 +368,7 @@ async function migrate() {
 		'_id': 'version'
 	}).then(res => res ? res.version : '0.0.0'); // 0.0.0 for old versions
 
-	if (semver.lt(currentVersion, migrateVersion)) {
+	if (semver.lt(currentVersion, version)) {
 		console.log(`Current version: ${currentVersion}`);
 		const migrations = require(__dirname+'/migrations/');
 		const migrationVersions = Object.keys(migrations)
@@ -394,7 +394,7 @@ async function migrate() {
 			console.log(`Finished migrating to version ${ver}`);
 		}
 	} else {
-		console.log(`Migration not required, you are already on the current version (${migrateVersion})`)
+		console.log(`Migration not required, you are already on the current version (${version})`)
 	}
 
 	await Mongo.client.close();
