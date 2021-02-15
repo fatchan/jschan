@@ -304,7 +304,7 @@ block content
 					p Early 404: When a new thread is posted, delete any existing threads with less than #{early404Replies} replies beyond the first 1/#{early404Fraction} of threads.
 					p Disable anonymizer file posting: Prevent users posting images through anonymizers such as Tor hidden services, lokinet SNApps or i2p eepsites.
 					p Blocked Countries: Block country codes (based on geo Ip data) from posting.
-					p Filters: Newline separated list of words or phrases to match in posts. Checks name, message, filenames, subject, and filenames.
+					p Filters: Newline separated list of words or phrases to match in posts. Checks name, message, email, subject, and filenames.
 					p Strict Filtering: More aggressively match filters, by normalising the input compared against the filters.
 					p Filter Mode: What to do when a post matches a filter.
 					p Filter Auto Ban Duration: How long to automatically ban for when filter mode is set to ban. Input the duration in time format described in the #[a(href='#moderation') moderation section].
