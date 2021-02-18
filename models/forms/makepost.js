@@ -26,6 +26,7 @@ const path = require('path')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, config = require(__dirname+'/../../config.js')
+	, { postPasswordSecret } = require(__dirname+'/../../configs/secrets.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js');
@@ -33,7 +34,7 @@ const path = require('path')
 module.exports = async (req, res, next) => {
 
 	const { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		postPasswordSecret, strictFiltering, animatedGifThumbnails, audioThumbnails } = config.get;
+		strictFiltering, animatedGifThumbnails, audioThumbnails } = config.get;
 
 	//spam/flood check
 	const flood = await spamCheck(req, res);
