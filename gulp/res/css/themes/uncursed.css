@@ -1,0 +1,41 @@
+/*clear*/
+:root {
+	--icon-color: invert(96%) sepia(63%) saturate(2060%) hue-rotate(97deg) brightness(104%) contrast(103%);
+	--alt-label-color: #0a0a0a;
+	--alt-font-color: #ccc;
+	--background-top: #111;
+	--background-rest: #111;
+	--navbar-color: #222;
+	--post-color: #222;
+	--post-outline-color: #2d2d2d;
+	--label-color: #0a0a0a;
+	--box-border-color: #1f1f1f;
+	--darken: #0000000f;
+	--highlighted-post-color: #112534;
+	--highlighted-post-outline-color: #2d2d2d;
+	--board-title: #b90000;
+	--hr: #222;
+	--font-color: #ccc;
+	--name-color: #ccc;
+	--capcode-color: #0ff;
+	--subject-color: ffb566;
+	--link-color: #fff;
+	--post-link-color: ffff74;
+	--link-hover: #58bcff;
+	--input-borders: #2d2d2d;
+	--input-color: #ccc;
+	--input-background: #0a0a0a;
+	--dice-color: maroon;
+	--title-color: #d70000;
+	--greentext-color: #8766dd;
+	--pinktext-color:#1f8d80;
+}
+.post-info, .post-container:target .post-info, .post-container.highlighted .post-info {
+	background:none!important;border:none!important
+}
+tr:nth-child(2n+1) {
+	background: unset;
+}
+th {
+    background: var(--navbar-color)!important;
+}

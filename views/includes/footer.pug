@@ -1,5 +1,5 @@
 unless minimal
-	.footer#bottom
+	small.footer#bottom
 		| • 
 		a(href='/news.html') news
 		|  • 
@@ -7,12 +7,11 @@ unless minimal
 		|  • 
 		a(href='/faq.html') faq
 		|  • 
-		a(href='https://status.fatpeople.lol/goto/8_-hNsaGk') status
-		|  • 
 		a(href='/transparency.html') transparency
+		|  • 
+		a(href='https://status.fatpeople.lol/goto/8_-hNsaGk') status
 		|  •  
 		div
-			small
-				a(href='https://gitgud.io/fatchan/jschan/') jschan
-				|  #{version}-#{commit}
+			a(href='https://gitgud.io/fatchan/jschan/') jschan
+			|  #{version}
 script(src=`/js/render.js?v=${commit}`)
