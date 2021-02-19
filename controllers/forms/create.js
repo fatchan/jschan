@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
 	if (enableUserBoardCreation === false && res.locals.permLevel > 1) {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
-			'error': 'User board creation is currently disabled',
+			'error': 'User board creation is currently disabled. Request boards on /t/.',
 			'redirect': '/create.html'
 		});
 	}
