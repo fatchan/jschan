@@ -299,6 +299,11 @@ p {
 	padding: 2px;
 }
 
+.catalog-thumb.attachmentimg, .catalog-thumb.audioimg, .catalog-thumb.spoilerimg {
+	height: 64px;
+	width: 64px;
+}
+
 .upload-list {
 	max-height: 75px;
 	overflow-x: hidden;
