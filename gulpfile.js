@@ -146,15 +146,18 @@ async function wipe() {
 
 	await Mongo.client.close();
 
-	//delete all the static files
-	return Promise.all([
+	await Promise.all([
+		del([ 'static/file/*' ]),
+		del([ 'static/captcha/*' ]),
 		del([ 'static/html/*' ]),
 		del([ 'static/json/*' ]),
 		del([ 'static/banner/*' ]),
-		del([ 'static/captcha/*' ]),
-		del([ 'static/file/*' ]),
 		del([ 'static/css/*' ]),
+	]);
+
+	return Promise.all([
 		fs.ensureDir(`${uploadDirectory}/captcha`),
+		fs.ensureDir(`${uploadDirectory}/file/thumb`),
 	]);
 
 }
