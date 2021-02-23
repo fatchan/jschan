@@ -266,7 +266,9 @@ async function custompages() {
 			googleRecaptchaSiteKey: google.siteKey,
 			hcaptchaSitekey: hcaptcha.siteKey,
 			captchaGridSize: config.get.captchaOptions.grid.size,
+			globalAnnouncement: config.get.globalAnnouncement,
 			commit,
+			version,
 		}
 	}))
 	.pipe(gulp.dest(paths.pug.dest));
