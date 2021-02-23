@@ -81,27 +81,41 @@ module.exports = (req, res, next) => {
 		}
 	}
 
-	//convert checked reports to number
-	if (req.body.checkedposts) {
-		req.body.checkedposts = req.body.checkedposts.map(Number);
+	try {
+		//ids for newspost editing
+		if (req.params.newsid) {
+			req.params.newsid = ObjectId(req.params.newsid);
+		}
+		if (req.body.news_id) {
+			req.body.news_id = ObjectId(req.body.news_id);
+		}
+		//convert checked reports to number
+		if (req.body.checkedposts) {
+			req.body.checkedposts = req.body.checkedposts.map(Number);
+		}
+		//convert checked global reports to mongoid
+		if (req.body.globalcheckedposts) {
+			req.body.globalcheckedposts = req.body.globalcheckedposts.map(ObjectId)
+		}
+		if (req.body.checkednews) {
+			req.body.checkednews = req.body.checkednews.map(ObjectId)
+		}
+		//convert checked bans to mongoid
+		if (req.body.checkedbans) {
+			req.body.checkedbans = req.body.checkedbans.map(ObjectId)
+		}
+		/*
+		//convert checked reports to mongoid
+		if (req.body.checkedreports) {
+			req.body.checkedreports = req.body.checkedreports.map(ObjectId)
+		}
+		*/
+	} catch (e) {
+		return dynamicResponse(req, res, 400, 'message', {
+			'title': 'Bad request',
+			'message': 'Malformed input'
+		});
 	}
-	//convert checked global reports to mongoid
-	if (req.body.globalcheckedposts) {
-		req.body.globalcheckedposts = req.body.globalcheckedposts.map(ObjectId)
-	}
-	if (req.body.checkednews) {
-		req.body.checkednews = req.body.checkednews.map(ObjectId)
-	}
-	//convert checked bans to mongoid
-	if (req.body.checkedbans) {
-		req.body.checkedbans = req.body.checkedbans.map(ObjectId)
-	}
-/*
-	//convert checked reports to mongoid
-	if (req.body.checkedreports) {
-		req.body.checkedreports = req.body.checkedreports.map(ObjectId)
-	}
-*/
 
 	//convert duration string to time in ms
 	for (let i = 0; i < timeFields.length; i++) {
@@ -136,17 +150,11 @@ module.exports = (req, res, next) => {
 		}
 	}
 
-	//ids for newspost editing
-	if (req.params.newsid) {
-		req.params.newsid = ObjectId(req.params.newsid);
-	}
-	if (req.body.news_id) {
-		req.body.news_id = ObjectId(req.body.news_id);
-	}
 	//thread id
 	if (req.params.id) {
 		req.params.id = +req.params.id;
 	}
+
 	//moglog date
 	if (req.params.date) {
 		let [ month, day, year ] = req.params.date.split('-');
