@@ -118,7 +118,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 			allContents += concatContents.replace(/[^a-zA-Z0-9.-]+/gm, ''); //removing anything thats not alphamnumeric or . and -
 		}
 		//global filters
-		if (globalSettings && globalFilters.length > 0 && globalFilterMode > 0) {
+		if (globalFilters && globalFilters.length > 0 && globalFilterMode > 0) {
 			hitGlobalFilter = globalFilters.some(filter => { return allContents.includes(filter.toLowerCase()) });
 		}
 		//board-specific filters (doesnt use strict filtering)
