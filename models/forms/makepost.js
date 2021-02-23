@@ -458,7 +458,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		});
 	}
 
-	const postId = await Posts.insertOne(res.locals.board, data, thread, res.locals.anonymizer);
+	const { postId, postMongoId } = await Posts.insertOne(res.locals.board, data, thread, res.locals.anonymizer);
 
 	let enableCaptcha = false; //make this returned from some function, refactor and move the next section to another file
 	const pphTriggerActive = (pphTriggerAction > 0 && pphTrigger > 0);
@@ -561,6 +561,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	}
 
 	const projectedPost = {
+		'_id': postMongoId,
 		'date': data.date,
 		'name': data.name,
 		'country': data.country,
