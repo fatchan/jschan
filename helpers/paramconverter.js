@@ -27,7 +27,9 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 		'board_defaults_tph_trigger_action', 'board_defaults_pph_trigger_action', 'board_defaults_captcha_reset', 'board_defaults_lock_reset', 'board_defaults_thread_limit',
 		'board_defaults_reply_limit', 'board_defaults_bump_limit', 'board_defaults_max_files', 'board_defaults_min_thread_message_length',
 		'board_defaults_min_reply_message_length', 'board_defaults_max_thread_message_length', 'board_defaults_max_reply_message_length', 'board_defaults_filter_mode',
-		] //convert these to numbers before they hit our routes
+		'perm_levels_markdown_pink', 'perm_levels_markdown_green', 'perm_levels_markdown_bold', 'perm_levels_markdown_underline', 'perm_levels_markdown_strike',
+		'perm_levels_markdown_italic', 'perm_levels_markdown_title', 'perm_levels_markdown_spoiler', 'perm_levels_markdown_mono', 'perm_levels_markdown_code',
+		'perm_levels_markdown_link', 'perm_levels_markdown_detected', 'perm_levels_markdown_dice'] //convert these to numbers before they hit our routes
 	, timeFields = ['ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time']
 	, timeFieldRegex = /^(?<YEAR>[\d]+y)?(?<MONTH>[\d]+mo)?(?<WEEK>[\d]+w)?(?<DAY>[\d]+d)?(?<HOUR>[\d]+h)?(?<MINUTE>[\d]+m)?(?<SECOND>[\d]+s)?$/
 	, timeUtils = require(__dirname+'/timeutils.js')

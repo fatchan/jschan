@@ -125,6 +125,15 @@ block content
 						.label Allow User Board Creation
 						label.postform-style.ph-5
 							input(type='checkbox', name='enable_user_board_creation' value='true' checked=settings.enableUserBoardCreation)
+					each markdownName in Object.keys(settings.permLevels.markdown)
+						.row
+							.label #{markdownName} Markdown
+							select(name=`perm_levels_markdown_${markdownName}`)
+								option(value='0', selected=settings.permLevels.markdown[markdownName] === 0) Admin
+								option(value='1', selected=settings.permLevels.markdown[markdownName] === 1) Global Staff
+								option(value='2', selected=settings.permLevels.markdown[markdownName] === 2) Board Owner
+								option(value='3', selected=settings.permLevels.markdown[markdownName] === 3) Board Mod
+								option(value='4', selected=settings.permLevels.markdown[markdownName] === 4) Everybody
 					.row
 						.label Default Ban Duration
 						input(type='number', name='default_ban_duration',  placeholder='e.g. 1w', value=settings.defaultBanDuration)

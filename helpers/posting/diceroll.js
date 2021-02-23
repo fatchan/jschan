@@ -30,7 +30,7 @@ module.exports = {
 		return `${matchWithoutValue}=${sum}${value ? value : ''}`;
 	},
 
-	markdown: (match, numdice, numsides, operator, modifier, value) => {
+	markdown: (permLevel, match, numdice, numsides, operator, modifier, value) => {
 		numdice = parseInt(numdice);
 		numsides = parseInt(numsides);
 		value = parseInt(value);

@@ -413,7 +413,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		res.locals.board.settings, res.locals.board.owner, res.locals.user ? res.locals.user.username : null);
 	//get message, quotes and crossquote array
 	const nomarkup = prepareMarkdown(req.body.message, true);
-	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread, res.locals.permLevel < 4);
+	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread, res.locals.permLevel);
 
 	//build post data for db. for some reason all the property names are lower case :^)
 	const data = {
