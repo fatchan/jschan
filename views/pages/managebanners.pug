@@ -10,7 +10,7 @@ block content
 	br
 	+managenav('banners')
 	hr(size=1)
-	h4.no-m-p Add Banners:
+	h4.no-m-p Add Banners (Max #{globalLimits.bannerFiles.total})
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/addbanners`, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
