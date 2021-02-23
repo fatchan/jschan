@@ -17,6 +17,15 @@ module.exports = {
 		module.exports.db = module.exports.client.db(secrets.dbName);
 	},
 
+	//do i really want a separate fuckin file just for these? lol
+	getConfig: () => {
+		return module.exports.db.collection('globalsettings').findOne({ _id: 'globalsettings' });
+	},
+
+	setConfig: (newSettings) => {
+		return module.exports.db.collection('globalsettings').replaceOne({ _id: 'globalsettings' }, newSettings, { upsert: true });
+	},
+
 	checkVersion: async() => {
 		const currentVersion = await module.exports.db
 			.collection('version')

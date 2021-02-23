@@ -1,11 +1,13 @@
 'use strict';
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+	, { setConfig } = require(__dirname+'/../../db/db.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, redis = require(__dirname+'/../../redis.js')
 	, config = require(__dirname+'/../../config.js')
+	, Mongo = require(__dirname+'/../../db/db.js')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
@@ -280,7 +282,7 @@ module.exports = async (req, res, next) => {
 		},
 	};
 
-	redis.set('globalsettings', newSettings);
+	await Mongo.setConfig(newSettings);
 
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {

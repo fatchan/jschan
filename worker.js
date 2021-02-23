@@ -5,7 +5,6 @@ process
 	.on('unhandledRejection', console.error);
 
 const Mongo = require(__dirname+'/db/db.js')
-	, config = require(__dirname+'/config.js');
 
 (async () => {
 

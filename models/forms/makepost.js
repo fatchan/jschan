@@ -104,7 +104,8 @@ module.exports = async (req, res, next) => {
 	}
 	//filters
 	if (res.locals.permLevel > 1) { //global staff bypass filters
-		const globalSettings = await cache.get('globalsettings');
+		const { filters: globalFilters, filterMode: globalFilterMode,
+			filterBanDuration: globalFilterBanDuration } = config.get;
 		let hitGlobalFilter = false
 			, hitLocalFilter = false
 			, ban;
@@ -117,8 +118,8 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 			allContents += concatContents.replace(/[^a-zA-Z0-9.-]+/gm, ''); //removing anything thats not alphamnumeric or . and -
 		}
 		//global filters
-		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
-			hitGlobalFilter = globalSettings.filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
+		if (globalSettings && globalFilters.length > 0 && globalFilterMode > 0) {
+			hitGlobalFilter = globalFilters.some(filter => { return allContents.includes(filter.toLowerCase()) });
 		}
 		//board-specific filters (doesnt use strict filtering)
 		if (!hitGlobalFilter && res.locals.permLevel >= 4 && filterMode > 0 && filters && filters.length > 0) {
@@ -127,7 +128,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		}
 		if (hitGlobalFilter || hitLocalFilter) {
 			await deleteTempFiles(req).catch(e => console.error);
-			const useFilterMode = hitGlobalFilter ? globalSettings.filterMode : filterMode; //global override local filter
+			const useFilterMode = hitGlobalFilter ? globalFilterMode : filterMode; //global override local filter
 			if (useFilterMode === 1) {
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
@@ -135,7 +136,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 					'redirect': redirect
 				});
 			} else { //otherwise filter mode must be 2
-				const useFilterBanDuration = hitGlobalFilter ? globalSettings.filterBanDuration : filterBanDuration;
+				const useFilterBanDuration = hitGlobalFilter ? globalFilterBanDuration : filterBanDuration;
 				const banBoard = hitGlobalFilter ? null : res.locals.board._id;
 				const banDate = new Date();
 				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
