@@ -13,7 +13,7 @@
 	--darken: #0000000f;
 	--highlighted-post-color: #112534;
 	--highlighted-post-outline-color: #2d2d2d;
-	--board-title: #b90000;
+	--board-title: #0ff;
 	--hr: #222;
 	--font-color: #ccc;
 	--name-color: #ccc;
@@ -26,7 +26,7 @@
 	--input-color: #ccc;
 	--input-background: #0a0a0a;
 	--dice-color: maroon;
-	--title-color: #d70000;
+	--title-color: #0ff;
 	--greentext-color: #8766dd;
 	--pinktext-color:#1f8d80;
 }
@@ -37,5 +37,5 @@ tr:nth-child(2n+1) {
 	background: unset;
 }
 th {
-    background: var(--navbar-color)!important;
+	background: var(--navbar-color)!important;
 }

@@ -41,8 +41,15 @@ tr:nth-child(2n+1) {
 	background: unset;
 }
 th {
-    background: var(--navbar-color)!important;
+	background: var(--navbar-color)!important;
 }
 .flag {
 	filter: invert(1);
+}
+.corner-logo {
+	filter:invert(1);
+	color:#333;
+}
+.corner-logo a {
+	color:black;
 }
