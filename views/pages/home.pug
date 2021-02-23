@@ -41,6 +41,14 @@ block content
 							|  Lokinet SNApp
 						| 
 						a(href='irc://irc.fatpeople.lol:+6697/fatchan') 💬 IRC
+	if globalAnnouncement.markdown
+		.table-container.flex-center.mv-5
+			table
+				tr
+					th.alt(colspan=3) Global Announcement
+				tr
+					td
+						pre.post-message.no-m-p.text-center !{globalAnnouncement.markdown}
 	if recentNews && recentNews.length > 0
 		.table-container.flex-center.mv-5
 			table.newstable
@@ -55,7 +63,6 @@ block content
 						td
 							- const newsDate = new Date(post.date);
 							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
-
 	if boards && boards.length > 0
 		+boardtable(true, false)
 			each board in boards
@@ -75,6 +82,17 @@ block content
 				tr
 					td(colspan=5)
 						a.bold(href='/boards.html') More Boards
+		.table-container.flex-center.mv-10.text-center
+			table(style='max-width:450px')
+				tr
+					th Want your own board?
+				tr
+					td
+						pre.no-m-p
+							a(href='/register.html') Register an account
+							| , then 
+							a(href='/t/thread/1.html#postform') request a board
+							| .
 		.table-container.flex-center.mv-10.text-center
 			table(style='max-width:450px')
 				tr
