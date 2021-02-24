@@ -18,6 +18,7 @@ const config = require(__dirname+'/config.js')
 	, { version } = require(__dirname+'/package.json')
 	, { randomBytes } = require('crypto')
 	, Redis = require(__dirname+'/redis.js')
+	, Mongo = require(__dirname+'/db/db.js')
 	, paths = {
 		styles: {
 			src: 'gulp/res/css/',
@@ -43,37 +44,18 @@ const config = require(__dirname+'/config.js')
 
 
 async function password() {
-
-	const Mongo = require(__dirname+'/db/db.js')
-	const Redis = require(__dirname+'/redis.js')
-	await Mongo.connect();
-
 	const { Accounts } = require(__dirname+'/db/');
-
 	const randomPassword = randomBytes(20).toString('base64')
 	await Accounts.changePassword('admin', randomPassword);
 	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
-
-	Redis.close();
-	return Mongo.client.close();
-
 }
 
 async function ips() {
-	const Mongo = require(__dirname+'/db/db.js')
-	await Mongo.connect();
-	const Redis = require(__dirname+'/redis.js')
 	const { func: ipSchedule } = require(__dirname+'/schedules/tasks/ips.js');
 	await ipSchedule();
-	Redis.close();
-	return Mongo.client.close();
 }
 
 async function wipe() {
-
-	const Mongo = require(__dirname+'/db/db.js')
-	const Redis = require(__dirname+'/redis.js')
-	await Mongo.connect();
 	const db = Mongo.db;
 
 	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
@@ -144,8 +126,6 @@ async function wipe() {
 		upsert: true
 	});
 
-	await Mongo.client.close();
-
 	await Promise.all([
 		del([ 'static/file/*' ]),
 		del([ 'static/captcha/*' ]),
@@ -164,7 +144,6 @@ async function wipe() {
 
 //update the css file
 async function css() {
-	await config.load();
 	try {
 		//a little more configurable
 		let bypassHeight = (config.get.captchaOptions.type === 'google' || config.get.captchaOptions.type === 'hcaptcha')
@@ -246,7 +225,6 @@ function icons() {
 }
 
 async function cache() {
-	const Redis = require(__dirname+'/redis.js')
 	await Promise.all([
 		Redis.deletePattern('boards:listed'),
 		Redis.deletePattern('board:*'),
@@ -257,7 +235,6 @@ async function cache() {
 		Redis.deletePattern('overboard'),
 		Redis.deletePattern('catalog'),
 	]);
-	Redis.close();
 }
 
 function deletehtml() {
@@ -265,7 +242,6 @@ function deletehtml() {
 }
 
 async function custompages() {
-	await config.load();
 	const formatSize = require(__dirname+'/helpers/files/formatsize.js');
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
@@ -290,14 +266,15 @@ async function custompages() {
 			googleRecaptchaSiteKey: google.siteKey,
 			hcaptchaSitekey: hcaptcha.siteKey,
 			captchaGridSize: config.get.captchaOptions.grid.size,
+			globalAnnouncement: config.get.globalAnnouncement,
 			commit,
+			version,
 		}
 	}))
 	.pipe(gulp.dest(paths.pug.dest));
 }
 
 async function scripts() {
-	await config.load();
 	const { themes, codeThemes } = require(__dirname+'/helpers/themes.js');
 	try {
 		const locals = `const themes = ['${themes.join("', '")}'];
@@ -360,10 +337,6 @@ const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 }
 
 async function migrate() {
-
-	const Mongo = require(__dirname+'/db/db.js')
-	const Redis = require(__dirname+'/redis.js')
-	await Mongo.connect();
 	const db = Mongo.db;
 
 	//get current version from db if present (set in 'reset' task in recent versions)
@@ -393,49 +366,47 @@ async function migrate() {
 			} catch (e) {
 				console.error(e);
 				console.warn(`Migration to ${ver} encountered an error`);
+				process.exit(1);
 			}
 			console.log(`Finished migrating to version ${ver}`);
 		}
 	} else {
 		console.log(`Migration not required, you are already on the current version (${version})`)
 	}
-
-	await Mongo.client.close();
-	Redis.close();
-
-}
-
-async function closeRedis() {
-	Redis.close();
 }
 
 async function init() {
-	//puts default configs into redis during setup
 	const defaultConfig = require(__dirname+'/configs/template.js.example');
-	const Redis = require(__dirname+'/redis.js')
-	const globalSettings = await Redis.get('globalsettings');
+	await Mongo.connect();
+	const globalSettings = await Mongo.getConfig();
 	if (!globalSettings) {
-		await Redis.set('globalsettings', defaultConfig);
+		await Mongo.setConfig(defaultConfig);
+	}
+	await config.load();
+}
+
+async function closeConnections() {
+	Redis.close();
+	if (Mongo.client) {
+		await Mongo.client.close();
 	}
 }
 
-const build = gulp.series(init, gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages)), closeRedis);
-const reset = gulp.series(wipe, build);
-const html = gulp.series(deletehtml, custompages, closeRedis);
+const build = gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages));
 
+//godhelpme
 module.exports = {
-	html,
-	css: gulp.series(css, closeRedis),
-	images,
-	icons,
-	reset,
-	custompages: gulp.series(custompages, closeRedis),
-	scripts: gulp.series(scripts, closeRedis),
-	wipe: gulp.series(wipe, closeRedis),
-	cache,
-	migrate,
-	password,
-	ips,
+	html: gulp.series(init, deletehtml, custompages, closeConnections),
+	css: gulp.series(init, css, closeConnections),
+	images: gulp.series(images, closeConnections),
+	icons: gulp.series(icons, closeConnections),
+	reset: gulp.series(init, wipe, build, closeConnections),
+	custompages: gulp.series(init, custompages, closeConnections),
+	scripts: gulp.series(init, scripts, closeConnections),
+	cache: gulp.series(cache, closeConnections),
+	migrate: gulp.series(init, migrate, closeConnections),
+	password: gulp.series(init, password, closeConnections),
+	ips: gulp.series(init, ips, closeConnections),
 	rebuild: [deletehtml, css, scripts, custompages],
-	default: build,
+	default: gulp.series(init, build, closeConnections),
 };

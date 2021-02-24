@@ -7,7 +7,6 @@ const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
 	, config = require(__dirname+'/../../config.js')
-	, cache = require(__dirname+'/../../redis.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../helpers/tasks.js')
@@ -27,7 +26,7 @@ todo: handle some more situations
 
 	//filters
 	if (res.locals.permLevel > 1) { //global staff bypass filters for edit
-		const globalSettings = await cache.get('globalsettings');
+		const globalSettings = config.get;
 		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
 			let hitGlobalFilter = false
 				, ban
@@ -85,7 +84,7 @@ todo: handle some more situations
 		board.settings, board.owner, res.locals.user ? res.locals.user.username : null);
 	//new message and quotes
 	const nomarkup = prepareMarkdown(req.body.message, false);
-	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread, true);
+	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread, res.locals.permLevel);
 	//todo: email and subject (probably dont need any transformation since staff bypass limits on forceanon, and it doesnt have to account for sage/etc
 
 	//intersection/difference of quotes sets for linking and unlinking

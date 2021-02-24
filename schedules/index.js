@@ -12,7 +12,6 @@ const Mongo = require(__dirname+'/../db/db.js')
 
 	await Mongo.connect();
 	await Mongo.checkVersion();
-	await config.load();
 
 	//start all the scheduled tasks
 	const schedules = require(__dirname+'/tasks/index.js');

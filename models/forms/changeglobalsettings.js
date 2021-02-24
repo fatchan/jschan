@@ -1,11 +1,13 @@
 'use strict';
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+	, { setConfig } = require(__dirname+'/../../db/db.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, redis = require(__dirname+'/../../redis.js')
 	, config = require(__dirname+'/../../config.js')
+	, Mongo = require(__dirname+'/../../db/db.js')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
@@ -19,7 +21,7 @@ module.exports = async (req, res, next) => {
 	const announcement = req.body.global_announcement === null ? null : prepareMarkdown(req.body.global_announcement, false);
 	let markdownAnnouncement = oldSettings.globalAnnouncement.markdown;
 	if (announcement !== oldSettings.globalAnnouncement.raw) {
-		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null, true))
+		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null, res.locals.permLevel))
 	}
 
 	const newSettings = {
@@ -75,6 +77,23 @@ module.exports = async (req, res, next) => {
 		},
 		ipHashPermLevel: numberSetting(req.body.ip_hash_perm_level, oldSettings.ipHashPermLevel),
 		deleteBoardPermLevel: numberSetting(req.body.delete_board_perm_level, oldSettings.deleteBoardPermLevel),
+		permLevels: {
+			markdown: {
+				green: numberSetting(req.body.perm_levels_markdown_green, oldSettings.permLevels.markdown.green),
+				pink: numberSetting(req.body.perm_levels_markdown_pink, oldSettings.permLevels.markdown.pink),
+				title: numberSetting(req.body.perm_levels_markdown_title, oldSettings.permLevels.markdown.title),
+				bold: numberSetting(req.body.perm_levels_markdown_bold, oldSettings.permLevels.markdown.bold),
+				underline: numberSetting(req.body.perm_levels_markdown_underline, oldSettings.permLevels.markdown.underline),
+				strike: numberSetting(req.body.perm_levels_markdown_strike, oldSettings.permLevels.markdown.strike),
+				italic: numberSetting(req.body.perm_levels_markdown_italic, oldSettings.permLevels.markdown.italic),
+				mono: numberSetting(req.body.perm_levels_markdown_mono, oldSettings.permLevels.markdown.mono),
+				code: numberSetting(req.body.perm_levels_markdown_code, oldSettings.permLevels.markdown.code),
+				spoiler: numberSetting(req.body.perm_levels_markdown_spoiler, oldSettings.permLevels.markdown.spoiler),
+				detected: numberSetting(req.body.perm_levels_markdown_detected, oldSettings.permLevels.markdown.detected),
+				link: numberSetting(req.body.perm_levels_markdown_link, oldSettings.permLevels.markdown.link),
+				dice: numberSetting(req.body.perm_levels_markdown_dice, oldSettings.permLevels.markdown.dice),
+			},
+		},
 		pruneImmediately: booleanSetting(req.body.prune_immediately, oldSettings.pruneImmediately),
 		hashImages: booleanSetting(req.body.hash_images, oldSettings.hashImages),
 		rateLimitCost: {
@@ -263,7 +282,7 @@ module.exports = async (req, res, next) => {
 		},
 	};
 
-	redis.set('globalsettings', newSettings);
+	await Mongo.setConfig(newSettings);
 
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {

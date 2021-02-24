@@ -9,7 +9,7 @@ const { CustomPages } = require(__dirname+'/../../db/')
 module.exports = async (req, res, next) => {
 
 	const message = prepareMarkdown(req.body.message, false);
-	const { message: markdownMessage } = await messageHandler(message, null, null, true);
+	const { message: markdownMessage } = await messageHandler(message, null, null, res.locals.permLevel);
 
 	const post = {
 		'board': req.params.board,

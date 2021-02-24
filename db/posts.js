@@ -492,7 +492,7 @@ module.exports = {
 			});
 		}
 
-		return postId;
+		return { postMongoId, postId };
 
 	},
 

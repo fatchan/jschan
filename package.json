@@ -1,6 +1,6 @@
 {
   "name": "jschan",
-  "version": "0.0.22",
+  "version": "0.1.0",
   "description": "",
   "main": "server.js",
   "dependencies": {
