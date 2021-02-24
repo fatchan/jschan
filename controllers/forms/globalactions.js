@@ -23,7 +23,9 @@ module.exports = async (req, res, next) => {
 		if (!req.body.global_report_ban) {
 			errors.push('Must select a report action if checked reports');
 		}
-		if (req.body.checkedreports.length > req.body.globalcheckedposts.length*5) {
+		if (!req.body.globalcheckedposts) {
+			errors.push('Must check parent post if checking reports for report action');
+		} else if (req.body.checkedreports.length > req.body.globalcheckedposts.length*5) {
 			//5 reports max per post
 			errors.push('Invalid number of reports checked');
 		}

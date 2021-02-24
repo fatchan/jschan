@@ -362,6 +362,7 @@ class formHandler {
 		} else {
 			this.fileLabelText.nodeValue = `${this.files.length} file${this.files.length > 1 ? 's' : ''} selected`;
 		}
+		this.fileInput.value = null;
 	}
 
 	//remove all files from this form
