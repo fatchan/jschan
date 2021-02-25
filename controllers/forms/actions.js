@@ -21,12 +21,15 @@ module.exports = async (req, res, next) => {
 		&& req.body.checkedposts.length > globalLimits.multiInputs.posts.staff) {
 		errors.push(`Must not select >${globalLimits.multiInputs.posts.staff} posts per request`);
 	}
+
 	//checked reports
 	if (req.body.checkedreports) {
 		if (!req.body.report_ban) {
 			errors.push('Must select a report action if checked reports');
 		}
-		if (req.body.checkedreports.length > req.body.checkedposts.length*5) {
+		if (!req.body.checkedposts) {
+			errors.push('Must check parent post if checking reports for report action');
+		} else if (req.body.checkedreports.length > req.body.checkedposts.length*5) {
 			//5 reports max per post
 			errors.push('Invalid number of reports checked');
 		}
