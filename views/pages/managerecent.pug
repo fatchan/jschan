@@ -17,8 +17,8 @@ block content
 				.dot#livecolor
 				|  Connecting... 
 				input.postform-style.ml-5.di#updatepostsbutton(type='button' value='Update')
-	hr(size=1)
 	form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
+		hr(size=1)
 		input(type='hidden' name='_csrf' value=csrf)
 		if posts.length === 0
 			p No posts.
