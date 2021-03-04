@@ -228,12 +228,12 @@ const moderatePost = (postContainer) => {
 	modalBg.style.display = 'unset';
 	modalBg.style.zIndex = 3;
 	const actionCaptcha = actionForm.querySelector('.captchafield');
-	captchaController.loadCaptcha(actionCaptcha);
 	const postCheck = postContainer.querySelector('.post-check');
 	Array.from(postCheck.form.elements)
 		.filter(e => e.name === 'checkedposts')
 		.forEach(e => e.checked = false);
 	postCheck.checked = true;
+	captchaController.loadCaptcha(actionCaptcha);
 }
 
 const postMenuChange = function(e) {
