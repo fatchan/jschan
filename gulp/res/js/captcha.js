@@ -101,6 +101,9 @@ class CaptchaController {
 
 	loadCaptcha(field) {
 		const captchaDiv = field.previousSibling;
+		if (captchaDiv.children.length > 0) {
+			return;
+		}
 		const captchaImg = document.createElement('img');
 		const refreshDiv = document.createElement('div');
 		captchaDiv.style.display = '';
