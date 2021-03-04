@@ -2,17 +2,21 @@ details.toggle-label#actionform
 	summary.toggle-summary Show Post Actions
 	.actions
 		h4.no-m-p Actions:
-		label
-			input.post-check(type='checkbox', name='delete' value='1')
-			| Delete Posts
-		label
-			input.post-check(type='checkbox', name='unlink_file' value='1')
-			| Unlink Files
-		label
-			input.post-check(type='checkbox', name='spoiler' value='1')
-			| Spoiler Files
-		label
-			input#password(type='password', name='postpassword', placeholder='Post password' autocomplete='off')
+		if board.settings.userPostDelete
+			label
+				input.post-check(type='checkbox', name='delete' value='1')
+				| Delete Posts
+		if board.settings.userPostUnlink
+			label
+				input.post-check(type='checkbox', name='unlink_file' value='1')
+				| Unlink Files
+		if board.settings.userPostSpoiler
+			label
+				input.post-check(type='checkbox', name='spoiler' value='1')
+				| Spoiler Files
+		if board.settings.userPostSpoiler || board.settings.userPostUnlink || board.settings.userPostDelete
+			label
+				input#password(type='password', name='postpassword', placeholder='Post password' autocomplete='off')
 		label
 			input.post-check(type='checkbox', name='report' value='1')
 			| Report
