@@ -64,6 +64,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 						option(value='fsub') Filter Subject
 					if post.tripcode
 						option(value='ftrip') Filter Tripcode
+					option(value='moderate') Moderate
 		.post-data
 			if post.files.length > 0
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))

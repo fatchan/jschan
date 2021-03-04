@@ -589,7 +589,7 @@ td pre {
 	right: 0;
 	left: 0;
 	background-color: #00000070;
-	z-index: 3;
+	z-index: 4;
 }
 
 .modal {
@@ -600,7 +600,7 @@ td pre {
 	position: fixed;
 	top: 3em;
 	background-color: var(--post-color);
-	z-index: 4;
+	z-index: 5;
 	box-sizing: border-box;
 	border: 5px solid var(--post-color);
 	align-self: center;
