@@ -16,12 +16,3 @@ table.boardtable th:nth-child(1) {
 	background-repeat: no-repeat;
 	background-position: bottom right;
 }
-@media only screen and (max-width: 480px) {
-	.footer {
-		padding-bottom: 3em;
-	}
-}
-.catalog-thumb.attachmentimg, .catalog-thumb.audioimg, .catalog-thumb.spoilerimg {
-	height: 64px;
-	width: 64px;
-}
