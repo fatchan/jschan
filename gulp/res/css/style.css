@@ -589,7 +589,7 @@ td pre {
 	right: 0;
 	left: 0;
 	background-color: #00000070;
-	z-index: 3;
+	z-index: 4;
 }
 
 .modal {
@@ -600,7 +600,7 @@ td pre {
 	position: fixed;
 	top: 3em;
 	background-color: var(--post-color);
-	z-index: 4;
+	z-index: 5;
 	box-sizing: border-box;
 	border: 5px solid var(--post-color);
 	align-self: center;
@@ -629,6 +629,41 @@ details.actions div {
 
 .actions label, .actions div {
 	padding: 2px 0;
+}
+
+.floatactions[open] {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: inline-flex;
+	flex-direction: column;
+	max-width: calc(100% - 10px);
+	max-height: calc(100% - 50px);
+	position: fixed;
+	background-color: var(--post-color);
+	z-index: 3;
+	box-sizing: border-box;
+	border: 5px solid var(--post-color);
+	align-self: center;
+	overflow: auto;
+}
+
+.floatactions[open] .toggle-summary {
+	list-style-type: none;
+	font-size: 0px;
+	font-weight: bold;
+	float: right;
+	overflow: hidden;
+	margin-right: 1px;
+}
+
+.floatactions[open] .toggle-summary:hover {
+	color: var(--link-hover);
+}
+
+.floatactions[open] .toggle-summary::before {
+	content: "X";
+	font-size: 10pt!important;
 }
 
 div.captchafield {

@@ -2,9 +2,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	const actionFooter = document.querySelector('summary.toggle-summary');
 	if (actionFooter) {
-		actionFooter.onclick = () => {
-			actionFooter.scrollIntoView();
-		}
+		actionFooter.addEventListener('click', (e) => {
+			if (!actionFooter.parentElement.classList.contains('floatactions')) {
+				actionFooter.scrollIntoView();
+			} else {
+				actionFooter.parentElement.classList.remove('floatactions');
+			}
+		}, false);
 	}
 
 	const volumeSetting = document.getElementById('volume-setting');
