@@ -200,11 +200,48 @@ const toggleFilter = (filterType, filterData, state) => {
 	updateSavedFilters();
 }
 
+//i guess this works, lmfao and saves ton of time
+let actionForm, modalBg, moderatingPost;
+const cancelModeratePost = () => {
+	if (!moderatingPost) {
+		return;
+	}
+	moderatingPost.querySelector('.post-check').checked = false;
+	moderatingPost.style.zIndex = 'unset';
+	if (moderatingPost.classList.contains('op')) {
+		moderatingPost.style.background = 'unset';
+	}
+	modalBg.style.display = 'none';
+	modalBg.style.zIndex = 4;
+	actionForm.removeAttribute('open');
+	moderatingPost = null;
+}
+const moderatePost = (postContainer) => {
+	moderatingPost = postContainer;
+	actionForm.classList.add('floatactions');
+	actionForm.setAttribute('open', 'open');
+	actionForm.style.zIndex = 3;
+	postContainer.style.zIndex = 3;
+	if (postContainer.classList.contains('op')) {
+		postContainer.style.background = 'var(--post-color)';
+	}
+	modalBg.style.display = 'unset';
+	modalBg.style.zIndex = 3;
+	const actionCaptcha = actionForm.querySelector('.captchafield');
+	const postCheck = postContainer.querySelector('.post-check');
+	Array.from(postCheck.form.elements)
+		.filter(e => e.name === 'checkedposts')
+		.forEach(e => e.checked = false);
+	postCheck.checked = true;
+	captchaController.loadCaptcha(actionCaptcha);
+}
+
 const postMenuChange = function(e) {
 	const postContainer = this.parentElement.parentElement.parentElement;
 	const postDataset = postContainer.dataset
 	const filterType = this.value;
 	const hiding = !postContainer.classList.contains('hidden');
+	this.value = '';
 	let filterData;
 	switch (filterType) {
 		case 'single':
@@ -222,9 +259,10 @@ const postMenuChange = function(e) {
 		case 'fsub':
 			filterData = postDataset.subject;
 			break;
+		case 'moderate':
+			return moderatePost(postContainer);
 	}
 	toggleFilter(filterType, filterData, hiding);
-	this.value = '';
 };
 
 for (let menu of document.getElementsByClassName('postmenu')) {
@@ -289,6 +327,10 @@ window.addEventListener('updatePostMessage', function(e) {
 
 window.addEventListener('settingsReady', function(e) {
 
+	actionForm = document.getElementById('actionform');
+	modalBg = document.querySelector('.modal-bg');
+	actionForm.firstChild.addEventListener('click', cancelModeratePost);
+	modalBg.addEventListener('click', cancelModeratePost, false);
 	filtersTable = document.getElementById('advancedfilters');
 	updateFiltersTable();
 
