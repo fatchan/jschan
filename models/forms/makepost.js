@@ -595,10 +595,10 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	}
 	const { raw, single } = data.ip;
 	//but emit it to manage pages because they need to get all posts through socket including thread
-	Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { single, raw: null } });
-	Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single, raw } });
-	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-hashed`, 'newPost', { ...projectedPost, ip: { single, raw: null } });
-	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { single, raw } });
+	Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw: null } });
+	Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw } });
+	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-hashed`, 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw: null } });
+	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw } });
 
 	//now add other pages to be built in background
 	if (enableCaptcha) {
