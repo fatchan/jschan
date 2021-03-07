@@ -328,9 +328,12 @@ window.addEventListener('updatePostMessage', function(e) {
 window.addEventListener('settingsReady', function(e) {
 
 	actionForm = document.getElementById('actionform');
-	modalBg = document.querySelector('.modal-bg');
-	actionForm.firstChild.addEventListener('click', cancelModeratePost);
-	modalBg.addEventListener('click', cancelModeratePost, false);
+	if (actionForm) {
+		modalBg = document.querySelector('.modal-bg');
+		actionForm.firstChild.addEventListener('click', cancelModeratePost);
+		modalBg.addEventListener('click', cancelModeratePost, false);
+	}
+
 	filtersTable = document.getElementById('advancedfilters');
 	updateFiltersTable();
 
