@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
 
 	let posts;
 	try {
-		posts = await Posts.getGlobalRecent(offset, limit, ipMatch, res.locals.permLevel);
+		posts = await Posts.getBoardRecent(offset, limit, ipMatch, null, res.locals.permLevel);
 	} catch (err) {
 		return next(err)
 	}
