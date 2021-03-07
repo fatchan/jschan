@@ -144,7 +144,7 @@ block content
 			tr
 				td ~~strikethrough~~
 				td
-					span.strikethrough strikethrough
+					span.strike strikethrough
 			tr
 				td ||spoiler text||
 				td
