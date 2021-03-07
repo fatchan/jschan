@@ -72,7 +72,7 @@ module.exports = (req, res, next) => {
 	for (let i = 0; i < numberFields.length; i++) {
 		const field = numberFields[i];
 		if (req.body[field] != null) {
-			const num = parseInt(req.body[field]);
+			const num = parseInt(req.body[field], 10);
 			if (Number.isSafeInteger(num)) {
 				req.body[field] = num;
 			} else {
@@ -140,7 +140,7 @@ module.exports = (req, res, next) => {
 				}
 				req.body[field] = duration;
 			} else {
-				const num = parseInt(req.body[field]);
+				const num = parseInt(req.body[field], 10);
 				if (Number.isSafeInteger(num)) {
 					req.body[field] = num;
 				} else {

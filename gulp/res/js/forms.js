@@ -1,3 +1,4 @@
+const forms = document.getElementsByTagName('form');
 const modalClasses = ['modal', 'modal-bg'];
 function removeModal() {
 	modalClasses.forEach(c => document.getElementsByClassName(c)[0].remove());
@@ -452,7 +453,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 window.addEventListener('settingsReady', () => {
 
-	const forms = document.getElementsByTagName('form');
 	for(let i = 0; i < forms.length; i++) {
 		if (forms[i].method === 'post' /*&& forms[i].encoding === 'multipart/form-data'*/) {
 			new formHandler(forms[i]);

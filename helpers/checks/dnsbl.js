@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
 		if (isBlacklisted === null) { //not cached
 			const dnsblResp = await batch(ip, dnsbl.blacklists);
 			isBlacklisted = dnsblResp.some(r => r.listed === true);
-			await cache.set(`blacklisted:${ip}`, isBlacklisted, dnsbl.cacheTime/1000);
+			await cache.set(`blacklisted:${ip}`, isBlacklisted, Math.floor(dnsbl.cacheTime/1000));
 		}
 		if (isBlacklisted) {
 			deleteTempFiles(req).catch(e => console.error);

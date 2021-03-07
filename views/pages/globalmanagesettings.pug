@@ -136,7 +136,7 @@ block content
 								option(value='4', selected=settings.permLevels.markdown[markdownName] === 4) Everybody
 					.row
 						.label Default Ban Duration
-						input(type='number', name='default_ban_duration',  placeholder='e.g. 1w', value=settings.defaultBanDuration)
+						input(type='text', name='default_ban_duration',  placeholder='e.g. 1w', value=settings.defaultBanDuration)
 					.row
 						.label Quote Limit
 						input(type='number', name='quote_limit', value=settings.quoteLimit)
@@ -208,7 +208,7 @@ block content
 						input(type='number' name='block_bypass_expire_after_uses' value=settings.blockBypass.expireAfterUses)
 					.row
 						.label Expire After Time
-						input(type='number' name='block_bypass_expire_after_time' value=settings.blockBypass.expireAfterTime)
+						input(type='text' name='block_bypass_expire_after_time' placeholder='e.g. 1d' value=settings.blockBypass.expireAfterTime)
 
 					.row
 						h4.mv-5 Antispam
@@ -249,7 +249,7 @@ block content
 						textarea(name='dnsbl_blacklists' placeholder='Newline separated') #{settings.dnsbl.blacklists.join('\n')}
 					.row
 						.label Cache Time
-						input(type='number' name='dnsbl_cache_time' value=settings.dnsbl.cacheTime)
+						input(type='text' name='dnsbl_cache_time' placeholder='e.g. 1h' value=settings.dnsbl.cacheTime)
 
 					.row
 						h4.mv-5 Ratelimit Costs

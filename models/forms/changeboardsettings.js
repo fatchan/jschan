@@ -142,6 +142,14 @@ module.exports = async (req, res, next) => {
 		, rebuildCatalog = false
 		, rebuildOther = false;
 
+	if (newSettings.userPostDelete !== oldSettings.userPostDelete
+		|| newSettings.userPostSpoiler !== oldSettings.userPostSpoiler
+		|| newSettings.userPostUnlink !== oldSettings.userPostUnlink) {
+			rebuildThreads = true;
+			rebuildBoard = true;
+			rebuildCatalog = true;
+	}
+
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
 		if (oldSettings.captchaMode === 0) {
 			rebuildBoard = true;

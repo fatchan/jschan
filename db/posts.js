@@ -21,14 +21,20 @@ module.exports = {
 		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
 	},
 
-	getGlobalRecent: (offset=0, limit=20, ip, permLevel) => {
-		//global recent posts for recent section of global manage page
+	getBoardRecent: async (offset=0, limit=20, ip, board, permLevel) => {
 		const query = {};
+		if (board) {
+			query['board'] = board;
+		}
 		const projection = {
 			'salt': 0,
 			'password': 0,
-			'reports': 0,
 		};
+		if (!board) {
+			projection['reports'] = 0;
+		} else {
+			projection['globalreports'] = 0;
+		}
 		if (ip instanceof RegExp) {
 			query['ip.single'] = ip;
 		} else if (typeof ip === 'string') {
@@ -36,36 +42,34 @@ module.exports = {
 		}
 		if (permLevel > config.get.ipHashPermLevel) {
 			projection['ip.raw'] = 0;
+			//MongoError, why cant i just projection['reports.ip.raw'] = 0;
+			if (board) {
+				projection['reports'] = { ip: { raw: 0 } };
+			} else {
+				projection['globalreports'] = { ip: { raw: 0 } };
+			}
 		}
-		return db.find(query, {
+		const posts = await db.find(query, {
 			projection
 		}).sort({
 			'_id': -1
 		}).skip(offset).limit(limit).toArray();
-	},
-
-	getBoardRecent: (offset=0, limit=20, ip, board, permLevel) => {
-		const query = {
-			board
-		};
-		const projection = {
-			'salt': 0,
-			'password': 0,
-			'globalreports': 0,
-		};
-		if (ip instanceof RegExp) {
-			query['ip.single'] = ip;
-		} else if (typeof ip === 'string') {
-			query['ip.raw'] = ip;
-		}
-		if (permLevel > config.get.ipHashPermLevel) {
-			projection['ip.raw'] = 0;
-		}
-		return db.find(query, {
-			projection
-		}).sort({
-			'_id': -1
-		}).skip(offset).limit(limit).toArray();
+		posts.forEach(p => {
+			//kill me
+			p.ip.single = p.ip.single.slice(-10);
+			p.ip.qrange = p.ip.qrange.slice(-10);
+			p.ip.hrange = p.ip.hrange.slice(-10);
+			if (board) {
+				p.reports.forEach(r => {
+					r.ip.single = r.ip.single.slice(-10);
+				});
+			} else {
+				p.globalreports.forEach(r => {
+					r.ip.single = r.ip.single.slice(-10);
+				});
+			}
+		});
+		return posts;
 	},
 
 	getRecent: async (board, page, limit=10, getSensitive=false, sortSticky=true) => {
