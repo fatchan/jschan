@@ -5,8 +5,8 @@ module.exports = (query, limit) => {
 	delete nopage.page;
 	const queryString = new URLSearchParams(nopage).toString();
 	let page;
-	if (query.page && Number.isSafeInteger(parseInt(query.page))) {
-		page = parseInt(query.page);
+	if (query.page && Number.isSafeInteger(parseInt(query.page, 10))) {
+		page = parseInt(query.page, 10);
 		if (page <= 0) {
 			page = 1;
 		}
