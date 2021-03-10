@@ -298,10 +298,10 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 							&& lteThumbSize);
 						let firstFrameOnly = true;
 						if (processedFile.hasThumb //if it needs thumbnailing
-							&& (!lteThumbSize //and its big enough
-							&& file.mimetype === 'image/gif' //and its a gif
-							&& (imageData['Delay'] != null || imageData['Iterations'] != null) //and its not a static gif (naive check)
-							&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
+							&& (file.mimetype === 'image/gif' //and its a gif
+//								&& !lteThumbSize //and its big enough -> why was this a thing originally?
+								&& (imageData['Delay'] != null || imageData['Iterations'] != null) //and its not a static gif (naive check)
+								&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
 							firstFrameOnly = false;
 							processedFile.thumbextension = '.gif';
 						}
