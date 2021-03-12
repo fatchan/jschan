@@ -271,6 +271,9 @@ module.exports = {
 		bannerFilesSize: { //in bytes, 10MB default
 			max: 10485760
 		},
+		flagFilesSize: { //in bytes, 1MB default
+			max: 1048576
+		},
 		/* NOTE: postFilesSize and bannerFilesSize counts in bytes the amount of total data in form submission including
 			other fields like message, name, etc. Therefore a very long message would reduce the space left for files very slightly.
 			To counteract this, consider increasing postFilesSize and bannerFilesSize beyond your desired max filesize by a small margin */
