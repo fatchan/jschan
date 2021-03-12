@@ -10,6 +10,7 @@ mixin uploaditem(item)
 					label
 						input(type='checkbox', name='spoiler', value=item.hash)
 						| Spoiler
-				label
-					input(type='checkbox', name='strip_filename', value=item.hash)
-					| Strip Filename
+				if item.stripFilenames
+					label
+						input(type='checkbox', name='strip_filename', value=item.hash)
+						| Strip Filename

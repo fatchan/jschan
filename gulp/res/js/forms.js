@@ -324,6 +324,7 @@ class formHandler {
 		}
 		const item = {
 			spoilers: this.fileUploadList.dataset.spoilers === 'true',
+			stripFilenames: this.fileUploadList.dataset.stripFilenames === 'true',
 			name: file.name,
 			hash: fileHash,
 		}

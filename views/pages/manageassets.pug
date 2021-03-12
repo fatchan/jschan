@@ -1,0 +1,22 @@
+extends ../layout.pug
+include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
+include ../mixins/fileform.pug
+
+block head
+	title /#{board._id}/ - Manage Assets
+
+block content
+	+boardheader('Assets')
+	br
+	+managenav('assets')
+	hr(size=1)
+	+fileform('banner', globalLimits.bannerFiles.max, globalLimits.bannerFiles.total,
+		`/forms/board/${board._id}/addbanners`, `/forms/board/${board._id}/deletebanners`,
+		'checkedbanners', board.banners)
+	hr(size=1)
+	+fileform('flag', globalLimits.flagFiles.max, globalLimits.flagFiles.total,
+		`/forms/board/${board._id}/addflags`, `/forms/board/${board._id}/deleteflags`,
+		'checkedflags', board.flags)
+	hr(size=1)
+	p todo: custom other files

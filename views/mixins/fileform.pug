@@ -1,0 +1,33 @@
+include ./filelabel.pug
+
+mixin fileform(name, max, total, addpath, deletepath, checkname, fileList)
+	- const capitalName = `${name.charAt(0).toUpperCase()}${name.substring(1)}`;
+	h4.no-m-p Add #{capitalName}s (Max #{globalLimits.bannerFiles.total})
+	.form-wrapper.flexleft.mt-10
+		form.form-post(action=addpath, enctype='multipart/form-data', method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			.row
+				.label
+					span #{capitalName}#{max > 1 ? 's' : ''}
+						span.required *
+					if max > 1
+						|  
+						|  
+						small (Max #{max})
+				span.col
+					+filelabel(name, max)
+					input(id=name type='file', name='file' multiple required)
+					.upload-list(data-spoilers='false' data-strip-filenames='false')
+			input(type='submit', value='submit')
+	if fileList.length > 0
+		hr(size=1)
+		h4.no-m-p Delete #{capitalName}s:
+		.form-wrapper.flexleft.mt-10
+			form.form-post(action=deletepath, enctype='application/x-www-form-urlencoded', method='POST')
+				input(type='hidden' name='_csrf' value=csrf)
+				.catalog
+					each file in fileList
+						label.banner-check
+							input(type='checkbox' name=checkname value=file)
+							img.board-banner(src=`${filepath}/${file}` loading='lazy')
+				input(type='submit', value='delete')

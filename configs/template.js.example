@@ -264,6 +264,10 @@ module.exports = {
 			max: 10, //number of banners uploadable in one request
 			total: 100, //max number of banners for a board
 		},
+		flagFiles: {
+			max: 10, //number of banners uploadable in one request
+			total: 100, //max number of flags for a board
+		},
 		bannerFilesSize: { //in bytes, 10MB default
 			max: 10485760
 		},

@@ -41,6 +41,7 @@ module.exports = async (req, res, next) => {
 		'_id': uri,
 		owner,
 		'banners': [],
+		'flags': [],
 		'sequence_value': 1,
 		'pph': 0,
 		'ppd': 0,

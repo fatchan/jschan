@@ -1,3 +1,4 @@
+include ../mixins/filelabel.pug
 - const isThread = thread != null;
 - const subjectRequired = (!isThread && board.settings.forceThreadSubject);
 - const messageRequired = (!isThread && board.settings.forceThreadMessage) || (isThread && board.settings.forceReplyMessage);
@@ -52,9 +53,9 @@ section.form-wrapper.flex-center
 						small Max #{maxFiles} files
 					small #{postFilesSize} total
 				span.col
-					include ./filelabel.pug
+					+filelabel('file', maxFiles)
 					input#file(type='file', name='file' multiple required=fileRequired )
-					.upload-list(data-spoilers=(board.settings.userPostSpoiler ? 'true' : 'false'))
+					.upload-list(data-spoilers=(board.settings.userPostSpoiler ? 'true' : 'false') data-strip-filenames='false')
 				if board.settings.userPostSpoiler
 					noscript
 						label.postform-style.ph-5.ml-1.fh

@@ -12,7 +12,10 @@ pug_html = pug_html + "\u003Cdiv class=\"row sb\"\u003E";
 if (item.spoilers) {
 pug_html = pug_html + "\u003Clabel\u003E\u003Cinput" + (" type=\"checkbox\" name=\"spoiler\""+pug_attr("value", item.hash, true, false)) + "\u002F\u003ESpoiler\u003C\u002Flabel\u003E";
 }
-pug_html = pug_html + "\u003Clabel\u003E\u003Cinput" + (" type=\"checkbox\" name=\"strip_filename\""+pug_attr("value", item.hash, true, false)) + "\u002F\u003EStrip Filename\u003C\u002Flabel\u003E\u003C\u002Fdiv\u003E";
+if (item.stripFilenames) {
+pug_html = pug_html + "\u003Clabel\u003E\u003Cinput" + (" type=\"checkbox\" name=\"strip_filename\""+pug_attr("value", item.hash, true, false)) + "\u002F\u003EStrip Filename\u003C\u002Flabel\u003E";
+}
+pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 };
