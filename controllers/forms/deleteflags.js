@@ -1,14 +1,14 @@
 'use strict';
 
-const deleteBanners = require(__dirname+'/../../models/forms/deletebanners.js')
+const deleteFlags = require(__dirname+'/../../models/forms/deleteflags.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
 
 module.exports = async (req, res, next) => {
 
 	const errors = [];
 
-	if (!req.body.checkedbanners || req.body.checkedbanners.length === 0) {
-		errors.push('Must select at least one banner to delete');
+	if (!req.body.checkedflags || req.body.checkedflags.length === 0) {
+		errors.push('Must select at least one flag to delete');
 	}
 
 	if (errors.length > 0) {
@@ -19,18 +19,18 @@ module.exports = async (req, res, next) => {
 		})
 	}
 
-	for (let i = 0; i < req.body.checkedbanners.length; i++) {
-		if (!res.locals.board.banners.includes(req.body.checkedbanners[i])) {
+	for (let i = 0; i < req.body.checkedflags.length; i++) {
+		if (!res.locals.board.flags.includes(req.body.checkedflags[i])) {
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
-				'message': 'Invalid banners selected',
+				'message': 'Invalid flags selected',
 				'redirect': `/${req.params.board}/manage/assets.html`
 			})
 		}
 	}
 
 	try {
-		await deleteBanners(req, res, next);
+		await deleteFlags(req, res, next);
 	} catch (err) {
 		console.error(err);
 		return next(err);

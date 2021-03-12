@@ -24,7 +24,8 @@ module.exports = async (uri, board) => {
 		CustomPages.deleteBoard(uri), //custom pages for the board
 		remove(`${uploadDirectory}/html/${uri}/`), //html
 		remove(`${uploadDirectory}/json/${uri}/`), //json
-		remove(`${uploadDirectory}/banner/${uri}/`) //banners
+		remove(`${uploadDirectory}/banner/${uri}/`), //banners
+		remove(`${uploadDirectory}/flag/${uri}/`), //flags
 	]);
 
 }

@@ -61,7 +61,8 @@ module.exports = async (req, res, next) => {
 		Accounts.addOwnedBoard(owner, uri),
 		ensureDir(`${uploadDirectory}/html/${uri}`),
 		ensureDir(`${uploadDirectory}/json/${uri}`),
-		ensureDir(`${uploadDirectory}/banner/${uri}`)
+		ensureDir(`${uploadDirectory}/banner/${uri}`),
+		ensureDir(`${uploadDirectory}/flag/${uri}`),
 	]);
 
 	return res.redirect(`/${uri}/index.html`);

@@ -98,34 +98,53 @@ module.exports = {
 		);
 	},
 
-	removeBanners: (board, filenames) => {
-		cache.del(`board:${board}`);
-		cache.del(`banners:${board}`);
-		return db.updateOne(
-			{
-				'_id': board,
-			}, {
-				'$pullAll': {
-					'banners': filenames
-				}
-			}
-		);
-	},
-
-	addBanners: (board, filenames) => {
-		cache.del(`board:${board}`);
-		cache.del(`banners:${board}`);
+	addToArray: (board, key, list) => {
 		return db.updateOne(
 			{
 				'_id': board,
 			}, {
 				'$push': {
-					'banners': {
-						'$each': filenames
+					[key]: {
+						'$each': list
 					}
 				}
 			}
 		);
+
+	},
+
+	removeFromArray: (board, key, list) => {
+		return db.updateOne(
+			{
+				'_id': board,
+			}, {
+				'$pullAll': {
+					[key]: list
+				}
+			}
+		);
+	},
+
+	removeBanners: (board, filenames) => {
+		cache.del(`board:${board}`);
+		cache.del(`banners:${board}`);
+		return module.exports.removeFromArray(board, 'banners', filenames);
+	},
+
+	addBanners: (board, filenames) => {
+		cache.del(`board:${board}`);
+		cache.del(`banners:${board}`);
+		return module.exports.addToArray(board, 'banners', filenames)
+	},
+
+	removeFlags: (board, filenames) => {
+		cache.del(`board:${board}`);
+		return module.exports.removeFromArray(board, 'flags', filenames);
+	},
+
+	addFlags: (board, filenames) => {
+		cache.del(`board:${board}`);
+		return module.exports.addToArray(board, 'flags', filenames)
 	},
 
 	getLocalListed: async () => {
