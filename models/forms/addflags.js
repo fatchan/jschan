@@ -9,6 +9,7 @@ const path = require('path')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, { countryCodesSet } = require(__dirname+'/../../helpers/countries.js')
 	, { Boards } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../queue.js');
 
@@ -52,11 +53,16 @@ module.exports = async (req, res, next) => {
 	const filenames = [];
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		const file = req.files.file[i];
-		const filename = file.sha256 + path.extname(file.name);
-		file.filename = filename;
+		let noExt = path.parse(file.name).name;
+
+		//match case for real country flags
+		if (noExt.length === 2 && countryCodesSet.has(noExt.toUpperCase())) {
+			file.name = file.name.toUpperCase();
+		}
 
 		//check if already exists
-		const exists = await pathExists(`${uploadDirectory}/flag/${req.params.board}/${filename}`);
+		const exists = await res.locals.board.flags
+			.some(f => path.parse(f).name.toLowerCase() === noExt.toLowerCase());
 
 		if (exists) {
 			await remove(file.tempFilePath);
@@ -64,10 +70,10 @@ module.exports = async (req, res, next) => {
 		}
 
 		//add to list after checking it doesnt already exist
-		filenames.push(filename);
+		filenames.push(file.name);
 
 		//then upload it
-		await moveUpload(file, filename, `flag/${req.params.board}`);
+		await moveUpload(file, file.name, `flag/${req.params.board}`);
 
 		//and delete the temp file
 		await remove(file.tempFilePath);

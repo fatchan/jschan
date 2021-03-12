@@ -30,4 +30,5 @@ mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, fileP
 						label.banner-check
 							input(type='checkbox' name=checkName value=file)
 							img(class=imageClass src=`${filePath}/${file}` loading='lazy')
+							small #{file.substring(0, file.lastIndexOf('.'))}
 				input(type='submit', value='delete')
