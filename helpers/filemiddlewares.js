@@ -8,10 +8,13 @@ const { debugLogs } = require(__dirname+'/../configs/secrets.js')
 let postFiles,
 	uploadLimitFunction,
 	handleBannerFiles,
+	handleFlagFiles,
 	numFilesUploadLimitFunction,
+	numFlagsUploadLimitFunction,
 	numBannersUploadLimitFunction;
 
 const updateHandlers = () => {
+	//this thing is kinda gross
 	const { globalLimits,  filterFileNames, spaceFileNameReplacement } = require(__dirname+'/../config.js').get
 	uploadLimitFunction = (req, res, next) => {
 		return dynamicResponse(req, res, 413, 'message', {
@@ -35,6 +38,13 @@ const updateHandlers = () => {
 			'redirect': req.headers.referer
 		});
 	};
+	numFlagsUploadLimitFunction = (req, res, next) => {
+		return dynamicResponse(req, res, 400, 'message', {
+			'title': 'Too many files',
+			'message': `Max banners per request is ${globalLimits.flagFiles.max}`,
+			'redirect': req.headers.referer
+		});
+	};
 	handleBannerFiles = upload({
 		debug: debugLogs,
 		createParentPath: true,
@@ -52,6 +62,23 @@ const updateHandlers = () => {
 		tempFileDir: __dirname+'/../tmp/'
 	});
 	module.exports.handleBannerFiles = handleBannerFiles;
+	handleFlagFiles = upload({
+		debug: debugLogs,
+		createParentPath: true,
+		safeFileNames: filterFileNames,
+		spaceFileNameReplacement,
+		preserveExtension: 4,
+		limits: {
+			totalSize: globalLimits.flagFilesSize.max,
+			fileSize: globalLimits.flagFilesSize.max,
+			files: globalLimits.flagFiles.max
+		},
+		numFilesLimitHandler: numFlagsUploadLimitFunction,
+		limitHandler: uploadLimitFunction,
+		useTempFiles: true,
+		tempFileDir: __dirname+'/../tmp/'
+	});
+	module.exports.handleFlagFiles = handleFlagFiles;
 	postFiles = upload({
 		debug: debugLogs,
 		createParentPath: true,
@@ -76,6 +103,7 @@ addCallback('config', updateHandlers);
 module.exports = {
 
 	handleBannerFiles,
+	handleFlagFiles,
 
 	handlePostFilesEarlyTor: (req, res, next) => {
 		if (res.locals.anonymizer) {

@@ -1,10 +1,10 @@
 include ./filelabel.pug
 
-mixin fileform(name, max, total, addpath, deletepath, checkname, fileList)
+mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, filePath, imageClass)
 	- const capitalName = `${name.charAt(0).toUpperCase()}${name.substring(1)}`;
 	h4.no-m-p Add #{capitalName}s (Max #{globalLimits.bannerFiles.total})
 	.form-wrapper.flexleft.mt-10
-		form.form-post(action=addpath, enctype='multipart/form-data', method='POST')
+		form.form-post(action=addPath, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
 				.label
@@ -23,11 +23,11 @@ mixin fileform(name, max, total, addpath, deletepath, checkname, fileList)
 		hr(size=1)
 		h4.no-m-p Delete #{capitalName}s:
 		.form-wrapper.flexleft.mt-10
-			form.form-post(action=deletepath, enctype='application/x-www-form-urlencoded', method='POST')
+			form.form-post(action=deletePath, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
 				.catalog
 					each file in fileList
 						label.banner-check
-							input(type='checkbox' name=checkname value=file)
-							img.board-banner(src=`${filepath}/${file}` loading='lazy')
+							input(type='checkbox' name=checkName value=file)
+							img(class=imageClass src=`${filePath}/${file}` loading='lazy')
 				input(type='submit', value='delete')

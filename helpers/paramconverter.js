@@ -3,7 +3,7 @@
 const { ObjectId } = require(__dirname+'/../db/db.js')
 	//todo: separate these into a schema/set for differ ent routes and inject it before the controller, to prevent checkign a bunch of other shit for every post
 	, allowedArrays = new Set(['captcha', 'checkedcustompages', 'checkednews', 'checkedposts', 'globalcheckedposts', 'spoiler', 'strip_filename',
-		'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts', 'countries'])
+		'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts', 'checkedflags', 'countries'])
 	, trimFields = ['allowed_hosts', 'dnsbl_blacklists', 'other_mime_types', 'highlight_options_language_subset', 'themes', 'code_themes',
 		'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'tags', 'uri', 'moderators', 'announcement', 'description', 'message',
 		'name', 'subject', 'email', 'postpassword', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message', 'custom_css'] //trim if we dont want filed with whitespace
