@@ -198,6 +198,13 @@ module.exports = async (req, res, next) => {
 			bannerFilesSize: {
 				max: numberSetting(req.body.global_limits_banner_files_size_max, oldSettings.globalLimits.bannerFilesSize.max),
 			},
+			flagFiles: {
+				max: numberSetting(req.body.global_limits_flag_files_max, oldSettings.globalLimits.flagFiles.max),
+				total: numberSetting(req.body.global_limits_flag_files_total, oldSettings.globalLimits.flagFiles.total),
+			},
+			flagFilesSize: {
+				max: numberSetting(req.body.global_limits_flag_files_size_max, oldSettings.globalLimits.flagFilesSize.max),
+			},
 			fieldLength: {
 				name: numberSetting(req.body.global_limits_field_length_name, oldSettings.globalLimits.fieldLength.name),
 				email: numberSetting(req.body.global_limits_field_length_email, oldSettings.globalLimits.fieldLength.email),
