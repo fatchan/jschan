@@ -1528,7 +1528,7 @@ row.wrap.sb .col {
 
 }
 
-.flag, .customflag::before {
+.flag, .customflag, .customflag::before {
 	display: inline-block;
 	width: 16px;
 	height: 11px;
@@ -1540,15 +1540,9 @@ row.wrap.sb .col {
 }
 
 .customflag {
-	display: inline-block;
-	width: 16px;
-	height: 11px;
-	image-rendering: crisp-edges;
-	image-rendering: pixelated;
-	image-rendering: -webkit-optimize-contrast;
-	-ms-interpolation-mode: nearest-neighbor;
+	background: none;
 }
-.customflag:before {
+.customflag::before {
 	content: ' ';
 	background-position:-48px -165px;
 }
