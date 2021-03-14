@@ -54,9 +54,9 @@ const express  = require('express')
 	, logout = require(__dirname+'/../models/forms/logout.js');
 
 //make new post
-router.post('/board/:board/post', geoAndTor, fileMiddlewares.handlePostFilesEarlyTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, fileMiddlewares.handlePostFiles,
+router.post('/board/:board/post', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, fileMiddlewares.posts,
 	paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, imageHashes, makePostController);
-router.post('/board/:board/modpost', geoAndTor, fileMiddlewares.handlePostFilesEarlyTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), fileMiddlewares.handlePostFiles,
+router.post('/board/:board/modpost', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), fileMiddlewares.posts,
 	paramConverter, csrf, numFiles, blockBypassCheck, dnsblCheck, makePostController); //mod post has token instead of captcha
 
 //post actions
@@ -71,9 +71,9 @@ router.post('/editpost', geoAndTor, torPreBypassCheck, processIp, useSession, se
 //board management forms
 router.post('/board/:board/transfer', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, transferController);
 router.post('/board/:board/settings', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
-router.post('/board/:board/addbanners', useSession, sessionRefresh, fileMiddlewares.handleBannerFiles, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
+router.post('/board/:board/addbanners', useSession, sessionRefresh, fileMiddlewares.banner, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
 router.post('/board/:board/deletebanners', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
-router.post('/board/:board/addflags', useSession, sessionRefresh, fileMiddlewares.handleFlagFiles, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, addFlagsController); //add flags
+router.post('/board/:board/addflags', useSession, sessionRefresh, fileMiddlewares.flag, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, addFlagsController); //add flags
 router.post('/board/:board/deleteflags', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteFlagsController); //delete flags
 router.post('/board/:board/addcustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, addCustomPageController); //add banners
 router.post('/board/:board/deletecustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteCustomPageController); //delete banners
