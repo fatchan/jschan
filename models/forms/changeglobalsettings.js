@@ -162,7 +162,7 @@ module.exports = async (req, res, next) => {
 		early404Replies: numberSetting(req.body.early_404_replies, oldSettings.early404Replies),
 		maxRecentNews: numberSetting(req.body.max_recent_news, oldSettings.maxRecentNews),
 		filterFileNames: booleanSetting(req.body.filter_file_names, oldSettings.filterFileNames),
-		spaceFileNameReplacement: trimSetting(req.body.space_file_name_replacement, oldSettings.spaceFileNameReplacement),
+		spaceFileNameReplacement: req.body.space_file_name_replacement,
 		globalLimits:  {
 			customCss: {
 				enabled: booleanSetting(req.body.global_limits_custom_css_enabled, oldSettings.globalLimits.customCss.enabled),
