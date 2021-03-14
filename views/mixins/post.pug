@@ -106,10 +106,10 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					-
 						const splitPost = post.message.split('\n');
 						const messageLines = splitPost.length;
-						if (messageLines > 15) {
-							truncatedMessage = splitPost.slice(0, 15).join('\n');
-						} else if (post.message.length > 1500) {
-							truncatedMessage = post.message.substring(0, 1500).replace(/<([\w]+)?([^>]*)?$/, '');
+						if (messageLines > 25) {
+							truncatedMessage = splitPost.slice(0, 25).join('\n');
+						} else if (post.message.length > 3000) {
+							truncatedMessage = post.message.substring(0, 3000).replace(/<([\w]+)?([^>]*)?$/, '');
 							const lastAnchorOpen = truncatedMessage.lastIndexOf('<a');
 							const lastAnchorClose = truncatedMessage.lastIndexOf('</a>');
 							if (lastAnchorOpen >= 0 && (lastAnchorClose === -1 || lastAnchorClose < lastAnchorOpen)) {
