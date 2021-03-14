@@ -33,7 +33,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					| 
 				if post.country && post.country.code
 					if post.country.custom === true
-						img.flag(src=`/flag/${post.board}/${post.country.src}` title=post.country.name alt=post.country.name)
+						img.customflag(src=`/flag/${post.board}/${post.country.src}` title=post.country.name alt=' ')
 						| 
 					else
 						span(class=`flag flag-${post.country.code.toLowerCase()}` title=post.country.name alt=post.country.name)

@@ -1529,7 +1529,7 @@ row.wrap.sb .col {
 
 }
 
-.flag {
+.flag, .customflag::before {
 	display: inline-block;
 	width: 16px;
 	height: 11px;
@@ -1538,6 +1538,20 @@ row.wrap.sb .col {
 	image-rendering: pixelated;
 	image-rendering: -webkit-optimize-contrast;
 	-ms-interpolation-mode: nearest-neighbor;
+}
+
+.customflag {
+	display: inline-block;
+	width: 16px;
+	height: 11px;
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+	image-rendering: -webkit-optimize-contrast;
+	-ms-interpolation-mode: nearest-neighbor;
+}
+.customflag:before {
+	content: ' ';
+	background-position:-48px -165px;
 }
 
 .flag.flag-xx {
