@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	for (let i = 0; i < req.body.checkedflags.length; i++) {
-		if (!res.locals.board.flags.includes(req.body.checkedflags[i])) {
+		if (!res.locals.board.flags[req.body.checkedflags[i]]) {
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': 'Invalid flags selected',

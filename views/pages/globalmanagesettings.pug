@@ -650,7 +650,11 @@ block content
 					.row
 						.label Geo Flags
 						label.postform-style.ph-5
-							input(type='checkbox', name='board_defaults_flags', value='true' checked=settings.boardDefaults.flags)
+							input(type='checkbox', name='board_defaults_geo_flags', value='true' checked=settings.boardDefaults.geoFlags)
+					.row
+						.label Custom Flags
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_custom_flags', value='true' checked=settings.boardDefaults.customFlags)
 					.row
 						.label User Post Deletion
 						label.postform-style.ph-5

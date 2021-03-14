@@ -904,6 +904,12 @@ input:invalid, textarea:invalid {
 	height: 22px;
 }
 
+#selected-flag {
+	border: 1px solid var(--post-outline-color);
+	width: 32px;
+	height: 22px;
+}
+
 .board-description {
 	text-align:center;
 	margin: 0;

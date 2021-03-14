@@ -54,7 +54,7 @@ module.exports = async (req, res, next) => {
 	const { filterBanDuration, filterMode, filters, blockedCountries, threadLimit, ids, userPostSpoiler,
 		lockReset, captchaReset, pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
 		maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
-		captchaMode, lockMode, allowedFileTypes, flags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
+		captchaMode, lockMode, allowedFileTypes, customFlags, geoFlags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
 	if (res.locals.permLevel >= 4
 		&& res.locals.country
 		&& blockedCountries.includes(res.locals.country.code)) {
@@ -393,8 +393,19 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 //		}
 	}
 	let country = null;
-	if (flags === true) {
+	if (geoFlags === true) {
 		country = res.locals.country;
+	}
+	if (customFlags === true) {
+		if (req.body.customflag && res.locals.board.flags[req.body.customflag] != null) {
+			//if customflags allowed, and its a valid selection
+			country = {
+				name: req.body.customflag,
+				code: req.body.customflag,
+				src: res.locals.board.flags[req.body.customflag],
+				custom: true, //this will help
+			};
+		}
 	}
 	let password = null;
 	if (req.body.postpassword) {

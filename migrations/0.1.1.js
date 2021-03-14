@@ -1,6 +1,7 @@
 'use strict';
 
-const fs = require('fs-extra');
+const fs = require('fs-extra')
+	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js');
 
 module.exports = async(db, redis) => {
 	console.log('adding flags customisation');
@@ -10,11 +11,19 @@ module.exports = async(db, redis) => {
 		'$set': {
 			'globalLimits.flagFiles': template.globalLimits.flagFiles,
 			'globalLimits.flagFilesSize': template.globalLimits.flagFilesSize,
+			'boardDefaults.customFlags': false,
+		},
+		'$rename': {
+			'boardDefaults.flags': 'boardDefaults.geoFlags',
 		}
 	});
 	await db.collection('boards').updateMany({}, {
 		'$set': {
 			'flags': [],
+			'settings.customFlags': false,
+		},
+		'$rename': {
+			'settings.flags': 'settings.geoFlags',
 		}
 	});
 };

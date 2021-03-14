@@ -364,7 +364,8 @@ module.exports = {
 		sageOnlyEmail: false, //only allow sage email
 		early404: true, //delete threads beyond the first 1/3 of pages with less than 5 replies
 		ids: false, //show per thread poster ID based on ip
-		flags: false, //show geo flags, requires nginx setup
+		geoFlags: false, //show geo flags, requires nginx setup
+		customFlags: false, //show custom flags
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
 		userPostUnlink: true, //alow user to unlink files fomr their post

@@ -73,7 +73,7 @@ router.post('/board/:board/transfer', useSession, sessionRefresh, csrf, Boards.e
 router.post('/board/:board/settings', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
 router.post('/board/:board/addbanners', useSession, sessionRefresh, fileMiddlewares.handleBannerFiles, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
 router.post('/board/:board/deletebanners', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
-router.post('/board/:board/addflags', useSession, sessionRefresh, fileMiddlewares.handleBannerFiles, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, addFlagsController); //add flags
+router.post('/board/:board/addflags', useSession, sessionRefresh, fileMiddlewares.handleFlagFiles, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, addFlagsController); //add flags
 router.post('/board/:board/deleteflags', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteFlagsController); //delete flags
 router.post('/board/:board/addcustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, addCustomPageController); //add banners
 router.post('/board/:board/deletecustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteCustomPageController); //delete banners

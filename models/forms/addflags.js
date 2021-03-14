@@ -50,27 +50,18 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	const filenames = [];
+	const newFlags = {};
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		const file = req.files.file[i];
 		let noExt = path.parse(file.name).name;
 
 		//match case for real country flags
 		if (noExt.length === 2 && countryCodesSet.has(noExt.toUpperCase())) {
-			file.name = file.name.toUpperCase();
-		}
-
-		//check if already exists
-		const exists = await res.locals.board.flags
-			.some(f => path.parse(f).name.toLowerCase() === noExt.toLowerCase());
-
-		if (exists) {
-			await remove(file.tempFilePath);
-			continue;
+			noExt = noExt.toUpperCase();
 		}
 
 		//add to list after checking it doesnt already exist
-		filenames.push(file.name);
+		newFlags[noExt] = file.name;
 
 		//then upload it
 		await moveUpload(file, file.name, `flag/${req.params.board}`);
@@ -82,17 +73,10 @@ module.exports = async (req, res, next) => {
 
 	deleteTempFiles(req).catch(e => console.error);
 
-	// no new flags added, so they all must already existed
-	if (filenames.length === 0) {
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'message': `Flag${res.locals.numFiles > 1 ? 's' : ''} already exist${res.locals.numFiles > 1 ? '' : 's'}`,
-			'redirect': redirect
-		});
-	}
+	const updatedFlags = { ...res.locals.board.flags, ...newFlags };
 
 	// add flags in db
-	await Boards.addFlags(req.params.board, filenames);
+	await Boards.setFlags(req.params.board, updatedFlags);
 
 	/*
 		should we rebuild here if (overwriting country flag){}?
@@ -100,7 +84,7 @@ module.exports = async (req, res, next) => {
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
-		'message': `Uploaded ${filenames.length} new flags.`,
+		'message': `Uploaded ${res.locals.numFiles} new flags.`,
 		'redirect': redirect
 	});
 

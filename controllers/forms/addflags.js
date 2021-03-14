@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': errors,
-			'redirect': `/${req.params.board}/manage/flags.html`
+			'redirect': `/${req.params.board}/manage/assets.html`
 		})
 	}
 

@@ -65,6 +65,16 @@ section.form-wrapper.flex-center
 			section.row
 				.label Password
 				input(type='password', name='postpassword', placeholder='Password to delete/spoiler/unlink later' maxlength='50')
+		if modview || board.settings.customFlags === true
+			- const boardFlags = Object.entries(board.flags)
+			if boardFlags.length > 0
+				section.row
+					.label Flag
+					select#customflag(name='customflag')
+						option(value='') #{board.settings.geoFlags === true ? 'Country Flag' : ''}
+						each flag in boardFlags
+							option(value=flag[0] data-src=`/flag/${board._id}/${flag[1]}`) #{flag[0]}
+					img.jsonly#selected-flag
 		if ((board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2) && !modview
 			if captchaType === 'text'
 				include ./captchasidelabel.pug

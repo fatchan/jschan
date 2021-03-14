@@ -137,14 +137,16 @@ module.exports = {
 		return module.exports.addToArray(board, 'banners', filenames)
 	},
 
-	removeFlags: (board, filenames) => {
+	setFlags: (board, flags) => {
 		cache.del(`board:${board}`);
-		return module.exports.removeFromArray(board, 'flags', filenames);
-	},
-
-	addFlags: (board, filenames) => {
-		cache.del(`board:${board}`);
-		return module.exports.addToArray(board, 'flags', filenames)
+		//could use dot notation and set flags.x for only changes? seems a bit unsafe though and couldnt have . in name
+		return db.updateOne({
+			'_id': board,
+		}, {
+			'$set': {
+				'flags': flags,
+			}
+		});
 	},
 
 	getLocalListed: async () => {
