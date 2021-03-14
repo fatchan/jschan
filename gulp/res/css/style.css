@@ -906,7 +906,6 @@ input:invalid, textarea:invalid {
 
 #selected-flag {
 	border: 1px solid var(--post-outline-color);
-	width: 32px;
 	height: 22px;
 }
 
