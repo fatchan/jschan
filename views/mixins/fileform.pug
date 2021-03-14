@@ -2,7 +2,7 @@ include ./filelabel.pug
 
 mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameList, filePath, imageClass)
 	- const capitalName = `${name.charAt(0).toUpperCase()}${name.substring(1)}`;
-	h4.no-m-p Add #{capitalName}s (Max #{globalLimits.bannerFiles.total})
+	h4.no-m-p Add #{capitalName}s (Max #{total})
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=addPath, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
