@@ -1,9 +1,11 @@
 {
   "name": "jschan",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "migrateVersion": "0.1.1",
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "@fatchan/gulp-pug": "^4.0.1",
     "bcrypt": "^5.0.1",
     "bull": "^3.20.1",
     "cache-pug-templates": "^2.0.3",
@@ -24,7 +26,6 @@
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-less": "^4.0.1",
-    "@fatchan/gulp-pug": "^4.0.1",
     "gulp-replace": "^1.0.0",
     "gulp-uglify-es": "^2.0.0",
     "highlight.js": "^10.6.0",

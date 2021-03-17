@@ -16,7 +16,7 @@ const express  = require('express')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	, setMinimal = require(__dirname+'/../helpers/setminimal.js')
 	//page models
-	, { manageRecent, manageReports, manageBanners, manageSettings, manageBans,
+	, { manageRecent, manageReports, manageAssets, manageSettings, manageBans,
 		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
@@ -52,7 +52,7 @@ router.get('/:board/manage/recent.(html|json)', useSession, sessionRefresh, isLo
 router.get('/:board/manage/bans.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageBans);
 router.get('/:board/manage/logs.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageLogs);
 router.get('/:board/manage/settings.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageSettings);
-router.get('/:board/manage/banners.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageBanners);
+router.get('/:board/manage/assets.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageAssets);
 router.get('/:board/manage/custompages.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageCustomPages);
 router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageCatalog);
 router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
