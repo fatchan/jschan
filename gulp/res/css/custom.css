@@ -1,3 +1,8 @@
+#selected-flag {
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+	-ms-interpolation-mode: nearest-neighbor;
+}
 .catalog-tile, .post-container {
     transition: background-color 80ms, border-color 80ms;
 }
