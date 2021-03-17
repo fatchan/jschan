@@ -162,7 +162,7 @@ module.exports = async (req, res, next) => {
 		early404Replies: numberSetting(req.body.early_404_replies, oldSettings.early404Replies),
 		maxRecentNews: numberSetting(req.body.max_recent_news, oldSettings.maxRecentNews),
 		filterFileNames: booleanSetting(req.body.filter_file_names, oldSettings.filterFileNames),
-		spaceFileNameReplacement: trimSetting(req.body.space_file_name_replacement, oldSettings.spaceFileNameReplacement),
+		spaceFileNameReplacement: req.body.space_file_name_replacement,
 		globalLimits:  {
 			customCss: {
 				enabled: booleanSetting(req.body.global_limits_custom_css_enabled, oldSettings.globalLimits.customCss.enabled),
@@ -197,6 +197,13 @@ module.exports = async (req, res, next) => {
 			},
 			bannerFilesSize: {
 				max: numberSetting(req.body.global_limits_banner_files_size_max, oldSettings.globalLimits.bannerFilesSize.max),
+			},
+			flagFiles: {
+				max: numberSetting(req.body.global_limits_flag_files_max, oldSettings.globalLimits.flagFiles.max),
+				total: numberSetting(req.body.global_limits_flag_files_total, oldSettings.globalLimits.flagFiles.total),
+			},
+			flagFilesSize: {
+				max: numberSetting(req.body.global_limits_flag_files_size_max, oldSettings.globalLimits.flagFilesSize.max),
 			},
 			fieldLength: {
 				name: numberSetting(req.body.global_limits_field_length_name, oldSettings.globalLimits.fieldLength.name),
@@ -243,7 +250,8 @@ module.exports = async (req, res, next) => {
 			sageOnlyEmail: booleanSetting(req.body.board_defaults_sage_only_email, oldSettings.boardDefaults.sageOnlyEmail),
 			early404: booleanSetting(req.body.board_defaults_early_404, oldSettings.boardDefaults.early404),
 			ids: booleanSetting(req.body.board_defaults_ids, oldSettings.boardDefaults.ids),
-			flags: booleanSetting(req.body.board_defaults_flags, oldSettings.boardDefaults.flags),
+			customFlags: booleanSetting(req.body.board_defaults_custom_flags, oldSettings.boardDefaults.customFlags),
+			geoFlags: booleanSetting(req.body.board_defaults_geo_flags, oldSettings.boardDefaults.geoFlags),
 			userPostDelete: booleanSetting(req.body.board_defaults_user_post_delete, oldSettings.boardDefaults.userPostDelete),
 			userPostSpoiler: booleanSetting(req.body.board_defaults_user_post_spoiler, oldSettings.boardDefaults.userPostSpoiler),
 			userPostUnlink: booleanSetting(req.body.board_defaults_user_post_unlink, oldSettings.boardDefaults.userPostUnlink),

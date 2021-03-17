@@ -9,6 +9,7 @@ const path = require('path')
 	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, { countryCodesSet } = require(__dirname+'/../../helpers/countries.js')
 	, { Boards } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../queue.js');
 
@@ -20,9 +21,8 @@ module.exports = async (req, res, next) => {
 	// check all mime types before we try saving anything
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		if (!mimeTypes.allowed(req.files.file[i].mimetype, {
-				//banners can be static image or animated (gif, apng, etc)
 				image: true,
-				animatedImage: true,
+				animatedImage: true, //gif flags? i guess lol
 				video: false,
 				audio: false,
 				other: false
@@ -50,45 +50,21 @@ module.exports = async (req, res, next) => {
 		}
 	}
 
-	const filenames = [];
+	const newFlags = {};
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		const file = req.files.file[i];
-		const filename = file.sha256 + path.extname(file.name);
-		file.filename = filename;
+		let noExt = path.parse(file.name).name;
 
-		//check if already exists
-		const exists = await pathExists(`${uploadDirectory}/banner/${req.params.board}/${filename}`);
-
-		if (exists) {
-			await remove(file.tempFilePath);
-			continue;
+		//match case for real country flags
+		if (noExt.length === 2 && countryCodesSet.has(noExt.toUpperCase())) {
+			noExt = noExt.toUpperCase();
 		}
 
 		//add to list after checking it doesnt already exist
-		filenames.push(filename);
-
-		//get metadata from tempfile
-		const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
-		let geometry = imageData.size;
-		if (Array.isArray(geometry)) {
-			geometry = geometry[0];
-		}
-
-		//make sure its 300x100 banner
-		if (geometry.width > globalLimits.bannerFiles.width
-			|| geometry.height > globalLimits.bannerFiles.height
-			|| (globalLimits.bannerFiles.forceAspectRatio === true
-				&& (geometry.width/geometry.height !== 3))) {
-			await deleteTempFiles(req).catch(e => console.error);
-			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
-				'message': `Invalid file ${file.name}. Max banner dimensions are ${globalLimits.bannerFiles.width}x${globalLimits.bannerFiles.height}${globalLimits.bannerFiles.forceAspectRatio === true ? ' and must be a 3:1 aspect ratio' : '' }.`,
-				'redirect': redirect
-			});
-		}
+		newFlags[noExt] = file.name;
 
 		//then upload it
-		await moveUpload(file, filename, `banner/${req.params.board}`);
+		await moveUpload(file, file.name, `flag/${req.params.board}`);
 
 		//and delete the temp file
 		await remove(file.tempFilePath);
@@ -97,34 +73,18 @@ module.exports = async (req, res, next) => {
 
 	deleteTempFiles(req).catch(e => console.error);
 
-	// no new banners
-	if (filenames.length === 0) {
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'message': `Banner${res.locals.numFiles > 1 ? 's' : ''} already exist${res.locals.numFiles > 1 ? '' : 's'}`,
-			'redirect': redirect
-		});
-	}
+	const updatedFlags = { ...res.locals.board.flags, ...newFlags };
 
-	// add banners to the db
-	await Boards.addBanners(req.params.board, filenames);
+	// add flags in db
+	await Boards.setFlags(req.params.board, updatedFlags);
 
-	// add banners to board in memory
-	res.locals.board.banners = res.locals.board.banners.concat(filenames);
-
-	if (filenames.length > 0) {
-		//add public banners page to build queue
-		buildQueue.push({
-	        'task': 'buildBanners',
-			'options': {
-				'board': res.locals.board,
-			}
-		});
-	}
+	/*
+		should we rebuild here if (overwriting country flag){}?
+	*/
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
-		'message': `Uploaded ${filenames.length} new banners.`,
+		'message': `Uploaded ${res.locals.numFiles} new flags.`,
 		'redirect': redirect
 	});
 

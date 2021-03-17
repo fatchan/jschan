@@ -3,7 +3,7 @@
 const { ObjectId } = require(__dirname+'/../db/db.js')
 	//todo: separate these into a schema/set for differ ent routes and inject it before the controller, to prevent checkign a bunch of other shit for every post
 	, allowedArrays = new Set(['captcha', 'checkedcustompages', 'checkednews', 'checkedposts', 'globalcheckedposts', 'spoiler', 'strip_filename',
-		'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts', 'countries'])
+		'checkedreports', 'checkedbans', 'checkedbanners', 'checkedaccounts', 'checkedflags', 'countries'])
 	, trimFields = ['allowed_hosts', 'dnsbl_blacklists', 'other_mime_types', 'highlight_options_language_subset', 'themes', 'code_themes',
 		'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'tags', 'uri', 'moderators', 'announcement', 'description', 'message',
 		'name', 'subject', 'email', 'postpassword', 'password', 'default_name', 'report_reason', 'ban_reason', 'log_message', 'custom_css'] //trim if we dont want filed with whitespace
@@ -17,8 +17,9 @@ const { ObjectId } = require(__dirname+'/../db/db.js')
 		'lock_wait', 'prune_modlogs', 'prune_ips', 'thumb_size', 'video_thumb_percentage', 'quote_limit', 'preview_replies', 'sticky_preview_replies',
 		'early_404_fraction', 'early_404_replies', 'max_recent_news', 'highlight_options_threshold', 'global_limits_thread_limit_min', 'global_limits_thread_limit_max',
 		'global_limits_reply_limit_min', 'global_limits_reply_limit_max', 'global_limits_bump_limit_min', 'global_limits_bump_limit_max', 'global_limits_post_files_max',
-		'global_limits_post_files_size_max', 'global_limits_banner_files_width', 'global_limits_banner_files_height', 'global_limits_banner_files_max', 'global_limits_banner_files_total',
-		'global_alimits_banner_files_total', 'global_limits_banner_files_size_max', 'global_limits_field_length_name', 'global_limits_field_length_email',
+		'global_limits_post_files_size_max', 'global_limits_banner_files_width', 'global_limits_banner_files_height',
+		'global_limits_banner_files_max', 'global_limits_banner_files_total', 'global_limits_banner_files_size_max', 'global_limits_flag_files_max',
+		'global_limits_flag_files_total', 'global_limits_flag_files_size_max', 'global_limits_field_length_name', 'global_limits_field_length_email',
 		'global_limits_field_length_subject', 'global_limits_field_length_postpassword', 'global_limits_field_length_message', 'global_limits_field_length_report_reason',
 		'global_limits_field_length_ban_reason', 'global_limits_field_length_log_message', 'global_limits_field_length_uri', 'global_limits_field_length_boardname',
 		'global_limits_field_length_description', 'global_limits_multi_input_posts_anon', 'global_limits_multi_input_posts_staff', 'global_limits_custom_css_max',

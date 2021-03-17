@@ -4,7 +4,7 @@ module.exports = async (req, res, next) => {
 
 	res
 	.set('Cache-Control', 'private, max-age=5')
-	.render('managebanners', {
+	.render('manageassets', {
 		csrf: req.csrfToken(),
 	});
 

@@ -35,6 +35,8 @@ const express  = require('express')
 	, deleteNewsController = require(__dirname+'/forms/deletenews.js')
 	, uploadBannersController = require(__dirname+'/forms/uploadbanners.js')
 	, deleteBannersController = require(__dirname+'/forms/deletebanners.js')
+	, addFlagsController = require(__dirname+'/forms/addflags.js')
+	, deleteFlagsController = require(__dirname+'/forms/deleteflags.js')
 	, boardSettingsController = require(__dirname+'/forms/boardsettings.js')
 	, transferController = require(__dirname+'/forms/transfer.js')
 	, resignController = require(__dirname+'/forms/resign.js')
@@ -52,9 +54,9 @@ const express  = require('express')
 	, logout = require(__dirname+'/../models/forms/logout.js');
 
 //make new post
-router.post('/board/:board/post', geoAndTor, fileMiddlewares.handlePostFilesEarlyTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, fileMiddlewares.handlePostFiles,
+router.post('/board/:board/post', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, fileMiddlewares.posts,
 	paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, imageHashes, makePostController);
-router.post('/board/:board/modpost', geoAndTor, fileMiddlewares.handlePostFilesEarlyTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), fileMiddlewares.handlePostFiles,
+router.post('/board/:board/modpost', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn, hasPerms(3), fileMiddlewares.posts,
 	paramConverter, csrf, numFiles, blockBypassCheck, dnsblCheck, makePostController); //mod post has token instead of captcha
 
 //post actions
@@ -67,14 +69,16 @@ router.post('/appeal', geoAndTor, torPreBypassCheck, processIp, useSession, sess
 router.post('/editpost', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, paramConverter, Boards.bodyExists, calcPerms, hasPerms(3), editPostController);
 
 //board management forms
-router.post('/board/:board/transfer', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, transferController);
-router.post('/board/:board/settings', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
-router.post('/board/:board/addbanners', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, fileMiddlewares.handleBannerFiles, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
-router.post('/board/:board/deletebanners', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
-router.post('/board/:board/addcustompages', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, addCustomPageController); //add banners
-router.post('/board/:board/deletecustompages', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteCustomPageController); //delete banners
-router.post('/board/:board/editbans', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
-router.post('/board/:board/deleteboard', /*geoAndTor, torPreBypassCheck, processIp,*/ useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(config.get.deleteBoardPermLevel), deleteBoardController); //delete board
+router.post('/board/:board/transfer', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, transferController);
+router.post('/board/:board/settings', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, boardSettingsController);
+router.post('/board/:board/addbanners', useSession, sessionRefresh, fileMiddlewares.banner, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, uploadBannersController); //add banners
+router.post('/board/:board/deletebanners', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteBannersController); //delete banners
+router.post('/board/:board/addflags', useSession, sessionRefresh, fileMiddlewares.flag, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, numFiles, addFlagsController); //add flags
+router.post('/board/:board/deleteflags', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteFlagsController); //delete flags
+router.post('/board/:board/addcustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, addCustomPageController); //add banners
+router.post('/board/:board/deletecustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), paramConverter, deleteCustomPageController); //delete banners
+router.post('/board/:board/editbans', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), paramConverter, editBansController); //edit bans
+router.post('/board/:board/deleteboard', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(config.get.deleteBoardPermLevel), deleteBoardController); //delete board
 
 //global management forms
 router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), paramConverter, editBansController); //remove bans
@@ -98,7 +102,7 @@ router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLog
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptcha);
 //solve captcha for block bypass
-router.post('/blockbypass', geoAndTor, /*torPreBypassCheck,*/ processIp, verifyCaptcha, blockBypass);
+router.post('/blockbypass', geoAndTor, processIp, verifyCaptcha, blockBypass);
 
 module.exports = router;
 

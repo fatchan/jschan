@@ -93,6 +93,12 @@ class formHandler {
 			this.fileInput.addEventListener('change', e => this.fileInputChange(e));
 			this.fileLabel.addEventListener('auxclick', e => this.fileLabelAuxclick(e));
 		}
+		this.customFlagInput = this.form.elements.customflag;
+		this.selectedFlagImage = document.getElementById('selected-flag');
+		if (this.customFlagInput && this.selectedFlagImage) {
+			this.customFlagInput.addEventListener('change', () => this.updateFlagField(), false);
+			this.updateFlagField();
+		}
 		this.messageBox && this.messageBox.addEventListener('keydown', e => this.controlEnterSubmit(e));
 		form.addEventListener('paste', e => this.paste(e));
 		form.addEventListener('submit', e => this.formSubmit(e));
@@ -102,17 +108,24 @@ class formHandler {
 		const savedName = this.form.elements.name && this.form.elements.name.value;
 		this.form.reset();
 		if (this.form.elements.name) {
-			this.form.elements.name.value = savedName
+			this.form.elements.name.value = savedName;
 		}
 		if (this.form.elements.postpassword) {
 			this.form.elements.postpassword.value = localStorage.getItem('postpassword');
 		}
+		this.updateFlagField();
 		this.updateMessageBox();
 		this.files = [];
 		this.updateFilesText();
 		const captcha = this.form.querySelector('.captcharefresh');
 		if (captcha) {
 			captcha.dispatchEvent(new Event('click'));
+		}
+	}
+
+	updateFlagField() {
+		if (this.customFlagInput) {
+			this.selectedFlagImage.src = this.customFlagInput.options[this.customFlagInput.options.selectedIndex].dataset.src || '';
 		}
 	}
 
@@ -324,6 +337,7 @@ class formHandler {
 		}
 		const item = {
 			spoilers: this.fileUploadList.dataset.spoilers === 'true',
+			stripFilenames: this.fileUploadList.dataset.stripFilenames === 'true',
 			name: file.name,
 			hash: fileHash,
 		}

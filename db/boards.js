@@ -98,34 +98,55 @@ module.exports = {
 		);
 	},
 
-	removeBanners: (board, filenames) => {
-		cache.del(`board:${board}`);
-		cache.del(`banners:${board}`);
-		return db.updateOne(
-			{
-				'_id': board,
-			}, {
-				'$pullAll': {
-					'banners': filenames
-				}
-			}
-		);
-	},
-
-	addBanners: (board, filenames) => {
-		cache.del(`board:${board}`);
-		cache.del(`banners:${board}`);
+	addToArray: (board, key, list) => {
 		return db.updateOne(
 			{
 				'_id': board,
 			}, {
 				'$push': {
-					'banners': {
-						'$each': filenames
+					[key]: {
+						'$each': list
 					}
 				}
 			}
 		);
+
+	},
+
+	removeFromArray: (board, key, list) => {
+		return db.updateOne(
+			{
+				'_id': board,
+			}, {
+				'$pullAll': {
+					[key]: list
+				}
+			}
+		);
+	},
+
+	removeBanners: (board, filenames) => {
+		cache.del(`board:${board}`);
+		cache.del(`banners:${board}`);
+		return module.exports.removeFromArray(board, 'banners', filenames);
+	},
+
+	addBanners: (board, filenames) => {
+		cache.del(`board:${board}`);
+		cache.del(`banners:${board}`);
+		return module.exports.addToArray(board, 'banners', filenames)
+	},
+
+	setFlags: (board, flags) => {
+		cache.del(`board:${board}`);
+		//could use dot notation and set flags.x for only changes? seems a bit unsafe though and couldnt have . in name
+		return db.updateOne({
+			'_id': board,
+		}, {
+			'$set': {
+				'flags': flags,
+			}
+		});
 	},
 
 	getLocalListed: async () => {
