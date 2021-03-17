@@ -71,7 +71,7 @@ section.form-wrapper.flex-center
 				section.row
 					.label Flag
 					select#customflag(name='customflag')
-						option(value='') #{board.settings.geoFlags === true ? 'Country Flag' : ''}
+						option(value='') #{board.settings.geoFlags === true ? 'Geographic Flag' : 'None'}
 						each flag in boardFlags
 							option(value=flag[0] data-src=`/flag/${board._id}/${flag[1]}`) #{flag[0]}
 					img.jsonly#selected-flag
