@@ -125,9 +125,7 @@ class formHandler {
 
 	updateFlagField() {
 		if (this.customFlagInput) {
-			const flagSrc = this.customFlagInput.options[this.customFlagInput.options.selectedIndex].dataset.src || '';
-			this.selectedFlagImage.src = flagSrc;
-			this.selectedFlagImage.style.width = flagSrc ? '32px' : '0px';
+			this.selectedFlagImage.src = this.customFlagInput.options[this.customFlagInput.options.selectedIndex].dataset.src || '';
 		}
 	}
 

@@ -904,9 +904,10 @@ input:invalid, textarea:invalid {
 	height: 22px;
 }
 
-#selected-flag {
+#selected-flag[src^='/'] {
 	border: 1px solid var(--post-outline-color);
 	height: 22px;
+	width: 32px;
 }
 
 .board-description {
