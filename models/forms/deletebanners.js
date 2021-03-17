@@ -9,7 +9,7 @@ const { remove } = require('fs-extra')
 
 module.exports = async (req, res, next) => {
 
-	const redirect = `/${req.params.board}/manage/banners.html`;
+	const redirect = `/${req.params.board}/manage/assets.html`;
 
 	//delete file of all selected banners
 	await Promise.all(req.body.checkedbanners.map(async filename => {

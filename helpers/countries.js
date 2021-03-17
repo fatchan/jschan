@@ -22,6 +22,7 @@ countryNamesMap['LOKI'] = 'Lokinet SNApp';
 module.exports = {
 	countryNamesMap,
 	countryCodes,
+	countryCodesSet: new Set(countryCodes),
 	isAnonymizer: (code) => {
 		return anonymizerCountryCodesSet.has(code);
 	},

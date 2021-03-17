@@ -1,3 +1,4 @@
+include ../mixins/filelabel.pug
 - const isThread = thread != null;
 - const subjectRequired = (!isThread && board.settings.forceThreadSubject);
 - const messageRequired = (!isThread && board.settings.forceThreadMessage) || (isThread && board.settings.forceReplyMessage);
@@ -52,9 +53,9 @@ section.form-wrapper.flex-center
 						small Max #{maxFiles} files
 					small #{postFilesSize} total
 				span.col
-					include ./filelabel.pug
+					+filelabel('file', maxFiles)
 					input#file(type='file', name='file' multiple required=fileRequired )
-					.upload-list(data-spoilers=(board.settings.userPostSpoiler ? 'true' : 'false'))
+					.upload-list(data-spoilers=(board.settings.userPostSpoiler ? 'true' : 'false') data-strip-filenames='false')
 				if board.settings.userPostSpoiler
 					noscript
 						label.postform-style.ph-5.ml-1.fh
@@ -64,6 +65,16 @@ section.form-wrapper.flex-center
 			section.row
 				.label Password
 				input(type='password', name='postpassword', placeholder='Password to delete/spoiler/unlink later' maxlength='50')
+		if modview || board.settings.customFlags === true
+			- const boardFlags = Object.entries(board.flags)
+			if boardFlags.length > 0
+				section.row
+					.label Flag
+					select#customflag(name='customflag')
+						option(value='') #{board.settings.geoFlags === true ? 'Geographic Flag' : 'None'}
+						each flag in boardFlags
+							option(value=flag[0] data-src=`/flag/${board._id}/${flag[1]}`) #{flag[0]}
+					img.jsonly#selected-flag
 		if ((board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2) && !modview
 			if captchaType === 'text'
 				include ./captchasidelabel.pug

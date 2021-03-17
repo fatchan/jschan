@@ -896,6 +896,20 @@ input:invalid, textarea:invalid {
 	min-height: 100px;
 }
 
+.board-flag {
+	margin: 5px;
+	max-width: 100%;
+	border: 1px solid var(--post-outline-color);
+	width: 32px;
+	height: 22px;
+}
+
+#selected-flag[src^='/'] {
+	border: 1px solid var(--post-outline-color);
+	height: 22px;
+	width: 32px;
+}
+
 .board-description {
 	text-align:center;
 	margin: 0;
@@ -1515,7 +1529,7 @@ row.wrap.sb .col {
 
 }
 
-.flag {
+.flag, .customflag, .customflag::before {
 	display: inline-block;
 	width: 16px;
 	height: 11px;
@@ -1524,6 +1538,14 @@ row.wrap.sb .col {
 	image-rendering: pixelated;
 	image-rendering: -webkit-optimize-contrast;
 	-ms-interpolation-mode: nearest-neighbor;
+}
+
+.customflag {
+	background: none;
+}
+.customflag::before {
+	content: ' ';
+	background-position:-48px -165px;
 }
 
 .flag.flag-xx {
