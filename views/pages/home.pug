@@ -10,6 +10,9 @@ block head
 
 block content
 	h1.board-title #{meta.siteName}
+	pre.board-description.em
+		| The people shall not be deprived or abridged of their right to speak, to write, or to publish their sentiments;
+		| and the freedom of the press, as one of the great bulwarks of liberty, shall be inviolable.
 	.table-container.flex-center.mv-10.text-center
 		table(style='max-width:500px')
 			tr
@@ -34,23 +37,19 @@ block content
 						a(href='https://fatchan.is') .is
 						| )
 						|
+						a(href='http://fatchan.loki/')
+							img(src="/file/loki.png" title="lokinet" width="14" height="14")
+							|  fatchan.loki
+						|  (
+						a(href='https://lokinet.org/') Get Lokinet
+						| )
+						|
 						a(href='http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/') 🧅 Tor hidden service
 						|  (
 						a(href='https://www.torproject.org/download/') Get Tor Browser
 						| )
 						|
-						a(href='http://e8zhrn4ideccyy6wfs8gyytdgz8xmcn11f1y5o557z3g8a18gf4y.loki/')
-							img(src="/file/loki.png" title="lokinet" width="14" height="14")
-							|  Lokinet SNApp
-						|  (
-						a(href='https://lokinet.org/') Get Lokinet
-						| )
-						|
 						a(href='irc://irc.fatpeople.lol:+6697/fatchan') 💬 IRC
-						|
-						|
-						|
-						span.em "The people shall not be deprived or abridged of their right to speak, to write, or to publish their sentiments; and the freedom of the press, as one of the great bulwarks of liberty, shall be inviolable."
 	if globalAnnouncement.markdown
 		.table-container.flex-center.mv-5
 			table
