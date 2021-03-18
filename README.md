@@ -1,7 +1,7 @@
 # jschan
 Anonymous imageboard software.
 
-Demo/test instance: [Clearnet](https://fatchan.org),  [Tor hidden service](http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/), [Lokinet SNApp](http://e8zhrn4ideccyy6wfs8gyytdgz8xmcn11f1y5o557z3g8a18gf4y.loki/)
+Demo/test instance: [Clearnet](https://fatchan.org), [Tor hidden service](http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/), [Lokinet SNApp](http://fatchan.loki/)
 
 ## Goals
 - Oldschool look, newschool features
