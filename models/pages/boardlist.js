@@ -1,39 +1,61 @@
 'use strict';
 
 const config = require(__dirname+'/../../config.js')
-	, { Boards, Webring } = require(__dirname+'/../../db/')
+	, { Boards } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../redis.js')
 	, { relativeColor, relativeString } = require(__dirname+'/../../helpers/timeutils.js')
 	, pageQueryConverter = require(__dirname+'/../../helpers/pagequeryconverter.js')
-	, limit = 20;
+	, limit = 30;
 
 module.exports = async (req, res, next) => {
 
-	const { enableWebring } = config.get;
+	const { meta } = config.get;
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 	const direction = req.query.direction && req.query.direction === 'asc' ? 1 : -1;
 	const search = (typeof req.query.search === 'string' ? req.query.search : null);
-	let sort = req.query.sort && req.query.sort === 'activity' ? 'activity' : 'popularity';
+	const localFirst = req.query.local_first != null;
+	const sortType = req.query.sort && req.query.sort === 'activity' ? 'activity' : 'popularity';
+	let sort = {};
 
-	const cacheQuery = new URLSearchParams({ direction, sort, search, page });
+	const webringSites = [meta.siteName, ...(await Boards.webringSites())];
+	const webringSitesSet = new Set(webringSites);
+
+	let selectedSites = req.query.sites ? (typeof req.query.sites === 'string' ? [req.query.sites] : req.query.sites) : [];
+	let validSelectedSites = selectedSites.filter(ss => webringSitesSet.has(ss));
+	if (validSelectedSites.length === 0) {
+		validSelectedSites = webringSites;
+	}
+	const validSelectedSitesSet = new Set(validSelectedSites);
+
+	const cacheQuery = new URLSearchParams({ direction, sort: sortType, search, page, localFirst, selectedSites: [...validSelectedSitesSet] });
 	cacheQuery.sort();
 	const cacheQueryString = cacheQuery.toString();
 	const cached = await cache.get(`boardlist:${cacheQueryString}`);
-
-	let localBoards, webringBoards, localPages, webringPages, maxPage;
-	if (cached) {
-		({ localBoards, webringBoards, localPages, webringPages, maxPage } = cached);
-	} else {
-		if (sort === 'activity') {
-			sort = {
-				'lastPostTimestamp': direction
-			}
+	const { shown, notShown } = webringSites.reduce((acc, ws) => {
+		if (validSelectedSitesSet.has(ws)) {
+			acc.shown.push(ws);
 		} else {
-			sort = {
-				'ips': direction,
-				'pph': direction,
-				'sequence_value': direction
-			};
+			acc.notShown.push(ws)
+		}
+		return acc;
+	}, { shown: [], notShown: [] });
+	validSelectedSites = validSelectedSites.map(x => x === meta.siteName ? null : x);
+
+	if (localFirst && validSelectedSitesSet.has(meta.siteName)) {
+		//meh.
+		sort['webring'] = 1;
+	}
+	let boards, maxPage;
+	if (cached) {
+		({ boards, maxPage } = cached);
+	} else {
+
+		if (sortType === 'activity') {
+			sort['lastPostTimestamp'] = direction;
+		} else {
+			sort['ips'] = direction;
+			sort['pph'] = direction;
+			sort['sequence_value'] = direction;
 		}
 
 		let filter = {};
@@ -44,42 +66,25 @@ module.exports = async (req, res, next) => {
 		}
 
 		try {
-			[ localBoards, localPages, webringBoards, webringPages ] = await Promise.all([
-				Boards.boardSort(offset, limit, sort, filter),
-				Boards.count(filter),
-				enableWebring ? Webring.boardSort(offset, limit, sort, filter) : null,
-				enableWebring ? Webring.count(filter) : 0,
+			[ boards, maxPage ] = await Promise.all([
+				Boards.boardSort(offset, limit, sort, filter, false, validSelectedSites),
+				Boards.count(filter, false, validSelectedSites),
 			]);
-			localPages = Math.ceil(localPages / limit);
-			webringPages = Math.ceil(webringPages / limit);
-			maxPage = Math.max(localPages, webringPages);
+			maxPage = Math.ceil(maxPage/limit);
 		} catch (err) {
 			return next(err);
 		}
 		const now = new Date();
-		if (localBoards) {
-			for (let i = 0; i < localBoards.length; i++) {
-				if (localBoards[i].lastPostTimestamp) {
-					const lastPostDate = new Date(localBoards[i].lastPostTimestamp);
-					localBoards[i].lastPostTimestamp = {
-						text: relativeString(now, lastPostDate),
-						color: relativeColor(now, lastPostDate)
-					}
+		for (let i = 0; i < boards.length; i++) {
+			if (boards[i].lastPostTimestamp) {
+				const lastPostDate = new Date(boards[i].lastPostTimestamp);
+				boards[i].lastPostTimestamp = {
+					text: relativeString(now, lastPostDate),
+					color: relativeColor(now, lastPostDate)
 				}
 			}
 		}
-		if (webringBoards) {
-			for (let i = 0; i < webringBoards.length; i++) {
-				if (webringBoards[i].lastPostTimestamp) {
-					const lastPostDate = new Date(webringBoards[i].lastPostTimestamp);
-					webringBoards[i].lastPostTimestamp = {
-						text: relativeString(now, lastPostDate),
-						color: relativeColor(now, lastPostDate)
-					}
-				}
-			}
-		}
-		cache.set(`boardlist:${cacheQueryString}`, { localBoards, localPages, webringBoards, webringPages, maxPage }, 60);
+		cache.set(`boardlist:${cacheQueryString}`, { boards, maxPage }, 60);
 	}
 
 	res
@@ -87,18 +92,19 @@ module.exports = async (req, res, next) => {
 
 	if (req.path === '/boards.json') {
 		res.json({
-			localBoards,
-			webringBoards,
+			boards,
 			page,
 			maxPage,
 		});
 	} else {
 		res.render('boardlist', {
-			localBoards,
-			webringBoards,
+			boards,
+			shown,
+			notShown,
 			page,
 			maxPage,
 			query: req.query,
+			localFirst,
 			search,
 			queryString,
 		});

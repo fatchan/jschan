@@ -2,9 +2,9 @@ const numCpus = require('os').cpus().length;
 module.exports = {
 	// Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
 	apps : [{
-		name: 'build-worker',
+		name: 'dev-build-worker',
 		script: 'worker.js',
-		instances: Math.floor(numCpus/2), //if you only have 1 core and floor to 0, 0 just means "all cores" which is correct in that case.
+		instances: 1,
 		autorestart: true,
 		watch: false,
 		max_memory_restart: '1G',
@@ -19,9 +19,9 @@ module.exports = {
 			NODE_ENV: 'production'
 		}
 	}, {
-		name: 'chan',
+		name: 'dev-chan',
 		script: 'server.js',
-		instances: Math.floor(numCpus/2),
+		instances: 1,
 		autorestart: true,
 		watch: false,
 		max_memory_restart: '1G',
@@ -35,7 +35,7 @@ module.exports = {
 			NODE_ENV: 'production'
 		}
 	}, {
-		name: 'schedules',
+		name: 'dev-schedules',
 		script: 'schedules/index.js',
 		instances: 1,
 		autorestart: true,

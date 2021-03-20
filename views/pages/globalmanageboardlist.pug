@@ -15,31 +15,34 @@ block content
 	.flexcenter.mv-10
 		form.form-post(action='/globalmanage/boards.html' method='GET')
 			input(type='hidden' value=page)
-			.row
-				.label Search
-				input(type='text' name='search' value=search placeholder='Uri or tags')
-			.row
-				.label Sort
-				select(name='sort')
-					option(value='popularity') Popularity
-					option(value='activity' selected=query.sort === 'activity') Latest Activity
-			.row
-				.label Order
-				select(name='direction')
-					option(value='desc') Descending
-					option(value='asc' selected=query.direction === 'asc') Ascending
-			.row
-				.label Unlisted
-				label.postform-style.ph-5
-					input(type='checkbox', name='filter_unlisted', value='1' checked=(query.filter_unlisted != null))
-			.row
-				.label SFW
-				label.postform-style.ph-5
-					input(type='checkbox', name='filter_sfw', value='1' checked=(query.filter_sfw != null))
-			.row
-				.label Abandoned
-				label.postform-style.ph-5
-					input(type='checkbox', name='filter_abandoned', value='1' checked=(query.filter_abandoned != null))
+			.row.wrap.sb
+				.col.mr-5
+					.row
+						.label Search
+						input(type='text' name='search' value=search placeholder='Uri or tags')
+					.row
+						.label Sort
+						select(name='sort')
+							option(value='popularity') Popularity
+							option(value='activity' selected=query.sort === 'activity') Latest Activity
+					.row
+						.label Order
+						select(name='direction')
+							option(value='desc') Descending
+							option(value='asc' selected=query.direction === 'asc') Ascending
+				.col
+					.row
+						.label Unlisted
+						label.postform-style.ph-5
+							input(type='checkbox', name='filter_unlisted', value='1' checked=(query.filter_unlisted != null))
+					.row
+						.label SFW
+						label.postform-style.ph-5
+							input(type='checkbox', name='filter_sfw', value='1' checked=(query.filter_sfw != null))
+					.row
+						.label Abandoned
+						label.postform-style.ph-5
+							input(type='checkbox', name='filter_abandoned', value='1' checked=(query.filter_abandoned != null))
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
 		h4.text-center.mv-10 Board List:

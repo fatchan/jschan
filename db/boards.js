@@ -169,10 +169,11 @@ module.exports = {
 		return listedBoards;
 	},
 
-	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}, showSensitive=false) => {
+	boardSort: (skip=0, limit=50, sort={ ips:-1, pph:-1, sequence_value:-1 }, filter={}, showSensitive=false, webringSites=false) => {
 		const addedFilter = {};
 		const projection = {
 			'_id': 1,
+			'uri': 1,
 			'lastPostTimestamp': 1,
 			'sequence_value': 1,
 			'pph': 1,
@@ -181,11 +182,22 @@ module.exports = {
 			'settings.sfw': 1,
 			'settings.description': 1,
 			'settings.name': 1,
-			'settings.tags': 1,
+			'tags': 1,
+			'path': 1,
+			'siteName': 1,
+			'webring': 1,
 			'settings.unlistedLocal': 1,
 		};
+		if (webringSites) {
+			addedFilter['siteName'] = {
+				'$in': webringSites,
+			};
+		}
 		if (!showSensitive) {
-			addedFilter['settings.unlistedLocal'] = false;
+			addedFilter['settings.unlistedLocal'] = { '$ne': true };
+			if (!webringSites) {
+				addedFilter['webring'] = false;
+			}
 		} else {
 			if (filter.filter_sfw) {
 				addedFilter['settings.sfw'] = true;
@@ -197,12 +209,14 @@ module.exports = {
 				addedFilter['owner'] = null;
 				addedFilter['settings.moderators'] = [];
 			}
+			addedFilter['webring'] = false;
 			projection['settings.moderators'] = 1;
 			projection['owner'] = 1;
 		}
 		if (filter.search) {
 			addedFilter['$or'] = [
-				{ 'settings.tags': filter.search },
+				{ 'tags': filter.search },
+				{ 'uri': filter.search },
 				{ '_id':  filter.search },
 			];
 		}
@@ -215,7 +229,8 @@ module.exports = {
 
 	webringBoards: () => {
 		return db.find({
-			'settings.unlistedWebring': false
+			'webring': false,
+			'settings.unlistedWebring': false,
 		}, {
 			'projection': {
 				'_id': 1,
@@ -227,15 +242,20 @@ module.exports = {
 				'settings.sfw': 1,
 				'settings.description': 1,
 				'settings.name': 1,
-				'settings.tags': 1,
+				'tags': 1,
 			}
 		}).toArray();
 	},
 
-	count: (filter, showSensitive=false) => {
+	count: (filter, showSensitive=false, webringSites=false) => {
 		const addedFilter = {};
+		if (webringSites) {
+			addedFilter['siteName'] = {
+				'$in': webringSites,
+			};
+		}
 		if (!showSensitive) {
-			addedFilter['settings.unlistedLocal'] = false;
+			addedFilter['settings.unlistedLocal'] = { $ne: true };
 		} else {
 			if (filter.filter_sfw) {
 				addedFilter['settings.sfw'] = true;
@@ -247,21 +267,48 @@ module.exports = {
 				addedFilter['owner'] = null;
 				addedFilter['settings.moderators'] = [];
 			}
+			addedFilter['webring'] = false;
 		}
 		if (filter.search) {
 			addedFilter['$or'] = [
-				{ 'settings.tags': filter.search },
+				{ 'tags': filter.search },
+				{ 'uri':  filter.search },
 				{ '_id':  filter.search },
 			];
 		}
 		return db.countDocuments(addedFilter);
 	},
 
+	webringSites: async () => {
+		let webringSites = await cache.get('webringsites');
+		if (!webringSites) {
+			webringSites = await db.aggregate([
+				{
+					'$match': {
+						'webring': true
+					},
+				},
+				{
+					'$group': {
+						'_id': null,
+						'sites': {
+							'$addToSet': '$siteName'
+						}
+					}
+				}
+			])
+			.toArray()
+			.then(res => res[0].sites);
+			cache.set('webringsites', webringSites);
+		}
+		return webringSites;
+	},
+
 	totalStats: () => {
 		return db.aggregate([
 			{
 				'$group': {
-					'_id': null,
+					'_id': '$webring',
 					'posts': {
 						'$sum': '$sequence_value'
 					},
@@ -279,10 +326,14 @@ module.exports = {
 							'$cond': ['$settings.unlistedLocal', 1, 0]
 						}
 					},
-					//removed ips because sum is inaccurate
 				}
 			}
-		]).toArray().then(res => res[0]);
+		])
+		.toArray()
+		.then(res => {
+			res.sort((a, b) => a._id ? 1 : -1);
+			return res;
+		});
 	},
 
 	exists: async (req, res, next) => {

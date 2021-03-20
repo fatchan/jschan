@@ -9,58 +9,56 @@ block content
 	.flexcenter.mv-10
 		form.form-post(action='/boards.html' method='GET')
 			input(type='hidden' value=page)
-			.row
-				.label Search
-				input(type='text' name='search' value=search placeholder='Uri or tags')
-			.row
-				.label Sort
-				select(name='sort')
-					option(value='popularity') Popularity
-					option(value='activity' selected=query.sort === 'activity') Latest Activity
-			.row
-				.label Order
-				select(name='direction')
-					option(value='desc') Descending
-					option(value='asc' selected=query.direction === 'asc') Ascending
+			.row.wrap.sb
+				div(class=`col${enableWebring ? ' mr-5' : ''}`)
+					.row
+						.label Search
+						input(type='text' name='search' value=search placeholder='Uri or tags')
+					.row
+						.label Sort
+						select(name='sort')
+							option(value='popularity') Popularity
+							option(value='activity' selected=query.sort === 'activity') Latest Activity
+					.row
+						.label Order
+						select(name='direction')
+							option(value='desc') Descending
+							option(value='asc' selected=query.direction === 'asc') Ascending
+					.row
+						.label Local First
+						label.postform-style.ph-5
+							input(type='checkbox', name='local_first', value='true' checked=localFirst)
+				if enableWebring
+					.col
+						.row
+							.label Sites
+							select(name='sites' size='5' multiple)
+								optgroup(label='Shown')
+									each site in shown
+										option(value=site selected=true) #{site}
+								optgroup(label='Not Shown')
+									each site in notShown
+										option(value=site) #{site}
 			input(type='submit', value='Filter')
-	if localBoards && localBoards.length > 0
-		h4.board-description Local Boards
+	if boards && boards.length > 0
 		+boardtable(true, true)
-			each board in localBoards
+			each board in boards
+				- const path = board.webring ? board.path : `/${board._id}/index.html`;
 				tr
 					td 
 						span.left
+							if board.webring === true
+								span.help(title='Webring') &#x1F517;
+								|  
 							if board.settings.sfw === true
 								span.help(title='SFW') &#x1F4BC;
 								|  
-							if board.settings.unlistedLocal === true
-								span.help(title='Unlisted') &#x1F441;&#xFE0F;
-								|  
-						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
-					td #{board.settings.description}
+						a(href=path) #{board.webring ? board.siteName : ''} /#{board.webring ? board.uri : board._id}/ - #{board.settings.name}
+					td #{board.settings.description || '-'}
 					td #{board.pph}
-					td #{board.ppd}
+					td #{board.ppd || '-'}
 					td #{board.ips}
 					td #{board.sequence_value-1}
-					if board.lastPostTimestamp
-						td(style=`background-color: ${board.lastPostTimestamp.color}`) #{board.lastPostTimestamp.text}
-					else
-						td -
-	if webringBoards && webringBoards.length > 0
-		h4.board-description Webring Boards
-		+boardtable(false, true)
-			each board in webringBoards
-				tr
-					td
-						span.left
-							if !board.nsfw
-								span.help(title='SFW') &#x1F4BC;
-								|  
-						a(href=board.path) #{board.siteName} /#{board.uri}/ - #{board.title}
-					td #{board.subtitle || '-'}
-					td #{board.postsPerHour}
-					td #{board.uniqueUsers}
-					td #{board.totalPosts}
 					if board.lastPostTimestamp
 						td(style=`background-color: ${board.lastPostTimestamp.color}`) #{board.lastPostTimestamp.text}
 					else
