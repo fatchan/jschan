@@ -233,7 +233,9 @@ const moderatePost = (postContainer) => {
 		.filter(e => e.name === 'checkedposts')
 		.forEach(e => e.checked = false);
 	postCheck.checked = true;
-	captchaController.loadCaptcha(actionCaptcha);
+	if (actionCaptcha) {
+		captchaController.loadCaptcha(actionCaptcha);
+	}
 }
 
 const postMenuChange = function(e) {
