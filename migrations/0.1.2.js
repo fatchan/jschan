@@ -5,6 +5,9 @@ module.exports = async(db, redis) => {
 	await db.collection('boards').updateMany({}, {
 		'$set': {
 			'webring': false,
+		},
+		'$rename': {
+			'settings.tags': 'tags'
 		}
 	});
 	await db.collection('boards').dropIndexes();
