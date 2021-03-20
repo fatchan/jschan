@@ -1,6 +1,6 @@
 include ./filelabel.pug
 
-mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameList, filePath, imageClass)
+mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameList, filePath, imageClass, showName)
 	- const capitalName = `${name.charAt(0).toUpperCase()}${name.substring(1)}`;
 	h4.no-m-p Add #{capitalName}s (Max #{total})
 	.form-wrapper.flexleft.mt-10
@@ -30,5 +30,6 @@ mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameL
 						label.banner-check
 							input(type='checkbox' name=checkName value=nameList[index])
 							img(class=imageClass src=`${filePath}/${file}` loading='lazy')
-							small #{file.substring(0, file.lastIndexOf('.'))}
+							if showName
+								small #{file.substring(0, file.lastIndexOf('.'))}
 				input(type='submit', value='delete')
