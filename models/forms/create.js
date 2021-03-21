@@ -48,6 +48,7 @@ module.exports = async (req, res, next) => {
 		'ppd': 0,
 		'ips': 0,
 		'lastPostTimestamp': null,
+		'webring': false,
 		'settings': {
 			name,
 			description,
