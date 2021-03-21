@@ -15,7 +15,7 @@
     "del": "^6.0.0",
     "dnsbl": "^3.2.0",
     "express": "^4.17.1",
-    "express-fileupload": "git+https://gitgud.io/fatchan/express-fileupload.git#3ad9916d005c434efc783e3da8d526072f7e772f",
+    "express-fileupload": "git+https://gitgud.io/fatchan/express-fileupload.git#b2c0d9c0868fed3b4bbd5c0318cb162ee81146b4",
     "express-session": "^1.17.0",
     "file-type": "^15.0.1",
     "fluent-ffmpeg": "^2.1.2",
