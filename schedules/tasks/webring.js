@@ -80,7 +80,7 @@ module.exports = {
 				return x;
 			});
 			await Boards.db.insertMany(webringBoards);
-			await Redis.set('webringsites', [...siteNames]);
+			await Redis.set('webringsites', [...siteNames].sort((a, b) => a.localeCompare(b)));
 		}
 
 		//update webring.json
