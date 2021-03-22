@@ -74,6 +74,7 @@ block content
 						td
 							- const newsDate = new Date(post.date);
 							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
+
 	if boards && boards.length > 0
 		+boardtable(true, false)
 			each board in boards
@@ -107,13 +108,13 @@ block content
 		.table-container.flex-center.mv-10.text-center
 			table(style='max-width:450px')
 				tr
-					th Overall Stats
+					th Local Stats
 				tr
 					td
 						pre.no-m-p
 							| There are currently #[span.bold #{localStats.total-localStats.unlisted}] public boards, #[span.bold #{localStats.total}] in total. Sitewide, #[span.bold #{localStats.ppd}] post#{localStats.ppd === 1 ? ' has' : 's have'} been made in the last day, #[span.bold #{localStats.pph}] in the last hour, #[span.bold #{localStats.posts}] in total.
 							| #[span.bold #{fileStats.count}] file#{fileStats.count === 1 ? ' is' : 's are'} being served, totaling #[span.bold #{fileStats.totalSizeString}].
-		if enableWebring === true
+		if enableWebring === true && webringStats != null
 			.table-container.flex-center.mv-10.text-center
 				table(style='max-width:450px')
 					tr
