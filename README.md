@@ -46,6 +46,7 @@ Demo/test instance: [Clearnet](https://fatchan.org),  [Tor hidden service](http:
 
 - Separate, non-root user to run the application
 - Basic security like ssh root login disabled, key login only, firewall (ufw works) deny all incoming on ports besides http/s and ssh.
+- Set the timezone to UTC
 
 **2. Install dependencies.**
 
@@ -108,7 +109,7 @@ If your nginx doesn't have the necessary module by default, or is using v2 inste
 
 If you use cloudflare, please read [these](https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-Logging-visitor-IP-addresses-with-mod-cloudflare-) [articles](https://support.cloudflare.com/hc/en-us/articles/200168236-Configuring-Cloudflare-IP-Geolocation) to setup proper IP forwarding and geolocation headers. Similar steps would apply to other CDNs/reverse proxies.
 
-Also included is an "nginx_advanced" config, and a snippets folder for advanced users who want to better organise and more easily customise the nginx configuration. It functions the same as the normal nginx.example, but you need to create the snippets folder in /etc/nginx/snippets, and copy the example snippets.
+Also included is an "nginx_advanced" config, and a snippets folder for advanced users who want to better organise and more easily customise the nginx configuration. It functions the same as the normal nginx.example, but you need to create the snippets folder in /etc/nginx/snippets, copy the example snippets, and edit them with your domain and installation path.
 
 - Use https://realfavicongenerator.net/ to generate favicons how you want them to look and replace the files in gulp/res/icons/ with the icons from that package.
 
