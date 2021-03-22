@@ -298,7 +298,12 @@ module.exports = {
 				}
 			])
 			.toArray()
-			.then(res => res[0].sites.sort((a, b) => a.localeCompare(b)));
+			.then(res => {
+				if (res[0].sites) {
+					return res[0].sites.sort((a, b) => a.localeCompare(b));
+				}
+				return [];
+			});
 			cache.set('webringsites', webringSites);
 		}
 		return webringSites;
