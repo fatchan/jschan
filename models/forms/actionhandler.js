@@ -259,7 +259,7 @@ module.exports = async (req, res, next) => {
 		buildBoards = (await Boards.db.find({
 			'_id': {
 				'$in': threadBoards
-			}
+			},
 		}).toArray()).reduce((acc, curr) => {
 			if (!acc[curr._id]) {
 				acc[curr._id] = curr;

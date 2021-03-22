@@ -105,7 +105,6 @@ module.exports = async (req, res, next) => {
 		'fileR9KMode': numberSetting(req.body.file_r9k_mode, oldSettings.fileR9KMode),
 		'filterMode': numberSetting(req.body.filter_mode, oldSettings.filterMode),
 		'filterBanDuration': numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
-		'tags': arraySetting(req.body.tags, oldSettings.tags, 10),
 		'filters': arraySetting(req.body.filters, oldSettings.filters, 50),
 		'blockedCountries': req.body.countries || [],
 		'disableAnonymizerFilePosting': booleanSetting(req.body.disable_anonymizer_file_posting),
@@ -128,6 +127,7 @@ module.exports = async (req, res, next) => {
 	await Boards.updateOne(req.params.board, {
 		'$set':  {
 			'settings': newSettings,
+			'tags': arraySetting(req.body.tags, oldSettings.tags, 10),
 		}
 	});
 

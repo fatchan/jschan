@@ -19,6 +19,12 @@ main.minimal {
 	height: 100vh;
 }
 
+.form-post {
+	display: flex;
+	flex-direction: column;
+	max-width: 100%;
+}
+
 .row {
 	display: flex;
 	flex-direction: row;
@@ -741,12 +747,6 @@ span.captchacheckbox {
 
 .toggle:checked + * {
 	display: flex;
-}
-
-.form-post {
-	display: flex;
-	flex-direction: column;
-	max-width: 100%;
 }
 
 .user-id {

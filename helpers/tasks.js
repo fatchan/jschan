@@ -242,8 +242,10 @@ module.exports = {
 			Files.activeContent(), //size ans number of files
 			News.find(maxRecentNews), //some recent newsposts
 		]);
+		const [ localStats, webringStats ] = totalStats;
 		const { html } = await render('index.html', 'home.pug', {
-			totalStats,
+			localStats,
+			webringStats,
 			boards,
 			fileStats,
 			recentNews,
