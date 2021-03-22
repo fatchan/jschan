@@ -4,7 +4,8 @@ const fetch = require('node-fetch')
 	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, config = require(__dirname+'/../../config.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
-	, { Boards, Webring } = require(__dirname+'/../../db/')
+	, Redis = require(__dirname+'/../../redis.js')
+	, { Boards } = require(__dirname+'/../../db/')
 	, { outputFile } = require('fs-extra')
 	, SocksProxyAgent = require('socks-proxy-agent')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
@@ -21,6 +22,7 @@ module.exports = {
 
 		const agent = proxy.enabled ? new SocksProxyAgent(require('url').parse(proxy.address)) : null;
 		const visited = new Map();
+		const siteNames = new Set();
 		let known = new Set(following);
 		let webringBoards = []; //list of webring boards
 		while (known.size > visited.size) {
@@ -51,31 +53,34 @@ module.exports = {
 						.filter(url => !blacklist.some(x => url.includes(x)) && !url.includes(meta.url))
 						.forEach(url => known.add(url));
 				}
+				siteNames.add(ring.name);
 				if (ring.boards && ring.boards.length > 0) {
 					//add some stuff for the boardlist and then add their boards
 					ring.boards.forEach(board => {
 						board.siteName = ring.name;
 						//convert to numbers because old infinity webring plugin returns string
-						board.totalPosts = parseInt(board.totalPosts);
-						board.postsPerHour = parseInt(board.postsPerHour);
-						board.uniqueUsers = parseInt(board.uniqueUsers);
+						board.sequence_value = parseInt(board.totalPosts);
+						board.pph = parseInt(board.postsPerHour);
+						board.ips = parseInt(board.uniqueUsers);
+						board.settings = {
+							sfw: !board.nsfw,
+							name: board.title,
+							description: board.subtitle,
+						};
 					});
 					webringBoards = webringBoards.concat(ring.boards);
 				}
 			}
 		}
 
+		await Boards.db.deleteMany({ webring: true });
 		if (webringBoards.length > 0) {
-			//$out from temp collection to replace webring boards
-			const tempCollection = Mongo.db.collection('tempwebring');
-			await tempCollection.insertMany(webringBoards);
-			await tempCollection.aggregate([
-				{ $out : 'webring' }
-			]).toArray();
-			await tempCollection.drop();
-		} else {
-			//otherwise none found, so delete them all
-			await Webring.deleteAll();
+			webringBoards = webringBoards.map(x => {
+				x.webring = true;
+				return x;
+			});
+			await Boards.db.insertMany(webringBoards);
+			await Redis.set('webringsites', [...siteNames].sort((a, b) => a.localeCompare(b)));
 		}
 
 		//update webring.json
@@ -96,10 +101,11 @@ module.exports = {
 					subtitle: b.settings.description,
 					path: `${meta.url}/${b._id}/`,
 					postsPerHour: b.pph,
+					postsPerDay: b.ppd,
 					totalPosts: b.sequence_value-1,
 					uniqueUsers: b.ips,
 					nsfw: !b.settings.sfw,
-					tags: b.settings.tags,
+					tags: b.tags,
 					lastPostTimestamp: b.lastPostTimestamp,
 				};
 			}),
