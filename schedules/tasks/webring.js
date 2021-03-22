@@ -67,6 +67,7 @@ module.exports = {
 							name: board.title,
 							description: board.subtitle,
 						};
+						board.lastPostTimestamp = new Date(board.lastPostTimestamp.toString());
 					});
 					webringBoards = webringBoards.concat(ring.boards);
 				}
