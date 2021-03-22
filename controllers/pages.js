@@ -31,7 +31,11 @@ router.get('/index.html', home);
 router.get('/news.html', news);
 
 //board list
-router.get('/boards.(html|json)', useSession, sessionRefresh, calcPerms, boardlist);
+router.get('/boards.(html|json)', boardlist);
+
+//overboard
+router.get('/overboard.html', overboard); //overboard
+router.get('/catalog.html', overboardCatalog); //overboard catalog view
 
 //board pages
 router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, paramConverter, board); //index
@@ -41,9 +45,6 @@ router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
 router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
 router.get('/:board/custompage/:page.html', Boards.exists, customPage); //board custom page
 router.get('/:board/banners.html', Boards.exists, banners); //banners
-router.get('/overboard.html', overboard); //overboard
-router.get('/catalog.html', overboardCatalog); //overboard catalog view
-router.get('/create.html', useSession, sessionRefresh, isLoggedIn, create); //create new board
 router.get('/randombanner', randombanner); //random banner
 
 //board manage pages
@@ -84,5 +85,6 @@ router.get('/account.html', useSession, sessionRefresh, isLoggedIn, csrf, accoun
 router.get('/login.html', login);
 router.get('/register.html', register);
 router.get('/changepassword.html', changePassword);
+router.get('/create.html', useSession, sessionRefresh, isLoggedIn, create); //create new board
 
 module.exports = router;
