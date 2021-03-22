@@ -40,6 +40,7 @@ module.exports = async (req, res, next) => {
 	const newBoard = {
 		'_id': uri,
 		owner,
+		tags,
 		'banners': [],
 		'flags': [],
 		'sequence_value': 1,
@@ -47,10 +48,10 @@ module.exports = async (req, res, next) => {
 		'ppd': 0,
 		'ips': 0,
 		'lastPostTimestamp': null,
+		'webring': false,
 		'settings': {
 			name,
 			description,
-			tags,
 			'moderators': [],
 			...boardDefaults
 		}

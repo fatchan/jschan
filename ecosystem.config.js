@@ -4,7 +4,7 @@ module.exports = {
 	apps : [{
 		name: 'build-worker',
 		script: 'worker.js',
-		instances: Math.floor(numCpus/2), //if you only have 1 core and floor to 0, 0 just means "all cores" which is correct in that case.
+		instances: Math.floor(numCpus/2),
 		autorestart: true,
 		watch: false,
 		max_memory_restart: '1G',

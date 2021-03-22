@@ -49,7 +49,7 @@ block content
 						input(type='text' name='description' value=board.settings.description)
 					.row
 						.label Tags
-						textarea(name='tags' placeholder='Newline separated, max 10') #{board.settings.tags.join('\n')}
+						textarea(name='tags' placeholder='Newline separated, max 10') #{board.tags.join('\n')}
 					.row
 						.label Moderators
 						textarea(name='moderators' placeholder='Newline separated, max 10') #{board.settings.moderators.join('\n')}

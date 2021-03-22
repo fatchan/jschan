@@ -38,6 +38,8 @@ const config = require(__dirname+'/config.js')
 
 	// disable useless express header
 	app.disable('x-powered-by');
+	//query strings
+	app.set('query parser', 'simple');
 	// parse forms
 	app.use(express.urlencoded({extended: false}));
 	// parse cookies

@@ -59,14 +59,14 @@ async function wipe() {
 	const db = Mongo.db;
 
 	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
-		'modlog','news', 'posts', 'poststats', 'ratelimit', 'webring', 'bypass'];
+		'modlog','news', 'posts', 'poststats', 'ratelimit', 'bypass'];
 	for (const name of collectionNames) {
 		//drop collection so gulp reset can be run again. ignores error of dropping non existing collection first time
 		await db.dropCollection(name).catch(e => {});
 		await db.createCollection(name);
 	}
 
-	const { Webring, Boards, Posts, Captchas, Ratelimits, News, CustomPages,
+	const { Boards, Posts, Captchas, Ratelimits, News, CustomPages,
 		Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
 
 	//wipe db shit
@@ -77,7 +77,6 @@ async function wipe() {
 		Accounts.deleteAll(),
 		Posts.deleteAll(),
 		Boards.deleteAll(),
-		Webring.deleteAll(),
 		Bans.deleteAll(),
 		Files.deleteAll(),
 		Stats.deleteAll(),
@@ -89,11 +88,9 @@ async function wipe() {
 	//add indexes - should profiled and changed at some point if necessary
 	await Stats.db.createIndex({board:1, hour:1})
 	await Boards.db.createIndex({ips: 1, pph:1, sequence_value:1})
-	await Boards.db.createIndex({'settings.tags':1})
+	await Boards.db.createIndex({tags: 1})
+	await Boards.db.createIndex({uri: 1})
 	await Boards.db.createIndex({lastPostTimestamp:1})
-	await Webring.db.createIndex({uniqueUsers:1, postsPerHour:1, totalPosts:1})
-	await Webring.db.createIndex({tags:1})
-	await Webring.db.createIndex({lastPostTimestamp:1})
 	await Bans.db.dropIndexes()
 	await Captchas.db.dropIndexes()
 	await Ratelimits.db.dropIndexes()
@@ -234,6 +231,7 @@ async function cache() {
 		Redis.deletePattern('blacklisted:*'),
 		Redis.deletePattern('overboard'),
 		Redis.deletePattern('catalog'),
+		Redis.deletePattern('webringsites'),
 	]);
 }
 

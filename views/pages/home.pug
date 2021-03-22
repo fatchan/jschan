@@ -89,7 +89,7 @@ block content
 					td #{board.ppd}
 					td #{board.ips}
 					td #{board.sequence_value-1}
-			if totalStats.total-totalStats.unlisted > boards.length
+			if localStats.total-localStats.unlisted > boards.length
 				tr
 					td(colspan=5)
 						a.bold(href='/boards.html') More Boards
@@ -111,5 +111,14 @@ block content
 				tr
 					td
 						pre.no-m-p
-							| There are currently #[span.bold #{totalStats.total-totalStats.unlisted}] public boards, #[span.bold #{totalStats.total}] in total. Sitewide, #[span.bold #{totalStats.ppd}] post#{totalStats.ppd === 1 ? ' has' : 's have'} been made in the last day, #[span.bold #{totalStats.pph}] in the last hour, #[span.bold #{totalStats.posts}] in total.
+							| There are currently #[span.bold #{localStats.total-localStats.unlisted}] public boards, #[span.bold #{localStats.total}] in total. Sitewide, #[span.bold #{localStats.ppd}] post#{localStats.ppd === 1 ? ' has' : 's have'} been made in the last day, #[span.bold #{localStats.pph}] in the last hour, #[span.bold #{localStats.posts}] in total.
 							| #[span.bold #{fileStats.count}] file#{fileStats.count === 1 ? ' is' : 's are'} being served, totaling #[span.bold #{fileStats.totalSizeString}].
+		if enableWebring === true
+			.table-container.flex-center.mv-10.text-center
+				table(style='max-width:450px')
+					tr
+						th Webring Stats
+					tr
+						td
+							pre.no-m-p
+								| There are currently #[span.bold #{webringStats.total}] boards in the known webring. Across all webring boards, #[span.bold #{webringStats.pph}] post#{webringStats.pph === 1 ? ' has' : 's have'} been made in the last hour, #[span.bold #{webringStats.posts}] in total.

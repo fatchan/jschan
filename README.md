@@ -157,8 +157,8 @@ $ gulp #run default gulp task
 
 EITHER:
 
-- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself).
 - Use the socks proxy provided by a non-docker tor daemon, which is probably already setup on port 9050 if you have a tor installed for hidden service.
+- Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself).
 - Use your own socks proxy
 
 Then update the proxy address in global settings. The first 2 will allow you to follow .onions in your webring follow list.

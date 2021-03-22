@@ -42,7 +42,6 @@ const { debugLogs } = require(__dirname+'/../configs/secrets.js')
 				useTempFiles: true,
 				tempFileDir: __dirname+'/../tmp/'
 			});
-			module.exports[fileType] = fileHandlers[fileType];
 		});
 	};
 
@@ -51,8 +50,12 @@ addCallback('config', updateHandlers);
 
 module.exports = {
 
-	banner: fileHandlers.banner,
-	flag: fileHandlers.flag,
+	banner: (req, res, next) => {
+		return fileHandlers.banner(req, res, next);
+	},
+	flag: (req, res, next) => {
+		return fileHandlers.flag(req, res, next);
+	},
 	posts: (req, res, next) => {
 		if (res.locals.anonymizer) {
 			return next();
