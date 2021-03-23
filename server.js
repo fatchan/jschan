@@ -11,7 +11,6 @@ const config = require(__dirname+'/config.js')
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
 	, { port, cookieSecret, debugLogs, google, hcaptcha } = require(__dirname+'/configs/secrets.js')
-	, referrerCheck = require(__dirname+'/helpers/referrercheck.js')
 	, Mongo = require(__dirname+'/db/db.js')
 	, Socketio = require(__dirname+'/socketio.js')
 	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
@@ -56,6 +55,7 @@ const config = require(__dirname+'/config.js')
 	app.set('trust proxy', 1);
 
 	//self explanatory middlewares
+	const referrerCheck = require(__dirname+'/helpers/referrercheck.js');
 	app.use(referrerCheck);
 
 	// use pug view engine
