@@ -8,3 +8,4 @@
 ##### 0.1.2
   - Merge webring and local board list and improve webring search and filter functionality
   - New stat section of homepage
+  - Replaced fatchan styled/branded spoiler image
