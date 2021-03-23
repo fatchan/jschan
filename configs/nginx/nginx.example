@@ -9,7 +9,7 @@ server {
 	server_tokens off;
 
 	add_header Cache-Control "public";
-	add_header Content-Security-Policy "default-src 'self'; img-src 'self' blob:; object-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-src 'self' https://www.youtube.com/embed/ https://www.bitchute.com/embed/; connect-src 'self' wss://domain.com/";
+	add_header Content-Security-Policy "default-src 'self'; img-src 'self' blob:; object-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-src 'self' https://www.youtube.com/embed/ https://www.bitchute.com/embed/; connect-src 'self' wss://domain.com/" always;
 	add_header Referrer-Policy "same-origin, strict-origin-when-cross-origin" always;
 	add_header X-Frame-Options "sameorigin" always;
 	add_header X-Content-Type-Options "nosniff" always;
@@ -115,19 +115,42 @@ server {
 		proxy_set_header Host $host;
 	}
 
-	# HTML
+	location @backend-private {
+		#no cache control public
+		add_header Content-Security-Policy "default-src 'self'; img-src 'self' blob:; object-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-src 'self' https://www.youtube.com/embed/ https://www.bitchute.com/embed/; connect-src 'self' wss://domain.com/" always;
+		add_header Referrer-Policy "same-origin, strict-origin-when-cross-origin" always;
+		add_header X-Frame-Options "sameorigin" always;
+		add_header X-Content-Type-Options "nosniff" always;
+		add_header X-XSS-Protection "1; mode=block" always;
+		proxy_buffering off;
+		proxy_pass http://chan$request_uri;
+		proxy_http_version 1.1;
+		proxy_set_header X-Forwarded-Proto https;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Country-Code $geoip_country_code;
+		proxy_set_header Connection '';
+		proxy_set_header Host $host;
+	}
+
+	# authed, no cache pages
+	location ~* ^/((\w+/manage/.*|globalmanage/(reports|bans|recent|boards|globallogs|news|accounts|settings))|account|create)\.(html|json)$ {
+		expires 0;
+		try_files /dev/null @backend-private;
+	}
+
+	# public html
 	location ~* \.html$ {
 		expires 0;
 		root /path/to/jschan/static/html;
 		try_files $uri @backend;
 	}
 
-	# JSON
+	# public json
 	location ~* \.json$ {
 		expires 0;
 		root /path/to/jschan/static/json;
 		try_files $uri @backend;
-		#some json files will build pages on-demand
 	}
 
 	# CSS
@@ -211,7 +234,7 @@ server {
 #	server_tokens off;
 #
 #	add_header Cache-Control "public";
-#	add_header Content-Security-Policy "default-src 'self'; img-src 'self' blob:; object-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'";
+#	add_header Content-Security-Policy "default-src 'self'; img-src 'self' blob:; object-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'" always;
 #	add_header Referrer-Policy "same-origin" always;
 #	add_header X-Frame-Options "sameorigin" always;
 #	add_header X-Content-Type-Options "nosniff" always;
@@ -315,6 +338,30 @@ server {
 #		proxy_set_header X-Country-Code 'TOR';
 #		proxy_set_header Connection '';
 #		proxy_set_header Host $host;
+#	}
+#
+#	location @backend-private {
+#		#no cache control public
+#		add_header Content-Security-Policy "default-src 'self'; img-src 'self' blob:; object-src 'self' blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; frame-src 'self' https://www.youtube.com/embed/ https://www.bitchute.com/embed/; connect-src 'self' wss://domain.com/" always;
+#		add_header Referrer-Policy "same-origin, strict-origin-when-cross-origin" always;
+#		add_header X-Frame-Options "sameorigin" always;
+#		add_header X-Content-Type-Options "nosniff" always;
+#		add_header X-XSS-Protection "1; mode=block" always;
+#		proxy_buffering off;
+#		proxy_pass http://chan$request_uri;
+#		proxy_http_version 1.1;
+#		proxy_set_header X-Forwarded-Proto http;
+#		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#		proxy_set_header X-Real-IP $remote_addr;
+#		proxy_set_header X-Country-Code 'TOR';
+#		proxy_set_header Connection '';
+#		proxy_set_header Host $host;
+#	}
+#
+#	# authed, no cache pages
+#	location ~* ^/((\w+/manage/.*|globalmanage/(reports|bans|recent|boards|globallogs|news|accounts|settings))|account|create)\.(html|json)$ {
+#		expires 0;
+#		try_files /dev/null @backend-private;
 #	}
 #
 #	# HTML
