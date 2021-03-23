@@ -9,15 +9,16 @@ block content
 		table.table-body
 			tr.table-row
 				td
-					p Updated monthly
+					p A transparency report is published monthly. Each one is signed with with a PGP key linked below and contains the latest bitcoin block hash at the time of writing. This proves at least that the message was authored by somebody with access to the private key, and was not made in advance to be published retroactively.
 					p
-						a(href='/file/no-cd/pubkey.asc') pubkey
-					details
+						a(href='/file/no-cd/pubkey.asc') PGP pubkey
+					details(open)
 						summary 2020
 						ul
 							li: a(href='/file/no-cd/canary-23-12-2020.txt') 23-12-2020
-					details
+					details(open)
 						summary 2021
 						ul
 							li: a(href='/file/no-cd/canary-24-01-2021.txt') 24-01-2021
 							li: a(href='/file/no-cd/canary-24-02-2021.txt') 24-02-2021
+							li: a(href='/file/no-cd/canary-23-03-2021.txt') 23-03-2021

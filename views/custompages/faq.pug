@@ -19,6 +19,8 @@ block content
 						li: a(href='#whats-an-imageboard') What is an imageboard?
 						li: a(href='/rules.html') What are the rules?
 						li: a(href='#contact') How can I contact the administration?
+						li: a(href='#support') How can I help support the site?
+						li: a(href='#transparency') Is there a transparency report?
 					b Making posts
 					ul.mv-0
 						li: a(href='#captcha') How do I solve CAPTCHA?
@@ -320,11 +322,32 @@ block content
 				th: a(href='#contact') How can I contact the administration?
 			tr
 				td
-					a(href='https://gitgud.io/fatchan/jschan/-/issues') Open an issue on gitgud
-					| , 
-					a(href='mailto:tom@69420.me') send an email,
-					|  or 
-					a(href='irc://irc.fatpeople.lol:+6697/fatchan') join the IRC
-					| . Also send bitcoin here: 
+					| There are several points of contact:
+					ul
+						li: a(href='https://gitgud.io/fatchan/jschan/-/issues') Open an issue on gitgud
+						li: a(href='mailto:tom@69420.me') Send an email to the administration directly
+						li: a(href='irc://irc.fatpeople.lol:+6697/fatchan') Join the IRC and chat
+					| For disclosure of sensitive issues such as those related to site security, please refer to 
+					a(href='/.well-known/security.txt') security.txt
+					|  and if necessary, maintain confidentiality.
+	.table-container.flex-center.mv-5
+		.anchor#support
+		table
+			tr
+				th: a(href='#support') How can I help support the site?
+			tr
+				td
+					| The only costs to run the site currently are bills for server infrastructure, domains, etc. Therefore the most straightforward way to support the site is financially, through crypto donation. You can send bitcoin here: 
 					a(href='bitcoin:bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6') bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6
-					|  :^)
+					| . Bitcoin donation can be anonymous and bitcoin is not controlled by any central authority, meaning in the event of finantial trouble or deplatforming the site will have a secure reserve of currency to pay bills.
+					| There is no option for other methods of accepting support such as Paypal as this poses deplatforming risk, legal and technical challenges, along with not being private or anonymous.
+	.table-container.flex-center.mv-5
+		.anchor#transparency
+		table
+			tr
+				th: a(href='#transparency') Is there a transparency report?
+			tr
+				td
+					| Yes, a simple transparency report is posted each month detailing any requests for information or gag orders that had been served to the site. They are signed with with a PGP key and contain the latest bitcoin block hash at the time of writing. This proves at least that the message was authored by somebody with access to the private key, and was not made in advance to be released retroactively. The transparency report is available 
+					a(href='/transparency.html') here
+					|  and is also linked at the bottom of every page.
