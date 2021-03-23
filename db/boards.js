@@ -326,11 +326,27 @@ module.exports = {
 					'total': {
 						'$sum': 1
 					},
+					'sites': {
+						'$addToSet': '$siteName'
+					},
 					'unlisted': {
 						'$sum': {
 							'$cond': ['$settings.unlistedLocal', 1, 0]
 						}
 					},
+				}
+			},
+			{
+				'$project': {
+					'_id': 1,
+					'posts': 1,
+					'pph': 1,
+					'ppd': 1,
+					'total': 1,
+					'sites': {
+						'$size': '$sites'
+					},
+					'unlisted': 1,
 				}
 			}
 		])
