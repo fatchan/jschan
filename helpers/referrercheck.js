@@ -1,8 +1,17 @@
 'use strict';
 
-const { refererCheck, allowedHosts } = require(__dirname+'/../configs/secrets.js')
+const config = require(__dirname+'/../config.js')
 	, dynamicResponse = require(__dirname+'/dynamic.js')
-	, allowedHostSet = new Set(allowedHosts);
+	, { addCallback } = require(__dirname+'/../redis.js')
+
+let refererCheck, allowedHosts, allowedHostSet;
+const updateReferers = () => {
+	({ refererCheck, allowedHosts } = config.get);
+	allowedHostSet = new Set(allowedHosts);
+}
+updateReferers();
+addCallback('config', updateReferers);
+
 
 module.exports = (req, res, next) => {
 	if (req.method !== 'POST') {
