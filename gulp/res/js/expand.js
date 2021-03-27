@@ -174,7 +174,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 								`url("${encodeURI(thumbElement.src)}")`;
 							expandedElement.style.backgroundRepeat = 'no-repeat';
 							expandedElement.style.backgroundPosition = 'top';
-							expandedElement.style.backgroundSize = 'contain';
 							expandedElement.style.minWidth = thumbElement.width+'px';
 							expandedElement.style.paddingTop = thumbElement.height+'px';
 						} else {
