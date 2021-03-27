@@ -56,7 +56,7 @@ block content
 						a(href=path) #{board.webring ? board.siteName : ''} /#{board.webring ? board.uri : board._id}/ - #{board.settings.name}
 					td #{board.settings.description || '-'}
 					td #{board.pph}
-					td #{board.ppd || '-'}
+					td #{board.ppd != null ? board.ppd : '-'}
 					td #{board.ips}
 					td #{board.sequence_value-1}
 					if board.lastPostTimestamp
