@@ -399,7 +399,8 @@ block content
 							input(type='checkbox', name='frontend_script_default_smooth_scrolling', value='true' checked=settings.frontendScriptDefault.smoothScrolling)
 					.row
 						.label Default Volume
-						input(type='number', name='frontend_script_default_volume' value=settings.frontendScriptDefault.defaultVolume)
+						label.postform-style.ph-5
+							input(type='range' name='frontend_script_default_volume' min='0' max='100' value=settings.frontendScriptDefault.defaultVolume)
 					.row
 						.label Loop Audio/Video
 						label.postform-style.ph-5
