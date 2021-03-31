@@ -18,7 +18,7 @@
 	--name-color:#dd0;
 	--capcode-color:#f00;
 	--subject-color:#ff0;
-	--post-link-color:#f00;
+	--post-link-color:#d2d888;
 	--link-color:#d2d888;
 	--link-hover:#fff;
 	--input-borders:#a9a9a9;
@@ -28,4 +28,7 @@
 	--title-color:#fd0;
 	--greentext-color:#de6;
 	--pinktext-color:#E0727F;
+}
+.postform-style {
+	color: #000;
 }
