@@ -1,7 +1,7 @@
 :root {
 	--icon-color: invert(17%) sepia(89%) saturate(7057%) hue-rotate(2deg) brightness(93%) contrast(120%);
 	--darken: #ffffff10;
-	--board-title: #c5c8c6;
+	--board-title: white;
 	--hr: #282a2e;
 	--dice-color: darkorange;
 	--title-color: #d70000;
@@ -138,25 +138,33 @@ input[type=submit], input[type=submit], label[for=file] {
 .catalog-thumb {
 	margin-top:5px;
 }
-#settings, .stickynav a {
-	border-style:inset
-}
-.op {
-	border:2px outset transparent!important;
-}
 .op, .op .post-info {
 	background:none!important;
 }
+.op .post-info {
+	color:white;
+}
+.op .post-name {
+	color:white;
+}
+.op.post-subject {
+    color: white!important;
+}
 .op {
-	color:var(--font-color);
+	border:2px outset transparent!important;
 	--greentext-color:#3ae03a;
 	--font-color:white;
+	--subject-color: white;
+	color:var(--font-color);
 }
 .anchor:target+.post-container.op {
 	--greentext-color:unset;
 	--font-color:black;
 }
+.op .postmenu {
+	border-left-color: white;
+}
 .postmenu {
+	color: black;
 	border-left-color: #ddd;
 }
-
