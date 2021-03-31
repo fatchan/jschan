@@ -120,9 +120,6 @@ hr {
 .modal {
 	padding:3px;
 }
-.op {
-	width:unset!important;
-}
 input[type=submit], input[type=submit], label[for=file] {
 	background: var(--post-color)!important;
 }
@@ -138,3 +135,28 @@ input[type=submit], input[type=submit], label[for=file] {
 .nav-item .rainbow {
 	display: inline;
 }
+.catalog-thumb {
+	margin-top:5px;
+}
+#settings, .stickynav a {
+	border-style:inset
+}
+.op {
+	border:2px outset transparent!important;
+}
+.op, .op .post-info {
+	background:none!important;
+}
+.op {
+	color:var(--font-color);
+	--greentext-color:#3ae03a;
+	--font-color:white;
+}
+.anchor:target+.post-container.op {
+	--greentext-color:unset;
+	--font-color:black;
+}
+.postmenu {
+	border-left-color: #ddd;
+}
+
