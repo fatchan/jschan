@@ -55,7 +55,7 @@ section.form-wrapper.flex-center
 				span.col
 					+filelabel('file', maxFiles)
 					input#file(type='file', name='file' multiple required=fileRequired )
-					.upload-list(data-spoilers=(board.settings.userPostSpoiler ? 'true' : 'false') data-strip-filenames='false')
+					.upload-list(data-spoilers=(board.settings.userPostSpoiler ? 'true' : 'false') data-strip-filenames='true')
 				if board.settings.userPostSpoiler
 					noscript
 						label.postform-style.ph-5.ml-1.fh
