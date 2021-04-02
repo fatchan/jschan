@@ -299,7 +299,7 @@ module.exports = {
 			])
 			.toArray()
 			.then(res => {
-				if (res[0].sites) {
+				if (res.length > 0 && res[0].sites) {
 					return res[0].sites.sort((a, b) => a.localeCompare(b));
 				}
 				return [];
