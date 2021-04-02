@@ -67,7 +67,9 @@ module.exports = {
 							name: board.title,
 							description: board.subtitle,
 						};
-						board.lastPostTimestamp = new Date(board.lastPostTimestamp.toString());
+						if (board.lastPostTimestamp) {
+							board.lastPostTimestamp = new Date(board.lastPostTimestamp.toString());
+						}
 					});
 					webringBoards = webringBoards.concat(ring.boards);
 				}
@@ -78,6 +80,7 @@ module.exports = {
 		if (webringBoards.length > 0) {
 			webringBoards = webringBoards.map(x => {
 				x.webring = true;
+				delete x._id; //would cause inserterror, but still dont wanna let that happen
 				return x;
 			});
 			await Boards.db.insertMany(webringBoards);
