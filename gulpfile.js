@@ -262,7 +262,7 @@ async function custompages() {
 			postFilesSize: formatSize(config.get.globalLimits.postFilesSize.max),
 			captchaType: config.get.captchaOptions.type,
 			googleRecaptchaSiteKey: google.siteKey,
-			hcaptchaSitekey: hcaptcha.siteKey,
+			hcaptchaSiteKey: hcaptcha.siteKey,
 			captchaGridSize: config.get.captchaOptions.grid.size,
 			globalAnnouncement: config.get.globalAnnouncement,
 			commit,
