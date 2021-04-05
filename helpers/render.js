@@ -36,7 +36,7 @@ const  updateLocals = () => {
 		enableWebring,
 		captchaType: captchaOptions.type,
 		googleRecaptchaSiteKey: google.siteKey,
-		hcaptchaSitekey: hcaptcha.siteKey,
+		hcaptchaSiteKey: hcaptcha.siteKey,
 		captchaGridSize: captchaOptions.grid.size,
 		globalAnnouncement,
 	};
