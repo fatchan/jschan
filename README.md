@@ -121,9 +121,9 @@ Also included is an "nginx_advanced" config, and a snippets folder for advanced 
 # copy example secrets file and edit it to fill out the details
 $ cp configs/secrets.js.example configs/secrets.js && editor configs/secrets.js
 
-# copy example custompages for rules and faq and edit
-$ cp views/custompages/faq.pug.example views/custompages/faq.pug
-$ cp views/custompages/rules.pug.example views/custompages/rules.pug
+# edit rules and faq pages if desired:
+$ editor views/custompages/faq.pug views/custompages/rules.pug
+# you can also add more .pug files in that folder with the same general format to create other custom pages
 
 # install dependencies and run build tasks
 $ npm install
