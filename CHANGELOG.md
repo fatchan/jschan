@@ -9,3 +9,5 @@
   - Merge webring and local board list and improve webring search and filter functionality
   - New stat section of homepage
   - Replaced fatchan styled/branded spoiler image
+  - Fixed undefined hcaptcha site key bug
+  - Updated README with info about nginx CSP for 3rd party captcha providers
