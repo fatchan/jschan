@@ -1,6 +1,7 @@
 let liveEnabled = localStorage.getItem('live') == 'true';
 let scrollEnabled = localStorage.getItem('scroll') == 'true';
 let socket;
+let socketPingInterval;
 let forceUpdate;
 
 window.addEventListener('settingsReady', function(event) { //after domcontentloaded
@@ -181,20 +182,24 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				reconnectionDelay: 3000,
 				reconnectionDelayMax: 15000,
 			});
+			const socketPing = () => {
+				const pingStart = Date.now();
+				socket.volatile.emit('ping', () => {
+					const latency = Date.now() - pingStart;
+					updateLive(`Connected for live posts (${latency}ms)`, '#0de600');
+				});
+			}
 			socket.on('connect', async () => {
 				console.log('socket connected');
 				await fetchNewPosts();
 				socket.emit('room', room);
+				clearInterval(socketPingInterval);
+				socketPingInterval = setInterval(socketPing, 10000);
 			});
 			socket.on('message', (message) => {
 				console.log(message, room);
 				if (message === 'joined') {
 					updateLive('Connected for live posts', '#0de600');
-				}
-			});
-			socket.on('pong', (latency) => {
-				if (socket.connected) {
-					updateLive(`Connected for live posts (${latency}ms)`, '#0de600');
 				}
 			});
 			socket.on('reconnect_attempt', () => {
