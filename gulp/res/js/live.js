@@ -194,12 +194,13 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				await fetchNewPosts();
 				socket.emit('room', room);
 				clearInterval(socketPingInterval);
-				socketPingInterval = setInterval(socketPing, 10000);
+				socketPingInterval = setInterval(socketPing, 20000);
 			});
 			socket.on('message', (message) => {
 				console.log(message, room);
 				if (message === 'joined') {
 					updateLive('Connected for live posts', '#0de600');
+					socketPing();
 				}
 			});
 			socket.on('reconnect_attempt', () => {
