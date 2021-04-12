@@ -1,15 +1,7 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	const mainStyleSheet = document.querySelector('link[rel="stylesheet"]').sheet;
-	const rulesKey = mainStyleSheet.rules != null ? 'rules' : 'cssRules';
-	for (rule of mainStyleSheet[rulesKey]) {
-		if(rule.selectorText == '.user-id') {
-			rule.style.cursor = 'pointer'; //make ids like a link when hovering
-		}
-	}
-
 	const statsElem = document.getElementById('threadstats');
-	const idElems = [];
+	const idElems = document.getElementsByClassName('user-id');
 	const idMap = new Map();
 	const isHighlightedSet = new Set();
 
@@ -38,14 +30,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 
-	//fetch starting ids
-	const startElems = document.getElementsByClassName('user-id');
-	for (let i = 0; i < startElems.length; i++) {
-		idElems.push(startElems[i]);
-		startElems[i].addEventListener('dblclick', toggleHighlightPosts);
-	}
-	//set counts
+	//map count of starting ids
 	for (let i = 0; i < idElems.length; i++) {
+		idElems[i].addEventListener('dblclick', toggleHighlightPosts);
 		incrementMap(idElems[i].innerText);
 	}
 
