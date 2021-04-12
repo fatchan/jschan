@@ -8,6 +8,10 @@
 ##### 0.1.2
   - Merge webring and local board list and improve webring search and filter functionality
   - New stat section of homepage
-  - Replaced fatchan styled/branded spoiler image
+  - Replaced and removed some fatchan-specific media
   - Fixed undefined hcaptcha site key bug
   - Updated README with info about nginx CSP for 3rd party captcha providers
+  - Update socket-io 2.x to 4.x
+
+##### 0.1.3
+  - Script optimizations, improve page load speed
