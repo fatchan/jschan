@@ -44,8 +44,8 @@
     "sanitize-html": "^2.3.3",
     "saslprep": "^1.0.3",
     "semver": "^7.3.5",
-    "socket.io": "^2.4.1",
-    "socket.io-redis": "^5.4.0",
+    "socket.io": "^4.0.1",
+    "socket.io-redis": "^6.1.0",
     "socks-proxy-agent": "^5.0.0",
     "unix-crypt-td-js": "^1.1.4"
   },
@@ -56,5 +56,5 @@
     "start-dev": "pm2 start ecosystem.config.js --env development"
   },
   "author": "fatchan",
-  "license": "AGPL-3.0-or-later"
+  "license": "AGPL-3.0-only"
 }

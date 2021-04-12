@@ -39,9 +39,6 @@ module.exports = {
 				const crossQuote = crossQuotes[i].split('&#x2F;');
 				const crossQuoteBoard = crossQuote[1];
 				const crossQuotePostId = +crossQuote[2];
-				if (crossQuoteBoard === board) {
-					continue;
-				}
 				if (!crossQuoteMap[crossQuoteBoard]) {
 					crossQuoteMap[crossQuoteBoard] = [];
 				}

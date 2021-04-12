@@ -107,6 +107,8 @@ geoip_country /usr/share/GeoIP/GeoIP.dat;
 ```
 If your nginx doesn't have the necessary module by default, or is using v2 instead, find your own guide.
 
+If you plan on using hcaptcha or google recaptcha, you will need to modify the content-security-policy header (CSP) in your nginx config. (documentation: [google recaptcha](https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website.-how-can-i-configure-it-to-work-with-recaptcha), [hcaptcha](https://docs.hcaptcha.com/#content-security-policy-settings))
+
 If you use cloudflare, please read [these](https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-Logging-visitor-IP-addresses-with-mod-cloudflare-) [articles](https://support.cloudflare.com/hc/en-us/articles/200168236-Configuring-Cloudflare-IP-Geolocation) to setup proper IP forwarding and geolocation headers. Similar steps would apply to other CDNs/reverse proxies.
 
 Also included is an "nginx_advanced" config, and a snippets folder for advanced users who want to better organise and more easily customise the nginx configuration. It functions the same as the normal nginx.example, but you need to create the snippets folder in /etc/nginx/snippets, copy the example snippets, and edit them with your domain and installation path.
@@ -119,9 +121,9 @@ Also included is an "nginx_advanced" config, and a snippets folder for advanced 
 # copy example secrets file and edit it to fill out the details
 $ cp configs/secrets.js.example configs/secrets.js && editor configs/secrets.js
 
-# copy example custompages for rules and faq and edit
-$ cp views/custompages/faq.pug.example views/custompages/faq.pug
-$ cp views/custompages/rules.pug.example views/custompages/rules.pug
+# edit rules and faq pages if desired:
+$ editor views/custompages/faq.pug views/custompages/rules.pug
+# you can also add more .pug files in that folder with the same general format to create other custom pages
 
 # install dependencies and run build tasks
 $ npm install

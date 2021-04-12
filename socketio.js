@@ -26,6 +26,11 @@ module.exports = {
 
 	startRooms: () => {
 		module.exports.io.on('connection', socket => {
+			socket.on('ping', cb => {
+				if (typeof cb === "function") {
+					cb();
+				}
+			});
 			socket.on('room', room => {
 				const roomMatch = room.match(roomRegex);
 				if (roomMatch && roomMatch.groups) {
