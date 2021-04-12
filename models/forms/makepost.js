@@ -428,8 +428,10 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread, res.locals.permLevel);
 
 	//build post data for db. for some reason all the property names are lower case :^)
+	const now = Date.now()
 	const data = {
-		'date': new Date(),
+		'date': new Date(now),
+		'u': now,
 		name,
 		country,
 		'board': req.params.board,
