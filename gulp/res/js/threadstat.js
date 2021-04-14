@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	const statsElem = document.getElementById('threadstats');
-	const idElems = document.getElementsByClassName('user-id');
+	const idElems = Array.from(document.getElementsByClassName('user-id'));
 	const idMap = new Map();
 	const isHighlightedSet = new Set();
 
