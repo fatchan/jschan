@@ -52,20 +52,6 @@ server {
 		return 200 "User-agent: *\nDisallow:\n";
 	}
 
-	location = /site.webmanifest {
-		access_log off;
-		expires max;
-		root /path/to/jschan/static/file;
-		try_files $uri =404;
-	}
-
-	location = /browserconfig.xml {
-		access_log off;
-		expires max;
-		root /path/to/jschan/static/file;
-		try_files $uri =404;
-	}
-
 	location = /favicon.ico {
 		access_log off;
 		expires max;
@@ -170,18 +156,10 @@ server {
 	}
 
 	# Files (image, video, audio, other)
-	location ~* \.(png|jpg|jpeg|bmp|gif|apng|webp|pjpeg|jfif|mkv|mp4|webm|mov|svg|flac|mp3|ogg|wav|opus)$ {
+	location ~* \.(png|jpg|jpeg|bmp|webmanifest|xml|ico|gif|apng|webp|pjpeg|jfif|mkv|mp4|webm|mov|svg|flac|mp3|ogg|wav|opus)$ {
 		access_log off;
 		expires max;
 		root /path/to/jschan/static;
-		try_files $uri =404;
-	}
-
-	# Favicon, safari icons, apple-touch icon, browserconfig, mstiles, etc.
-	location ~* \.(webmanifest|xml)$ {
-		access_log off;
-		expires max;
-		root /path/to/jschan/static/file;
 		try_files $uri =404;
 	}
 
@@ -252,20 +230,6 @@ server {
 #		access_log off;
 #		add_header Content-Type text/plain;
 #		return 200 "User-agent: *\nDisallow:\n";
-#	}
-#
-#	location = /site.webmanifest {
-#		access_log off;
-#		expires max;
-#		root /path/to/jschan/static/file;
-#		try_files $uri =404;
-#	}
-#
-#	location = /browserconfig.xml {
-#		access_log off;
-#		expires max;
-#		root /path/to/jschan/static/file;
-#		try_files $uri =404;
 #	}
 #
 #	location = /favicon.ico {
@@ -373,18 +337,10 @@ server {
 #	}
 #
 #	# Files (image, video, audio, other)
-#	location ~* \.(png|jpg|jpeg|bmp|gif|apng|webp|jfif|pjpeg|mkv|mp4|webm|mov|svg|mp3|ogg|wav|opus)$ {
+#	location ~* \.(png|jpg|jpeg|bmp|webmanifest|xml|ico|gif|apng|webp|jfif|pjpeg|mkv|mp4|webm|mov|svg|flac|mp3|ogg|wav|opus)$ {
 #		access_log off;
 #		expires max;
 #		root /path/to/jschan/static;
-#		try_files $uri =404;
-#	}
-#
-#	# Favicon, safari icons, apple-touch icon, browserconfig, mstiles, etc.
-#	location ~* \.(webmanifest|xml)$ {
-#		access_log off;
-#		expires max;
-#		root /path/to/jschan/static/file;
 #		try_files $uri =404;
 #	}
 #

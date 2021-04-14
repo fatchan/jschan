@@ -113,8 +113,6 @@ If you use cloudflare, please read [these](https://support.cloudflare.com/hc/en-
 
 Also included is an "nginx_advanced" config, and a snippets folder for advanced users who want to better organise and more easily customise the nginx configuration. It functions the same as the normal nginx.example, but you need to create the snippets folder in /etc/nginx/snippets, copy the example snippets, and edit them with your domain and installation path.
 
-- Use https://realfavicongenerator.net/ to generate favicons how you want them to look and replace the files in gulp/res/icons/ with the icons from that package.
-
 **7. Clone this repo, browse to the folder and set some things up**
 
 ```bash
@@ -132,6 +130,9 @@ $ npm run-script setup
 # setup the database and folder structure, and creates the admin account. **The (random) password will be printed in the command line.**
 $ gulp reset
 # NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything
+
+# place your master favicon file in gulp/res/icons/master.png, then generate
+gulp generate-favicon
 
 # make pm2 (process manager) start on server restart
 $ pm2 startup #and follow any prompts
