@@ -1366,10 +1366,10 @@ row.wrap.sb .col {
 		width: 100%;
 		min-width: unset;
 	}
- 	[title], [mobiletitle] {
+ 	[title] {
 		position:relative
  	}
-	[title]:hover:after, [mobiletitle]:hover:after {
+	[title]:hover:after {
 		color: white;
 		font-size: small;
 		border-radius: 2px;
@@ -1385,10 +1385,10 @@ row.wrap.sb .col {
 	[title]:hover:after {
 		content:attr(title);
 	}
-	[mobiletitle]:hover:after {
-		content:attr(mobiletitle);
+	.user-id[title]:hover:after {
+		content:"Double tap to highlight" attr(data-count);
 	}
-	[title]:hover:before, [mobiletitle]:hover:before {
+	[title]:hover:before {
 		content: '';
 		position: absolute;
 		top: -6px;
