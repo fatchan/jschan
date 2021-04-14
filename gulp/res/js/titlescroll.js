@@ -24,10 +24,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const updateTitle = () => {
 		if (unread.length === 0) {
 			document.title = originalTitle;
-			changeFavicon('/favicon.ico');
+//			changeFavicon('/favicon.ico');
 		} else {
 			document.title = `(${unread.length}) ${originalTitle}`;
-			changeFavicon('/file/favicon2.ico');
+//			changeFavicon('/file/favicon2.ico');
 		}
 	}
 
