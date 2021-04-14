@@ -14,5 +14,5 @@
   - Update socket-io 2.x to 4.x
 
 ##### 0.1.3
-  - Script optimizations, improve page load speed
+  - Script optimizations, improve script execution speed especially on longer threads
   - Extra (u) download link for no reason
