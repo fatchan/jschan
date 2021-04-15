@@ -17,3 +17,4 @@
   - Script optimizations, improve script execution speed especially on longer threads
   - Extra (u) download link for no reason
   - favicon, webmanifest, browserconfig, etc for browsers made into gulp task
+  - Webring now sends and checks for ppd stat
