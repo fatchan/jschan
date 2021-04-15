@@ -61,7 +61,9 @@ module.exports = {
 						//convert to numbers because old infinity webring plugin returns string
 						board.sequence_value = parseInt(board.totalPosts);
 						board.pph = parseInt(board.postsPerHour);
-						board.ppd = parseInt(board.postsPerDay);
+						if (board.postsPerDay != null) {
+							board.ppd = parseInt(board.postsPerDay);
+						}
 						board.ips = parseInt(board.uniqueUsers);
 						board.settings = {
 							sfw: !board.nsfw,
