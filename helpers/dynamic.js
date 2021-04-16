@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = (req, res, code, page, data) => {
+	console.log('dynamicResponse', code, data);
 	res.status(code);
 	if (req.body.minimal) {
 		data.minimal = true;
