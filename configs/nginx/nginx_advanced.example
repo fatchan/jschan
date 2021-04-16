@@ -1,72 +1,74 @@
 upstream chan {
+	#ip_hash;
 	server 127.0.0.1:7000;
+	server 127.0.0.1:7001;
+	server 127.0.0.1:7002;
+	server 127.0.0.1:7003;
 }
 
 server {
-
-	server_name www.xxxxxxxx.loki xxxxxxxx.loki;
-
+	server_name www.e8zhrn4ideccyy6wfs8gyytdgz8xmcn11f1y5o557z3g8a18gf4y.loki e8zhrn4ideccyy6wfs8gyytdgz8xmcn11f1y5o557z3g8a18gf4y.loki www.fatchan.loki fatchan.loki;
 	client_max_body_size 0;
-	#address may vary if this address is already used by something other than lokinet
+
 	listen 172.16.0.1:80;
 
-	include /etc/nginx/snippets/security_headers.conf;
-	include /etc/nginx/snippets/error_pages.conf;
-	include /etc/nginx/snippets/jschan_loki_routes.conf;
-	include /etc/nginx/snippets/jschan_common_routes.conf;
-
+	include /etc/nginx/includes/security_headers.conf;
+	include /etc/nginx/includes/error_pages.conf;
+	include /etc/nginx/includes/js_challenge.conf;
+	include /etc/nginx/includes/jschan_common_routes.conf;
+	include /etc/nginx/includes/jschan_loki_routes.conf;
 }
 
 server {
-
-	server_name www.xxxxxxxx.onion xxxxxxxx.onion;
-
+	server_name www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion www.e8zhrn4ideccyy6wfs8gyytdgz8xmcn11f1y5o557z3g8a18gf4y.loki e8zhrn4ideccyy6wfs8gyytdgz8xmcn11f1y5o557z3g8a18gf4y.loki;
 	client_max_body_size 0;
+
 	listen unix:/var/run/nginx-tor.sock;
 	allow "unix:";
 	deny all;
 
-	include /etc/nginx/snippets/security_headers.conf;
-	include /etc/nginx/snippets/error_pages.conf;
-	include /etc/nginx/snippets/jschan_tor_routes.conf;
-	include /etc/nginx/snippets/jschan_common_routes.conf;
-
+	include /etc/nginx/includes/security_headers.conf;
+	include /etc/nginx/includes/error_pages.conf;
+	include /etc/nginx/includes/js_challenge.conf;
+	include /etc/nginx/includes/jschan_common_routes.conf;
+	include /etc/nginx/includes/jschan_tor_routes.conf;
 }
 
 server {
-
-	server_name www.example.com example.com;
-
+	absolute_redirect off;
+	server_name fatchan.org www.fatchan.org;
 	client_max_body_size 0;
-	#header will tell tor users accessing clearnet endpoint to use onion service
-	add_header onion-location 'http://xxxxxxxxxxx.onion$request_uri';
+	add_header onion-location 'http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion$request_uri';	
 
-	include /etc/nginx/snippets/security_headers.conf;
-	include /etc/nginx/snippets/error_pages.conf;
-	include /etc/nginx/snippets/jschan_common_routes.conf;
-	include /etc/nginx/snippets/jschan_clearnet_routes.conf;
+	listen [::]:443 ssl http2 ipv6only=on; # managed by Certbot
+	listen 443 ssl http2; # managed by Certbot
+	include snippets/self-signed.conf;
+	include snippets/ssl-params.conf;
 
-	listen [::]:443 ssl ipv6only=on; # managed by Certbot
-	listen 443 ssl; # managed by Certbot
-	ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem; # managed by Certbot
-	ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem; # managed by Certbot
-	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-
+	include /etc/nginx/includes/realip.conf;
+	include /etc/nginx/includes/security_headers.conf;
+	include /etc/nginx/includes/error_pages.conf;
+	include /etc/nginx/includes/js_challenge.conf;
+	include /etc/nginx/includes/jschan_common_routes.conf;
+	include /etc/nginx/includes/jschan_clearnet_routes.conf;
 }
 
 server {
-	if ($host = www.example.com) {
-		return 301 https://$host$request_uri;
-	} # managed by Certbot
 
-	if ($host = example.com) {
-		return 301 https://$host$request_uri;
-	} # managed by Certbot
+	absolute_redirect off;
+	server_name fatchan.is fatchan.li fatchan.ru fatchan.tw fatchan.net fatchan.top fatchan.to www.fatchan.is www.fatchan.li www.fatchan.ru www.fatchan.tw www.fatchan.net www.fatchan.top www.fatchan.to;
+	client_max_body_size 0;
+	add_header onion-location 'http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion$request_uri';	
 
-	server_name www.example.com example.com;
+	listen [::]:443 ssl http2 ipv6only=on; # managed by Certbot
+	listen 443 ssl http2; # managed by Certbot
+	include snippets/self-signed.conf;
+	include snippets/ssl-params.conf;
 
-	listen 80;
-	listen [::]:80;
-	return 444; # managed by Certbot
+	include /etc/nginx/includes/realip.conf;
+	include /etc/nginx/includes/security_headers.conf;
+	#include /etc/nginx/includes/error_pages.conf;
+	include /etc/nginx/includes/js_challenge.conf;
+	include /etc/nginx/includes/jschan_limited_routes.conf;
+
 }
