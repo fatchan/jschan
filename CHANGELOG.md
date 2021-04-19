@@ -18,3 +18,4 @@
   - Extra (u) download link for no reason
   - favicon, webmanifest, browserconfig, etc for browsers made into gulp task
   - Webring now sends and checks for ppd stat
+  - Board search improved (prefix matches)

@@ -3,6 +3,7 @@
 const Mongo = require(__dirname+'/db.js')
 	, cache = require(__dirname+'/../redis.js')
 	, dynamicResponse = require(__dirname+'/../helpers/dynamic.js')
+	, escapeRegExp = require(__dirname+'/../helpers/escaperegexp.js')
 	, db = Mongo.db.collection('boards');
 
 module.exports = {
@@ -214,10 +215,11 @@ module.exports = {
 			projection['owner'] = 1;
 		}
 		if (filter.search) {
+			const prefixRegExp = new RegExp(`^${escapeRegExp(filter.search)}`, 'i');
 			addedFilter['$or'] = [
-				{ 'tags': filter.search },
-				{ 'uri': filter.search },
-				{ '_id':  filter.search },
+				{ 'tags': prefixRegExp },
+				{ 'uri': prefixRegExp },
+				{ '_id': prefixRegExp },
 			];
 		}
 		return db.find(addedFilter, { projection })
@@ -270,10 +272,11 @@ module.exports = {
 			addedFilter['webring'] = false;
 		}
 		if (filter.search) {
+			const prefixRegExp = new RegExp(`^${escapeRegExp(filter.search)}`, 'i');
 			addedFilter['$or'] = [
-				{ 'tags': filter.search },
-				{ 'uri':  filter.search },
-				{ '_id':  filter.search },
+				{ 'tags': prefixRegExp },
+				{ 'uri': prefixRegExp },
+				{ '_id': prefixRegExp },
 			];
 		}
 		return db.countDocuments(addedFilter);
