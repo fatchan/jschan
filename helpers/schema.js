@@ -1,15 +1,5 @@
 'use strict';
 
-/* planned schema would be array of smth like this:
-{
-	result: <check function, either predefined, some other check like isAlphaNumeric, or a custom callback>,
-	expected: <true or false>
-	error: <error text>,
-	permLevel: [optional perm level],
-}
-lengthBody, numberBody, minmaxBody, inArrayBody, arrayInBody, checkSchema
-*/
-
 module.exports = {
 
 //TODO: move some other checks here? like isAlphaNumeric would be a good example
