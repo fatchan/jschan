@@ -11,20 +11,13 @@ const { Posts } = require(__dirname+'/../../db/')
 
 module.exports = {
 
-	options: {
-		timeFields: [],
-		trimFields: [],
-		allowedArrays: [],
-		processThreadIdParam: [],
-		processDateParam: [],
-		processMessageLength: [],
-		numberFields: [],
-		numberArrays: [],
-		objectIdFields: [],
-		objectIdArrays: []
-	},
-
-	paramConverter: paramConverter(module.exports.options),
+	paramConverter: paramConverter({
+		timeFields: ['ban_duration'],
+		trimFields: ['postpassword', 'report_reason', 'ban_reason', 'log_message'],
+		allowedArrays: ['checkedreports', 'checkedposts'],
+		numberFields: ['move_to_thread'],
+		numberArrays: ['checkedposts'],
+	}),
 
 	controller: async (req, res, next) => {
 

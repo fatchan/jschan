@@ -12,20 +12,12 @@ const makePost = require(__dirname+'/../../models/forms/makepost.js')
 
 module.exports = {
 
-	options: {
-		timeFields: [],
-		trimFields: [],
-		allowedArrays: [],
-		processThreadIdParam: [],
-		processDateParam: [],
-		processMessageLength: [],
-		numberFields: [],
-		numberArrays: [],
-		objectIdFields: [],
-		objectIdArrays: []
-	},
-
-	paramConverter: paramConverter(module.exports.options),
+	paramConverter: paramConverter({
+		trimFields: ['message', 'name', 'subject', 'email', 'postpassword', 'password'],
+		allowedArrays: ['spoiler', 'strip_filename'],
+		processMessageLength: true,
+		numberFields: ['thread'],
+	}),
 
 	controller: async (req, res, next) => {
 

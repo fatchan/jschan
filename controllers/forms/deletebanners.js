@@ -8,20 +8,9 @@ const deleteBanners = require(__dirname+'/../../models/forms/deletebanners.js')
 
 module.exports = {
 
-	options: {
-		timeFields: [],
-		trimFields: [],
-		allowedArrays: [],
-		processThreadIdParam: [],
-		processDateParam: [],
-		processMessageLength: [],
-		numberFields: [],
-		numberArrays: [],
-		objectIdFields: [],
-		objectIdArrays: []
-	},
-
-	paramConverter: paramConverter(module.exports.options),
+	paramConverter: paramConverter({
+		allowedArrays: ['checkedbanners']
+	}),
 
 	controller: async (req, res, next) => {
 

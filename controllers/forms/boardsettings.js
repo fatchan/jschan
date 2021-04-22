@@ -11,20 +11,14 @@ const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardse
 
 module.exports = {
 
-	options: {
-		timeFields: [],
-		trimFields: [],
-		allowedArrays: [],
-		processThreadIdParam: [],
-		processDateParam: [],
-		processMessageLength: [],
-		numberFields: [],
-		numberArrays: [],
-		objectIdFields: [],
-		objectIdArrays: []
-	},
-
-	paramConverter: paramConverter(module.exports.options),
+	paramConverter: paramConverter({
+		timeFields: ['ban_duration'],
+		trimFields: ['filters', 'moderators', 'tags', 'announcement', 'description', 'name', 'custom_css'],
+		allowedArrays: ['countries'],
+		numberFields: ['lock_reset', 'captcha_reset', 'filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode', 'tph_trigger', 'pph_trigger', 'pph_trigger_action',
+			'tph_trigger_action', 'bump_limit', 'reply_limit', 'max_files', 'thread_limit', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length',
+			'min_reply_message_length'],
+	}),
 
 	controller: async (req, res, next) => {
 
