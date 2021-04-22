@@ -3,6 +3,7 @@ const ffmpeg = require('fluent-ffmpeg')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (file, geometry, timestamp) => {
+console.log(file, geometry, timestamp)
 	const { thumbSize } = config.get;
 	return new Promise((resolve, reject) => {
 		const command = ffmpeg(`${uploadDirectory}/file/${file.filename}`)
@@ -19,7 +20,8 @@ module.exports = (file, geometry, timestamp) => {
 				0
 			])
 			.outputOptions([
-				`-vf scale=${geometry.width > geometry.height ? thumbSize + ':-2' : '-2:' + thumbSize}`
+				`-vf scale=${geometry.width > geometry.height ? thumbSize + ':-2' : '-2:' + thumbSize}`,
+				'-frames:v 1'
 			])
 			.output(`${uploadDirectory}/file/thumb/${file.hash}${file.thumbextension}`)
 			.run();
