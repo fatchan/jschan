@@ -18,36 +18,29 @@ module.exports = {
 	controller: async (req, res, next) => {
 
 		const { globalLimits } = config.get;
-		const errors = [];
 
-		if (!req.body.message || res.locals.messageLength === 0) {
-			errors.push('Missing message');
-		}
-		if (res.locals.messageLength > globalLimits.customPages.maxLength) {
-			errors.push(`Message must be ${globalLimits.customPages.maxLength} characters or less`);
-		}
-		if (!req.body.title || req.body.title.length === 0) {
-			errors.push('Missing title');
-		}
-		if (req.body.title.length > 50) {
-			errors.push('Title must be 50 characters or less');
-		}
-		if (!req.body.page
-			|| req.body.page.length === 0) {
-			errors.push('Missing .html name');
-		}
-		if (/[a-z0-9_-]+/.test(req.body.page) !== true) {
-			errors.push('.html name must contain a-z 0-9 _ - only');
-		}
-		if (req.body.title.length > 50) {
-			errors.push('.html name must be 50 characters or less');
-		}
-		if ((await CustomPages.boardCount(req.params.board)) > globalLimits.customPages.max) {
-			errors.push(`Can only create ${globalLimits.customPages.max} pages per board`);
-		}
-		if ((await CustomPages.findOne(req.params.board, req.body.page))) {
-			errors.push('.html name must be unique');
-		}
+		const schema = [
+			{ result: existsBody(req.body.message), expected: true, error: 'Missing message' },
+			{ result: existsBody(req.body.title), expected: true, error: 'Missing title' },
+			{ result: existsBody(req.body.page), expected: true, error: 'Missing .html name' },
+			{ result: () => {
+                if (req.body.page) {
+                    return /[a-z0-9_-]+/.test(req.body.page);
+                }
+                return false;
+            } , expected: true, error: '.html name must contain a-z 0-9 _ - only' },
+			{ result: numberBody(res.locals.messageLength, 0, globalLimits.customPages.maxLength), expected: true, error: `Message must be ${globalLimits.customPages.maxLength} characters or less` },
+			{ result: lengthBody(req.body.title, 0, 50), expected: false, error: 'Title must be 50 characters or less' },
+			{ result: lengthBody(req.body.page, 0, 50), expected: false, error: '.html name must be 50 characters or less' },
+			{ result: async () => {
+				return (await CustomPages.boardCount(req.params.board)) > globalLimits.customPages.max;
+			}, expected: false, error: `Can only create ${globalLimits.customPages.max} pages per board`},
+			{ result: async () => {
+				return (await CustomPages.findOne(req.params.board, req.body.page)) == null;
+			}, expected: true, error: '.html name must be unique'},
+		];
+
+		const errors = await checkSchema(schema);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
