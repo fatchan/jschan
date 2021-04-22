@@ -39,7 +39,7 @@ module.exports = {
 
 		const { globalLimits } = config.get;
 
-		const schema = [
+		const errors = await checkSchema([
 			{ result: () => {
 				if (req.body.thumb_extension) {
 					return /\.[a-z0-9]+/i.test(req.body.thumb_extension);
@@ -179,9 +179,7 @@ module.exports = {
 			{ result: lengthBody(req.body.webring_following, 0, 10000), expected: false, error: 'Webring following list must not exceed 10000 characters' },
 			{ result: lengthBody(req.body.webring_blacklist, 0, 10000), expected: false, error: 'Webring blacklist must not exceed 10000 characters' },
 			{ result: lengthBody(req.body.webring_logos, 0, 10000), expected: false, error: 'Webring logos list must not exceed 10000 characters' },
-		];
-
-		const errors = await checkSchema(schema);
+		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {

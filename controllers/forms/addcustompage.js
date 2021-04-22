@@ -19,7 +19,7 @@ module.exports = {
 
 		const { globalLimits } = config.get;
 
-		const schema = [
+		const errors = await checkSchema([
 			{ result: existsBody(req.body.message), expected: true, error: 'Missing message' },
 			{ result: existsBody(req.body.title), expected: true, error: 'Missing title' },
 			{ result: existsBody(req.body.page), expected: true, error: 'Missing .html name' },
@@ -38,9 +38,7 @@ module.exports = {
 			{ result: async () => {
 				return (await CustomPages.findOne(req.params.board, req.body.page)) == null;
 			}, expected: true, error: '.html name must be unique'},
-		];
-
-		const errors = await checkSchema(schema);
+		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {

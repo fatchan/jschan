@@ -14,11 +14,9 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
-		const errors = [];
-
-		if (!req.body.checkedbanners || req.body.checkedbanners.length === 0) {
-			errors.push('Must select at least one banner to delete');
-		}
+		const errors = await checkSchema([
+			{ result: lengthBody(req.body.checkedbanners, 1), expected: false, error: 'Must select at least one banner to delete' },
+		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
