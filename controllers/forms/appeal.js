@@ -20,16 +20,11 @@ module.exports = {
 	controller: async (req, res, next) => {
 
 		const { globalLimits } = config.get;
-		const errors = [];
-		if (!req.body.checkedbans || req.body.checkedbans.length === 0 || req.body.checkedbans.length > 10) {
-			errors.push('Must select 1-10 bans');
-		}
-		if (!req.body.message || res.locals.messageLength === 0) {
-			errors.push('Appeals must include a message');
-		}
-		if (res.locals.messageLength > globalLimits.fieldLength.message) {
-			errors.push('Appeal message must be 2000 characters or less');
-		}
+
+		const errors = await checkSchema([
+			{ result: existsBody(req.body.message), expected: true, error: 'Appeals must include a message' },
+			{ result: numberBody(res.locals.messageLength, 1, globalLimits.fieldLength.message), expected: true, error: `Appeal message must be ${globalLimits.fieldLength.message} characters or less` },
+		]); //should appeals really be based off message field length global limit? minor.
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
@@ -47,10 +42,8 @@ module.exports = {
 		}
 
 		if (amount === 0) {
-			/*
-				this can occur if they selected invalid id, non-ip match, already appealed, or unappealable bans. prevented by databse filter, so we use
-				use the updatedCount return value to check if any appeals were made successfully. if not, we end up here.
-			*/
+			/* this can occur if they selected invalid id, non-ip match, already appealed, or unappealable bans. prevented by databse filter, so we use
+				use the updatedCount return value to check if any appeals were made successfully. if not, we end up here. */
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'error': 'Invalid bans selected',
