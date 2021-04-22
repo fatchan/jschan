@@ -3,7 +3,6 @@ const ffmpeg = require('fluent-ffmpeg')
 	, uploadDirectory = require(__dirname+'/uploadDirectory.js');
 
 module.exports = (file, geometry, timestamp) => {
-console.log(file, geometry, timestamp)
 	const { thumbSize } = config.get;
 	return new Promise((resolve, reject) => {
 		const command = ffmpeg(`${uploadDirectory}/file/${file.filename}`)
