@@ -661,6 +661,8 @@ details.actions div {
 	float: right;
 	overflow: hidden;
 	margin-right: 1px;
+	position: absolute;
+    right: 0;
 }
 
 .floatactions[open] .toggle-summary:hover {
