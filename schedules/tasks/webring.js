@@ -123,7 +123,7 @@ module.exports = {
 		debugLogs && console.log(timeDiffString(label, end));
 	},
 	interval: timeUtils.MINUTE*15,
-	immediate: true,
+	immediate: false,
 	condition: 'enableWebring'
 
 };
