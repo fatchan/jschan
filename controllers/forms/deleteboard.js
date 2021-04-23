@@ -16,34 +16,17 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
-		const errors = [];
-
-		if (!req.body.confirm) {
-			errors.push('Missing confirmation');
-		}
-		if (!req.body.uri) {
-			errors.push('Missing URI');
-		}
-		let board;
-		if (alphaNumericRegex.test(req.body.uri) !== true) {
-			errors.push('URI must contain a-z 0-9 only');
-		} else {
-			//no need to check these if the board name is completely invalid
-			if (req.params.board != null && req.params.board !== req.body.uri) {
-				//board manage page to not be able to delete other boards;
-				//req.params.board will be null on global delete, so this wont happen
-				errors.push('URI does not match current board');
-			}
-			try {
-				board = await Boards.findOne(req.body.uri)
-			} catch (err) {
-				return next(err);
-			}
-			if (!board) {
-				//global must check exists because the route skips Boards.exists middleware
-				errors.push(`Board /${req.body.uri}/ does not exist`);
-			}
-		}
+		const board = null;
+		const errors = await checkSchema([
+			{ result: existsBody(req.body.confirm), expected: true, error: 'Missing confirmation' },
+			{ result: existsBody(req.body.uri), expected: true, error: 'Missing URI' },
+			{ result: alphaNumericRegex.test(req.body.uri), blocking: true, expected: true, error: 'URI must contain a-z 0-9 only'},
+			{ result: (req.params.board === req.body.uri), expected: true, error: 'URI does not match current board' },
+			{ result: async () => {
+				board = await Boards.findOne(req.body.uri);
+				return board != null;
+			}, expected: true, error: `Board /${req.body.uri}/ does not exist` }
+		], res.locals.permLevel);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {

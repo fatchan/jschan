@@ -18,45 +18,17 @@ module.exports = {
 
 		const { enableUserAccountCreation } = config.get;
 
-		if (enableUserAccountCreation === false && res.locals.permLevel > 1) {
-			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
-				'error': 'Acount creation is disabled',
-				'redirect': '/register.html'
-			});
-		}
-
-		const errors = [];
-
-		//check exist
-		if (!req.body.username || req.body.username.length <= 0) {
-			errors.push('Missing username');
-		}
-		if (!req.body.password || req.body.password.length <= 0) {
-			errors.push('Missing password');
-		}
-		if (!req.body.passwordconfirm || req.body.passwordconfirm.length <= 0) {
-			errors.push('Missing password confirmation');
-		}
-
-		//check
-		if (req.body.username) {
-			if (req.body.username.length > 50) {
-				errors.push('Username must be 50 characters or less');
-			}
-			if (alphaNumericRegex.test(req.body.username) !== true) {
-				errors.push('Username must contain a-z 0-9 only');
-			}
-		}
-		if (req.body.password && req.body.password.length > 100) {
-			errors.push('Password must be 100 characters or less');
-		}
-		if (req.body.passwordconfirm && req.body.passwordconfirm.length > 100) {
-			errors.push('Password confirmation must be 100 characters or less');
-		}
-		if (req.body.password != req.body.passwordconfirm) {
-			errors.push('Password and password confirmation must match');
-		}
+		const errors = await checkSchema([
+			{ result: (enableUserAccountCreation === true), blocking: true, permLevel: 2, expected: true, error: 'Account creation is currently disabled' },
+			{ result: existsBody(req.body.username), expected: true, error: 'Missing username' },
+			{ result: lengthBody(req.body.username, 1, 50), expected: false, error: 'Username must be 50 characters or less' },
+			{ result: alphaNumericRegex.test(req.body.username), expected: true, error: 'Username must contain a-z 0-9 only'},
+			{ result: existsBody(req.body.password), expected: true, error: 'Missing password' },
+			{ result: lengthBody(req.body.password, 1, 50), expected: false, error: 'Password must be 50 characters or less' },
+			{ result: existsBody(req.body.passwordconfirm), expected: true, error: 'Missing password confirmation' },
+			{ result: lengthBody(req.body.passwordconfirm, 1, 100), expected: false, error: 'Password confirmation must be 100 characters or less' },
+			{ result: (req.body.password === req.body.passwordconfirm), expected: true, error: 'Password and password confirmation must match' },
+		], res.locals.permLevel);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {

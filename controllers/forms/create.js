@@ -18,38 +18,15 @@ module.exports = {
 
 		const { enableUserBoardCreation, globalLimits } = config.get;
 
-		if (enableUserBoardCreation === false && res.locals.permLevel > 1) {
-			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
-				'error': 'User board creation is currently disabled',
-				'redirect': '/create.html'
-			});
-		}
-
-		const errors = [];
-
-		//check exist
-		if (!req.body.uri || req.body.uri.length <= 0) {
-			errors.push('Missing URI');
-		}
-		if (!req.body.name || req.body.name.length <= 0) {
-			errors.push('Missing name');
-		}
-		//other validation
-		if (req.body.uri) {
-			if (req.body.uri.length > globalLimits.fieldLength.uri) {
-				errors.push(`URI must be ${globalLimits.fieldLength.uri} characters or less`);
-			}
-			if (alphaNumericRegex.test(req.body.uri) !== true) {
-				errors.push('URI must contain a-z 0-9 only');
-			}
-		}
-		if (req.body.name && req.body.name.length > globalLimits.fieldLength.boardname) {
-			errors.push(`Name must be ${globalLimits.fieldLength.boardname} characters or less`);
-		}
-		if (req.body.description && req.body.description.length > globalLimits.fieldLength.description) {
-			errors.push(`Description must be ${globalLimits.fieldLength.description} characters or less`);
-		}
+		const errors = await checkSchema([
+			{ result: (enableUserBoardCreation === true), blocking: true, permLevel: 2, expected: true, error: 'User board creation is currently disabled' },
+			{ result: existsBody(req.body.uri), expected: true, error: 'Missing URI' },
+			{ result: lengthBody(req.body.uri, 1, globalLimits.fieldLength.uri), expected: false, error: `URI must be ${globalLimits.fieldLength.uri} characters or less` },
+			{ result: existsBody(req.body.name), expected: true, error: 'Missing name' },
+			{ result: lengthBody(req.body.name, 1, globalLimits.fieldLength.boardname), expected: false, error: `Name must be ${globalLimits.fieldLength.boardname} characters or less` },
+			{ result: alphaNumericRegex.test(req.body.uri), expected: true, error: 'URI must contain a-z 0-9 only' },
+			{ result: existsBody(req.body.description), expected: true, error: `Description must be ${globalLimits.fieldLength.description} characters or less` },
+		], res.locals.permLevel);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
