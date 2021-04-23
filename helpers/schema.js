@@ -61,6 +61,9 @@ module.exports = {
 			const expected = (check.expected || false);
 			if (result !== expected) {
 				errors.push(check.error);
+				if (check.blocking === true) {
+					break; //errors that you want to stop and not bother checking the rest
+				}
 			}
 		}
 		return errors;
