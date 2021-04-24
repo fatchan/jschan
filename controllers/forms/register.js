@@ -19,7 +19,7 @@ module.exports = {
 		const { enableUserAccountCreation } = config.get;
 
 		const errors = await checkSchema([
-			{ result: (enableUserAccountCreation === true), blocking: true, permLevel: 2, expected: true, error: 'Account creation is currently disabled' },
+			{ result: (enableUserAccountCreation === true), blocking: true, permLevel: 1, expected: true, error: 'Account creation is currently disabled' },
 			{ result: existsBody(req.body.username), expected: true, error: 'Missing username' },
 			{ result: lengthBody(req.body.username, 1, 50), expected: false, error: 'Username must be 50 characters or less' },
 			{ result: alphaNumericRegex.test(req.body.username), expected: true, error: 'Username must contain a-z 0-9 only'},

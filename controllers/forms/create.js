@@ -19,7 +19,7 @@ module.exports = {
 		const { enableUserBoardCreation, globalLimits } = config.get;
 
 		const errors = await checkSchema([
-			{ result: (enableUserBoardCreation === true), blocking: true, permLevel: 2, expected: true, error: 'User board creation is currently disabled' },
+			{ result: (enableUserBoardCreation === true), blocking: true, permLevel: 1, expected: true, error: 'User board creation is currently disabled' },
 			{ result: existsBody(req.body.uri), expected: true, error: 'Missing URI' },
 			{ result: lengthBody(req.body.uri, 1, globalLimits.fieldLength.uri), expected: false, error: `URI must be ${globalLimits.fieldLength.uri} characters or less` },
 			{ result: existsBody(req.body.name), expected: true, error: 'Missing name' },
