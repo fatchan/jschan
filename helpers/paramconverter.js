@@ -22,6 +22,7 @@ const defaultOptions = {
 module.exports = (options) => {
 
 	options = { ...defaultOptions, ...options };
+	options.allowedArrays.push('captcha'); //this is the only one for now, otherwise i would .concat them all or something.
 
 	return (req, res, next) => {
 
