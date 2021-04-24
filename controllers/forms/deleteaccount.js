@@ -12,19 +12,17 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
-		if (!req.body.confirm) {
-			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
-				'error': 'Missing confirmation',
-				'redirect': '/account.html',
-			});
-		}
-
 		const { modBoards, ownedBoards } = res.locals.user;
-		if (ownedBoards.length > 0 || modBoards.length > 0) {
+
+		const errors = await checkSchema([
+			{ result: existsBody(req.body.confirm), expected: true, error: 'Missing confirmation' },
+			{ result: (numberBody(ownedBoards.length, 0, 0) && numberBody(modBoards.length, 0, 0)), expected: true, error: 'You cannot delete your account while you hold staff position on any board' },
+		]);
+
+		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
-				'message': 'You cannot delete your account while you hold staff position on any board',
+				'errors': errors,
 				'redirect': '/account.html',
 			});
 		}

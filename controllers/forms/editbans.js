@@ -17,14 +17,10 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
-		const errors = [];
-
-		if (!req.body.checkedbans || req.body.checkedbans.length === 0) {
-			errors.push('Must select at least one ban');
-		}
-		if (!req.body.option || (req.body.option !== 'unban' && req.body.option !== 'deny_appeal')) {
-			errors.push('Invalid ban action')
-		}
+		const errors = await checkSchema([
+			{ result: lengthBody(req.body.checkedbans, 1), expected: false, error: 'Must select at least one ban' },
+			{ result: inArrayBody(req.body.option, ['unban', 'deny_appeal']), expected: true, error: 'Invalid ban action' },
+		]);
 
 		const redirect = req.params.board ? `/${req.params.board}/manage/bans.html` : '/globalmanage/bans.html';
 

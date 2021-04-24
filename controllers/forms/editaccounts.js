@@ -15,17 +15,11 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
-		const errors = [];
-
-		if (!req.body.checkedaccounts || req.body.checkedaccounts.length === 0) {
-			errors.push('Must select at least one account');
-		}
-		if (typeof req.body.auth_level !== 'number' && !req.body.delete_account) {
-			errors.push('Missing auth level or delete action');
-		}
-		if (typeof req.body.auth_level === 'number' && req.body.auth_level < 0 || req.body.auth_level > 4) {
-			errors.push('Auth level must be 0-4');
-		}
+		const errors = await checkSchema([
+			{ result: lengthBody(req.body.checkedaccounts, 1), expected: false, error: 'Must select at least one account' },
+			{ result: numberBody(req.body.auth_level, 0, 4), expected: true, error: 'Auth level must be a number 0-4' },
+			{ result: (typeof req.body.auth_level === 'number' || req.body.delete_account), expected: true, error: 'Missing auth level or delete action' }
+		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
