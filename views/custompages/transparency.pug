@@ -12,13 +12,16 @@ block content
 					p A transparency report is published monthly. Each one is signed with with a PGP key linked below and contains the latest bitcoin block hash at the time of writing. This proves at least that the message was authored by somebody with access to the private key, and was not made in advance to be published retroactively.
 					p
 						a(href='/file/no-cd/pubkey.asc') PGP pubkey
+					p To verify a message, first download the public key and import it. #[.code gpg --import pubkey.asc]
+					p Then download any of the reports, and verify it to ensure the signature is good and the fingerprint matches. #[.code gpg --verify report-23-12-2020.txt]
 					details(open)
 						summary 2020
 						ul
-							li: a(href='/file/no-cd/canary-23-12-2020.txt') 23-12-2020
+							li: a(href='/file/no-cd/report-23-12-2020.txt') 23-12-2020
 					details(open)
 						summary 2021
 						ul
-							li: a(href='/file/no-cd/canary-24-01-2021.txt') 24-01-2021
-							li: a(href='/file/no-cd/canary-24-02-2021.txt') 24-02-2021
-							li: a(href='/file/no-cd/canary-23-03-2021.txt') 23-03-2021
+							li: a(href='/file/no-cd/report-24-01-2021.txt') 24-01-2021
+							li: a(href='/file/no-cd/report-24-02-2021.txt') 24-02-2021
+							li: a(href='/file/no-cd/report-23-03-2021.txt') 23-03-2021
+							li: a(href='/file/no-cd/report-24-04-2021.txt') 24-04-2021
