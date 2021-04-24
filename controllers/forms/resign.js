@@ -16,25 +16,15 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
-		const errors = [];
-
-		if (!req.body.confirm) {
-			errors.push('Missing confirmation');
-		}
-		if (!req.body.board || req.body.board.length === 0) {
-			errors.push('You did not select a board');
-		} else if (alphaNumericRegex.test(req.body.board) !== true) {
-			errors.push('URI must contain a-z 0-9 only');
-		} else {
-			try {
+		const errors = checkSchema([
+			{ result: existsBody(req.body.confirm), expected: true, error: 'Missing confirmation' },
+			{ result: lengthBody(req.body.board, 1), expected: true, error: 'You did not select a board' },
+			{ result: alphaNumericRegex.test(req.body.board), expected: true, error: 'URI must contain a-z 0-9 only' },
+			{ result: async () => {
 				res.locals.board = await Boards.findOne(req.body.board);
-			} catch (err) {
-				return next(err);
-			}
-			if (!res.locals.board) {
-				errors.push(`Board /${req.body.board}/ does not exist`);
-			}
-		}
+				return res.locals.board != null;
+			}, expected: true, error: `Board /${req.body.board}/ does not exist` },
+		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
