@@ -78,27 +78,26 @@ You may install Node.js yourself without nvm if you prefer.
 
 **6. Configure nginx**
 
-- Copy the nginx.example config to the sites-eavailable folder, and create a symlink from sites-available -> sites-enabled
+- Copy the nginx example config and snippets, and create a symlink from sites-available -> sites-enabled
 ```bash
-$ sudo cp configs/nginx/nginx.example /etc/nginx/sites-available/DOMAIN.COM
-$ sudo ln -s /etc/nginx/sites-available/DOMAIN.COM /etc/nginx/sites-enabled/DOMAIN.COM
+$ sudo cp configs/nginx/nginx.example /etc/nginx/sites-available/EXAMPLE.COM
+$ sudo ln -s /etc/nginx/sites-available/EXAMPLE.COM /etc/nginx/sites-enabled/EXAMPLE.COM
+$ sudo cp configs/nginx/snippets/* /etc/nginx/snippets
 ```
+
+- If you have a .onion or .loki address, uncomment the block in /etc/nginx/sites-available/EXAMPLE.COM
 
 Edit/replace the following in your nginx config:
-- "domain.com" with your domain name
 - "/path/to/jschan" with the path of your jschan root folder
-- If using .onion, uncomment the .onion block, and replace the example address with your .onion
-```bash
-$ sudo editor /etc/nginx/sites-available/DOMAIN.COM
-```
-
+- "example.com" with your domain name
+- "example.onion" or "example.loki" with your tor or lokinet address
 `sed` can be used to automate this process:
 ```bash
-$ sudo sed -i 's|/path/to/jschan|/path/to/your/install|g' /etc/nginx/sites-available/DOMAIN.COM
-$ sudo sed -i 's/domain.com/your.domain.com/g' /etc/nginx/sites-available/DOMAIN.COM
+$ sudo sed -i 's|/path/to/jschan|/path/to/your/install|g' /etc/nginx/sites-available/EXAMPLE.COM
+$ sudo sed -i 's/example.com/your.example.com/g' /etc/nginx/sites-available/EXAMPLE.COM
 ```
 
-- Make sure the sites enabled folder is included by `/etc/nginx/nginx.conf` (it is in debian nginx package)
+- Make sure the sites enabled folder is included by `/etc/nginx/nginx.conf` (in debian nginx package this is already done)
 - Use [certbot](https://certbot.eff.org/) to get a free https certificate.
 
 - For post flags to work, [follow this guide](http://archive.is/2SMOb) to setup the [legacy GeoIP database](https://www.miyuru.lk/geoiplegacy) and add these directives to the http block in `/etc/nginx/nginx.conf`:
@@ -110,8 +109,6 @@ If your nginx doesn't have the necessary module by default, or is using v2 inste
 If you plan on using hcaptcha or google recaptcha, you will need to modify the content-security-policy header (CSP) in your nginx config. (documentation: [google recaptcha](https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website.-how-can-i-configure-it-to-work-with-recaptcha), [hcaptcha](https://docs.hcaptcha.com/#content-security-policy-settings))
 
 If you use cloudflare, please read [these](https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-Logging-visitor-IP-addresses-with-mod-cloudflare-) [articles](https://support.cloudflare.com/hc/en-us/articles/200168236-Configuring-Cloudflare-IP-Geolocation) to setup proper IP forwarding and geolocation headers. Similar steps would apply to other CDNs/reverse proxies.
-
-Also included is an "nginx_advanced" config, and a snippets folder for advanced users who want to better organise and more easily customise the nginx configuration. It functions the same as the normal nginx.example, but you need to create the snippets folder in /etc/nginx/snippets, copy the example snippets, and edit them with your domain and installation path.
 
 **7. Clone this repo, browse to the folder and set some things up**
 
