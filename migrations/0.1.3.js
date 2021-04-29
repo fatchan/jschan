@@ -16,5 +16,6 @@ module.exports = async(db, redis) => {
 			}
 		}
 	]).toArray();
-	console.log('=\nHEY, you should update your nginx configs. 0.1.3 had some nginx config changes to support new favicon location and gulp task. Refer to step 6 of README if you forgot how\n=')
+	console.log('=\nNOTICE: 0.1.3 has updated nginx config, now using snippets for a more modular config that is easier to maintain. It is recommended to update these, refer to step 6 of README.\n=')
+	console.log('=\nNOTICE: 0.1.3 now makes custom favicon generate easily and properly. Place your master image file in gulp/res/icons/master.png, then run "gulp generate-favicon && gulp icons".\n=')
 };

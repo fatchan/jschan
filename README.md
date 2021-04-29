@@ -50,11 +50,11 @@ Demo/test instance: [Clearnet](https://fatchan.org), [Tor hidden service](http:/
 
 **2. Install dependencies.**
 
-NOTE: You may need to add sources depending on your distro. If you want animated gif thumbnails, ffmpeg ?=4.3.x is recommended. For debian, it can be found in the testing repos or compiled from source.
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick
 ```
+NOTE: [Compile ffmpeg from source](https://trac.ffmpeg.org/wiki/CompilationGuide) if you plan to use animated .gif thumbnails, as there are known issues with older ffmpeg versions producing buggy thumbnails.
 
 **3. Install MongoDB**
 
@@ -91,6 +91,7 @@ Edit/replace the following in your nginx config:
 - "/path/to/jschan" with the path of your jschan root folder
 - "example.com" with your domain name
 - "example.onion" or "example.loki" with your tor or lokinet address
+
 `sed` can be used to automate this process:
 ```bash
 $ sudo sed -i 's|/path/to/jschan|/path/to/your/install|g' /etc/nginx/sites-available/EXAMPLE.COM
@@ -100,11 +101,10 @@ $ sudo sed -i 's/example.com/your.example.com/g' /etc/nginx/sites-available/EXAM
 - Make sure the sites enabled folder is included by `/etc/nginx/nginx.conf` (in debian nginx package this is already done)
 - Use [certbot](https://certbot.eff.org/) to get a free https certificate.
 
-- For post flags to work, [follow this guide](http://archive.is/2SMOb) to setup the [legacy GeoIP database](https://www.miyuru.lk/geoiplegacy) and add these directives to the http block in `/etc/nginx/nginx.conf`:
+- For post flags to work, [follow this guide](http://archive.is/2SMOb) to setup the [legacy GeoIP database](https://www.miyuru.lk/geoiplegacy), then add this directive inside the http block of `/etc/nginx/nginx.conf`:
 ```
 geoip_country /usr/share/GeoIP/GeoIP.dat;
 ```
-If your nginx doesn't have the necessary module by default, or is using v2 instead, find your own guide.
 
 If you plan on using hcaptcha or google recaptcha, you will need to modify the content-security-policy header (CSP) in your nginx config. (documentation: [google recaptcha](https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website.-how-can-i-configure-it-to-work-with-recaptcha), [hcaptcha](https://docs.hcaptcha.com/#content-security-policy-settings))
 
@@ -131,8 +131,9 @@ $ gulp reset
 # place your master favicon file in gulp/res/icons/master.png, then generate
 gulp generate-favicon
 
-# make pm2 (process manager) start on server restart
-$ pm2 startup #and follow any prompts
+# make jschan pm2 a service and load on system startup. this will output some commands you need to run to complete the process.
+$ pm2 startup
+
 # save the process list so jschan is started with pm2
 $ pm2 save
 
@@ -141,10 +142,9 @@ $ npm run-script start
 $ gulp
 
 # some commands you may need to use in future/find helpful
-# pm2 is a process manager for nodejs
 $ pm2 list #list running pm2 processes
 $ pm2 logs #see logs
-$ pm2 reload all #reload all backend processes
+$ pm2 reload ecosystem.config.js #reload all backend processes
 
 # gulp is used for various jobs like minifying and compiling scripts
 # the build-worker process may also run some of these for certain operations e.g. editing global settings in the web panel
@@ -158,32 +158,35 @@ $ gulp #run default gulp task
 
 EITHER:
 
-- Use the socks proxy provided by a non-docker tor daemon, which is probably already setup on port 9050 if you have a tor installed for hidden service.
+- Use the socks proxy provided by a non-docker tor daemon, which is probably already setup on port 9050 if you have tor installed for a hidden service.
 - Install docker and run torproxy in a container: https://github.com/dperson/torproxy (of course, audit the docker image yourself).
 - Use your own socks proxy
 
-Then update the proxy address in global settings. The first 2 will allow you to follow .onions in your webring follow list.
+Either of the first two options will allow you to follow .onions in your webring follow list.
+
+To enable the proxy, tick "Use Socks Proxy" in global management settings and set the appropriate proxy address, e.g. `socks5h://127.0.0.1:9050`, then save settings.
 
 ## Updating
 
 ```bash
+#stop the jschan backend
+$ pm2 stop ecosystem.config.js
 #pull the latest changes
 $ git pull
 #install dependencies again in case any have updated or changed
 $ npm install
-#run the gulp migrate task. this will update things such as your database schema
+#run the gulp migrate task. this will update things such as your database schema.
 $ gulp migrate
-#stop the jschan backend
-$ pm2 stop all
 #run the default gulp task to update, scripts, css, icons, images and delete old html
 $ gulp
 #start the backend again
-$ pm2 restart all
+$ pm2 restart ecosystem.config.js --env production
 #if something breaks, check and read the logs, they will help figure out what went wrong
 $ pm2 logs
 ```
 
 ## For generous people
 
-BTC: [`bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6`](bitcoin:bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6)
-XMR: [`89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh`](monero:89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh)
+Bitcoin (BTC): [`bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6`](bitcoin:bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6)
+
+Monero (XMR): [`89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh`](monero:89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh)
