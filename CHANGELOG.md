@@ -14,8 +14,11 @@
   - Update socket-io 2.x to 4.x
 
 ##### 0.1.3
-  - Script optimizations, improve script execution speed especially on longer threads
+  - Script optimizations, improves page load speed especially on longer threads
   - Extra (u) download link for no reason
   - favicon, webmanifest, browserconfig, etc for browsers made into gulp task
   - Webring now sends and checks for ppd stat
   - Board search improved (prefix matches)
+  - Update code for form submission and data validation, faster and easier to maintain
+  - Bugfix flags not updating in the post form properly when BO add/removes them
+  - Bugfix reporter bans breaking in some cases
