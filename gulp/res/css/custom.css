@@ -18,7 +18,8 @@ table.boardtable th:nth-child(1) {
 .corner-logo {
 	background-image : url(/file/mascotcorner.png);
 	background-repeat: no-repeat;
-	background-position: right top 5px;
+	background-position: right bottom;
+	background-size: contain;
 }
 .aa {
 	font-family: Mona, "MS Pgothic", "MS P繧ｴ繧ｷ繝�け", IPAMonaPGothic, "IPA 繝｢繝翫� P繧ｴ繧ｷ繝�け", submona !important;

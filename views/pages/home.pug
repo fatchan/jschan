@@ -9,10 +9,11 @@ block head
 		meta(property='og:description', content=recentNews[0].message.raw.substring(0,200))
 
 block content
-	h1.board-title #{meta.siteName}
-	pre.board-description.em
-		| The people shall not be deprived or abridged of their right to speak, to write, or to publish their sentiments;
-		| and the freedom of the press, as one of the great bulwarks of liberty, shall be inviolable.
+	.board-header
+		h1.board-title #{meta.siteName}
+		span.text-center.em(style='max-width:500px')
+			| The people shall not be deprived or abridged of their right to speak, to write, or to publish their sentiments;
+			| and the freedom of the press, as one of the great bulwarks of liberty, shall be inviolable.
 	.table-container.flex-center.mv-10.text-center
 		table(style='max-width:500px')
 			tr
@@ -21,7 +22,6 @@ block content
 				td
 					pre.no-m-p
 						| Welcome to fatchan.
-						|
 						| 🌐 
 						a(href='https://fatchan.org/') fatchan.org
 						|  (
@@ -93,10 +93,10 @@ block content
 					td #{board.sequence_value-1}
 			if localStats.total-localStats.unlisted > boards.length
 				tr
-					td(colspan=5)
+					td(colspan=6)
 						a.bold(href='/boards.html') More Boards
 			tr
-				td.bold(colspan=5)
+				td.bold(colspan=6)
 					| Want your own board? 
 					a(href='/register.html') Register an account
 					| , then 
