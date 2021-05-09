@@ -17,8 +17,8 @@ module.exports = {
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.username), expected: true, error: 'Missing username' },
 			{ result: existsBody(req.body.password), expected: true, error: 'Missing password' },
-			{ result: lengthBody(req.body.username, 1, 50), expected: false, error: 'Username must be 50 characters or less' },
-			{ result: lengthBody(req.body.password, 1, 100), expected: false, error: 'Password must be 100 characters or less' },
+			{ result: lengthBody(req.body.username, 1, 50), expected: false, error: 'Username must be 1-50 characters' },
+			{ result: lengthBody(req.body.password, 1, 100), expected: false, error: 'Password must be 1-100 characters' },
 		]);
 
 		if (errors.length > 0) {
