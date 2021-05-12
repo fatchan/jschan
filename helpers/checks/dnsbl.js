@@ -23,8 +23,9 @@ module.exports = async (req, res, next) => {
 			deleteTempFiles(req).catch(e => console.error);
 			return dynamicResponse(req, res, 403, 'message', {
 				'title': 'Forbidden',
-				'message': 'Your IP address is listed on a blacklist',
-				'redirect': req.headers.referer || '/'
+				'message': `Your request was blocked because your IP address is listed on a blacklist.${blockBypass.bypassDnsbl ? ' You can solve a "block bypass" to temporarily circumvent blacklisting.' : ''}`,
+				'redirect': req.headers.referer || '/',
+				'link': blockBypass.bypassDnsbl ? { text: 'Solve block bypass', href: '/bypass.html' } : null,
 			});
 		}
 	}

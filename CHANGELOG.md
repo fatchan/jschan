@@ -20,5 +20,6 @@
   - Webring now sends and checks for ppd stat
   - Board search improved (prefix matches)
   - Update code for form submission and data validation, faster and easier to maintain
+  - Make it more obvious to users with a blacklisted IP if block bypass dnsbl is enabled
   - Bugfix flags not updating in the post form properly when BO add/removes them
   - Bugfix reporter bans breaking in some cases
