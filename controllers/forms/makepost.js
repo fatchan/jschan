@@ -22,7 +22,7 @@ module.exports = {
 	controller: async (req, res, next) => {
 
 		const { pruneImmediately, globalLimits, disableAnonymizerFilePosting } = config.get;
-		
+
 		const hasNoMandatoryFile = globalLimits.postFiles.max !== 0 && res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0;
 			//maybe add more duplicates here?
 

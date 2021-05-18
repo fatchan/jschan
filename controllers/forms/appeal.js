@@ -23,7 +23,7 @@ module.exports = {
 
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.message), expected: true, error: 'Appeals must include a message' },
-			{ result: numberBody(res.locals.messageLength, 1, globalLimits.fieldLength.message), expected: true, error: `Appeal message must be ${globalLimits.fieldLength.message} characters or less` },
+			{ result: numberBody(res.locals.messageLength, 0, globalLimits.fieldLength.message), expected: true, error: `Appeal message must be ${globalLimits.fieldLength.message} characters or less` },
 		]); //should appeals really be based off message field length global limit? minor.
 
 		if (errors.length > 0) {

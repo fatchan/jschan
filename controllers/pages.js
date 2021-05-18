@@ -25,7 +25,7 @@ const express  = require('express')
 		captcha, thread, modlog, modloglist, account, boardlist, customPage } = require(__dirname+'/../models/pages/')
 	, threadParamConverter = paramConverter({ processThreadIdParam: true })
 	, logParamConverter = paramConverter({ processDateParam: true })
-	, newsParamConverter = paramConverter({ objectIdFields: ['newsid'] });
+	, newsParamConverter = paramConverter({ objectIdParams: ['newsid'] });
 
 //homepage
 router.get('/index.html', home);

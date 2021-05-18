@@ -12,6 +12,7 @@ const defaultOptions = {
 	allowedArrays: [], //helpers/checks/captcha.js already does this for captcha
 	numberFields: [],
 	numberArrays: [],
+	objectIdParams: [],
 	objectIdFields: [],
 	objectIdArrays: [],
 	processThreadIdParam: false,
@@ -26,9 +27,9 @@ module.exports = (options) => {
 
 	return (req, res, next) => {
 
-		const { timeFields, trimFields, allowedArrays,
-				processThreadIdParam, processDateParam, processMessageLength,
-				numberFields, numberArrays, objectIdFields, objectIdArrays } = options;
+		const { timeFields, trimFields, allowedArrays, processThreadIdParam,
+			processDateParam, processMessageLength, numberFields, numberArrays,
+			objectIdParams, objectIdFields, objectIdArrays } = options;
 
 		/* check all body fields, body-parser prevents this array being too big, so no worry.
 		   whitelist for fields that can be arrays, and convert singular of those fields to 1 length array */
@@ -109,6 +110,12 @@ module.exports = (options) => {
 					req.body[field] = ObjectId(req.body[field]);
 				}
 			}
+			for (let i = 0; i < objectIdParams.length; i++) {
+				const field = objectIdParams[i];
+				if (req.params[field]) {
+					req.params[field] = ObjectId(req.params[field]);
+				}
+			}
 			for (let i = 0; i < objectIdArrays.length; i++) {
 				const field = objectIdArrays[i];
 				if (req.body[field]) {
@@ -145,8 +152,8 @@ module.exports = (options) => {
 
 		/* normalise message length check for CRLF vs just LF, because String.length depending on browser wont count CRLF as
 		   2 characters, so user gets "message too long" at the right length. Maybe will add another array for these in future */
-		if (processMessageLength && req.body.message) {
-			res.locals.messageLength = req.body.message.replace(/\r\n/igm, '\n').length;
+		if (processMessageLength) {
+			res.locals.messageLength = req.body.message ? req.body.message.replace(/\r\n/igm, '\n').length : 0;
 		}
 
 		next();

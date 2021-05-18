@@ -2,6 +2,7 @@
 
 const addNews = require(__dirname+'/../../models/forms/addnews.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, config = require(__dirname+'/../../config.js')
 	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
@@ -20,7 +21,7 @@ module.exports = {
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.message), expected: true, error: 'Missing message' },
 			{ result: existsBody(req.body.title), expected: true, error: 'Missing title' },
-			{ result: lengthBody(req.body.message, 0, globalLimits.fieldLength.message), expected: false, error: `Message must be ${globalLimits.fieldLength.message} characters or less` },
+			{ result: numberBody(res.locals.messageLength, 0, globalLimits.fieldLength.message), expected: true, error: `Message must be ${globalLimits.fieldLength.message} characters or less` },
 			{ result: lengthBody(req.body.title, 0, 50), expected: false, error: 'Title must be 50 characters or less' },
 		]);
 

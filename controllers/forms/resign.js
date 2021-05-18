@@ -18,7 +18,7 @@ module.exports = {
 
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.confirm), expected: true, error: 'Missing confirmation' },
-			{ result: lengthBody(req.body.board, 1), expected: true, error: 'You did not select a board' },
+			{ result: existsBody(req.body.board), expected: true, error: 'You did not select a board' },
 			{ result: alphaNumericRegex.test(req.body.board), expected: true, error: 'URI must contain a-z 0-9 only' },
 			{ result: async () => {
 				res.locals.board = await Boards.findOne(req.body.board);

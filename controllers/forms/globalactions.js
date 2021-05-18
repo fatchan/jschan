@@ -22,9 +22,9 @@ module.exports = {
 	controller: async (req, res, next) => {
 
 		const { globalLimits } = config.get;
-		
+
 		res.locals.actions = actionChecker(req);
-		
+
 		const errors = await checkSchema([
 			{ result: lengthBody(req.body.globalcheckedposts, 1), expected: false, blocking: true, error: 'Must select at least one post' },
 			{ result: lengthBody(res.locals.actions.validActions, 1), expected: false, blocking: true, error: 'No actions selected' },
