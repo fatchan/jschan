@@ -15,11 +15,13 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { globalLimits } = config.get;
+
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.message), expected: true, error: 'Missing message' },
 			{ result: existsBody(req.body.title), expected: true, error: 'Missing title' },
-			{ result: lengthBody(req.body.message, 1, 10000), expected: false, error: 'Message must be 10000 characters or less' },
-			{ result: lengthBody(req.body.title, 1, 50), expected: false, error: 'Title must be 50 characters or less' },
+			{ result: lengthBody(req.body.message, 0, globalLimits.fieldLength.message), expected: false, error: `Message must be ${globalLimits.fieldLength.message} characters or less` },
+			{ result: lengthBody(req.body.title, 0, 50), expected: false, error: 'Title must be 50 characters or less' },
 		]);
 
 		if (errors.length > 0) {
