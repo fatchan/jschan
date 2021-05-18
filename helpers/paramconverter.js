@@ -29,6 +29,7 @@ module.exports = (options) => {
 		const { timeFields, trimFields, allowedArrays,
 				processThreadIdParam, processDateParam, processMessageLength,
 				numberFields, numberArrays, objectIdFields, objectIdArrays } = options;
+
 		/* check all body fields, body-parser prevents this array being too big, so no worry.
 		   whitelist for fields that can be arrays, and convert singular of those fields to 1 length array */
 		const bodyFields = Object.keys(req.body);
@@ -50,7 +51,7 @@ module.exports = (options) => {
 			const field = trimFields[i];
 			if (req.body[field]) {
 				//trimEnd() because trailing whitespace doesnt affect how a post appear and if it is all whitespace, trimEnd will get it all anyway
-				req.body[field] = req.body[field].trimEnd();
+				req.body[field] = req.body[field].trimEnd() || null;
 			}
 		}
 
@@ -143,7 +144,7 @@ module.exports = (options) => {
 		}
 
 		/* normalise message length check for CRLF vs just LF, because String.length depending on browser wont count CRLF as
-		   2 characters, so user gets "message too long" at the right length. */
+		   2 characters, so user gets "message too long" at the right length. Maybe will add another array for these in future */
 		if (processMessageLength && req.body.message) {
 			res.locals.messageLength = req.body.message.replace(/\r\n/igm, '\n').length;
 		}
