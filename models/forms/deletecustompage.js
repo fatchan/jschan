@@ -7,7 +7,15 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 
 module.exports = async (req, res, next) => {
 
-	await CustomPages.deleteMany(req.body.checkedcustompages, req.params.board);
+	const deletedCount = await CustomPages.deleteMany(req.body.checkedcustompages, req.params.board).then(res => res.deletedCount);
+
+	if (deletedCount === 0) {
+		return dynamicResponse(req, res, 400, 'message', {
+			'title': 'Bad Request',
+			'message': 'Invalid custom pages selected',
+			'redirect': `/${req.params.board}/manage/custompages.html`
+		});
+	}
 
 	await Promise.all(req.body.checkedcustompages.map(page => {
 		remove(`${uploadDirectory}/html/${req.params.board}/custompage/${page}.html`)
