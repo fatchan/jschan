@@ -31,7 +31,7 @@ module.exports = {
 			{ result: (res.locals.anonymizer && (disableAnonymizerFilePosting || res.locals.board.settings.disableAnonymizerFilePosting)
 				&& res.locals.numFiles > 0), expected: false, error: `Posting files through anonymizers has been disabled ${disableAnonymizerFilePosting ? 'globally' : 'on this board'}` },
 			{ result: res.locals.numFiles > res.locals.board.settings.maxFiles, blocking: true, permLevel: 1, expected: true, error: `Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}` },
-			{ result: (lengthBody(req.body.subject, 0, 0) && (!existsBody(req.body.thread)
+			{ result: (lengthBody(req.body.subject, 1) && (!existsBody(req.body.thread)
 				&& res.locals.board.settings.forceThreadSubject)), expected: false, error: 'Threads must include a subject' },
 			{ result: lengthBody(req.body.message, 1) && (!existsBody(req.body.thread)
 				&& res.locals.board.settings.forceThreadMessage), expected: false, error: 'Threads must include a message' },
@@ -45,9 +45,9 @@ module.exports = {
 			{ result: existsBody(req.body.message) && !existsBody(req.body.thread) && lengthBody(req.body.message, res.locals.board.settings.minThreadMessageLength, res.locals.board.settings.maxThreadMessageLength),
 				expected: false, error: `Thread messages must be ${res.locals.board.settings.minThreadMessageLength}-${res.locals.board.settings.maxThreadMessageLength} characters` },
 			{ result: lengthBody(req.body.postpassword, 0, globalLimits.fieldLength.postpassword), expected: false, error: `Password must be ${globalLimits.fieldLength.postpassword} characters or less` },
-			{ result: lengthBody(req.body.name, 0, globalLimits.fieldLength.name), expected: false, error: `Password must be ${globalLimits.fieldLength.name} characters or less` },
-			{ result: lengthBody(req.body.subject, 0, globalLimits.fieldLength.subject), expected: false, error: `Password must be ${globalLimits.fieldLength.subject} characters or less` },
-			{ result: lengthBody(req.body.email, 0, globalLimits.fieldLength.email), expected: false, error: `Password must be ${globalLimits.fieldLength.email} characters or less` },
+			{ result: lengthBody(req.body.name, 0, globalLimits.fieldLength.name), expected: false, error: `Name must be ${globalLimits.fieldLength.name} characters or less` },
+			{ result: lengthBody(req.body.subject, 0, globalLimits.fieldLength.subject), expected: false, error: `Subject must be ${globalLimits.fieldLength.subject} characters or less` },
+			{ result: lengthBody(req.body.email, 0, globalLimits.fieldLength.email), expected: false, error: `Email must be ${globalLimits.fieldLength.email} characters or less` },
 		]);
 
 		if (errors.length > 0) {

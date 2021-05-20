@@ -25,7 +25,7 @@ module.exports = {
 		const { globalLimits, rateLimitCost } = config.get
 			, maxThread = (Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxThreadMessageLength) || globalLimits.fieldLength.message)
 			, maxReply = (Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxReplyMessageLength) || globalLimits.fieldLength.message);
-		
+
 		const errors = await checkSchema([
 			{ result: lengthBody(req.body.description, 0, globalLimits.fieldLength.description), expected: false, error: `Board description must be ${globalLimits.fieldLength.description} characters or less` },
 			{ result: lengthBody(req.body.announcements, 0, 5000), expected: false, error: 'Board announcements must be 5000 characters or less' },
