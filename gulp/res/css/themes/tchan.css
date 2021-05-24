@@ -31,7 +31,7 @@
 }
 
 body {
-	background: #140e10;
+	background: #140e10 url(/css/themes/tchan-bg.png);
 	font-family: trebuchet ms,Tahoma,Verdana,Arial,sans-serif;
 	font-size: 13.3333px!important
 }
