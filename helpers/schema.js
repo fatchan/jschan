@@ -25,14 +25,20 @@ module.exports = {
 
 	//same, but with old/new fallbacks for settings that can adjust a dependency at same time
 	numberBodyVariable: (data, minOld, minNew, maxOld, maxNew) => {
-		if (!minNew) {
+		if (minNew == null) {
 			minNew = minOld;
 		}
-		if (!maxNew) {
+		if (maxNew == null) {
 			maxNew = maxOld;
 		}
-		const varMin = Math.min(minOld, minNew) || minOld;
-		const varMax = Math.max(maxOld, maxNew) || maxOld;
+		const varMin = Math.min(minOld, minNew);
+		if (isNaN(varMin)) {
+			varMin = minOld;
+		}
+		const varMax = Math.max(maxOld, maxNew);
+		if (isNaN(varMax)) {
+			varMax = maxOld;
+		}
 		return typeof data === 'number' && (varMin <= data && varMax >= data);
 	},
 
