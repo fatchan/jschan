@@ -95,7 +95,7 @@ module.exports = {
 			if (lang === 'aa') {
 				return `<span class='aa'>${escape(matches.groups.code)}</span>`;
 			} else {
-				const { value } = highlight(lang, trimFix, true);
+				const { value } = highlight(trimFix, { language: lang, ignoreIllegals: true });
 				return `<span class='code hljs'><small>language: ${lang}</small>\n${value}</span>`;
 			}
 		}
