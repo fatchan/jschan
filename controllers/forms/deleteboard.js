@@ -16,7 +16,7 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
-		const board = null;
+		let board = null;
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.confirm), expected: true, error: 'Missing confirmation' },
 			{ result: existsBody(req.body.uri), expected: true, error: 'Missing URI' },
