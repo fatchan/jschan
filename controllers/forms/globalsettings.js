@@ -57,7 +57,7 @@ module.exports = {
 				return false;
 			}, expected: false, error: 'Extra mime types must be like type/subtype' },
 			{ result: lengthBody(req.body.global_announcement, 0, 10000), expected: false, error: 'Global announcement must not exceed 10000 characters' },
-			{ result: lengthBody(req.body.filters, 0, 5000), expected: false, error: 'Filter text cannot exceed 5000 characters' },
+			{ result: lengthBody(req.body.filters, 0, 50000), expected: false, error: 'Filter text cannot exceed 50000 characters' },
 			{ result: numberBody(req.body.filter_mode, 0, 2), expected: true, error: 'Filter mode must be a number from 0-2' },
 			{ result: numberBody(req.body.ban_duration), expected: true, error: 'Invalid filter auto ban duration' },
 			{ result: lengthBody(req.body.allowed_hosts, 0, 10000), expected: false, error: 'Allowed hosts must not exceed 10000 characters' },

@@ -30,7 +30,7 @@ module.exports = {
 			{ result: lengthBody(req.body.description, 0, globalLimits.fieldLength.description), expected: false, error: `Board description must be ${globalLimits.fieldLength.description} characters or less` },
 			{ result: lengthBody(req.body.announcements, 0, 5000), expected: false, error: 'Board announcements must be 5000 characters or less' },
 			{ result: lengthBody(req.body.tags, 0, 2000), expected: false, error: 'Tags length must be 2000 characters or less' },
-			{ result: lengthBody(req.body.filters, 0, 2000), expected: false, error: 'Filters length must be 2000 characters or less' },
+			{ result: lengthBody(req.body.filters, 0, 20000), expected: false, error: 'Filters length must be 20000 characters or less' },
 			{ result: lengthBody(req.body.custom_css, 0, globalLimits.customCss.max), expected: false, error: `Custom CSS must be ${globalLimits.customCss.max} characters or less` },
 			{ result: arrayInBody(globalLimits.customCss.filters, req.body.custom_css), permLevel: 1, expected: false, error: `Custom CSS strict mode is enabled and does not allow the following: "${globalLimits.customCss.filters.join('", "')}"` },
 			{ result: lengthBody(req.body.moderators, 0, 500), expected: false, error: 'Moderators length must be 500 characters orless' },
