@@ -1,9 +1,9 @@
 ##### 0.1.1
- - Added changelog
- - Version now changes with some kind of meaning
- - Animated gif thumbnails no longer generate static image for images < thumbnail dimensions
- - Boards management "Banners" page is now "Assets"
- - Boards can have custom flags
+  - Added changelog
+  - Version now changes with some kind of meaning
+  - Animated gif thumbnails no longer generate static image for images < thumbnail dimensions
+  - Boards management "Banners" page is now "Assets"
+  - Boards can have custom flags
 
 ##### 0.1.2
   - Merge webring and local board list and improve webring search and filter functionality
@@ -21,5 +21,6 @@
   - Board search improved (prefix matches)
   - Update code for form submission and data validation, faster and easier to maintain
   - Make it more obvious to users with a blacklisted IP if block bypass dnsbl is enabled
-  - Bugfix flags not updating in the post form properly when BO add/removes them
-  - Bugfix reporter bans breaking in some cases
+  - Add new themes
+  - Improved README
+  - Many bugfixes
