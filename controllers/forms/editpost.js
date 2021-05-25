@@ -21,14 +21,13 @@ module.exports = {
 		const { rateLimitCost, globalLimits } = config.get;
 
 		const errors = await checkSchema([
-			{ result: existsBody(res.locals.board, 1), expected: false, error: 'Missing board' },
-			{ result: lengthBody(req.body.board, 1), expected: false, error: 'Missing board' },
-			{ result: numberBody(req.body.postId), expected: false, error: 'Missing postId' },
-			{ result: lengthBody(req.body.message, 1, globalLimits.fieldLength.message), expected: false, error: `Message must be ${globalLimits.fieldLength.message} characters or less` },
-			{ result: lengthBody(req.body.name, 1, globalLimits.fieldLength.name), expected: false, error: `Name must be ${globalLimits.fieldLength.name} characters or less` },
-			{ result: lengthBody(req.body.subject, 1, globalLimits.fieldLength.subject), expected: false, error: `Subject must be ${globalLimits.fieldLength.subject} characters or less` },
-			{ result: lengthBody(req.body.email, 1, globalLimits.fieldLength.email), expected: false, error: `Email must be ${globalLimits.fieldLength.email} characters or less` },
-			{ result: lengthBody(req.body.log_message, 1, globalLimits.fieldLength.log_message), expected: false, error: `Modlog message must be ${globalLimits.fieldLength.log_message} characters or less` },
+			{ result: existsBody(req.body.board), expected: true, error: 'Missing board' },
+			{ result: numberBody(req.body.postId, 1), expected: true, error: 'Missing postId' },
+			{ result: lengthBody(req.body.message, 0, globalLimits.fieldLength.message), expected: false, error: `Message must be ${globalLimits.fieldLength.message} characters or less` },
+			{ result: lengthBody(req.body.name, 0, globalLimits.fieldLength.name), expected: false, error: `Name must be ${globalLimits.fieldLength.name} characters or less` },
+			{ result: lengthBody(req.body.subject, 0, globalLimits.fieldLength.subject), expected: false, error: `Subject must be ${globalLimits.fieldLength.subject} characters or less` },
+			{ result: lengthBody(req.body.email, 0, globalLimits.fieldLength.email), expected: false, error: `Email must be ${globalLimits.fieldLength.email} characters or less` },
+			{ result: lengthBody(req.body.log_message, 0, globalLimits.fieldLength.log_message), expected: false, error: `Modlog message must be ${globalLimits.fieldLength.log_message} characters or less` },
 			{ result: async () => {
 				res.locals.post = await Posts.getPost(req.body.board, req.body.postId);
 				return res.locals.post != null;
