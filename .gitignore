@@ -10,5 +10,6 @@ gulp/res/css/custom.css
 gulp/res/js/locals.js
 gulp/res/js/post.js
 gulp/res/js/modal.js
+gulp/res/icons/*
 tmp/
 .idea/
