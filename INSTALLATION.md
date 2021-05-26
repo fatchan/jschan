@@ -93,18 +93,19 @@ $ cp configs/secrets.js.example configs/secrets.js && editor configs/secrets.js
 $ editor views/custompages/faq.pug views/custompages/rules.pug
 # you can also add more .pug files in that folder with the same general format to create other custom pages
 
-# install dependencies and run build tasks
+# install nodejs packages
 $ npm install
+
+# replace the master file for your favicon in gulp/res/icons/master.png
+
+# run the setup script. installs pm2 process manager and gulp build system and runs some gulp tasks.
 $ npm run-script setup
 
-# setup the database and folder structure, and creates the admin account. **The (random) password will be printed in the command line.**
+# run gulp reset to setup the database and folder structure and create the admin account. **Default admin account details with random password will be printed to the command line.**
 $ gulp reset
-# NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything
+# NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything.
 
-# place your master favicon file in gulp/res/icons/master.png, then generate
-gulp generate-favicon
-
-# make jschan pm2 a service and load on system startup. this will output some commands you need to run to complete the process.
+# make jschan pm2 a service and load on system startup. this will output some additional commands you need to run to complete the process if you were smart and didnt do everything as "root" user.
 $ pm2 startup
 
 # save the process list so jschan is started with pm2

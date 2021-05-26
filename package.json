@@ -52,7 +52,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "setup": "npm i -g pm2 gulp && gulp",
+    "setup": "npm i -g pm2 gulp && gulp generate-favicon && gulp default",
     "start": "pm2 start ecosystem.config.js --env production",
     "start-dev": "pm2 start ecosystem.config.js --env development"
   },

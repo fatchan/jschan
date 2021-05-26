@@ -131,6 +131,7 @@ gulp.task('check-for-favicon-update', function(done) {
 		if (err) {
 			throw err;
 		}
+		done();
 	});
 });
 
@@ -498,7 +499,7 @@ module.exports = {
 	html: gulp.series(init, deletehtml, custompages, closeConnections),
 	css: gulp.series(init, css, closeConnections),
 	images: gulp.series(images, closeConnections),
-	icons: gulp.series(icons, closeConnections),
+	icons: gulp.series('check-for-favicon-update', icons, closeConnections),
 	reset: gulp.series(init, wipe, build, closeConnections),
 	custompages: gulp.series(init, custompages, closeConnections),
 	scripts: gulp.series(init, scripts, closeConnections),
