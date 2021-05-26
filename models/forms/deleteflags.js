@@ -4,6 +4,7 @@ const { remove } = require('fs-extra')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { Boards } = require(__dirname+'/../../db/')
+	, buildQueue = require(__dirname+'/../../queue.js');
 
 module.exports = async (req, res, next) => {
 
@@ -19,6 +20,22 @@ module.exports = async (req, res, next) => {
 
 	//remove from db
 	await Boards.setFlags(req.params.board, updatedFlags);
+
+	await remove(`${uploadDirectory}/html/${req.params.board}/thread/`);
+	buildQueue.push({
+		'task': 'buildBoardMultiple',
+		'options': {
+			'board': res.locals.board,
+			'startpage': 1,
+			'endpage': Math.ceil(res.locals.board.settings.threadLimit/10),
+		}
+	});
+	buildQueue.push({
+		'task': 'buildCatalog',
+		'options': {
+			'board': res.locals.board,
+		}
+	});
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',

@@ -1,0 +1,86 @@
+:root {
+	--icon-color: invert(17%) sepia(89%) saturate(7057%) hue-rotate(2deg) brightness(93%) contrast(120%);
+	--alt-label-color: #313340;
+	--alt-font-color: black;
+	--label-color: #313340;
+	--box-border-color: #000;
+	--font-color: black;
+	--name-color: #117743;
+	--link-color: #176f6d;
+	--capcode-color: #f00;
+	--subject-color: #8C489F;
+	--darken: #00000010;
+	--hr: #ffffff;
+	--input-borders: #a9a9a9;
+	--input-color: #000;
+	--input-background: white;
+	--dice-color: darkorange;
+	--title-color: #f12e37;
+	--greentext-color: green;
+	--pinktext-color: #E0727F;
+	--post-link-color: hsl(51deg 71% 42%);
+	--link-hover: hsl(50deg 68% 31%);
+	--background-top: #f9e272;
+	--background-rest: #f9e272;
+	--navbar-color: #2d303e;
+	--post-color: #fafbe7;
+	--post-outline-color: hsl(179deg 26% 69%);
+	--highlighted-post-color: #fafbe7;
+	--highlighted-post-outline-color: hsl(179deg 26% 69%);
+	--board-title: #663E11;
+}
+
+body {
+	background: linear-gradient(#f9e272,rgba(255,255,255,0) 400px calc(100% - 200px),#f9e272),url(/css/themes/56chan-bg.png),hsl(178 40% 80%)
+}
+
+.board-title {
+	text-shadow: 1px 1px 1px rgba(167,170,168,.6)
+}
+
+.navbar a {
+	color: #d1ba47
+}
+
+.noselect,.post-quoters a {
+	color: #ef589c
+}
+
+.post-quoters a:hover {
+	color: #002c58!important
+}
+
+.noselect:hover {
+	color: #002c58!important
+}
+
+.post-quoters {
+	font-weight: 700
+}
+
+.postmenu {
+	border-left: calc(2 * .5em * .866) solid #b7a01f
+}
+
+.label,.rlabel {
+	color: #fff
+}
+
+.container {
+	padding: 20px
+}
+
+.jsonly.postform-style.filelabel,input#submitpost {
+	background-color: #176f6d;
+	border: 1px solid hsl(63deg 71% 95%)!important;
+	color: #fff;
+	font-weight: 700
+}
+
+.captcha {
+	filter: invert(17%) sepia(10%) saturate(7057%) hue-rotate(170deg) brightness(93%) contrast(120%)
+}
+
+.post-message a {
+	color: hsl(51deg 71% 42%)
+}

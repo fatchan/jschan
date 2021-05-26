@@ -586,6 +586,7 @@ td pre {
 	margin: 5px;
 	padding: 0 15px;
 	/*list-style: none;*/
+	word-break: break-all;
 }
 
 .modal-bg {
@@ -661,6 +662,8 @@ details.actions div {
 	float: right;
 	overflow: hidden;
 	margin-right: 1px;
+	position: absolute;
+    right: 0;
 }
 
 .floatactions[open] .toggle-summary:hover {

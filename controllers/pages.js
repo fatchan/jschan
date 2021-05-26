@@ -22,7 +22,10 @@ const express  = require('express')
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, create, editNews,
 		board, catalog, banners, randombanner, news, captchaPage, overboard, overboardCatalog,
-		captcha, thread, modlog, modloglist, account, boardlist, customPage } = require(__dirname+'/../models/pages/');
+		captcha, thread, modlog, modloglist, account, boardlist, customPage } = require(__dirname+'/../models/pages/')
+	, threadParamConverter = paramConverter({ processThreadIdParam: true })
+	, logParamConverter = paramConverter({ processDateParam: true })
+	, newsParamConverter = paramConverter({ objectIdParams: ['newsid'] });
 
 //homepage
 router.get('/index.html', home);
@@ -38,11 +41,11 @@ router.get('/overboard.html', overboard); //overboard
 router.get('/catalog.html', overboardCatalog); //overboard catalog view
 
 //board pages
-router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, paramConverter, board); //index
-router.get('/:board/thread/:id([1-9][0-9]{0,}).(html|json)', Boards.exists, paramConverter, Posts.exists, thread); //thread view
+router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, board); //index
+router.get('/:board/thread/:id([1-9][0-9]{0,}).(html|json)', Boards.exists, threadParamConverter, Posts.exists, thread); //thread view
 router.get('/:board/catalog.(html|json)', Boards.exists, catalog); //catalog
 router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
-router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, paramConverter, modlog); //daily log
+router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, logParamConverter, modlog); //daily log
 router.get('/:board/custompage/:page.html', Boards.exists, customPage); //board custom page
 router.get('/:board/banners.html', Boards.exists, banners); //banners
 router.get('/randombanner', randombanner); //random banner
@@ -56,8 +59,8 @@ router.get('/:board/manage/settings.html', useSession, sessionRefresh, isLoggedI
 router.get('/:board/manage/assets.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageAssets);
 router.get('/:board/manage/custompages.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, manageCustomPages);
 router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageCatalog);
-router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, manageBoard);
-router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, paramConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
+router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(3), csrf, manageBoard);
+router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, threadParamConverter, calcPerms, hasPerms(3), csrf, Posts.exists, manageThread);
 
 //global manage pages
 router.get('/globalmanage/reports.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(1), csrf, globalManageReports);
@@ -70,7 +73,7 @@ router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
 
 //edit pages
-router.get('/editnews/:newsid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, paramConverter, editNews);
+router.get('/editnews/:newsid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, newsParamConverter, editNews);
 //TODO: edit post get endpoint
 //TODO: edit board custom page get endpoint
 

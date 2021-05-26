@@ -4,170 +4,100 @@ const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardse
 	, { themes, codeThemes } = require(__dirname+'/../../helpers/themes.js')
 	, { Ratelimits } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, config = require(__dirname+'/../../config.js');
+	, config = require(__dirname+'/../../config.js')
+	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
-module.exports = async (req, res, next) => {
+module.exports = {
 
-	const { globalLimits, rateLimitCost } = config.get;
-	const errors = [];
+	paramConverter: paramConverter({
+		timeFields: ['ban_duration'],
+		trimFields: ['filters', 'moderators', 'tags', 'announcement', 'description', 'name', 'custom_css'],
+		allowedArrays: ['countries'],
+		numberFields: ['lock_reset', 'captcha_reset', 'filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode', 'tph_trigger', 'pph_trigger', 'pph_trigger_action',
+			'tph_trigger_action', 'bump_limit', 'reply_limit', 'max_files', 'thread_limit', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length',
+			'min_reply_message_length'],
+	}),
 
-//TODO: add helpers for different checks, passing name, min/max and return true with error if hit
-	if (req.body.description &&
-		(req.body.description.length < 1 ||
-		 req.body.description.length > globalLimits.fieldLength.description)) {
-		errors.push(`Board description must be 1-${globalLimits.fieldLength.description} characters`);
-	}
-	if (req.body.announcements && (req.body.announcements.length < 1 || req.body.announcements.length > 2000)) {
-		errors.push('Board announcements must be 1-2000 characters');
-	}
-	if (req.body.tags && req.body.tags.length > 2000) {
-		errors.push('Tags length must be 2000 characters or less');
-	}
-	if (req.body.filters && req.body.filters.length > 2000) {
-		errors.push('Filters length must be 2000 characters or less');
-	}
-	if (req.body.custom_css && globalLimits.customCss.enabled) {
-		if (res.locals.permLevel > 1 && globalLimits.customCss.strict && globalLimits.customCss.filters.some(filter => req.body.custom_css.includes(filter))) {
-			errors.push(`Custom CSS strict mode is enabled and does not allow the following: "${globalLimits.customCss.filters.join('", "')}"`);
-		}
-		if (req.body.custom_css.length > globalLimits.customCss.max) {
-			errors.push(`Custom CSS must be ${globalLimits.customCss.max} characters or less`);
-		}
-	}
-	if (req.body.moderators && req.body.moderators.length > 500) {
-		errors.push('Moderators length must be 500 characters orless');
-	}
-	if (req.body.name &&
-		(req.body.name.length < 1 ||
-		 req.body.name.length > globalLimits.fieldLength.boardname)) {
-		errors.push(`Board name must be 1-${globalLimits.fieldLength.boardname} characters`);
-	}
-	if (req.body.default_name && (req.body.default_name.length < 1 || req.body.default_name.length > 50)) {
-		errors.push('Anon name must be 1-50 characters');
-	}
-	if (typeof req.body.reply_limit === 'number'
-		&& (req.body.reply_limit < globalLimits.replyLimit.min
-			|| req.body.reply_limit > globalLimits.replyLimit.max)) {
-		errors.push(`Reply Limit must be ${globalLimits.replyLimit.min}-${globalLimits.replyLimit.max}`);
-	}
-	if (typeof req.body.bump_limit === 'number'
-		&& (req.body.bump_limit < globalLimits.bumpLimit.min
-			|| req.body.bump_limit > globalLimits.bumpLimit.max)) {
-		errors.push(`Bump Limit must be ${globalLimits.bumpLimit.min}-${globalLimits.bumpLimit.max}`);
-	}
-	if (typeof req.body.thread_limit === 'number'
-		&& (req.body.thread_limit < globalLimits.threadLimit.min
-			|| req.body.thread_limit > globalLimits.threadLimit.max)) {
-		errors.push(`Threads Limit must be ${globalLimits.threadLimit.min}-${globalLimits.threadLimit.max}`);
-	}
-	if (typeof req.body.max_files === 'number' && (req.body.max_files < 0 || req.body.max_files > globalLimits.postFiles.max)) {
-		errors.push(`Max files must be 0-${globalLimits.postFiles.max}`);
-	}
+	controller: async (req, res, next) => {
 
-	//make sure new min/max message dont conflict
-	if (typeof req.body.min_thread_message_length === 'number'
-		&& typeof req.body.max_thread_message_length === 'number'
-		&& req.body.min_thread_message_length
-		&& req.body.max_thread_message_length
-		&& req.body.min_thread_message_length > req.body.max_thread_message_length) {
-		errors.push('Min and max thread message lengths must not violate eachother');
-	}
-	if (typeof req.body.min_reply_message_length === 'number'
-		&& typeof req.body.max_reply_message_length === 'number'
-		&& req.body.min_reply_message_length > req.body.max_reply_message_length) {
-		errors.push('Min and max reply message lengths must not violate eachother');
-	}
+		const { globalLimits, rateLimitCost } = config.get
+			, maxThread = (Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxThreadMessageLength) || globalLimits.fieldLength.message)
+			, maxReply = (Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxReplyMessageLength) || globalLimits.fieldLength.message);
 
-	//make sure existing min/max message dont conflict
-	const minThread = Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxThreadMessageLength) || globalLimits.fieldLength.message;
-	if (typeof req.body.min_thread_message_length === 'number'
-		&& (req.body.min_thread_message_length < 0
-			|| req.body.min_thread_message_length > minThread)) {
-		errors.push(`Min thread message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Thread Message Length" (currently ${res.locals.board.settings.maxThreadMessageLength})`);
-	}
-	const minReply = Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxReplyMessageLength) || globalLimits.fieldLength.message;
-	if (typeof req.body.min_reply_message_length === 'number'
-		&& (req.body.min_reply_message_length < 0
-			|| req.body.min_reply_message_length > minReply)) {
-		errors.push(`Min reply message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Reply Message Length" (currently ${res.locals.board.settings.maxReplyMessageLength})`);
-	}
-	if (typeof req.body.max_thread_message_length === 'number'
-		&& (req.body.max_thread_message_length < 0
-			|| req.body.max_thread_message_length > globalLimits.fieldLength.message
-			|| (req.body.max_thread_message_length
-				&& req.body.max_thread_message_length < res.locals.board.settings.minThreadMessageLength))) {
-		errors.push(`Max thread message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Thread Message Length" (currently ${res.locals.board.settings.minThreadMessageLength})`);
-	}
-	if (typeof req.body.max_reply_message_length === 'number'
-		&& (req.body.max_reply_message_length < 0
-			|| req.body.max_reply_message_length > globalLimits.fieldLength.message
-			|| (req.body.max_reply_message_length
-				&& req.body.max_reply_message_length < res.locals.board.settings.minReplyMessageLength))) {
-		errors.push(`Max reply message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Reply Message Length" (currently ${res.locals.board.settings.minReplyMessageLength})`);
-	}
+		const errors = await checkSchema([
+			{ result: lengthBody(req.body.description, 0, globalLimits.fieldLength.description), expected: false, error: `Board description must be ${globalLimits.fieldLength.description} characters or less` },
+			{ result: lengthBody(req.body.announcements, 0, 5000), expected: false, error: 'Board announcements must be 5000 characters or less' },
+			{ result: lengthBody(req.body.tags, 0, 2000), expected: false, error: 'Tags length must be 2000 characters or less' },
+			{ result: lengthBody(req.body.filters, 0, 20000), expected: false, error: 'Filters length must be 20000 characters or less' },
+			{ result: lengthBody(req.body.custom_css, 0, globalLimits.customCss.max), expected: false, error: `Custom CSS must be ${globalLimits.customCss.max} characters or less` },
+			{ result: arrayInBody(globalLimits.customCss.filters, req.body.custom_css), permLevel: 1, expected: false, error: `Custom CSS strict mode is enabled and does not allow the following: "${globalLimits.customCss.filters.join('", "')}"` },
+			{ result: lengthBody(req.body.moderators, 0, 500), expected: false, error: 'Moderators length must be 500 characters orless' },
+			{ result: lengthBody(req.body.name, 1, globalLimits.fieldLength.boardname), expected: false, error: `Board name must be 1-${globalLimits.fieldLength.boardname} characters` },
+			{ result: lengthBody(req.body.default_name, 0, 50), expected: false, error: 'Anon name must be 50 characters or less' },
+			{ result: numberBody(req.body.reply_limit, globalLimits.replyLimit.min, globalLimits.replyLimit.max), expected: true, error: `Reply Limit must be ${globalLimits.replyLimit.min}-${globalLimits.replyLimit.max}` },
+			{ result: numberBody(req.body.bump_limit, globalLimits.bumpLimit.min, globalLimits.bumpLimit.max), expected: true, error: `Bump Limit must be ${globalLimits.bumpLimit.min}-${globalLimits.bumpLimit.max}` },
+			{ result: numberBody(req.body.thread_limit, globalLimits.threadLimit.min, globalLimits.threadLimit.max), expected: true, error: `Threads Limit must be ${globalLimits.threadLimit.min}-${globalLimits.threadLimit.max}` },
+			{ result: numberBody(req.body.max_files, 0, globalLimits.postFiles.max), expected: true, error: `Max files must be 0-${globalLimits.postFiles.max}` },
+			{ result: numberBody(req.body.min_thread_message_length, 0, globalLimits.fieldLength.message), expected: true, error: `Min thread message length must be 0-${globalLimits.fieldLength.message}` },
+			{ result: numberBody(req.body.min_reply_message_length, 0, globalLimits.fieldLength.message), expected: true, error: `Min reply message length must be 0-${globalLimits.fieldLength.message}` },
+			{ result: numberBody(req.body.max_thread_message_length, 0, globalLimits.fieldLength.message), expected: true, error: `Max thread message length must be 0-${globalLimits.fieldLength.message}` },
+			{ result: numberBody(req.body.max_reply_message_length, 0, globalLimits.fieldLength.message), expected: true, error: `Max reply message length must be 0-${globalLimits.fieldLength.message}` },
+			{ result: minmaxBody(req.body.min_thread_message_length, req.body.max_thread_message_length), expected: true, error: 'Min and max thread message lengths must not violate eachother' },
+			{ result: minmaxBody(req.body.min_reply_message_length, req.body.max_reply_message_length), expected: true, error: 'Min and max reply message lengths must not violate eachother' },
+			{ result: numberBodyVariable(req.body.min_thread_message_length, res.locals.board.settings.minThreadMessageLength,
+				req.body.min_thread_message_length, maxThread, req.body.max_thread_message_length), expected: true,
+				error: `Min thread message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Thread Message Length" (currently ${res.locals.board.settings.maxThreadMessageLength})` },
+			{ result: numberBodyVariable(req.body.min_reply_message_length, res.locals.board.settings.minReplyMessageLength,
+				req.body.min_reply_message_length, maxReply, req.body.max_reply_message_length), expected: true,
+				error: `Min reply message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Reply Message Length" (currently ${res.locals.board.settings.maxReplyMessageLength})` },
+			{ result: numberBodyVariable(req.body.max_thread_message_length, res.locals.board.settings.minThreadMessageLength,
+				req.body.min_thread_message_length, globalLimits.fieldLength.message, globalLimits.fieldLength.message), expected: true,
+				error: `Max thread message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Thread Message Length" (currently ${res.locals.board.settings.minThreadMessageLength})` },
+			{ result: numberBodyVariable(req.body.max_reply_message_length, res.locals.board.settings.minReplyMessageLength,
+				req.body.min_reply_message_length, globalLimits.fieldLength.message, globalLimits.fieldLength.message), expected: true,
+				error: `Max reply message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Reply Message Length" (currently ${res.locals.board.settings.minReplyMessageLength})` },
+			{ result: numberBody(req.body.lock_mode, 0, 2), expected: true, error: 'Invalid lock mode' },
+			{ result: numberBody(req.body.captcha_mode, 0, 2), expected: true, error: 'Invalid captcha mode' },
+			{ result: numberBody(req.body.filter_mode, 0, 2), expected: true, error: 'Invalid filter mode' },
+			{ result: numberBody(req.body.tph_trigger, 0, 10000), expected: true, error: 'Invalid tph trigger threshold' },
+			{ result: numberBody(req.body.tph_trigger_action, 0, 4), expected: true, error: 'Invalid tph trigger action' },
+			{ result: numberBody(req.body.pph_trigger, 0, 10000), expected: true, error: 'Invalid pph trigger threshold' },
+			{ result: numberBody(req.body.pph_trigger_action, 0, 4), expected: true, error: 'Invalid pph trigger action' },
+			{ result: numberBody(req.body.lock_reset, 0, 2), expected: true, error: 'Invalid trigger reset lock' },
+			{ result: numberBody(req.body.captcha_reset, 0, 2), expected: true, error: 'Invalid trigger reset captcha' },
+			{ result: numberBody(req.body.ban_duration, 0), expected: true, error: 'Invalid filter auto ban duration' },
+			{ result: inArrayBody(req.body.theme, themes), expected: true, error: 'Invalid theme' },
+			{ result: inArrayBody(req.body.code_theme, codeThemes), expected: true, error: 'Invalid code theme' },
+		], res.locals.permLevel);
 
-	if (typeof req.body.lock_mode === 'number' && (req.body.lock_mode < 0 || req.body.lock_mode > 2)) {
-		errors.push('Invalid lock mode');
-	}
-	if (typeof req.body.captcha_mode === 'number' && (req.body.captcha_mode < 0 || req.body.captcha_mode > 2)) {
-		errors.push('Invalid captcha mode');
-	}
-	if (typeof req.body.filter_mode === 'number' && (req.body.filter_mode < 0 || req.body.filter_mode > 2)) {
-		errors.push('Invalid filter mode');
-	}
-	if (typeof req.body.ban_duration === 'number' && req.body.ban_duration < 0) {
-		errors.push('Invalid filter auto ban duration');
-	}
-	if (req.body.theme && !themes.includes(req.body.theme)) {
-		errors.push('Invalid theme');
-	}
-	if (req.body.code_theme && !codeThemes.includes(req.body.code_theme)) {
-		errors.push('Invalid code theme');
-	}
-
-	if (typeof req.body.tph_trigger === 'number' && (req.body.tph_trigger < 0 || req.body.tph_trigger > 10000)) {
-		errors.push('Invalid tph trigger threshold');
-	}
-	if (typeof req.body.tph_trigger_action === 'number' && (req.body.tph_trigger_action < 0 || req.body.tph_trigger_action > 4)) {
-		errors.push('Invalid tph trigger action');
-	}
-	if (typeof req.body.pph_trigger === 'number' && (req.body.pph_trigger < 0 || req.body.pph_trigger > 10000)) {
-		errors.push('Invalid pph trigger threshold');
-	}
-	if (typeof req.body.pph_trigger_action === 'number' && (req.body.pph_trigger_action < 0 || req.body.pph_trigger_action > 4)) {
-		errors.push('Invalid pph trigger action');
-	}
-	if (typeof req.body.lock_reset === 'number' && (req.body.lock_reset < 0 || req.body.lock_reset > 2)) {
-		errors.push('Invalid trigger reset lock');
-	}
-	if (typeof req.body.captcha_reset === 'number' && (req.body.captcha_reset < 0 || req.body.captcha_reset > 2)) {
-		errors.push('Invalid trigger reset captcha');
-	}
-
-	if (errors.length > 0) {
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': `/${req.params.board}/manage/settings.html`
-		});
-	}
-
-	if (res.locals.permLevel > 1) { //if not global staff or above
-		const ratelimitBoard = await Ratelimits.incrmentQuota(req.params.board, 'settings', rateLimitCost.boardSettings); //2 changes a minute
-//		const ratelimitIp = await Ratelimits.incrmentQuota(res.locals.ip.single, 'settings', rateLimitCost.boardSettings);
-		if (ratelimitBoard > 100 /* || ratelimitIp > 100 */) {
-			return dynamicResponse(req, res, 429, 'message', {
-				'title': 'Ratelimited',
-				'error': 'You are changing settings too quickly, please wait a minute and try again',
+		if (errors.length > 0) {
+			return dynamicResponse(req, res, 400, 'message', {
+				'title': 'Bad request',
+				'errors': errors,
 				'redirect': `/${req.params.board}/manage/settings.html`
 			});
 		}
-	}
 
-	try {
-		await changeBoardSettings(req, res, next);
-	} catch (err) {
-		return next(err);
+		if (res.locals.permLevel > 1) { //if not global staff or above
+			const ratelimitBoard = await Ratelimits.incrmentQuota(req.params.board, 'settings', rateLimitCost.boardSettings); //2 changes a minute
+			const ratelimitIp = res.locals.anonymizer ? 0 : (await Ratelimits.incrmentQuota(res.locals.ip.single, 'settings', rateLimitCost.boardSettings));
+			if (ratelimitBoard > 100 || ratelimitIp > 100) {
+				return dynamicResponse(req, res, 429, 'message', {
+					'title': 'Ratelimited',
+					'error': 'You are changing settings too quickly, please wait a minute and try again',
+					'redirect': `/${req.params.board}/manage/settings.html`
+				});
+			}
+		}
+
+		try {
+			await changeBoardSettings(req, res, next);
+		} catch (err) {
+			return next(err);
+		}
+
 	}
 
 }

@@ -72,6 +72,7 @@ module.exports = async (req, res, next) => {
 				});
 				ips = ips.concat(matches);
 			}
+			ips = ips.filter(n => n);
 			[...new Set(ips)].forEach(ip => {
 				bans.push({
 					'ip': ip,

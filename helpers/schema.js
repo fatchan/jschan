@@ -1,15 +1,5 @@
 'use strict';
 
-/* planned schema would be array of smth like this:
-{
-	result: <check function, either predefined, some other check like isAlphaNumeric, or a custom callback>,
-	expected: <true or false>
-	error: <error text>,
-	permLevel: [optional perm level],
-}
-lengthBody, numberBody, minmaxBody, inArrayBody, arrayInBody, checkSchema
-*/
-
 module.exports = {
 
 //TODO: move some other checks here? like isAlphaNumeric would be a good example
@@ -35,14 +25,20 @@ module.exports = {
 
 	//same, but with old/new fallbacks for settings that can adjust a dependency at same time
 	numberBodyVariable: (data, minOld, minNew, maxOld, maxNew) => {
-		if (!minNew) {
+		if (minNew == null) {
 			minNew = minOld;
 		}
-		if (!maxNew) {
+		if (maxNew == null) {
 			maxNew = maxOld;
 		}
-		const varMin = Math.min(minOld, minNew) || minOld;
-		const varMax = Math.max(maxOld, maxNew) || maxOld;
+		const varMin = Math.min(minOld, minNew);
+		if (isNaN(varMin)) {
+			varMin = minOld;
+		}
+		const varMax = Math.max(maxOld, maxNew);
+		if (isNaN(varMax)) {
+			varMax = maxOld;
+		}
 		return typeof data === 'number' && (varMin <= data && varMax >= data);
 	},
 
@@ -65,12 +61,15 @@ module.exports = {
 	checkSchema: async (schema, permLevel) => {
 		const errors = [];
 		//filter check if my perm level is lower than the requirement. e.g. bypass filters checks
-		const filteredSchema = schema.filter(c => c.permLevel == null || c.permLevel > permLevel);
+		const filteredSchema = schema.filter(c => c.permLevel == null || c.permLevel < permLevel);
 		for (let check of filteredSchema) {
 			const result = await (typeof check.result === 'function' ? check.result() : check.result);
 			const expected = (check.expected || false);
 			if (result !== expected) {
 				errors.push(check.error);
+				if (check.blocking === true) {
+					break; //errors that you want to stop and not bother checking the rest
+				}
 			}
 		}
 		return errors;

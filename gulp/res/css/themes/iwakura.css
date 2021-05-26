@@ -1,0 +1,59 @@
+:root {
+	--icon-color: invert(15%) sepia(66%) saturate(7479%) hue-rotate(6deg) brightness(98%) contrast(124%);
+	--alt-label-color: #282a2e;
+	--alt-font-color: #f4c095;
+	--background-top: #0d1a1d;
+	--background-rest: #0d1a1d;
+	--navbar-color: #222222eb;
+	--post-color: #222222;
+	--post-outline-color: #d2738a;
+	--label-color: #282a2e;
+	--box-border-color: #d2738a;
+	--darken: #ffffff10;
+	--highlighted-post-color: #6d99ba73;
+	--highlighted-post-outline-color: #82cece;
+	--board-title: #f4c095;
+	--hr: #d2738a;
+	--font-color: #dcdcdc;
+	--name-color: #d2738a;
+	--capcode-color: #15ff00;
+	--subject-color: #f4c095;
+	--link-color: #6d98ba;
+	--post-link-color: #6d98ba;
+	--link-hover: #bd0000;
+	--input-borders: #d2738a;
+	--input-color: #dcdcdc;
+	--input-background: #282a2e;
+	--dice-color: darkorange;
+	--title-color: #d70000;
+	--greentext-color: #88b319;
+	--pinktext-color: #e0727f;
+}
+
+body {
+	background: linear-gradient(#6d99BA50,#1c1c1c75 400px calc(100% - 200px),#d2738A90),url(/css/themes/iwakura-bg.gif),#0d0d0d none repeat scroll 0 0
+}
+
+a.quote {
+	color: #f4c095
+}
+
+table {
+	border: 1px solid var(--box-border-color)
+}
+
+tr {
+	background: var(--background-rest) url(/css/themes/iwakura-bg.gif)
+}
+
+.captcha {
+	filter: invert(90%)
+}
+
+#float .post-container,#livetext,#threadstats,.catalog-tile,.pages,.post-container {
+	border-style: none none none solid
+}
+
+hr {
+	margin: 16px 0
+}

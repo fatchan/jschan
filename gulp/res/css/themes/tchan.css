@@ -1,0 +1,274 @@
+:root {
+	--input-borders: #140e10;
+	--input-color: #cb9fac;
+	--input-background: #1e1415;
+	--input-alt-borders: #99719c;
+	--input-alt-color: hsl(342.3, 29.7%, 71%);
+	--icon-color: invert(17%) sepia(89%) saturate(7057%) hue-rotate(295deg) brightness(93%) contrast(120%);
+	--darken: #00000010;
+	--capcode-color: #bd758d;
+	--dice-color: darkorange;
+	--pinktext-color: #E0727F;
+	--label-color: #241c1e;
+	--box-border-color: #140e10;
+	--link-color: palevioletred;
+	--post-link-color: palevioletred;
+	--link-hover: pink;
+	--board-title: rgba(0, 0, 0, 0);
+	--subject-color: #aa00a9;
+	--hr: #582d3d;
+	--name-color: #bd758d;
+	--font-color: hsl(342, 30%, 71%);
+	--post-color: #301821;
+	--post-outline-color: #40232e;
+	--highlighted-post-color: #301821;
+	--highlighted-post-outline-color: #40232e;
+	--title-color: red;
+	--greentext-color: #4f9234;
+	--spoiler-bg-color: #120c0d;
+	--spoiler-hover-color: #dcd9d9;
+	--spoiler-bg-color-op: #584453;
+}
+
+body {
+	background: #140e10 url(/css/themes/tchan-bg.png);
+	font-family: trebuchet ms,Tahoma,Verdana,Arial,sans-serif;
+	font-size: 13.3333px!important
+}
+
+.postmenu {
+	border: none;
+	background: url(/css/themes/tchan-star.png) no-repeat;
+	display: inline-block;
+	height: 19px;
+	width: 17px;
+	vertical-align: bottom;
+	margin-left: 5px
+}
+
+a.post-name {
+	color: red!important;
+	font-size: 0;
+	text-decoration: none
+}
+
+a.post-name:before {
+	content: 'SAGE!';
+	font-size: 13px;
+	text-decoration: none
+}
+
+.you::after {
+	margin-left: 3px;
+	content: "(You)";
+	font-weight: lighter;
+	font-style: italic;
+	font-size: 13px;
+	color: var(--name-color)
+}
+
+.spoiler {
+	background: var(--spoiler-bg-color);
+	color: transparent
+}
+
+.spoiler:hover {
+	color: var(--spoiler-hover-color)
+}
+
+.post-container.op .spoiler {
+	background: var(--spoiler-bg-color-op)
+}
+
+.captcha {
+	border-radius: 5px;
+	filter: invert(80%) sepia(15%) saturate(557%) hue-rotate(280deg) brightness(80%) contrast(120%)
+}
+
+.post-capcode {
+	color: #bd758d!important;
+	font-weight: 700!important
+}
+
+.post-capcode:after {
+	color: #bd758d!important;
+	font-weight: 700!important;
+	text-shadow: none;
+	content: '';
+	background: url(/css/themes/tchan-capcode.png) 0 0 no-repeat;
+	background-size: cover;
+	width: 15px!important;
+	height: 16px!important;
+	display: inline-block;
+	margin-left: 5px
+}
+
+.board-title {
+	font-weight: 700;
+	background-attachment: scroll;
+	background-clip: text;
+	-webkit-background-clip: text;
+	background-color: rgba(0,0,0,0);
+	background-image: linear-gradient(to right,red,#ffa600,#fff500,#06ff00,#00c9ff,#2300ff,#ff00fa,red);
+	background-size: 200%;
+	animation: heading 1s linear infinite
+}
+
+@keyframes heading {
+	to {
+		background-position: 200% center
+	}
+}
+
+.navbar {
+	background: 0 0;
+	border: none;
+	box-shadow: none;
+	position: absolute;
+	color: var(--font-color)
+}
+
+.navbar a {
+	color: var(--link-color)
+}
+
+.detected {
+	background: linear-gradient(to right,red,#ffa600,#fff500,#06ff00,#00c9ff,#2300ff,#ff00fa,red);
+	background-size: 200% auto;
+	color: #000;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	font-weight: 700;
+	animation: heading 1s linear infinite!important;
+	font-family: trebuchet ms,Tahoma,Verdana,Arial,sans-serif!important;
+	font-size: 100%!important
+}
+
+.pinktext {
+	font-weight: 400;
+	font-family: trebuchet ms,Tahoma,Verdana,Arial,sans-serif!important;
+	font-size: x-large;
+	color: #cb9eac
+}
+
+.close.postform-style,input,select,textarea {
+	font-family: trebuchet ms,Tahoma,Verdana,Arial,sans-serif!important;
+	font-size: 13.3333px!important;
+	border-radius: 5px!important
+}
+
+.postform-style,input,select,textarea {
+	font-family: trebuchet ms,Tahoma,Verdana,Arial,sans-serif!important;
+	font-size: 13.3333px!important;
+	border-radius: 5px!important
+}
+
+.modal a.button {
+	color: var(--link-color)!important
+}
+
+.modal a.button:hover {
+	color: var(--link-hover)!important
+}
+
+input[type=submit] {
+	padding: 3px 4px;
+	min-height: unset!important
+}
+
+input[type=file],input[type=number],input[type=password],input[type=range],input[type=text],textarea {
+	border-width: 2px!important
+}
+
+.close.postform-style,input[type=button],input[type=submit],select {
+	border-width: 1px!important;
+	border-color: var(--input-alt-borders)!important;
+	color: var(--input-alt-color)!important
+}
+
+#float .post-container,#livetext,#postform,#threadstats,.catalog-tile,.modal,.pages,.post-container,.stickynav,.toggle-summary {
+	border-radius: 4px;
+	border-style: solid none none solid;
+	border-width: 1px;
+	box-shadow: 2px 2px 1px #120c0d
+}
+
+.post-container.op {
+	box-shadow: unset
+}
+
+#postform {
+	padding: 4px
+}
+
+#dragHandle {
+	border-radius: 4px
+}
+
+.file-thumb,.post-file-src * {
+	max-width: 90vw;
+	border-radius: 5px
+}
+
+.file-thumb {
+	box-shadow: 0 1px 4px rgba(0,0,0,.2)
+}
+
+.post-container {
+	padding-right: 3em;
+	padding-top: .3em;
+	padding-bottom: .5em;
+	padding-left: .7em
+}
+
+.post-file-info {
+	font-size: smaller;
+	text-align: left;
+	max-width: 150px
+}
+
+.post-file {
+	align-items: start
+}
+
+.filelabel,div.label,textarea {
+	border-radius: 5px;
+	border-width: 2px
+}
+
+tr {
+	background: var(--input-background);
+	color: var(--input-color)
+}
+
+.board-banner {
+	border: 2px solid #cb9fac;
+	border-radius: 10px
+}
+
+.code {
+	background-color: var(--spoiler-bg-color)!important;
+	border-radius: 5px;
+	border: var(--spoiler-bg-color)!important
+}
+
+.spoiler:not(:hover) * {
+	background: var(--spoiler-bg-color)!important;
+	color: transparent
+}
+
+.spoiler {
+	cursor: auto
+}
+
+.spoiler:hover a {
+	color: var(--spoiler-hover-color)!important
+}
+
+.post-container.op .spoiler:not(:hover) * {
+	background: var(--spoiler-bg-color-op)!important
+}
+
+.anchor:target+.catalog-tile,.anchor:target+.post-container,.anchor:target+table,.anchor:target+table tbody tr th,.post-container.highlighted,.post-container.hoverhighlighted {
+	outline: 2px dashed #cb9fac
+}

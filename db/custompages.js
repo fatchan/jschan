@@ -43,7 +43,7 @@ module.exports = {
 				'$in': pages
 			},
 			'board': board
-		})
+		});
 	},
 
 	deleteBoard: (board) => {

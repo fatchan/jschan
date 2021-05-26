@@ -1,40 +1,40 @@
 'use strict';
 
 const loginAccount = require(__dirname+'/../../models/forms/login.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
-module.exports = async (req, res, next) => {
+module.exports = {
 
-	const errors = [];
+	paramConverter: paramConverter({
+		trimFields: ['username', 'password'],
+	}),
 
-	//check exist
-	if (!req.body.username || req.body.username.length <= 0) {
-		errors.push('Missing username');
-	}
-	if (!req.body.password || req.body.password.length <= 0) {
-		errors.push('Missing password');
-	}
+	controller: async (req, res, next) => {
 
-	//check too long
-	if (req.body.username && req.body.username.length > 50) {
-		errors.push('Username must be 50 characters or less');
-	}
-	if (req.body.password && req.body.password.length > 100) {
-		errors.push('Password must be 100 characters or less');
-	}
+		const errors = await checkSchema([
+			{ result: existsBody(req.body.username), expected: true, error: 'Missing username' },
+			{ result: existsBody(req.body.password), expected: true, error: 'Missing password' },
+			{ result: lengthBody(req.body.username, 0, 50), expected: false, error: 'Username must be 1-50 characters' },
+			{ result: lengthBody(req.body.password, 0, 100), expected: false, error: 'Password must be 1-100 characters' },
+		]);
 
-	if (errors.length > 0) {
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': '/login.html'
-		})
-	}
+		if (errors.length > 0) {
+			return dynamicResponse(req, res, 400, 'message', {
+				'title': 'Bad request',
+				'errors': errors,
+				'redirect': '/login.html'
+			})
+		}
 
-	try {
-		await loginAccount(req, res, next);
-	} catch (err) {
-		return next(err);
-	}
+		try {
+			await loginAccount(req, res, next);
+		} catch (err) {
+			return next(err);
+		}
+
+	},
 
 }

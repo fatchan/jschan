@@ -3,64 +3,47 @@
 const alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, config = require(__dirname+'/../../config.js')
-	, registerAccount = require(__dirname+'/../../models/forms/register.js');
+	, registerAccount = require(__dirname+'/../../models/forms/register.js')
+	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
-module.exports = async (req, res, next) => {
+module.exports = {
 
-	const { enableUserAccountCreation } = config.get;
+	paramConverter: paramConverter({
+		trimFields: ['username', 'password', 'passwordconfirm'],
+	}),
 
-	if (enableUserAccountCreation === false && res.locals.permLevel > 1) {
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'error': 'Acount creation is disabled',
-			'redirect': '/register.html'
-		});
-	}
+	controller: async (req, res, next) => {
 
-	const errors = [];
+		const { enableUserAccountCreation } = config.get;
 
-	//check exist
-	if (!req.body.username || req.body.username.length <= 0) {
-		errors.push('Missing username');
-	}
-	if (!req.body.password || req.body.password.length <= 0) {
-		errors.push('Missing password');
-	}
-	if (!req.body.passwordconfirm || req.body.passwordconfirm.length <= 0) {
-		errors.push('Missing password confirmation');
-	}
+		const errors = await checkSchema([
+			{ result: (enableUserAccountCreation === true), blocking: true, permLevel: 1, expected: true, error: 'Account creation is currently disabled' },
+			{ result: existsBody(req.body.username), expected: true, error: 'Missing username' },
+			{ result: lengthBody(req.body.username, 0, 50), expected: false, error: 'Username must be 50 characters or less' },
+			{ result: alphaNumericRegex.test(req.body.username), expected: true, error: 'Username must contain a-z 0-9 only'},
+			{ result: existsBody(req.body.password), expected: true, error: 'Missing password' },
+			{ result: lengthBody(req.body.password, 0, 50), expected: false, error: 'Password must be 50 characters or less' },
+			{ result: existsBody(req.body.passwordconfirm), expected: true, error: 'Missing password confirmation' },
+			{ result: lengthBody(req.body.passwordconfirm, 0, 100), expected: false, error: 'Password confirmation must be 100 characters or less' },
+			{ result: (req.body.password === req.body.passwordconfirm), expected: true, error: 'Password and password confirmation must match' },
+		], res.locals.permLevel);
 
-	//check
-	if (req.body.username) {
-		if (req.body.username.length > 50) {
-			errors.push('Username must be 50 characters or less');
+		if (errors.length > 0) {
+			return dynamicResponse(req, res, 400, 'message', {
+				'title': 'Bad request',
+				'errors': errors,
+				'redirect': '/register.html'
+			})
 		}
-		if (alphaNumericRegex.test(req.body.username) !== true) {
-			errors.push('Username must contain a-z 0-9 only');
+
+		try {
+			await registerAccount(req, res, next);
+		} catch (err) {
+			return next(err);
 		}
-	}
-	if (req.body.password && req.body.password.length > 100) {
-		errors.push('Password must be 100 characters or less');
-	}
-	if (req.body.passwordconfirm && req.body.passwordconfirm.length > 100) {
-		errors.push('Password confirmation must be 100 characters or less');
-	}
-	if (req.body.password != req.body.passwordconfirm) {
-		errors.push('Password and password confirmation must match');
-	}
 
-	if (errors.length > 0) {
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': '/register.html'
-		})
-	}
-
-	try {
-		await registerAccount(req, res, next);
-	} catch (err) {
-		return next(err);
 	}
 
 }

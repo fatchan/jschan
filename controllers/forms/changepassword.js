@@ -1,55 +1,45 @@
 'use strict';
 
 const changePassword = require(__dirname+'/../../models/forms/changepassword.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
-module.exports = async (req, res, next) => {
+module.exports = {
 
-	const errors = [];
+	paramConverter: paramConverter({
+		trimFields: ['username', 'password', 'newpassword', 'newpasswordconfirm'],
+	}),
 
-	//check exist
-	if (!req.body.username || req.body.username.length <= 0) {
-		errors.push('Missing username');
-	}
-	if (!req.body.password || req.body.password.length <= 0) {
-		errors.push('Missing password');
-	}
-	if (!req.body.newpassword || req.body.newpassword.length <= 0) {
-		errors.push('Missing new password');
-	}
-	if (!req.body.newpasswordconfirm || req.body.newpasswordconfirm.length <= 0) {
-		errors.push('Missing new password confirmation');
-	}
+	controller: async (req, res, next) => {
 
-	//check too long
-	if (req.body.username && req.body.username.length > 50) {
-		errors.push('Username must be 50 characters or less');
-	}
-	if (req.body.password && req.body.password.length > 100) {
-		errors.push('Password must be 100 characters or less');
-	}
-	if (req.body.newpassword && req.body.newpassword.length > 100) {
-		errors.push('Password must be 100 characters or less');
-	}
-	if (req.body.newpasswordconfirm && req.body.newpasswordconfirm.length > 100) {
-		errors.push('Password confirmation must be 100 characters or less');
-	}
-	if (req.body.newpassword != req.body.newpasswordconfirm) {
-		errors.push('New password and password confirmation must match');
-	}
+		const errors = await checkSchema([
+			{ result: existsBody(req.body.username), expected: true, error: 'Missing username' },
+			{ result: lengthBody(req.body.username, 0, 50), expected: false, error: 'Username must be 50 characters or less' },
+			{ result: existsBody(req.body.password), expected: true, error: 'Missing password' },
+			{ result: lengthBody(req.body.password, 0, 50), expected: false, error: 'Password must be 50 characters or less' },
+			{ result: existsBody(req.body.newpassword), expected: true, error: 'Missing new password' },
+			{ result: lengthBody(req.body.newpassword, 0, 100), expected: false, error: 'New pasword must be 100 characters or less' },
+			{ result: existsBody(req.body.newpasswordconfirm), expected: true, error: 'Missing new password confirmation' },
+			{ result: lengthBody(req.body.newpasswordconfirm, 0, 100), expected: false, error: 'New password confirmation must be 100 characters or less' },
+			{ result: (req.body.newpassword === req.body.newpasswordconfirm), expected: true, error: 'New password and password confirmation must match' },
+		]);
 
-	if (errors.length > 0) {
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': '/changepassword.html'
-		})
-	}
+		if (errors.length > 0) {
+			return dynamicResponse(req, res, 400, 'message', {
+				'title': 'Bad request',
+				'errors': errors,
+				'redirect': '/changepassword.html'
+			})
+		}
 
-	try {
-		await changePassword(req, res, next);
-	} catch (err) {
-		return next(err);
+		try {
+			await changePassword(req, res, next);
+		} catch (err) {
+			return next(err);
+		}
+
 	}
 
 }

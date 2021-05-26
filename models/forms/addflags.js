@@ -78,9 +78,21 @@ module.exports = async (req, res, next) => {
 	// add flags in db
 	await Boards.setFlags(req.params.board, updatedFlags);
 
-	/*
-		should we rebuild here if (overwriting country flag){}?
-	*/
+	await remove(`${uploadDirectory}/html/${req.params.board}/thread/`);
+	buildQueue.push({
+		'task': 'buildBoardMultiple',
+		'options': {
+			'board': res.locals.board,
+			'startpage': 1,
+			'endpage': Math.ceil(res.locals.board.settings.threadLimit/10),
+		}
+	});
+	buildQueue.push({
+		'task': 'buildCatalog',
+		'options': {
+			'board': res.locals.board,
+		}
+	});
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',

@@ -1,37 +1,44 @@
 'use strict';
 
 const addNews = require(__dirname+'/../../models/forms/addnews.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, config = require(__dirname+'/../../config.js')
+	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
-module.exports = async (req, res, next) => {
+module.exports = {
 
-	const errors = [];
+	paramConverter: paramConverter({
+		trimFields: ['message', 'title'],
+		processMessageLength: true,
+	}),
 
-	if (!req.body.message || res.locals.messageLength === 0) {
-		errors.push('Missing message');
-	}
-	if (res.locals.messageLength > 10000) {
-		errors.push('Message must be 10000 characters or less');
-	}
-	if (!req.body.title || req.body.title.length === 0) {
-		errors.push('Missing title');
-	}
-	if (req.body.title.length > 50) {
-		errors.push('Title must be 50 characters or less');
-	}
+	controller: async (req, res, next) => {
 
-	if (errors.length > 0) {
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': '/globalmanage/news.html'
-		});
-	}
+		const { globalLimits } = config.get;
 
-	try {
-		await addNews(req, res, next);
-	} catch (err) {
-		return next(err);
+		const errors = await checkSchema([
+			{ result: existsBody(req.body.message), expected: true, error: 'Missing message' },
+			{ result: existsBody(req.body.title), expected: true, error: 'Missing title' },
+			{ result: numberBody(res.locals.messageLength, 0, globalLimits.fieldLength.message), expected: true, error: `Message must be ${globalLimits.fieldLength.message} characters or less` },
+			{ result: lengthBody(req.body.title, 0, 50), expected: false, error: 'Title must be 50 characters or less' },
+		]);
+
+		if (errors.length > 0) {
+			return dynamicResponse(req, res, 400, 'message', {
+				'title': 'Bad request',
+				'errors': errors,
+				'redirect': '/globalmanage/news.html'
+			});
+		}
+
+		try {
+			await addNews(req, res, next);
+		} catch (err) {
+			return next(err);
+		}
+
 	}
 
 }

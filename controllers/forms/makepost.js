@@ -5,97 +5,73 @@ const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
 	, config = require(__dirname+'/../../config.js')
-	, { Files } = require(__dirname+'/../../db/');
+	, { Files } = require(__dirname+'/../../db/')
+	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
-module.exports = async (req, res, next) => {
+module.exports = {
 
-	const { pruneImmediately, globalLimits, disableAnonymizerFilePosting } = config.get;
-	const errors = [];
+	paramConverter: paramConverter({
+		trimFields: ['message', 'name', 'subject', 'email', 'postpassword', 'password'],
+		allowedArrays: ['spoiler', 'strip_filename'],
+		processMessageLength: true,
+		numberFields: ['thread'],
+	}),
 
-	// even if force file and message are off, the post must contain one of either.
-	if ((!req.body.message || res.locals.messageLength === 0) && res.locals.numFiles === 0) {
-		errors.push('Posts must include a message or file');
-	}
-	if (res.locals.anonymizer
-		&& (disableAnonymizerFilePosting || res.locals.board.settings.disableAnonymizerFilePosting)
-		&& res.locals.numFiles > 0) {
-		errors.push(`Posting files through anonymizers has been disabled ${disableAnonymizerFilePosting ? 'globally' : 'on this board'}`);
-	}
-	if (res.locals.numFiles > res.locals.board.settings.maxFiles) {
-		errors.push(`Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}`);
-	}
-	// check file, subject and message enforcement according to board settings
-	if (!req.body.subject || req.body.subject.length === 0) {
-		if (!req.body.thread && res.locals.board.settings.forceThreadSubject) {
-			errors.push('Threads must include a subject');
-		} //no option to force op subject, seems useless
-	}
-	if (globalLimits.postFiles.max !== 0 && res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0) {
-		if (!req.body.thread && res.locals.board.settings.forceThreadFile) {
-			errors.push('Threads must include a file');
-		} else if (req.body.thread && res.locals.board.settings.forceReplyFile) {
-			errors.push('Posts must include a file');
+	controller: async (req, res, next) => {
+
+		const { pruneImmediately, globalLimits, disableAnonymizerFilePosting } = config.get;
+
+		const hasNoMandatoryFile = globalLimits.postFiles.max !== 0 && res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0;
+			//maybe add more duplicates here?
+
+		const errors = await checkSchema([
+			{ result: (lengthBody(req.body.message, 1) && res.locals.numFiles === 0), expected: false, error: 'Posts must include a message or file' },
+			{ result: (res.locals.anonymizer && (disableAnonymizerFilePosting || res.locals.board.settings.disableAnonymizerFilePosting)
+				&& res.locals.numFiles > 0), expected: false, error: `Posting files through anonymizers has been disabled ${disableAnonymizerFilePosting ? 'globally' : 'on this board'}` },
+			{ result: res.locals.numFiles > res.locals.board.settings.maxFiles, blocking: true, permLevel: 1, expected: true, error: `Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}` },
+			{ result: (lengthBody(req.body.subject, 1) && (!existsBody(req.body.thread)
+				&& res.locals.board.settings.forceThreadSubject)), expected: false, error: 'Threads must include a subject' },
+			{ result: lengthBody(req.body.message, 1) && (!existsBody(req.body.thread)
+				&& res.locals.board.settings.forceThreadMessage), expected: false, error: 'Threads must include a message' },
+			{ result: lengthBody(req.body.message, 1) && (existsBody(req.body.thread)
+				&& res.locals.board.settings.forceReplyMessage), expected: false, error: 'Replies must include a message' },
+			{ result: hasNoMandatoryFile && !existsBody(req.body.thread) && res.locals.board.settings.forceThreadFile , expected: false, error: 'Threads must include a file' },
+			{ result: hasNoMandatoryFile && existsBody(req.body.thread) && res.locals.board.settings.forceReplyFile , expected: false, error: 'Replies must include a file' },
+			{ result: lengthBody(req.body.message, 0, globalLimits.fieldLength.message), expected: false, blocking: true, error: `Message must be ${globalLimits.fieldLength.message} characters or less` },
+			{ result: existsBody(req.body.message) && existsBody(req.body.thread) && lengthBody(req.body.message, res.locals.board.settings.minReplyMessageLength, res.locals.board.settings.maxReplyMessageLength),
+				expected: false, error: `Reply messages must be ${res.locals.board.settings.minReplyMessageLength}-${res.locals.board.settings.maxReplyMessageLength} characters` },
+			{ result: existsBody(req.body.message) && !existsBody(req.body.thread) && lengthBody(req.body.message, res.locals.board.settings.minThreadMessageLength, res.locals.board.settings.maxThreadMessageLength),
+				expected: false, error: `Thread messages must be ${res.locals.board.settings.minThreadMessageLength}-${res.locals.board.settings.maxThreadMessageLength} characters` },
+			{ result: lengthBody(req.body.postpassword, 0, globalLimits.fieldLength.postpassword), expected: false, error: `Password must be ${globalLimits.fieldLength.postpassword} characters or less` },
+			{ result: lengthBody(req.body.name, 0, globalLimits.fieldLength.name), expected: false, error: `Name must be ${globalLimits.fieldLength.name} characters or less` },
+			{ result: lengthBody(req.body.subject, 0, globalLimits.fieldLength.subject), expected: false, error: `Subject must be ${globalLimits.fieldLength.subject} characters or less` },
+			{ result: lengthBody(req.body.email, 0, globalLimits.fieldLength.email), expected: false, error: `Email must be ${globalLimits.fieldLength.email} characters or less` },
+		]);
+
+		if (errors.length > 0) {
+			await deleteTempFiles(req).catch(e => console.error);
+			return dynamicResponse(req, res, 400, 'message', {
+				'title': 'Bad request',
+				'errors': errors,
+				'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
+			});
 		}
-	}
-	if (!req.body.message || res.locals.messageLength === 0) {
-		if (!req.body.thread && res.locals.board.settings.forceThreadMessage) {
-			errors.push('Threads must include a message');
-		} else if (req.body.therad && res.locals.board.settings.forceReplyMessage) {
-			errors.push('Posts must include a message');
-		}
-	}
-	if (req.body.message) {
-		if (res.locals.messageLength > globalLimits.fieldLength.message) {
-			errors.push(`Message must be ${globalLimits.fieldLength.message} characters or less`);
-		} else if (!req.body.thread
-			&& res.locals.board.settings.maxThreadMessageLength
-			&& res.locals.messageLength > res.locals.board.settings.maxThreadMessageLength) {
-			errors.push(`Thread messages must be ${res.locals.board.settings.maxThreadLength} characters or less`);
-		} else if (req.body.thread
-			&& res.locals.board.settings.maxReplyMessageLength
-			&& res.locals.messageLength > res.locals.board.settings.maxReplyMessageLength) {
-			errors.push(`Reply messages must be ${res.locals.board.settings.maxReplyMessageLength} characters or less`);
-		} else if (!req.body.thread && res.locals.messageLength < res.locals.board.settings.minThreadMessageLength) {
-			errors.push(`Thread messages must be at least ${res.locals.board.settings.minThreadMessageLength} characters long`);
-		} else if (req.body.thread && res.locals.messageLength < res.locals.board.settings.minReplyMessageLength) {
-			errors.push(`Reply messages must be at least ${res.locals.board.settings.minReplyMessageLength} characters long`);
-		}
-	}
 
-	// subject, email, name, password limited length
-	if (req.body.postpassword && req.body.postpassword.length > globalLimits.fieldLength.postpassword) {
-		errors.push(`Password must be ${globalLimits.fieldLength.postpassword} characters or less`);
-	}
-	if (req.body.name && req.body.name.length > globalLimits.fieldLength.name) {
-		errors.push(`Name must be ${globalLimits.fieldLength.name} characters or less`);
-	}
-	if (req.body.subject && req.body.subject.length > globalLimits.fieldLength.subject) {
-		errors.push(`Subject must be ${globalLimits.fieldLength.subject} characters or less`);
-	}
-	if (req.body.email && req.body.email.length > globalLimits.fieldLength.email) {
-		errors.push(`Email must be ${globalLimits.fieldLength.email} characters or less`);
-	}
-
-	if (errors.length > 0) {
-		await deleteTempFiles(req).catch(e => console.error);
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': `/${req.params.board}${req.body.thread ? '/thread/' + req.body.thread + '.html' : ''}`
-		});
-	}
-
-	try {
-		await makePost(req, res, next);
-	} catch (err) {
-		await deleteTempFiles(req).catch(e => console.error);
-		if (res.locals.numFiles > 0) {
-			const incedFiles = req.files.file.filter(x => x.inced === true && x.filename != null);
-			const incedFileNames = incedFiles.map(x => x.filename);
-			await Files.decrement(incedFileNames).catch(e => console.error);
-			await pruneFiles(incedFileNames);
+		try {
+			await makePost(req, res, next);
+		} catch (err) {
+			await deleteTempFiles(req).catch(e => console.error);
+			if (res.locals.numFiles > 0) {
+				const incedFiles = req.files.file.filter(x => x.inced === true && x.filename != null);
+				const incedFileNames = incedFiles.map(x => x.filename);
+				await Files.decrement(incedFileNames).catch(e => console.error);
+				await pruneFiles(incedFileNames);
+			}
+			return next(err);
 		}
-		return next(err);
+
 	}
 
 }

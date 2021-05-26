@@ -1,39 +1,48 @@
 'use strict';
 
 const deleteFlags = require(__dirname+'/../../models/forms/deleteflags.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
-module.exports = async (req, res, next) => {
+module.exports = {
 
-	const errors = [];
+	paramConverter: paramConverter({
+		allowedArrays: ['checkedflags'],
+	}),
 
-	if (!req.body.checkedflags || req.body.checkedflags.length === 0) {
-		errors.push('Must select at least one flag to delete');
-	}
+	controller: async (req, res, next) => {
 
-	if (errors.length > 0) {
-		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': errors,
-			'redirect': `/${req.params.board}/manage/assets.html`
-		})
-	}
+		const errors = await checkSchema([
+			{ result: lengthBody(req.body.checkedflags, 1), expected: false, error: 'Must select at least one flag to delete' },
+		]);
 
-	for (let i = 0; i < req.body.checkedflags.length; i++) {
-		if (!res.locals.board.flags[req.body.checkedflags[i]]) {
+		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
-				'message': 'Invalid flags selected',
+				'errors': errors,
 				'redirect': `/${req.params.board}/manage/assets.html`
 			})
 		}
-	}
 
-	try {
-		await deleteFlags(req, res, next);
-	} catch (err) {
-		console.error(err);
-		return next(err);
+		for (let i = 0; i < req.body.checkedflags.length; i++) {
+			if (!res.locals.board.flags[req.body.checkedflags[i]]) {
+				return dynamicResponse(req, res, 400, 'message', {
+					'title': 'Bad request',
+					'message': 'Invalid flags selected',
+					'redirect': `/${req.params.board}/manage/assets.html`
+				})
+			}
+		}
+
+		try {
+			await deleteFlags(req, res, next);
+		} catch (err) {
+			console.error(err);
+			return next(err);
+		}
+
 	}
 
 }

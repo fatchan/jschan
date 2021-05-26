@@ -131,6 +131,7 @@ gulp.task('check-for-favicon-update', function(done) {
 		if (err) {
 			throw err;
 		}
+		done();
 	});
 });
 
@@ -262,24 +263,33 @@ async function css() {
 			console.log(e);
 		}
 	}
+	//move themes css to output folder
 	await gulp.src([
 			`${paths.styles.src}/themes/*.css`,
 		])
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(`${paths.styles.dest}/themes/`));
+	//replace url( in codethemes to correct basepath of images, and move to output folder
 	await gulp.src([
 			`${paths.styles.src}/codethemes/*.css`,
 		])
-		.pipe(replace('url(./', 'url(/file/'))
+		.pipe(replace('url(./', 'url(/css/codethemes/'))
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
+	//move any non-css (images) for code themes to codetheme folder
 	await gulp.src([
 			`${paths.styles.src}/codethemes/*`,
 			`!${paths.styles.src}/codethemes/*.css`,
 		])
-		.pipe(gulp.dest(paths.images.dest));
+		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
+	//move any non-css (images) for themes to theme folder
+	await gulp.src([
+			`${paths.styles.src}/themes/*`,
+			`!${paths.styles.src}/themes/*.css`,
+		])
+		.pipe(gulp.dest(`${paths.styles.dest}/themes/`));
 	await gulp.src([
 			`${paths.styles.src}/locals.css`,
 			`${paths.styles.src}/nscaptcha.css`,
@@ -489,7 +499,7 @@ module.exports = {
 	html: gulp.series(init, deletehtml, custompages, closeConnections),
 	css: gulp.series(init, css, closeConnections),
 	images: gulp.series(images, closeConnections),
-	icons: gulp.series(icons, closeConnections),
+	icons: gulp.series('check-for-favicon-update', icons, closeConnections),
 	reset: gulp.series(init, wipe, build, closeConnections),
 	custompages: gulp.series(init, custompages, closeConnections),
 	scripts: gulp.series(init, scripts, closeConnections),
