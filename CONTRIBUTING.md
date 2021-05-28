@@ -2,11 +2,9 @@
 
 Thanks for considering contributing.
 
-If you haven't already, join the IRC ([irc.fatpeople.lol #fatchan](irc://irc.fatpeople.lol:+6697/fatchan)).
-
 Some links:
   * [Kanban board](https://gitgud.io/fatchan/jschan/-/boards/4780) already has issues in swim lanes.
-  * IRC: [irc.fatpeople.lol #fatchan](irc://irc.fatpeople.lol:+6697/fatchan)
+  * IRC: [irc.fatpeople.lol #fatchan](ircs://irc.fatpeople.lol:6697/fatchan)
 
 ## LICENSE?
 
