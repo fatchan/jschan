@@ -24,3 +24,6 @@
   - Add new themes
   - Improved README
   - Many bugfixes
+
+##### 0.1.4
+  - Banner uploading bugfix
