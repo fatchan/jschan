@@ -17,7 +17,6 @@ module.exports = async (req, res, next) => {
 	const { globalLimits, checkRealMimeTypes } = config.get;
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
-	// check all mime types before we try saving anything
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		if (!mimeTypes.allowed(req.files.file[i].mimetype, {
 				//banners can be static image or animated (gif, apng, etc)
@@ -34,11 +33,9 @@ module.exports = async (req, res, next) => {
 				'redirect': redirect
 			});
 		}
-	}
 
-	// check for any mismatching supposed mimetypes from the actual file mimetype
-	if (checkRealMimeTypes) {
-		for (let i = 0; i < res.locals.numFiles; i++) {
+		// check for any mismatching supposed mimetypes from the actual file mimetype
+		if (checkRealMimeTypes) {
 			if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
 				deleteTempFiles(req).catch(e => console.error);
 				return dynamicResponse(req, res, 400, 'message', {
@@ -47,6 +44,24 @@ module.exports = async (req, res, next) => {
 					'redirect': redirect
 				});
 			}
+		}
+
+		//300x100 check
+		const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
+		let geometry = imageData.size;
+		if (Array.isArray(geometry)) {
+			geometry = geometry[0];
+		}
+		if (geometry.width > globalLimits.bannerFiles.width
+			|| geometry.height > globalLimits.bannerFiles.height
+			|| (globalLimits.bannerFiles.forceAspectRatio === true
+				&& (geometry.width/geometry.height !== 3))) {
+			await deleteTempFiles(req).catch(e => console.error);
+			return dynamicResponse(req, res, 400, 'message', {
+				'title': 'Bad request',
+				'message': `Invalid file ${req.files.file[i].name}. Max banner dimensions are ${globalLimits.bannerFiles.width}x${globalLimits.bannerFiles.height}${globalLimits.bannerFiles.forceAspectRatio === true ? ' and must be a 3:1 aspect ratio' : '' }.`,
+				'redirect': redirect
+			});
 		}
 	}
 
@@ -66,26 +81,6 @@ module.exports = async (req, res, next) => {
 
 		//add to list after checking it doesnt already exist
 		filenames.push(filename);
-
-		//get metadata from tempfile
-		const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
-		let geometry = imageData.size;
-		if (Array.isArray(geometry)) {
-			geometry = geometry[0];
-		}
-
-		//make sure its 300x100 banner
-		if (geometry.width > globalLimits.bannerFiles.width
-			|| geometry.height > globalLimits.bannerFiles.height
-			|| (globalLimits.bannerFiles.forceAspectRatio === true
-				&& (geometry.width/geometry.height !== 3))) {
-			await deleteTempFiles(req).catch(e => console.error);
-			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
-				'message': `Invalid file ${file.name}. Max banner dimensions are ${globalLimits.bannerFiles.width}x${globalLimits.bannerFiles.height}${globalLimits.bannerFiles.forceAspectRatio === true ? ' and must be a 3:1 aspect ratio' : '' }.`,
-				'redirect': redirect
-			});
-		}
 
 		//then upload it
 		await moveUpload(file, filename, `banner/${req.params.board}`);

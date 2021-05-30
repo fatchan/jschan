@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path')
-	, { remove, pathExists } = require('fs-extra')
+	, { remove } = require('fs-extra')
 	, config = require(__dirname+'/../../config.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
