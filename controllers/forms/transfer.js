@@ -17,7 +17,7 @@ module.exports = {
 
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.username), expected: true, error: 'Missing new owner username' },
-			{ result: lengthBody(req.body.username, 0, 50), expected: true, error: 'New owner username must be 50 characters or less' },
+			{ result: lengthBody(req.body.username, 1, 50), expected: false, error: 'New owner username must be 50 characters or less' },
 			{ result: (req.body.username === res.locals.board.owner), expected: false, error: 'New owner must be different from current owner' },
 			{ result: alphaNumericRegex.test(req.body.username), expected: true, error: 'New owner username must contain a-z 0-9 only' },
 		]);
