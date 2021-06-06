@@ -19,7 +19,7 @@ module.exports = async(db, redis) => {
 	});
 	await db.collection('boards').updateMany({}, {
 		'$set': {
-			'flags': [],
+			'flags': {},
 			'settings.customFlags': false,
 		},
 		'$rename': {
