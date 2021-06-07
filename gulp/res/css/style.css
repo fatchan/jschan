@@ -1107,6 +1107,14 @@ input[type="button"], input[type="range"], input[type="number"], input[type="tex
 	border-radius: 0px;
 }
 
+.nogrow * {
+	flex-grow: 0;
+}
+
+.nogrow input[type="submit"] {
+	width: min-content;
+}
+
 textarea {
 	max-height: 100%;
 	max-width: 100%;

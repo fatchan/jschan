@@ -6,7 +6,7 @@ block head
 block content
 	.board-header
 		h1.board-title Welcome, #{user.username}
-		h4.board-description Auth level: #{user.authLevel}
+		h4.board-description Account type: #{authLevelNames[user.authLevel]}
 	br
 	hr(size=1)
 	h4.no-m-p General:
