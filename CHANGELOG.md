@@ -27,3 +27,8 @@
 
 ##### 0.1.4
   - Banner uploading bugfix
+
+##### 0.1.5
+  - Try to fallback thumbnail generation for video with horribly broken encoding
+  - Country blocklist now can actually fit all countries
+  - Make "auth level" text box into "account type" dropdown in accounts page, easier to understand
