@@ -57,7 +57,7 @@ module.exports = async (req, res, next) => {
 	if (req.body.countries) {
 		req.body.countries = [...new Set(req.body.countries)] //prevents submitting multiple of same code, not like it matters, but meh
 			.filter(code => validCountryCodes.has(code))
-			.slice(0,250);
+			.slice(0,countryCodes.length);
 	}
 
 	const newSettings = {

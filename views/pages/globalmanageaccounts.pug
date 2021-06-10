@@ -22,14 +22,14 @@ block content
 			input(type='submit', value='Filter')
 		h4.no-m-p Accounts:
 		if accounts && accounts.length > 0
-			form.form-post(action=`/forms/global/editaccounts` method='POST' enctype='application/x-www-form-urlencoded')
+			form.form-post.nogrow(action=`/forms/global/editaccounts` method='POST' enctype='application/x-www-form-urlencoded')
 				input(type='hidden' name='_csrf' value=csrf)
 				.table-container.flex-left
-					table.fw
+					table
 						tr
 							th
 							th Username
-							th Auth Level
+							th Account Type
 							th Own Boards
 							th Mod Boards
 							th Last Active
@@ -37,7 +37,7 @@ block content
 							tr
 								td: input(type='checkbox', name='checkedaccounts' value=account._id)
 								td #{account._id}
-								td #{account.authLevel}
+								td #{authLevelNames[account.authLevel]}
 								td
 									if account.ownedBoards.length > 0
 										for b in account.ownedBoards
@@ -60,8 +60,14 @@ block content
 				.pages.mv-5
 					include ../includes/pages.pug
 				.row
-					.label Set Auth Level
-					input(type='number' name='auth_level')
+					.label Set Account Type
+					select(name='auth_level')
+						option(value='')
+						option(value='0') Admin
+						option(value='1') Global Staff
+						option(value='2') Global Board Owner
+						option(value='3') Global Mod
+						option(value='4') Regular User
 				.row
 					.label Delete Accounts
 					label.postform-style.ph-5

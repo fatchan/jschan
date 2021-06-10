@@ -48,7 +48,7 @@ router.post('/editpost', geoAndTor, torPreBypassCheck, processIp, useSession, se
 
 //board management forms
 router.post('/board/:board/transfer', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), transferController.paramConverter, transferController.controller);
-router.post('/board/:board/settings', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), boardSettingsController.paramConverter, boardSettingsController.controller);
+router.post('/board/:board/settings', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), boardSettingsController.paramConverter, boardSettingsController.controller);
 router.post('/board/:board/addbanners', useSession, sessionRefresh, fileMiddlewares.banner, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), numFiles, uploadBannersController.controller); //add banners
 router.post('/board/:board/deletebanners', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteBannersController.paramConverter, deleteBannersController.controller); //delete banners
 router.post('/board/:board/addflags', useSession, sessionRefresh, fileMiddlewares.flag, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), numFiles, addFlagsController.controller); //add flags

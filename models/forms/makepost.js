@@ -329,15 +329,17 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 								const numFrames = videoStreams[0].nb_frames;
 								if (numFrames === 'N/A' && subtype === 'webm') {
 									await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
-									let videoThumbStat = null;
-									try {
-										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
-									} catch (err) { /*ENOENT, the thumb failed to create. No need to handle this.*/	}
-									if (!videoThumbStat || videoThumbStat.size === 0) {
-										await videoThumbnail(processedFile, processedFile.geometry, 0);
-									}
 								} else {
 									await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
+								}
+								//check and fix bad thumbnails in all cases, helps prevent complaints from child molesters who want improper encoding handled better
+								let videoThumbStat = null;
+								try {
+									videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
+								} catch (err) { /*ENOENT probably, ignore*/}
+								if (!videoThumbStat || videoThumbStat.code === 'ENOENT' || videoThumbStat.size === 0) {
+									//create thumb again at 0 timestamp and lets hope it exists this time
+									await videoThumbnail(processedFile, processedFile.geometry, 0);
 								}
 							}
 						} else {

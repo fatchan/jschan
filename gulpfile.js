@@ -352,6 +352,7 @@ async function custompages() {
 	])
 	.pipe(gulppug({
 		locals: {
+			authLevelNames: ['Admin', 'Global Staff', 'Global Board Owner', 'Global Board Mod', 'Regular User'],
 			early404Fraction: config.get.early404Fraction,
 			early404Replies: config.get.early404Replies,
 			meta: config.get.meta,
