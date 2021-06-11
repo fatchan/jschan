@@ -28,7 +28,7 @@ const express  = require('express')
 		addFlagsController, deleteFlagsController, boardSettingsController, transferController,
 		resignController, deleteAccountController, loginController, registerController, changePasswordController,
 		editAccountsController, globalSettingsController, createBoardController, makePostController,
-		editPostController, newCaptcha, blockBypass, logout } = require(__dirname+'/forms/index.js');
+		editCustomPageController, editPostController, newCaptcha, blockBypass, logout } = require(__dirname+'/forms/index.js');
 
 
 //make new post
@@ -57,6 +57,7 @@ router.post('/board/:board/addcustompages', useSession, sessionRefresh, csrf, Bo
 router.post('/board/:board/deletecustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteCustomPageController.paramConverter, deleteCustomPageController.controller); //delete banners
 router.post('/board/:board/editbans', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), editBansController.paramConverter, editBansController.controller); //edit bans
 router.post('/board/:board/deleteboard', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(config.get.deleteBoardPermLevel), deleteBoardController.controller); //delete board
+router.post('/board/:board/editcustompage', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), editCustomPageController.paramConverter, editCustomPageController.controller); //edit custom page
 
 //global management forms
 router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), editBansController.paramConverter, editBansController.controller); //remove bans

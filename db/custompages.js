@@ -18,10 +18,19 @@ module.exports = {
 		.toArray();
 	},
 
+	//browsing board
 	findOne: (board, page) => {
 		return db.findOne({
 			'board': board,
 			'page': page
+		});
+	},
+
+	//editing
+	findOneId: (id, board) => {
+		return db.findOne({
+			'_id': id,
+			'board': board,
 		});
 	},
 
@@ -35,7 +44,22 @@ module.exports = {
 		return db.insertOne(custompage);
 	},
 
-	updateOne: () => {},
+	findOneAndUpdate: (id, board, page, title, raw, markdown, edited) => {
+		return db.findOneAndUpdate({
+			'_id': id,
+			'board': board,
+		}, {
+			'$set': {
+				'page': page,
+				'title': title,
+				'message.raw': raw,
+				'message.markdown': markdown,
+				'edited': edited,
+			}
+		}, {
+			returnDocument: 'before',
+		});
+	},
 
 	deleteMany: (pages, board) => {
 		return db.deleteMany({

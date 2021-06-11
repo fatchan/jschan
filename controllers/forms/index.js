@@ -11,6 +11,7 @@ module.exports = {
 	deleteCustomPageController: require(__dirname+'/deletecustompage.js'),
 	addNewsController: require(__dirname+'/addnews.js'),
 	editNewsController: require(__dirname+'/editnews.js'),
+	editCustomPageController: require(__dirname+'/editcustompage.js'),
 	deleteNewsController: require(__dirname+'/deletenews.js'),
 	uploadBannersController: require(__dirname+'/uploadbanners.js'),
 	deleteBannersController: require(__dirname+'/deletebanners.js'),

@@ -9,4 +9,5 @@ module.exports = {
 	globalManageNews: require(__dirname+'/news.js'),
 	globalManageAccounts: require(__dirname+'/accounts.js'),
 	globalManageSettings: require(__dirname+'/settings.js'),
+	editNews: require(__dirname+'/editnews.js'),
 }

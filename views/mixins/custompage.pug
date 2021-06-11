@@ -6,6 +6,7 @@ mixin custompage(page, manage=false)
 					if manage === true
 						input.left.post-check(type='checkbox', name='checkedcustompages' value=page.page)  
 						a.left(href=`/${board._id}/custompage/${page.page}.html`) #{page.title}
+						a.right.ml-5(href=`/${board._id}/manage/editcustompage/${page._id}.html`) [Edit]
 					- const pageDate = new Date(page.date);
 					time.right.reltime(datetime=pageDate.toISOString()) #{pageDate.toLocaleString(undefined, {hourCycle:'h23'})}
 			tr
@@ -14,3 +15,8 @@ mixin custompage(page, manage=false)
 						p.no-m-p #{`${page.message.raw.substring(0,50)}...`}
 					else
 						pre.post-message.no-m-p !{page.message.markdown}
+					if page.edited
+						small.right.cb.edited
+							| Last edited  
+							- const pageEditDate = new Date(page.edited);
+							time.reltime(datetime=pageEditDate.toISOString()) #{pageEditDate.toLocaleString(undefined, {hourCycle:'h23'})}
