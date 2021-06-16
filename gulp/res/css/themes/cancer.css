@@ -53,7 +53,7 @@ body, .navbar {
 .anchor{
 	background: var(--post-color);
 	height: 30px;
-	width: 10px;
+	width: 20px;
 	margin-left: 50px;
 	margin-top: 0
 }
@@ -64,4 +64,7 @@ body, .navbar {
 }
 .label, .rlabel, table {
 	border:none;
+}
+.thread .anchor:first-of-type {
+	background: none;
 }
