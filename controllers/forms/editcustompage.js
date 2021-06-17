@@ -26,11 +26,11 @@ module.exports = {
 			{ result: existsBody(req.body.title), expected: true, error: 'Missing title' },
 			{ result: existsBody(req.body.page), expected: true, error: 'Missing .html name' },
 			{ result: () => {
-                if (req.body.page) {
-                    return /[a-z0-9_-]+/.test(req.body.page);
-                }
-                return false;
-            } , expected: true, error: '.html name must contain a-z 0-9 _ - only' },
+				if (req.body.page) {
+					return /[a-z0-9_-]+/.test(req.body.page);
+				}
+				return false;
+			} , expected: true, error: '.html name must contain a-z 0-9 _ - only' },
 			{ result: numberBody(res.locals.messageLength, 0, globalLimits.customPages.maxLength), expected: true, error: `Message must be ${globalLimits.customPages.maxLength} characters or less` },
 			{ result: lengthBody(req.body.title, 0, 50), expected: false, error: 'Title must be 50 characters or less' },
 			{ result: lengthBody(req.body.page, 0, 50), expected: false, error: '.html name must be 50 characters or less' },
