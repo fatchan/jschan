@@ -1076,7 +1076,7 @@ input:invalid, textarea:invalid {
 	text-align: center;
 	flex-shrink: 0;
 	margin-top: auto;
-	line-height: 3em;
+	line-height: 1.5em;
 }
 
 a.button {
