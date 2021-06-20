@@ -17,7 +17,7 @@ module.exports = async (uri, board) => {
 	}
 	await Promise.all([
 		Accounts.removeOwnedBoard(board.owner, uri), //remove board from owner account
-		board.settings.moderators.length > 0 ? Accounts.removeModBoard(board.settings.moderators) : void 0, //remove board from mods accounts
+		board.settings.moderators.length > 0 ? Accounts.removeModBoard(board.settings.moderators, uri) : void 0, //remove board from mods accounts
 		Modlogs.deleteBoard(uri), //modlogs for the board
 		Bans.deleteBoard(uri), //bans for the board
 		Stats.deleteBoard(uri), //stats for the board
