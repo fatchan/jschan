@@ -25,7 +25,7 @@ module.exports = {
 			{ result: existsBody(req.body.page), expected: true, error: 'Missing .html name' },
 			{ result: () => {
                 if (req.body.page) {
-                    return /[a-z0-9_-]+/.test(req.body.page);
+                    return /^[a-z0-9_-]+$/i.test(req.body.page);
                 }
                 return false;
             } , expected: true, error: '.html name must contain a-z 0-9 _ - only' },
