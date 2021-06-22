@@ -33,3 +33,5 @@
   - Country blocklist now can actually fit all countries
   - Make "auth level" text box into "account type" dropdown in accounts page, easier to understand
   - Board owners can now edit custom pages
+  - Show a little message and disable reply form on full threads (hit reply limit)
+  - Allow longer language names for code blocks
