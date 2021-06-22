@@ -35,3 +35,4 @@
   - Board owners can now edit custom pages
   - Show a little message and disable reply form on full threads (hit reply limit)
   - Allow longer language names for code blocks
+  - User settings import and export option
