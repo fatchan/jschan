@@ -32,7 +32,7 @@ module.exports = {
 			'board_defaults_min_reply_message_length', 'board_defaults_max_thread_message_length', 'board_defaults_max_reply_message_length', 'board_defaults_filter_mode',
 			'perm_levels_markdown_pink', 'perm_levels_markdown_green', 'perm_levels_markdown_bold', 'perm_levels_markdown_underline', 'perm_levels_markdown_strike',
 			'perm_levels_markdown_italic', 'perm_levels_markdown_title', 'perm_levels_markdown_spoiler', 'perm_levels_markdown_mono', 'perm_levels_markdown_code',
-			'perm_levels_markdown_link', 'perm_levels_markdown_detected', 'perm_levels_markdown_dice'], //damn, this has a lot of numbers lol
+			'perm_levels_markdown_link', 'perm_levels_markdown_detected', 'perm_levels_markdown_dice', 'perm_levels_markdown_fortune'], //damn, this has a lot of numbers lol
 	}),
 
 	controller: async (req, res, next) => {
@@ -95,6 +95,7 @@ module.exports = {
 			{ result: numberBody(req.body.perm_levels_markdown_detected, 0, 4), expected: true, error: 'Invalid detected markdown perm level' },
 			{ result: numberBody(req.body.perm_levels_markdown_link, 0, 4), expected: true, error: 'Invalid link markdown perm level' },
 			{ result: numberBody(req.body.perm_levels_markdown_dice, 0, 4), expected: true, error: 'Invalid dice markdown perm level' },
+			{ result: numberBody(req.body.perm_levels_markdown_fortune, 0, 4), expected: true, error: 'Invalid fortune markdown perm level' },
 			{ result: numberBody(req.body.rate_limit_cost_captcha, 1, 100), expected: true, error: 'Rate limit cost captcha must be a number from 1-100' },
 			{ result: numberBody(req.body.rate_limit_cost_board_settings, 1, 100), expected: true, error: 'Rate limit cost board settings must be a number from 1-100' },
 			{ result: numberBody(req.body.rate_limit_cost_edit_post, 1, 100), expected: true, error: 'Rate limit cost edit post must be a number from 1-100' },

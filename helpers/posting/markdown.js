@@ -20,6 +20,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 	, { addCallback } = require(__dirname+'/../../redis.js')
 	, config = require(__dirname+'/../../config.js')
 	, diceroll = require(__dirname+'/diceroll.js')
+	, fortune = require(__dirname+'/fortune.js')
 	, linkmatch = require(__dirname+'/linkmatch.js');
 
 let replacements = []
@@ -40,7 +41,9 @@ const updateMarkdownPerms = () => {
 		{ permLevel: markdownPermLevels.link, regex: linkRegex, cb: linkmatch },
 		{ permLevel: markdownPermLevels.detected, regex: detectedRegex, cb: (permLevel, match, detected) => `<span class='detected'>${detected}</span>` },
 		{ permLevel: markdownPermLevels.dice, regex: diceroll.regexMarkdown, cb: diceroll.markdown },
+		{ permLevel: markdownPermLevels.fortune, regex: fortune.regex, cb: fortune.markdown },
 	];
+	//todo: add any missing perm levels so no migration required so people can add custom markdown on their own. maybe give these a name property and give it a class
 };
 
 updateMarkdownPerms();
@@ -106,6 +109,7 @@ module.exports = {
 		//so theoretically now with some more options in the global manage page you can set permissions or enable/disable markdowns
 		const allowedReplacements = replacements.filter(r => r.permLevel >= permLevel);
 		for (let i = 0; i < allowedReplacements.length; i++) {
+			//could bind more variables here and make them available as additional arguments. would pass more args -> markdown -> procesRegularChunk, etc.
 			text = text.replace(allowedReplacements[i].regex, allowedReplacements[i].cb.bind(null, permLevel));
 		}
 		return text;

@@ -24,6 +24,11 @@ module.exports = async (req, res, next) => {
 		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null, res.locals.permLevel))
 	}
 
+	const newMarkdownPermLevels = Object.keys(oldSettings.permLevels.markdown).reduce((acc, val) => {
+		acc[val] = numberSetting(req.body[`perm_levels_markdown_${val}`], oldSettings.permLevels.markdown[val]);
+		return acc;
+	}, {})
+
 	const newSettings = {
 		filters: arraySetting(req.body.filters, oldSettings.filters),
 		filterMode: numberSetting(req.body.filter_mode, oldSettings.filterMode),
@@ -78,21 +83,7 @@ module.exports = async (req, res, next) => {
 		ipHashPermLevel: numberSetting(req.body.ip_hash_perm_level, oldSettings.ipHashPermLevel),
 		deleteBoardPermLevel: numberSetting(req.body.delete_board_perm_level, oldSettings.deleteBoardPermLevel),
 		permLevels: {
-			markdown: {
-				green: numberSetting(req.body.perm_levels_markdown_green, oldSettings.permLevels.markdown.green),
-				pink: numberSetting(req.body.perm_levels_markdown_pink, oldSettings.permLevels.markdown.pink),
-				title: numberSetting(req.body.perm_levels_markdown_title, oldSettings.permLevels.markdown.title),
-				bold: numberSetting(req.body.perm_levels_markdown_bold, oldSettings.permLevels.markdown.bold),
-				underline: numberSetting(req.body.perm_levels_markdown_underline, oldSettings.permLevels.markdown.underline),
-				strike: numberSetting(req.body.perm_levels_markdown_strike, oldSettings.permLevels.markdown.strike),
-				italic: numberSetting(req.body.perm_levels_markdown_italic, oldSettings.permLevels.markdown.italic),
-				mono: numberSetting(req.body.perm_levels_markdown_mono, oldSettings.permLevels.markdown.mono),
-				code: numberSetting(req.body.perm_levels_markdown_code, oldSettings.permLevels.markdown.code),
-				spoiler: numberSetting(req.body.perm_levels_markdown_spoiler, oldSettings.permLevels.markdown.spoiler),
-				detected: numberSetting(req.body.perm_levels_markdown_detected, oldSettings.permLevels.markdown.detected),
-				link: numberSetting(req.body.perm_levels_markdown_link, oldSettings.permLevels.markdown.link),
-				dice: numberSetting(req.body.perm_levels_markdown_dice, oldSettings.permLevels.markdown.dice),
-			},
+			markdown: newMarkdownPermLevels,
 		},
 		pruneImmediately: booleanSetting(req.body.prune_immediately, oldSettings.pruneImmediately),
 		hashImages: booleanSetting(req.body.hash_images, oldSettings.hashImages),
