@@ -153,7 +153,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			});
 			window.dispatchEvent(newPostEvent);
 		}
-		toggleDottedUnderlines(hoveredPost, thisId);
+		if (hovering || isVisible(hoveredPost)) {
+			toggleDottedUnderlines(hoveredPost, thisId);
+		}
 	}
 
 	for (let i = 0; i < quotes.length; i++) {
