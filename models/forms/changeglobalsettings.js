@@ -196,6 +196,13 @@ module.exports = async (req, res, next) => {
 			flagFilesSize: {
 				max: numberSetting(req.body.global_limits_flag_files_size_max, oldSettings.globalLimits.flagFilesSize.max),
 			},
+			assetFiles: {
+				max: numberSetting(req.body.global_limits_asset_files_max, oldSettings.globalLimits.assetFiles.max),
+				total: numberSetting(req.body.global_limits_asset_files_total, oldSettings.globalLimits.assetFiles.total),
+			},
+			assetFilesSize: {
+				max: numberSetting(req.body.global_limits_asset_files_size_max, oldSettings.globalLimits.assetFilesSize.max),
+			},
 			fieldLength: {
 				name: numberSetting(req.body.global_limits_field_length_name, oldSettings.globalLimits.fieldLength.name),
 				email: numberSetting(req.body.global_limits_field_length_email, oldSettings.globalLimits.fieldLength.email),

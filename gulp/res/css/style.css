@@ -899,6 +899,14 @@ input:invalid, textarea:invalid {
 	min-height: 100px;
 }
 
+.board-asset {
+	margin: 10px;
+	border: 1px solid var(--post-outline-color);
+	height: 100px;
+	width: 100px;
+	object-fit: scale-down;
+}
+
 .board-flag {
 	margin: 5px;
 	max-width: 100%;

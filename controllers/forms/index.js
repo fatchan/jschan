@@ -15,6 +15,8 @@ module.exports = {
 	deleteNewsController: require(__dirname+'/deletenews.js'),
 	uploadBannersController: require(__dirname+'/uploadbanners.js'),
 	deleteBannersController: require(__dirname+'/deletebanners.js'),
+	addAssetsController: require(__dirname+'/addassets.js'),
+	deleteAssetsController: require(__dirname+'/deleteassets.js'),
 	addFlagsController: require(__dirname+'/addflags.js'),
 	deleteFlagsController: require(__dirname+'/deleteflags.js'),
 	boardSettingsController: require(__dirname+'/boardsettings.js'),

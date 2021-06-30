@@ -539,6 +539,15 @@ block content
 					.row
 						.label Total Flags Per Board
 						input(type='number' name='global_limits_flag_files_total' value=settings.globalLimits.flagFiles.total)
+					.row
+						.label Asset File Size Max
+						input(type='number' name='global_limits_asset_files_size_max' value=settings.globalLimits.assetFilesSize.max)
+					.row
+						.label Assets Per Upload Max
+						input(type='number' name='global_limits_asset_files_max' value=settings.globalLimits.assetFiles.max)
+					.row
+						.label Total Assets Per Board
+						input(type='number' name='global_limits_asset_files_total' value=settings.globalLimits.assetFiles.total)
 
 					.row
 						h4.mv-5 Webring

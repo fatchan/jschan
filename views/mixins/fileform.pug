@@ -1,8 +1,9 @@
 include ./filelabel.pug
 
-mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameList, filePath, imageClass, showName)
+mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameList, filePath, imageClass, showName, showLink, formDescription)
 	- const capitalName = `${name.charAt(0).toUpperCase()}${name.substring(1)}`;
 	h4.no-m-p Add #{capitalName}s (Max #{total})
+	p #{formDescription}
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=addPath, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
@@ -32,4 +33,6 @@ mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameL
 							img(class=imageClass src=`${filePath}/${file}` loading='lazy')
 							if showName
 								small #{file.substring(0, file.lastIndexOf('.'))}
+							if showLink
+								a(href=`${filePath}/${file}`) Link
 				input(type='submit', value='delete')
