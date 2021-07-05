@@ -21,14 +21,13 @@ mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameL
 					.upload-list(data-spoilers='false' data-strip-filenames='false')
 			input(type='submit', value='submit')
 	if fileList.length > 0
-		hr(size=1)
-		h4.no-m-p Delete #{capitalName}s:
+		h4.mv-5 Delete #{capitalName}s:
 		.form-wrapper.flexleft.mt-10
 			form.form-post(action=deletePath, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
 				.catalog
 					each file, index in fileList
-						label.banner-check
+						label.asset-check
 							input(type='checkbox' name=checkName value=nameList[index])
 							img(class=imageClass src=`${filePath}/${file}` loading='lazy')
 							if showName
