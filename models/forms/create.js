@@ -49,6 +49,7 @@ module.exports = async (req, res, next) => {
 		'lastPostTimestamp': null,
 		'webring': false,
 		'flags': {},
+		'assets': [],
 		'settings': {
 			name,
 			description,
@@ -64,6 +65,7 @@ module.exports = async (req, res, next) => {
 		ensureDir(`${uploadDirectory}/json/${uri}`),
 		ensureDir(`${uploadDirectory}/banner/${uri}`),
 		ensureDir(`${uploadDirectory}/flag/${uri}`),
+		ensureDir(`${uploadDirectory}/asset/${uri}`),
 	]);
 
 	return res.redirect(`/${uri}/index.html`);

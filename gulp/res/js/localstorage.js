@@ -40,13 +40,14 @@ setDefaultLocalStorage('volume', settings.defaultVolume);
 setDefaultLocalStorage('loop', settings.loop);
 setDefaultLocalStorage('imageloadingbars', settings.imageLoadingBars);
 setDefaultLocalStorage('live', settings.live);
-setDefaultLocalStorage('scroll', settings.sctollToPosts);
+setDefaultLocalStorage('scroll', settings.scrollToPosts);
 setDefaultLocalStorage('localtime', settings.localTime);
 setDefaultLocalStorage('relative', settings.relativeTime);
 setDefaultLocalStorage('24hour', settings.hour24Time);
 setDefaultLocalStorage('notifications', settings.notificationsEnabled);
 setDefaultLocalStorage('notification-yous-only', settings.notificationsYousOnly);
 setDefaultLocalStorage('yous-setting', settings.showYous);
+setDefaultLocalStorage('disableboardcss', false);
 
 setDefaultLocalStorage('dragtop', null);
 setDefaultLocalStorage('dragleft', null);

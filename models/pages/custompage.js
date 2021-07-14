@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
 
 	let html;
 	try {
-		html = await buildCustomPage(req.params);
+		html = await buildCustomPage({ ...req.params, board: res.locals.board });
 	} catch (err) {
 		return next(err);
 	}

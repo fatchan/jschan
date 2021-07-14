@@ -151,6 +151,11 @@ module.exports = async (req, res, next) => {
 			rebuildCatalog = true;
 	}
 
+	if (newSettings.replyLimit !== oldSettings.replyLimit) {
+		rebuildBoard = true;
+		rebuildThreads = true;
+	}
+
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
 		if (oldSettings.captchaMode === 0) {
 			rebuildBoard = true;
@@ -221,6 +226,7 @@ module.exports = async (req, res, next) => {
 	}
 	if (rebuildOther) {
 		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/logs/`));
+		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/custompage/`));
 		buildQueue.push({
 			'task': 'buildModLogList',
 			'options': {

@@ -14,8 +14,7 @@ const { debugLogs } = require(__dirname+'/../configs/secrets.js')
 	}
 	, updateHandlers = () => {
 		const { globalLimits,  filterFileNames, spaceFileNameReplacement } = require(__dirname+'/../config.js').get;
-		['flag', 'banner', 'post'].forEach(fileType => {
-			//one day this will be more easy to extend
+		['flag', 'banner', 'asset', 'post'].forEach(fileType => {
 			const fileSizeLimit = globalLimits[`${fileType}FilesSize`];
 			const fileNumLimit = globalLimits[`${fileType}Files`];
 			const fileNumLimitFunction = (req, res, next) => {
@@ -50,6 +49,9 @@ addCallback('config', updateHandlers);
 
 module.exports = {
 
+	asset: (req, res, next) => {
+		return fileHandlers.asset(req, res, next);
+	},
 	banner: (req, res, next) => {
 		return fileHandlers.banner(req, res, next);
 	},

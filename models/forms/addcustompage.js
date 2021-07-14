@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
 			'markdown': markdownMessage
 		},
 		'date': new Date(),
-		'edited': null, //unused currently
+		'edited': null,
 	};
 
 	const insertedCustomPage = await CustomPages.insertOne(post);

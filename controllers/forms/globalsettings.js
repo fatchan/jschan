@@ -20,7 +20,8 @@ module.exports = {
 			'overboard_limit', 'overboard_catalog_limit', 'lock_wait', 'prune_modlogs', 'prune_ips', 'thumb_size', 'video_thumb_percentage', 'quote_limit', 'preview_replies',
 			'sticky_preview_replies', 'early_404_fraction', 'early_404_replies', 'max_recent_news', 'highlight_options_threshold', 'global_limits_thread_limit_min',
 			'global_limits_thread_limit_max', 'global_limits_reply_limit_min', 'global_limits_reply_limit_max', 'global_limits_bump_limit_min', 'global_limits_bump_limit_max',
-			'global_limits_post_files_max', 'global_limits_post_files_size_max', 'global_limits_banner_files_width', 'global_limits_banner_files_height', 'global_limits_banner_files_max',
+			'global_limits_post_files_max', 'global_limits_post_files_size_max', 'global_limits_asset_files_total', 'global_limits_asset_files_max', 'global_limits_asset_files_size_max',
+			'global_limits_banner_files_width', 'global_limits_banner_files_height', 'global_limits_banner_files_max',
 			'global_limits_banner_files_total', 'global_limits_banner_files_size_max', 'global_limits_flag_files_max', 'global_limits_flag_files_total', 'global_limits_flag_files_size_max',
 			'global_limits_field_length_name', 'global_limits_field_length_email', 'global_limits_field_length_subject', 'global_limits_field_length_postpassword',
 			'global_limits_field_length_message', 'global_limits_field_length_report_reason', 'global_limits_field_length_ban_reason', 'global_limits_field_length_log_message',
@@ -32,7 +33,7 @@ module.exports = {
 			'board_defaults_min_reply_message_length', 'board_defaults_max_thread_message_length', 'board_defaults_max_reply_message_length', 'board_defaults_filter_mode',
 			'perm_levels_markdown_pink', 'perm_levels_markdown_green', 'perm_levels_markdown_bold', 'perm_levels_markdown_underline', 'perm_levels_markdown_strike',
 			'perm_levels_markdown_italic', 'perm_levels_markdown_title', 'perm_levels_markdown_spoiler', 'perm_levels_markdown_mono', 'perm_levels_markdown_code',
-			'perm_levels_markdown_link', 'perm_levels_markdown_detected', 'perm_levels_markdown_dice'], //damn, this has a lot of numbers lol
+			'perm_levels_markdown_link', 'perm_levels_markdown_detected', 'perm_levels_markdown_dice', 'perm_levels_markdown_fortune'], //damn, this has a lot of numbers lol
 	}),
 
 	controller: async (req, res, next) => {
@@ -95,6 +96,7 @@ module.exports = {
 			{ result: numberBody(req.body.perm_levels_markdown_detected, 0, 4), expected: true, error: 'Invalid detected markdown perm level' },
 			{ result: numberBody(req.body.perm_levels_markdown_link, 0, 4), expected: true, error: 'Invalid link markdown perm level' },
 			{ result: numberBody(req.body.perm_levels_markdown_dice, 0, 4), expected: true, error: 'Invalid dice markdown perm level' },
+			{ result: numberBody(req.body.perm_levels_markdown_fortune, 0, 4), expected: true, error: 'Invalid fortune markdown perm level' },
 			{ result: numberBody(req.body.rate_limit_cost_captcha, 1, 100), expected: true, error: 'Rate limit cost captcha must be a number from 1-100' },
 			{ result: numberBody(req.body.rate_limit_cost_board_settings, 1, 100), expected: true, error: 'Rate limit cost board settings must be a number from 1-100' },
 			{ result: numberBody(req.body.rate_limit_cost_edit_post, 1, 100), expected: true, error: 'Rate limit cost edit post must be a number from 1-100' },
@@ -135,6 +137,9 @@ module.exports = {
 			{ result: numberBody(req.body.global_limits_flag_files_size_max), expected: true, error: 'Flag files size must be a number' },
 			{ result: numberBody(req.body.global_limits_flag_files_max), expected: true, error: 'Flag files max must be a number' },
 			{ result: numberBody(req.body.global_limits_flag_files_total), expected: true, error: 'Flag files total must be a number' },
+			{ result: numberBody(req.body.global_limits_asset_files_size_max), expected: true, error: 'Asset files size must be a number' },
+			{ result: numberBody(req.body.global_limits_asset_files_max), expected: true, error: 'Asset files max must be a number' },
+			{ result: numberBody(req.body.global_limits_asset_files_total), expected: true, error: 'Asset files total must be a number' },
 			{ result: numberBody(req.body.global_limits_field_length_name), expected: true, error: 'Global limit name field length must be a number' },
 			{ result: numberBody(req.body.global_limits_field_length_email), expected: true, error: 'Global limit email field length must be a number' },
 			{ result: numberBody(req.body.global_limits_field_length_subject), expected: true, error: 'Global limit subject field length must be a number' },
