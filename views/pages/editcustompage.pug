@@ -1,0 +1,27 @@
+extends ../layout.pug
+
+block head
+	title Edit Custom Page
+
+block content
+	h1.board-title Edit Custom Page
+	include ../includes/stickynav.pug
+	.form-wrapper.flex-center.mv-10
+		form.form-post(action=`/forms/board/${board._id}/editcustompage` method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			input(type='hidden' name='page_id' value=page._id)
+			.row
+				.label .html name
+				input(type='text' name='page' pattern='[a-zA-Z0-9-_]+' title='a-zA-Z0-9-_ only' value=page.page required)
+			.table-container.flex-center.mv-5
+				table
+					tr
+						th
+							input.edit.left(type='text' name='title' value=page.title required)
+							- const pageDate = new Date(page.date);
+							time.right.reltime(datetime=pageDate.toISOString()) #{pageDate.toLocaleString(undefined, {hourCycle:'h23'})}
+					tr
+						td
+
+							textarea.edit.fw(name='message' rows='10' placeholder='Supports post styling' required) #{page.message.raw}
+			input(type='submit', value='save')

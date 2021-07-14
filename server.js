@@ -71,6 +71,7 @@ const config = require(__dirname+'/config.js')
 		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
 		//default settings
+		app.locals.authLevelNames = ['Admin', 'Global Staff', 'Global Board Owner', 'Global Board Mod', 'Regular User'];
 		app.locals.enableUserAccountCreation = enableUserAccountCreation;
 		app.locals.enableUserBoardCreation = enableUserBoardCreation;
 		app.locals.defaultTheme = boardDefaults.theme;

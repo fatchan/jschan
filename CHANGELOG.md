@@ -27,3 +27,13 @@
 
 ##### 0.1.4
   - Banner uploading bugfix
+
+##### 0.1.5
+  - Try to fallback thumbnail generation for video with horribly broken encoding
+  - Country blocklist now can actually fit all countries
+  - Make "auth level" text box into "account type" dropdown in accounts page, easier to understand
+  - Board owners can now edit custom pages
+  - Board owners can now manage custom assets
+  - Show a little message and disable reply form on full threads (hit reply limit)
+  - Allow longer language names for code blocks
+  - User settings import and export option

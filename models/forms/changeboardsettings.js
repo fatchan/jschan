@@ -57,7 +57,7 @@ module.exports = async (req, res, next) => {
 	if (req.body.countries) {
 		req.body.countries = [...new Set(req.body.countries)] //prevents submitting multiple of same code, not like it matters, but meh
 			.filter(code => validCountryCodes.has(code))
-			.slice(0,250);
+			.slice(0,countryCodes.length);
 	}
 
 	const newSettings = {
@@ -151,6 +151,11 @@ module.exports = async (req, res, next) => {
 			rebuildCatalog = true;
 	}
 
+	if (newSettings.replyLimit !== oldSettings.replyLimit) {
+		rebuildBoard = true;
+		rebuildThreads = true;
+	}
+
 	if (newSettings.captchaMode > oldSettings.captchaMode) {
 		if (oldSettings.captchaMode === 0) {
 			rebuildBoard = true;
@@ -221,6 +226,7 @@ module.exports = async (req, res, next) => {
 	}
 	if (rebuildOther) {
 		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/logs/`));
+		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/custompage/`));
 		buildQueue.push({
 			'task': 'buildModLogList',
 			'options': {

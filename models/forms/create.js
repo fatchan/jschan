@@ -42,13 +42,14 @@ module.exports = async (req, res, next) => {
 		owner,
 		tags,
 		'banners': [],
-		'flags': [],
 		'sequence_value': 1,
 		'pph': 0,
 		'ppd': 0,
 		'ips': 0,
 		'lastPostTimestamp': null,
 		'webring': false,
+		'flags': {},
+		'assets': [],
 		'settings': {
 			name,
 			description,
@@ -64,6 +65,7 @@ module.exports = async (req, res, next) => {
 		ensureDir(`${uploadDirectory}/json/${uri}`),
 		ensureDir(`${uploadDirectory}/banner/${uri}`),
 		ensureDir(`${uploadDirectory}/flag/${uri}`),
+		ensureDir(`${uploadDirectory}/asset/${uri}`),
 	]);
 
 	return res.redirect(`/${uri}/index.html`);

@@ -166,8 +166,10 @@ block content
 				td https://example.com
 				td: a(href='#!') https://example.com
 			tr
-				td [custom label](https://example.com)
-				td: a(href='#!') custom label
+				td
+					| [Board Rules](https://your.imageboard/a/custompage/rules.html)
+					small (staff only)
+				td: a(href='#!') Board Rules
 			tr
 				td &gt;&gt;123
 				td: a(class="quote" href="#!") &gt;&gt;123
@@ -282,9 +284,9 @@ block content
 							li Board owner: Same as board moderator
 							li Board moderator: All below, move/merge, ban, delete-by-ip, sticky/sage/lock/cycle
 							li Regular user: Reports, and post spoiler/delete/unlink if the board has them enabled
-						| Administrators have the ability to assign a permission level directly to users through the global management page. Typically a user is level 4 (regular user), 1 (global staff) or 0 (administrator).
-						| Level 2 and 3 are usually only applicable to users when on a board they are owner or moderator. However, level 2 or 3 can be assigned manually to create global board owners or global board moderators
-						| who have board owner or moderation permissions on all boards, but without access to the global moderation interfaces. If assigning global board owners (level 2), they will have access to the board settings
+						| Administrators can set account types for users on the global management accounts page. Normally only Admin (level 0), Global Staff (level 1) and Regular User (level 4) are assigned here.
+						| Level 2 or 3 permission is handled internally for users on boards they own or moderate, while their account remains listed as "Regular User". However admins can manually assign Global Board Owner (level 2) and Global Board Mod (level 3)
+						| to grant an account board owner or moderation permissions on all boards, but without access to the global moderation interfaces. If assigning Global Board Owner (level 2), they will have access to the board settings
 						| and the ability to reassign board owners.
 	.table-container.flex-center.mv-5
 		.anchor#antispam

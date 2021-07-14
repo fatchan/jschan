@@ -16,16 +16,17 @@ const express  = require('express')
 	, csrf = require(__dirname+'/../helpers/checks/csrfmiddleware.js')
 	, setMinimal = require(__dirname+'/../helpers/setminimal.js')
 	//page models
-	, { manageRecent, manageReports, manageAssets, manageSettings, manageBans,
+	, { manageRecent, manageReports, manageAssets, manageSettings, manageBans, editCustomPage,
 		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages } = require(__dirname+'/../models/pages/manage/')
-	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards,
+	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards, editNews,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
-	, { changePassword, blockBypass, home, register, login, create, editNews,
+	, { changePassword, blockBypass, home, register, login, create,
 		board, catalog, banners, randombanner, news, captchaPage, overboard, overboardCatalog,
 		captcha, thread, modlog, modloglist, account, boardlist, customPage } = require(__dirname+'/../models/pages/')
 	, threadParamConverter = paramConverter({ processThreadIdParam: true })
 	, logParamConverter = paramConverter({ processDateParam: true })
-	, newsParamConverter = paramConverter({ objectIdParams: ['newsid'] });
+	, newsParamConverter = paramConverter({ objectIdParams: ['newsid'] })
+	, custompageParamConverter = paramConverter({ objectIdParams: ['custompageid'] });
 
 //homepage
 router.get('/index.html', home);
@@ -73,9 +74,9 @@ router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, globalManageSettings);
 
 //edit pages
-router.get('/editnews/:newsid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, newsParamConverter, editNews);
+router.get('/globalmanage/editnews/:newsid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms, hasPerms(0), csrf, newsParamConverter, editNews);
+router.get('/:board/manage/editcustompage/:custompageid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms, hasPerms(2), csrf, custompageParamConverter, editCustomPage);
 //TODO: edit post get endpoint
-//TODO: edit board custom page get endpoint
 
 //captcha
 router.get('/captcha', geoAndTor, processIp, captcha); //get captcha image and cookie

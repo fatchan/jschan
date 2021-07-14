@@ -138,6 +138,16 @@ module.exports = {
 		return module.exports.addToArray(board, 'banners', filenames)
 	},
 
+	removeAssets: (board, filenames) => {
+		cache.del(`board:${board}`);
+		return module.exports.removeFromArray(board, 'assets', filenames);
+	},
+
+	addAssets: (board, filenames) => {
+		cache.del(`board:${board}`);
+		return module.exports.addToArray(board, 'assets', filenames)
+	},
+
 	setFlags: (board, flags) => {
 		cache.del(`board:${board}`);
 		//could use dot notation and set flags.x for only changes? seems a bit unsafe though and couldnt have . in name

@@ -31,8 +31,11 @@ block head
 block content
 	+boardheader(modview ? 'Mod View' : null)
 	br
-	include ../includes/postform.pug
-	br
+	if thread.replyposts >= board.settings.replyLimit && !thread.cyclic && !modview
+		p.title.text-center ⊖ Thread has reached reply limit.
+	else
+		include ../includes/postform.pug
+		br
 	include ../includes/announcements.pug
 	include ../includes/stickynav.pug
 	if modview

@@ -24,11 +24,11 @@ const express  = require('express')
 //controllers
 	, { deleteBoardController, editBansController, appealController, globalActionController,
 		actionController, addCustomPageController, deleteCustomPageController, addNewsController,
-		editNewsController, deleteNewsController, uploadBannersController, deleteBannersController,
-		addFlagsController, deleteFlagsController, boardSettingsController, transferController,
+		editNewsController, deleteNewsController, uploadBannersController, deleteBannersController, addFlagsController,
+		deleteFlagsController, boardSettingsController, transferController, addAssetsController, deleteAssetsController,
 		resignController, deleteAccountController, loginController, registerController, changePasswordController,
 		editAccountsController, globalSettingsController, createBoardController, makePostController,
-		editPostController, newCaptcha, blockBypass, logout } = require(__dirname+'/forms/index.js');
+		editCustomPageController, editPostController, newCaptcha, blockBypass, logout } = require(__dirname+'/forms/index.js');
 
 
 //make new post
@@ -48,15 +48,22 @@ router.post('/editpost', geoAndTor, torPreBypassCheck, processIp, useSession, se
 
 //board management forms
 router.post('/board/:board/transfer', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), transferController.paramConverter, transferController.controller);
-router.post('/board/:board/settings', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), boardSettingsController.paramConverter, boardSettingsController.controller);
-router.post('/board/:board/addbanners', useSession, sessionRefresh, fileMiddlewares.banner, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), numFiles, uploadBannersController.controller); //add banners
-router.post('/board/:board/deletebanners', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteBannersController.paramConverter, deleteBannersController.controller); //delete banners
-router.post('/board/:board/addflags', useSession, sessionRefresh, fileMiddlewares.flag, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), numFiles, addFlagsController.controller); //add flags
-router.post('/board/:board/deleteflags', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteFlagsController.paramConverter, deleteFlagsController.controller); //delete flags
-router.post('/board/:board/addcustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), addCustomPageController.paramConverter, addCustomPageController.controller); //add banners
-router.post('/board/:board/deletecustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteCustomPageController.paramConverter, deleteCustomPageController.controller); //delete banners
+router.post('/board/:board/settings', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), boardSettingsController.paramConverter, boardSettingsController.controller);
 router.post('/board/:board/editbans', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(3), editBansController.paramConverter, editBansController.controller); //edit bans
 router.post('/board/:board/deleteboard', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(config.get.deleteBoardPermLevel), deleteBoardController.controller); //delete board
+//board crud banners, flags, assets, custompages
+router.post('/board/:board/addbanners', useSession, sessionRefresh, fileMiddlewares.banner, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), numFiles, uploadBannersController.controller); //add banners
+router.post('/board/:board/deletebanners', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteBannersController.paramConverter, deleteBannersController.controller); //delete banners
+
+///--- wip
+router.post('/board/:board/addassets', useSession, sessionRefresh, fileMiddlewares.asset, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), numFiles, addAssetsController.controller); //add assets
+router.post('/board/:board/deleteassets', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteAssetsController.paramConverter, deleteAssetsController.controller); //delete assets
+
+router.post('/board/:board/addflags', useSession, sessionRefresh, fileMiddlewares.flag, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), numFiles, addFlagsController.controller); //add flags
+router.post('/board/:board/deleteflags', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteFlagsController.paramConverter, deleteFlagsController.controller); //delete flags
+router.post('/board/:board/addcustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), addCustomPageController.paramConverter, addCustomPageController.controller); //add custom pages
+router.post('/board/:board/deletecustompages', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), deleteCustomPageController.paramConverter, deleteCustomPageController.controller); //delete custom pages
+router.post('/board/:board/editcustompage', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn, hasPerms(2), editCustomPageController.paramConverter, editCustomPageController.controller); //edit custom page
 
 //global management forms
 router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, hasPerms(1), editBansController.paramConverter, editBansController.controller); //remove bans

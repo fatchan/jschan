@@ -886,11 +886,6 @@ input:invalid, textarea:invalid {
 	text-decoration: none;
 }
 
-.banner-check {
-	display: flex;
-	align-items: center;
-}
-
 .board-banner {
 	margin: 10px;
 	max-width: 100%;
@@ -899,8 +894,30 @@ input:invalid, textarea:invalid {
 	min-height: 100px;
 }
 
-.board-flag {
-	margin: 5px;
+.asset-check {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+}
+
+.asset-banner {
+	margin: 0 5px;
+	max-width: 100%;
+	border: 1px solid var(--post-outline-color);
+	min-width: 300px;
+	min-height: 100px;
+}
+
+.asset-generic {
+	margin: 0 5px;
+	border: 1px solid var(--post-outline-color);
+	height: 100px;
+	width: 100px;
+	object-fit: scale-down;
+}
+
+.asset-flag {
+	margin: 0 5px;
 	max-width: 100%;
 	border: 1px solid var(--post-outline-color);
 	width: 32px;
@@ -1076,7 +1093,7 @@ input:invalid, textarea:invalid {
 	text-align: center;
 	flex-shrink: 0;
 	margin-top: auto;
-	line-height: 3em;
+	line-height: 1.5em;
 }
 
 a.button {
@@ -1105,6 +1122,14 @@ input[type="button"], input[type="range"], input[type="number"], input[type="tex
 	margin: 0;
 	flex-grow: 1;
 	border-radius: 0px;
+}
+
+.nogrow * {
+	flex-grow: 0;
+}
+
+.nogrow input[type="submit"] {
+	width: min-content;
 }
 
 textarea {
