@@ -82,6 +82,9 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								- const uFile = `${post.u}-${fileindex}${file.extension}`
 								span: a(href='/file/'+file.filename title='Download '+uFile download=uFile) (u)
 								br
+								if globalmanage && file.phash != null
+									span #{file.phash}
+									br
 								if file.hasThumb && !(post.spoiler || file.spoiler)
 									span.jsonly
 										b [

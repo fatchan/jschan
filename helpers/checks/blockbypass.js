@@ -19,6 +19,8 @@ module.exports = async (req, res, next) => {
 
 	//check if blockbypass exists and right length
 	const bypassId = req.signedCookies.bypassid;
+	console.log('blockbypass', bypassId);
+
 	if (!res.locals.solvedCaptcha && (!bypassId || bypassId.length !== 24)) {
 		deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 403, 'message', {

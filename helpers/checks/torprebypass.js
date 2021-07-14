@@ -18,6 +18,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	let bypassId = req.signedCookies.bypassid;
+	console.log('torprebypass', bypassId);
 
 	const { secureCookies, blockBypass } = config.get;
 	if (blockBypass.enabled || blockBypass.forceAnonymizers) {

@@ -59,5 +59,8 @@ table, #float .post-container, #livetext, #threadstats, .catalog-tile, .pages, .
 	box-shadow: 0 0 3px 1px var(--darken);
 }
 .flex-center + br + hr, .text-center + hr {
-	display: none
+	display: none;
+}
+hr + .post-message.text-center {
+	margin: 10px 0;
 }

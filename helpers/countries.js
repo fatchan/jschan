@@ -2,8 +2,8 @@
 
 const countries = require('i18n-iso-countries')
 	, countryNamesMap = countries.getNames('en')
-	, extraCountryCodes = ['EU', 'XX', 'T1']
-	, anonymizerCountryCodes = ['TOR', 'LOKI']
+	, extraCountryCodes = ['EU', 'XX']
+	, anonymizerCountryCodes = ['TOR', 'T1', 'LOKI']
 	, anonymizerCountryCodesSet = new Set(anonymizerCountryCodes)
 	, countryCodes = Object.keys(countryNamesMap)
 		.concat(extraCountryCodes, anonymizerCountryCodes);
