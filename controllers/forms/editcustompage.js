@@ -37,7 +37,7 @@ module.exports = {
 			{ result: async () => {
 				const existingPage = await CustomPages.findOne(req.params.board, req.body.page);
 				if (existingPage && existingPage.page === req.body.page) {
-					return existingPage._id === req.body.page_id;
+					return existingPage._id.equals(req.body.page_id);
 				}
 				return true;
 			}, expected: true, error: '.html name must be unique'},
