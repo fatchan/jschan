@@ -4,8 +4,6 @@ module.exports = (permLevel, match, p1, p2, p3, offset, string, groups) => {
 
 	let { url, label, urlOnly } = groups;
 
-console.log(url, label, urlOnly)
-
 	url = url || urlOnly;
 	if (permLevel >= 4) {
 		label = url
