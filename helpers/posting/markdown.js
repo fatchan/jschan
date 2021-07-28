@@ -9,7 +9,7 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 	, strikeRegex = /~~(.+?)~~/gm
 	, italicRegex = /\*\*(.+?)\*\*/gm
 	, spoilerRegex = /\|\|([\s\S]+?)\|\|/gm
-	, detectedRegex = /(\(\(\(.+?\)\)\))/gm
+	, detectedRegex = /\(\(\((.+?)\)\)\)/gm
 	, linkRegex = /\[(?<label>[^\[][^\]]*?)\]\((?<url>(?:&#x2F;[^\s<>\[\]{}|\\^)]+|https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^)]+))\)|(?<urlOnly>https?\:&#x2F;&#x2F;[^\s<>\[\]{}|\\^]+)/g
 	, codeRegex = /(?:(?<language>[a-z+]{1,14})\r?\n)?(?<code>[\s\S]+)/i
 	, includeSplitRegex = /(\[code\][\s\S]+?\[\/code\])/gm
@@ -38,8 +38,8 @@ const updateMarkdownPerms = () => {
 		{ permLevel: markdownPermLevels.italic, regex: italicRegex, cb: (permLevel, match, italic) => `<span class='em'>${italic}</span>` },
 		{ permLevel: markdownPermLevels.spoiler, regex: spoilerRegex, cb: (permLevel, match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
 		{ permLevel: markdownPermLevels.mono, regex: monoRegex, cb: (permLevel, match, mono) => `<span class='mono'>${mono}</span>` },
+		{ permLevel: markdownPermLevels.detected, regex: detectedRegex, cb: (permLevel, match, detected) => `<span class='detected'>&lpar;&lpar;&lpar; ${detected} &rpar;&rpar;&rpar;</span>` },
 		{ permLevel: markdownPermLevels.link, regex: linkRegex, cb: linkmatch },
-		{ permLevel: markdownPermLevels.detected, regex: detectedRegex, cb: (permLevel, match, detected) => `<span class='detected'>${detected}</span>` },
 		{ permLevel: markdownPermLevels.dice, regex: diceroll.regexMarkdown, cb: diceroll.markdown },
 		{ permLevel: markdownPermLevels.fortune, regex: fortune.regex, cb: fortune.markdown },
 	];
