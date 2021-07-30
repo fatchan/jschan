@@ -46,7 +46,8 @@ module.exports = async (req, res, next) => {
 
 	if (bypass //if they have a valid bypass
 		&& (bypass.uses < blockBypass.expireAfterUses //and its not overused
-			|| (res.locals.anonymizer && !blockBypass.forceAnonymizers))) { //OR its forced for anonymizers
+			|| (res.locals.anonymizer
+				&& !blockBypass.forceAnonymizers))) { //OR its not forced for anonymizers
 		return next();
 	}
 
