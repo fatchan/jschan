@@ -1,0 +1,13 @@
+mixin announcements(hrTop=true, hrMiddle=true, hrBottom=true)
+	- const hasGlobalAnnouncement = globalAnnouncement.markdown;
+	- const hasBoardAnnouncement = board && board.settings.announcement.markdown;
+	if hrTop && (hasGlobalAnnouncement || hasBoardAnnouncement)
+		hr(size=1)
+	if hasGlobalAnnouncement
+		pre.post-message.no-m-p.text-center !{globalAnnouncement.markdown}
+	if hrMiddle && (hasGlobalAnnouncement && hasBoardAnnouncement)
+		hr(size=1)
+	if board && board.settings.announcement.markdown
+		pre.post-message.no-m-p.text-center !{board.settings.announcement.markdown}
+	if hrBottom && (hasGlobalAnnouncement || hasBoardAnnouncement)
+		hr(size=1)

@@ -3,6 +3,7 @@ include ../mixins/post.pug
 include ../mixins/boardnav.pug
 include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
+include ../mixins/announcements.pug
 
 block head
 	- const subjectString = thread.subject || (thread.nomarkup ? `${thread.nomarkup.substring(0, globalLimits.fieldLength.subject)}${thread.nomarkup.length > globalLimits.fieldLength.subject ? '...' : ''}` : thread.postId);
@@ -36,7 +37,7 @@ block content
 	else
 		include ../includes/postform.pug
 		br
-	include ../includes/announcements.pug
+	+announcements()
 	include ../includes/stickynav.pug
 	if modview
 		+managenav(null, true)
