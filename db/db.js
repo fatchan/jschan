@@ -7,13 +7,8 @@ const secrets = require(__dirname+'/../configs/secrets.js')
 module.exports = {
 
 	connect: async () => {
-		if (module.exports.client) {
-			throw new Error('Mongo already connected');
-		}
-		module.exports.client = await MongoClient.connect(secrets.dbURL, {
-			useNewUrlParser: true,
-			useUnifiedTopology: true
-		});
+		module.exports.client = new MongoClient(secrets.dbURL);
+		await module.exports.client.connect();
 		module.exports.db = module.exports.client.db(secrets.dbName);
 	},
 
