@@ -29,6 +29,9 @@ const FileType = require('file-type')
 		'audio/ogg',
 		'audio/wave',
 		'audio/wav',
+		'audio/m4a',
+		'audio/mp4',
+		'audio/aac',
 	]);
 
 let other;
