@@ -47,13 +47,13 @@ block content
 				tr
 					td 
 						span.left
-							if board.webring === true
-								span.help(title='Webring') &#x1F517;
-								|  
 							if board.settings.sfw === true
 								span.help(title='SFW') &#x1F4BC;
 								|  
-						a(href=path) #{board.webring ? board.siteName : ''} /#{board.webring ? board.uri : board._id}/ - #{board.settings.name}
+						a(href=path)
+							| #{board.webring ? board.siteName : ''} /#{board.webring ? board.uri : board._id}/ - #{board.settings.name}
+							if board.webring === true
+								span.external.help(title='Webring')
 					td #{board.settings.description || '-'}
 					td #{board.pph}
 					td #{board.ppd != null ? board.ppd : '-'}

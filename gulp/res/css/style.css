@@ -512,7 +512,7 @@ th {
 }
 
 .fw td, .fw th {
-    width: 8%; /*Fixes log tables when large actions are taken*/
+	width: 8%; /*Fixes log tables when large actions are taken*/
 }
 
 td, th {
@@ -663,7 +663,7 @@ details.actions div {
 	overflow: hidden;
 	margin-right: 1px;
 	position: absolute;
-    right: 0;
+	right: 0;
 }
 
 .floatactions[open] .toggle-summary:hover {
@@ -860,6 +860,15 @@ video, img {
 }
 .audioimg {
 	background-image: var(--audio-img);
+}
+
+.external {
+	background-image: url(/file/external-link.png);
+	background-position: center right;
+	background-repeat: no-repeat;
+	padding-right: 14px;
+	background-size: 11px;
+	image-rendering: pixelated;
 }
 
 input:invalid, textarea:invalid {
