@@ -248,6 +248,11 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				extension,
 			};
 
+			//phash
+			if (file.phash) {
+				processedFile.phash = file.phash;
+			}
+
 			//type and subtype
 			let [type, subtype] = processedFile.mimetype.split('/');
 			//check if already exists
