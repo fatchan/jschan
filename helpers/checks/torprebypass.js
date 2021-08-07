@@ -54,7 +54,7 @@ module.exports = async (req, res, next) => {
 		const newBypassId = newBypass.insertedId;
 		bypassId = newBypassId.toString();
 		res.locals.preFetchedBypassId = bypassId;
-		res.locals.blockBypass = newBypass.ops[0];
+		res.locals.blockBypass = true;
 		res.cookie('bypassid', newBypassId.toString(), {
 			'maxAge': blockBypass.expireAfterTime,
 			'secure': production && secureCookies && (req.headers['x-forwarded-proto'] === 'https'),
