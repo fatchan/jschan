@@ -8,37 +8,17 @@ block content
 	h1.board-title Board List
 	.flexcenter.mv-10
 		form.form-post(action='/boards.html' method='GET')
-			input(type='hidden' value=page)
-			.row.wrap.sb
-				div(class=`col${enableWebring ? ' mr-5' : ''}`)
-					.row
-						.label Search
-						input(type='text' name='search' value=search placeholder='Uri or tags')
-					.row
-						.label Sort
-						select(name='sort')
-							option(value='popularity') Popularity
-							option(value='activity' selected=query.sort === 'activity') Latest Activity
-					.row
-						.label Order
-						select(name='direction')
-							option(value='desc') Descending
-							option(value='asc' selected=query.direction === 'asc') Ascending
-					.row
-						.label Local First
-						label.postform-style.ph-5
-							input(type='checkbox', name='local_first', value='true' checked=localFirst)
-				if enableWebring
-					.col
-						.row
-							.label Sites
-							select(name='sites' size='5' multiple)
-								optgroup(label='Shown')
-									each site in shown
-										option(value=site selected=true) #{site}
-								optgroup(label='Not Shown')
-									each site in notShown
-										option(value=site) #{site}
+			.col
+				.row
+					.label Include Boards
+					input(type='text' name='in' value=includeBoards.join(',') placeholder='comma separated')
+				.row
+					.label Exclude Boards
+					input(type='text' name='ex' value=excludeBoards.join(',') placeholder='comma separated')
+				.row
+					.label Include Default Boards
+					label.postform-style.ph-5
+						input(type='checkbox', name='include_default', value='true' checked=includeDefault)
 			input(type='submit', value='Filter')
 	if boards && boards.length > 0
 		+boardtable(true, true)

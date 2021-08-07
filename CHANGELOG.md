@@ -37,3 +37,10 @@
   - Show a little message and disable reply form on full threads (hit reply limit)
   - Allow longer language names for code blocks
   - User settings import and export option
+
+##### 0.1.6
+  - Mongodb v5 and node driver v4 update
+  - IP rangebans use more reasonable range for ipv6
+  - Fix ip randomising schedule
+  - Global announcements now show on overboard (both views)
+  - Overboard upgrade, now can set to add and remove any boards
