@@ -53,13 +53,20 @@ module.exports = async (req, res, next) => {
 
 	res
 	.set('Cache-Control', 'public, max-age=60')
-	.render('overboard', {
-		threads,
-		includeDefault,
-		addBoards,
-		removeBoards,
-		selectedBoards,
-		cacheQueryString,
-	});
+
+	if (req.path === '/overboard.html') {
+		res.json({
+			threads,
+		});
+	} else {
+		res.render('overboard', {
+			threads,
+			includeDefault,
+			addBoards,
+			removeBoards,
+			selectedBoards,
+			cacheQueryString,
+		});
+	}
 
 }

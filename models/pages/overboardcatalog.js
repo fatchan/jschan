@@ -6,7 +6,7 @@ const { Posts, Boards } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	const { overboardCatalogLimit } = config.get;
+	const { overboardCatalogLimit, allowCustomOverboard } = config.get;
 
 	let selectedBoards = [];
 	const addList = (req.query.add ? (typeof req.query.add === 'string' ? req.query.add.split(',') : req.query.add) : [])
@@ -50,13 +50,21 @@ module.exports = async (req, res, next) => {
 
 	res
 	.set('Cache-Control', 'public, max-age=60')
-	.render('overboardcatalog', {
-		threads,
-		includeDefault,
-		addBoards,
-		removeBoards,
-		selectedBoards,
-		cacheQueryString,
-	});
+
+	if (req.path === '/catalog.html') {
+		res.json({
+			threads,
+		});
+	} else {
+		res.render('overboardcatalog', {
+			threads,
+			includeDefault,
+			addBoards,
+			removeBoards,
+			selectedBoards,
+			cacheQueryString,
+		});
+	}
+
 
 }

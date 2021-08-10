@@ -38,8 +38,8 @@ router.get('/news.html', news);
 router.get('/boards.(html|json)', boardlist);
 
 //overboard
-router.get('/overboard.html', overboard); //overboard
-router.get('/catalog.html', overboardCatalog); //overboard catalog view
+router.get('/overboard.(html|json)', overboard); //overboard
+router.get('/catalog.(html|json)', overboardCatalog); //overboard catalog view
 
 //board pages
 router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, board); //index
