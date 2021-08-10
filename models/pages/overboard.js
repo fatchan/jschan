@@ -13,11 +13,13 @@ module.exports = async (req, res, next) => {
 	const addList = (req.query.add ? (typeof req.query.add === 'string' ? req.query.add.split(',') : req.query.add) : [])
 		.slice(0, overboardLimit)
 		.map(b => b.trim())
-		.filter(b => b);
+		.filter(b => b)
+		.sort();
 	const removeList = (req.query.rem ? (typeof req.query.rem === 'string' ? req.query.rem.split(',') : req.query.rem) : [])
 		.slice(0, overboardLimit)
 		.map(b => b.trim())
-		.filter(b => b);
+		.filter(b => b)
+		.sort();
 	const addBoards = [...new Set(addList)]
 	const removeBoardsSet = new Set(removeList);
 	const removeBoards = [...removeBoardsSet];
