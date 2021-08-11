@@ -13,20 +13,21 @@ block content
 			| (
 			a(href=`/catalog.html?${cacheQueryString}`) Catalog View
 			| )
-	.flexcenter.mv-10
-		form.form-post(action='/overboard.html' method='GET')
-			.col
-				.row
-					.label Include Default Boards
-					label.postform-style.ph-5
-						input(type='checkbox', name='include_default', value='true' checked=includeDefault)
-				.row
-					.label Add Boards
-					input(type='text' name='add' value=addBoards.join(',') placeholder='comma separated')
-				.row
-					.label Remove Boards
-					input(type='text' name='rem' value=removeBoards.join(',') placeholder='comma separated')
-			input(type='submit', value='Filter')
+	if allowCustomOverboard === true
+		.flexcenter.mv-10
+			form.form-post(action='/overboard.html' method='GET')
+				.col
+					.row
+						.label Include Default Boards
+						label.postform-style.ph-5
+							input(type='checkbox', name='include_default', value='true' checked=includeDefault)
+					.row
+						.label Add Boards
+						input(type='text' name='add' value=addBoards.join(',') placeholder='comma separated')
+					.row
+						.label Remove Boards
+						input(type='text' name='rem' value=removeBoards.join(',') placeholder='comma separated')
+				input(type='submit', value='Filter')
 	+announcements(true, true, false)
 	hr(size=1)
 	if threads.length === 0

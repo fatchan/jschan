@@ -27,7 +27,7 @@ module.exports = async (req, res, next) => {
 	const newMarkdownPermLevels = Object.keys(oldSettings.permLevels.markdown).reduce((acc, val) => {
 		acc[val] = numberSetting(req.body[`perm_levels_markdown_${val}`], oldSettings.permLevels.markdown[val]);
 		return acc;
-	}, {})
+	}, {});
 
 	const newSettings = {
 		filters: arraySetting(req.body.filters, oldSettings.filters),
@@ -94,6 +94,7 @@ module.exports = async (req, res, next) => {
 		},
 		overboardLimit: numberSetting(req.body.overboard_limit, oldSettings.overboardLimit),
 		overboardCatalogLimit: numberSetting(req.body.overboard_catalog_limit, oldSettings.overboardCatalogLimit),
+		allowCustomOverboard: booleanSetting(req.body.allow_custom_overboard, oldSettings.allowCustomOverboard),
 		cacheTemplates: booleanSetting(req.body.cache_templates, oldSettings.cacheTemplates),
 		lockWait: numberSetting(req.body.lock_wait, oldSettings.lockWait),
 		pruneModlogs: numberSetting(req.body.prune_modlogs, oldSettings.pruneModlogs),
