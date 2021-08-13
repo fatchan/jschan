@@ -8,7 +8,7 @@
 	--navbar-color: #f0e0d6;
 	--post-color: #f0e0d6;
 	--post-outline-color: #d9bfb7;
-	--label-color: #EA8;
+	--label-color: #fca;
 	--box-border-color: #000;
 	--darken: #00000010;
 	--highlighted-post-color: #f0c0b0;
@@ -33,4 +33,8 @@
 
 .post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
 	border-width: 0 1px 1px 0;
+}
+
+tr, tr:nth-child(2n+1) {
+    background: #fff;
 }
