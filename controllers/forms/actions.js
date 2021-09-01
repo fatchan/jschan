@@ -33,7 +33,7 @@ module.exports = {
 			{ result: (existsBody(req.body.report_ban) && !req.body.checkedreports), expected: false, error: 'Must select post and reports to ban reporter' },
 			{ result: (existsBody(req.body.checkedreports) && !req.body.report_ban), expected: false, error: 'Must select a report action if checked reports' },
 			{ result: (existsBody(req.body.checkedreports) && !req.body.checkedposts), expected: false, error: 'Must check parent post if checking reports for report action' },
-			{ result: (existsBody(req.body.checkedreports) && lengthBody(req.body.checkedreports, 1, req.body.checkedposts.length*5)), expected: false, error: 'Invalid number of reports checked' },
+			{ result: (existsBody(req.body.checkedreports) && existsBody(req.body.checkedposts) && lengthBody(req.body.checkedreports, 1, req.body.checkedposts.length*5)), expected: false, error: 'Invalid number of reports checked' },
 			{ result: (res.locals.permLevel > res.locals.actions.authRequired), expected: false, blocking: true, error: 'No permission' },
 			{ result: (existsBody(req.body.delete) && !res.locals.board.settings.userPostDelete), permLevel: 3, expected: false, error: 'User post deletion is disabled on this board' },
 			{ result: (existsBody(req.body.spoiler) && !res.locals.board.settings.userPostSpoiler), permLevel: 3, expected: false, error: 'User file spoiling is disabled on this board' },
