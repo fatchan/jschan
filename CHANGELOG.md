@@ -43,4 +43,6 @@
   - IP rangebans use more reasonable range for ipv6
   - Fix ip randomising schedule
   - Global announcements now show on overboard (both views)
-  - Overboard upgrade, now can set to add and remove any boards
+  - Overboard upgrade, now users can set to add and remove any boards, global setting to enable/disable
+  - Add an extra "new reply" button to the end of threads for convenience
+  - Users with scripts will now see proper thumbnails for video files in the upload list instead of a generic image
