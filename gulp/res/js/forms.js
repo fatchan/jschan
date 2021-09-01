@@ -4,6 +4,32 @@ function removeModal() {
 	modalClasses.forEach(c => document.getElementsByClassName(c)[0].remove());
 }
 
+async function videoThumbnail(file) {
+	return new Promise((resolve, reject) => {
+		const hiddenVideo = document.createElement('video');
+		hiddenVideo.setAttribute('src', URL.createObjectURL(file));
+		hiddenVideo.load();
+		hiddenVideo.addEventListener('error', err => {
+			reject(err);
+		});
+		hiddenVideo.addEventListener('loadedmetadata', () => {
+			setTimeout(() => {
+				hiddenVideo.currentTime = 0; //max hiddenVideo.duration
+			}, 500); //apparently 'loadedmetadata' is too early -.-
+			hiddenVideo.addEventListener('seeked', () => {
+				const canvas = document.createElement("canvas");
+				canvas.width = hiddenVideo.videoWidth;
+				canvas.height = hiddenVideo.videoHeight;
+				const ctx = canvas.getContext("2d");
+				ctx.drawImage(hiddenVideo, 0, 0, canvas.width, canvas.height);
+				ctx.canvas.toBlob(blob => {
+					resolve(blob);
+				});
+			});
+		});
+	});
+}
+
 function doModal(data, postcallback) {
 	try {
 		const modalHtml = modal({ modal: data });
@@ -349,7 +375,15 @@ class formHandler {
 				item.url = '/file/audio.png'
 				break;
 			case 'video':
-				item.url = '/file/video.png'
+				try {
+					const thumbnailBlob = await videoThumbnail(file);
+console.log(thumbnailBlob)
+					item.url = URL.createObjectURL(thumbnailBlob);
+				} catch (err) {
+console.error(err)
+					//couldnt create video thumb for some reason
+					item.url = '/file/video.png'
+				}
 				break;
 			default:
 				item.url = '/file/attachment.png'
