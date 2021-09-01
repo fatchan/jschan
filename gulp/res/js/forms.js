@@ -13,14 +13,15 @@ async function videoThumbnail(file) {
 			reject(err);
 		});
 		hiddenVideo.addEventListener('loadedmetadata', () => {
+			//apparently 'loadedmetadata' is too early -.-
 			setTimeout(() => {
-				hiddenVideo.currentTime = 0; //max hiddenVideo.duration
-			}, 500); //apparently 'loadedmetadata' is too early -.-
+				hiddenVideo.currentTime = 0;
+			}, 500);
 			hiddenVideo.addEventListener('seeked', () => {
-				const canvas = document.createElement("canvas");
+				const canvas = document.createElement('canvas');
 				canvas.width = hiddenVideo.videoWidth;
 				canvas.height = hiddenVideo.videoHeight;
-				const ctx = canvas.getContext("2d");
+				const ctx = canvas.getContext('2d');
 				ctx.drawImage(hiddenVideo, 0, 0, canvas.width, canvas.height);
 				ctx.canvas.toBlob(blob => {
 					resolve(blob);
@@ -377,10 +378,8 @@ class formHandler {
 			case 'video':
 				try {
 					const thumbnailBlob = await videoThumbnail(file);
-console.log(thumbnailBlob)
 					item.url = URL.createObjectURL(thumbnailBlob);
 				} catch (err) {
-console.error(err)
 					//couldnt create video thumb for some reason
 					item.url = '/file/video.png'
 				}
