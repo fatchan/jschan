@@ -356,7 +356,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 						}
 						break;
 					default:
-						throw new Error(`invalid file mime type: ${processedFile}`);
+						throw new Error(`invalid file mime type: ${processedFile.mimetype}`);
 				}
 			}
 
