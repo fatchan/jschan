@@ -32,7 +32,7 @@
 #float .post-container, div#livetext, div#threadstats, .catalog-tile,
 nav.pages, div.pages, .post-container:not(.op), nav.stickynav,
 summary.toggle-summary, table, div.catalog-tile, div.highlighted,
-div.hoverhighlighted, a.toggle-summary, .board-banner {
+div.hoverhighlighted, a.toggle-summary, .board-banner, .bottom-reply {
 	border-width: 1px;
 	border-radius: 2px;
 }
