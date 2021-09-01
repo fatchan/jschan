@@ -10,7 +10,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		history.replaceState({}, '', '#postform');
 		postForm.style.display = 'flex';
 		topPostButton.style.visibility = 'hidden';
-		bottomPostButton.style.display = 'none';
+		if (bottomPostButton) {
+			bottomPostButton.style.display = 'none';
+		}
 		postForm.dispatchEvent(new Event('opened'));
 	};
 	const closePostForm = (e) => {
@@ -18,12 +20,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		history.replaceState({}, '', location.pathname);
 		postForm.style.display = 'none';
 		topPostButton.style.visibility = 'visible';
-		bottomPostButton.style.display = '';
+		if (bottomPostButton) {
+			bottomPostButton.style.display = '';
+		}
 	};
 	if (postForm) {
 		const closeButton = postForm ? postForm.querySelector('.close') : null;
 		topPostButton.addEventListener('click', openPostForm, false);
-		bottomPostButton.addEventListener('click', openPostForm, false);
+		if (bottomPostButton) {
+			bottomPostButton.addEventListener('click', openPostForm, false);
+		}
 		closeButton.addEventListener('click', closePostForm, false);
 	}
 
