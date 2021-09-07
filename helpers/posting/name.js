@@ -1,7 +1,7 @@
 'use strict';
 
 const { getInsecureTrip, getSecureTrip } = require(__dirname+'/tripcode.js')
-	, nameRegex = /^(?<name>(?!##|#).*?)?(?:(?<secure>##|#)(?<tripcode>[^# ].+?))?(?<capcode>##(?<capcodetext> .*?)?)?$/
+	, nameRegex = /^(?<name>(?!##|#).*?)?(?:(?<secure>##?)(?<tripcode>[^# ].+?))?(?<capcode>##(?<capcodetext> .*?)?)?$/
 	, staffLevels = ['Admin', 'Global Staff', 'Board Owner', 'Board Mod']
 	, staffLevelsRegex = new RegExp(`(${staffLevels.join('|')})+`, 'igm')
 
