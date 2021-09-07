@@ -1,5 +1,6 @@
 extends ../layout.pug
 include ../mixins/post.pug
+include ../mixins/announcements.pug
 
 block head
 	title Overboard Index
@@ -7,15 +8,30 @@ block head
 block content
 	.board-header
 		h1.board-title Overboard Index
-		h4.board-description Recently bumped threads from all listed boards
+		h4.board-description Recently bumped threads from multiple boards
 			|  
 			| (
-			a(href='/catalog.html') Catalog View
+			a(href=`/catalog.html?${cacheQueryString}`) Catalog View
 			| )
+	if allowCustomOverboard === true
+		.flexcenter.mv-10
+			form.form-post(action='/overboard.html' method='GET')
+				.col
+					.row
+						.label Include Default Boards
+						label.postform-style.ph-5
+							input(type='checkbox', name='include_default', value='true' checked=includeDefault)
+					.row
+						.label Add Boards
+						input(type='text' name='add' value=addBoards.join(',') placeholder='comma separated')
+					.row
+						.label Remove Boards
+						input(type='text' name='rem' value=removeBoards.join(',') placeholder='comma separated')
+				input(type='submit', value='Filter')
+	+announcements(true, true, false)
 	hr(size=1)
 	if threads.length === 0
 		p No posts.
-		hr(size=1)
 	for thread in threads
 		h4.no-m-p Thread from #[a(href=`/${thread.board}/index.html`) /#{thread.board}/]
 		.thread

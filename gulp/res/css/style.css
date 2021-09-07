@@ -575,11 +575,20 @@ td pre {
 		opacity: 0.5;
 	}
 }
-.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats, .bottom-reply {
 	background: var(--post-color);
 	border-width: 1px;
 	border-style: solid;
 	border-color: var(--post-outline-color);
+}
+
+.bottom-reply {
+	display: block;
+	max-width: 100%;
+	margin: 5px 0;
+	padding: 10px;
+	width: -moz-max-content;
+	width: max-content;
 }
 
 .nomarks {

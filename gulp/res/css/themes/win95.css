@@ -32,7 +32,7 @@
 .flag {
 	image-rendering:pixelated;
 }
-.post-container:not(.op), #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats, .navbar, #postform, .op, table, .board-banner, .filelabel, .modal {
+.post-container:not(.op), #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats, .navbar, #postform, .op, table, .board-banner, .filelabel, .modal, .bottom-reply {
 	border: 2px outset lightgray!important;
 }
 input[type=button],

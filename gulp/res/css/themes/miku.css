@@ -30,6 +30,6 @@
 	--greentext-color: #789922;
 	--pinktext-color:#E0727F;
 }
-.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats, .bottom-reply {
 	border-width: 0 1px 1px 0;
 }

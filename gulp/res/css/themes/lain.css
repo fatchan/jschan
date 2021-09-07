@@ -30,7 +30,7 @@
 	--greentext-color: #B8D962;
 	--pinktext-color:#E0727F;
 }
-.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats, .bottom-reply {
 	border-width: 1px;
 }
 .captcha {

@@ -1,5 +1,6 @@
 extends ../layout.pug
 include ../mixins/catalogtile.pug
+include ../mixins/announcements.pug
 
 block head
 	title Overboard Catalog
@@ -11,9 +12,24 @@ block content
 		h4.board-description Recently bumped threads from all listed boards
 			|  
 			| (
-			a(href='/overboard.html') Index View
+			a(href=`/overboard.html?${cacheQueryString}`) Index View
 			| )
-	br
+	if allowCustomOverboard === true
+		.flexcenter.mv-10
+			form.form-post(action='/catalog.html' method='GET')
+				.col
+					.row
+						.label Include Default Boards
+						label.postform-style.ph-5
+							input(type='checkbox', name='include_default', value='true' checked=includeDefault)
+					.row
+						.label Add Boards
+						input(type='text' name='add' value=addBoards.join(',') placeholder='comma separated')
+					.row
+						.label Remove Boards
+						input(type='text' name='rem' value=removeBoards.join(',') placeholder='comma separated')
+				input(type='submit', value='Filter')
+	+announcements()
 	include ../includes/stickynav.pug
 	.wrapbar
 		.pages.jsonly

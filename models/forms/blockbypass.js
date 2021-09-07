@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
 	const { secureCookies, blockBypass } = config.get;
 	const bypass = await Bypass.getBypass();
 	const bypassId = bypass.insertedId;
-	res.locals.blockBypass = bypass.ops[0];
+	res.locals.blockBypass = true;
 
 	res.cookie('bypassid', bypassId.toString(), {
 		'maxAge': blockBypass.expireAfterTime,

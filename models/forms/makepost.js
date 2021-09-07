@@ -356,7 +356,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 						}
 						break;
 					default:
-						throw new Error(`invalid file mime type: ${processedFile}`);
+						throw new Error(`invalid file mime type: ${processedFile.mimetype}`);
 				}
 			}
 
@@ -387,12 +387,8 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		salt = (await randomBytesAsync(128)).toString('base64');
 	}
 	if (ids === true) {
-//		if (res.locals.country.code === 'TOR') {
-//			userId = '000000';
-//		} else {
-			const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.raw).digest('hex');
-			userId = fullUserIdHash.substring(fullUserIdHash.length-6);
-//		}
+		const fullUserIdHash = createHash('sha256').update(salt + res.locals.ip.raw).digest('hex');
+		userId = fullUserIdHash.substring(fullUserIdHash.length-6);
 	}
 	let country = null;
 	if (geoFlags === true) {
@@ -417,10 +413,10 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	//spoiler files only if board settings allow
 	const spoiler = (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler_all ? true : false;
 
-	//forceanon hide reply subjects so cant be used as name for replies
 	//forceanon and sageonlyemail only allow sage email
-	let subject = (res.locals.permLevel >= 4 && req.body.thread && (disableReplySubject || forceAnon)) ? null : req.body.subject;
 	let email = (res.locals.permLevel < 4 || (!forceAnon && !sageOnlyEmail) || req.body.email === 'sage') ? req.body.email : null;
+	//disablereplysubject
+	let subject = (res.locals.permLevel >= 4 && req.body.thread && disableReplySubject) ? null : req.body.subject;
 
 	//get name, trip and cap
 	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel,

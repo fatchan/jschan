@@ -117,6 +117,8 @@ module.exports = {
 	overboardLimit: 20,
 	//how many threads to show on overboard catalog view
 	overboardCatalogLimit: 100,
+	//allow custom overboard (user pick what boards to show)
+	allowCustomOverboard: true,
 
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,

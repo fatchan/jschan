@@ -3,6 +3,7 @@ include ../mixins/catalogtile.pug
 include ../mixins/boardnav.pug
 include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
+include ../mixins/announcements.pug
 
 block head
 	title /#{board._id}/ - Catalog
@@ -12,7 +13,7 @@ block content
 	br
 	include ../includes/postform.pug
 	br
-	include ../includes/announcements.pug
+	+announcements()
 	include ../includes/stickynav.pug
 	.wrapbar
 		if modview

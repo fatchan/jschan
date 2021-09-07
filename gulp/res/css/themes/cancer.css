@@ -43,7 +43,7 @@ body, .navbar {
 .post-icons, .post-subject, .post-check, .board-banner, .postmenu, .user-id, .flag {
 	display: none;
 }
-.post-container, .catalog-tile, .navbar, .pages, .toggle-summary, #threadstats, #livetext  {
+.post-container, .catalog-tile, .navbar, .pages, .toggle-summary, #threadstats, #livetext, .bottom-reply  {
 	border: none;
 	border-radius: 10px;
 }
