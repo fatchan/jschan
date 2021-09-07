@@ -1,7 +1,7 @@
 'use strict';
 
 const { getInsecureTrip, getSecureTrip } = require(__dirname+'/tripcode.js')
-	, nameRegex = /^(?<name>(?!##|#).*?)?(?:(?<secure>##?)(?<tripcode>[^# ].+?))?(?<capcode>##(?<capcodetext> .*?)?)?$/
+	, nameRegex = /^(?<name>[^#]*?)?(?:(?<tripcode>##(?<strip>[^ ].*?)|#(?<itrip>[^#].*?)))?(?<capcode>##(?<capcodetext> .*?)?)?$/
 	, staffLevels = ['Admin', 'Global Staff', 'Board Owner', 'Board Mod']
 	, staffLevelsRegex = new RegExp(`(${staffLevels.join('|')})+`, 'igm')
 
@@ -25,10 +25,15 @@ module.exports = async (inputName, permLevel, boardSettings, boardOwner, usernam
 			}
 			//tripcode
 			if (groups.tripcode) {
-				if (groups.secure.length === 1) {
-					tripcode = `!${getInsecureTrip(groups.tripcode)}`;
-				} else {
-					tripcode = `!!${(await getSecureTrip(groups.tripcode))}`;
+				let tripcodeText = groups.strip || groups.itrip;
+				if (permLevel >= 4 && groups.capcode === '##' && !groups.capcodetext) {
+					//for the complaining non-staff troglodyte who puts the name as all #s
+					tripcodeText = tripcodeText.concat('##');
+				}
+				if (groups.strip) {
+					tripcode = `!!${(await getSecureTrip(tripcodeText))}`;
+				} else if (groups.itrip) {
+					tripcode = `!${getInsecureTrip(tripcodeText)}`;
 				}
 			}
 			//capcode
