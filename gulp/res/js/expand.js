@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
-	const actionFooter = document.querySelector('summary.toggle-summary');
+	const actionFooter = document.querySelector('#action-menu');
 	if (actionFooter) {
 		actionFooter.addEventListener('click', (e) => {
 			if (!actionFooter.parentElement.classList.contains('floatactions')) {
