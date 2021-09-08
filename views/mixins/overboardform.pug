@@ -1,0 +1,15 @@
+mixin overboardform(overboardFormAction)
+	.flexcenter.mv-10
+		form.form-post(action=overboardFormAction method='GET')
+			.col
+				.row
+					.label Include Default Boards
+					label.postform-style.ph-5
+						input(type='checkbox', name='include_default', value='true' checked=includeDefault)
+				.row
+					.label Add Boards
+					input(type='text' name='add' value=addBoards.join(',') placeholder='comma separated')
+				.row
+					.label Remove Boards
+					input(type='text' name='rem' value=removeBoards.join(',') placeholder='comma separated')
+			input(type='submit', value='Filter')
