@@ -291,6 +291,11 @@ module.exports = async (req, res, next) => {
 
 	await Mongo.setConfig(newSettings);
 
+	if (oldSettings.enableWebring === true && newSettings.enableWebring === false) {
+		//delete webring boards from boardlist when disabling.
+		await Boards.db.deleteMany({ webring: true });
+	}
+
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {
 		await Promise.all(promises);
