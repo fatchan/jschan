@@ -34,11 +34,11 @@ module.exports = (req, res, next) => {
 		let qrange = ''
 			, hrange = '';
 		if (ipKind === 'ipv4') {
-			qrange = createCIDR(ip, 24).toString();
-			hrange = createCIDR(ip, 16).toString();
+			qrange = createCIDR(ipStr, 24).toString();
+			hrange = createCIDR(ipStr, 16).toString();
 		} else {
-			qrange = createCIDR(ip, 64).toString();
-			hrange = createCIDR(ip, 48).toString();
+			qrange = createCIDR(ipStr, 64).toString();
+			hrange = createCIDR(ipStr, 48).toString();
 		}
 		res.locals.ip = {
 			raw: ipHashPermLevel === -1 ? hashIp(ipStr) : ipStr,
