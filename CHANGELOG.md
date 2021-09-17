@@ -50,4 +50,6 @@
   - Add board option to enable imgOps link next to filenames
   - Add board option to enable an external "archive" link with the other nav links
   - Improved API for some global moderation interfaces, to allow more custom integration to reports and more
+  - Staff who hide their name from public logs will also be hidden in the ban when shown to banned user
+  - Strict filtering improvements
   - Many bugfixes
