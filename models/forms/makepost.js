@@ -154,6 +154,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 					'date': banDate,
 					'expireAt': banExpiry,
 					'allowAppeal': true, //should i make this configurable if appealable?
+					'showUser': true,
 					'seen': false
 				};
 				const insertedResult = await Bans.insertOne(ban);

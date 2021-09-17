@@ -62,6 +62,7 @@ todo: handle some more situations
 						'date': banDate,
 						'expireAt': banExpiry,
 						'allowAppeal': true, //should i make this configurable if appealable?
+						'showUser': true,
 						'seen': false
 					};
  					const insertedResult = await Bans.insertOne(ban);
