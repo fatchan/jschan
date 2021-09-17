@@ -13,7 +13,7 @@ mixin ban(ban, banpage)
 		- const ip = permLevel > ipHashPermLevel ? ban.ip.single.slice(-10) : ban.ip.raw;
 		td #{ip}
 		td #{ban.type}
-		td #{ban.issuer}
+		td #{(!banpage || ban.showUser === true) ? ban.issuer : 'Hidden User'}
 		- const banDate = new Date(ban.date);
 		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(undefined, {hourCycle:'h23'})}
 		- const expireDate = new Date(ban.expireAt);

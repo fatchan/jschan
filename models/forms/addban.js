@@ -24,6 +24,7 @@ module.exports = async (req, res, redirect) => {
 		'board': req.params.board || null,
 		'posts': null,
 		'issuer': req.session.user,
+		'showUser': req.body.hide_name != null,
 		'date': actionDate,
 		'expireAt': new Date(actionDate.getTime() + (req.body.ban_duration || defaultBanDuration)),
 		'allowAppeal': req.body.no_appeal ? false : true,
