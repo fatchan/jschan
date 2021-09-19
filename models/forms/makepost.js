@@ -116,6 +116,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 			allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); //removing diacritics
 			allContents += concatContents.replace(/[\u200B-\u200D\uFEFF]/g, ''); //removing ZWS
 			allContents += concatContents.replace(/[^a-zA-Z0-9.-]+/gm, ''); //removing anything thats not alphamnumeric or . and -
+			allContents += concatContents.split(/(\%[^\%]+)/).map(part => { try { return decodeURIComponent(part) } catch(e) { return '' } }).join(''); //catch pedophile spammers url-fu with encoding
 		}
 		//global filters
 		if (globalFilters && globalFilters.length > 0 && globalFilterMode > 0) {
@@ -153,6 +154,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 					'date': banDate,
 					'expireAt': banExpiry,
 					'allowAppeal': true, //should i make this configurable if appealable?
+					'showUser': true,
 					'seen': false
 				};
 				const insertedResult = await Bans.insertOne(ban);
@@ -247,6 +249,11 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				size: file.size,
 				extension,
 			};
+
+			//phash
+			if (file.phash) {
+				processedFile.phash = file.phash;
+			}
 
 			//type and subtype
 			let [type, subtype] = processedFile.mimetype.split('/');

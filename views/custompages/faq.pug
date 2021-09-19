@@ -64,7 +64,7 @@ block content
 					p 
 						| Names should be input like: 
 						input(disabled='true' spellcheck='false' type='text' value='Name##Tripcode## Capcode')
-						| . Tripcode and capcode are optional components. Tripcodes and capcodes may not contain "#" and the whitespace before capcodes is significant. 
+						| . Tripcode and capcode are optional components. Please note the whitespace before capcodes is significant. 
 					p Valid examples: 
 					ol.mv-0
 						li name
@@ -79,7 +79,7 @@ block content
 						li #tripcode## capcode
 						li ##tripcode## capcode
 						li ##
-					p The last example is considered a blank capcode and can be used as a shortcut to display your role.
+					p The last example is considered a blank capcode and can be used as a shortcut to display your role. Additionally, if a user has multiple aplicable roles (e.g. a board owner, but the user is also global staff) capcodes will default to their lowest role. To show the higher role, you must be explicit and precede any capcode with the role name e.g. ## Global Staff or ## Global Staff capcode
 					p Each component can be used in combination or independently. In a post number 9 would look like:
 						-
 							const examplePost = {

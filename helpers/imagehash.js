@@ -11,7 +11,6 @@ module.exports = async (req, res, next) => {
 			const mainType = req.files.file[i].mimetype.split('/')[0];
 			if (mainType === 'image' || mainType === 'video') {
 				hashPromises.push(imageHash(req.files.file[i].tempFilePath, 8, 'hex').then(res => {
-					console.log(res.hash);
 					req.files.file[i].phash = res.hash;
 				}));
 			}

@@ -36,6 +36,7 @@ todo: handle some more situations
 				allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); //removing diacritics
 				allContents += concatContents.replace(/[\u200B-\u200D\uFEFF]/g, ''); //removing ZWS
 				allContents += concatContents.replace(/[^a-zA-Z0-9.-]+/gm, ''); //removing anything thats not alphamnumeric or . and -
+				allContents += concatContents.split(/(\%[^\%]+)/).map(part => { try { return decodeURIComponent(part) } catch(e) { return '' } }).join(''); //catch pedophile spammers url-fu with encoding
 			}
 			//global filters
 			hitGlobalFilter = globalSettings.filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
@@ -61,6 +62,7 @@ todo: handle some more situations
 						'date': banDate,
 						'expireAt': banExpiry,
 						'allowAppeal': true, //should i make this configurable if appealable?
+						'showUser': true,
 						'seen': false
 					};
  					const insertedResult = await Bans.insertOne(ban);

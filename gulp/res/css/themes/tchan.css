@@ -186,7 +186,7 @@ input[type=file],input[type=number],input[type=password],input[type=range],input
 	color: var(--input-alt-color)!important
 }
 
-#float .post-container,#livetext,#postform,#threadstats,.catalog-tile,.modal,.pages,.post-container,.stickynav,.toggle-summary, .bottom-reply {
+#float .post-container,#livetext,#postform,#threadstats,.catalog-tile,.modal,.pages,.post-container,.stickynav,#action-menu, .collapse, .bottom-reply {
 	border-radius: 4px;
 	border-style: solid none none solid;
 	border-width: 1px;

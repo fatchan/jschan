@@ -47,6 +47,7 @@ module.exports = async (req, res, next) => {
 				'expireAt': banExpiry,
 				allowAppeal,
 				'appeal': null,
+				'showUser': !req.body.hide_name,
 				'seen': false,
 			});
 		}
@@ -85,6 +86,7 @@ module.exports = async (req, res, next) => {
 					'expireAt': banExpiry,
 					allowAppeal,
 					'appeal': null,
+					'showUser': !req.body.hide_name,
 					'seen': false
 				});
 			});

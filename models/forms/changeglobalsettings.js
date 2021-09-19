@@ -231,6 +231,8 @@ module.exports = async (req, res, next) => {
 		boardDefaults: {
 			theme: trimSetting(req.body.board_defaults_theme, oldSettings.boardDefaults.theme),
 			codeTheme: trimSetting(req.body.board_defaults_code_theme, oldSettings.boardDefaults.codeTheme),
+			reverseImageSearchLinks: booleanSetting(req.body.board_defaults_reverse_image_search_links, oldSettings.boardDefaults.reverseImageSearchLinks),
+			archiveLinks: booleanSetting(req.body.board_defaults_archive_links, oldSettings.boardDefaults.archiveLinks),
 			sfw: booleanSetting(req.body.board_defaults_sfw, oldSettings.boardDefaults.sfw),
 			lockMode: numberSetting(req.body.board_defaults_lock_mode, oldSettings.boardDefaults.lockMode),
 			fileR9KMode: numberSetting(req.body.board_defaults_file_r9k_mode, oldSettings.boardDefaults.fileR9KMode),
@@ -290,6 +292,11 @@ module.exports = async (req, res, next) => {
 	};
 
 	await Mongo.setConfig(newSettings);
+
+	if (oldSettings.enableWebring === true && newSettings.enableWebring === false) {
+		//delete webring boards from boardlist when disabling.
+		await Boards.db.deleteMany({ webring: true });
+	}
 
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {

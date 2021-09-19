@@ -50,7 +50,7 @@ tr {
 	filter: invert(90%)
 }
 
-#float .post-container, #livetext, #threadstats, .catalog-tile, .pages, .post-container, .bottom-reply {
+#float .post-container, #livetext, #threadstats, .catalog-tile, .pages, .post-container, .collapse, .bottom-reply {
 	border-style: none none none solid
 }
 

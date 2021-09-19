@@ -31,7 +31,7 @@
 	--pinktext-color:#E0727F;
 }
 
-.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats, .bottom-reply {
+.post-container, #float .post-container, .stickynav, .pages, #action-menu, .catalog-tile, #livetext, #threadstats, .collapse, .bottom-reply {
 	border-width: 0 1px 1px 0;
 }
 
