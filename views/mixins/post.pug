@@ -100,7 +100,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 									| )
 								if type === 'image' && ((board && board.settings.reverseImageSearchLinks === true) || overboard || manage || globalmanage)
 									|  
-									span: a(href=`https://imgops.com/${meta.url}/file/${file.filename}` title='ImgOps' target='_blank') ImgOps
+									span: a(href=`https://tineye.com/search?url=${encodeURIComponent(meta.url+'/file/'+file.filename)}` title='Reverse Image Search' target='_blank') Reverse
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/file/${file.filename}`)
 									if post.spoiler || file.spoiler
