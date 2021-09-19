@@ -379,6 +379,8 @@ module.exports = {
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
 		userPostUnlink: true, //alow user to unlink files fomr their post
+		reverseImageSearchLink: false, //show imgops or similar
+		archiveLink: false, //show external archive link
 		threadLimit: 200,
 		replyLimit: 1000,
 		bumpLimit: 500,

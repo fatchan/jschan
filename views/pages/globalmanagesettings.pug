@@ -775,5 +775,13 @@ block content
 						.label Allow Other Files
 						label.postform-style.ph-5
 							input(type='checkbox', name='board_defaults_allowed_file_types_other', value='true' checked=settings.boardDefaults.allowedFileTypes.other)
+					.row
+						.label Reverse Image Search Links
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_reverse_image_search_links', value='true' checked=settings.boardDefaults.reverseImageSearchLinks)
+					.row
+						.label External Archive Links
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_archive_links', value='true' checked=settings.boardDefaults.archiveLinks)
 
 			input.row(type='submit', value='save settings')

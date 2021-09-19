@@ -68,6 +68,8 @@ module.exports = async (req, res, next) => {
 		'theme': req.body.theme || oldSettings.theme,
 		'codeTheme': req.body.code_theme || oldSettings.codeTheme,
 		'sfw': booleanSetting(req.body.sfw),
+		'archiveLinks': booleanSetting(req.body.archive_links),
+		'reverseImageSearchLinks': booleanSetting(req.body.reverse_image_search_links),
 		'unlistedLocal': booleanSetting(req.body.unlisted_local),
 		'unlistedWebring': booleanSetting(req.body.unlisted_webring),
 		'early404': booleanSetting(req.body.early404),
@@ -151,7 +153,9 @@ module.exports = async (req, res, next) => {
 			rebuildCatalog = true;
 	}
 
-	if (newSettings.replyLimit !== oldSettings.replyLimit) {
+	if (newSettings.replyLimit !== oldSettings.replyLimit
+		|| newSettings.archiveLinks !== oldSettings.archiveLinks
+		|| newSettings.reverseImageSearchLinks !== oldSettings.reverseImageSearchLinks) {
 		rebuildBoard = true;
 		rebuildThreads = true;
 	}
