@@ -386,6 +386,7 @@ const captchaGridSize = ${config.get.captchaOptions.grid.size};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const ipHashPermLevel = ${config.get.ipHashPermLevel};
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
+const metaLocal = ${JSON.stringify(config.get.meta)};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));

@@ -76,6 +76,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))
 					each file, fileindex in post.files
 						.post-file
+							- const type = file.mimetype.split('/')[0]
 							span.post-file-info
 								span: a(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? 'Spoiler File' : file.originalFilename}
 								|  
@@ -97,10 +98,9 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 									if file.durationString
 										| , #{file.durationString}
 									| )
-								if (board && board.settings.reverseImageSearchLinks === true) || overboard || manage || globalmanage
+								if type === 'image' && ((board && board.settings.reverseImageSearchLinks === true) || overboard || manage || globalmanage)
 									|  
 									span: a(href=`https://imgops.com/${meta.url}/file/${file.filename}` title='ImgOps' target='_blank') ImgOps
-							- const type = file.mimetype.split('/')[0]
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/file/${file.filename}`)
 									if post.spoiler || file.spoiler

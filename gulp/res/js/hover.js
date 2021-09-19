@@ -131,7 +131,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			if (!postJson) {
 				return; //post was deleted or missing
 			}
-			const postHtml = post({ post: postJson });
+			const postHtml = post({
+				post: postJson,
+				meta: metaLocal,
+			});
 			const wrap = document.createElement('div');
 			wrap.innerHTML = postHtml;
 			hoveredPost = wrap.firstChild.nextSibling;
