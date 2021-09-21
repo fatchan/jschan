@@ -83,6 +83,14 @@ block content
 						label.postform-style.ph-5
 							input(type='checkbox', name='custom_flags', value='true' checked=board.settings.customFlags)
 					.row
+						.label Reverse Image Search Links
+						label.postform-style.ph-5
+							input(type='checkbox', name='reverse_image_search_links', value='true' checked=board.settings.reverseImageSearchLinks)
+					.row
+						.label External Archive Links
+						label.postform-style.ph-5
+							input(type='checkbox', name='archive_links', value='true' checked=board.settings.archiveLinks)
+					.row
 						.label SFW
 						label.postform-style.ph-5
 							input(type='checkbox', name='sfw', value='true' checked=board.settings.sfw)

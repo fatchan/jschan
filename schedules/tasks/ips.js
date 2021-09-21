@@ -41,7 +41,7 @@ module.exports = {
 			});
 		});
 		console.log(`Randomising ip on ${bulkWrites.length} posts`);
-		if (bulkWrites.length.length > 0) {
+		if (bulkWrites.length > 0) {
 			await Posts.db.bulkWrite(bulkWrites);
 		}
 	},

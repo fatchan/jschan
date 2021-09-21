@@ -117,6 +117,12 @@ module.exports = {
 	overboardLimit: 20,
 	//how many threads to show on overboard catalog view
 	overboardCatalogLimit: 100,
+	//allow custom overboard (user pick what boards to show)
+	allowCustomOverboard: true,
+
+	//default url format/links for archive and reverse image search links, %s will be replaced by the url
+	archiveLinksURL: 'https://archive.today/?run=1&url=%s',
+	reverseImageLinksURL: 'https://tineye.com/search?url=%s',
 
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
@@ -377,6 +383,8 @@ module.exports = {
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
 		userPostUnlink: true, //alow user to unlink files fomr their post
+		reverseImageSearchLinks: false, //show imgops or similar
+		archiveLinks: false, //show external archive link
 		threadLimit: 200,
 		replyLimit: 1000,
 		bumpLimit: 500,

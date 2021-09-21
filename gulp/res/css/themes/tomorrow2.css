@@ -35,7 +35,7 @@
 	border: 1px solid var(--highlighted-post-outline-color) !important;
 }
 
-#float .post-container, #livetext, #threadstats, .navbar, .catalog-tile, .pages, .post-container, .stickynav, .toggle-summary {
+#float .post-container, #livetext, #threadstats, .navbar, .catalog-tile, .pages, .post-container, .stickynav, .collapse, .bottom-reply {
 	border-width: 1px!important;
 	border-color: black!important;
 }

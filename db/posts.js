@@ -530,23 +530,43 @@ module.exports = {
 		})
 	},
 
-	getReports: (board) => {
-		return db.find({
+	getReports: async (board, permLevel) => {
+		const projection = {
+			'salt': 0,
+			'password': 0,
+			'globalreports': 0,
+		};
+		if (permLevel > config.get.ipHashPermLevel) {
+			projection['ip.raw'] = 0;
+			projection['reports'] = { ip: { raw: 0 } };
+		}
+		const posts = await db.find({
 			'reports.0': {
 				'$exists': true
 			},
 			'board': board
-		}, {
-			'projection': {
-				'salt': 0,
-				'password': 0,
-				//'ip': 0,
-				'globalreports': 0,
-			}
-		}).toArray();
+		}, { projection }).toArray();
+		posts.forEach(p => {
+			p.ip.single = p.ip.single.slice(-10);
+			p.ip.qrange = p.ip.qrange.slice(-10);
+			p.ip.hrange = p.ip.hrange.slice(-10);
+			p.reports.forEach(r => {
+				r.ip.single = r.ip.single.slice(-10);
+			});
+		});
+		return posts;
 	},
 
-	getGlobalReports: (offset=0, limit, ip) => {
+	getGlobalReports: async (offset=0, limit, ip, permLevel) => {
+		const projection = {
+			'salt': 0,
+			'password': 0,
+			'reports': 0,
+		};
+		if (permLevel > config.get.ipHashPermLevel) {
+			projection['ip.raw'] = 0;
+			projection['globalreports'] = { ip: { raw: 0 } };
+		}
 		const query = {
 			'globalreports.0': {
 				'$exists': true
@@ -563,13 +583,16 @@ module.exports = {
 				{ 'globalreports.ip.raw': ip }
 			];
 		}
-		return db.find(query, {
-			'projection': {
-				'salt': 0,
-				'password': 0,
-				'reports': 0,
-			}
-		}).skip(offset).limit(limit).toArray();
+		const posts = await db.find(query, { projection }).skip(offset).limit(limit).toArray();
+		posts.forEach(p => {
+			p.ip.single = p.ip.single.slice(-10);
+			p.ip.qrange = p.ip.qrange.slice(-10);
+			p.ip.hrange = p.ip.hrange.slice(-10);
+			p.globalreports.forEach(r => {
+				r.ip.single = r.ip.single.slice(-10);
+			});
+		});
+		return posts;
 	},
 
 	deleteOne: (board, options) => {

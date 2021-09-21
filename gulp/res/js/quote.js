@@ -1,25 +1,35 @@
 window.addEventListener('DOMContentLoaded', (event) => {
 
 	const postForm = document.querySelector('#postform');
-	const newPostButton = document.querySelector('a[href="#postform"]');
+	const topPostButton = document.querySelector('a[href="#postform"]');
+	const bottomPostButton = document.querySelector('.bottom-reply');
 	const openPostForm = (e) => {
 		if (e) {
 			e.preventDefault();
 		}
 		history.replaceState({}, '', '#postform');
 		postForm.style.display = 'flex';
-		newPostButton.style.visibility = 'hidden';
+		topPostButton.style.visibility = 'hidden';
+		if (bottomPostButton) {
+			bottomPostButton.style.display = 'none';
+		}
 		postForm.dispatchEvent(new Event('opened'));
 	};
 	const closePostForm = (e) => {
 		e.preventDefault();
 		history.replaceState({}, '', location.pathname);
 		postForm.style.display = 'none';
-		newPostButton.style.visibility = 'visible';
+		topPostButton.style.visibility = 'visible';
+		if (bottomPostButton) {
+			bottomPostButton.style.display = '';
+		}
 	};
 	if (postForm) {
 		const closeButton = postForm ? postForm.querySelector('.close') : null;
-		newPostButton.addEventListener('click', openPostForm, false);
+		topPostButton.addEventListener('click', openPostForm, false);
+		if (bottomPostButton) {
+			bottomPostButton.addEventListener('click', openPostForm, false);
+		}
 		closeButton.addEventListener('click', closePostForm, false);
 	}
 

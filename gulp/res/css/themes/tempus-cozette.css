@@ -31,8 +31,8 @@
 }
 #float .post-container, div#livetext, div#threadstats, .catalog-tile,
 nav.pages, div.pages, .post-container:not(.op), nav.stickynav,
-summary.toggle-summary, table, div.catalog-tile, div.highlighted,
-div.hoverhighlighted, a.toggle-summary, .board-banner {
+summary#action-menu, table, div.catalog-tile, div.highlighted,
+div.hoverhighlighted, a#action-menu, .board-banner, .collapse, bottom-reply {
 	border-width: 1px;
 	border-radius: 2px;
 }

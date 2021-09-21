@@ -12,19 +12,28 @@ module.exports = async (req, res, next) => {
 
 	let reports;
 	try {
-		reports = await Posts.getGlobalReports(offset, limit, ipMatch);
+		reports = await Posts.getGlobalReports(offset, limit, ipMatch, res.locals.permLevel);
 	} catch (err) {
 		return next(err)
 	}
 
-	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('globalmanagereports', {
-		csrf: req.csrfToken(),
-		reports,
-		page,
-		ip: ipMatch ? req.query.ip : null,
-		queryString,
-	});
+	res.set('Cache-Control', 'private, max-age=5');
+
+	if (req.path.endsWith('/reports.json')) {
+		res.json({
+			reports,
+			page,
+			ip: ipMatch ? req.query.ip : null,
+			queryString,
+		});
+	} else {
+		res.render('globalmanagereports', {
+			csrf: req.csrfToken(),
+			reports,
+			page,
+			ip: ipMatch ? req.query.ip : null,
+			queryString,
+		});
+	}
 
 }

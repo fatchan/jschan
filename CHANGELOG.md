@@ -37,3 +37,21 @@
   - Show a little message and disable reply form on full threads (hit reply limit)
   - Allow longer language names for code blocks
   - User settings import and export option
+
+##### 0.1.6
+  - Mongodb v5 and node driver v4 update
+  - IP rangebans use more reasonable range for ipv6
+  - Fix ip randomising schedule
+  - Global announcements now show on overboard (both views)
+  - Overboard upgrade, now users can set to add and remove any boards, global setting to enable/disable. Form is collapsible
+  - Add an extra "new reply" button to the end of threads for convenience
+  - Users with scripts will now see proper video thumbnails (depending on browser supported codecs) in the upload list
+  - Make fuzzy image hash option and hashes visible to globals, for filtering
+  - Add board option to enable reverse image search link next to filenames
+  - Add board option to enable an external "archive" link with the other nav links
+  - Add global option to configure the URL for archive/reverse image serach links
+  - Improved API for some global moderation interfaces, to allow more custom integration to reports and more
+  - Staff who hide their name from public logs will also be hidden in the ban when shown to banned user
+  - Image previews now shown in notifications
+  - Strict filtering improvements
+  - Many bugfixes

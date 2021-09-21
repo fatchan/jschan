@@ -1,5 +1,7 @@
 extends ../layout.pug
 include ../mixins/catalogtile.pug
+include ../mixins/overboardform.pug
+include ../mixins/announcements.pug
 
 block head
 	title Overboard Catalog
@@ -11,9 +13,11 @@ block content
 		h4.board-description Recently bumped threads from all listed boards
 			|  
 			| (
-			a(href='/overboard.html') Index View
+			a(href=`/overboard.html?${cacheQueryString}`) Index View
 			| )
-	br
+	if allowCustomOverboard === true
+		+overboardform('/catalog.html')
+	+announcements()
 	include ../includes/stickynav.pug
 	.wrapbar
 		.pages.jsonly

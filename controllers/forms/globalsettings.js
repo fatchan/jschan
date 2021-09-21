@@ -12,7 +12,7 @@ module.exports = {
 
 	paramConverter: paramConverter({
 		timeFields: ['ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time'],
-		trimFields: ['allowed_hosts', 'dnsbl_blacklists', 'other_mime_types', 'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters'],
+		trimFields: ['allowed_hosts', 'dnsbl_blacklists', 'other_mime_types', 'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links'],
 		numberFields: ['filter_mode', 'auth_level',
 			'captcha_options_generate_limit', 'captcha_options_grid_size',  'captcha_options_image_size', 'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max',
 			'captcha_options_distortion', 'captcha_options_grid_icon_y_offset', 'flood_timers_same_content_same_ip', 'flood_timers_same_content_any_ip', 'flood_timers_any_content_same_ip',
@@ -57,6 +57,19 @@ module.exports = {
 				}
 				return false;
 			}, expected: false, error: 'Extra mime types must be like type/subtype' },
+			{ result: () => {
+				if (req.body.archive_links) {
+					//simple enough regex
+					return /https?\:\/\/[^\s<>\[\]{}|\\^]+%s[^\s<>\[\]{}|\\^]*/i.test(req.body.archive_links);
+				}
+				return false;
+			}, expected: true, error: 'Invalid archive links URL format, must be a link containing %s where the url param belongs.' },
+			{ result: () => {
+				if (req.body.reverse_links) {
+					return /https?\:\/\/[^\s<>\[\]{}|\\^]+%s[^\s<>\[\]{}|\\^]*/i.test(req.body.reverse_links);
+				}
+				return false;
+			}, expected: true, error: 'Invalid reverse image search links URL format, must be a link containing %s where the url param belongs.' },
 			{ result: lengthBody(req.body.global_announcement, 0, 10000), expected: false, error: 'Global announcement must not exceed 10000 characters' },
 			{ result: lengthBody(req.body.filters, 0, 50000), expected: false, error: 'Filter text cannot exceed 50000 characters' },
 			{ result: numberBody(req.body.filter_mode, 0, 2), expected: true, error: 'Filter mode must be a number from 0-2' },

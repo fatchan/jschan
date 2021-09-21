@@ -33,6 +33,7 @@ block content
 						li: a(href='#make-a-board') How do I make my own board?
 						li: a(href='#staff-and-permissions') How do staff, users and permissions work?
 						li: a(href='#antispam') What do the board settings for antispam do?
+						li: a(href='#archive-reverse-url-format') What is the archive/reverse image search link url format?
 	.table-container.flex-center.mv-5
 		.anchor#whats-an-imageboard
 		table
@@ -68,7 +69,7 @@ block content
 					p 
 						| Names should be input like: 
 						input(disabled='true' spellcheck='false' type='text' value='Name##Tripcode## Capcode')
-						| . Tripcode and capcode are optional components. Tripcodes and capcodes may not contain "#" and the whitespace before capcodes is significant. 
+						| . Tripcode and capcode are optional components. Please note the whitespace before capcodes is significant. 
 					p Valid examples: 
 					ol.mv-0
 						li name
@@ -83,7 +84,7 @@ block content
 						li #tripcode## capcode
 						li ##tripcode## capcode
 						li ##
-					p The last example is considered a blank capcode and can be used as a shortcut to display your role.
+					p The last example is considered a blank capcode and can be used as a shortcut to display your role. Additionally, if a user has multiple aplicable roles (e.g. a board owner, but the user is also global staff) capcodes will default to their lowest role. To show the higher role, you must be explicit and precede any capcode with the role name e.g. ## Global Staff or ## Global Staff capcode
 					p Each component can be used in combination or independently. In a post number 9 would look like:
 						-
 							const examplePost = {
@@ -161,7 +162,7 @@ block content
 			tr
 				td (((detected)))
 				td
-					span.detected (((detected)))
+					span.detected ((( detected )))
 			tr
 				td ##2d9+3
 				td
@@ -315,6 +316,19 @@ block content
 					p Strict Filtering: More aggressively match filters, by normalising the input compared against the filters.
 					p Filter Mode: What to do when a post matches a filter.
 					p Filter Auto Ban Duration: How long to automatically ban for when filter mode is set to ban. Input the duration in time format described in the #[a(href='#moderation') moderation section].
+	.table-container.flex-center.mv-5
+		.anchor#archive-reverse-url-format
+		table
+			tr
+				th: a(href='#archive-reverse-url-format') What is the archive/reverse image search link url format?
+			tr
+				td
+					p
+						| Put a link with 
+						span.mono %s
+						|  where the url of the page/file should go for reverse image search or archive links. For example 
+						span.mono https://tineye.com/search?url=#[span.bold %s]
+						| .
 	.table-container.flex-center.mv-5
 		.anchor#contact
 		table

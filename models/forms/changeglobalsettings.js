@@ -27,7 +27,7 @@ module.exports = async (req, res, next) => {
 	const newMarkdownPermLevels = Object.keys(oldSettings.permLevels.markdown).reduce((acc, val) => {
 		acc[val] = numberSetting(req.body[`perm_levels_markdown_${val}`], oldSettings.permLevels.markdown[val]);
 		return acc;
-	}, {})
+	}, {});
 
 	const newSettings = {
 		filters: arraySetting(req.body.filters, oldSettings.filters),
@@ -94,6 +94,9 @@ module.exports = async (req, res, next) => {
 		},
 		overboardLimit: numberSetting(req.body.overboard_limit, oldSettings.overboardLimit),
 		overboardCatalogLimit: numberSetting(req.body.overboard_catalog_limit, oldSettings.overboardCatalogLimit),
+		allowCustomOverboard: booleanSetting(req.body.allow_custom_overboard, oldSettings.allowCustomOverboard),
+		archiveLinksURL: trimSetting(req.body.archive_links, oldSettings.archiveLinksURL),
+		reverseImageLinksURL: trimSetting(req.body.reverse_links, oldSettings.reverseImageLinksURL),
 		cacheTemplates: booleanSetting(req.body.cache_templates, oldSettings.cacheTemplates),
 		lockWait: numberSetting(req.body.lock_wait, oldSettings.lockWait),
 		pruneModlogs: numberSetting(req.body.prune_modlogs, oldSettings.pruneModlogs),
@@ -230,6 +233,8 @@ module.exports = async (req, res, next) => {
 		boardDefaults: {
 			theme: trimSetting(req.body.board_defaults_theme, oldSettings.boardDefaults.theme),
 			codeTheme: trimSetting(req.body.board_defaults_code_theme, oldSettings.boardDefaults.codeTheme),
+			reverseImageSearchLinks: booleanSetting(req.body.board_defaults_reverse_image_search_links, oldSettings.boardDefaults.reverseImageSearchLinks),
+			archiveLinks: booleanSetting(req.body.board_defaults_archive_links, oldSettings.boardDefaults.archiveLinks),
 			sfw: booleanSetting(req.body.board_defaults_sfw, oldSettings.boardDefaults.sfw),
 			lockMode: numberSetting(req.body.board_defaults_lock_mode, oldSettings.boardDefaults.lockMode),
 			fileR9KMode: numberSetting(req.body.board_defaults_file_r9k_mode, oldSettings.boardDefaults.fileR9KMode),
@@ -289,6 +294,11 @@ module.exports = async (req, res, next) => {
 	};
 
 	await Mongo.setConfig(newSettings);
+
+	if (oldSettings.enableWebring === true && newSettings.enableWebring === false) {
+		//delete webring boards from boardlist when disabling.
+		await Boards.db.deleteMany({ webring: true });
+	}
 
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {

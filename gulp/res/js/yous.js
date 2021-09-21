@@ -69,9 +69,32 @@ const handleNewYous = (e) => {
 		try {
 			console.log('attempting to send notification', postYou);
 			const postData = e.detail.json;
-			new Notification(`${quotesYou ? 'New quote in: ' : ''}${document.title}`, {
+			const notificationOptions = {
 				body: postData.nomarkup ? postData.nomarkup.substring(0,100) : ''
-			});
+			}
+			if (postData.files.length > 0) {
+				//tries to use a thumb instead of full files, will be lighter on bandwidth and able to show for video and some audio too
+				let notificationImageURL;
+				const spoilerNotification = (postData.spoiler || postData.files.some(f => f.spoiler === true));
+				const notificationFile = postData.files.find(f => (!f.spoiler && (f.hasThumb === true || f.mimetype.startsWith('image/'))));
+				if (spoilerNotification && !notificationFile) {
+					notificationImageURL = '/file/spoiler.png';
+				} else {
+					if (notificationFile) {
+						if (notificationFile.hasThumb) {
+							notificationImageURL = `/file/thumb/${notificationFile.hash}${notificationFile.thumbextension}`;
+						} else {
+							notificationImageURL = `/file/${notificationFile.filename}`;
+						}
+					}
+				}
+				if (notificationImageURL) {
+					notificationOptions.image = notificationImageURL;
+					notificationOptions.badge = notificationImageURL;
+					notificationOptions.icon = notificationImageURL;
+				}
+			}
+			new Notification(`${quotesYou ? 'New quote in: ' : ''}${document.title}`, notificationOptions);
 		} catch (e) {
 			// notification cant send for some reason -- user revoked perms in browser?
 			console.log('failed to send notification', e);

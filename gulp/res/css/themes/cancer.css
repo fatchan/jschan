@@ -1,4 +1,5 @@
 :root {
+
 	--label-color: #1DA1F2;
 	--alt-label-color: #1DA1F2;
 	--background-top: #E6ECF0;
@@ -43,7 +44,7 @@ body, .navbar {
 .post-icons, .post-subject, .post-check, .board-banner, .postmenu, .user-id, .flag {
 	display: none;
 }
-.post-container, .catalog-tile, .navbar, .pages, .toggle-summary, #threadstats, #livetext  {
+.post-container, .catalog-tile, .navbar, .pages, #action-menu, #threadstats, #livetext, .collapse, .bottom-reply  {
 	border: none;
 	border-radius: 10px;
 }

@@ -40,7 +40,7 @@ module.exports = async (req, res, next) => {
 		try {
 			const bypassMongoId = ObjectId(bypassId);
 			bypass = await Bypass.checkBypass(bypassMongoId);
-			res.locals.blockBypass = bypass;
+			res.locals.blockBypass = true;
 		} catch (err) {
 			return next(err);
 		}
@@ -48,7 +48,8 @@ module.exports = async (req, res, next) => {
 
 	if (bypass //if they have a valid bypass
 		&& (bypass.uses < blockBypass.expireAfterUses //and its not overused
-			|| (res.locals.anonymizer && !blockBypass.forceAnonymizers))) { //OR its forced for anonymizers
+			|| (res.locals.anonymizer
+				&& !blockBypass.forceAnonymizers))) { //OR its not forced for anonymizers
 		return next();
 	}
 
@@ -56,7 +57,7 @@ module.exports = async (req, res, next) => {
 		//they dont have a valid bypass, but just solved board captcha, so give them a new one
 		const newBypass = await Bypass.getBypass();
 		const newBypassId = newBypass.insertedId;
-		res.locals.blockBypass = newBypass.ops[0];
+		res.locals.blockBypass = true;
 		res.cookie('bypassid', newBypassId.toString(), {
 			'maxAge': blockBypass.expireAfterTime,
 			'secure': production && secureCookies && (req.headers['x-forwarded-proto'] === 'https'),

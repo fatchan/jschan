@@ -39,7 +39,8 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			modview: isModView,
 			manage: (isRecent && !isGlobalRecent),
 			globalmanage: isGlobalRecent,
-			upLevel: isThread
+			upLevel: isThread,
+			...extraLocals,
 		});
 		let insertPoint;
 		if (isRecent) {

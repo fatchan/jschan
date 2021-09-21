@@ -332,8 +332,8 @@ async function cache() {
 		Redis.deletePattern('banners:*'),
 		Redis.deletePattern('users:*'),
 		Redis.deletePattern('blacklisted:*'),
-		Redis.deletePattern('overboard'),
-		Redis.deletePattern('catalog'),
+		Redis.deletePattern('overboard:*'),
+		Redis.deletePattern('catalog:*'),
 		Redis.deletePattern('webringsites'),
 	]);
 }
@@ -358,6 +358,8 @@ async function custompages() {
 			early404Fraction: config.get.early404Fraction,
 			early404Replies: config.get.early404Replies,
 			meta: config.get.meta,
+			archiveLinksURL: config.get.archiveLinksURL,
+			reverseImageLinksURL: config.get.reverseImageLinksURL,
 			enableWebring: config.get.enableWebring,
 			globalLimits: config.get.globalLimits,
 			codeLanguages: config.get.highlightOptions.languageSubset,
@@ -386,6 +388,7 @@ const captchaGridSize = ${config.get.captchaOptions.grid.size};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const ipHashPermLevel = ${config.get.ipHashPermLevel};
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
+const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));

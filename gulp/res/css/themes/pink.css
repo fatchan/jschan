@@ -30,7 +30,7 @@
 	--greentext-color:#789922;
 	--pinktext-color:#FF00EF;
 }
-.post-container:not(.op), .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats,#float, table {
+.post-container:not(.op), .stickynav, .pages, #action-menu, .catalog-tile, #livetext, #threadstats,#float, table, .collapse, .bottom-reply {
 	box-shadow: 3px 3px 3px var(--darken);
 }
 hr {

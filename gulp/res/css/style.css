@@ -575,11 +575,20 @@ td pre {
 		opacity: 0.5;
 	}
 }
-.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
+.post-container, #float .post-container, .stickynav, .pages, .catalog-tile, #livetext, #threadstats, .bottom-reply, .collapse {
 	background: var(--post-color);
 	border-width: 1px;
 	border-style: solid;
 	border-color: var(--post-outline-color);
+}
+
+.bottom-reply {
+	display: block;
+	max-width: 100%;
+	margin: 5px 0;
+	padding: 10px;
+	width: -moz-max-content;
+	width: max-content;
 }
 
 .nomarks {
@@ -655,7 +664,7 @@ details.actions div {
 	overflow: auto;
 }
 
-.floatactions[open] .toggle-summary {
+.floatactions[open] #action-menu {
 	list-style-type: none;
 	font-size: 0px;
 	font-weight: bold;
@@ -666,11 +675,11 @@ details.actions div {
 	right: 0;
 }
 
-.floatactions[open] .toggle-summary:hover {
+.floatactions[open] #action-menu:hover {
 	color: var(--link-hover);
 }
 
-.floatactions[open] .toggle-summary::before {
+.floatactions[open] #action-menu::before {
 	content: "X";
 	font-size: 10pt!important;
 }
@@ -710,7 +719,7 @@ span.captchacheckbox {
 	height: 100%;
 }
 
-.toggle-summary {
+.collapse {
 	padding: 10px;
 	cursor: pointer;
 }
@@ -731,7 +740,7 @@ span.captchacheckbox {
 	position: fixed;
 }
 
-#postform:target + .toggle-summary {
+#postform:target + #action-menu {
 	visibility: hidden;
 }
 
