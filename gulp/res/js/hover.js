@@ -133,7 +133,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			}
 			const postHtml = post({
 				post: postJson,
-				meta: metaLocal,
+				...extraLocals,
 			});
 			const wrap = document.createElement('div');
 			wrap.innerHTML = postHtml;

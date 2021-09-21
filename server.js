@@ -64,8 +64,8 @@ const config = require(__dirname+'/config.js')
 	app.set('views', views);
 
 	const loadAppLocals = () => {
-		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions,
-			enableUserBoardCreation, enableUserAccountCreation,
+		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions, archiveLinksURL,
+			enableUserBoardCreation, enableUserAccountCreation, reverseImageLinksURL,
 			debugLogs, ipHashPermLevel, meta, enableWebring, globalAnnouncement } = config.get;
 		//cache loaded templates
 		app.cache = {};
@@ -78,6 +78,8 @@ const config = require(__dirname+'/config.js')
 		app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 		app.locals.globalLimits = globalLimits;
 		app.locals.ipHashPermLevel = ipHashPermLevel;
+		app.locals.archiveLinksURL = archiveLinksURL;
+		app.locals.reverseImageLinksURL = reverseImageLinksURL;
 		app.locals.enableWebring = enableWebring;
 		app.locals.commit = commit;
 		app.locals.version = version;
