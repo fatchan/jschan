@@ -13,18 +13,20 @@ const { outputFile } = require('fs-extra')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
 	, config = require(__dirname+'/../config.js');
 
-let { enableUserBoardCreation, enableUserAccountCreation,
-		lockWait, globalLimits, boardDefaults, cacheTemplates,
+let { enableUserBoardCreation, enableUserAccountCreation, archiveLinksURL,
+		lockWait, globalLimits, boardDefaults, cacheTemplates, reverseImageLinksURL,
 		meta, enableWebring, captchaOptions, globalAnnouncement } = config.get
 	, renderLocals = null;
 
 const  updateLocals = () => {
-	({ enableUserBoardCreation, enableUserAccountCreation,
-		lockWait, globalLimits, boardDefaults, cacheTemplates,
+	({ enableUserBoardCreation, enableUserAccountCreation, archiveLinksURL,
+		lockWait, globalLimits, boardDefaults, cacheTemplates, reverseImageLinksURL,
 		meta, enableWebring, captchaOptions, globalAnnouncement } = config.get);
 	renderLocals = {
 		authLevelNames: ['Admin', 'Global Staff', 'Global Board Owner', 'Global Board Mod', 'Regular User'],
 		cache: cacheTemplates,
+		archiveLinksURL,
+		reverseImageLinksURL,
 		meta,
 		commit,
 		version,

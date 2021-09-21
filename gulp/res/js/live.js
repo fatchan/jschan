@@ -40,7 +40,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			manage: (isRecent && !isGlobalRecent),
 			globalmanage: isGlobalRecent,
 			upLevel: isThread,
-			meta: metaLocal,
+			...extraLocals,
 		});
 		let insertPoint;
 		if (isRecent) {

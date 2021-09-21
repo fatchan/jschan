@@ -10,4 +10,4 @@ mixin boardnav(selected, showIndex, upLevel)
 	a(href=`${upLevel ? '../' : ''}logs.html` class=(selected === 'logs' ? 'bold' : '')) [Logs]
 	if thread != null && board.settings != null && board.settings.archiveLinks === true
 		|  
-		a(href=`https://archive.today/?run=1&url=${meta.url}/${thread.board}/thread/${thread.postId}.html` target='_blank') [Archive]
+		a(href=`${archiveLinksURL.replace('%s', encodeURIComponent(meta.url+'/'+thread.board+'/'+thread+'/'+thread.postId+'.html'))}` rel='nofollow' referrerpolicy='same-origin' target='_blank') [Archive]

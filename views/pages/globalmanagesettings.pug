@@ -97,6 +97,24 @@ block content
 						label.postform-style.ph-5
 							input(type='checkbox', name='allow_custom_overboard' value='true' checked=settings.allowCustomOverboard)
 					.row
+						.label
+							| External Archive Links URL
+							|
+							small
+								| (
+								a(href='/faq.html#archive-reverse-url-format') ?
+								| )
+						input(type='text', name='archive_links', value=settings.archiveLinksURL)
+					.row
+						.label
+							| Reverse Image Search Links URL
+							|
+							small
+								| (
+								a(href='/faq.html#archive-reverse-url-format') ?
+								| )
+						input(type='text', name='reverse_links', value=settings.reverseImageLinksURL)
+					.row
 						.label Prune Modlogs Days
 						input(type='number', name='prune_modlogs' value=settings.pruneModlogs)
 					.row
