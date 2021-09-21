@@ -47,8 +47,9 @@
   - Add an extra "new reply" button to the end of threads for convenience
   - Users with scripts will now see proper video thumbnails (depending on browser supported codecs) in the upload list
   - Make fuzzy image hash option and hashes visible to globals, for filtering
-  - Add board option to enable imgOps link next to filenames
+  - Add board option to enable reverse image search link next to filenames
   - Add board option to enable an external "archive" link with the other nav links
+  - Add global option to configure the URL for archive/reverse image serach links
   - Improved API for some global moderation interfaces, to allow more custom integration to reports and more
   - Staff who hide their name from public logs will also be hidden in the ban when shown to banned user
   - Image previews now shown in notifications
