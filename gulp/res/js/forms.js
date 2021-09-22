@@ -95,7 +95,8 @@ let recaptchaResponse = null;
 function recaptchaCallback(response) {
 	recaptchaResponse = response;
 }
-class formHandler {
+
+class postFormHandler {
 
 	constructor(form) {
 		this.form = form;
@@ -261,8 +262,10 @@ class formHandler {
 							forceUpdate();
 						}
 					}
-					if (this.form.getAttribute('action') !== '/forms/editpost'
-						&& !this.form.getAttribute('action').endsWith('/settings')) { //dont reset on edit, keep the new values in there. todo: add exceptions/better handling for this situation
+					//dont reset on edit, keep the new values in there. todo: add exceptions/better handling for this situation
+					const formAction = this.form.getAttribute('action');
+					if (formAction !== '/forms/editpost'
+						&& !formAction.endsWith('/settings')) {
 						this.reset();
 					}
 				} else {
@@ -500,10 +503,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 window.addEventListener('settingsReady', () => {
 
-	for(let i = 0; i < forms.length; i++) {
-		if (forms[i].method === 'post' /*&& forms[i].encoding === 'multipart/form-data'*/) {
-			new formHandler(forms[i]);
+	for (let i = 0; i < forms.length; i++) {
+		if (forms[i].method === 'post') {
+			new postFormHandler(forms[i]);
 		}
 	}
 
-})
+});

@@ -55,3 +55,9 @@
   - Image previews now shown in notifications
   - Strict filtering improvements
   - Many bugfixes
+
+### 0.1.7
+  - Update inconsistent wording of custom overboard subtitle from 0.1.6
+  - Dont show "local first" checkbox in boardlist when webring isn't even enabled
+  - Bugfix to code markup, remove only leading blank lines, keeping leading whitespace on first non-empty line
+  - Make overboard settings save somewhat in localstorage to help stupid zoomers who dont know what a BOOKMARK is

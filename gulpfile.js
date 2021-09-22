@@ -414,6 +414,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 			`${paths.scripts.src}/captcha.js`,
 			`${paths.scripts.src}/forms.js`,
 			`${paths.scripts.src}/*.js`,
+			`!${paths.scripts.src}/saveoverboard.js`,
 			`!${paths.scripts.src}/hidefileinput.js`,
 			`!${paths.scripts.src}/dragable.js`,
 			`!${paths.scripts.src}/filters.js`,
@@ -428,6 +429,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
+			`${paths.scripts.src}/saveoverboard.js`,
 			`${paths.scripts.src}/hidefileinput.js`,
 			`${paths.scripts.src}/dragable.js`,
 			`${paths.scripts.src}/hideimages.js`,
