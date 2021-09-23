@@ -24,10 +24,11 @@ block content
 						select(name='direction')
 							option(value='desc') Descending
 							option(value='asc' selected=query.direction === 'asc') Ascending
-					.row
-						.label Local First
-						label.postform-style.ph-5
-							input(type='checkbox', name='local_first', value='true' checked=localFirst)
+					if enableWebring
+						.row
+							.label Local First
+							label.postform-style.ph-5
+								input(type='checkbox', name='local_first', value='true' checked=localFirst)
 				if enableWebring
 					.col
 						.row
