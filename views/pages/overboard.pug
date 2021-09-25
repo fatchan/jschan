@@ -14,6 +14,7 @@ block content
 			| (
 			a(href=`/catalog.html?${cacheQueryString}`) Catalog View
 			| )
+	include ../includes/stickynav.pug
 	if allowCustomOverboard === true
 		+overboardform('/overboard.html')
 	+announcements(true, true, false)
