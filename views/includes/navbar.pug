@@ -5,7 +5,7 @@ unless minimal
 			| Boards 
 			if enableWebring
 				.rainbow +Webring
-		a.nav-item(href='/overboard.html') Overboard
+		a.nav-item#overboardlink(href='/overboard.html') Overboard
 		a.nav-item(href='/account.html') Account
 		if board
 			a.nav-item(href=`/${board._id}/manage/reports.html`) Manage
