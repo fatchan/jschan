@@ -57,4 +57,4 @@ setDefaultLocalStorage('name', '');
 setDefaultLocalStorage('theme', 'default');
 setDefaultLocalStorage('codetheme', 'default');
 setDefaultLocalStorage('customcss', '');
-setDefaultLocalStorage('overboardsettings', '{}');
+setDefaultLocalStorage('overboardsettings', '{"add":"","rem":""}');
