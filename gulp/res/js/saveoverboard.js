@@ -8,18 +8,20 @@ if (overboardLink) {
 	}
 	updateOverboardLink();
 	if (location.pathname === '/overboard.html') {
-		const overboardForm = document.querySelector('form[action="/overboard.html"]');
-		const saveOverboardSettings = (e) => {
-			const newOverboardSettings = {
-				add: overboardForm.elements.add.value,
-				rem: overboardForm.elements.rem.value,
-				include_default: overboardForm.elements.include_default.checked,
-			};
-			if (newOverboardSettings.add.length === 0 && !newOverboardSettings.include_default) {
-				newOverboardSettings.include_default = true; //nice
+		const overboardForm = document.getElementById('overboardform');
+		if (overboardForm) {
+			const saveOverboardSettings = (e) => {
+				const newOverboardSettings = {
+					add: overboardForm.elements.add.value,
+					rem: overboardForm.elements.rem.value,
+					include_default: overboardForm.elements.include_default.checked,
+				};
+				if (newOverboardSettings.add.length === 0 && !newOverboardSettings.include_default) {
+					newOverboardSettings.include_default = true; //nice
+				}
+				setLocalStorage('overboardsettings', JSON.stringify(newOverboardSettings));
 			}
-			setLocalStorage('overboardsettings', JSON.stringify(newOverboardSettings));
+			overboardForm.addEventListener('submit', saveOverboardSettings, false);
 		}
-		overboardForm.addEventListener('submit', saveOverboardSettings, false);
 	}
 }

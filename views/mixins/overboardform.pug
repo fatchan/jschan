@@ -2,7 +2,7 @@ mixin overboardform(overboardFormAction)
 	.flexcenter.mv-10
 		details
 			summary.collapse Customise
-			form.mt-5.form-post(action=overboardFormAction method='GET')
+			form.mt-5.form-post#overboardform(action=overboardFormAction method='GET')
 				.col
 					.row
 						.label Include Default Boards
