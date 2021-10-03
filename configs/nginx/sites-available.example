@@ -2,40 +2,37 @@ upstream chan {
 	server 127.0.0.1:7000;
 }
 
-# uncomment for lokinet snapp
-#server {
-#	server_name www.example.loki example.loki;
-#	client_max_body_size 0;
-#
-#	#address may vary if this address is already used by something other than lokinet
-#	listen 172.16.0.1:80;
-#
-#	include /etc/nginx/snippets/security_headers.conf;
-#	include /etc/nginx/snippets/error_pages.conf;
-#	include /etc/nginx/snippets/jschan_common_routes.conf;
-#	include /etc/nginx/snippets/jschan_loki_routes.conf;
-#}
+server {
+	server_name www.example.loki example.loki;
+	client_max_body_size 0;
 
-# uncomment for .onion tor hidden service
-#server {
-#	server_name www.example.onion example.onion;
-#	client_max_body_size 0;
-#
-#	listen unix:/var/run/nginx-tor.sock;
-#	allow "unix:";
-#	deny all;
-#
-#	include /etc/nginx/snippets/security_headers.conf;
-#	include /etc/nginx/snippets/error_pages.conf;
-#	include /etc/nginx/snippets/jschan_common_routes.conf;
-#	include /etc/nginx/snippets/jschan_tor_routes.conf;
-#}
+	listen 172.16.0.1:80;
+
+	include /etc/nginx/snippets/security_headers.conf;
+	include /etc/nginx/snippets/error_pages.conf;
+	include /etc/nginx/snippets/jschan_common_routes.conf;
+	include /etc/nginx/snippets/jschan_loki_routes.conf;
+}
+
+server {
+	server_name www.example.onion example.onion;
+	client_max_body_size 0;
+
+	listen unix:/var/run/nginx-tor.sock;
+	allow "unix:";
+	deny all;
+
+	include /etc/nginx/snippets/security_headers.conf;
+	include /etc/nginx/snippets/error_pages.conf;
+	include /etc/nginx/snippets/jschan_common_routes.conf;
+	include /etc/nginx/snippets/jschan_tor_routes.conf;
+}
 
 server {
 	server_name www.example.com example.com;
 	client_max_body_size 0;
-	#uncomment if you have a .onion
-	#add_header onion-location 'http://example.onion$request_uri';
+
+	add_header onion-location 'http://example.onion$request_uri';
 
 	listen [::]:443 ssl ipv6only=on; # managed by Certbot
 	listen 443 ssl; # managed by Certbot
