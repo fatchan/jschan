@@ -26,7 +26,7 @@
 
 ```bash
 $ sudo apt-get update
-$ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick
+$ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx
 ```
 NOTE: If you plan to use animated .gif thumbnails, ffmpeg >=4.3.1 is recommended as there are known issues with older ffmpeg versions producing buggy thumbnails. You can [compile ffmpeg from source](https://trac.ffmpeg.org/wiki/CompilationGuide) to get a newer version.
 
@@ -52,8 +52,7 @@ You may install Node.js yourself without nvm if you prefer.
 
 **6. Configure nginx**
 
-For standard installations, run configs/nginx/nginx.sh for easy installation. This will prompt you for installation directory, domains, onion/lokinet, whether 
-to enable geoip and more. Then, use [certbot](https://certbot.eff.org/) to get a free https certificate.
+For standard installations, run `configs/nginx/nginx.sh` as root. This will prompt you for installation directory, domains, onion/lokinet, enable geoip, install a letsencrypt certificate with certbot and more.
 
 For non-standard installations like using a CDN, see [configs/nginx/README.md](configs/nginx/README.md) and DIY.
 

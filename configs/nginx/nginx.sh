@@ -13,7 +13,8 @@ read -p "Enter tor .onion address (blank=no .onion address): " ONION_DOMAIN
 read -p "Enter lokinet .loki address (blank=no .loki address): " LOKI_DOMAIN
 read -p "Allow google captcha in content-security policy? (y/n): " GOOGLE_CAPTCHA
 read -p "Allow Hcaptcha in content-security policy? (y/n): " H_CAPTCHA
-read -p "Try to download and setup geoip for post flags? (y/n): " GEOIP
+read -p "Download and setup geoip for post flags? (y/n): " GEOIP
+read -p "Use certbot to install letsencrypt certificate for https? (y/n): " LETSENCRYPT
 
 #looks good?
 read -p "Is this correct?
@@ -39,6 +40,11 @@ JSCHAN_CONFIG="upstream chan {
 }"
 
 if [ "$CLEARNET_DOMAIN" != "" ]; then
+
+	if [ "$LETSENCRYPT" == "y" ]; then
+		#run certbot for certificate
+		sudo certbot certonly --standalone -d $CLEARNET_DOMAIN -d www.$CLEARNET_DOMAIN
+	fi
 
 	#onion_location rediret header
 	ONION_LOCATION=""
@@ -95,7 +101,7 @@ if [ "$ONION_DOMAIN" != "" ]; then
 	JSCHAN_CONFIG="${JSCHAN_CONFIG}
 
 server {
-	server_name www.example.onion example.onion;
+	server_name www.$ONION_DOMAIN $ONION_DOMAIN;
 	client_max_body_size 0;
 
 	listen unix:/var/run/nginx-tor.sock;
@@ -146,8 +152,8 @@ fi
 #printf "$JSCHAN_CONFIG"
 
 #write the config to file and syymlink to sites-available
-echo $JSCHAN_CONFIG >> /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf
-sudo ln -s /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME.conf
+printf "$JSCHAN_CONFIG" >> /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
+sudo ln -s /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
 
 if [ "$GOOGLE_CAPTCHA" == "y" ]; then
 	#add google captcha CSP exceptions
@@ -178,3 +184,6 @@ if [ "$GEOIP" == "y" ]; then
 geoip_country /usr/share/GeoIP/GeoIP.dat;' /etc/nginx/nginx.conf
 
 fi
+
+#and restart nginx
+sudo systemctl restart nginx
