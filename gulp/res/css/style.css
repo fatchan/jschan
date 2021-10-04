@@ -272,13 +272,13 @@ object {
 	padding: 5px;
 	margin: 5px;
 	text-align: center;
-	height: 220px;
-	width: 180px;
+	height: 340px;
+	width: 280px;
 	overflow: hidden;
 	border: 1px solid var(--post-outline-color);
 	box-sizing: border-box;
 	flex-grow: 1;
-	max-width: 250px;
+	max-width: 280px;
 }
 
 .catalog-tile:focus {
@@ -298,16 +298,29 @@ p {
 	display: block;
 	box-shadow: 0 0 3px black;
 	width: auto;
-	max-height: 64px;
+	max-height: 100px;
 	box-sizing: border-box;
 	object-fit: cover;
-	margin: 0 auto 5px;
+	margin: 3px;
 	padding: 2px;
 }
 
 .catalog-thumb.attachmentimg, .catalog-thumb.audioimg, .catalog-thumb.spoilerimg {
 	height: 64px;
 	width: 64px;
+}
+
+.catalog-thumb.small {
+	max-height: 48px;
+	max-width: 48px;
+}
+
+.ct-r1 {
+	justify-content: center;
+}
+
+.ct-r2 {
+	justify-content: space-evenly;
 }
 
 .upload-list {
@@ -1386,6 +1399,11 @@ row.wrap.sb .col {
 }
 
 @media only screen and (max-width: 600px) {
+
+	.ct-r2 .catalog-thumb.small {
+		max-width: 32px;
+		max-height: 32px;
+	}
 
 	.postmenu {
 		border-left: .5em solid transparent;
