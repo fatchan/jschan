@@ -19,6 +19,7 @@
     "express-session": "^1.17.2",
     "file-type": "^15.0.1",
     "fluent-ffmpeg": "^2.1.2",
+    "form-data": "^4.0.0",
     "fs": "0.0.1-security",
     "fs-extra": "^9.1.0",
     "gm": "git+https://gitgud.io/fatchan/gm.git",
