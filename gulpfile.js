@@ -515,6 +515,11 @@ module.exports = {
 	migrate: gulp.series(init, migrate, closeConnections),
 	password: gulp.series(init, password, closeConnections),
 	ips: gulp.series(init, ips, closeConnections),
-	rebuild: [deletehtml, css, scripts, custompages],
 	default: gulp.series(init, build, closeConnections),
+	buildTasks: { //dont include init, etc
+		deletehtml: gulp.task(deletehtml),
+		scripts: gulp.task(scripts),
+		css: gulp.task(css),
+		custompages: gulp.task(custompages),
+	}
 };

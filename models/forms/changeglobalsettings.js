@@ -11,7 +11,33 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
-	, { remove } = require('fs-extra');
+	, { remove } = require('fs-extra')
+	, { isDeepStrictEqual } = require('util')
+	, template = require(__dirname+'/../../configs/template.js.example')
+	, getDotProp = (obj, prop) => prop.split('.').reduce((a, b) => a[b], obj)
+	, includeChildren = (template, prop, tasks) => Object.keys(getDotProp(template, prop)).reduce((a, x) => { a[`${prop}.${x}`] = tasks; return a; }, {})
+	, settingChangeEntries = Object.entries({
+		//doesnt seem like it would be much different transforming this to be tasks: [settings] or this way, so this way it is
+		'globalAnnouncement.raw': ['deletehtml'],
+		'meta.siteName': ['deletehtml', 'scripts', 'custompages'],
+		'meta.url': ['deletehtml', 'scripts', 'custompages'],
+		'captchaOptions.type': ['deletehtml', 'css', 'scripts'],
+		'archiveLinksURL': ['deletehtml'],
+		'reverseImageLinksURL': ['deletehtml'],
+		'enableWebring': ['deletehtml'],
+		'thumbSize': ['deletehtml', 'css', 'scripts'],
+		'previewReplies': ['deletehtml'],
+		'stickyPreviewReplies': ['deletehtml'],
+		'maxRecentNews': ['deletehtml'],
+		'themes': ['scripts'],
+		'codeThemes': ['scripts'],
+		'globalLimits.postFiles.max': ['deletehtml'],
+		'globalLimits.postFilesSize.max': ['deletehtml'],
+		//these will make it easier to keep updated and include objects where any/all property change needs tasks
+		//basically, it expands to all of globalLimits.fieldLength.* or frontendScriptDefault.*
+		...includeChildren(template, 'globalLimits.fieldLength', ['deletehtml']),
+		...includeChildren(template, 'frontendScriptDefault', ['scripts']),
+	});
 
 module.exports = async (req, res, next) => {
 
@@ -308,9 +334,26 @@ module.exports = async (req, res, next) => {
 	//publish to redis so running processes get updated config
 	redis.redisPublisher.publish('config', JSON.stringify(newSettings));
 
-	buildQueue.push({
-		'task': 'gulp'
+	//relevant tasks: deletehtml, css, scripts, custompages
+	const gulpTasks = new Set();
+	settingChangeEntries.every(entry => {
+		let oldValue = getDotProp(oldSettings, entry[0]);
+		let newValue = getDotProp(newSettings, entry[0]);
+		if (!isDeepStrictEqual(oldValue, newValue)) {
+			console.log( entry[0], getDotProp(oldSettings, entry[0]), getDotProp(newSettings, entry[0]))
+			entry[1].forEach(t => gulpTasks.add(t));
+		}
+		return gulpTasks.size < 4; //continues checking unless there are already 4 (all possible tasks atm)
 	});
+
+	if (gulpTasks.size > 0) {
+		buildQueue.push({
+			'task': 'gulp',
+			'options': {
+				'tasks': [...gulpTasks],
+			}
+		});
+	}
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
