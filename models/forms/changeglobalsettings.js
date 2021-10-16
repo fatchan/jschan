@@ -11,11 +11,9 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
+	, { includeChildren, compareSettings } = require(__dirname+'/../../helpers/settingsdiff.js')
 	, { remove } = require('fs-extra')
-	, { isDeepStrictEqual } = require('util')
 	, template = require(__dirname+'/../../configs/template.js.example')
-	, getDotProp = (obj, prop) => prop.split('.').reduce((a, b) => a[b], obj)
-	, includeChildren = (template, prop, tasks) => Object.keys(getDotProp(template, prop)).reduce((a, x) => { a[`${prop}.${x}`] = tasks; return a; }, {})
 	, settingChangeEntries = Object.entries({
 		//doesnt seem like it would be much different transforming this to be tasks: [settings] or this way, so this way it is
 		'globalAnnouncement.raw': ['deletehtml'],
@@ -35,6 +33,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		'globalLimits.postFilesSize.max': ['deletehtml'],
 		//these will make it easier to keep updated and include objects where any/all property change needs tasks
 		//basically, it expands to all of globalLimits.fieldLength.* or frontendScriptDefault.*
+		//it could be calculated in compareSettings with *, but im just precompiling it now. probably a tiny bit faster not doing it each time
 		...includeChildren(template, 'globalLimits.fieldLength', ['deletehtml']),
 		...includeChildren(template, 'frontendScriptDefault', ['scripts']),
 	});
@@ -335,16 +334,7 @@ module.exports = async (req, res, next) => {
 	redis.redisPublisher.publish('config', JSON.stringify(newSettings));
 
 	//relevant tasks: deletehtml, css, scripts, custompages
-	const gulpTasks = new Set();
-	settingChangeEntries.every(entry => {
-		let oldValue = getDotProp(oldSettings, entry[0]);
-		let newValue = getDotProp(newSettings, entry[0]);
-		if (!isDeepStrictEqual(oldValue, newValue)) {
-			console.log( entry[0], getDotProp(oldSettings, entry[0]), getDotProp(newSettings, entry[0]))
-			entry[1].forEach(t => gulpTasks.add(t));
-		}
-		return gulpTasks.size < 4; //continues checking unless there are already 4 (all possible tasks atm)
-	});
+	const gulpTasks = compareSettings(settingChangeEntries, oldSettings, newSettings, 4);
 
 	if (gulpTasks.size > 0) {
 		buildQueue.push({

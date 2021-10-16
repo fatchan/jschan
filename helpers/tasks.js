@@ -21,7 +21,7 @@ module.exports = {
 			and send task options with list of tasks instead of always doing all */
 		const label = `running gulp tasks [${options.tasks.join(', ')}] after global config change`;
 		const start = process.hrtime();
-		gulp.series(options.tasks, () => {
+		gulp.series(options.tasks.map(t => buildTasks[t]), () => {
 			const end = process.hrtime(start);
 			debugLogs && console.log(timeDiffString(label, end));
 		})();

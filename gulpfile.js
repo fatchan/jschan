@@ -517,9 +517,9 @@ module.exports = {
 	ips: gulp.series(init, ips, closeConnections),
 	default: gulp.series(init, build, closeConnections),
 	buildTasks: { //dont include init, etc
-		deletehtml: gulp.task(deletehtml),
-		scripts: gulp.task(scripts),
-		css: gulp.task(css),
-		custompages: gulp.task(custompages),
+		deletehtml,
+		css,
+		scripts,
+		custompages,
 	}
 };
