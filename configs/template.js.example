@@ -406,6 +406,8 @@ module.exports = {
 		filters: [], //words/phrases to block
 		filterMode: 0, //0=nothing, 1=prevent post, 2=auto ban
 		filterBanDuration: 0, //duration (in ms) to ban if filter mode=2
+		deleteProtectionAge: 0, //prevent non-staff OP from deleting their thread if it older than this age in ms
+		deleteProtectionCount: 0, //prevent non-staff op deleting their thread if it has more than this many replies
 		strictFiltering: false,
 		announcement: {
 			raw: null,

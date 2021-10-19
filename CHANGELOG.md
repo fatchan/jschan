@@ -66,3 +66,5 @@
   - Much improved nginx configuration for installation, script does most of the work
   - Fixed settings form asking to save password -.-
   - Multiple files & post flags now shown in catalog view
+  - Faster, more efficient global settings changes
+  - Add option for board owner to prevent OP deleting threads that are too old or have too many replies
