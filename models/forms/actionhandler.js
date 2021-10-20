@@ -98,14 +98,14 @@ module.exports = async (req, res, next) => {
 	if (deleting) {
 		if (res.locals.permLevel >= 4) {
 			//delete protection. this could only be single board actions obvously with permLevel >=4
-			const { deleteProtectionAge, deleteProtectionCount } = threadBoards[res.locals.posts[0].board].settings;
+			const { deleteProtectionAge, deleteProtectionCount } = res.locals.board.settings;
 			if (deleteProtectionAge > 0 || deleteProtectionCount > 0) {
 				const protectedThread = res.locals.posts.some(p => {
 					return p.thread === null //is a thread
 						&& ((deleteProtectionCount > 0 && p.replyposts > deleteProtectionCount) //and it has more replies than the protection count
-							|| (deleteProtectionAge > 0 && new Date(p.date + deleteProtectionAge) > new Date())); //or was created too recently
+							|| (deleteProtectionAge > 0 && new Date() > new Date(p.date.getTime() + deleteProtectionAge))); //or was created too long ato
 				});
-				if (protectedThread != null) {
+				if (protectedThread === true) {
 					//alternatively, the above .some() could become a filter like some other options and silently not delete,
 					//but i think in this case it would be important to notify the user that their own thread(s) cant be deleted yet
 					return dynamicResponse(req, res, 403, 'message', {
