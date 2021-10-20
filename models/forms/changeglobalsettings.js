@@ -300,6 +300,8 @@ module.exports = async (req, res, next) => {
 			disableAnonymizerFilePosting: booleanSetting(req.body.board_defaults_disable_anonymizer_file_posting, oldSettings.boardDefaults.disableAnonymizerFilePosting),
 			filterMode: numberSetting(req.body.board_defaults_filter_mode, oldSettings.boardDefaults.filterMode),
 			filterBanDuration: numberSetting(req.body.board_defaults_filter_ban_duration, oldSettings.boardDefaults.filterBanDuration),
+			deleteProtectionAge: numberSetting(req.body.board_defaults_delete_protection_age, oldSettings.boardDefaults.deleteProtectionAge),
+			deleteProtectionCount: numberSetting(req.body.board_defaults_delete_protection_count, oldSettings.boardDefaults.deleteProtectionCount),
 			strictFiltering: booleanSetting(req.body.board_defaults_strict_filtering, oldSettings.boardDefaults.strictFiltering),
 			customCSS: null,
 			blockedCountries: [],
