@@ -9,9 +9,7 @@ block head
 	- const subjectString = thread.subject || (thread.nomarkup ? `${thread.nomarkup.substring(0, globalLimits.fieldLength.subject)}${thread.nomarkup.length > globalLimits.fieldLength.subject ? '...' : ''}` : thread.postId);
 	title /#{board._id}/ - #{subjectString}
 	if !modview
-		meta(property='og:site_name', value=meta.siteName)
 		meta(property='og:title', content=thread.subject)
-		meta(property='og:url', content=meta.url)
 		meta(property='og:description', content=thread.nomarkup)
 		if thread.files.length > 0
 			if thread.spoiler || thread.files[0].spoiler
