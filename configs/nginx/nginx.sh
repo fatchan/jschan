@@ -11,6 +11,7 @@ read -p "Enter your clearnet domain name e.g. example.com (blank=no clearnet dom
 SITES_AVAILABLE_NAME=${CLEARNET_DOMAIN:-jschan} #not sure on a good default, used for sites-available config name
 read -p "Enter tor .onion address (blank=no .onion address): " ONION_DOMAIN
 read -p "Enter lokinet .loki address (blank=no .loki address): " LOKI_DOMAIN
+read -p "Should robots.txt disallow compliant crawlers? (y/n): " ROBOTS_TXT_DISALLOW
 read -p "Allow google captcha in content-security policy? (y/n): " GOOGLE_CAPTCHA
 read -p "Allow Hcaptcha in content-security policy? (y/n): " H_CAPTCHA
 read -p "Download and setup geoip for post flags? (y/n): " GEOIP
@@ -22,6 +23,7 @@ jschan directory: $JSCHAN_DIRECTORY
 clearnet domain: $CLEARNET_DOMAIN
 .onion address: $ONION_DOMAIN
 .loki address: $LOKI_DOMAIN
+robots.txt disallow all: $ROBOTS_TXT_DISALLOW
 google captcha: $GOOGLE_CAPTCHA
 hcaptcha: $H_CAPTCHA
 geoip: $GEOIP
@@ -167,6 +169,11 @@ if [ "$H_CAPTCHA" == "y" ]; then
 	sudo sed -i "s|frame-src|frame-src https://hcaptcha.com, https://*.hcaptcha.com |g" /etc/nginx/snippets/*
 	sudo sed -i "s|style-src|style-src https://hcaptcha.com, https://*.hcaptcha.com |g" /etc/nginx/snippets/*
 	sudo sed -i "s|connect-src|connect-src https://hcaptcha.com, https://*.hcaptcha.com |g" /etc/nginx/snippets/*
+fi
+
+if [ "$ROBOTS_TXT_DISALLOW" == "y" ]; then
+	#add path / (all) to disallow to make robots.txt block all robots instead of allowing
+	sudo sed -d "s|Disallow:|Disallow: /|g" /etc/nginx/snippets/jschan_common_routes.conf
 fi
 
 if [ "$GEOIP" == "y" ]; then
