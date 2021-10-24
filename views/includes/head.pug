@@ -6,6 +6,8 @@ if isBoard
 		meta(name='description' content=board.settings.description)
 	if board.settings.tags
 		meta(name='keywords' content=board.settings.tags.join(','))
+else
+	meta(name='keywords' content='fatchan,imageboard,free speech,open source,jschan,bbs')
 noscript
 	style .jsonly { display: none!important; } .user-id { cursor: auto!important; }
 link(rel='stylesheet' href=`/css/style.css?v=${commit}&ct=${captchaType}`)
