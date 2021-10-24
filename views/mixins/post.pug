@@ -86,10 +86,10 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								if globalmanage && file.phash != null
 									span #{file.phash}
 									br
-								if file.hasThumb && !(post.spoiler || file.spoiler)
+								if !file.attachment && !(post.spoiler || file.spoiler)
 									span.jsonly
 										b [
-										a.dummy-link.hide-image.noselect(data-src=`/file/thumb/${file.hash}${file.thumbextension}`) Hide
+										a.dummy-link.hide-image.noselect(data-src=`/file/${file.hasThumb ? 'thumb/'+file.hash+file.thumbextension : file.filename}`) Hide
 										b ]
 								span 
 									|  (#{file.sizeString}
