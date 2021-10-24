@@ -15,7 +15,7 @@ const config = require(__dirname+'/config.js')
 	, realFavicon = require('gulp-real-favicon')
 	, del = require('del')
 	, pug = require('pug')
-	, gulppug = require('@fatchan/gulp-pug')
+	, gulppug = require('gulp-pug')
 	, { migrateVersion, version } = require(__dirname+'/package.json')
 	, { randomBytes } = require('crypto')
 	, Redis = require(__dirname+'/redis.js')
@@ -515,6 +515,11 @@ module.exports = {
 	migrate: gulp.series(init, migrate, closeConnections),
 	password: gulp.series(init, password, closeConnections),
 	ips: gulp.series(init, ips, closeConnections),
-	rebuild: [deletehtml, css, scripts, custompages],
 	default: gulp.series(init, build, closeConnections),
+	buildTasks: { //dont include init, etc
+		deletehtml,
+		css,
+		scripts,
+		custompages,
+	}
 };

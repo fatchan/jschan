@@ -35,6 +35,10 @@ See [CHANGELOG.md](CHANGELOG.md) for changes between versions.
 ## Contributing
 Interested in contributing to jschan development? See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
+## Related Projects
+Here are some other projects related to jschan that you might find useful. Unless explicitly specified here, they are not officially endorsed or otherwise guaranteed to work or be safe and should be used at your own risk.
+ - [myumyu/globalafk](https://gitgud.io/myumyu/globalafk/) - "A simple python script that sends ugly notifications when something happens on a jschan imageboard that you moderate."
+
 ## For generous people
 
 Bitcoin (BTC): [`bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6`](bitcoin:bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6)

@@ -11,7 +11,7 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 module.exports = {
 
 	paramConverter: paramConverter({
-		timeFields: ['ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time'],
+		timeFields: ['ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
 		trimFields: ['allowed_hosts', 'dnsbl_blacklists', 'other_mime_types', 'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links'],
 		numberFields: ['filter_mode', 'auth_level',
 			'captcha_options_generate_limit', 'captcha_options_grid_size',  'captcha_options_image_size', 'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max',
@@ -30,7 +30,7 @@ module.exports = {
 			'board_defaults_lock_mode', 'board_defaults_file_r9k_mode', 'board_defaults_message_r9k_mode', 'board_defaults_captcha_mode', 'board_defaults_tph_trigger',
 			'board_defaults_pph_trigger', 'board_defaults_tph_trigger_action', 'board_defaults_pph_trigger_action', 'board_defaults_captcha_reset', 'board_defaults_lock_reset',
 			'board_defaults_thread_limit', 'board_defaults_reply_limit', 'board_defaults_bump_limit', 'board_defaults_max_files', 'board_defaults_min_thread_message_length',
-			'board_defaults_min_reply_message_length', 'board_defaults_max_thread_message_length', 'board_defaults_max_reply_message_length', 'board_defaults_filter_mode',
+			'board_defaults_min_reply_message_length', 'board_defaults_max_thread_message_length', 'board_defaults_max_reply_message_length', 'board_defaults_filter_mode', 'board_defaults_delete_protection_count',
 			'perm_levels_markdown_pink', 'perm_levels_markdown_green', 'perm_levels_markdown_bold', 'perm_levels_markdown_underline', 'perm_levels_markdown_strike',
 			'perm_levels_markdown_italic', 'perm_levels_markdown_title', 'perm_levels_markdown_spoiler', 'perm_levels_markdown_mono', 'perm_levels_markdown_code',
 			'perm_levels_markdown_link', 'perm_levels_markdown_detected', 'perm_levels_markdown_dice', 'perm_levels_markdown_fortune'], //damn, this has a lot of numbers lol
@@ -194,6 +194,8 @@ module.exports = {
 			{ result: minmaxBody(req.body.board_defaults_min_reply_message_length, req.body.board_defaults_max_reply_message_length), expected: true, error: 'Board defaults reply message length min must be less than max' },
 			{ result: numberBody(req.body.board_defaults_filter_mode, 0, 2), expected: true, error: 'Board defaults filter mode must be a number from 0-2' },
 			{ result: numberBody(req.body.board_defaults_filter_ban_duration), expected: true, error: 'Board defaults filter ban duration must be a number' },
+			{ result: numberBody(req.body.board_defaults_delete_protection_age, 0), expected: true, error: 'Invalid board defaults OP thread age delete protection' },
+			{ result: numberBody(req.body.board_defaults_delete_protection_count, 0), expected: true, error: 'Invalid board defaults OP thread reply count delete protection' },
 			{ result: lengthBody(req.body.webring_following, 0, 10000), expected: false, error: 'Webring following list must not exceed 10000 characters' },
 			{ result: lengthBody(req.body.webring_blacklist, 0, 10000), expected: false, error: 'Webring blacklist must not exceed 10000 characters' },
 			{ result: lengthBody(req.body.webring_logos, 0, 10000), expected: false, error: 'Webring logos list must not exceed 10000 characters' },

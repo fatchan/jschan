@@ -11,7 +11,32 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
-	, { remove } = require('fs-extra');
+	, { includeChildren, compareSettings } = require(__dirname+'/../../helpers/settingsdiff.js')
+	, { remove } = require('fs-extra')
+	, template = require(__dirname+'/../../configs/template.js.example')
+	, settingChangeEntries = Object.entries({
+		//doesnt seem like it would be much different transforming this to be tasks: [settings] or this way, so this way it is
+		'globalAnnouncement.raw': ['deletehtml'],
+		'meta.siteName': ['deletehtml', 'scripts', 'custompages'],
+		'meta.url': ['deletehtml', 'scripts', 'custompages'],
+		'captchaOptions.type': ['deletehtml', 'css', 'scripts'],
+		'archiveLinksURL': ['deletehtml'],
+		'reverseImageLinksURL': ['deletehtml'],
+		'enableWebring': ['deletehtml'],
+		'thumbSize': ['deletehtml', 'css', 'scripts'],
+		'previewReplies': ['deletehtml'],
+		'stickyPreviewReplies': ['deletehtml'],
+		'maxRecentNews': ['deletehtml'],
+		'themes': ['scripts'],
+		'codeThemes': ['scripts'],
+		'globalLimits.postFiles.max': ['deletehtml'],
+		'globalLimits.postFilesSize.max': ['deletehtml'],
+		//these will make it easier to keep updated and include objects where any/all property change needs tasks
+		//basically, it expands to all of globalLimits.fieldLength.* or frontendScriptDefault.*
+		//it could be calculated in compareSettings with *, but im just precompiling it now. probably a tiny bit faster not doing it each time
+		...includeChildren(template, 'globalLimits.fieldLength', ['deletehtml']),
+		...includeChildren(template, 'frontendScriptDefault', ['scripts']),
+	});
 
 module.exports = async (req, res, next) => {
 
@@ -275,6 +300,8 @@ module.exports = async (req, res, next) => {
 			disableAnonymizerFilePosting: booleanSetting(req.body.board_defaults_disable_anonymizer_file_posting, oldSettings.boardDefaults.disableAnonymizerFilePosting),
 			filterMode: numberSetting(req.body.board_defaults_filter_mode, oldSettings.boardDefaults.filterMode),
 			filterBanDuration: numberSetting(req.body.board_defaults_filter_ban_duration, oldSettings.boardDefaults.filterBanDuration),
+			deleteProtectionAge: numberSetting(req.body.board_defaults_delete_protection_age, oldSettings.boardDefaults.deleteProtectionAge),
+			deleteProtectionCount: numberSetting(req.body.board_defaults_delete_protection_count, oldSettings.boardDefaults.deleteProtectionCount),
 			strictFiltering: booleanSetting(req.body.board_defaults_strict_filtering, oldSettings.boardDefaults.strictFiltering),
 			customCSS: null,
 			blockedCountries: [],
@@ -308,9 +335,17 @@ module.exports = async (req, res, next) => {
 	//publish to redis so running processes get updated config
 	redis.redisPublisher.publish('config', JSON.stringify(newSettings));
 
-	buildQueue.push({
-		'task': 'gulp'
-	});
+	//relevant tasks: deletehtml, css, scripts, custompages
+	const gulpTasks = compareSettings(settingChangeEntries, oldSettings, newSettings, 4);
+
+	if (gulpTasks.size > 0) {
+		buildQueue.push({
+			'task': 'gulp',
+			'options': {
+				'tasks': [...gulpTasks],
+			}
+		});
+	}
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',

@@ -212,6 +212,12 @@ block content
 							option(value='0', selected=board.settings.messageR9KMode === 0) Off
 							option(value='1', selected=board.settings.messageR9KMode === 1) Per Thread
 							option(value='2', selected=board.settings.messageR9KMode === 2) Board Wide
+					.row
+						.label OP Reply Count Delete Protection
+						input(type='number' name='delete_protection_count' value=board.settings.deleteProtectionCount)
+					.row
+						.label OP Thread Age Delete Protection
+						input(type='text' name='delete_protection_age' placeholder='e.g. 1w' value=board.settings.deleteProtectionAge)
 				.col.w900
 					.row
 						h4.mv-5 Antispam

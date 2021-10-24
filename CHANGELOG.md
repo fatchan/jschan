@@ -61,3 +61,10 @@
   - Dont show "local first" checkbox in boardlist when webring isn't even enabled
   - Bugfix to code markup, remove only leading blank lines, keeping leading whitespace on first non-empty line
   - Make overboard settings save somewhat in localstorage to help stupid zoomers who dont know what a BOOKMARK is
+
+### 0.1.8
+  - Much improved nginx configuration for installation, script does most of the work
+  - Fixed settings form asking to save password -.-
+  - Multiple files & post flags now shown in catalog view
+  - Faster, more efficient global settings changes
+  - Add option for board owner to prevent OP deleting threads that are too old or have too many replies
