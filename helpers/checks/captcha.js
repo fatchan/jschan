@@ -5,7 +5,7 @@ const { Captchas } = require(__dirname+'/../../db/')
     , config = require(__dirname+'/../../config.js')
     , { hcaptcha, google } = require(__dirname+'/../../configs/secrets.js')
 	, FormData = require('form-data')
-	, fetch = require('node-fetch')
+	, fetch = import('node-fetch')
 	, { timingSafeEqual } = require('crypto')
 
 module.exports = async (captchaInput, captchaId) => {

@@ -6,7 +6,7 @@ mixin newspost(post, globalmanage=false)
 				th
 					if globalmanage === true
 						input.left.post-check(type='checkbox', name='checkednews' value=post._id)  
-					a.left(href=`#${post._id}`) #{post.title}
+					a.left(href=`/news.html#${post._id}`) #{post.title}
 					if globalmanage === true
 						a.right.ml-5(href=`/globalmanage/editnews/${post._id}.html`) [Edit]
 					- const newsDate = new Date(post.date);

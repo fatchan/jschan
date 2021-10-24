@@ -757,6 +757,12 @@ block content
 						.label Max Reply Message Length
 						input(type='number' name='board_defaults_max_reply_message_length' value=settings.boardDefaults.maxReplyMessageLength)
 					.row
+						.label OP Reply Count Delete Protection
+						input(type='number' name='board_defaults_delete_protection_count' value=settings.boardDefaults.deleteProtectionCount)
+					.row
+						.label OP Thread Age Delete Protection
+						input(type='text' name='board_defaults_delete_protection_age' placeholder='e.g. 1w' value=settings.boardDefaults.deleteProtectionAge)
+					.row
 						.label Disable anonymizer file posting
 						label.postform-style.ph-5
 							input(type='checkbox', name='board_defaults_disable_anonymizer_file_posting', value='true' checked=settings.boardDefaults.disableAnonymizerFilePosting)

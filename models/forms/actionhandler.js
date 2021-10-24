@@ -56,7 +56,7 @@ module.exports = async (req, res, next) => {
 				redirect,
 			});
 		}
-		res.locals.posts = passwordPosts
+		res.locals.posts = passwordPosts;
 	}
 
 	//affected boards, list and page numbers
@@ -96,6 +96,26 @@ module.exports = async (req, res, next) => {
 		messages.push(message);
 	}
 	if (deleting) {
+		if (res.locals.permLevel >= 4) {
+			//delete protection. this could only be single board actions obvously with permLevel >=4
+			const { deleteProtectionAge, deleteProtectionCount } = res.locals.board.settings;
+			if (deleteProtectionAge > 0 || deleteProtectionCount > 0) {
+				const protectedThread = res.locals.posts.some(p => {
+					return p.thread === null //is a thread
+						&& ((deleteProtectionCount > 0 && p.replyposts > deleteProtectionCount) //and it has more replies than the protection count
+							|| (deleteProtectionAge > 0 && new Date() > new Date(p.date.getTime() + deleteProtectionAge))); //or was created too long ato
+				});
+				if (protectedThread === true) {
+					//alternatively, the above .some() could become a filter like some other options and silently not delete,
+					//but i think in this case it would be important to notify the user that their own thread(s) cant be deleted yet
+					return dynamicResponse(req, res, 403, 'message', {
+						'title': 'Forbidden',
+						'error': 'You cannot delete old threads or threads with too many replies',
+						redirect,
+					});
+				}
+			}
+		}
 		const postsBefore = res.locals.posts.length;
 		if (req.body.delete_ip_board || req.body.delete_ip_global || req.body.delete_ip_thread) {
 			const deletePostIps = res.locals.posts.map(x => x.ip.single);

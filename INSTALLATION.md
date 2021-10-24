@@ -26,7 +26,7 @@
 
 ```bash
 $ sudo apt-get update
-$ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick
+$ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx
 ```
 NOTE: If you plan to use animated .gif thumbnails, ffmpeg >=4.3.1 is recommended as there are known issues with older ffmpeg versions producing buggy thumbnails. You can [compile ffmpeg from source](https://trac.ffmpeg.org/wiki/CompilationGuide) to get a newer version.
 
@@ -52,49 +52,9 @@ You may install Node.js yourself without nvm if you prefer.
 
 **6. Configure nginx**
 
-NOTE: The sample configs assume you use the apex domain and a www. subdomain.
+For standard installations, run `configs/nginx/nginx.sh` as root. This will prompt you for installation directory, domains, onion/lokinet, enable geoip, install a letsencrypt certificate with certbot and more.
 
-- Copy the nginx example config and snippets, and create a symlink from sites-available -> sites-enabled
-```bash
-$ sudo cp configs/nginx/nginx.example /etc/nginx/sites-available/EXAMPLE.COM
-$ sudo ln -s /etc/nginx/sites-available/EXAMPLE.COM /etc/nginx/sites-enabled/EXAMPLE.COM
-$ sudo cp configs/nginx/snippets/* /etc/nginx/snippets
-```
-
-If you have a .onion or .loki address:
-- Uncomment the block in /etc/nginx/sites-available/EXAMPLE.COM
-
-Edit/replace the following in your nginx config:
-- "/path/to/jschan" with the path of your jschan root folder
-- "example.com" with your domain name
-- "example.onion" or "example.loki" with your tor or lokinet address
-
-`sed` can be used to automate this process, for example:
-```bash
-$ sudo sed -i 's|/path/to/jschan|/path/to/your/install|g' /etc/nginx/sites-available/EXAMPLE.COM
-$ sudo sed -i 's|/path/to/jschan|/path/to/your/install|g' /etc/nginx/snippets/*
-$ sudo sed -i 's/example.com/your.example.com/g' /etc/nginx/sites-available/EXAMPLE.COM
-$ sudo sed -i 's/example.com/your.example.com/g' /etc/nginx/snippets/*
-# repeat the same for "example.onion" and "example.loki" with your addresses
-```
-
-If you don't use .onion or .loki address, remove the example domains from the content-security-policy snippet:
-```bash
-$ sudo sed -i 's/ wss:\/\/www.example.onion\/ wss:\/\/example.onion\///g' /etc/nginx/snippets/security_headers*
-$ sudo sed -i 's/ wss:\/\/www.example.loki\/ wss:\/\/example.loki\///g' /etc/nginx/snippets/security_headers*
-```
-
-- Make sure the sites enabled folder is included by `/etc/nginx/nginx.conf` (in debian nginx package this is already done)
-- Use [certbot](https://certbot.eff.org/) to get a free https certificate.
-
-- For post flags to work, [follow this guide](http://archive.is/2SMOb) to setup the [legacy GeoIP database](https://www.miyuru.lk/geoiplegacy), then add this directive inside the http block of `/etc/nginx/nginx.conf`:
-```
-geoip_country /usr/share/GeoIP/GeoIP.dat;
-```
-
-If you plan on using hcaptcha or google recaptcha, you will need to modify the content-security-policy header (CSP) in your nginx config. (documentation: [google recaptcha](https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website.-how-can-i-configure-it-to-work-with-recaptcha), [hcaptcha](https://docs.hcaptcha.com/#content-security-policy-settings))
-
-If you use cloudflare, please read [these](https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-Logging-visitor-IP-addresses-with-mod-cloudflare-) [articles](https://support.cloudflare.com/hc/en-us/articles/200168236-Configuring-Cloudflare-IP-Geolocation) to setup proper IP forwarding and geolocation headers. Similar steps would apply to other CDNs/reverse proxies.
+For non-standard installations like using a CDN, see [configs/nginx/README.md](configs/nginx/README.md) and DIY.
 
 **7. Get the backend setup & running**
 

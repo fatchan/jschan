@@ -1,23 +1,40 @@
 meta(charset='utf-8')
 meta(name='viewport' content='width=device-width initial-scale=1')
+
+//- very basic styles to hide some elements and improve experience for users with noscript
+noscript
+	style .jsonly { display: none!important; } .user-id { cursor: auto!important; }
+
+//- whether this page is rendered for a board
 - const isBoard = board != null;
+
+//- general meta and opengraph meta tags
 if isBoard
 	if board.settings.description
 		meta(name='description' content=board.settings.description)
 	if board.settings.tags
 		meta(name='keywords' content=board.settings.tags.join(','))
-noscript
-	style .jsonly { display: none!important; } .user-id { cursor: auto!important; }
+meta(property='og:site_name', value=meta.siteName)
+meta(property='og:url', content=meta.url)
+
+//- main stylesheet
 link(rel='stylesheet' href=`/css/style.css?v=${commit}&ct=${captchaType}`)
+
+//- theme stylesheets
 - const theme = isBoard ? board.settings.theme : defaultTheme;
-- const codeTheme = isBoard ? board.settings.codeTheme : defaultCodeTheme;
 link#theme(rel='stylesheet' data-theme=theme href=`/css/themes/${theme}.css`)
+- const codeTheme = isBoard ? board.settings.codeTheme : defaultCodeTheme;
+link#codetheme(rel='stylesheet' data-theme=codeTheme href=`/css/codethemes/${codeTheme}.css`)
 if isBoard && board.settings.customCss
 	style#board-customcss #{board.settings.customCss}
-link#codetheme(rel='stylesheet' data-theme=codeTheme href=`/css/codethemes/${codeTheme}.css`)
+
+//- include html_code from gulp-favicon
 include ../../gulp/res/icons/html_code.html
+
+//- main script
 script(src=`/js/all.js?v=${commit}&ct=${captchaType}`)
 
+//- additional scripts included only if hcaptcha or recaptcha is used
 if captchaType === 'google'
 	script(src='https://www.google.com/recaptcha/api.js' async defer)
 if captchaType === 'hcaptcha'
