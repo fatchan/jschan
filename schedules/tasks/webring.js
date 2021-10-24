@@ -1,6 +1,6 @@
 'use strict';
 
-const fetch = import('node-fetch')
+const fetch = require('node-fetch')
 	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, config = require(__dirname+'/../../config.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
