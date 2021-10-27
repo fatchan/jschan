@@ -11,7 +11,7 @@ block content
 		.anchor
 		table
 			tr
-				th Frequently Asked Questions 
+				th Frequently Asked Questions
 			tr
 				td.post-message
 					b General
@@ -21,6 +21,8 @@ block content
 						li: a(href='#contact') How can I contact the administration?
 						li: a(href='#support') How can I help support the site?
 						li: a(href='#transparency') Is there a transparency report?
+						li: a(href='#mirrors') Mirrors
+						li: a(href='#irc') IRC
 					b Making posts
 					ul.mv-0
 						li: a(href='#captcha') How do I solve CAPTCHA?
@@ -352,7 +354,7 @@ block content
 				th: a(href='#support') How can I help support the site?
 			tr
 				td
-					| The only costs to run the site currently are bills for server infrastructure, domains, etc. Therefore the most straightforward way to support the site is financially with cryptocurrency:
+					| Therefore the most straightforward way to support the site is financially with cryptocurrency:
 					ul
 						li
 							img(src="/file/bitcoin.png" alt="bitcoin logo" width="14" height="14")
@@ -363,14 +365,43 @@ block content
 							|  Monero 
 							a.mono(href='monero:89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh') 89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh
 					| OpenAlias for both addresses is "69420.me".
-					| Cryptocurrency donation can be anonymous and is not controlled by any central authority, meaning in the event of financial trouble or deplatforming the site will be able to pay bills.
+					| Cryptocurrency donation can be anonymous and is not controlled by any central authority. Crypto can be used to pay bills in case of deplatforming/censorship by hosting companies or payment processors.
 	.table-container.flex-center.mv-5
-		.anchor#transparency
+		.anchor#mirrors
 		table
 			tr
-				th: a(href='#transparency') Is there a transparency report?
+				th: a(href='#mirrors') Mirrors
 			tr
 				td
-					| Yes, a simple transparency report is posted each month detailing any requests for information or gag orders that had been served to the site. They are signed with with a PGP key and contain the latest bitcoin block hash at the time of writing. This proves at least that the message was authored by somebody with access to the private key, and was not made in advance to be released retroactively. The transparency report is available 
-					a(href='/transparency.html') here
-					|  and is also linked at the bottom of every page.
+					pre.no-m-p
+						| Current domain: 
+						a(href='https://fatchan.org/') fatchan.org
+						|
+						| Dormant mirrors: 
+						a(href='https://fatchan.net') .net
+						| , 
+						a(href='https://fatchan.to') .to
+						| , 
+						a(href='https://fatchan.top') .top
+						| , 
+						a(href='https://fatchan.tw') .tw
+						| , 
+						a(href='https://fatchan.li') .li
+						| , 
+						a(href='https://fatchan.ru') .ru
+						| , 
+						a(href='https://fatchan.is') .is
+	.table-container.flex-center.mv-5
+		.anchor#irc
+		table
+			tr
+				th: a(href='#irc') IRC
+			tr
+				td
+					pre.no-m-p
+						| Client users: irc.fatpeople.lol port 6697 TLS
+						|
+						a(href='ircs://irc.fatpeople.lol:6697/fatchan') Direct Link
+						|
+						|
+						a(href='https://irc.fatpeople.lol/') Webchat for dummies

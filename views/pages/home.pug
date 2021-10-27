@@ -11,63 +11,41 @@ block head
 block content
 	.board-header
 		h1.board-title #{meta.siteName}
-		span.text-center.em(style='max-width:500px')
-			| Just two weeks to flatten the curve!
 	.table-container.flex-center.mv-10.text-center
 		table(style='max-width:500px')
 			tr
-				th.alt Welcome
+				th.alt
+					span.em.bold Just two weeks to flatten the curve!
 			tr.corner-logo
 				td
 					pre.no-m-p
-						| Don't forget to bookmark the mirrors and join our IRC.
+						| Resurrected, the original jschan-based imageboard.
 						| 🌐 
 						a(href='https://fatchan.org/') fatchan.org
-						|  (
-						a(href='https://fatchan.net') .net
-						| , 
-						a(href='https://fatchan.to') .to
-						| , 
-						a(href='https://fatchan.top') .top
-						| , 
-						a(href='https://fatchan.tw') .tw
-						| , 
-						a(href='https://fatchan.li') .li
-						| , 
-						a(href='https://fatchan.ru') .ru
-						| , 
-						a(href='https://fatchan.is') .is
-						| )
-						| 🧅 
-						a(href='http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/') Tor hidden service
-						|  (
-						a(href='https://www.torproject.org/download/') Get Tor Browser
-						| )
-						|
+						|  • 🪞 
+						a(href='/faq.html#mirrors') mirrors
+						|  • 🧅 
+						a(href='http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/') .onion
+						|  •  
 						img(src="/file/lokinet.png" alt="lokinet logo" width="14" height="14")
-						| 
-						a(href='http://fatchan.loki/') fatchan.loki
-						|  (
-						a(href='https://lokinet.org/') Get Lokinet
-						| )
+						|  
+						a(href='http://fatchan.loki/') .loki
+						|
+						| Want a board? 
+						a(href='/t/thread/1325.html') Request one
+						| .
 						| 💬 
-						a(href='ircs://irc.fatpeople.lol:6697/fatchan') IRC
-						|  (
-						a(href='https://irc.fatpeople.lol/') For Dummies
-						| )
-	if globalAnnouncement.markdown
-		.table-container.flex-center.mv-5
-			table
-				tr
-					th.alt(colspan=3) Global Announcement
-				tr
-					td
-						pre.post-message.no-m-p.text-center !{globalAnnouncement.markdown}
-	if recentNews && recentNews.length > 0
+						a(href='/faq.html#irc') Join the IRC
+	if recentNews && recentNews.length > 0 || globalAnnouncement.markdown
 		.table-container.flex-center.mv-5
 			table.newstable
 				tr
 					th(colspan=3) Latest News
+
+				if globalAnnouncement.markdown
+					tr
+						td(colspan=3)
+							pre.post-message.no-m-p.text-center !{globalAnnouncement.markdown}
 				each post in recentNews
 					tr
 						td
@@ -97,11 +75,6 @@ block content
 				tr
 					td(colspan=6)
 						a.bold(href='/boards.html?local_first=true') More Boards
-			tr
-				td.bold(colspan=6)
-					| Want your own board? 
-					a(href='/t/thread/1325.html') Click here
-					| .
 		.table-container.flex-center.mv-10.text-center
 			table(style='max-width:450px')
 				tr
