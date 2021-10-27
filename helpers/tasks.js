@@ -239,7 +239,7 @@ module.exports = {
 		let [ totalStats, boards, fileStats, recentNews ] = await Promise.all([
 			Boards.totalStats(), //overall total posts ever made
 			Boards.boardSort(0, 20), //top 20 boards sorted by users, pph, total posts
-			Files.activeContent(), //size ans number of files
+			Files.activeContent(), //size and number of files
 			News.find(maxRecentNews), //some recent newsposts
 		]);
 		const [ localStats, webringStats ] = totalStats;
