@@ -16,25 +16,25 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, template = require(__dirname+'/../../configs/template.js.example')
 	, settingChangeEntries = Object.entries({
 		//doesnt seem like it would be much different transforming this to be tasks: [settings] or this way, so this way it is
-		'globalAnnouncement.raw': ['deletehtml'],
+		'globalAnnouncement.raw': ['deletehtml', 'custompages'],
 		'meta.siteName': ['deletehtml', 'scripts', 'custompages'],
 		'meta.url': ['deletehtml', 'scripts', 'custompages'],
-		'captchaOptions.type': ['deletehtml', 'css', 'scripts'],
-		'archiveLinksURL': ['deletehtml'],
-		'reverseImageLinksURL': ['deletehtml'],
-		'enableWebring': ['deletehtml'],
+		'captchaOptions.type': ['deletehtml', 'css', 'scripts', 'custompages'],
+		'archiveLinksURL': ['deletehtml', 'custompages'],
+		'reverseImageLinksURL': ['deletehtml', 'custompages'],
+		'enableWebring': ['deletehtml', 'custompages'],
 		'thumbSize': ['deletehtml', 'css', 'scripts'],
-		'previewReplies': ['deletehtml'],
-		'stickyPreviewReplies': ['deletehtml'],
-		'maxRecentNews': ['deletehtml'],
+		'previewReplies': ['deletehtml', 'custompages'],
+		'stickyPreviewReplies': ['deletehtml', 'custompages'],
+		'maxRecentNews': ['deletehtml', 'custompages'],
 		'themes': ['scripts'],
 		'codeThemes': ['scripts'],
-		'globalLimits.postFiles.max': ['deletehtml'],
-		'globalLimits.postFilesSize.max': ['deletehtml'],
+		'globalLimits.postFiles.max': ['deletehtml', 'custompages'],
+		'globalLimits.postFilesSize.max': ['deletehtml', 'custompages'],
 		//these will make it easier to keep updated and include objects where any/all property change needs tasks
 		//basically, it expands to all of globalLimits.fieldLength.* or frontendScriptDefault.*
 		//it could be calculated in compareSettings with *, but im just precompiling it now. probably a tiny bit faster not doing it each time
-		...includeChildren(template, 'globalLimits.fieldLength', ['deletehtml']),
+		...includeChildren(template, 'globalLimits.fieldLength', ['deletehtml', 'custompages']),
 		...includeChildren(template, 'frontendScriptDefault', ['scripts']),
 	});
 
