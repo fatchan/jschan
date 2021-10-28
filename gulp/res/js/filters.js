@@ -262,7 +262,6 @@ const postMenuChange = function(e) {
 		case 'moderate':
 			return moderatePost(postContainer);
 	}
-console.log(filterType, filterData, hiding)
 	toggleFilter(filterType, filterData, hiding);
 };
 
