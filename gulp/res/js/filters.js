@@ -237,7 +237,7 @@ const moderatePost = (postContainer) => {
 }
 
 const postMenuChange = function(e) {
-	const postContainer = this.parentElement.parentElement.parentElement;
+	const postContainer = this.closest(isCatalog ? '.catalog-tile': '.post-container');
 	const postDataset = postContainer.dataset
 	const filterType = this.value;
 	const hiding = !postContainer.classList.contains('hidden');
@@ -262,6 +262,7 @@ const postMenuChange = function(e) {
 		case 'moderate':
 			return moderatePost(postContainer);
 	}
+console.log(filterType, filterData, hiding)
 	toggleFilter(filterType, filterData, hiding);
 };
 
