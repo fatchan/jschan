@@ -77,9 +77,7 @@ const togglePostsHidden = (posts, state, single) => {
 		} else {
 			elem.classList['add']('hidden');
 		}
-		if (!isCatalog) {
 			elem.querySelector('.postmenu').children[0].textContent = (showing ? 'Hide' : 'Show');
-		}
 	}
 };
 
