@@ -46,7 +46,7 @@ mixin catalogtile(post, index, overboard=false)
 			br 
 			span(title='Replies') R: #{post.replyposts}
 			|  / 
-			span(title='Files') F: #{post.replyfiles}
+			span(title='Files') F: #{post.replyfiles + post.files.length}
 			if !overboard
 				|  / 
 				span(title='Page') P: #{Math.ceil(index/10)}
