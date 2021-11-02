@@ -236,14 +236,14 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		//upload, create thumbnails, get metadata, etc.
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			const file = req.files.file[i];
-			let extension = path.extname(file.name) || file.name.substring(file.name.indexOf('.'));
+			const extension = file.extension || path.extname(file.name);
 			file.filename = file.sha256 + extension;
 
 			//get metadata
 			let processedFile = {
+				filename: file.filename,
 				spoiler: (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler && req.body.spoiler.includes(file.sha256),
 				hash: file.sha256,
-				filename: file.filename, //could probably remove since we have hash and extension
 				originalFilename: req.body.strip_filename && req.body.strip_filename.includes(file.sha256) ? file.filename : file.name,
 				mimetype: file.mimetype,
 				size: file.size,

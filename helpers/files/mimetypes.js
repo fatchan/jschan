@@ -53,10 +53,12 @@ module.exports = {
 	realMimeCheck: async (file) => {
 		const supposedMimeType = file.mimetype;
 		const realMimeType = await FileType.fromFile(file.tempFilePath);
-		if (!realMimeType) {
-			return config.get.allowMimeNoMatch;
+		if (realMimeType) {
+			//note the correct file extension in case it is incorrect/missing
+			file.extension = `.${realMimeType.ext}`;
+			return supposedMimeType === realMimeType.mime;
 		}
-		return supposedMimeType === realMimeType.mime;
+		return config.get.allowMimeNoMatch;
 	},
 
 	image, animatedImage, video, audio, other
