@@ -38,3 +38,6 @@
 tr, tr:nth-child(2n+1) {
     background: #fff;
 }
+.corner-logo {
+	background: #fff right bottom / contain no-repeat url("/file/mascotcorner.png");
+}
