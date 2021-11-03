@@ -1,0 +1,21 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+- From 24-07-2021 - 01-09-2021 fatchan received no requests for information or gag orders
+
+Latest bitcoin block hash at time of writing:
+0000000000000000000b71143423c936c1c4ef46ee9f05bfa2db0dd004b200a7
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCAAdFiEE9/vuBNwQh8OAtFnjESiEqlffQLEFAmEvG58ACgkQESiEqlff
+QLF0Agv+J41y8cAfDi9eRpQh6WDE/eVigKiVswNP1V4iU9I+hSLSEsh3B6qObywA
+VH3+5U6S4qA2LtDcNwLz0NPRJ73bjEUD1aUc9j8Qzw5qVPljE/bl093ESYnjC2MV
+c8xS7uRJbsZz/FxA7pze6x0yvwR4rmt5KBwwtscdRgSaEWRISaJAoHpHHlEBTFQc
+tKsP5hh6ufgBoApbyQVo8i18Z8w6z5AeO96EJjU+sTLnS8XodofcSlpIqiO9UT4a
+gC/zdezvZawyEh6+HqhzeVyk9VqBas/PfxEn1DoybBVegfhMQesBrH9odQEPXJHo
+Fzd8pOWwIGVhDizlYrWMzLmcWxHdYf47iVP9cb1LonuGkVWmGGVHbw2FJCufweq8
+7IUyCoa4jLH6PctBCbXkTuD8jtt3GGuXxbOtvv73jGLwCsk8vMXt9QTnakq81WXe
+WW9va4tKV4qZzp5PuVUMi+ALDRhANrrVh5kunyAZWFNpKwuNO84iRFstKANq2iHv
+OcNsfqQN
+=xaI0
+-----END PGP SIGNATURE-----
