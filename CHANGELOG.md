@@ -68,3 +68,10 @@
   - Multiple files & post flags now shown in catalog view
   - Faster, more efficient global settings changes
   - Add option for board owner to prevent OP deleting threads that are too old or have too many replies
+
+### 0.1.9
+  - Fix "improved" global settings changes not regenerating custom pages properly
+  - Postmenu dropdown for filters/moderate added to catalog tiles
+  - Notifications are no longer sent for posts when clicking "view full text"
+  - Make handling files with no/incorrect extension better
+  - Image count from OP is included in catalog tiles file count

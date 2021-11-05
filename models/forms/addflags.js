@@ -53,7 +53,9 @@ module.exports = async (req, res, next) => {
 	const newFlags = {};
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		const file = req.files.file[i];
+		const extension = file.extension || path.extname(file.name);
 		let noExt = path.parse(file.name).name;
+		file.filename = noExt + file.sha256 + extension;
 
 		//match case for real country flags
 		if (noExt.length === 2 && countryCodesSet.has(noExt.toUpperCase())) {
@@ -61,10 +63,10 @@ module.exports = async (req, res, next) => {
 		}
 
 		//add to list after checking it doesnt already exist
-		newFlags[noExt] = file.name;
+		newFlags[noExt] = file.filename;
 
 		//then upload it
-		await moveUpload(file, file.name, `flag/${req.params.board}`);
+		await moveUpload(file, file.filename, `flag/${req.params.board}`);
 
 		//and delete the temp file
 		await remove(file.tempFilePath);

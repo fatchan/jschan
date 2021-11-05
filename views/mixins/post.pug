@@ -154,7 +154,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					- const ompo = post.omittedposts;
 					- const omfi = post.omittedfiles;
 					| #{ompo} repl#{ompo > 1 ? 'ies' : 'y'}
-					| #{omfi > 0 ? ` and ${omfi} image${omfi > 1 ? 's' : ''}` : ''} omitted. 
+					| #{omfi > 0 ? ` and ${omfi} file${omfi > 1 ? 's' : ''}` : ''} omitted. 
 					| #[a(href=postURL) View the full thread]
 			if post.previewbacklinks != null
 				if post.previewbacklinks.length > 0

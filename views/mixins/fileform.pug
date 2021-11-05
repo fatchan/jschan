@@ -31,7 +31,7 @@ mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameL
 							input(type='checkbox' name=checkName value=nameList[index])
 							img(class=imageClass src=`${filePath}/${file}` loading='lazy')
 							if showName
-								small #{file.substring(0, file.lastIndexOf('.'))}
+								small #{nameList[index]}
 							if showLink
 								a(href=`${filePath}/${file}`) Link
 				input(type='submit', value='delete')
