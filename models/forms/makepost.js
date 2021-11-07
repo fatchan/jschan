@@ -236,8 +236,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		//upload, create thumbnails, get metadata, etc.
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			const file = req.files.file[i];
-			const extension = file.extension || path.extname(file.name);
-			file.filename = file.sha256 + extension;
+			file.filename = file.sha256 + file.extension;
 
 			//get metadata
 			let processedFile = {
@@ -247,7 +246,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				originalFilename: req.body.strip_filename && req.body.strip_filename.includes(file.sha256) ? file.filename : file.name,
 				mimetype: file.mimetype,
 				size: file.size,
-				extension,
+				extension: file.extension,
 			};
 
 			//phash
