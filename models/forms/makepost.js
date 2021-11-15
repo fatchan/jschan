@@ -579,7 +579,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 
 	const projectedPost = {
 		'_id': postMongoId,
-		'u': data.now,
+		'u': data.u,
 		'date': data.date,
 		'name': data.name,
 		'country': data.country,
