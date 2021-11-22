@@ -58,3 +58,22 @@ setDefaultLocalStorage('theme', 'default');
 setDefaultLocalStorage('codetheme', 'default');
 setDefaultLocalStorage('customcss', '');
 setDefaultLocalStorage('overboardsettings', '{"add":"","rem":"","include_default":true}');
+
+// clearnet onion mirror niggers
+/*
+const validHosts = [
+	'fatchan.org', 'www.fatchan.org',
+	'cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion', 'www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion', 
+	'fatchan.loki', 'www.fatchan.loki',
+	'fatchan.net', 'www.fatchan.net',
+	'fatchan.to', 'www.fatchan.to',
+	'fatchan.top', 'www.fatchan.top',
+	'fatchan.tw', 'www.fatchan.tw',
+	'fatchan.li', 'www.fatchan.li',
+	'fatchan.ru', 'www.fatchan.ru',
+	'fatchan.is', 'www.fatchan.is',
+];
+if (!validHosts.some(h => h === location.hostname)) {
+	//fuck off
+}
+*/
