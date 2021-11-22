@@ -59,12 +59,12 @@ module.exports = {
 					ring.boards.forEach(board => {
 						board.siteName = ring.name;
 						//convert to numbers because old infinity webring plugin returns string
-						board.sequence_value = parseInt(board.totalPosts);
-						board.pph = parseInt(board.postsPerHour);
+						board.sequence_value = parseInt(board.totalPosts) || 0;
+						board.pph = parseInt(board.postsPerHour) || 0;
 						if (board.postsPerDay != null) {
-							board.ppd = parseInt(board.postsPerDay);
+							board.ppd = parseInt(board.postsPerDay) || 0;
 						}
-						board.ips = parseInt(board.uniqueUsers);
+						board.ips = parseInt(board.uniqueUsers) || 0;
 						board.settings = {
 							sfw: !board.nsfw,
 							name: board.title,

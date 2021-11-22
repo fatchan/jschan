@@ -48,8 +48,7 @@ module.exports = async (req, res, next) => {
 	const filenames = [];
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		const file = req.files.file[i];
-		const extension = file.extension || path.extname(file.name);
-		file.filename = file.sha256 + extension;
+		file.filename = file.sha256 + file.extension;
 
 		//check if already exists
 		const exists = await pathExists(`${uploadDirectory}/asset/${req.params.board}/${file.filename}`);

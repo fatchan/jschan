@@ -53,9 +53,8 @@ module.exports = async (req, res, next) => {
 	const newFlags = {};
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		const file = req.files.file[i];
-		const extension = file.extension || path.extname(file.name);
 		let noExt = path.parse(file.name).name;
-		file.filename = noExt + file.sha256 + extension;
+		file.filename = noExt + file.sha256 + file.extension;
 
 		//match case for real country flags
 		if (noExt.length === 2 && countryCodesSet.has(noExt.toUpperCase())) {
