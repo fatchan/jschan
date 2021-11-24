@@ -77,9 +77,7 @@ const togglePostsHidden = (posts, state, single) => {
 		} else {
 			elem.classList['add']('hidden');
 		}
-		if (!isCatalog) {
 			elem.querySelector('.postmenu').children[0].textContent = (showing ? 'Hide' : 'Show');
-		}
 	}
 };
 
@@ -239,7 +237,7 @@ const moderatePost = (postContainer) => {
 }
 
 const postMenuChange = function(e) {
-	const postContainer = this.parentElement.parentElement.parentElement;
+	const postContainer = this.closest(isCatalog ? '.catalog-tile': '.post-container');
 	const postDataset = postContainer.dataset
 	const filterType = this.value;
 	const hiding = !postContainer.classList.contains('hidden');

@@ -12,6 +12,13 @@ const { debugLogs } = require(__dirname+'/../configs/secrets.js')
 			'redirect': req.headers.referer
 		});
 	}
+	, missingExtensionLimitFunction = (req, res, next) => {
+		return dynamicResponse(req, res, 400, 'message', {
+			'title': 'Bad Request',
+			'message': 'Missing file extensions',
+			'redirect': req.headers.referer
+		});
+	}
 	, updateHandlers = () => {
 		const { globalLimits,  filterFileNames, spaceFileNameReplacement } = require(__dirname+'/../config.js').get;
 		['flag', 'banner', 'asset', 'post'].forEach(fileType => {
@@ -36,8 +43,9 @@ const { debugLogs } = require(__dirname+'/../configs/secrets.js')
 					fileSize: fileSizeLimit.max,
 					files: fileNumLimit.max,
 				},
-				numFilesLimitHandler: fileNumLimitFunction,
 				limitHandler: fileSizeLimitFunction,
+				numFilesLimitHandler: fileNumLimitFunction,
+				extensionLimitHandler: missingExtensionLimitFunction,
 				useTempFiles: true,
 				tempFileDir: __dirname+'/../tmp/'
 			});

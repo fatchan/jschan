@@ -173,7 +173,7 @@ fi
 
 if [ "$ROBOTS_TXT_DISALLOW" == "y" ]; then
 	#add path / (all) to disallow to make robots.txt block all robots instead of allowing
-	sudo sed -d "s|Disallow:|Disallow: /|g" /etc/nginx/snippets/jschan_common_routes.conf
+	sudo sed -i "s|Disallow:|Disallow: /|g" /etc/nginx/snippets/jschan_common_routes.conf
 fi
 
 if [ "$GEOIP" == "y" ]; then

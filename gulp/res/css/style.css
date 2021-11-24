@@ -1398,6 +1398,14 @@ row.wrap.sb .col {
 	}
 }
 
+
+@media only screen and (min-width: 600px) {
+	/* not-completely-shit way to "fix" short text squishing on single file posts */
+	.post-files:not(.fn) + .post-message {
+		min-width: 40em;
+	}
+}
+
 @media only screen and (max-width: 600px) {
 
 	.ct-r2 .catalog-thumb.small {
