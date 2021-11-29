@@ -3,6 +3,8 @@ Anonymous imageboard software.
 
 Demo/test instance: [Clearnet](https://fatchan.org), [Tor hidden service](http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/), [Lokinet SNApp](http://fatchan.loki/)
 
+API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/) - Gitgud pages link: http://fatchan.gitgud.site/jschan-docs/#introduction
+
 Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/fatchan)
 
 ## Goals
