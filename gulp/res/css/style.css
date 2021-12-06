@@ -205,7 +205,7 @@ pre {
 	content: "Settings";
 }
 
-#postform-dragHandle {
+#postform-dragHandle, #threadwatcher-dragHandle {
 	flex-grow: 1;
 	background: var(--darken);
 	height: 1.75em;
@@ -1181,7 +1181,7 @@ input[type="file"] {
 	background: var(--input-background);
 }
 
-#postform {
+#postform, #threadwatcher {
 	display: none;
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
@@ -1193,6 +1193,10 @@ input[type="file"] {
 	box-sizing: border-box;
 	border: 5px solid var(--post-color);
 	overflow-y: auto;
+}
+
+#threadwatcher {
+	display: flex;
 }
 
 #postform:target {

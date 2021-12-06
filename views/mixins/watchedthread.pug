@@ -1,0 +1,7 @@
+mixin watchedthread(thread)
+	div
+		.watched-thread
+			p 
+				b /#{thread.board}/#{thread.postId}
+				|  - #{thread.subject}
+			a.close X

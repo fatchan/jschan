@@ -49,10 +49,9 @@ setDefaultLocalStorage('notification-yous-only', settings.notificationsYousOnly)
 setDefaultLocalStorage('yous-setting', settings.showYous);
 setDefaultLocalStorage('disableboardcss', false);
 
-setDefaultLocalStorage('dragtop', null);
-setDefaultLocalStorage('dragleft', null);
 setDefaultLocalStorage('filters1', '[]');
 setDefaultLocalStorage('yous', '[]');
+setDefaultLocalStorage('watchlist', '[]');
 setDefaultLocalStorage('name', '');
 setDefaultLocalStorage('theme', 'default');
 setDefaultLocalStorage('codetheme', 'default');
