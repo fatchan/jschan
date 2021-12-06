@@ -118,5 +118,5 @@ class Dragable {
 }
 
 if (document.getElementById('postform')) {
-	new Dragable('#dragHandle', '#postform');
+	new Dragable('#postform-dragHandle', '#postform');
 }

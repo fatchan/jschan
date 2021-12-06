@@ -205,7 +205,7 @@ pre {
 	content: "Settings";
 }
 
-#dragHandle {
+#postform-dragHandle {
 	flex-grow: 1;
 	background: var(--darken);
 	height: 1.75em;
@@ -1520,7 +1520,7 @@ row.wrap.sb .col {
 		width: 2.25em;
 	}
 
-	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select, #dragHandle {
+	input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], .postform-style, select, #postform-dragHandle {
 		min-height: 2.25em;
 		box-sizing: border-box;
 	}
