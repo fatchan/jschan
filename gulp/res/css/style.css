@@ -214,6 +214,7 @@ pre {
 	align-items: center;
 	justify-content: center;
 	font-weight: bold;
+	width: 100%;
 }
 
 .wrapbar {
@@ -1197,6 +1198,19 @@ input[type="file"] {
 
 #threadwatcher {
 	display: flex;
+	flex-direction: column;
+}
+
+.watched-thread {
+	width: 100%;
+	justify-content: space-between;
+	padding: 3px;
+	box-sizing: border-box;
+}
+
+.watched-thread a {
+	width: unset
+	margin-right: 5px;
 }
 
 #postform:target {
