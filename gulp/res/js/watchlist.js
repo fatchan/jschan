@@ -8,7 +8,7 @@ class ThreadWatcher {
 		this.clearButton.addEventListener('click', this.clear, false)
 		this.createListHtml();
 		this.refreshInterval = setInterval(this.refresh, 60 * 1000);
-		this.refresh();
+		this.refresh(); //store last refresh in ls? do a setTimeout until then, run once, then start the interval inside the timeout callback
 	}
 
 	refresh() {
@@ -57,26 +57,24 @@ class ThreadWatcher {
 		const watchListItemHtml = watchedthread({ watchedthread: { board, postId, subject } });
 		this.threadWatcher.insertAdjacentHTML('beforeend', watchListItemHtml);
 		const watchedThreadElem = this.threadWatcher.lastChild;
-		const lastClose = watchedThreadElem.querySelector('.close');
-		lastClose.addEventListener('click', () => {
-			watchedThreadElem.remove();
-			this.remove(key);
-		});
+		const closeButton = watchedThreadElem.querySelector('.close');
+		closeButton.addEventListener('click', e => this.remove(e, key));
 		this.updateSettingsList();
 	}
 
-	remove(key) {
+	remove(e, key) {
 		console.log('removing', key, 'from watchlist');
+		e.target.parentElement.remove();
 		this.watchListMap.delete(key);
 		this.updateSettingsList();
 	}
 
 	clear() {
+		console.log('clearing watchlist');
 		this.watchListMap = new Map();
 		Array.from(this.threadWatcher.children)
 			.forEach((c, i) => i > 0 && c.remove()); //remove all except first child (the draghandle)
 		setLocalStorage('watchlist', '[]');
-		console.log('cleared watchlist');
 		this.updateSettingsList();
 	}
 
