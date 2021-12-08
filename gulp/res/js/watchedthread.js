@@ -6,9 +6,9 @@ var pug_match_html=/["&<>]/;function watchedthread(locals) {var pug_html = "", p
     (function (watchedthread) {
       pug_mixins["watchedthread"] = pug_interp = function(thread){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\u003Cdiv class=\"row watched-thread\"\u003E\u003Ca class=\"close\"\u003EX\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cdiv" + (" class=\"row watched-thread\""+pug_attr("data-id", `${thread.board}-${thread.postId}`, true, false)) + "\u003E\u003Ca class=\"close\"\u003EX\u003C\u002Fa\u003E";
 const watchedThreadLink = `/${thread.board}/thread/${thread.postId}.html`;
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", watchedThreadLink, true, false)) + "\u003E\u002F" + (pug_escape(null == (pug_interp = thread.board) ? "" : pug_interp)) + "\u002F - " + (pug_escape(null == (pug_interp = thread.subject) ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003Ca" + (pug_attr("href", `${watchedThreadLink}#bottom`, true, false)) + "\u003E[▼]\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Ca" + (pug_attr("href", watchedThreadLink, true, false)) + "\u003E\u002F" + (pug_escape(null == (pug_interp = thread.board) ? "" : pug_interp)) + "\u002F - " + (pug_escape(null == (pug_interp = thread.subject || 'No subject') ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003Ca" + (pug_attr("href", `${watchedThreadLink}#bottom`, true, false)) + "\u003E[▼]\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
 };
 pug_mixins["watchedthread"](watchedthread);
     }.call(this, "watchedthread" in locals_for_with ?

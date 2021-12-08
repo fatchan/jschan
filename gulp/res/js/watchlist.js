@@ -1,68 +1,86 @@
 class ThreadWatcher {
 
-	constructor() {
-		this.watchListSet = new Set(JSON.parse(localStorage.getItem('watchlist')));
+	init() {
+		this.watchListMap = new Map(JSON.parse(localStorage.getItem('watchlist')));
 		this.settingsInput = document.getElementById('watchlist-setting');
-		this.settingsInput.value = [...this.watchListSet];
 		this.clearButton = document.getElementById('watchlist-clear');
-		this.clearButton.addEventListener('click', this.clear, false);
+		this.clear = this.clear.bind(this);
+		this.clearButton.addEventListener('click', this.clear, false)
 		this.createListHtml();
-		this.threadWatcher = document.getElementById('threadwatcher');
-		//show this time in draghandle? could also add .spin (same as captcha refresh) when updating
 		this.refreshInterval = setInterval(this.refresh, 60 * 1000);
 		this.refresh();
-
-		this.add()
 	}
 
 	refresh() {
 		console.log('refreshing thread watcher');
-		//
 	}
 
 	//pause() { }
 
 	//resume() { }
 
+	updateSettingsList() {
+		const mapSpread = [...this.watchListMap];
+		setLocalStorage('watchlist', JSON.stringify(mapSpread));
+		this.settingsInput.value = mapSpread;
+	}
+
 	createListHtml() {
 		const threadWatcherHtml = threadwatcher();
 		const footer = document.getElementById('bottom');
 		footer.insertAdjacentHTML('afterend', threadWatcherHtml);
+		this.threadWatcher = document.getElementById('threadwatcher');
 		new Dragable('#threadwatcher-dragHandle', '#threadwatcher');
-		//todo: add() all ones saved in storage
+		for (let t of this.watchListMap.entries()) {
+			console.log(t)
+			const [board, postId] = t[0].split('-');
+			const subject = t[1];
+			this.add(board, postId, subject, true);
+		}
 	}
 
-	//fetchThread() {}
+	fetchThread() {
+		//todo: if 404, remove()
+	}
 
-	add(board, thread) {
-		console.log('add');
+	add(board, postId, subject, insertOnly=false) {
+		const key = `${board}-${postId}`;
+		if (!insertOnly) {
+			if (this.watchListMap.has(key)) {
+				return; //already watching
+			}
+			console.log('adding', key, 'to watchlist');
+			this.watchListMap.set(key, subject);
+		}
 		//todo: = fetchThread();
-		//todo: dedup/prevent dup
-		//todo: push to watchListSet
 		//todo: modify watchListItemHtml to highlight/bold, if already in selected thread
-		const watchListItemHtml = watchedthread({ watchedthread: { board: 'test', subject: 'testing 123', postId: 1 } });
+		const watchListItemHtml = watchedthread({ watchedthread: { board, postId, subject } });
 		this.threadWatcher.insertAdjacentHTML('beforeend', watchListItemHtml);
 		const watchedThreadElem = this.threadWatcher.lastChild;
 		const lastClose = watchedThreadElem.querySelector('.close');
 		lastClose.addEventListener('click', () => {
 			watchedThreadElem.remove();
-			this.remove(board, thread);
+			this.remove(key);
 		});
+		this.updateSettingsList();
 	}
 
-	remove(board, thread) {
-		console.log('remove');
-//
+	remove(key) {
+		console.log('removing', key, 'from watchlist');
+		this.watchListMap.delete(key);
+		this.updateSettingsList();
 	}
 
 	clear() {
-		console.log('clear');
-		watchList = new Set();
-		watchListInput.value = '';
+		this.watchListMap = new Map();
+		Array.from(this.threadWatcher.children)
+			.forEach((c, i) => i > 0 && c.remove()); //remove all except first child (the draghandle)
 		setLocalStorage('watchlist', '[]');
 		console.log('cleared watchlist');
+		this.updateSettingsList();
 	}
 
 }
 
-window.addEventListener('settingsReady', () => new ThreadWatcher());
+const threadWatcher = new ThreadWatcher();
+window.addEventListener('settingsReady', () => threadWatcher.init());

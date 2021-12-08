@@ -261,6 +261,11 @@ const postMenuChange = function(e) {
 			break;
 		case 'moderate':
 			return moderatePost(postContainer);
+		case 'watch':
+			if (postContainer.classList.contains('op')) {
+				threadWatcher.add(postDataset.board, postDataset.postId, postDataset.subject);
+			}
+			return;
 	}
 	toggleFilter(filterType, filterData, hiding);
 };
