@@ -428,7 +428,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 			`!${paths.scripts.src}/timezone.js`,
 		])
 		.pipe(concat('all.js'))
-		.pipe(uglify({compress:false}))
+//		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 	return gulp.src([
 			`${paths.scripts.src}/saveoverboard.js`,
@@ -442,7 +442,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 			`${paths.scripts.src}/time.js`,
 		])
 		.pipe(concat('render.js'))
-		.pipe(uglify({compress:false}))
+//		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
 }
 

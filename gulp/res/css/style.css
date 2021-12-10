@@ -1213,6 +1213,11 @@ input[type="file"] {
 	margin-right: 5px;
 }
 
+.watched-thread[data-unread]::after {
+	content: "(" attr(data-unread) ")";
+	font-weight: bold;
+}
+
 #postform:target {
 	display: flex;
 }

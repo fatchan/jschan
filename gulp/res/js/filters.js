@@ -263,7 +263,7 @@ const postMenuChange = function(e) {
 			return moderatePost(postContainer);
 		case 'watch':
 			if (postContainer.classList.contains('op')) {
-				threadWatcher.add(postDataset.board, postDataset.postId, postDataset.subject);
+				threadWatcher.add(postDataset.board, postDataset.postId, { subject: postDataset.subject, unread: 0, updatedDate: new Date() });
 			}
 			return;
 	}
