@@ -1197,7 +1197,8 @@ input[type="file"] {
 }
 
 #threadwatcher {
-	display: flex;
+	display: none;
+	white-space: nowrap;
 	flex-direction: column;
 }
 

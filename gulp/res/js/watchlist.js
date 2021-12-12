@@ -2,8 +2,6 @@ class ThreadWatcher {
 
 //todo:
 //- dont increase unread count when refreshing if already have a thread opened
-//- option to hide/minimise/disable thread watcher, or not show unless there is at least 1 thread in watchlist
-//- update settings export to include watched threads
 //- notifications, probably in fetchthread()
 //- try and deal with having more tabs open running refresh more often than necessary. maybe for this it has to
 //  use a serviceworker so it only has 1 thread background fetching (problems: needs https so maybe wont work on
@@ -12,7 +10,7 @@ class ThreadWatcher {
 
 	init() {
 		this.watchListMap = new Map(JSON.parse(localStorage.getItem('watchlist')));
-		window.addEventListener('storage', e => this.storageEventHandler(e)); 
+		window.addEventListener('storage', e => this.storageEventHandler(e));
 		this.settingsInput = document.getElementById('watchlist-setting');
 		this.clearButton = document.getElementById('watchlist-clear');
 		this.clearButton.addEventListener('click', () => this.clear(), false)
@@ -28,7 +26,7 @@ class ThreadWatcher {
 			}
 		}
 		this.createList();
-		this.refreshInterval = setInterval(() => this.refresh(), 60 * 1000);
+		this.refreshInterval = setInterval(() => this.refresh(), 3 * 1000);
 	}
 
 	refresh() {
@@ -90,6 +88,9 @@ class ThreadWatcher {
 	}
 
 	commit() {
+		if (this.threadWatcher) {
+			this.threadWatcher.style.display = (this.watchListMap.size === 0 ? 'none' : null);
+		}
 		const mapSpread = [...this.watchListMap];
 		setLocalStorage('watchlist', JSON.stringify(mapSpread));
 		this.settingsInput.value = mapSpread;
@@ -100,6 +101,9 @@ class ThreadWatcher {
 		const footer = document.getElementById('bottom');
 		footer.insertAdjacentHTML('afterend', threadWatcherHtml);
 		this.threadWatcher = document.getElementById('threadwatcher');
+		if (this.watchListMap.size === 0) {
+			this.threadWatcher.style.display = 'none';
+		}
 		new Dragable('#threadwatcher-dragHandle', '#threadwatcher');
 		for (let t of this.watchListMap.entries()) {
 			const [board, postId] = t[0].split('-');
@@ -162,8 +166,6 @@ const threadWatcher = new ThreadWatcher();
 
 window.addEventListener('settingsReady', () => {
 
-	threadWatcher.init()
-
-	//settings shit goes here
+	threadWatcher.init();
 
 });
