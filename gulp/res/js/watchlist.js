@@ -14,9 +14,9 @@ class ThreadWatcher {
 		this.settingsInput = document.getElementById('watchlist-setting');
 		this.clearButton = document.getElementById('watchlist-clear');
 		this.clearButton.addEventListener('click', () => this.clear(), false)
-		const threadMatch = window.location.pathname.match(/^\/(?<threadBoard>\w+)(?:\/manage)?\/thread\/(?<threadId>\d+)\.html$/);
-		if (threadMatch && threadMatch.groups) {
-			const key = `${threadMatch.groups.threadBoard}-${threadMatch.groups.threadId}`;
+		const threadMatch = window.location.pathname.match(/^\/(\w+)(?:\/manage)?\/thread\/(\d+)\.html$/);
+		if (threadMatch !== null) {
+			const key = `${threadMatch[1]}-${threadMatch[2]}`;
 			const data = this.watchListMap.get(key);
 			//window.addEventListener('scroll', () => { /**/ }); //this is not ideal
 			if (data) {
