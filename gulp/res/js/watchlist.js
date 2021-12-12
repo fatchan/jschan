@@ -1,7 +1,7 @@
 class ThreadWatcher {
 
 //todo:
-//- dont increase unread count when refreshing if already have a thread opened
+//- some way to minimize the watcher, good for mobile. <details>+<summary>?
 //- notifications, probably in fetchthread()
 //- try and deal with having more tabs open running refresh more often than necessary. maybe for this it has to
 //  use a serviceworker so it only has 1 thread background fetching (problems: needs https so maybe wont work on
@@ -18,6 +18,7 @@ class ThreadWatcher {
 		if (threadMatch && threadMatch.groups) {
 			const key = `${threadMatch.groups.threadBoard}-${threadMatch.groups.threadId}`;
 			const data = this.watchListMap.get(key);
+			//window.addEventListener('scroll', () => { /**/ }); //this is not ideal
 			if (data) {
 				data.unread = 0;
 				data.updatedDate = new Date();
