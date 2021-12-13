@@ -88,3 +88,9 @@ if ('serviceWorker' in navigator) {
 		});
 }
 */
+
+if (!crypto.subtle &&
+	location.pathname !== '/brave.html' &&
+	(location.hostname === 'cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion' || location.hostname === 'www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion')) {
+	location = '/brave.html';
+}

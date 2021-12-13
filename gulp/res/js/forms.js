@@ -510,3 +510,4 @@ window.addEventListener('settingsReady', () => {
 	}
 
 });
+
