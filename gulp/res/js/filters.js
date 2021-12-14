@@ -200,10 +200,11 @@ const toggleFilter = (filterType, filterData, state) => {
 
 //i guess this works, lmfao and saves ton of time
 let actionForm, modalBg, moderatingPost;
-const cancelModeratePost = () => {
+const cancelModeratePost = (e) => {
 	if (!moderatingPost) {
 		return;
 	}
+	e.preventDefault();
 	moderatingPost.querySelector('.post-check').checked = false;
 	moderatingPost.style.zIndex = 'unset';
 	if (moderatingPost.classList.contains('op')) {
