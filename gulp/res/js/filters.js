@@ -264,7 +264,8 @@ const postMenuChange = function(e) {
 			return moderatePost(postContainer);
 		case 'watch':
 			if (postContainer.classList.contains('op')) {
-				threadWatcher.add(postDataset.board, postDataset.postId, { subject: postDataset.subject, unread: 0, updatedDate: new Date() });
+				const watcherSubject = (postDataset.subject || postContainer.querySelector('.post-message').textContent || "No subject").substring(0, 25);
+				threadWatcher.add(postDataset.board, postDataset.postId, { subject: watcherSubject, unread: 0, updatedDate: new Date() });
 			}
 			return;
 	}

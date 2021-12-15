@@ -1,35 +1,38 @@
 class ThreadWatcher {
 
-//todo:
-//- some way to minimize the watcher, good for mobile. <details>+<summary>?
-//- notifications, probably in fetchthread()
-//- try and deal with having more tabs open running refresh more often than necessary. maybe for this it has to
-//  use a serviceworker so it only has 1 thread background fetching (problems: needs https so maybe wont work on
-//  tor, lokinet, etc). with service worker needs to be some mechanism that only 1 client/tab send message to do
-//  a fetch, or maybe it only responds at most every 60 seconds since the client can share with eachother.
-
 	init() {
+		//read the watchlist map from localstorage
 		this.watchListMap = new Map(JSON.parse(localStorage.getItem('watchlist')));
+
+		//call the updatehandler when storage changes in another context
 		window.addEventListener('storage', e => this.storageEventHandler(e));
+
+		//setup the settings menu and "clear" button
 		this.settingsInput = document.getElementById('watchlist-setting');
 		this.clearButton = document.getElementById('watchlist-clear');
-		this.clearButton.addEventListener('click', () => this.clear(), false)
-		const threadMatch = window.location.pathname.match(/^\/(\w+)(?:\/manage)?\/thread\/(\d+)\.html$/);
-		if (threadMatch !== null) {
-			const key = `${threadMatch[1]}-${threadMatch[2]}`;
-			const data = this.watchListMap.get(key);
-			//window.addEventListener('scroll', () => { /**/ }); //this is not ideal
-			if (data) {
-				data.unread = 0;
-				data.updatedDate = new Date();
-				this.watchListMap.set(key, data);
-				this.commit();
+		this.clearButton.addEventListener('click', () => this.clear(), false);
+
+		//create and insert the watchlist
+		this.createList();
+
+		//check if we are in a thread, and setup events for when the tab is focused/unfocused
+		this.isFocused = document.hasFocus();
+		this.threadMatch = window.location.pathname.match(/^\/(\w+)(?:\/manage)?\/thread\/(\d+)\.html$/);
+		if (this.threadMatch !== null) {
+			window.addEventListener('focus', () => this.focusHandler(this.threadMatch[1], this.threadMatch[2]));
+			window.addEventListener('blur', () => this.blurHandler());
+			if (this.isFocused === true) {
+				//set unread=0 for the current thread if the tab is focused
+				this.focusHandler(this.threadMatch[1], this.threadMatch[2]);
 			}
 		}
-		this.createList();
-		this.refreshInterval = setInterval(() => this.refresh(), 3 * 1000);
+
+		//start refreshing on an interval
+		this.refreshInterval = setInterval(() => this.refresh(), 60 * 1000);
+
 	}
 
+	//refresh all the threads in the watchlist map
 	refresh() {
 		for (let t of this.watchListMap.entries()) {
 			const [board, postId] = t[0].split('-');
@@ -38,6 +41,7 @@ class ThreadWatcher {
 		}
 	}
 
+	//fetch a thread from the API and check if there are newer posts, and set unread if necessary.
 	async fetchThread(board, postId, data) {
 		let res, json;
 		try {
@@ -48,9 +52,16 @@ class ThreadWatcher {
 			const updatedDate = new Date(data.updatedDate);
 			const newPosts = json.replies.filter(r => new Date(r.date) > updatedDate);
 			if (newPosts.length > 0) {
-				data.subject = json.subject;
+				data.subject = (json.subject || json.nomarkup || "No subject").substring(0, 25);
 				data.updatedDate = new Date();
-				data.unread += newPosts.length;
+				if (this.isFocused && this.threadMatch
+					&& this.threadMatch[1] === board && this.threadMatch[2] === postId) {
+					//unread=0 when fetching from inside a thread that is focused
+					data.unread = 0;
+				} else {
+					data.unread += newPosts.length;
+					this.notify(newPosts);
+				}
 				const key = `${board}-${postId}`;
 				this.watchListMap.set(key, data);
 				this.updateRow(board, postId, data);
@@ -62,18 +73,39 @@ class ThreadWatcher {
 		}
 	}
 
+	//send notifications (if enabled and following other settings) for posts fetched by threadwatcher
+	notify(newPosts) {
+		if (notificationsEnabled) {
+			//i dont like fetching and creating the set each time, but it could be updated cross-context so its necessary (for now)
+			const yous = new Set(JSON.parse(localStorage.getItem('yous')));
+			for (const reply of newPosts) {
+				const isYou = yous.has(`${reply.board}-${reply.postId}`);
+				const quotesYou = reply.quotes.some(q => yous.has(`${reply.board}-${q.postId}`))
+				if (!isYou && !(notificationYousOnly && !quotesYou)) {
+					const notificationOptions = formatNotificationOptions(json);
+					try {
+						new Notification(`Post in watched thread: ${document.title}`, notificationOptions);
+					} catch (e) {
+						console.log('failed to send notification', e);
+					}
+				}
+			}
+		}
+	}
+
+	//handle event for when storage changes in another tab and update the watcher to be in sync
 	storageEventHandler(e) {
 		if (e.storageArea === localStorage
 			&& e.key === 'watchlist') {
 			console.log('updating watchlist from another context');
 			const newMap = new Map(JSON.parse(e.newValue));
-			const deleted = [];
 			this.watchListMap.forEach((data, key) => {
 				if (!newMap.has(key)) {
 					const [board, postId] = key.split('-');
 					this.deleteRow(board, postId);
 				}
 			});
+			//let setOwnUnread = false;
 			newMap.forEach((data, key) => {
 				const [board, postId] = key.split('-');
 				const oldData = this.watchListMap.get(key);
@@ -81,22 +113,57 @@ class ThreadWatcher {
 					this.addRow(board, postId, data);
 				} else if (oldData && (oldData.unread !== data.unread
 					|| oldData.subject !== data.subject)) {
+					/*if (this.isFocused && this.threadMatch
+						&& this.threadMatch[1] === board && this.threadMatch[2] === postId) {
+						setOwnUnread = true;
+						data.unread = 0;
+					}*/
 					this.updateRow(board, postId, data);
 				}
 			});
 			this.watchListMap = new Map(JSON.parse(e.newValue));
+			this.setVisibility();
+			/*if (setOwnUnread === true) {
+				this.commit();
+			}*/
 		}
 	}
 
-	commit() {
-		if (this.threadWatcher) {
-			this.threadWatcher.style.display = (this.watchListMap.size === 0 ? 'none' : null);
+	//handle event when current page becomes focused (only listens on thread pages) and set unread=0 for this thread
+	focusHandler(board, postId) {
+		this.isFocused = true;
+		const key = `${board}-${postId}`;
+		const data = this.watchListMap.get(key);
+		if (data && data.unread !== 0) {
+			data.unread = 0;
+			data.updatedDate = new Date();
+			this.watchListMap.set(key, data);
+			this.updateRow(board, postId, data);
+			this.commit();
 		}
+	}
+
+	//self explanatory
+	blurHandler() {
+		this.isFocused = false;
+	}
+
+	//commit any changes to localstorage and settings menu box (readonly)
+	commit() {
 		const mapSpread = [...this.watchListMap];
 		setLocalStorage('watchlist', JSON.stringify(mapSpread));
 		this.settingsInput.value = mapSpread;
+		this.setVisibility();
 	}
 
+	//toggles watcher visibility
+	setVisibility() {
+		if (this.threadWatcher) {
+			this.threadWatcher.style.display = (this.watchListMap.size === 0 ? 'none' : null);
+		}
+	}
+
+	//create the actual thread watcher box and draghandle and insert it into the page
 	createList() {
 		const threadWatcherHtml = threadwatcher();
 		const footer = document.getElementById('bottom');
@@ -105,6 +172,7 @@ class ThreadWatcher {
 		if (this.watchListMap.size === 0) {
 			this.threadWatcher.style.display = 'none';
 		}
+		//reuse the dragable class for something :^)
 		new Dragable('#threadwatcher-dragHandle', '#threadwatcher');
 		for (let t of this.watchListMap.entries()) {
 			const [board, postId] = t[0].split('-');
@@ -113,9 +181,11 @@ class ThreadWatcher {
 		}
 	}
 
+	//add a thread to the watchlist map
 	add(board, postId, data) {
 		const key = `${board}-${postId}`;
 		if (this.watchListMap.has(key)) {
+			//dont add duplicates
 			return;
 		}
 		this.watchListMap.set(key, data);
@@ -123,12 +193,14 @@ class ThreadWatcher {
 		this.commit();
 	}
 
+	//remove a thread from the watchlist map
 	remove(board, postId) {
 		this.deleteRow(board, postId);
 		this.watchListMap.delete(`${board}-${postId}`);
 		this.commit();
 	}
 
+	//remove all threads from the watchlist
 	clear() {
 		for (let t of this.watchListMap.entries()) {
 			const [board, postId] = t[0].split('-');
@@ -139,22 +211,27 @@ class ThreadWatcher {
 		this.commit();
 	}
 
+	//add the actual row html to the watcher
 	addRow(board, postId, data) {
 		const watchListItemHtml = watchedthread({ watchedthread: { board, postId, ...data } });
 		this.threadWatcher.insertAdjacentHTML('beforeend', watchListItemHtml);
 		const watchedThreadElem = this.threadWatcher.lastChild;
 		const closeButton = watchedThreadElem.querySelector('.close');
+		//when x button clicked, call remove
 		closeButton.addEventListener('click', e => this.remove(board, postId));
 	}
 
+	//delete the actual row from the watcher
 	deleteRow(board, postId) {
 		const row = this.threadWatcher.querySelector(`[data-id="${board}-${postId}"]`);
 		row.remove();
 	}
 
+	//update a row in the watcher for new unread count
 	updateRow(board, postId, data) {
 		const row = this.threadWatcher.querySelector(`[data-id="${board}-${postId}"]`);
 		if (data.unread === 0) {
+			//remove the attribute completely to not show (0), we only want to show (1) or more
 			row.removeAttribute('data-unread');
 		} else {
 			row.setAttribute('data-unread', data.unread);
