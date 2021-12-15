@@ -60,7 +60,7 @@ class ThreadWatcher {
 					data.unread = 0;
 				} else {
 					data.unread += newPosts.length;
-					this.notify(newPosts);
+					//this.notify(newPosts);
 				}
 				const key = `${board}-${postId}`;
 				this.watchListMap.set(key, data);
@@ -73,7 +73,7 @@ class ThreadWatcher {
 		}
 	}
 
-	//send notifications (if enabled and following other settings) for posts fetched by threadwatcher
+	/*send notifications (if enabled and following other settings) for posts fetched by threadwatcher
 	notify(newPosts) {
 		if (notificationsEnabled) {
 			//i dont like fetching and creating the set each time, but it could be updated cross-context so its necessary (for now)
@@ -82,7 +82,7 @@ class ThreadWatcher {
 				const isYou = yous.has(`${reply.board}-${reply.postId}`);
 				const quotesYou = reply.quotes.some(q => yous.has(`${reply.board}-${q.postId}`))
 				if (!isYou && !(notificationYousOnly && !quotesYou)) {
-					const notificationOptions = formatNotificationOptions(json);
+					const notificationOptions = formatNotificationOptions(reply);
 					try {
 						new Notification(`Post in watched thread: ${document.title}`, notificationOptions);
 					} catch (e) {
@@ -91,7 +91,7 @@ class ThreadWatcher {
 				}
 			}
 		}
-	}
+	}*/
 
 	//handle event for when storage changes in another tab and update the watcher to be in sync
 	storageEventHandler(e) {
