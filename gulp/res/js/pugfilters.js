@@ -14,14 +14,14 @@ if (filterArr.length > 0) {
   if ('number' == typeof $$obj.length) {
       for (var pug_index0 = 0, $$l = $$obj.length; pug_index0 < $$l; pug_index0++) {
         var filter = $$obj[pug_index0];
-pug_html = pug_html + "\u003Ctr\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_interp = filterTypeMap[filter.type]) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_interp = filter.val.toString()) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Cinput" + (pug_attr("disabled", true, true, false)+" type=\"checkbox\""+pug_attr("checked", filter.type.endsWith('r'), true, false)) + "\u002F\u003E\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Ca" + (" class=\"right close\""+pug_attr("data-type", filter.type, true, false)+pug_attr("data-data", filter.val, true, false)) + "\u003EX\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
+pug_html = pug_html + "\u003Ctr\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_interp = filterTypeMap[filter.type]) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_interp = filter.val.toString()) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Cinput" + (pug_attr("disabled", true, true, false)+" type=\"checkbox\""+pug_attr("checked", filter.type.endsWith('r'), true, false)) + "\u002F\u003E\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Ca" + (" class=\"right close\""+pug_attr("data-type", filter.type, true, false)+pug_attr("data-data", filter.val, true, false)) + "\u003E×\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
       }
   } else {
     var $$l = 0;
     for (var pug_index0 in $$obj) {
       $$l++;
       var filter = $$obj[pug_index0];
-pug_html = pug_html + "\u003Ctr\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_interp = filterTypeMap[filter.type]) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_interp = filter.val.toString()) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Cinput" + (pug_attr("disabled", true, true, false)+" type=\"checkbox\""+pug_attr("checked", filter.type.endsWith('r'), true, false)) + "\u002F\u003E\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Ca" + (" class=\"right close\""+pug_attr("data-type", filter.type, true, false)+pug_attr("data-data", filter.val, true, false)) + "\u003EX\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
+pug_html = pug_html + "\u003Ctr\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_interp = filterTypeMap[filter.type]) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_interp = filter.val.toString()) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Cinput" + (pug_attr("disabled", true, true, false)+" type=\"checkbox\""+pug_attr("checked", filter.type.endsWith('r'), true, false)) + "\u002F\u003E\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Ca" + (" class=\"right close\""+pug_attr("data-type", filter.type, true, false)+pug_attr("data-data", filter.val, true, false)) + "\u003E×\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
     }
   }
 }).call(this);

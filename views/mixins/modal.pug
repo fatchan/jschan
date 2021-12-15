@@ -3,7 +3,7 @@ mixin modal(data)
 	.modal(id=(data.settings ? 'settingsmodal' : '') style=data.hidden?'display:none':'')
 		.row
 			p.bold #{data.title}
-			a.close.postform-style#modalclose X
+			a.close.postform-style#modalclose ×
 		if data.message || data.messages || data.error || data.errors
 			.row
 				ul.nomarks

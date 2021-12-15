@@ -48,6 +48,7 @@ setDefaultLocalStorage('notifications', settings.notificationsEnabled);
 setDefaultLocalStorage('notification-yous-only', settings.notificationsYousOnly);
 setDefaultLocalStorage('yous-setting', settings.showYous);
 setDefaultLocalStorage('threadwatcher', settings.threadWatcher);
+setDefaultLocalStorage('threadwatcher-minimise', false);
 setDefaultLocalStorage('disableboardcss', false);
 
 setDefaultLocalStorage('filters1', '[]');

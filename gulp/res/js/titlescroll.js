@@ -24,10 +24,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const updateTitle = () => {
 		if (unread.length === 0) {
 			document.title = originalTitle;
-//			changeFavicon('/favicon.ico');
 		} else {
 			document.title = `(${unread.length}) ${originalTitle}`;
-//			changeFavicon('/file/favicon2.ico');
 		}
 	}
 
@@ -49,8 +47,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 
-	window.onfocus = focusChange;
-	window.onblur = focusChange;
+	window.addEventListener('focus', focusChange);
+	window.addEventListener('blur', focusChange);
 	window.addEventListener('scroll', updateVisible);
 
 	window.addEventListener('addPost', function(e) {

@@ -456,6 +456,7 @@ p {
 	margin-left: auto;
 	width: 25px;
 	cursor: pointer;
+	font-size: initial;
 }
 
 .reports {
@@ -1210,8 +1211,12 @@ input[type="file"] {
 }
 
 .watched-thread a {
-	width: unset;
 	margin-right: 5px;
+}
+
+.watched-thread .close {
+	margin-left: 0px;
+	width: 1em;
 }
 
 .watched-thread[data-unread]::after {
