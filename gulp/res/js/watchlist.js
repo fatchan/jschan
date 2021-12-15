@@ -1,8 +1,9 @@
 class ThreadWatcher {
 
 	init() {
-		//read the watchlist map from localstorage
+		//read the watchlist map and minimised state from localstorage
 		this.watchListMap = new Map(JSON.parse(localStorage.getItem('watchlist')));
+		this.minimised = localStorage.getItem('threadwatcher-minimise') === 'true';
 
 		//call the updatehandler when storage changes in another context
 		window.addEventListener('storage', e => this.storageEventHandler(e));
@@ -13,7 +14,11 @@ class ThreadWatcher {
 		this.clearButton.addEventListener('click', () => this.clear(), false);
 
 		//create and insert the watchlist
-		this.createList();
+		this.createList({minimised: this.minimised});
+
+		//add events for toggling minimised
+		this.minimiseButton = this.threadWatcher.firstChild.querySelector('.close');
+		this.minimiseButton.addEventListener('click', () => this.toggleMinimise());
 
 		//check if we are in a thread, and setup events for when the tab is focused/unfocused
 		this.isFocused = document.hasFocus();
@@ -156,6 +161,13 @@ class ThreadWatcher {
 		this.setVisibility();
 	}
 
+	toggleMinimise() {
+		this.minimised = !this.minimised;
+		this.minimiseButton.textContent = this.minimised ? '[+]' : '[−]';
+		this.threadWatcher.classList.toggle('minimised');
+		setLocalStorage('threadwatcher-minimise', this.minimised);
+	}
+
 	//toggles watcher visibility
 	setVisibility() {
 		if (this.threadWatcher) {
@@ -165,7 +177,7 @@ class ThreadWatcher {
 
 	//create the actual thread watcher box and draghandle and insert it into the page
 	createList() {
-		const threadWatcherHtml = threadwatcher();
+		const threadWatcherHtml = threadwatcher({ minimised: this.minimised });
 		const footer = document.getElementById('bottom');
 		footer.insertAdjacentHTML('afterend', threadWatcherHtml);
 		this.threadWatcher = document.getElementById('threadwatcher');

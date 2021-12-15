@@ -1203,6 +1203,10 @@ input[type="file"] {
 	flex-direction: column;
 }
 
+#threadwatcher.minimised .watched-thread {
+	display: none;
+}
+
 .watched-thread {
 	width: 100%;
 	justify-content: space-between;

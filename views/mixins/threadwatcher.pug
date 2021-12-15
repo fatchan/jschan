@@ -1,3 +1,5 @@
-mixin threadwatcher()
-	.flex-center#threadwatcher
-		.row.noselect#threadwatcher-dragHandle Thread Watcher
+mixin threadwatcher(minimised)
+	.flex-center#threadwatcher(class=(minimised ? 'minimised' : ''))
+		.row.noselect#threadwatcher-dragHandle
+			span.fw.text-center Thread Watcher 
+			span.mr-0.close #{minimised ? '[+]' : '[−]'}
