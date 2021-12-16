@@ -826,20 +826,27 @@ option {
 	align-items: center;
 }
 
-.post-file-info:hover {
-	word-break: break-all;
-}
-
 .post-file-info {
 	text-align: center;
 	margin: 2px;
 	margin-top: 0px;
+	width: 100%;
 	max-width: var(--thumbnail-size);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	word-break: keep-all;
 	font-size: x-small;
 }
+
+.post-file-info .filename {
+	display: inline-block;
+	max-width: calc(100% - 3em);;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: bottom;
+}
+
+/*.post-file-info .filename:hover {
+    word-break: break-all;
+    display: inline;
+}*/
 
 video, img {
 	max-height: 90vh;
@@ -1518,6 +1525,10 @@ row.wrap.sb .col {
 
 	.post-file-info {
 		max-width: 150px;
+	}
+
+	.post-file-info .filename {
+		max-width: 130px;
 	}
 
 	iframe.bypass {
