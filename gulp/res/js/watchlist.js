@@ -1,6 +1,12 @@
 class ThreadWatcher {
 
 	init() {
+		//dont bother loading if no footer, must be minimal view
+		this.footer = document.getElementById('bottom');
+		if (!this.footer) {
+			return;
+		}
+
 		//read the watchlist map and minimised state from localstorage
 		this.watchListMap = new Map(JSON.parse(localStorage.getItem('watchlist')));
 		this.minimised = localStorage.getItem('threadwatcher-minimise') === 'true';
@@ -185,8 +191,7 @@ class ThreadWatcher {
 	//create the actual thread watcher box and draghandle and insert it into the page
 	createList() {
 		const threadWatcherHtml = threadwatcher({ minimised: this.minimised });
-		const footer = document.getElementById('bottom');
-		footer.insertAdjacentHTML('afterend', threadWatcherHtml);
+		this.footer.insertAdjacentHTML('afterend', threadWatcherHtml);
 		this.threadWatcher = document.getElementById('threadwatcher');
 		if (this.watchListMap.size === 0) {
 			this.threadWatcher.style.display = 'none';
