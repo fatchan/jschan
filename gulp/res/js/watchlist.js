@@ -10,6 +10,7 @@ class ThreadWatcher {
 		//read the watchlist map and minimised state from localstorage
 		this.watchListMap = new Map(JSON.parse(localStorage.getItem('watchlist')));
 		this.minimised = localStorage.getItem('threadwatcher-minimise') === 'true';
+		this.threadMatch = window.location.pathname.match(/^\/(\w+)(?:\/manage)?\/thread\/(\d+)\.html$/);
 
 		//call the updatehandler when storage changes in another context
 		window.addEventListener('storage', e => this.storageEventHandler(e));
@@ -28,7 +29,6 @@ class ThreadWatcher {
 
 		//check if we are in a thread, and setup events for when the tab is focused/unfocused
 		this.isFocused = document.hasFocus();
-		this.threadMatch = window.location.pathname.match(/^\/(\w+)(?:\/manage)?\/thread\/(\d+)\.html$/);
 		if (this.threadMatch !== null) {
 			window.addEventListener('focus', () => this.focusHandler(this.threadMatch[1], this.threadMatch[2]));
 			window.addEventListener('blur', () => this.blurHandler());
@@ -237,7 +237,10 @@ class ThreadWatcher {
 
 	//add the actual row html to the watcher
 	addRow(board, postId, data) {
-		const watchListItemHtml = watchedthread({ watchedthread: { board, postId, ...data } });
+		const isCurrentThread = this.threadMatch != null
+			&& this.threadMatch[1] === board && this.threadMatch[2] === postId;
+console.log(this.threadMatch, isCurrentThread)
+		const watchListItemHtml = watchedthread({ watchedthread: { board, postId, ...data, isCurrentThread } });
 		this.threadWatcher.insertAdjacentHTML('beforeend', watchListItemHtml);
 		const watchedThreadElem = this.threadWatcher.lastChild;
 		const closeButton = watchedThreadElem.querySelector('.close');
