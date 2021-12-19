@@ -53,25 +53,32 @@ class ThreadWatcher {
 			res = await fetch(`/${board}/thread/${postId}.json`);
 			json = await res.json();
 		} catch (e) { /* ignore */ }
-		if (json && json.replies && json.replies.length > 0) {
+		if (json && json.replies) {
+			const newData = {
+				...data,
+				subject: (json.subject || json.nomarkup || "No subject").substring(0, 25),
+			};
 			const updatedDate = new Date(data.updatedDate);
 			const newPosts = json.replies.filter(r => new Date(r.date) > updatedDate);
 			if (newPosts.length > 0) {
-				data.subject = (json.subject || json.nomarkup || "No subject").substring(0, 25);
-				data.updatedDate = new Date();
 				if (this.isFocused && this.threadMatch
 					&& this.threadMatch[1] === board && this.threadMatch[2] === postId) {
 					//unread=0 when fetching from inside a thread that is focused
-					data.unread = 0;
+					newData.unread = 0;
 				} else {
-					data.unread += newPosts.length;
+					newData.unread += newPosts.length;
 					//this.notify(newPosts);
 				}
+			}
+			if (newData.subject !== data.subject
+				|| newData.unread !== data.unread) {
+				newData.updatedDate = new Date();
 				const key = `${board}-${postId}`;
-				this.watchListMap.set(key, data);
-				this.updateRow(board, postId, data);
+				this.watchListMap.set(key, newData);
+				this.updateRow(board, postId, newData);
 				this.commit();
 			}
+
 		} else if (res && res.status === 404) {
 			console.log('removing 404 thread from watchlist');
 			this.remove(board, postId);
@@ -248,6 +255,8 @@ class ThreadWatcher {
 		} else {
 			row.setAttribute('data-unread', data.unread);
 		}
+		//subject *can* change rarely, if the op was edited
+		row.children[1].textContent = `/${board}/ - ${data.subject}`;
 	}
 
 }
