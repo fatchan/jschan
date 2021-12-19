@@ -558,6 +558,9 @@ td pre {
 .ml-0 {
 	margin-left: 0;
 }
+.ml-a {
+	margin-left: auto;
+}
 
 .dot {
 	margin-right: 7px;
@@ -1216,7 +1219,7 @@ input[type="file"] {
 
 .watched-thread {
 	width: 100%;
-	justify-content: space-between;
+	/*justify-content: space-between;*/
 	padding: 3px;
 	box-sizing: border-box;
 }

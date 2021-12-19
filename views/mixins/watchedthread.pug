@@ -3,4 +3,4 @@ mixin watchedthread(thread)
 		a.close ×
 		- const watchedThreadLink = `/${thread.board}/thread/${thread.postId}.html`;
 		a(class=(thread.isCurrentThread ? 'bold' : '') href=watchedThreadLink) /#{thread.board}/ - #{thread.subject || 'No subject'}
-		a(href=`${watchedThreadLink}#bottom`) [▼]
+		a.ml-a(href=`${watchedThreadLink}#bottom`) [▼]

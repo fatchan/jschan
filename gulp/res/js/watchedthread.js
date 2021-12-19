@@ -12,7 +12,7 @@ var pug_match_html=/["&<>]/;function watchedthread(locals) {var pug_html = "", p
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv" + (" class=\"row watched-thread\""+pug_attr("data-id", `${thread.board}-${thread.postId}`, true, false)+pug_attr("data-unread", (thread.unread||null), true, false)) + "\u003E\u003Ca class=\"close\"\u003E×\u003C\u002Fa\u003E";
 const watchedThreadLink = `/${thread.board}/thread/${thread.postId}.html`;
-pug_html = pug_html + "\u003Ca" + (pug_attr("class", pug_classes([(thread.isCurrentThread ? 'bold' : '')], [true]), false, false)+pug_attr("href", watchedThreadLink, true, false)) + "\u003E\u002F" + (pug_escape(null == (pug_interp = thread.board) ? "" : pug_interp)) + "\u002F - " + (pug_escape(null == (pug_interp = thread.subject || 'No subject') ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003Ca" + (pug_attr("href", `${watchedThreadLink}#bottom`, true, false)) + "\u003E[▼]\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Ca" + (pug_attr("class", pug_classes([(thread.isCurrentThread ? 'bold' : '')], [true]), false, false)+pug_attr("href", watchedThreadLink, true, false)) + "\u003E\u002F" + (pug_escape(null == (pug_interp = thread.board) ? "" : pug_interp)) + "\u002F - " + (pug_escape(null == (pug_interp = thread.subject || 'No subject') ? "" : pug_interp)) + "\u003C\u002Fa\u003E\u003Ca" + (" class=\"ml-a\""+pug_attr("href", `${watchedThreadLink}#bottom`, true, false)) + "\u003E[▼]\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
 };
 pug_mixins["watchedthread"](watchedthread);
     }.call(this, "watchedthread" in locals_for_with ?
