@@ -87,11 +87,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 						.post-file
 							- const type = file.mimetype.split('/')[0]
 							span.post-file-info
-								- const uFile = `${post.u}-${fileindex}${file.extension}`
 								span
 									a.filename(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? 'Spoiler File' : file.originalFilename}
-									|  
-									a(href='/file/'+file.filename title='Download '+uFile download=uFile) (u)
 								br
 								if globalmanage && file.phash != null
 									span #{file.phash}
