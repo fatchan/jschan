@@ -136,11 +136,10 @@ pre {
 }
 
 .code, .mono {
-		background: var(--darken);
-		padding: 2px;
-		font-family: monospace;
-		max-width: max-content;
-		max-width: -moz-max-content;
+	background: var(--darken);
+	padding: 2px;
+	font-family: monospace;
+	max-width: calc(100vw - 50px);
 }
 .edit {
 	background: transparent!important;
@@ -844,11 +843,13 @@ option {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	vertical-align: bottom;
+	word-break: break-all;
+	white-space: nowrap;
 }
 
 /*.post-file-info .filename:hover {
-    word-break: break-all;
-    display: inline;
+	word-break: break-all;
+	white-space: unset;
 }*/
 
 video, img {
@@ -1528,10 +1529,6 @@ row.wrap.sb .col {
 
 	.post-file-info {
 		max-width: 150px;
-	}
-
-	.post-file-info .filename {
-		max-width: 130px;
 	}
 
 	iframe.bypass {
