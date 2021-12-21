@@ -263,10 +263,8 @@ const postMenuChange = function(e) {
 		case 'moderate':
 			return moderatePost(postContainer);
 		case 'watch':
-			if (postContainer.classList.contains('op')) {
-				const watcherSubject = (postDataset.subject || postContainer.querySelector('.post-message').textContent || "No subject").substring(0, 25);
-				threadWatcher.add(postDataset.board, postDataset.postId, { subject: watcherSubject, unread: 0, updatedDate: new Date() });
-			}
+			const watcherSubject = (postDataset.subject || postContainer.querySelector('.post-message').textContent || "No subject").substring(0, 25);
+			threadWatcher.add(postDataset.board, postDataset.postId, { subject: watcherSubject, unread: 0, updatedDate: new Date() });
 			return;
 	}
 	toggleFilter(filterType, filterData, hiding);

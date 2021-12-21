@@ -207,6 +207,7 @@ class ThreadWatcher {
 
 	//add a thread to the watchlist map
 	add(board, postId, data) {
+console.log(board, postId, data)
 		const key = `${board}-${postId}`;
 		if (this.watchListMap.has(key)) {
 			//dont add duplicates
@@ -239,7 +240,6 @@ class ThreadWatcher {
 	addRow(board, postId, data) {
 		const isCurrentThread = this.threadMatch != null
 			&& this.threadMatch[1] === board && this.threadMatch[2] === postId;
-console.log(this.threadMatch, isCurrentThread)
 		const watchListItemHtml = watchedthread({ watchedthread: { board, postId, ...data, isCurrentThread } });
 		this.threadWatcher.insertAdjacentHTML('beforeend', watchListItemHtml);
 		const watchedThreadElem = this.threadWatcher.lastChild;
