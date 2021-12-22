@@ -45,6 +45,7 @@ class ThreadWatcher {
 
 	//refresh all the threads in the watchlist map
 	refresh() {
+		console.log('refreshing watchlist')
 		for (let t of this.watchListMap.entries()) {
 			const [board, postId] = t[0].split('-');
 			const data = t[1];
@@ -207,7 +208,6 @@ class ThreadWatcher {
 
 	//add a thread to the watchlist map
 	add(board, postId, data) {
-console.log(board, postId, data)
 		const key = `${board}-${postId}`;
 		if (this.watchListMap.has(key)) {
 			//dont add duplicates
