@@ -106,6 +106,9 @@ tr:nth-child(2n+1) {
 		--greentext-color: #789922;
 		--pinktext-color:#E0727F;
 	}
+	.captcha {
+		filter: invert(5%);
+	}
 	.post-info, .post-container:target .post-info, .post-container.highlighted .post-info {
 		background:none/*!important*/;
 		border:none/*!important*/;
