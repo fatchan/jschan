@@ -263,7 +263,8 @@ const postMenuChange = function(e) {
 		case 'moderate':
 			return moderatePost(postContainer);
 		case 'watch':
-			const watcherSubject = (postDataset.subject || postContainer.querySelector('.post-message').textContent || "No subject").substring(0, 25);
+			const postMessage = postContainer.querySelector('.post-message');
+			const watcherSubject = (postDataset.subject || (postMessage && postMessage.textContent) || "No subject").substring(0, 25);
 			threadWatcher.add(postDataset.board, postDataset.postId, { subject: watcherSubject, unread: 0, updatedDate: new Date() });
 			return;
 	}
