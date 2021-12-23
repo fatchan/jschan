@@ -4,14 +4,15 @@ class Dragable {
 		this.draging = false;
 		this.xo = 0;
 		this.yo = 0;
+		this.targetId = target;
 		this.handle = document.querySelector(handle);
 		this.target = document.querySelector(target);
-		const savedTop = localStorage.getItem('dragtop');
+		const savedTop = localStorage.getItem(`${this.targetId}-dragtop`);
 		if (savedTop != 'null') {
 			this.target.style.top = savedTop;
 			this.target.style.bottom = 'unset';
 		}
-		const savedLeft = localStorage.getItem('dragleft');
+		const savedLeft = localStorage.getItem(`${this.targetId}-dragleft`);
 		if (savedLeft != 'null') {
 			this.target.style.left = savedLeft;
 		}
@@ -101,8 +102,8 @@ class Dragable {
 				break;
 		}
 		this.target.style.bottom = 'unset';
-		setLocalStorage('dragtop', this.target.style.top);
-		setLocalStorage('dragleft', this.target.style.left);
+		setLocalStorage(`${this.targetId}-dragtop`, this.target.style.top);
+		setLocalStorage(`${this.targetId}-dragleft`, this.target.style.left);
 	}
 
 	//stopped dragging
@@ -118,5 +119,5 @@ class Dragable {
 }
 
 if (document.getElementById('postform')) {
-	new Dragable('#dragHandle', '#postform');
+	new Dragable('#postform-dragHandle', '#postform');
 }

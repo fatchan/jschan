@@ -99,7 +99,7 @@ table {
 	background: var(--post-color);
 	border-spacing:0;
 }
-.post-info, #dragHandle, th:not(.alt){
+.post-info, #postform-dragHandle, th:not(.alt){
 	font-weight: bold;
 	color: #ddd;
 	background: #808080!important;

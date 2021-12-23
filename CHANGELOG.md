@@ -75,3 +75,11 @@
   - Notifications are no longer sent for posts when clicking "view full text"
   - Make handling files with no/incorrect extension better
   - Image count from OP is included in catalog tiles file count
+
+### 0.1.10
+  - Add thread watcher/watchlist, so users can save list of threads to a little window and see unread count
+  - There are now API docs available at http://fatchan.gitgud.site/jschan-docs/
+  - Improved installation nginx script. Confirms overwriting and doesnt break when run more than once
+  - Some visual tweaks (file "(u)" being on newline, "x" -> "×")
+  - Bugfixes
+

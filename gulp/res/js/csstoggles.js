@@ -50,6 +50,7 @@ const crispCss = `img { image-rendering: crisp-edges; }`;
 const nonColorIdsCss = `.user-id { background: transparent none repeat scroll 0% 0% !important; border-color: transparent; text-shadow: none; color: var(--font-color); }`;
 const alwaysShowSpoilersCss = `.spoiler { color: var(--font-color) !important; background: transparent none repeat scroll 0% 0%; outline: 1px solid black; cursor: auto; }`;
 const smoothScrollingCss = `html { scroll-behavior: smooth; }`;
+const threadWatcherCss = `#threadwatcher { display: flex; }`;
 
 //make classes with css
 new CssToggle('hiderecursive-setting', 'hiderecursive', settings.hideRecursive, hideRecursiveCss);
@@ -60,3 +61,4 @@ new CssToggle('noncolorids-setting', 'noncolorids', settings.nonColorIds, nonCol
 new CssToggle('alwaysshowspoilers-setting', 'alwaysshowspoilers', settings.alwaysShowSpoilers, alwaysShowSpoilersCss);
 new CssToggle('hidepoststubs-setting', 'hidepoststubs', settings.hidePostStubs, hidePostStubsCss);
 new CssToggle('smoothscrolling-setting', 'smoothscrolling', settings.smoothScrolling, smoothScrollingCss);
+new CssToggle('threadwatcher-setting', 'threadwatcher', settings.threadWatcher, threadWatcherCss);

@@ -396,6 +396,8 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		fs.writeFileSync('gulp/res/js/uploaditem.js', pug.compileFileClient(`${paths.pug.src}/includes/uploaditem.pug`, { compileDebug: false, debug: false, name: 'uploaditem' }));
 		fs.writeFileSync('gulp/res/js/pugfilters.js', pug.compileFileClient(`${paths.pug.src}/includes/filters.pug`, { compileDebug: false, debug: false, name: 'filters' }));
 		fs.writeFileSync('gulp/res/js/captchaformsection.js', pug.compileFileClient(`${paths.pug.src}/includes/captchaformsection.pug`, { compileDebug: false, debug: false, name: 'captchaformsection' }));
+		fs.writeFileSync('gulp/res/js/watchedthread.js', pug.compileFileClient(`${paths.pug.src}/includes/watchedthread.pug`, { compileDebug: false, debug: false, name: 'watchedthread' }));
+		fs.writeFileSync('gulp/res/js/threadwatcher.js', pug.compileFileClient(`${paths.pug.src}/includes/threadwatcher.pug`, { compileDebug: false, debug: false, name: 'threadwatcher' }));
 		fs.symlinkSync(__dirname+'/node_modules/socket.io/client-dist/socket.io.min.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
 	} catch (e) {
 		if (e.code !== 'EEXIST') {
@@ -417,12 +419,12 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 			`!${paths.scripts.src}/saveoverboard.js`,
 			`!${paths.scripts.src}/hidefileinput.js`,
 			`!${paths.scripts.src}/dragable.js`,
+			`!${paths.scripts.src}/watchlist.js`,
 			`!${paths.scripts.src}/filters.js`,
 			`!${paths.scripts.src}/hideimages.js`,
 			`!${paths.scripts.src}/yous.js`,
 			`!${paths.scripts.src}/catalog.js`,
 			`!${paths.scripts.src}/time.js`,
-			`!${paths.scripts.src}/themelist.js`, //dont include files from my fuck up with git. todo: make this a migration?
 			`!${paths.scripts.src}/timezone.js`,
 		])
 		.pipe(concat('all.js'))
@@ -435,6 +437,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 			`${paths.scripts.src}/hideimages.js`,
 			`${paths.scripts.src}/yous.js`,
 			`${paths.scripts.src}/filters.js`,
+			`${paths.scripts.src}/watchlist.js`,
 			`${paths.scripts.src}/catalog.js`,
 			`${paths.scripts.src}/time.js`,
 		])

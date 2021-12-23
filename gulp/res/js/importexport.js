@@ -1,7 +1,7 @@
 window.addEventListener('settingsReady', () => {
 
-	const settingNames = ['volume','loop','imageloadingbars','live','scroll','localtime','relative','24hour','notifications','hiddenimages'
-		,'notification-yous-only','yous-setting','filters1','name','theme','codetheme','customcss','disableboardcss','hiderecursive'
+	const settingNames = ['volume','loop','imageloadingbars','live','scroll','localtime','relative','24hour','notifications','hiddenimages', 'threadwatcher'
+		,'notification-yous-only','yous-setting','filters1','name','theme','codetheme','customcss','disableboardcss','hiderecursive', 'watchlist'
 		,'heightlimit','crispimages','hidethumbnails','noncolorids','alwaysshowspoilers','hidepoststubs','smoothscrolling'];
 
 	const importExportText = document.getElementById('import-export-setting');

@@ -1,7 +1,14 @@
 include ./report.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboard=false)
 	.anchor(id=post.postId)
-	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}` data-board=post.board data-post-id=post.postId data-user-id=post.userId data-name=post.name data-tripcode=post.tripcode data-subject=post.subject data-email=post.email)
+	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}`
+		data-board=post.board
+		data-post-id=post.postId
+		data-user-id=post.userId
+		data-name=post.name
+		data-tripcode=post.tripcode
+		data-subject=post.subject
+		data-email=post.email)
 		- const postURL = `/${post.board}/${(modview || manage || globalmanage) ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info
 			span
@@ -71,6 +78,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 						option(value='ftrip') Filter Tripcode
 					if !overboard && !ban
 						option(value='moderate') Moderate
+					if !post.thread
+						option(value='watch') Watch
 		.post-data
 			if post.files.length > 0
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))
@@ -78,10 +87,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 						.post-file
 							- const type = file.mimetype.split('/')[0]
 							span.post-file-info
-								span: a(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? 'Spoiler File' : file.originalFilename}
-								|  
-								- const uFile = `${post.u}-${fileindex}${file.extension}`
-								span: a(href='/file/'+file.filename title='Download '+uFile download=uFile) (u)
+								span
+									a.filename(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? 'Spoiler File' : file.originalFilename}
 								br
 								if globalmanage && file.phash != null
 									span #{file.phash}
