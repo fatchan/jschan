@@ -6,7 +6,7 @@ var pug_match_html=/["&<>]/;function uploaditem(locals) {var pug_html = "", pug_
     (function (uploaditem) {
       pug_mixins["uploaditem"] = pug_interp = function(item){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\u003Cdiv\u003E\u003Cdiv class=\"upload-item\"\u003E\u003Cimg" + (" class=\"upload-thumb\""+pug_attr("src", item.url, true, false)) + "\u002F\u003E\u003Cp\u003E" + (pug_escape(null == (pug_interp = item.name) ? "" : pug_interp)) + "\u003C\u002Fp\u003E\u003Ca class=\"close\"\u003EX\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv\u003E\u003Cdiv class=\"upload-item\"\u003E\u003Cimg" + (" class=\"upload-thumb\""+pug_attr("src", item.url, true, false)) + "\u002F\u003E\u003Cp\u003E" + (pug_escape(null == (pug_interp = item.name) ? "" : pug_interp)) + "\u003C\u002Fp\u003E\u003Ca class=\"close\"\u003E×\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
 if (item.hash) {
 pug_html = pug_html + "\u003Cdiv class=\"row sb\"\u003E";
 if (item.spoilers) {

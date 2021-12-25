@@ -47,12 +47,13 @@ setDefaultLocalStorage('24hour', settings.hour24Time);
 setDefaultLocalStorage('notifications', settings.notificationsEnabled);
 setDefaultLocalStorage('notification-yous-only', settings.notificationsYousOnly);
 setDefaultLocalStorage('yous-setting', settings.showYous);
+setDefaultLocalStorage('threadwatcher', settings.threadWatcher);
+setDefaultLocalStorage('threadwatcher-minimise', false);
 setDefaultLocalStorage('disableboardcss', false);
 
-setDefaultLocalStorage('dragtop', null);
-setDefaultLocalStorage('dragleft', null);
 setDefaultLocalStorage('filters1', '[]');
 setDefaultLocalStorage('yous', '[]');
+setDefaultLocalStorage('watchlist', '[]');
 setDefaultLocalStorage('name', '');
 setDefaultLocalStorage('theme', 'default');
 setDefaultLocalStorage('codetheme', 'default');

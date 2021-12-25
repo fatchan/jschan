@@ -1,0 +1,6 @@
+mixin watchedthread(thread)
+	.row.watched-thread(data-id=`${thread.board}-${thread.postId}` data-unread=(thread.unread||null))
+		a.close ×
+		- const watchedThreadLink = `/${thread.board}/thread/${thread.postId}.html`;
+		a(class=(thread.isCurrentThread ? 'bold' : '') href=watchedThreadLink) /#{thread.board}/ - #{thread.subject || 'No subject'}
+		a.ml-a(href=`${watchedThreadLink}#bottom`) [▼]

@@ -3,7 +3,7 @@ mixin modal(data)
 	.modal(id=(data.settings ? 'settingsmodal' : '') style=data.hidden?'display:none':'')
 		.row
 			p.bold #{data.title}
-			a.close.postform-style#modalclose X
+			a.close.postform-style#modalclose ×
 		if data.message || data.messages || data.error || data.errors
 			.row
 				ul.nomarks
@@ -109,49 +109,63 @@ mixin modal(data)
 								label.postform-style.ph-5
 									input#smoothscrolling-setting(type='checkbox')
 								.rlabel Smooth scrolling
+							.row
+								label.postform-style.ph-5
+									input#threadwatcher-setting(type='checkbox')
+								.rlabel Thread watcher
+					.row.wrap.sb.mt-5
+						.col.mr-5
+							.row
+								.label Video/Audio volume
+								label.postform-style.ph-5
+									input#volume-setting(type='range' min='0' max='100')
+							.row
+								.label Default name
+								input#name-setting(type='text' name='name')
+							.row
+								.label Post password
+								input#postpassword-setting(type='password' name='postpassword' autocomplete='new-password')
+							.row
+								.label Theme
+								select#theme-setting
+									option(value='default') default
+									each theme in data.settings.themes
+										option(value=theme) #{theme}
+							.row
+								.label Code theme
+								select#codetheme-setting
+									option(value='default') default
+									each theme in data.settings.codeThemes
+										option(value=theme) #{theme}
+
+						.col
+							.row
+								.label (You)s
+								input.mr-1#youslist-setting(type='text' readonly)
+								input#youslist-clear(type='button' value='Clear')
+							.row
+								.label Watchlist
+								input.mr-1#watchlist-setting(type='text' readonly)
+								input#watchlist-clear(type='button' value='Clear')
+							.row
+								.label Hidden images
+								input.mr-1#hiddenimages-setting(type='text' readonly)
+								input#hiddenimages-clear(type='button' value='Clear')
+							.row
+								.label Cache
+								input.mr-1#hovercachelist-setting(type='text' readonly)
+								input#hovercachelist-clear(type='button' value='Clear')
+
 					.row.mt-5
-						.label (You)s
-						input.mr-1#youslist-setting(type='text' readonly)
-						input#youslist-clear(type='button' value='Clear')
-					.row
-						.label Hidden images
-						input.mr-1#hiddenimages-setting(type='text' readonly)
-						input#hiddenimages-clear(type='button' value='Clear')
-					.row
-						.label Cache
-						input.mr-1#hovercachelist-setting(type='text' readonly)
-						input#hovercachelist-clear(type='button' value='Clear')
-					.row
-						.label Video/Audio volume
-						label.postform-style.ph-5
-							input#volume-setting(type='range' min='0' max='100')
-					.row
-						.label Default name
-						input#name-setting(type='text' name='name')
-					.row
-						.label Post password
-						input#postpassword-setting(type='password' name='postpassword' autocomplete='new-password')
-					.row
-						.label Theme
-						select#theme-setting
-							option(value='default') default
-							each theme in data.settings.themes
-								option(value=theme) #{theme}
-					.row
-						.label Code theme
-						select#codetheme-setting
-							option(value='default') default
-							each theme in data.settings.codeThemes
-								option(value=theme) #{theme}
-					.row
 						.label Custom CSS
 						textarea#customcss-setting(rows=7)
+
 					.row.mt-5
 						form.text-center#filter-form
 							table
 								tbody#advancedfilters
 									tr
-										th Post Filters
+										th(colspan=4) Post Filters
 										th
 										th
 										th

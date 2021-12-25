@@ -28,9 +28,14 @@ google captcha: $GOOGLE_CAPTCHA
 hcaptcha: $H_CAPTCHA
 geoip: $GEOIP
 (y/n): " CORRECT
-
 #not saying no = yes, just like real life
 [[ "$CORRECT" == "n" ]] && echo "Exiting..." && exit;
+
+#ask to overwrite if already exists
+if [[ -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME ]]; then
+	read -p "/etc/nginx/sites-available/$SITES_AVAILABLE_NAME already exists. Continue and overwrite existing configuration? (y/n)" OVERWRITE
+	[[ "$OVERWRITE" == "n" ]] && echo "Exiting..." && exit;
+fi
 
 #copy the snippets and replace install path, they aren't templated
 sudo cp $JSCHAN_DIRECTORY/configs/nginx/snippets/* /etc/nginx/snippets
@@ -150,12 +155,9 @@ else
 	sudo sed -i 's/ wss:\/\/www.example.loki\/ wss:\/\/example.loki\///g' /etc/nginx/snippets/security_headers*
 fi
 
-#debug
-#printf "$JSCHAN_CONFIG"
-
 #write the config to file and syymlink to sites-available
-printf "$JSCHAN_CONFIG" >> /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
-sudo ln -s /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
+printf "$JSCHAN_CONFIG" > /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
+sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
 
 if [ "$GOOGLE_CAPTCHA" == "y" ]; then
 	#add google captcha CSP exceptions
@@ -186,10 +188,14 @@ if [ "$GEOIP" == "y" ]; then
 	mv dbip.dat GeoIP.dat
 	chown www-data:www-data /usr/share/GeoIP/GeoIP.dat
 
-	#add config statement to /etc/nginx/nginx.conf
-	sudo sed -i '/http {/a \
+	#add goeip_country to /etc/nginx/nginx.conf, only if not already exists
+	grep -qF "geoip_country /usr/share/GeoIP/GeoIP.dat;" /etc/nginx/nginx.conf
+	if [ $? -eq 0 ]; then
+		sudo sed -i '/http {/a \
 geoip_country /usr/share/GeoIP/GeoIP.dat;' /etc/nginx/nginx.conf
-
+	fi
+else
+	sudo sed '/geoip_country/d' /etc/nginx/nginx.conf
 fi
 
 #and restart nginx

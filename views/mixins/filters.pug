@@ -6,6 +6,6 @@ mixin filters(filterArr)
 				td #{filterTypeMap[filter.type]}
 				td #{filter.val.toString()}
 				td: input(disabled type='checkbox' checked=filter.type.endsWith('r'))
-				td: a.right.close(data-type=filter.type data-data=filter.val) X
+				td: a.right.close(data-type=filter.type data-data=filter.val) ×
 	else
 		td(colspan=4) No Filters

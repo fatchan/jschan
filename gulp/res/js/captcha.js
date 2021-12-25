@@ -67,6 +67,8 @@ class CaptchaController {
 				const existingImage = captcha.previousSibling.children[0];
 				if (existingImage) {
 					captcha.previousSibling.children[0].src = xhr.responseURL;
+				} else {
+					this.loadCaptcha(captcha, xhr.responseURL);
 				}
 			}
 			this.refreshing = false;
@@ -99,7 +101,7 @@ class CaptchaController {
 		this.loadCaptcha(captchaField);
 	}
 
-	loadCaptcha(field) {
+	loadCaptcha(field, imgSrc = '/captcha') {
 		const captchaDiv = field.previousSibling;
 		if (captchaDiv.children.length > 0) {
 			return;
@@ -116,7 +118,7 @@ class CaptchaController {
 		if (captchaType === 'text') {
 			field.placeholder = 'loading';
 		}
-		captchaImg.src = '/captcha';
+		captchaImg.src = imgSrc;
 		captchaImg.onload = () => {
 			if (captchaType === 'text') {
 				field.placeholder = 'Captcha text';

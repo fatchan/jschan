@@ -200,10 +200,11 @@ const toggleFilter = (filterType, filterData, state) => {
 
 //i guess this works, lmfao and saves ton of time
 let actionForm, modalBg, moderatingPost;
-const cancelModeratePost = () => {
+const cancelModeratePost = (e) => {
 	if (!moderatingPost) {
 		return;
 	}
+	e.preventDefault();
 	moderatingPost.querySelector('.post-check').checked = false;
 	moderatingPost.style.zIndex = 'unset';
 	if (moderatingPost.classList.contains('op')) {
@@ -261,6 +262,11 @@ const postMenuChange = function(e) {
 			break;
 		case 'moderate':
 			return moderatePost(postContainer);
+		case 'watch':
+			const postMessage = postContainer.querySelector('.post-message');
+			const watcherSubject = (postDataset.subject || (postMessage && postMessage.textContent) || "No subject").substring(0, 25);
+			threadWatcher.add(postDataset.board, postDataset.postId, { subject: watcherSubject, unread: 0, updatedDate: new Date() });
+			return;
 	}
 	toggleFilter(filterType, filterData, hiding);
 };
