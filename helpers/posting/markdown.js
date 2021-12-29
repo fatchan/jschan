@@ -16,7 +16,8 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 	, splitRegex = /\[code\]([\s\S]+?)\[\/code\]/gm
 	, trimNewlineRegex = /^(\s*\r?\n)*/g
 	, escape = require(__dirname+'/escape.js')
-	, { highlight, highlightAuto } = require('highlight.js')
+	, { highlight, highlightAuto, listLanguages } = require('highlight.js')
+	, validLanguages = listLanguages() //precompute
 	, { addCallback } = require(__dirname+'/../../redis.js')
 	, config = require(__dirname+'/../../config.js')
 	, diceroll = require(__dirname+'/diceroll.js')
@@ -90,18 +91,18 @@ module.exports = {
 			lang = matches.groups.language.toLowerCase();
 		}
 		if (!lang) {
+			//no language specified, try automatic syntax highlighting
 			const { language, relevance, value } = highlightAuto(trimFix, highlightOptions.languageSubset);
 			if (relevance > highlightOptions.threshold) {
 				return `<span class='code hljs'><small>possible language: ${language}, relevance: ${relevance}</small>\n${value}</span>`;
 			}
-		} else if (lang !== 'plain' && highlightOptions.languageSubset.includes(lang)) {
-			if (lang === 'aa') {
-				return `<span class='aa'>${escape(matches.groups.code)}</span>`;
-			} else {
-				const { value } = highlight(trimFix, { language: lang, ignoreIllegals: true });
-				return `<span class='code hljs'><small>language: ${lang}</small>\n${value}</span>`;
-			}
+		} else if (lang === 'aa') {
+			return `<span class='aa'>${escape(matches.groups.code)}</span>`;
+		} else if (validLanguages.includes(lang)) {
+			const { value } = highlight(trimFix, { language: lang, ignoreIllegals: true });
+			return `<span class='code hljs'><small>language: ${lang}</small>\n${value}</span>`;
 		}
+		//else, auto highlight relevance threshold was too low, lang was not a valid language, or lang was 'plain'
 		return `<span class='code'>${escape(trimFix)}</span>`;
 	},
 
