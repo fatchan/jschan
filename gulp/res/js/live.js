@@ -26,6 +26,18 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		lastPostIds[board] = Math.max((lastPostIds[board] || 0), postId);
 	}
 
+	//add "deleted" title text to posts to show it was deleted
+	const deletePost = (data) {
+		console.log('got delete post message', data);
+		const anchor = document.getElementById(data.postId);
+		const postContainer = anchor.nextSibling;
+		postContainer.classList.add('deleted');
+		if (postContainer.classList.contains('op')) {
+			//OP was deleted, os every post in the thread is "deleted". hide new reply buttons (and disconnect socket)
+			//todo...
+		}
+	};
+
 	const newPost = (data) => {
 		//insert at end of thread, but insert at top for globalmanage
 		console.log('got new post', data);
@@ -236,6 +248,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				enableLive();
 			});
 			socket.on('newPost', newPost);
+			socket.on('deletePost', deletePost);
 		} else {
 			//websocket not supported, update with polling to api
 			updateButton.removeAttribute('style');

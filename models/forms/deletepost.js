@@ -35,7 +35,7 @@ module.exports = async (posts, board, all=false) => {
 			threadPosts = await Posts.getMultipleThreadPosts(board, threadPostIds);
 		} else {
 			//otherwise we fetch posts from threads on different boards separarely
-//TODO: use big board:$or/postid:$in query so this can be tackled in a single db query
+			//TODO: use big board:$or/postid:$in query so this can be tackled in a single db query
 			await Promise.all(threads.map(async thread => {
 				//for each thread, fetch all posts from the matching board and thread matching the threads postId
 				const currentThreadPosts = await Posts.getThreadPosts(thread.board, thread.postId);
@@ -61,7 +61,7 @@ module.exports = async (posts, board, all=false) => {
 
 	if (postFiles.length > 0) {
 		const fileNames = postFiles.map(x => x.filename)//[...new Set(postFiles.map(x => x.filename))];
-        await Files.decrement(fileNames);
+		await Files.decrement(fileNames);
 		if (pruneImmediately) {
 			await pruneFiles(fileNames);
 		}
@@ -112,6 +112,8 @@ module.exports = async (posts, board, all=false) => {
 
 	//deleting before remarkup so quotes are accurate
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
+	//emit the deletes to thread sockets (not recent sockets [yet?])
+	//Socketio.emitRoom(`board-thread`, 'deletePost', {postId:xxx});
 
 	if (all === false) {
 		//get posts that quoted deleted posts so we can remarkup them
@@ -125,18 +127,18 @@ module.exports = async (posts, board, all=false) => {
 					message = sanitize(quotedMessage, sanitizeOptions.after);
 					bulkWrites.push({
 						'updateOne': {
-		                	'filter': {
-		                    	'_id': post._id
-		                	},
-		                	'update': {
-		                    	'$set': {
-		                        	'quotes': threadQuotes,
+							'filter': {
+								'_id': post._id
+							},
+							'update': {
+								'$set': {
+									'quotes': threadQuotes,
 									'crossquotes': crossQuotes,
 									'message': message
-		                    	}
-		                	}
-		            	}
-		        	});
+								}
+							}
+						}
+					});
 				}
 			}));
 		}

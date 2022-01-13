@@ -1026,6 +1026,12 @@ input:invalid, textarea:invalid {
 	background: none;
 }
 
+.deleted .post-info::before {
+  content: "Deleted ";
+  font-weight: bold;
+  color: var(--title-color);
+}
+
 .anchor:target + .post-container,
 .anchor:target + .catalog-tile,
 .post-container.highlighted,

@@ -34,7 +34,7 @@ const path = require('path')
 module.exports = async (req, res, next) => {
 
 	const { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		strictFiltering, animatedGifThumbnails, audioThumbnails } = config.get;
+		strictFiltering, animatedGifThumbnails, audioThumbnails, ipHashPermLevel } = config.get;
 
 	//spam/flood check
 	const flood = await spamCheck(req, res);
@@ -614,9 +614,13 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	const { raw, single } = data.ip;
 	//but emit it to manage pages because they need to get all posts through socket including thread
 	Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw: null } });
-	Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw } });
 	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-hashed`, 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw: null } });
-	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw } });
+	if (ipHashPermLevel > -1) {
+		//small optimisation for boards where this is manually set to -1 for privacy, no need to emit to rooms that cant be accessed
+		//even if they are empty it will create extra communication noise in redis, socket adapter, etc.
+		Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw } });
+		Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw } });
+	}
 
 	//now add other pages to be built in background
 	if (enableCaptcha) {

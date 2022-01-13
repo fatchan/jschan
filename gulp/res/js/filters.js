@@ -77,7 +77,7 @@ const togglePostsHidden = (posts, state, single) => {
 		} else {
 			elem.classList['add']('hidden');
 		}
-			elem.querySelector('.postmenu').children[0].textContent = (showing ? 'Hide' : 'Show');
+		elem.querySelector('.postmenu').children[0].textContent = (showing ? 'Hide' : 'Show');
 	}
 };
 
