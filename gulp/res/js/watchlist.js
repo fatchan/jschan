@@ -45,7 +45,7 @@ class ThreadWatcher {
 
 	//refresh all the threads in the watchlist map
 	refresh() {
-		console.log('refreshing watchlist')
+		this.watchListMap.size > 0 && console.log('refreshing watchlist');
 		for (let t of this.watchListMap.entries()) {
 			const [board, postId] = t[0].split('-');
 			const data = t[1];
