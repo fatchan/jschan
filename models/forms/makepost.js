@@ -55,9 +55,18 @@ module.exports = async (req, res, next) => {
 		lockReset, captchaReset, pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
 		maxFiles, sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 		captchaMode, lockMode, allowedFileTypes, customFlags, geoFlags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
+	if (res.locals.numFiles > maxFiles) {
+		await deleteTempFiles(req).catch(e => console.error);
+		return dynamicResponse(req, res, 400, 'message', {
+			'title': 'Too many files',
+			'message': `Max files per post on this board is ${maxFiles}`,
+			'redirect': req.headers.referer
+		});
+	}
 	if (res.locals.permLevel >= 4
 		&& res.locals.country
 		&& blockedCountries.includes(res.locals.country.code)) {
+		await deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': `Your country "${res.locals.country.name}" is not allowed to post on this board`,
