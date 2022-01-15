@@ -4,6 +4,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, { remove } = require('fs-extra')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts, Files } = require(__dirname+'/../../db/')
+	, Socketio = require(__dirname+'/../../socketio.js')
 	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, config = require(__dirname+'/../../config.js')
@@ -18,13 +19,15 @@ module.exports = async (posts, board, all=false) => {
 	//filter to threads
 	const threads = posts.filter(x => x.thread == null);
 
-	if (threads.length > 0) {
-		//delete the html/json for threads
-		await Promise.all(threads.map(thread => {
-			remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`)
-			remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
-		}));
-	}
+	//emits not including the fetched posts from next block because those are based on threads being selected
+	//and we dont need to send delete message for every reply in a thread when the OP gets deleted.
+	const deleteEmits = posts.reduce((acc, post) => {
+		acc.push({
+			room: `${post.board}-${post.thread || post.postId}`,
+			postId: post.postId,
+		});
+		return acc;
+	}, []);
 
 	//get posts from all threads
 	let threadPosts = []
@@ -113,7 +116,9 @@ module.exports = async (posts, board, all=false) => {
 	//deleting before remarkup so quotes are accurate
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 	//emit the deletes to thread sockets (not recent sockets [yet?])
-	//Socketio.emitRoom(`board-thread`, 'deletePost', {postId:xxx});
+	for (let i = 0; i < deleteEmits.length; i++) {
+		Socketio.emitRoom(deleteEmits[i].room, 'deletePost', { postId: deleteEmits[i].postId });
+	}
 
 	if (all === false) {
 		//get posts that quoted deleted posts so we can remarkup them
@@ -147,6 +152,14 @@ module.exports = async (posts, board, all=false) => {
 	//bulkwrite it all
 	if (bulkWrites.length > 0) {
 		await Posts.db.bulkWrite(bulkWrites);
+	}
+
+	if (threads.length > 0) {
+		//delete the html/json for threads
+		await Promise.all(threads.map(thread => {
+			remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`)
+			remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
+		}));
 	}
 
 	//hooray!

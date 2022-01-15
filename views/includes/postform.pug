@@ -81,4 +81,4 @@ section.form-wrapper.flex-center
 			else
 				include ./captchaexpand.pug
 		input#submitpost(type='submit', value=`New ${isThread ? 'Reply' : 'Thread'}`)
-	a.collapse.no-decoration(href='#postform') [#{isThread ? 'New Reply' : 'New Thread'}]
+	a.collapse.no-decoration.post-button(href='#postform') [#{isThread ? 'New Reply' : 'New Thread'}]

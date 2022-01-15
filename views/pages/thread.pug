@@ -53,7 +53,7 @@ block content
 			for post in thread.replies
 				- uids && post.userId && uids.add(post.userId)
 				+post(post)
-		a.bottom-reply.no-decoration(href='#postform') [New Reply]
+		a.bottom-reply.no-decoration.post-button(href='#postform') [New Reply]
 		hr(size=1)
 		.wrapbar
 			if modview

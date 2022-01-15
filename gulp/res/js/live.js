@@ -27,14 +27,23 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	}
 
 	//add "deleted" title text to posts to show it was deleted
-	const deletePost = (data) {
+	const deletePost = (data) => {
 		console.log('got delete post message', data);
 		const anchor = document.getElementById(data.postId);
 		const postContainer = anchor.nextSibling;
 		postContainer.classList.add('deleted');
 		if (postContainer.classList.contains('op')) {
-			//OP was deleted, os every post in the thread is "deleted". hide new reply buttons (and disconnect socket)
-			//todo...
+			//OP was deleted, so every post in the thread is "deleted".
+			const postContainers = document.getElementsByClassName('post-container');
+			Array.from(postContainers).forEach(e => e.classList.add('deleted'));
+			//remove new reply buttons and postform
+			document.getElementById('postform').remove();
+			const postButtons = document.getElementsByClassName('post-button');
+			Array.from(postButtons).forEach(e => e.remove());
+			//and disconnect socket
+			if (socket.connected === true) {
+				socket.disconnect();
+			}
 		}
 	};
 
