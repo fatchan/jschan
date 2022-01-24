@@ -117,7 +117,7 @@ module.exports = async (posts, board, all=false) => {
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 	//emit the deletes to thread sockets (not recent sockets [yet?])
 	for (let i = 0; i < deleteEmits.length; i++) {
-		Socketio.emitRoom(deleteEmits[i].room, 'deletePost', { postId: deleteEmits[i].postId });
+		Socketio.emitRoom(deleteEmits[i].room, 'markPost', { postId: deleteEmits[i].postId, type: 'delete', mark: 'Deleted' });
 	}
 
 	if (all === false) {

@@ -26,24 +26,36 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		lastPostIds[board] = Math.max((lastPostIds[board] || 0), postId);
 	}
 
-	//add "deleted" title text to posts to show it was deleted
-	const deletePost = (data) => {
-		console.log('got delete post message', data);
+	//add text before post-info to show posts deleted, moved, etc
+	const markPost = (data) => {
+		console.log('got mark post message', data);
 		const anchor = document.getElementById(data.postId);
 		const postContainer = anchor.nextSibling;
-		postContainer.classList.add('deleted');
-		if (postContainer.classList.contains('op')) {
-			//OP was deleted, so every post in the thread is "deleted".
-			const postContainers = document.getElementsByClassName('post-container');
-			Array.from(postContainers).forEach(e => e.classList.add('deleted'));
-			//remove new reply buttons and postform
-			document.getElementById('postform').remove();
-			const postButtons = document.getElementsByClassName('post-button');
-			Array.from(postButtons).forEach(e => e.remove());
-			//and disconnect socket
-			if (socket.connected === true) {
-				socket.disconnect();
-			}
+		postContainer.classList.add('marked');
+		postContainer.setAttribute('data-mark', data.mark);
+		//handle any special cases for different marks
+		switch (data.type) {
+			case "delete":
+			case "move":
+				if (postContainer.classList.contains('op')) {
+					//moved or delete OPs then apply to whole thread
+					const postContainers = document.getElementsByClassName('post-container');
+					Array.from(postContainers).forEach(e => {
+						e.classList.add('marked')
+						e.setAttribute('data-mark', data.mark);
+					});
+					//remove new reply buttons and postform
+					document.getElementById('postform').remove();
+					const postButtons = document.getElementsByClassName('post-button');
+					Array.from(postButtons).forEach(e => e.remove());
+					//and disconnect socket
+					if (socket.connected === true) {
+						socket.disconnect();
+					}
+				}
+				break;
+			default:
+				//nothing special
 		}
 	};
 
@@ -257,7 +269,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 				enableLive();
 			});
 			socket.on('newPost', newPost);
-			socket.on('deletePost', deletePost);
+			socket.on('markPost', markPost);
 		} else {
 			//websocket not supported, update with polling to api
 			updateButton.removeAttribute('style');
