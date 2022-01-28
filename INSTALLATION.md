@@ -116,18 +116,28 @@ To enable the proxy, tick "Use Socks Proxy" in global management settings and se
 ## Updating
 
 ```bash
-#stop the jschan backend
+#first, stop the jschan backend
 $ pm2 stop ecosystem.config.js
+
 #pull the latest changes
 $ git pull
+
 #install dependencies again in case any have updated or changed
 $ npm install
+
+#check if anything nginx related changed between the old and new verison, e.g.
+$ git diff v0.1.5 v0.1.6 configs/nginx
+#If you use a completely standard jschan nginx, run configs/nginx/nginx.sh again.
+#Otherwise, update your nginx config with the necessary changes.
+
 #run the gulp migrate task. this will update things such as your database schema.
 $ gulp migrate
 #run the default gulp task to update, scripts, css, icons, images and delete old html
 $ gulp
+
 #start the backend again
 $ pm2 restart ecosystem.config.js --env production
+
 #if something breaks, check and read the logs, they will help figure out what went wrong
 $ pm2 logs
 ```
