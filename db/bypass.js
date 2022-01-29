@@ -8,10 +8,11 @@ module.exports = {
 
 	db,
 
-	checkBypass: (id) => {
+	checkBypass: (id, anonymizer=false) => {
 		const { blockBypass } = config.get;
 		return db.findOneAndUpdate({
 			'_id': id,
+			'anonymizer': anonymizer,
 			'uses': {
 				'$lte': blockBypass.expireAfterUses
 			}
@@ -22,10 +23,11 @@ module.exports = {
 		}).then(r => r.value);
 	},
 
-	getBypass: () => {
+	getBypass: (anonymizer=false) => {
 		const { blockBypass } = config.get;
 		return db.insertOne({
 			'uses': 0,
+			'anonymizer': anonymizer,
 			'expireAt': new Date(Date.now() + blockBypass.expireAfterTime)
 		});
 	},
