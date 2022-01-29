@@ -12,6 +12,7 @@ module.exports = {
 	catalog: require(__dirname+'/catalog.js'),
 	banners: require(__dirname+'/banners.js'),
 	customPage: require(__dirname+'/custompage.js'),
+	csrfPage: require(__dirname+'/csrf.js'),
 	randombanner: require(__dirname+'/randombanner.js'),
 	news: require(__dirname+'/news.js'),
 	captchaPage: require(__dirname+'/captchapage.js'),
