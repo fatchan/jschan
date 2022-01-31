@@ -50,7 +50,7 @@ module.exports = async (req, res, next) => {
 			&& !blockBypass.forceAnonymizers //AND its not forced for anonymizers
 			&& !bypassId)) { //AND they dont already have one,
 		//then give the user a bypass id
-		const newBypass = await Bypass.getBypass();
+		const newBypass = await Bypass.getBypass(res.locals.anonymizer);
 		const newBypassId = newBypass.insertedId;
 		bypassId = newBypassId.toString();
 		res.locals.preFetchedBypassId = bypassId;
