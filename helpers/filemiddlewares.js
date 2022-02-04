@@ -3,7 +3,7 @@
 const { debugLogs } = require(__dirname+'/../configs/secrets.js')
 	, dynamicResponse = require(__dirname+'/dynamic.js')
 	, { addCallback } = require(__dirname+'/../redis.js')
-	, upload = require('express-fileupload')
+	, upload = require('@fatchan/express-fileupload')
 	, fileHandlers = {}
 	, fileSizeLimitFunction = (req, res, next) => {
 		return dynamicResponse(req, res, 413, 'message', {
