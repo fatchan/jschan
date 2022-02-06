@@ -157,7 +157,6 @@ block content
 			tr
 				td.post-message
 					| See the #[a(rel='nofollow' referrerpolicy='same-origin' target='_blank' href='http://fatchan.gitgud.site/jschan-docs/#captcha-block-bypass') API docs] for example captchas and solutions.
-
 	.table-container.flex-center.mv-5
 		.anchor#name-formatting
 		table
@@ -313,11 +312,12 @@ block content
 						| ( ・ω・) Let's try that again.
 			tr
 				td(colspan=2)
-					| The "language" of code blocks is optional. Without it, automatic language detection is used. 
-					| If the language is "plain", highlighting is disabled for the code block. If "aa" is used, the font will be adjusted for Japanese Shift JIS art. 
-					| Not all programming languages are supported, a subset of popular languages is used. 
-					| If the language is not in the supported list, the code block will be rendered like "plain" with no highlighting.
-					| Languages supported: #{codeLanguages.join(', ')}
+					| Supported languages for code block syntax highlighting: 
+					a(rel='nofollow' referrerpolicy='same-origin' target='_blank' href='https://github.com/highlightjs/highlight.js/blob/master/SUPPORTED_LANGUAGES.md') https://github.com/highlightjs/highlight.js/blob/master/SUPPORTED_LANGUAGES.md
+					| . 
+					| If you do not specify a language, a subset of languages is supported for auto-detection: #{codeLanguages.join(', ')}. 
+					| If the language is "plain", an unsupported value, or the auto-detect confidence is too low, highlighting is disabled for the code block. 
+					| If the language is "aa", the font will be adjusted for Japanese Shift JIS art.
 	.table-container.flex-center.mv-5
 		.anchor#post-info
 		table

@@ -3,7 +3,7 @@
 const { debugLogs } = require(__dirname+'/../configs/secrets.js')
 	, dynamicResponse = require(__dirname+'/dynamic.js')
 	, { addCallback } = require(__dirname+'/../redis.js')
-	, upload = require('express-fileupload')
+	, upload = require('@fatchan/express-fileupload')
 	, fileHandlers = {}
 	, fileSizeLimitFunction = (req, res, next) => {
 		return dynamicResponse(req, res, 413, 'message', {
@@ -25,9 +25,10 @@ const { debugLogs } = require(__dirname+'/../configs/secrets.js')
 			const fileSizeLimit = globalLimits[`${fileType}FilesSize`];
 			const fileNumLimit = globalLimits[`${fileType}Files`];
 			const fileNumLimitFunction = (req, res, next) => {
+				const isPostform = req.path.endsWith('/post') || req.path.endsWith('/modpost');
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Too many files',
-					'message': (req.path.endsWith('/post') && res.locals.board) ? `Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}`
+					'message': (isPostform && res.locals.board) ? `Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}`
 						: `Max files per request is ${fileNumLimit.max}`,
 					'redirect': req.headers.referer
 				});

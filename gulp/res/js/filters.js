@@ -77,7 +77,7 @@ const togglePostsHidden = (posts, state, single) => {
 		} else {
 			elem.classList['add']('hidden');
 		}
-			elem.querySelector('.postmenu').children[0].textContent = (showing ? 'Hide' : 'Show');
+		elem.querySelector('.postmenu').children[0].textContent = (showing ? 'Hide' : 'Show');
 	}
 };
 
@@ -263,8 +263,8 @@ const postMenuChange = function(e) {
 		case 'moderate':
 			return moderatePost(postContainer);
 		case 'watch':
-			const watchedMessage = postContainer.querySelector('.post-message');
-			const watcherSubject = (postDataset.subject || (watchedMessage && watchedMessage.textContent) || "No subject").substring(0, 25);
+			const postMessage = postContainer.querySelector('.post-message');
+			const watcherSubject = (postDataset.subject || (postMessage && postMessage.textContent) || "No subject").substring(0, 25);
 			threadWatcher.add(postDataset.board, postDataset.postId, { subject: watcherSubject, unread: 0, updatedDate: new Date() });
 			return;
 	}

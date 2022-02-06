@@ -54,7 +54,7 @@ module.exports = {
 
 	//the opposite kinda, check if the data includes any of the values in the array
 	arrayInBody: (filters, data) => {
-		return filters.some(filter => data.includes(filter));
+		return data && filters.some(filter => data.includes(filter));
 	},
 
 	//check the actual schema

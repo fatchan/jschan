@@ -1035,6 +1035,16 @@ input:invalid, textarea:invalid {
 	background: none;
 }
 
+.post-container.marked::after {
+	content: attr(data-mark) " ";
+	font-weight: bold;
+	color: var(--title-color);
+}
+
+.post-container.marked .post-data, .post-container.marked .post-info {
+	opacity: 0.75
+}
+
 .anchor:target + .post-container,
 .anchor:target + .catalog-tile,
 .post-container.highlighted,

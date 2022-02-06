@@ -22,7 +22,7 @@ const express  = require('express')
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, create,
 		board, catalog, banners, randombanner, news, captchaPage, overboard, overboardCatalog,
-		captcha, thread, modlog, modloglist, account, boardlist, customPage } = require(__dirname+'/../models/pages/')
+		captcha, thread, modlog, modloglist, account, boardlist, customPage, csrfPage } = require(__dirname+'/../models/pages/')
 	, threadParamConverter = paramConverter({ processThreadIdParam: true })
 	, logParamConverter = paramConverter({ processDateParam: true })
 	, newsParamConverter = paramConverter({ objectIdParams: ['newsid'] })
@@ -90,5 +90,6 @@ router.get('/login.html', login);
 router.get('/register.html', register);
 router.get('/changepassword.html', changePassword);
 router.get('/create.html', useSession, sessionRefresh, isLoggedIn, create); //create new board
+router.get('/csrf.json', useSession, sessionRefresh, isLoggedIn, csrf, csrfPage); //just the token, for 3rd party stuff posting
 
 module.exports = router;
