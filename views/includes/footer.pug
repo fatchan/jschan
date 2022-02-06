@@ -1,19 +1,15 @@
 unless minimal
 	small.footer#bottom
-		|  • 
 		a(href='/rules.html') rules
 		|  • 
 		a(href='/faq.html') faq
 		|  • 
-		a(href='/transparency.html') transparency
+		a(href='http://fatchan.gitgud.site/jschan-docs/' rel='nofollow' referrerpolicy='same-origin' target='_blank') api
 		|  • 
 		a(href='https://stats.uptimerobot.com/QmO65uX3Yv' rel='nofollow' referrerpolicy='same-origin' target='_blank') status
-		|  • 
 		div
 			a(href='https://gitgud.io/fatchan/jschan/') jschan
-			|  #{version} 
-			|  • 
-			a(href='http://fatchan.gitgud.site/jschan-docs/' rel='nofollow' referrerpolicy='same-origin' target='_blank') api docs
+			|  #{version}
 
 //- "render" script - for scripted things that are blocking
 script(src=`/js/render.js?v=${commit}`)

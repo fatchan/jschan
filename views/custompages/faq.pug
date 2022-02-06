@@ -18,21 +18,22 @@ block content
 					ul.mv-0
 						li: a(href='#whats-an-imageboard') What is an imageboard?
 						li: a(href='/rules.html') What are the rules?
+						li: a(href='#copyright') DMCA/copyright
 						li: a(href='#contact') How can I contact the administration?
 						li: a(href='#support') How can I help support the site?
-						li: a(href='#transparency') Is there a transparency report?
+						li: a(href='/transparency.html') Is there a transparency report?
 						li: a(href='#mirrors') Mirrors
 						li: a(href='#irc') IRC
+						li: a(href='#make-a-board') How do I make my own board?
 					b Making posts
 					ul.mv-0
-						li: a(href='#captcha') How do I solve CAPTCHA?
+						li: a(href='#captcha') How do I solve the CAPTCHA?
 						li: a(href='#name-formatting') How do names, tripcodes and capcodes work?
 						li: a(href='#post-styling') What kind of styling options are available when making a post?
 						li: a(href='#post-info') What is the file size limit?
-						li: a(href='#moderation') How does moderation work?
-					b Boards, users & permissions
+					b Misc.
 					ul.mv-0
-						li: a(href='#make-a-board') How do I make my own board?
+						li: a(href='#moderation') How does moderation work?
 						li: a(href='#staff-and-permissions') How do staff, users and permissions work?
 						li: a(href='#antispam') What do the board settings for antispam do?
 						li: a(href='#archive-reverse-url-format') What is the archive/reverse image search link url format?
@@ -49,14 +50,113 @@ block content
 						| The primary difference between imageboards and traditional forums is that anybody can make a post without registering 
 						| an account or providing any personal information. This lowers the barrier to entry, protects user identities and focuses on what is said, rather than who says it. 
 	.table-container.flex-center.mv-5
+		.anchor#copyright
+		table
+			tr
+				th: a(href='#copyright') DMCA/copyright
+			tr
+				td
+					| Valid copyright takedown notices or legal equivalent only. Contact information available 
+					a(href='#contact') here
+					| . All notices will be published on this site for transparency reasons.
+	.table-container.flex-center.mv-5
+		.anchor#contact
+		table
+			tr
+				th: a(href='#contact') How can I contact the administration?
+			tr
+				td
+					| There are several points of contact:
+					ul
+						li: a(href='https://gitgud.io/fatchan/jschan/-/issues' rel='nofollow' referrerpolicy='same-origin' target='_blank') Gitgud issue tracker
+						li #[a(href='ircs://irc.fatpeople.lol:6697/fatchan') IRC] (#[a(href='https://irc.fatpeople.lol/') Webchat])
+						li #[a(href='https://getsession.org' rel='nofollow' referrerpolicy='same-origin' target='_blank') Session], ID (ONS name): #[span.mono fatchan]
+						li Email contact#[span.obscuremail]fatpeople.lol
+					| For disclosure of sensitive issues such as those related to site security, please refer to 
+					a(href='/.well-known/security.txt') security.txt
+					|  and if necessary, maintain confidentiality.
+	.table-container.flex-center.mv-5
+		.anchor#support
+		table
+			tr
+				th: a(href='#support') How can I help support the site?
+			tr
+				td
+					| The most straightforward way to support the site is financially with cryptocurrency:
+					ul
+						li
+							img(src="/file/bitcoin.png" alt="bitcoin logo" width="14" height="14")
+							|  Bitcoin 
+							a.mono(href='bitcoin:bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6') bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6
+						li
+							img(src="/file/monero.png" alt="monero logo" width="14" height="14")
+							|  Monero 
+							a.mono(href='monero:89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh') 89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh
+						li
+							img(src="/file/oxen.png" alt="oxen logo" width="14" height="14")
+							|  OXEN 
+							span.mono LBjExqjDKCFT6Tj198CfK8auAzBERJX1ogtcsjuKZ6AYWTFxwEADLgf2zZ8NHvWCa1UW7vrtY8DJmPYFpj3MEE69CryCvN6
+					| OpenAlias for Bitcoin and Monero is "69420.me".
+					| Cryptocurrency donation can be anonymous and is not controlled by any central authority. Crypto can be used to pay bills in case of deplatforming/censorship by hosting companies or payment processors.
+	.table-container.flex-center.mv-5
+		.anchor#mirrors
+		table
+			tr
+				th: a(href='#mirrors') Mirrors
+			tr
+				td
+					pre.no-m-p
+						| Current domain: 
+						a(href='https://fatchan.org/') fatchan.org
+						|
+						| Dormant mirrors: 
+						a(href='https://fatchan.net') .net
+						| , 
+						a(href='https://fatchan.to') .to
+						| , 
+						a(href='https://fatchan.top') .top
+						| , 
+						a(href='https://fatchan.tw') .tw
+						| , 
+						a(href='https://fatchan.li') .li
+						| , 
+						a(href='https://fatchan.ru') .ru
+						| , 
+						a(href='https://fatchan.is') .is
+	.table-container.flex-center.mv-5
+		.anchor#irc
+		table
+			tr
+				th: a(href='#irc') IRC
+			tr
+				td
+					pre.no-m-p
+						| Client users: irc.fatpeople.lol port 6697 TLS
+						|
+						a(href='ircs://irc.fatpeople.lol:6697/fatchan') Direct Link
+						|
+						|
+						a(href='https://irc.fatpeople.lol/') Webchat for dummies
+	.table-container.flex-center.mv-5
+		.anchor#make-a-board
+		table
+			tr
+				th: a(href='#make-a-board') How do I make my own board?
+			tr
+				td
+					p
+						a(href='/register.html') Register
+						|  an account, then 
+						a(href='/t/thread/1325.html#1325') request a board
+						| . Accounts that are inactive for 30 days or longer may be deleted without notice and lose their boards.
+	.table-container.flex-center.mv-5
 		.anchor#captcha
 		table
 			tr
-				th: a(href='#captcha') How do I solve CAPTCHA?
+				th: a(href='#captcha') How do I solve the CAPTCHA?
 			tr
 				td.post-message
-					p Select the boxes that correspond to each solid/filled icon in the grid. The image is shuffled and distorted, so use your brain. Junk around the edges is not included. See this example (red lines added for illustrative purposes):
-					img(src='/file/examplecaptcha.png')
+					| See the #[a(rel='nofollow' referrerpolicy='same-origin' target='_blank' href='http://fatchan.gitgud.site/jschan-docs/#captcha-block-bypass') API docs] for example captchas and solutions.
 
 	.table-container.flex-center.mv-5
 		.anchor#name-formatting
@@ -259,19 +359,6 @@ block content
 						| An input of "3mo" would mean 3 months and "1y2mo3w4d5h6m7s" would mean 1 year, 2 months, 3 weeks, 4 days, 5 hours, 6 minutes and 7 seconds. Units of time should be in descending order, so "2w1mo" is invalid.
 						| However you may use "6w" for example to input 6 weeks, and are not required to use "1mo2w".
 	.table-container.flex-center.mv-5
-		.anchor#make-a-board
-		table
-			tr
-				th: a(href='#make-a-board') How do I make my own board?
-			tr
-				td
-					p
-						a(href='/register.html') Register
-						|  an account, then 
-						a(href='/create.html') create a board
-						|. Please avoid making excessive amounts of boards, duplicate or boards similar to an existing one unless you expect that many users will migrate to the new board for whatever reason e.g. tyrannical moderation. 
-						| Accounts that are inactive for 30 days or longer may be deleted without notice and lose their boards.
-	.table-container.flex-center.mv-5
 		.anchor#staff-and-permissions
 		table
 			tr
@@ -332,81 +419,3 @@ block content
 						|  where the url of the page/file should go for reverse image search or archive links. For example 
 						span.mono https://tineye.com/search?url=#[span.bold %s]
 						| .
-	.table-container.flex-center.mv-5
-		.anchor#contact
-		table
-			tr
-				th: a(href='#contact') How can I contact the administration?
-			tr
-				td
-					| There are several points of contact:
-					ul
-						li: a(href='https://gitgud.io/fatchan/jschan/-/issues' rel='nofollow' referrerpolicy='same-origin' target='_blank') Gitgud issue tracker
-						li: a(href='ircs://irc.fatpeople.lol:6697/fatchan') IRC
-						li: a(href='mailto:tom@69420.me') Email
-						li #[a(href='https://getsession.org' rel='nofollow' referrerpolicy='same-origin' target='_blank') Session], ID #[span.mono 051b2ff270769d20764fa1b8e6bc3240b0a3c28ffb3242e7cce60db479b23ef427]
-					| For disclosure of sensitive issues such as those related to site security, please refer to 
-					a(href='/.well-known/security.txt') security.txt
-					|  and if necessary, maintain confidentiality.
-	.table-container.flex-center.mv-5
-		.anchor#support
-		table
-			tr
-				th: a(href='#support') How can I help support the site?
-			tr
-				td
-					| The most straightforward way to support the site is financially with cryptocurrency:
-					ul
-						li
-							img(src="/file/bitcoin.png" alt="bitcoin logo" width="14" height="14")
-							|  Bitcoin 
-							a.mono(href='bitcoin:bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6') bc1q4elrlz5puak4m9xy3hfvmpempnpqpu95v8s9m6
-						li
-							img(src="/file/monero.png" alt="monero logo" width="14" height="14")
-							|  Monero 
-							a.mono(href='monero:89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh') 89J9DXPLUBr5HjNDNZTEo4WYMFTouSsGjUjBnUCCUxJGUirthnii4naZ8JafdnmhPe4NP1nkWsgcK82Uga7X515nNR1isuh
-						li
-							img(src="/file/oxen.png" alt="oxen logo" width="14" height="14")
-							|  OXEN 
-							span.mono LBjExqjDKCFT6Tj198CfK8auAzBERJX1ogtcsjuKZ6AYWTFxwEADLgf2zZ8NHvWCa1UW7vrtY8DJmPYFpj3MEE69CryCvN6
-					| OpenAlias for Bitcoin and Monero is "69420.me".
-					| Cryptocurrency donation can be anonymous and is not controlled by any central authority. Crypto can be used to pay bills in case of deplatforming/censorship by hosting companies or payment processors.
-	.table-container.flex-center.mv-5
-		.anchor#mirrors
-		table
-			tr
-				th: a(href='#mirrors') Mirrors
-			tr
-				td
-					pre.no-m-p
-						| Current domain: 
-						a(href='https://fatchan.org/') fatchan.org
-						|
-						| Dormant mirrors: 
-						a(href='https://fatchan.net') .net
-						| , 
-						a(href='https://fatchan.to') .to
-						| , 
-						a(href='https://fatchan.top') .top
-						| , 
-						a(href='https://fatchan.tw') .tw
-						| , 
-						a(href='https://fatchan.li') .li
-						| , 
-						a(href='https://fatchan.ru') .ru
-						| , 
-						a(href='https://fatchan.is') .is
-	.table-container.flex-center.mv-5
-		.anchor#irc
-		table
-			tr
-				th: a(href='#irc') IRC
-			tr
-				td
-					pre.no-m-p
-						| Client users: irc.fatpeople.lol port 6697 TLS
-						|
-						a(href='ircs://irc.fatpeople.lol:6697/fatchan') Direct Link
-						|
-						|
-						a(href='https://irc.fatpeople.lol/') Webchat for dummies

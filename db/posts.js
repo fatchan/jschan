@@ -198,9 +198,11 @@ module.exports = {
 					'bumped': {
 						'$max': {
 							'$cond': [
+								//still need to improve this to ignore bump limitthreads
+								//and this could potentially cause a bug when moving if last reply is a sage. is $max right here then?
 								{ '$ne': [ '$email', 'sage' ] },
 								'$date',
-								0 //still need to improve this to ignore bump limitthreads
+								0
 							]
 						}
 					}
