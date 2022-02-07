@@ -165,6 +165,7 @@ module.exports = async (req, res, next) => {
 			notificationsEnabled: booleanSetting(req.body.frontend_script_default_notifications_embed, oldSettings.frontendScriptDefault.notificationsEnabled),
 			notificationsYousOnly: booleanSetting(req.body.frontend_script_default_notifications_yous_only, oldSettings.frontendScriptDefault.notificationsYousOnly),
 			showYous: booleanSetting(req.body.frontend_script_default_show_yous, oldSettings.frontendScriptDefault.showYous),
+			hideDeletedPostContent: booleanSetting(req.body.frontend_script_default_hide_deleted_post_content, oldSettings.frontendScriptDefault.hideDeletedPostContent),
 		},
 		animatedGifThumbnails: booleanSetting(req.body.animated_gif_thumbnails, oldSettings.animatedGifThumbnails),
 		audioThumbnails: booleanSetting(req.body.audio_thumbnails, oldSettings.audioThumbnails),

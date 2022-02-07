@@ -354,6 +354,7 @@ module.exports = {
 		notificationsEnabled: false, //show notifications for new posts in a thread
 		notificationsYousOnly: true, //only show notifications for posts that quote you
 		showYous: true, //show (You) next to name on your posts, and quotes linking to your post
+		hideDeletedPostContent: false, //hide the message and files from marked deleted posts from websocket
 	},
 
 	//default board settings when a board is created
