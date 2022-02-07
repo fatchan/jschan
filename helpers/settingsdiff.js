@@ -9,11 +9,11 @@ function getDotProp(obj, prop) {
 }
 
 function includeChildren(template, prop, tasks) {
-	Object.keys(getDotProp(template, prop))
-	.reduce((a, x) => {
-		a[`${prop}.${x}`] = tasks;
-		return a;
-	}, {});
+	return Object.keys(getDotProp(template, prop))
+		.reduce((a, x) => {
+			a[`${prop}.${x}`] = tasks;
+			return a;
+		}, {});
 }
 
 function compareSettings(entries, oldObject, newObject, maxSetSize) {
