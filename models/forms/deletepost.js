@@ -4,6 +4,7 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, { remove } = require('fs-extra')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts, Files } = require(__dirname+'/../../db/')
+	, Socketio = require(__dirname+'/../../socketio.js')
 	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, config = require(__dirname+'/../../config.js')
@@ -18,13 +19,15 @@ module.exports = async (posts, board, all=false) => {
 	//filter to threads
 	const threads = posts.filter(x => x.thread == null);
 
-	if (threads.length > 0) {
-		//delete the html/json for threads
-		await Promise.all(threads.map(thread => {
-			remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`)
-			remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
-		}));
-	}
+	//emits not including the fetched posts from next block because those are based on threads being selected
+	//and we dont need to send delete message for every reply in a thread when the OP gets deleted.
+	const deleteEmits = posts.reduce((acc, post) => {
+		acc.push({
+			room: `${post.board}-${post.thread || post.postId}`,
+			postId: post.postId,
+		});
+		return acc;
+	}, []);
 
 	//get posts from all threads
 	let threadPosts = []
@@ -35,7 +38,7 @@ module.exports = async (posts, board, all=false) => {
 			threadPosts = await Posts.getMultipleThreadPosts(board, threadPostIds);
 		} else {
 			//otherwise we fetch posts from threads on different boards separarely
-//TODO: use big board:$or/postid:$in query so this can be tackled in a single db query
+			//TODO: use big board:$or/postid:$in query so this can be tackled in a single db query
 			await Promise.all(threads.map(async thread => {
 				//for each thread, fetch all posts from the matching board and thread matching the threads postId
 				const currentThreadPosts = await Posts.getThreadPosts(thread.board, thread.postId);
@@ -61,7 +64,7 @@ module.exports = async (posts, board, all=false) => {
 
 	if (postFiles.length > 0) {
 		const fileNames = postFiles.map(x => x.filename)//[...new Set(postFiles.map(x => x.filename))];
-        await Files.decrement(fileNames);
+		await Files.decrement(fileNames);
 		if (pruneImmediately) {
 			await pruneFiles(fileNames);
 		}
@@ -112,6 +115,10 @@ module.exports = async (posts, board, all=false) => {
 
 	//deleting before remarkup so quotes are accurate
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
+	//emit the deletes to thread sockets (not recent sockets [yet?])
+	for (let i = 0; i < deleteEmits.length; i++) {
+		Socketio.emitRoom(deleteEmits[i].room, 'markPost', { postId: deleteEmits[i].postId, type: 'delete', mark: 'Deleted' });
+	}
 
 	if (all === false) {
 		//get posts that quoted deleted posts so we can remarkup them
@@ -125,18 +132,18 @@ module.exports = async (posts, board, all=false) => {
 					message = sanitize(quotedMessage, sanitizeOptions.after);
 					bulkWrites.push({
 						'updateOne': {
-		                	'filter': {
-		                    	'_id': post._id
-		                	},
-		                	'update': {
-		                    	'$set': {
-		                        	'quotes': threadQuotes,
+							'filter': {
+								'_id': post._id
+							},
+							'update': {
+								'$set': {
+									'quotes': threadQuotes,
 									'crossquotes': crossQuotes,
 									'message': message
-		                    	}
-		                	}
-		            	}
-		        	});
+								}
+							}
+						}
+					});
 				}
 			}));
 		}
@@ -145,6 +152,14 @@ module.exports = async (posts, board, all=false) => {
 	//bulkwrite it all
 	if (bulkWrites.length > 0) {
 		await Posts.db.bulkWrite(bulkWrites);
+	}
+
+	if (threads.length > 0) {
+		//delete the html/json for threads
+		await Promise.all(threads.map(thread => {
+			remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`)
+			remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
+		}));
 	}
 
 	//hooray!

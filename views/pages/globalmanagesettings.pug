@@ -291,7 +291,7 @@ block content
 						h4.mv-5 Code Highlighting
 					.row
 						.label
-							| Code Highlighting Languages
+							| Code Highlighting Auto-Detect Languages
 							|
 							small
 								| (
@@ -415,6 +415,10 @@ block content
 						.label Hide Post Stubs
 						label.postform-style.ph-5
 							input(type='checkbox', name='frontend_script_default_hide_post_stubs', value='true' checked=settings.frontendScriptDefault.hidePostStubs)
+					.row
+						.label Hide Deleted Post Content
+						label.postform-style.ph-5
+							input(type='checkbox', name='frontend_script_default_hide_deleted_post_content', value='true' checked=settings.frontendScriptDefault.hideDeletedPostContent)
 					.row
 						.label Smooth Scrolling
 						label.postform-style.ph-5

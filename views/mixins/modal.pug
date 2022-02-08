@@ -69,6 +69,10 @@ mixin modal(data)
 								.rlabel Hide post stubs
 							.row
 								label.postform-style.ph-5
+									input#hidedeletedpostcontent-setting(type='checkbox')
+								.rlabel Hide deleted post content
+							.row
+								label.postform-style.ph-5
 									input#disableboardcss-setting(type='checkbox')
 								.rlabel Disable board custom CSS
 
@@ -166,9 +170,6 @@ mixin modal(data)
 								tbody#advancedfilters
 									tr
 										th(colspan=4) Post Filters
-										th
-										th
-										th
 									tr
 										td Type
 										td Value

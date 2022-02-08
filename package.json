@@ -1,10 +1,11 @@
 {
   "name": "jschan",
-  "version": "0.1.10",
-  "migrateVersion": "0.1.10",
+  "version": "0.2.0",
+  "migrateVersion": "0.2.0",
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "@fatchan/express-fileupload": "^1.3.1",
     "bcrypt": "^5.0.1",
     "bull": "^3.29.3",
     "cache-pug-templates": "^2.0.3",
@@ -14,7 +15,6 @@
     "del": "^6.0.0",
     "dnsbl": "^3.2.0",
     "express": "^4.17.1",
-    "express-fileupload": "git+https://gitgud.io/fatchan/express-fileupload.git#ded0b1e69c222d1102fb2d8415996973e74a03fe",
     "express-session": "^1.17.2",
     "file-type": "^16.5.3",
     "fluent-ffmpeg": "^2.1.2",

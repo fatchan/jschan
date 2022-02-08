@@ -8,7 +8,7 @@ const { Bypass } = require(__dirname+'/../../db/')
 module.exports = async (req, res, next) => {
 
 	const { secureCookies, blockBypass } = config.get;
-	const bypass = await Bypass.getBypass();
+	const bypass = await Bypass.getBypass(res.locals.anonymizer);
 	const bypassId = bypass.insertedId;
 	res.locals.blockBypass = true;
 

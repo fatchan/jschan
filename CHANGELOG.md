@@ -83,3 +83,16 @@
   - Some visual tweaks (file "(u)" being on newline, "x" -> "×")
   - Bugfixes
 
+### 0.2.0
+  - From now on, versioning = major.minor.patch. significant changes = major, feature updates = minor, bugfixes/small stuff = patch.
+  - Update instructions about nginx changes when upgrading.
+  - Add an endpoint for getting the csrf token separately from html pages. See API docs for more details.
+  - Add post "marking" so moved/deleted posts info is sent over websocket. Frontend will handle them. Deleted threads and moved OPs will now also disconnect the socket and remove the post form.
+  - Block bypasses are now locked to where they were created (anonymizer or clearnet) to prevent some forms of 'smuggling'. This will be improved further in upcoming releases.
+  - Code highlighting now supports all highlight.js languages when explicitly specified. The whitelist now only applies to auto-detection, as originally intended.
+  - Quotes for post references in modlog now have the proper quote class, and will show when hovered like any other quote.
+  - Bugfixes
+  - [jschan-docs](http://fatchan.gitgud.site/jschan-docs/):
+    - API docs improvements, now includes csrf token, posting, post actions (and mod variants), and more. It should be enough documentation for somebody to write a mobile app integration.
+  - [globalafk](https://gitgud.io/fatchan/globalafk/) (my fork):
+    - On android with termux, tapping the notification will open the post (in mod view) and the notification has new shortcut buttons to quickly delete, delete+ban or delete+global ban.

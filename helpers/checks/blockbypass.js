@@ -37,7 +37,7 @@ module.exports = async (req, res, next) => {
 	if (bypassId && bypassId.length === 24) {
 		try {
 			const bypassMongoId = ObjectId(bypassId);
-			bypass = await Bypass.checkBypass(bypassMongoId);
+			bypass = await Bypass.checkBypass(bypassMongoId, res.locals.anonymizer);
 			res.locals.blockBypass = true;
 		} catch (err) {
 			return next(err);
@@ -53,7 +53,7 @@ module.exports = async (req, res, next) => {
 
 	if (res.locals.solvedCaptcha) {
 		//they dont have a valid bypass, but just solved board captcha, so give them a new one
-		const newBypass = await Bypass.getBypass();
+		const newBypass = await Bypass.getBypass(res.locals.anonymizer);
 		const newBypassId = newBypass.insertedId;
 		res.locals.blockBypass = true;
 		res.cookie('bypassid', newBypassId.toString(), {

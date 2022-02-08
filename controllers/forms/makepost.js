@@ -30,7 +30,7 @@ module.exports = {
 			{ result: (lengthBody(req.body.message, 1) && res.locals.numFiles === 0), expected: false, error: 'Posts must include a message or file' },
 			{ result: (res.locals.anonymizer && (disableAnonymizerFilePosting || res.locals.board.settings.disableAnonymizerFilePosting)
 				&& res.locals.numFiles > 0), expected: false, error: `Posting files through anonymizers has been disabled ${disableAnonymizerFilePosting ? 'globally' : 'on this board'}` },
-			{ result: res.locals.numFiles > res.locals.board.settings.maxFiles, blocking: true, permLevel: 1, expected: true, error: `Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}` },
+			{ result: res.locals.numFiles > res.locals.board.settings.maxFiles, blocking: true, expected: false, error: `Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}` },
 			{ result: (lengthBody(req.body.subject, 1) && (!existsBody(req.body.thread)
 				&& res.locals.board.settings.forceThreadSubject)), expected: false, error: 'Threads must include a subject' },
 			{ result: lengthBody(req.body.message, 1) && (!existsBody(req.body.thread)

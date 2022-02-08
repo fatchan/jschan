@@ -3,6 +3,7 @@
 const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, { remove } = require('fs-extra')
 	, { Posts } = require(__dirname+'/../../db/')
+	, Socketio = require(__dirname+'/../../socketio.js')
 	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
 	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
 	, { createHash } = require('crypto')
@@ -20,20 +21,17 @@ module.exports = async (req, res) => {
 		return acc;
 	}, { threads: [], postIds: [], postMongoIds: [] });
 
-//console.log(threads, postIds, postMongoIds)
+	//maybe should filter these? because it will include threads from which child posts are already fetched in the action handler, unlike the deleteposts model
+	const moveEmits = res.locals.posts.reduce((acc, post) => {
+		acc.push({
+			room: `${post.board}-${post.thread || post.postId}`,
+			postId: post.postId,
+		});
+		return acc;
+	}, []);
 
 	const backlinkRebuilds = new Set();
 	const bulkWrites = [];
-
-	if (threads.length > 0) {
-		//threads moved, so their html/json doesnt need to exist anymore
-		await Promise.all(threads.map(thread => {
-			return Promise.all([
-				remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`),
-				remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
-			]);
-		}));
-   	}
 
 	//remove backlinks from selected posts that link to unselected posts
 	bulkWrites.push({
@@ -95,6 +93,7 @@ module.exports = async (req, res) => {
 		acc.replyfiles += p.files.length;
 		return acc;
 	}, { replyposts: 0, replyfiles: 0 });
+
 	bulkWrites.push({
 		'updateOne': {
 			'filter': {
@@ -111,6 +110,11 @@ module.exports = async (req, res) => {
 	});
 
 	const movedPosts = await Posts.move(postMongoIds, req.body.move_to_thread).then(result => result.modifiedCount);
+
+	//emit markPost moves
+	for (let i = 0; i < moveEmits.length; i++) {
+		Socketio.emitRoom(moveEmits[i].room, 'markPost', { postId: moveEmits[i].postId, type: 'move', mark: 'Moved' });
+	}
 
 	//get posts that quoted moved posts so we can remarkup them
 	if (backlinkRebuilds.size > 0) {
@@ -160,8 +164,6 @@ module.exports = async (req, res) => {
 		}));
 	}
 
-//console.log(require('util').inspect(bulkWrites, {depth:null}))
-
 /*
 - post A quotes B, then A is moved to another thread: WORKS (removes backlink on B)
 - moving post A back into thread with B and backlink gets readded: WORKS
@@ -173,6 +175,16 @@ module.exports = async (req, res) => {
 	if (bulkWrites.length > 0) {
 		await Posts.db.bulkWrite(bulkWrites);
 	}
+
+	//delete html/json for no longer existing threads, because op was moved
+	if (threads.length > 0) {
+		await Promise.all(threads.map(thread => {
+			return Promise.all([
+				remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`),
+				remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
+			]);
+		}));
+   	}
 
 	return {
 		message: 'Moved posts',
