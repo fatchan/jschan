@@ -326,7 +326,8 @@ module.exports = async (req, res, next) => {
 
 	if (oldSettings.enableWebring === true && newSettings.enableWebring === false) {
 		//delete webring boards from boardlist when disabling.
-		await Boards.db.deleteMany({ webring: true });
+		promises.push(Boards.db.deleteMany({ webring: true }));
+		promises.push(remove(`${uploadDirectory}/json/webring.json`));
 	}
 
 	//finish the promises in parallel e.g. removing files
