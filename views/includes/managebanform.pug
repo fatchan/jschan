@@ -14,5 +14,10 @@ else
 			.label Deny Appeal
 			label.postform-style.ph-5
 				input(type='radio' name='option' value='deny_appeal')
+		.row
+			.label Edit Duration
+			label.postform-style.ph-5.mr-1
+				input(type='radio' name='option' value='edit')
+			input(type='text' name='ban_duration' placeholder='Ban duration e.g. 7d' autocomplete='off')
 	input(type='submit' value='submit')
 
