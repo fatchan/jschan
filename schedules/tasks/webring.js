@@ -43,6 +43,7 @@ module.exports = {
 				const ring = rings[i];
 				if (!ring || !ring.name || !ring.endpoint || !ring.url //malformed
 					|| ring.endpoint.includes(meta.url) //own site
+					|| blacklist.some(x => ring.endpoint.includes(x)) //blacklisted (for the case of a mirror to the endpoint)
 					|| visited.get(ring.endpoint) > 1) { //already seen endpoint (for multiple domain sites)
 					continue;
 				}
