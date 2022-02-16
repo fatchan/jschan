@@ -32,10 +32,10 @@ module.exports = async (req, res, next) => {
 	const cacheQueryString = cacheQuery.toString();
 	const cached = await cache.get(`boardlist:${cacheQueryString}`);
 	const { shown, notShown } = siteNames.reduce((acc, sn) => {
-		if (validSelectedSitesSet.has(ws)) {
+		if (validSelectedSitesSet.has(sn)) {
 			acc.shown.push(sn);
 		} else {
-			acc.notShown.push(sn)
+			acc.notShown.push(sn);
 		}
 		return acc;
 	}, { shown: [], notShown: [] });
