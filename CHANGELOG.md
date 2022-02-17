@@ -1,3 +1,6 @@
+### 0.3.2
+  - Minor bugfix to post moving.
+
 ### 0.3.1
   - Small board list optimisation, no longer try to fetch webring site names if webring not enabled.
   - Make webring blacklisting also apply to endpoints after being fetched, in case the URL is different (alt domain, onions, etc).
