@@ -1,3 +1,10 @@
+### 0.3.1
+  - Small board list optimisation, no longer try to fetch webring site names if webring not enabled.
+  - Make webring blacklisting also apply to endpoints after being fetched, in case the URL is different (alt domain, onions, etc).
+  - Webring.json and site names cache is now removed when webring is disabled.
+  - More reasonable webring timeout for fetching each site.
+  - Webring bugfixes.
+
 ### 0.3.0
   - Ban durations are now editable. Staff can set a new ban duration (starting from the current date, not the original ban issue date).
   - Minor bugfixes.

@@ -9,7 +9,7 @@ const config = require(__dirname+'/../../config.js')
 
 module.exports = async (req, res, next) => {
 
-	const { meta } = config.get;
+	const { meta, enableWebring } = config.get;
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 	const direction = req.query.direction && req.query.direction === 'asc' ? 1 : -1;
 	const search = (typeof req.query.search === 'string' ? req.query.search : null);
@@ -17,13 +17,13 @@ module.exports = async (req, res, next) => {
 	const sortType = req.query.sort && req.query.sort === 'activity' ? 'activity' : 'popularity';
 	let sort = {};
 
-	const webringSites = [meta.siteName, ...(await Boards.webringSites())];
-	const webringSitesSet = new Set(webringSites);
+	const siteNames = enableWebring === true ? [meta.siteName, ...(await Boards.webringSites())] : [meta.siteName];
+	const siteNamesSet = new Set(siteNames);
 
 	let selectedSites = req.query.sites ? (typeof req.query.sites === 'string' ? [req.query.sites] : req.query.sites) : [];
-	let validSelectedSites = selectedSites.filter(ss => webringSitesSet.has(ss));
+	let validSelectedSites = selectedSites.filter(ss => siteNamesSet.has(ss));
 	if (validSelectedSites.length === 0) {
-		validSelectedSites = webringSites;
+		validSelectedSites = siteNames;
 	}
 	const validSelectedSitesSet = new Set(validSelectedSites);
 
@@ -31,11 +31,11 @@ module.exports = async (req, res, next) => {
 	cacheQuery.sort();
 	const cacheQueryString = cacheQuery.toString();
 	const cached = await cache.get(`boardlist:${cacheQueryString}`);
-	const { shown, notShown } = webringSites.reduce((acc, ws) => {
-		if (validSelectedSitesSet.has(ws)) {
-			acc.shown.push(ws);
+	const { shown, notShown } = siteNames.reduce((acc, sn) => {
+		if (validSelectedSitesSet.has(sn)) {
+			acc.shown.push(sn);
 		} else {
-			acc.notShown.push(ws)
+			acc.notShown.push(sn);
 		}
 		return acc;
 	}, { shown: [], notShown: [] });
