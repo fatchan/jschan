@@ -5,7 +5,7 @@ Demo/test instance: [Clearnet](https://fatchan.org), [Tor hidden service](http:/
 
 API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/) - Gitgud pages link: http://fatchan.gitgud.site/jschan-docs/#introduction
 
-Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/fatchan)
+Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general)
 
 ## Goals
 - Oldschool look, newschool features

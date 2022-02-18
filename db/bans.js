@@ -92,6 +92,19 @@ module.exports = {
 		});
 	},
 
+	editDuration: (board, ids, newExpireAt) => {
+		return db.updateMany({
+			'board': board,
+			'_id': {
+				'$in': ids
+			},
+		}, {
+			'$set': {
+				'expireAt': newExpireAt,
+			}
+		});
+	},
+
 	removeMany: (board, ids) => {
 		return db.deleteMany({
 			'board': board,

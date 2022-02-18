@@ -29,8 +29,9 @@ module.exports = {
 			//get sites we havent visited yet
 			const toVisit = [...known].filter(url => !visited.has(url));
 			let rings = await Promise.all(toVisit.map(url => {
-				visited.set(url, (visited.get(url)||0)+1);
+				visited.set(url, (visited.get(url)||1));
 				return fetch(url, {
+					timeout: 20000,
 					agent,
 					headers: {
 						'User-Agent':''
@@ -43,10 +44,11 @@ module.exports = {
 				const ring = rings[i];
 				if (!ring || !ring.name || !ring.endpoint || !ring.url //malformed
 					|| ring.endpoint.includes(meta.url) //own site
+					|| blacklist.some(x => ring.endpoint.includes(x)) //blacklisted (for the case of a mirror to the endpoint)
 					|| visited.get(ring.endpoint) > 1) { //already seen endpoint (for multiple domain sites)
 					continue;
 				}
-				visited.set(ring.endpoint, visited.get(ring.endpoint)+1);
+				visited.set(ring.endpoint, (visited.get(ring.endpoint)||1)+1);
 				if (ring.following && ring.following.length > 0) {
 					//filter their folowing by blacklist/self and add to known sites
 					ring.following
