@@ -121,13 +121,13 @@ module.exports = async (req, res) => {
 		const remarkupPosts = await Posts.globalGetPosts([...backlinkRebuilds]);
 		await Promise.all(remarkupPosts.map(async post => { //doing these all at once
 			const postUpdate = {};
+			//update post message and/or id
 			if (post.userId) {
 				let userId = createHash('sha256').update(res.locals.destinationThread.salt + post.ip.raw).digest('hex');
 				userId = userId.substring(userId.length-6);
 				postUpdate.userId = userId;
 			}
-			//update post message and/or id
-			if (post.nomarkup && post.nomarkup.length > 0 || post.userId) {
+			if (post.nomarkup && post.nomarkup.length > 0) {
 				let message = markdown(post.nomarkup);
 				let { quotedMessage, threadQuotes, crossQuotes } = await quoteHandler.process(post.board, message, post.thread); // req.body.move_to_thread);
 				message = sanitize(quotedMessage, sanitizeOptions.after);
