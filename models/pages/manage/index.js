@@ -11,5 +11,8 @@ module.exports = {
 	manageCatalog: require(__dirname+'/catalog.js'),
 	manageThread: require(__dirname+'/thread.js'),
 	manageCustomPages: require(__dirname+'/custompages.js'),
+	manageMyPermissions: require(__dirname+'/mypermissions.js'),
 	editCustomPage: require(__dirname+'/editcustompage.js'),
+	manageStaff: require(__dirname+'/staff.js'),
+	editStaff: require(__dirname+'/editstaff.js'),
 }

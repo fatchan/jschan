@@ -17,8 +17,8 @@ module.exports = async (req, res, next) => {
 				await Accounts.updateLastActiveDate(req.session.user);
 				res.locals.user = {
 					'username': account._id,
-					'authLevel': account.authLevel,
-					'modBoards': account.modBoards,
+					'permissions': account.permissions.toString('base64'),
+					'staffBoards': account.staffBoards,
 					'ownedBoards': account.ownedBoards,
 				};
 				cache.set(`users:${req.session.user}`, res.locals.user, 3600);

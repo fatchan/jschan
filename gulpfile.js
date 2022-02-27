@@ -7,6 +7,7 @@ const config = require(__dirname+'/config.js')
 	, semver = require('semver')
 	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
 	, commit = require(__dirname+'/helpers/commit.js')
+	, PermissionTemplates = require(__dirname+'/helpers/permtemplates.js')
 	, replace = require('gulp-replace')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
@@ -203,7 +204,7 @@ async function wipe() {
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
 
 	const randomPassword = randomBytes(20).toString('base64')
-	await Accounts.insertOne('admin', 'admin', randomPassword, 0);
+	await Accounts.insertOne('admin', 'admin', randomPassword, PermissionTemplates.ROOT);
 	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 
 	await db.collection('version').replaceOne({
@@ -344,6 +345,7 @@ function deletehtml() {
 
 async function custompages() {
 	const formatSize = require(__dirname+'/helpers/files/formatsize.js');
+	const Permissions = require(__dirname+'/helpers/permissions.js');
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/404.pug`,
@@ -354,7 +356,7 @@ async function custompages() {
 	])
 	.pipe(gulppug({
 		locals: {
-			authLevelNames: ['Admin', 'Global Staff', 'Global Board Owner', 'Global Board Mod', 'Regular User'],
+			Permissions,
 			early404Fraction: config.get.early404Fraction,
 			early404Replies: config.get.early404Replies,
 			meta: config.get.meta,
@@ -386,7 +388,6 @@ const codeThemes = ['${codeThemes.join("', '")}'];
 const captchaType = '${config.get.captchaOptions.type}';
 const captchaGridSize = ${config.get.captchaOptions.grid.size};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
-const ipHashPermLevel = ${config.get.ipHashPermLevel};
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
 `;

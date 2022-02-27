@@ -2,13 +2,13 @@
 
 const escapeRegExp = require(__dirname+'/escaperegexp.js')
 	, { isIP } = require('net')
-	, config = require(__dirname+'/../config.js')
+	, Permissions = require(__dirname+'/permissions.js');
 
-module.exports = (query, permLevel) => {
-	const { ipHashPermLevel } = config.get;
+module.exports = (query, permissions) => {
 	if (query.ip && typeof query.ip === 'string') {
 		const decoded = decodeURIComponent(query.ip);
-		if (permLevel <= ipHashPermLevel && (isIP(decoded) || decoded.match(/[a-z0-9]{24}/i))) { //if perms to view raw ip or bypass, allow querying
+		if (permissions.get(Permissions.VIEW_RAW_IP) //allow raw ip query, if has perms to view raw ip
+			&& (isIP(decoded) || decoded.match(/[a-z0-9]{24}/i))) { //and is ip or bypass
 			return decoded;
 		} else if (decoded.length === 10) { //otherwise, only allow last 10 char substring
 			return new RegExp(`${escapeRegExp(decoded)}$`);

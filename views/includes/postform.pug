@@ -4,7 +4,7 @@ include ../mixins/filelabel.pug
 - const messageRequired = (!isThread && board.settings.forceThreadMessage) || (isThread && board.settings.forceReplyMessage);
 - const fileRequired = (!isThread && board.settings.forceThreadFile) || (isThread && board.settings.forceReplyFile);
 section.form-wrapper.flex-center
-	form.form-post#postform(action=`/forms/board/${board._id}/${modview ? 'mod' : ''}post`, enctype='multipart/form-data', method='POST')
+	form.form-post#postform(action=`/forms/board/${board._id}/${modview ? 'mod' : ''}post`, enctype='multipart/form-data', method='POST' data-reset-on-submit='true')
 		if modview
 			input(type='hidden' name='_csrf' value=csrf)
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)

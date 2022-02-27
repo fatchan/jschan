@@ -9,7 +9,7 @@ const { News } = require(__dirname+'/../../db/')
 module.exports = async (req, res, next) => {
 
 	const message = prepareMarkdown(req.body.message, false);
-	const { message: markdownNews } = await messageHandler(message, null, null, res.locals.permLevel);
+	const { message: markdownNews } = await messageHandler(message, null, null, res.locals.permissions);
 
 	const post = {
 		'title': req.body.title,

@@ -41,32 +41,7 @@ module.exports = async (req, res, next) => {
 	const announcement = req.body.announcement === null ? null : prepareMarkdown(req.body.announcement, false);
 	let markdownAnnouncement = oldSettings.announcement.markdown;
 	if (announcement !== oldSettings.announcement.raw) {
-		({ message: markdownAnnouncement } = await messageHandler(announcement, req.params.board, null, res.locals.permLevel))
-	}
-
-	let moderators = req.body.moderators != null ? req.body.moderators.split(/\r?\n/).filter(n => n && !(n == res.locals.board.owner)).slice(0,10) : [];
-	if (moderators.length === 0 && oldSettings.moderators.length > 0) {
-		//remove all mods if mod list being emptied
-		promises.push(Accounts.removeModBoard(oldSettings.moderators, req.params.board));
-	} else if (moderators !== oldSettings.moderators) {
-		if (moderators.length > 0) {
-			//make sure moderators actually have existing accounts
-			const validCount = await Accounts.countUsers(moderators);
-			if (validCount !== moderators.length) {
-				//some usernames were not valid, reset to old setting
-				moderators = oldSettings.moderators;
-			} else {
-				//all accounts exist, check added/removed
-				const modsRemoved = oldSettings.moderators.filter(m => !moderators.includes(m));
-				const modsAdded = moderators.filter(m => !oldSettings.moderators.includes(m));
-				if (modsRemoved.length > 0) {
-					promises.push(Accounts.removeModBoard(modsRemoved, req.params.board));
-				}
-				if (modsAdded.length > 0) {
-					promises.push(Accounts.addModBoard(modsAdded, req.params.board));
-				}
-			}
-		}
+		({ message: markdownAnnouncement } = await messageHandler(announcement, req.params.board, null, res.locals.permissions))
 	}
 
 	if (req.body.countries) {
@@ -76,7 +51,6 @@ module.exports = async (req, res, next) => {
 	}
 
 	const newSettings = {
-		moderators,
 		'name': trimSetting(req.body.name, oldSettings.name),
 		'description': trimSetting(req.body.description, oldSettings.description),
 		'defaultName': trimSetting(req.body.default_name, oldSettings.defaultName),

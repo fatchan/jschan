@@ -68,6 +68,7 @@ module.exports = async (req, res, next) => {
 	} else {
 		res.render('globalmanageboardlist', {
 			localBoards,
+			permissions: res.locals.permissions,
 			page,
 			maxPage,
 			query: req.query,

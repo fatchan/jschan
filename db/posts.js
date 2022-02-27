@@ -3,6 +3,7 @@
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
+	, Permissions = require(__dirname+'/../helpers/permissions.js')
 	, db = Mongo.db.collection('posts')
 	, config = require(__dirname+'/../config.js');
 
@@ -21,7 +22,7 @@ module.exports = {
 		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
 	},
 
-	getBoardRecent: async (offset=0, limit=20, ip, board, permLevel) => {
+	getBoardRecent: async (offset=0, limit=20, ip, board, permissions) => {
 		const query = {};
 		if (board) {
 			query['board'] = board;
@@ -40,7 +41,7 @@ module.exports = {
 		} else if (typeof ip === 'string') {
 			query['ip.raw'] = ip;
 		}
-		if (permLevel > config.get.ipHashPermLevel) {
+		if (!permissions.get(Permissions.VIEW_RAW_IP)) {
 			projection['ip.raw'] = 0;
 			//MongoError, why cant i just projection['reports.ip.raw'] = 0;
 			if (board) {
@@ -529,13 +530,13 @@ module.exports = {
 		})
 	},
 
-	getReports: async (board, permLevel) => {
+	getReports: async (board, permissions) => {
 		const projection = {
 			'salt': 0,
 			'password': 0,
 			'globalreports': 0,
 		};
-		if (permLevel > config.get.ipHashPermLevel) {
+		if (!permissions.get(Permissions.VIEW_RAW_IP)) {
 			projection['ip.raw'] = 0;
 			projection['reports'] = { ip: { raw: 0 } };
 		}
@@ -556,13 +557,13 @@ module.exports = {
 		return posts;
 	},
 
-	getGlobalReports: async (offset=0, limit, ip, permLevel) => {
+	getGlobalReports: async (offset=0, limit, ip, permissions) => {
 		const projection = {
 			'salt': 0,
 			'password': 0,
 			'reports': 0,
 		};
-		if (permLevel > config.get.ipHashPermLevel) {
+		if (!permissions.get(Permissions.VIEW_RAW_IP)) {
 			projection['ip.raw'] = 0;
 			projection['globalreports'] = { ip: { raw: 0 } };
 		}

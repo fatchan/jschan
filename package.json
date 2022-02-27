@@ -1,7 +1,7 @@
 {
   "name": "jschan",
-  "version": "0.3.2",
-  "migrateVersion": "0.2.0",
+  "version": "0.4.0",
+  "migrateVersion": "0.4.0",
   "description": "",
   "main": "server.js",
   "dependencies": {
@@ -22,6 +22,7 @@
     "fs": "0.0.1-security",
     "fs-extra": "^10.0.0",
     "gm": "git+https://gitgud.io/fatchan/gm.git",
+    "big-bitfield": "git+https://gitgud.io/fatchan/big-bitfield.git",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",

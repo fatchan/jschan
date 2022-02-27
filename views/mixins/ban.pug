@@ -10,7 +10,7 @@ mixin ban(ban, banpage)
 			else
 				| Global
 		td= ban.reason
-		- const ip = permLevel > ipHashPermLevel ? ban.ip.single.slice(-10) : ban.ip.raw;
+		- const ip = viewRawIp === true ? ban.ip.raw : ban.ip.single.slice(-10);
 		td #{ip}
 		td #{ban.type}
 		td #{(!banpage || ban.showUser === true) ? ban.issuer : 'Hidden User'}

@@ -1,11 +1,11 @@
 'use strict';
 
-module.exports = (permLevel, match, p1, p2, p3, offset, string, groups) => {
+module.exports = (permissions, match, p1, p2, p3, offset, string, groups) => {
 
 	let { url, label, urlOnly } = groups;
 
 	url = url || urlOnly;
-	if (permLevel >= 4) {
+	if (!permissions.get(MANAGE_BOARD_GENERAL)) {
 		label = url
 			.replace(/\(/g, '&lpar;')
 			.replace(/\)/g, '&rpar;');

@@ -1,3 +1,16 @@
+### 0.4.0
+  - New permission system. No more "levels" shit.
+    - Boards no longer have "moderators" but "staff".
+    - New "staff" page in board management, to add/remove/edit staff.
+    - The global "accounts" and board "staff" pages allow editing individual permissions.
+    - There is now more fine permission/access control system for global and board-level stuff.
+    - Users with permission to edit accounts can edit accounts on a global level and grant them permissions.
+    - Users with permission to edit board staff can do the same on a per-board level.
+  - Better continuity between pages like "news", "accounts", "custompages", "staff" and the associated editieng page. The manage/globalmaange navbar stays in place with the appropriate section highlighted.
+  - More linking between moderation interfaces e.g. globals board list will now show direct link to view the owners account.
+  - Made some board and page titles more consistent.
+  - Bugfixes.
+
 ### 0.3.2
   - Minor bugfix to post moving.
 

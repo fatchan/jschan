@@ -9,7 +9,7 @@ block head
 	title /#{board._id}/ - #{board.settings.name} - page #{page}
 
 block content
-	+boardheader(modview ? 'Mod View' : null)
+	+boardheader(modview ? 'Mod Index' : null)
 	br
 	include ../includes/postform.pug
 	br

@@ -19,6 +19,7 @@ module.exports = async (req, res, next) => {
 	.set('Cache-Control', 'private, max-age=5')
 	.render('editnews', {
 		csrf: req.csrfToken(),
+		permissions: res.locals.permissions,
 		news,
 	});
 

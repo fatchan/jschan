@@ -1,0 +1,53 @@
+extends ../layout.pug
+include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
+
+block head
+	title /#{board._id}/ - Staff
+
+block content
+	+boardheader('Staff')
+	br
+	+managenav('staff')
+	hr(size=1)
+	.form-wrapper.flexleft
+		h4.no-m-p Add Staff:
+		form.form-post.mv-5(action=`/forms/board/${board._id}/addstaff` method='POST' enctype='application/x-www-form-urlencoded')
+			input(type='hidden' name='_csrf' value=csrf)
+			.row
+				.label Username
+				input(type='text' name='username' required)
+			input(type='submit', value='Add')
+	hr(size=1)
+	h4.no-m-p Current Staff:
+	- const staffNames = Object.keys(board.staff);
+	if staffNames.length > 0
+		form.form-post.nogrow(action=`/forms/board/${board._id}/deletestaff` method='POST' enctype='application/x-www-form-urlencoded')
+			input(type='hidden' name='_csrf' value=csrf)
+			.table-container.flex-left.mv-5
+				table
+					tr
+						th
+						th Username
+						th Date Added
+						th Logs
+						th(colspan=2) Permissions
+					for username in staffNames
+						tr
+							td: input(type='checkbox' name='checkedstaff' value=username)
+							td #{username} #{user.username === username ? '(You)' : ''}
+							td 
+								time.reltime(datetime=board.staff[username].addedDate) #{board.staff[username].addedDate.toLocaleString(undefined, {hourCycle:'h23'})}
+							td: a(href=`/${board._id}/manage/logs.html?username=${username}`) [View]
+							td: span.mono #{board.staff[username].permissions.toString('base64')}
+							td
+								if user.username !== username
+									a(href=`/${board._id}/manage/editstaff/${username}.html`) [Edit]
+								else
+									a(href=`/${board._id}/manage/mypermissions.html`) [View]
+
+			h4.no-m-p Delete Selected:
+			input(type='submit', value='Delete')
+
+	else
+		p None.

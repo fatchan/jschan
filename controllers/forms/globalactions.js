@@ -23,7 +23,7 @@ module.exports = {
 
 		const { globalLimits } = config.get;
 
-		res.locals.actions = actionChecker(req);
+		res.locals.actions = actionChecker(req, res);
 
 		const errors = await checkSchema([
 			{ result: lengthBody(req.body.globalcheckedposts, 1), expected: false, blocking: true, error: 'Must select at least one post' },
@@ -35,12 +35,12 @@ module.exports = {
 			{ result: (existsBody(req.body.checkedreports) && req.body.globalcheckedposts
 				&& lengthBody(req.body.checkedreports, 1, req.body.globalcheckedposts.length*5)), expected: false, error: 'Invalid number of reports checked' },
 			{ result: (res.locals.actions.numGlobal > 0 && res.locals.actions.validActions.length <= res.locals.actions.numGlobal), expected: true, blocking: true, error: 'Invalid actions selected' },
-			{ result: (res.locals.permLevel > res.locals.actions.authRequired), expected: false, blocking: true, error: 'No permission' },
+			{ result: res.locals.actions.hasPermission, expected: true, blocking: true, error: 'No permission' },
 			{ result: (existsBody(req.body.edit) && lengthBody(req.body.globalcheckedposts, 1, 1)), expected: false, error: 'Must select only 1 post for edit action' },
 			{ result: lengthBody(req.body.postpassword, 0, globalLimits.fieldLength.postpassword), expected: false, error: `Password must be ${globalLimits.fieldLength.postpassword} characters or less` },
 			{ result: lengthBody(req.body.ban_reason, 0, globalLimits.fieldLength.ban_reason), expected: false, error: `Ban reason must be ${globalLimits.fieldLength.ban_reason} characters or less` },
 			{ result: lengthBody(req.body.log_message, 0, globalLimits.fieldLength.log_message), expected: false, error: `Modlog message must be ${globalLimits.fieldLength.log_message} characters or less` },
-		], res.locals.permLevel);
+		]);
 
 		//return the errors
 		if (errors.length > 0) {
