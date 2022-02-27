@@ -3,6 +3,7 @@
 const deleteStaff = require(__dirname+'/../../models/forms/deletestaff.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, Permissions = require(__dirname+'/../../helpers/permissions.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
@@ -17,6 +18,7 @@ module.exports = {
 		const errors = await checkSchema([
 			{ result: lengthBody(req.body.checkedstaff, 1), expected: false, error: 'Must select at least one staff to delete' },
 			{ result: existsBody(req.body.checkedstaff) && req.body.checkedstaff.some(s => !res.locals.board.staff[s]), expected: false, error: 'Invalid staff selection' },
+			{ result: existsBody(req.body.checkedstaff) && req.body.checkedstaff.some(s => s === res.locals.board.owner), expected: false, permission: Permissions.ROOT, error: "You can't delete the board owner" },
 			//not really necessary, but its a bit retarded to "delete yourself" as staff this way
 			{ result: existsBody(req.body.checkedstaff) && req.body.checkedstaff.some(s => s === res.locals.user.username), expected: false, error: 'Resign from the accounts page instead' },
 		]);

@@ -2,7 +2,7 @@
 
 const { Accounts, Boards } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, cache = require(__dirname+'/../../redis.js')
+	, cache = require(__dirname+'/../../redis.js');
 
 module.exports = async (req, res, next) => {
 
@@ -40,8 +40,11 @@ module.exports = async (req, res, next) => {
 						},
 						'update': {
 							'$set': {
-								'owner': null //board has no owner
-							}
+								'owner': null,
+							},
+							'$unset': {
+								[`staff.${acc.username}`]: "",
+							},
 						}
 					}
 				});

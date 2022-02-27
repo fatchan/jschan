@@ -1,6 +1,7 @@
 'use strict';
 
 const transferBoard = require(__dirname+'/../../models/forms/transferboard.js')
+	, { Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
 	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')

@@ -125,30 +125,30 @@ module.exports = {
 		);
 	},
 
-	setStaffPermissions: (board, username, permissions) => {
+	setStaffPermissions: (board, username, permissions, setOwner = false) => {
 		cache.del(`board:${board}`);
-		return db.updateOne(
-			{
-				'_id': board,
-			}, {
-				'$set': {
-					[`staff.${username}.permissions`]: Mongo.Binary(permissions.array),
-				}
+		const update = {
+			'$set': {
+				[`staff.${username}.permissions`]: Mongo.Binary(permissions.array),
 			}
-		);
+		};
+		if (setOwner === true) {
+			update['$set']['owner'] = username;
+		}
+		return db.updateOne({
+			'_id': board,
+		}, update);
 	},
 
 	setOwner: (board, username = null) => {
 		cache.del(`board:${board}`);
-		return db.updateOne(
-			{
-				'_id': board,
-			}, {
-				'$set': {
-					'owner': null
-				}
-			}
-		);
+		return db.updateOne({
+			'_id': board,
+		}, {
+			'$set': {
+				'owner': null,
+			},
+		});
 	},
 
 	addToArray: (board, key, list) => {
