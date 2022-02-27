@@ -35,9 +35,21 @@ const ROOT = new Permission();
 ROOT.setAll(Permission.allPermissions);
 
 module.exports = {
-	ANON,
-	BOARD_STAFF,
-	BOARD_OWNER,
-	GLOBAL_STAFF,
-	ROOT,
+
+	permTemplates: {
+		ANON,
+		BOARD_STAFF,
+		BOARD_OWNER,
+		GLOBAL_STAFF,
+		ROOT,
+	},
+
+	permTemplateMap: {
+		[ANON.base64]: 'Regular User',
+		[BOARD_STAFF.base64]: 'Board Staff',
+		[BOARD_OWNER.base64]: 'Board Owner',
+		[GLOBAL_STAFF.base64]: 'Global Staff',
+		[ROOT.base64]: 'Admin',
+	},
+
 };

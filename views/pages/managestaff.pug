@@ -24,14 +24,15 @@ block content
 	if staffNames.length > 0
 		form.form-post.nogrow(action=`/forms/board/${board._id}/deletestaff` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
-			.table-container.flex-left.mv-5
+			.table-container.flex-left.mv-5.text-center
 				table
 					tr
 						th
 						th Username
 						th Date Added
 						th Logs
-						th(colspan=2) Permissions
+						th Role
+						th Permissions
 					for username in staffNames
 						tr
 							td: input(type='checkbox' name='checkedstaff' value=username)
@@ -39,7 +40,7 @@ block content
 							td 
 								time.reltime(datetime=board.staff[username].addedDate) #{board.staff[username].addedDate.toLocaleString(undefined, {hourCycle:'h23'})}
 							td: a(href=`/${board._id}/manage/logs.html?username=${username}`) [View]
-							td: span.mono #{board.staff[username].permissions.toString('base64')}
+							td #{permTemplateMap[board.staff[username].permissions.toString('base64')] || 'Custom'}
 							td
 								if user.username !== username
 									a(href=`/${board._id}/manage/editstaff/${username}.html`) [Edit]

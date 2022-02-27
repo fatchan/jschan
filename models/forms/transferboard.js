@@ -2,7 +2,7 @@
 
 const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, PermissionTemplates = require(__dirname+'/../../helpers/permtemplates.js');
+	, { permTemplates } = require(__dirname+'/../../helpers/permtemplates.js');
 
 module.exports = async (req, res, next) => {
 
@@ -20,14 +20,14 @@ module.exports = async (req, res, next) => {
 	if (res.locals.board.staff[newOwner._id] != null) {
 		//if already a staff, just change their permission instead of removing+adding back
 		await Promise.all([
-			Boards.setStaffPermissions(req.params.board, newOwner._id, PermissionTemplates.BOARD_OWNER, true),
+			Boards.setStaffPermissions(req.params.board, newOwner._id, permTemplates.BOARD_OWNER, true),
 			Accounts.removeStaffBoard([newOwner._id], req.params.board),
 			Accounts.addOwnedBoard(newOwner._id, req.params.board),
 		]);
 	} else {
 		//otherwise add them as a new staff+owner
 		await Promise.all([
-			Boards.addStaff(req.params.board, newOwner._id, PermissionTemplates.BOARD_OWNER, true),
+			Boards.addStaff(req.params.board, newOwner._id, permTemplates.BOARD_OWNER, true),
 			Accounts.addOwnedBoard(newOwner._id, req.params.board),
 		]);
 	}

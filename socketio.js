@@ -6,9 +6,7 @@ const { redis: redisConfig } = require(__dirname+'/configs/secrets.js')
 	, roomRegex = /^(?<roomBoard>[a-z0-9]+)-(?<roomName>[a-z0-9-]+)$/i
 	, calcPerms = require(__dirname+'/helpers/checks/calcperms.js')
 	, Permissions = require(__dirname+'/helpers/permissions.js')
-	, Permission = require(__dirname+'/helpers/permission.js')
-	, PermissionTemplates = require(__dirname+'/helpers/permtemplates.js');
-
+	, Permission = require(__dirname+'/helpers/permission.js');
 
 module.exports = {
 

@@ -12,6 +12,7 @@ const { outputFile } = require('fs-extra')
 	, { version } = require(__dirname+'/../package.json')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
 	, Permissions = require(__dirname+'/permissions.js')
+	, { permTemplateMap } = require(__dirname+'/permtemplates.js')
 	, config = require(__dirname+'/../config.js');
 
 let { archiveLinksURL, lockWait, globalLimits, boardDefaults, cacheTemplates, 
@@ -22,6 +23,7 @@ const updateLocals = () => {
 	({ archiveLinksURL, lockWait, globalLimits, boardDefaults, cacheTemplates,
 		reverseImageLinksURL, meta, enableWebring, captchaOptions, globalAnnouncement } = config.get);
 	renderLocals = {
+		permTemplateMap,
 		Permissions,
 		cache: cacheTemplates,
 		archiveLinksURL,

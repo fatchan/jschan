@@ -5,7 +5,7 @@ const quoteHandler = require(__dirname+'/quotes.js')
 	, { markdown } = require(__dirname+'/markdown.js')
 	, sanitizeOptions = require(__dirname+'/sanitizeoptions.js')
 	, Permission = require(__dirname+'/../permissions.js')
-	, PermissionTemplates = require(__dirname+'/../permtemplates.js')
+	, { permTemplates } = require(__dirname+'/../permtemplates.js')
 	, sanitize = require('sanitize-html');
 
 module.exports = async (inputMessage, boardName, threadId=null, permissions=null) => {
@@ -16,7 +16,7 @@ module.exports = async (inputMessage, boardName, threadId=null, permissions=null
 
 	if (permissions === null) {
 		//technically there has for a long time been a bug here, but it can be fixed later. permissions unknown for old msgs
-		permissions = new Permission(PermissionTemplates.ANON.base64);
+		permissions = new Permission(permTemplates.ANON.base64);
 	}
 
 	//markdown a post, link the quotes, sanitize and return message and quote arrays

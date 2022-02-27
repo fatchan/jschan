@@ -2,7 +2,7 @@
 
 const Permissions = require(__dirname+'/../permissions.js') //needs rename
 	, Permission = require(__dirname+'/../permission.js')
-	, PermissionTemplates = require(__dirname+'/../permtemplates.js');
+	, { permTemplates } = require(__dirname+'/../permtemplates.js');
 
 module.exports = (req, res) => {
 
@@ -40,7 +40,7 @@ module.exports = (req, res) => {
 
 	} else {
 		//not logged in, gets default anon permission
-		calculatedPermissions = new Permission(PermissionTemplates.ANON.base64);
+		calculatedPermissions = new Permission(permTemplates.ANON.base64);
 	}
 
 	return calculatedPermissions;

@@ -1,6 +1,6 @@
 'use strict';
 
-const PermissionTemplates = require(__dirname+'/../helpers/permtemplates.js')
+const { permTemplates } = require(__dirname+'/../helpers/permtemplates.js')
 	, Permission = require(__dirname+'/../helpers/permission.js')
 	, { Binary } = require('mongodb');
 
@@ -9,19 +9,19 @@ module.exports = async(db, redis) => {
 	console.log('setting new permission templates to replace old permission "levels"');
 	await db.collection('accounts').updateMany({ permLevel: 0 }, {
 		'$set': {
-			'permissions': Binary(PermissionTemplates.ROOT.array),
+			'permissions': Binary(permTemplates.ROOT.array),
 		},
 	});
 	await db.collection('accounts').updateMany({ permLevel: 1 }, {
 		'$set': {
-			'permissions': Binary(PermissionTemplates.GLOBAL_STAFF.array),
+			'permissions': Binary(permTemplates.GLOBAL_STAFF.array),
 		},
 	});
 	//not doing 2 and 3 anymore, since they were a weird, ugly part of the old "levels" system.
 	//they can be added back manually by editing global perms if desired
 	await db.collection('accounts').updateMany({ permLevel: { $gte: 2 } }, { //gte2, to get 2, 3, and 4.
 		'$set': {
-			'permissions': Binary(PermissionTemplates.ANON.array),
+			'permissions': Binary(permTemplates.ANON.array),
 		},
 	});
 	console.log('renaming account modBoards->staffBoards');
@@ -51,14 +51,14 @@ module.exports = async(db, redis) => {
 	const bulkWrites = allBoards.map(board => {
 		const staffObject = board.moderators.reduce((acc, mod) => {
 			acc[mod] = {
-				permissions: Binary(PermissionTemplates.BOARD_STAFF.array),
+				permissions: Binary(permTemplates.BOARD_STAFF.array),
 				addedDate: new Date(),
 			};
 			return acc;
 		}, {});
 		//add add the BO to staff
 		staffObject[board.owner] = {
-			permissions: Binary(PermissionTemplates.BOARD_OWNER.array),
+			permissions: Binary(permTemplates.BOARD_OWNER.array),
 			addedDate: new Date(),
 		}
 		return {

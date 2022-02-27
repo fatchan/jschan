@@ -16,8 +16,9 @@ const config = require(__dirname+'/config.js')
 	, commit = require(__dirname+'/helpers/commit.js')
 	, { version } = require(__dirname+'/package.json')
 	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
+	, CachePugTemplates = require('cache-pug-templates')
 	, Permissions = require(__dirname+'/helpers/permissions.js')
-	, CachePugTemplates = require('cache-pug-templates');
+	, { permTemplateMap } = require(__dirname+'/helpers/permtemplates.js');
 
 (async () => {
 
@@ -71,6 +72,7 @@ const config = require(__dirname+'/config.js')
 		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
 		//default settings
+		app.locals.permTemplateMap = permTemplateMap;
 		app.locals.Permissions = Permissions;
 		app.locals.defaultTheme = boardDefaults.theme;
 		app.locals.defaultCodeTheme = boardDefaults.codeTheme;

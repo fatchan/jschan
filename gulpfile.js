@@ -7,7 +7,7 @@ const config = require(__dirname+'/config.js')
 	, semver = require('semver')
 	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
 	, commit = require(__dirname+'/helpers/commit.js')
-	, PermissionTemplates = require(__dirname+'/helpers/permtemplates.js')
+	, { permTemplates } = require(__dirname+'/helpers/permtemplates.js')
 	, replace = require('gulp-replace')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
@@ -204,7 +204,7 @@ async function wipe() {
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
 
 	const randomPassword = randomBytes(20).toString('base64')
-	await Accounts.insertOne('admin', 'admin', randomPassword, PermissionTemplates.ROOT);
+	await Accounts.insertOne('admin', 'admin', randomPassword, permTemplates.ROOT);
 	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 
 	await db.collection('version').replaceOne({
