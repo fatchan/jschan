@@ -10,9 +10,13 @@ module.exports = {
 
 	find: (ip, board) => {
 		let ipQuery;
-		if (typeof ip === 'object') { //object with hash and ranges in bancheck
+		if (typeof ip === 'object') {
 			ipQuery = {
-				'$in': [ip.single, ip.qrange, ip.hrange] //gets single and range ban in 1 query
+				'$in': [
+					ip.single, //full ip
+					ip.single.split('.').slice(0,2).join('.'), //qrange
+					ip.single.split('.').slice(0,1).join('.'), //hrange
+				],
 			}
 		} else {
 			ipQuery = ip;

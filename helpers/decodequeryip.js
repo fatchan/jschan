@@ -8,10 +8,9 @@ module.exports = (query, permLevel) => {
 	const { ipHashPermLevel } = config.get;
 	if (query.ip && typeof query.ip === 'string') {
 		const decoded = decodeURIComponent(query.ip);
-		if (permLevel <= ipHashPermLevel && (isIP(decoded) || decoded.match(/[a-z0-9]{24}/i))) { //if perms to view raw ip or bypass, allow querying
+		if (permLevel <= ipHashPermLevel || !isIP(decoded)) {
+			//if they have perm to view raw IP, or its NOT a raw ip, return
 			return decoded;
-		} else if (decoded.length === 10) { //otherwise, only allow last 10 char substring
-			return new RegExp(`${escapeRegExp(decoded)}$`);
 		}
 	}
 	return null; //else, no ip filter

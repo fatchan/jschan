@@ -26,15 +26,21 @@ module.exports = async (req, res, next) => {
 			const thisIpPosts = ipPosts[ip];
 			let type = 'single';
 			let banIp = {
-				single: ip,
-				raw: thisIpPosts[0].ip.raw
+				single: thisIpPosts[0].ip.single,
+				raw: thisIpPosts[0].ip.raw,
 			};
 			if (req.body.ban_h) {
 				type = 'half';
-				banIp.single = thisIpPosts[0].ip.hrange;
+				banIp.single = thisIpPosts[0].ip.single
+					.split('.')
+					.slice(0,1)
+					.join('.');
 			} else if (req.body.ban_q) {
 				type = 'quarter';
-				banIp.single = thisIpPosts[0].ip.qrange;
+				banIp.single = thisIpPosts[0].ip.single
+					.split('.')
+					.slice(0,2)
+					.join('.');
 			}
 			bans.push({
 				type,

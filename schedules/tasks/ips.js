@@ -33,8 +33,6 @@ module.exports = {
 							'ip.pruned': true,
 							'ip.raw': randomIP,
 							'ip.single': randomIP,
-							'ip.qrange': randomIP,
-							'ip.hrange': randomIP,
 						}
 					}
 				}
