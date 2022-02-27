@@ -1,6 +1,7 @@
 extends ../layout.pug
 include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
+include ../mixins/mypermissions.pug
 
 block head
 	title /#{board._id}/ - My Permissions
@@ -16,12 +17,4 @@ block content
 			|  
 			a(href=`/${board._id}/manage/editstaff/${user.username}.html`) [Edit]
 	- const jsonPermissions = permissions.toJSON();
-	for perm, index in Object.keys(jsonPermissions).filter(p => p.startsWith('MANAGE_BOARD_'))
-		if jsonPermissions[perm].title && index > 0
-			hr(size=1)
-			h4.mv-5 #{jsonPermissions[perm].title}
-		.row
-			label.postform-style.ph-5
-				input(type='checkbox' checked=jsonPermissions[perm].state disabled)
-			.rlabel #{jsonPermissions[perm].label}
-			p #{jsonPermissions[perm].desc}
+	+mypermissions(jsonPermissions, Object.keys(jsonPermissions).filter(p => p.startsWith('MANAGE_BOARD_')))

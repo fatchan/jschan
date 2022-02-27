@@ -1,0 +1,10 @@
+mixin mypermissions(jsonPermissions, keys)
+	for perm, index in keys
+		if jsonPermissions[perm].title && index > 0
+			hr(size=1)
+			h4.mv-5 #{jsonPermissions[perm].title}
+		.row
+			label.postform-style.ph-5
+				input(type='checkbox' checked=jsonPermissions[perm].state disabled)
+			.rlabel #{jsonPermissions[perm].label}
+			p #{jsonPermissions[perm].desc}
