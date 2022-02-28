@@ -38,7 +38,9 @@ module.exports = {
 					}
 				})
 				.then(res => res.json())
-				.catch(e => {});
+				.catch(e => {
+//					console.warn('webring', url, 'failed:', e.type);
+				});
 			}));
 			for (let i = 0; i < rings.length; i++) {
 				const ring = rings[i];
@@ -80,6 +82,8 @@ module.exports = {
 				}
 			}
 		}
+
+		debugLogs && console.log('Successfully fetched', siteNames.size, 'webring sites');
 
 		await Boards.db.deleteMany({ webring: true });
 		if (webringBoards.length > 0) {
@@ -125,7 +129,7 @@ module.exports = {
 		debugLogs && console.log(timeDiffString(label, end));
 	},
 	interval: timeUtils.MINUTE*15,
-	immediate: false,
+	immediate: true,
 	condition: 'enableWebring'
 
 };
