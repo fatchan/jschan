@@ -25,3 +25,14 @@ block content
 					.rlabel #{jsonPermissions[perm].label}
 					p #{jsonPermissions[perm].desc}
 			input(type='submit', value='Save')
+			hr(size=1)
+			h4.mv-5 Or, apply a role:
+			.row
+				.label Role
+				select(name='template')
+					option(disabled selected) None
+					//-limiting which ones atm
+					option(value=permTemplates.ANON.base64) Regular User
+					option(value=permTemplates.GLOBAL_STAFF.base64) Global Staff
+					option(value=permTemplates.ADMIN.base64) Admin
+			input(type='submit', value='Apply')

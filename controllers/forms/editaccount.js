@@ -6,6 +6,7 @@ const editAccount = require(__dirname+'/../../models/forms/editaccount.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
 	, Permissions = require(__dirname+'/../../helpers/permissions.js')
+	, { permTemplates } = require(__dirname+'/../../helpers/permtemplates.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
@@ -26,6 +27,9 @@ module.exports = {
 				return res.locals.editingAccount != null;
 			}, expected: true, error: 'Invalid account username' },
 			{ result: (res.locals.user.username === req.body.username), expected: false, error: "You can't edit your own permissions" },
+			{ result: !existsBody(req.body.template) //no template, OR the template is a valid one
+				|| inArrayBody(req.body.template, [permTemplates.ANON.base64, permTemplates.GLOBAL_STAFF.base64, permTemplates.ADMIN.base64]),
+				expected: true, error: "Invalid template selection" },
 		]);
 
 		if (errors.length > 0) {

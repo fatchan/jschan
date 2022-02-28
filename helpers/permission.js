@@ -6,9 +6,8 @@ const Permissions = require(__dirname+'/permissions.js')
 
 class Permission extends BigBitfield {
 
-	constructor(data, name = 'Custom') {
+	constructor(data) {
 		super(data);
-		this.name = name;
 	}
 
 	static permissionEntries = Object.entries(Permissions)

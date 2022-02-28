@@ -1,6 +1,7 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../../db/')
+	, { permTemplates } = require(__dirname+'/../../../helpers/permtemplates.js')
 	, Permission = require(__dirname+'/../../../helpers/permission.js');
 
 module.exports = async (req, res, next) => {
@@ -19,6 +20,7 @@ module.exports = async (req, res, next) => {
 		board: res.locals.board,
 		accountUsername: req.params.accountusername,
 		accountPermissions: new Permission(editingAccount.permissions),
+		permTemplates,
 	});
 
 }

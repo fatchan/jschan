@@ -15,7 +15,8 @@ ANON.setAll([
 
 const BOARD_STAFF = new Permission(ANON.base64)
 BOARD_STAFF.setAll([
-	Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS, Permissions.MANAGE_BOARD_SETTINGS, Permissions.MANAGE_BOARD_CUSTOMISATION,
+	Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS, Permissions.MANAGE_BOARD_SETTINGS, 
+	Permissions.MANAGE_BOARD_CUSTOMISATION,
 ]);
 
 const BOARD_OWNER = new Permission(BOARD_STAFF.base64)
@@ -25,10 +26,14 @@ BOARD_OWNER.setAll([
 
 const GLOBAL_STAFF = new Permission(BOARD_OWNER.base64);
 GLOBAL_STAFF.setAll([
-	//no MANAGE_GLOBAL_ACCOUNTS, for now
 	Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_GLOBAL_BANS, Permissions.MANAGE_GLOBAL_LOGS, Permissions.MANAGE_GLOBAL_NEWS, 
 	Permissions.MANAGE_GLOBAL_BOARDS, Permissions.MANAGE_GLOBAL_SETTINGS, Permissions.MANAGE_BOARD_OWNER, Permissions.BYPASS_FILTERS, 
 	Permissions.BYPASS_BANS, Permissions.BYPASS_SPAMCHECK, Permissions.BYPASS_RATELIMITS,
+]);
+
+const ADMIN = new Permission(GLOBAL_STAFF.base64);
+ADMIN.setAll([
+	Permissions.MANAGE_GLOBAL_ACCOUNTS, Permissions.VIEW_RAW_IP,
 ]);
 
 const ROOT = new Permission();
@@ -41,6 +46,7 @@ module.exports = {
 		BOARD_STAFF,
 		BOARD_OWNER,
 		GLOBAL_STAFF,
+		ADMIN,
 		ROOT,
 	},
 
@@ -49,7 +55,8 @@ module.exports = {
 		[BOARD_STAFF.base64]: 'Board Staff',
 		[BOARD_OWNER.base64]: 'Board Owner',
 		[GLOBAL_STAFF.base64]: 'Global Staff',
-		[ROOT.base64]: 'Admin',
+		[ADMIN.base64]: 'Admin',
+		[ROOT.base64]: 'Root',
 	},
 
 };
