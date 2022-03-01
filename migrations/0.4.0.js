@@ -7,19 +7,19 @@ const { permTemplates } = require(__dirname+'/../helpers/permtemplates.js')
 module.exports = async(db, redis) => {
 	console.log('making db changes for permissions update');
 	console.log('setting new permission templates to replace old permission "levels"');
-	await db.collection('accounts').updateMany({ permLevel: 0 }, {
+	await db.collection('accounts').updateMany({ authLevel: 0 }, {
 		'$set': {
 			'permissions': Binary(permTemplates.ROOT.array),
 		},
 	});
-	await db.collection('accounts').updateMany({ permLevel: 1 }, {
+	await db.collection('accounts').updateMany({ authLevel: 1 }, {
 		'$set': {
 			'permissions': Binary(permTemplates.GLOBAL_STAFF.array),
 		},
 	});
 	//not doing 2 and 3 anymore, since they were a weird, ugly part of the old "levels" system.
 	//they can be added back manually by editing global perms if desired
-	await db.collection('accounts').updateMany({ permLevel: { $gte: 2 } }, { //gte2, to get 2, 3, and 4.
+	await db.collection('accounts').updateMany({ authLevel: { $gte: 2 } }, { //gte2, to get 2, 3, and 4.
 		'$set': {
 			'permissions': Binary(permTemplates.ANON.array),
 		},
@@ -49,7 +49,7 @@ module.exports = async(db, redis) => {
 	console.log('converting old "moderators" arrays to "staff" perms map and giving BOARD_STAFF template');
 	const allBoards = await db.collection('boards').find({ webring: false }).toArray();
 	const bulkWrites = allBoards.map(board => {
-		const staffObject = board.moderators.reduce((acc, mod) => {
+		const staffObject = board.settings.moderators.reduce((acc, mod) => {
 			acc[mod] = {
 				permissions: Binary(permTemplates.BOARD_STAFF.array),
 				addedDate: new Date(),
@@ -68,14 +68,14 @@ module.exports = async(db, redis) => {
 				},
 				'update': {
 					'$unset': {
-						'moderators': '',
+						'settings.moderators': '',
 					},
 					'$set': {
 						'staff': staffObject,
 					}
 				}
 			}
-		});
+		};
 	});
 	await db.collection('boards').bulkWrite(bulkWrites);
 	console.log('Clearing globalsettings cache');

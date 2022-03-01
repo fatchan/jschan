@@ -61,7 +61,10 @@ module.exports = {
 	checkSchema: async (schema, permissions) => {
 		const errors = [];
 		//filter to checks with no permission or ones we dont have permission to skip.
-		const filteredSchema = schema.filter(c => c.permission == null || !permissions.get(c.permission));
+		let filteredSchema = schema;
+		if (permissions) {
+			filteredSchema = filteredSchema.filter(c => c.permission == null || !permissions.get(c.permission));
+		}
 		for (let check of filteredSchema) {
 			const result = await (typeof check.result === 'function' ? check.result() : check.result);
 			const expected = (check.expected || false);

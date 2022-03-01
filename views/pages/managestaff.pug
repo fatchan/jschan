@@ -35,7 +35,7 @@ block content
 						th Permissions
 					for staff in staffEntries
 						tr
-							td: input(type='checkbox' name='checkedstaff' value=username)
+							td: input(type='checkbox' name='checkedstaff' value=staff[0])
 							td #{staff[0]}#{user.username === staff[0] ? ' (You)' : ''}
 							td 
 								time.reltime(datetime=staff[1].addedDate) #{staff[1].addedDate.toLocaleString(undefined, {hourCycle:'h23'})}

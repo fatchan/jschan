@@ -67,7 +67,7 @@ module.exports = {
 
 	//block bypasses
 	blockBypass: {
-		enabled: true,
+		enabled: false,
 		forceAnonymizers: true,
 		expireAfterUses: 50, //however many (attempted) posts per block bypass captcha
 		expireAfterTime: 86400000, //expiry in ms regardless if the limit was reached, default 1 day

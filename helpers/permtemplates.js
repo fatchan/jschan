@@ -15,13 +15,13 @@ ANON.setAll([
 
 const BOARD_STAFF = new Permission(ANON.base64)
 BOARD_STAFF.setAll([
-	Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS, Permissions.MANAGE_BOARD_SETTINGS, 
-	Permissions.MANAGE_BOARD_CUSTOMISATION,
+	Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS, 
 ]);
 
 const BOARD_OWNER = new Permission(BOARD_STAFF.base64)
 BOARD_OWNER.setAll([
-	Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF,
+	Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF, Permissions.MANAGE_BOARD_CUSTOMISATION, 
+	Permissions.MANAGE_BOARD_SETTINGS,
 ]);
 
 const GLOBAL_STAFF = new Permission(BOARD_OWNER.base64);
