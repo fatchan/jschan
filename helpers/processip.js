@@ -30,17 +30,15 @@ module.exports = (req, res, next) => {
 			zeroPad: false,
 		});
 		let qrange
-			, hrange
-			, single;
+			, hrange;
 		if (ipKind === 'ipv4') {
 			qrange = createCIDR(ipStr, 24).toString();
 			hrange = createCIDR(ipStr, 16).toString();
-			single = `${hashIp(hrange).substring(0,6)}.${hashIp(qrange).substring(0,3)}.${hashIp(ipStr).substring(0,3)}.IP`;
 		} else {
 			qrange = createCIDR(ipStr, 64).toString();
 			hrange = createCIDR(ipStr, 48).toString();
-			single = `${hashIp(hrange).substring(0,8)}.${hashIp(qrange).substring(0,7)}.${hashIp(ipStr).substring(0,7)}.IP`;
 		}
+		const single = `${hashIp(hrange).substring(0,8)}.${hashIp(qrange).substring(0,7)}.${hashIp(ipStr).substring(0,7)}.IP`;
 		res.locals.ip = {
 			raw: ipHashPermLevel === -1 ? single : ipStr,
 			single,
