@@ -1,13 +1,13 @@
 'use strict';
 
 const config = require(__dirname+'/config.js')
+	, Permissions = require(__dirname+'/helpers/permissions.js')
 	, { hcaptcha, google } = require(__dirname+'/configs/secrets.js')
 	, gulp = require('gulp')
 	, fs = require('fs-extra')
 	, semver = require('semver')
 	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
 	, commit = require(__dirname+'/helpers/commit.js')
-	, { permTemplates } = require(__dirname+'/helpers/permtemplates.js')
 	, replace = require('gulp-replace')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
@@ -160,7 +160,7 @@ async function wipe() {
 	}
 
 	const { Boards, Posts, Captchas, Ratelimits, News, CustomPages,
-		Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
+		Accounts, Files, Stats, Modlogs, Bans, Bypass, Roles } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
@@ -168,6 +168,7 @@ async function wipe() {
 		Captchas.deleteAll(),
 		Ratelimits.deleteAll(),
 		Accounts.deleteAll(),
+		Roles.deleteAll(),
 		Posts.deleteAll(),
 		Boards.deleteAll(),
 		Bans.deleteAll(),
@@ -203,8 +204,12 @@ async function wipe() {
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
 
+//todo: insert roles to roles db
+
 	const randomPassword = randomBytes(20).toString('base64')
-	await Accounts.insertOne('admin', 'admin', randomPassword, permTemplates.ROOT);
+	const rootPermission = new Permission();
+	rootPermissions.set(Permissions.ROOT);
+	await Accounts.insertOne('admin', 'admin', randomPassword, rootPermission);
 	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 
 	await db.collection('version').replaceOne({
@@ -345,7 +350,6 @@ function deletehtml() {
 
 async function custompages() {
 	const formatSize = require(__dirname+'/helpers/files/formatsize.js');
-	const Permissions = require(__dirname+'/helpers/permissions.js');
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/404.pug`,

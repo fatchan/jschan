@@ -34,11 +34,7 @@ class Permission extends BigBitfield {
 		if (this.get(Permissions.ROOT)){ //root gets all perms
 			this.setAll(this.constructor.allPermissions);
 		} else if (this.get(Permissions.MANAGE_BOARD_OWNER)) { //BOs and "global staff"
-			this.setAll([
-				Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, 
-				Permissions.MANAGE_BOARD_LOGS, Permissions.MANAGE_BOARD_SETTINGS, 
-				Permissions.MANAGE_BOARD_CUSTOMISATION, Permissions.MANAGE_BOARD_STAFF,
-			]);
+			this.setAll(Permissions._MANAGE_BOARD_BITS);
 		}
 	}
 

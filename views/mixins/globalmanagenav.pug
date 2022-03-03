@@ -16,6 +16,9 @@ mixin globalmanagenav(selected, upLevel)
 		if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
 			|  
 			a(href=`${upLevel ? '../' : ''}accounts.html` class=(selected === 'accounts' ? 'bold' : '')) [Accounts]
+		if permissions.get(Permissions.MANAGE_GLOBAL_ROLES)
+			|  
+			a(href=`${upLevel ? '../' : ''}roles.html` class=(selected === 'roles' ? 'bold' : '')) [Roles]
 		if permissions.get(Permissions.MANAGE_GLOBAL_NEWS)
 			|  
 			a(href=`${upLevel ? '../' : ''}news.html` class=(selected === 'news' ? 'bold' : '')) [News]

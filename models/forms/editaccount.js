@@ -13,7 +13,6 @@ module.exports = async (req, res, next) => {
 		updatingPermissions = new Permission(req.body.template);
 	} else {
 		updatingPermissions = new Permission(res.locals.editingAccount.permissions);
-		//this can probably be made more general
 		updatingPermissions.set(Permissions.VIEW_RAW_IP, (req.body.VIEW_RAW_IP != null));
 		updatingPermissions.set(Permissions.CREATE_BOARD, (req.body.CREATE_BOARD != null));
 		updatingPermissions.set(Permissions.CREATE_ACCOUNT, (req.body.CREATE_ACCOUNT != null));
@@ -49,11 +48,12 @@ module.exports = async (req, res, next) => {
 		updatingPermissions.set(Permissions.USE_MARKDOWN_DICE, (req.body.USE_MARKDOWN_DICE != null));
 		updatingPermissions.set(Permissions.USE_MARKDOWN_FORTUNE, (req.body.USE_MARKDOWN_FORTUNE != null));
 		if (res.locals.permissions.get(Permissions.ROOT)) {
-			//be careful giving others manage_global_accounts!
 			updatingPermissions.set(Permissions.MANAGE_GLOBAL_ACCOUNTS, (req.body.MANAGE_GLOBAL_ACCOUNTS != null))
+			updatingPermissions.set(Permissions.MANAGE_GLOBAL_ROLES, (req.body.MANAGE_GLOBAL_ROLES != null))
 			updatingPermissions.set(Permissions.ROOT, (req.body.ROOT != null));
 		}
 	}
+	updatingPermissions.applyInheritance();
 
 	const updated = await Accounts.setAccountPermissions(req.body.username, updatingPermissions).then(r => r.matchedCount);
 

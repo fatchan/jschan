@@ -42,6 +42,9 @@ block content
 				if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
 					|   
 					a(href=`/globalmanage/accounts.html`) Accounts
+				if permissions.get(Permissions.MANAGE_GLOBAL_ROLES)
+					|   
+					a(href=`/globalmanage/roles.html`) Roles
 				if permissions.get(Permissions.MANAGE_GLOBAL_NEWS)
 					|   
 					a(href=`/globalmanage/news.html`) News

@@ -32,9 +32,9 @@ block content
 				select(name='template')
 					option(disabled selected) None
 					//-limiting which ones atm
-					option(value=permTemplates.ANON.base64) Regular User
-					option(value=permTemplates.BOARD_STAFF.base64) Global Board Staff
-					option(value=permTemplates.GLOBAL_STAFF.base64) Global Board Owner
-					option(value=permTemplates.GLOBAL_STAFF.base64) Global Staff
-					option(value=permTemplates.ADMIN.base64) Admin
+					option(value=roles.ANON.base64) Regular User
+					option(value=roles.BOARD_STAFF.base64) Global Board Staff
+					option(value=roles.BOARD_OWNER.base64) Global Board Owner
+					option(value=roles.GLOBAL_STAFF.base64) Global Staff
+					option(value=roles.ADMIN.base64) Admin
 			input(type='submit', value='Apply')

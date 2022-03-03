@@ -30,7 +30,7 @@ const express  = require('express')
 		resignController, deleteAccountController, loginController, registerController, changePasswordController,
 		deleteAccountsController, editAccountController, globalSettingsController, createBoardController, makePostController,
 		addStaffController, deleteStaffController, editStaffController, editCustomPageController, editPostController,
-		newCaptcha, blockBypass, logout } = require(__dirname+'/forms/index.js');
+		editRoleController, newCaptcha, blockBypass, logout } = require(__dirname+'/forms/index.js');
 
 
 //make new post
@@ -103,7 +103,9 @@ hasPerms.one(Permissions.MANAGE_GLOBAL_NEWS), deleteNewsController.paramConverte
 router.post('/global/deleteaccounts', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), deleteAccountsController.paramConverter, deleteAccountsController.controller); //account deleting
 router.post('/global/editaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
-hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), editAccountController.paramConverter, editAccountController.controller); //account deleting
+hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), editAccountController.paramConverter, editAccountController.controller); //account editing
+router.post('/global/editrole', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), editRoleController.paramConverter, editRoleController.controller); //role editing
 router.post('/global/settings', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), globalSettingsController.paramConverter, globalSettingsController.controller); //global settings
 

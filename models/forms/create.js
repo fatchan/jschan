@@ -3,7 +3,7 @@
 const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, { Binary } = require(__dirname+'/../../db/db.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { permTemplates } = require(__dirname+'/../../helpers/permtemplates.js')
+	, { roles } = require(__dirname+'/../../helpers/roles.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, restrictedURIs = new Set(['captcha', 'forms', 'randombanner', 'all'])
 	, { ensureDir } = require('fs-extra')
@@ -52,7 +52,7 @@ module.exports = async (req, res, next) => {
 		'webring': false,
 		'staff': {
 			[owner]: {
-				'permissions': Binary(permTemplates.BOARD_OWNER.array),
+				'permissions': Binary(roles.BOARD_OWNER.array),
 				'addedDate': new Date(),
 			},
 		},

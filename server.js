@@ -17,8 +17,7 @@ const config = require(__dirname+'/config.js')
 	, { version } = require(__dirname+'/package.json')
 	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
 	, CachePugTemplates = require('cache-pug-templates')
-	, Permissions = require(__dirname+'/helpers/permissions.js')
-	, { permTemplateMap } = require(__dirname+'/helpers/permtemplates.js');
+	, Permissions = require(__dirname+'/helpers/permissions.js');
 
 (async () => {
 
@@ -35,6 +34,11 @@ const config = require(__dirname+'/config.js')
 	// connect to redis
 	debugLogs && console.log('CONNECTING TO REDIS');
 	const redis = require(__dirname+'/redis.js');
+
+	// load roles early
+	const roles = require(__dirname+'/helpers/roles.js');
+	await roles.load();
+	app.locals.roleNameMap = roles.roleNameMap;
 
 	// disable useless express header
 	app.disable('x-powered-by');
@@ -72,7 +76,6 @@ const config = require(__dirname+'/config.js')
 		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
 		//default settings
-		app.locals.permTemplateMap = permTemplateMap;
 		app.locals.Permissions = Permissions;
 		app.locals.defaultTheme = boardDefaults.theme;
 		app.locals.defaultCodeTheme = boardDefaults.codeTheme;

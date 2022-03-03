@@ -19,14 +19,15 @@ const express  = require('express')
 	//page models
 	, { manageRecent, manageReports, manageAssets, manageSettings, manageBans, editCustomPage, manageMyPermissions,
 		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages, manageStaff, editStaff } = require(__dirname+'/../models/pages/manage/')
-	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards, editNews, editAccount,
-		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs } = require(__dirname+'/../models/pages/globalmanage/')
+	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards, editNews, editAccount, editRole,
+		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs, globalManageRoles } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, create, myPermissions,
 		board, catalog, banners, randombanner, news, captchaPage, overboard, overboardCatalog,
 		captcha, thread, modlog, modloglist, account, boardlist, customPage, csrfPage } = require(__dirname+'/../models/pages/')
 	, threadParamConverter = paramConverter({ processThreadIdParam: true })
 	, logParamConverter = paramConverter({ processDateParam: true })
 	, newsParamConverter = paramConverter({ objectIdParams: ['newsid'] })
+	, roleParamConverter = paramConverter({ objectIdParams: ['roleid'] })
 	, custompageParamConverter = paramConverter({ objectIdParams: ['custompageid'] });
 
 //homepage
@@ -97,13 +98,17 @@ router.get('/globalmanage/news.html', useSession, sessionRefresh, isLoggedIn, ca
 hasPerms.one(Permissions.MANAGE_GLOBAL_NEWS), csrf, globalManageNews);
 router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
 hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), csrf, globalManageAccounts);
+router.get('/globalmanage/roles.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
+hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), csrf, globalManageRoles);
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
 hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), csrf, globalManageSettings);
 router.get('/globalmanage/editnews/:newsid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms,
 hasPerms.one(Permissions.MANAGE_GLOBAL_NEWS), csrf, newsParamConverter, editNews);
 router.get('/globalmanage/editaccount/:accountusername([a-zA-Z0-9]{1,50}).html', useSession, sessionRefresh, isLoggedIn, calcPerms,
 hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), csrf, editAccount);
-//TODO: edit post edit page form, like editnews/editaccount endpoint
+router.get('/globalmanage/editrole/:roleid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms,
+hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), csrf, roleParamConverter, editRole);
+//TODO: edit post edit page form, like editnews/editaccount/editrole endpoint
 
 //captcha
 router.get('/captcha', geoAndTor, processIp, captcha); //get captcha image and cookie

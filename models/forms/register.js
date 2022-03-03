@@ -2,7 +2,7 @@
 
 const { Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { permTemplates } = require(__dirname+'/../../helpers/permtemplates.js');
+	, { roles } = require(__dirname+'/../../helpers/roles.js');
 
 module.exports = async (req, res, next) => {
 
@@ -22,7 +22,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	// add account to db. password is hashed in db model func for easier tests
-	await Accounts.insertOne(original, username, password, permTemplates.ANON);
+	await Accounts.insertOne(original, username, password, roles.ANON);
 
 	return res.redirect('/login.html');
 

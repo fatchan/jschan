@@ -2,13 +2,13 @@
 
 const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { permTemplates } = require(__dirname+'/../../helpers/permtemplates.js');
+	, { roles } = require(__dirname+'/../../helpers/roles.js');
 
 module.exports = async (req, res, next) => {
 
 	await Promise.all([
 		Accounts.addStaffBoard([req.body.username], res.locals.board._id),
-		Boards.addStaff(res.locals.board._id, req.body.username, permTemplates.BOARD_STAFF)
+		Boards.addStaff(res.locals.board._id, req.body.username, roles.BOARD_STAFF)
 	]);
 
 	return dynamicResponse(req, res, 200, 'message', {

@@ -35,6 +35,7 @@ module.exports = {
 	addStaffController: require(__dirname+'/addstaff.js'),
 	deleteStaffController: require(__dirname+'/deletestaff.js'),
 	editStaffController: require(__dirname+'/editstaff.js'),
+	editRoleController: require(__dirname+'/editrole.js'),
 
 	//these dont have a "real" controller
 	newCaptcha: require(__dirname+'/../../models/forms/newcaptcha.js'),

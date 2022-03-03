@@ -6,8 +6,9 @@ const Redis = require('ioredis')
 	, subscriber = new Redis(secrets.redis)
 	, publisher = new Redis(secrets.redis)
 	, messageCallbacks = {
-		'config': [], //others in future?
-	}
+		'config': [],
+		'roles': [],
+	};
 
 module.exports = {
 

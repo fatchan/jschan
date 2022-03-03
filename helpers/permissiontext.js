@@ -17,6 +17,7 @@ module.exports = {
 	MANAGE_GLOBAL_BOARDS: { label: 'Boards', desc: 'Access the global board list. Ability to search/filter. Also grants the ability to transfer or delete any board.' },
 	MANAGE_GLOBAL_SETTINGS: { label: 'Global Settings', desc: 'Access global settings. Ability to change any settings.' },
 	MANAGE_GLOBAL_ACCOUNTS: { label: 'Accounts', desc: 'Access the accounts list. Ability to search/sort. Ability to edit permissions of any user. Can only be given by somebody else with "Root" permission.' }, //view, delete, change account permissions
+	MANAGE_GLOBAL_ROLES: { label: 'Roles', desc: 'Access roles list. Ability to edit roles. Can only be given by somebody else with "Root" permission.' }, //view and edit roles
 	MANAGE_BOARD_OWNER: { title: 'Board Management', label: 'Board Owner', desc: 'Full control of the board, equivalent to the BO. Can delete and/or transfer the board. Can only be given by somebody else with "Board Owner" permission. Use with caution!' },
 	MANAGE_BOARD_GENERAL: { label: 'Board Staff', desc: 'General board staff permission. Access mod index, catalog, recent posts and reports. Ability to submit mod actions. Bypass board-specific bans and post filters.' },
 	MANAGE_BOARD_BANS: { label: 'Bans', desc: 'Access board bans. Ability to unban, edit, or deny appeals.' },
