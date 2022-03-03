@@ -15,7 +15,7 @@ block content
 			tr
 				th Role
 				th Permissions
-			for role in roles
+			for role in allRoles
 				tr
 					td #{roleNameMap[role.permissions.toString('base64')]}
 					td: a(href=`/globalmanage/editrole/${role._id}.html`) [Edit]

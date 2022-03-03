@@ -38,7 +38,6 @@ const config = require(__dirname+'/config.js')
 	// load roles early
 	const roles = require(__dirname+'/helpers/roles.js');
 	await roles.load();
-	app.locals.roleNameMap = roles.roleNameMap;
 
 	// disable useless express header
 	app.disable('x-powered-by');

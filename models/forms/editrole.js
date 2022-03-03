@@ -1,6 +1,7 @@
 'use strict';
 
 const { Roles } = require(__dirname+'/../../db/')
+	, redis = require(__dirname+'/../../redis.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, Permissions = require(__dirname+'/../../helpers/permissions.js')
 	, Permission = require(__dirname+'/../../helpers/permission.js');
@@ -62,6 +63,8 @@ module.exports = async (req, res, next) => {
 			'redirect': req.headers.referer || `/globalmanage/roles.html`,
 		});
 	}
+
+	redis.redisPublisher.publish('roles', null);
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',

@@ -8,8 +8,8 @@ const { Roles } = require(__dirname+'/../db/')
 
 const load = async () => {
 
-	//todo: take a message argument from callback,
-	//maybe need separate func just for reloading single role
+	//todo: take a message argument from callback
+	//maybe make it a separate func just for reloading single role?
 
 	let roles = await Roles.find();
 	roles = roles.reduce((acc, r) => {
@@ -37,14 +37,9 @@ const load = async () => {
 		[ROOT.base64]: 'Root',
 	};
 
-//	put in role edit model on successful edit
-//	redis.redisPublisher.publish('roles', JSON.stringify({/*ROLES OBJECT, make */}));
-
 };
 
-//possibly, will call a different function like "updaterole", with mesage for single
-//role name, for when a role is edited
-//redis.addCallback('roles', load);
+redis.addCallback('roles', load);
 
 module.exports = {
 	roles: {},

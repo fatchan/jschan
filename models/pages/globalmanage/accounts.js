@@ -1,6 +1,7 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../../db/')
+	, roles = require(__dirname+'/../../../helpers/roles.js')
 	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
 	, limit = 20;
 
@@ -48,6 +49,7 @@ module.exports = async (req, res, next) => {
 		accounts,
 		page,
 		maxPage,
+		roleNameMap: roles.roleNameMap,
 	});
 
 }
