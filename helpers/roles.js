@@ -17,24 +17,15 @@ const load = async () => {
 		return acc;
 	}, {});
 
-	const { ANON, BOARD_STAFF, BOARD_OWNER, GLOBAL_STAFF, ADMIN, ROOT } = roles;
-
-	module.exports.roles = {
-		ANON,
-		BOARD_STAFF,
-		BOARD_OWNER,
-		GLOBAL_STAFF,
-		ADMIN,
-		ROOT,
-	};
+	module.exports.roles = roles;
 
 	module.exports.roleNameMap = {
-		[ANON.base64]: 'Regular User',
-		[BOARD_STAFF.base64]: 'Board Staff',
-		[BOARD_OWNER.base64]: 'Board Owner',
-		[GLOBAL_STAFF.base64]: 'Global Staff',
-		[ADMIN.base64]: 'Admin',
-		[ROOT.base64]: 'Root',
+		[roles.ANON.base64]: 'Regular User',
+		[roles.BOARD_STAFF.base64]: 'Board Staff',
+		[roles.BOARD_OWNER.base64]: 'Board Owner',
+		[roles.GLOBAL_STAFF.base64]: 'Global Staff',
+		[roles.ADMIN.base64]: 'Admin',
+		[roles.ROOT.base64]: 'Root',
 	};
 
 };
