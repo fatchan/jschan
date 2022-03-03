@@ -1,11 +1,13 @@
 'use strict';
 
+const Permissions = require(__dirname+'/../permissions.js');
+
 module.exports = (permissions, match, p1, p2, p3, offset, string, groups) => {
 
 	let { url, label, urlOnly } = groups;
 
 	url = url || urlOnly;
-	if (!permissions.get(MANAGE_BOARD_GENERAL)) {
+	if (!permissions.get(Permissions.MANAGE_BOARD_GENERAL)) {
 		label = url
 			.replace(/\(/g, '&lpar;')
 			.replace(/\)/g, '&rpar;');
