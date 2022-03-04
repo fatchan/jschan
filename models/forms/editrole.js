@@ -1,16 +1,16 @@
 'use strict';
 
-const { Roles } = require(__dirname+'/../../db/')
+const { Roles, Accounts } = require(__dirname+'/../../db/')
+	, { Binary } = require(__dirname+'/../../db/db.js')
 	, redis = require(__dirname+'/../../redis.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, roleManager = require(__dirname+'/../../helpers/rolemanager.js')
 	, Permissions = require(__dirname+'/../../helpers/permissions.js')
 	, Permission = require(__dirname+'/../../helpers/permission.js');
 
 module.exports = async (req, res, next) => {
 
-	let rolePermissions;
-
-	rolePermissions = new Permission(res.locals.editingRole.permissions);
+	let rolePermissions = new Permission(res.locals.editingRole.permissions);
 	rolePermissions.set(Permissions.VIEW_RAW_IP, (req.body.VIEW_RAW_IP != null));
 	rolePermissions.set(Permissions.CREATE_BOARD, (req.body.CREATE_BOARD != null));
 	rolePermissions.set(Permissions.CREATE_ACCOUNT, (req.body.CREATE_ACCOUNT != null));
@@ -52,17 +52,27 @@ module.exports = async (req, res, next) => {
 	}
 	rolePermissions.applyInheritance();
 
-//todo: error for making role with same permissions as another role.
+	const existingRoleName = roleManager.roleNameMap[rolePermissions.base64]
+	if (existingRoleName) {
+		return dynamicResponse(req, res, 409, 'message', {
+			'title': 'Conflict',
+			'error': `Another role already exists with those same permissions: "${existingRoleName}"`,
+			'redirect': req.headers.referer || `/globalmanage/roles.html`,
+		});
+	}
 
 	const updated = await Roles.updateOne(req.body.roleid, rolePermissions).then(r => r.matchedCount);
 
 	if (updated === 0) {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
-			'errors': 'Role does not exist',
+			'error': 'Role does not exist',
 			'redirect': req.headers.referer || `/globalmanage/roles.html`,
 		});
 	}
+
+	const oldPermissions = new Permission(res.locals.editingRole.permissions);
+	await Accounts.setNewRolePermissions(oldPermissions, rolePermissions)
 
 	redis.redisPublisher.publish('roles', null);
 

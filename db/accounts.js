@@ -75,6 +75,18 @@ module.exports = {
 		return res;
 	},
 
+	setNewRolePermissions: async (oldPermissions, permissions) => {
+		const res = await db.updateMany({
+			'permissions': Mongo.Binary(oldPermissions.array),
+		}, {
+			'$set': {
+				'permissions': Mongo.Binary(permissions.array),
+			}
+		});
+		cache.deletePattern(`users:*`);
+		return res;
+	},
+
 	updateLastActiveDate: (username) => {
 		return db.updateOne({
 			'_id': username
