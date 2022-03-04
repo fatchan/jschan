@@ -6,7 +6,7 @@ const editAccount = require(__dirname+'/../../models/forms/editaccount.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
 	, Permissions = require(__dirname+'/../../helpers/permissions.js')
-	, { roles } = require(__dirname+'/../../helpers/roles.js')
+	, roleManager = require(__dirname+'/../../helpers/rolemanager.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
 
@@ -28,8 +28,8 @@ module.exports = {
 			}, expected: true, error: 'Invalid account username' },
 			{ result: (res.locals.user.username === req.body.username), expected: false, error: "You can't edit your own permissions" },
 			{ result: !existsBody(req.body.template) //no template, OR the template is a valid one
-				|| inArrayBody(req.body.template, [roles.ANON.base64, roles.GLOBAL_STAFF.base64, roles.ADMIN.base64,
-					roles.BOARD_STAFF.base64, roles.BOARD_OWNER.base64]),
+				|| inArrayBody(req.body.template, [roleManager.roles.ANON.base64, roleManager.roles.GLOBAL_STAFF.base64,
+					roleManager.roles.ADMIN.base64, roleManager.roles.BOARD_STAFF.base64, roleManager.roles.BOARD_OWNER.base64]),
 				expected: true, error: "Invalid template selection" },
 		]);
 

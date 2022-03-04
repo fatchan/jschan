@@ -36,8 +36,8 @@ const config = require(__dirname+'/config.js')
 	const redis = require(__dirname+'/redis.js');
 
 	// load roles early
-	const roles = require(__dirname+'/helpers/roles.js');
-	await roles.load();
+	const roleManager = require(__dirname+'/helpers/rolemanager.js');
+	await roleManager.load();
 
 	// disable useless express header
 	app.disable('x-powered-by');

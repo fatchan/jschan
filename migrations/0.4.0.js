@@ -1,6 +1,6 @@
 'use strict';
 
-const { roles } = require(__dirname+'/../helpers/roles.js')
+const roleManager = require(__dirname+'/../helpers/rolemanager.js')
 	, Permission = require(__dirname+'/../helpers/permission.js')
 	, { Binary } = require('mongodb');
 
@@ -9,19 +9,19 @@ module.exports = async(db, redis) => {
 	console.log('setting new permission templates to replace old permission "levels"');
 	await db.collection('accounts').updateMany({ authLevel: 0 }, {
 		'$set': {
-			'permissions': Binary(roles.ROOT.array),
+			'permissions': Binary(roleManager.roles.ROOT.array),
 		},
 	});
 	await db.collection('accounts').updateMany({ authLevel: 1 }, {
 		'$set': {
-			'permissions': Binary(roles.GLOBAL_STAFF.array),
+			'permissions': Binary(roleManager.roles.GLOBAL_STAFF.array),
 		},
 	});
 	//not doing 2 and 3 anymore, since they were a weird, ugly part of the old "levels" system.
 	//they can be added back manually by editing global perms if desired
 	await db.collection('accounts').updateMany({ authLevel: { $gte: 2 } }, { //gte2, to get 2, 3, and 4.
 		'$set': {
-			'permissions': Binary(roles.ANON.array),
+			'permissions': Binary(roleManager.roles.ANON.array),
 		},
 	});
 	console.log('renaming account modBoards->staffBoards');
@@ -51,14 +51,14 @@ module.exports = async(db, redis) => {
 	const bulkWrites = allBoards.map(board => {
 		const staffObject = board.settings.moderators.reduce((acc, mod) => {
 			acc[mod] = {
-				permissions: Binary(roles.BOARD_STAFF.array),
+				permissions: Binary(roleManager.roles.BOARD_STAFF.array),
 				addedDate: new Date(),
 			};
 			return acc;
 		}, {});
 		//add add the BO to staff
 		staffObject[board.owner] = {
-			permissions: Binary(roles.BOARD_OWNER.array),
+			permissions: Binary(roleManager.roles.BOARD_OWNER.array),
 			addedDate: new Date(),
 		}
 		return {

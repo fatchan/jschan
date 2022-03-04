@@ -1,7 +1,7 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../../db/')
-	, { roles } = require(__dirname+'/../../../helpers/roles.js')
+	, roleManager = require(__dirname+'/../../../helpers/rolemanager.js')
 	, Permission = require(__dirname+'/../../../helpers/permission.js');
 
 module.exports = async (req, res, next) => {
@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
 		board: res.locals.board,
 		accountUsername: req.params.accountusername,
 		accountPermissions,
-		roles,
+		roles: roleManager.roles,
 	});
 
 }

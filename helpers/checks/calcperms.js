@@ -2,7 +2,7 @@
 
 const Permissions = require(__dirname+'/../permissions.js') //needs rename
 	, Permission = require(__dirname+'/../permission.js')
-	, { roles } = require(__dirname+'/../roles.js');
+	, roleManager = require(__dirname+'/../rolemanager.js');
 
 module.exports = (req, res) => {
 
@@ -40,7 +40,7 @@ module.exports = (req, res) => {
 
 	} else {
 		//not logged in, gets default anon permission
-		calculatedPermissions = new Permission(roles.ANON.base64);
+		calculatedPermissions = new Permission(roleManager.roles.ANON.base64);
 	}
 
 	return calculatedPermissions;
