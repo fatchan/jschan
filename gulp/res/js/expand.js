@@ -122,11 +122,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
 								pfs.removeAttribute('data-loading');
 								pfs.removeAttribute('style');
 								const blob = this.response;
+								source.onload = function() {
+									thumbElement.style.opacity = '';
+									thumbElement.style.cursor = '';
+									fileAnchor.appendChild(expandedElement);
+									toggle(thumbElement, expandedElement, fileName, pfs);
+								}
 								source.src = window.URL.createObjectURL(blob);
-								thumbElement.style.opacity = '';
-								thumbElement.style.cursor = '';
-								fileAnchor.appendChild(expandedElement);
-								toggle(thumbElement, expandedElement, fileName, pfs);
 							}
 							request.onload = loaded;
 							request.responseType = 'blob';
