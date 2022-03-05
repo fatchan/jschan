@@ -31,8 +31,8 @@ module.exports = {
 					update: {
 						$set: {
 							'ip.pruned': true,
-							'ip.raw': randomIP,
-							'ip.single': randomIP,
+							'ip.raw': `${randomIP.slice(-10)}.PRUNED`,
+							'ip.single': `${randomIP.slice(-10)}.PRUNED`,
 						}
 					}
 				}
