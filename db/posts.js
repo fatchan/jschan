@@ -554,13 +554,13 @@ module.exports = {
 		if (ip != null) {
 			if (isIP(ip)) {
 				query['$or'] = [
-					{ 'ip.single': ip },
-					{ 'globalreports.ip.single': ip }
+					{ 'ip.raw': ip },
+					{ 'globalreports.ip.raw': ip }
 				];
 			} else {
 				query['$or'] = [
-					{ 'ip.raw': ip },
-					{ 'globalreports.ip.raw': ip }
+					{ 'ip.single': ip },
+					{ 'globalreports.ip.single': ip }
 				];
 			}
 		}
