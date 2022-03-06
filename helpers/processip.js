@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
 		const pseudoIp = res.locals.preFetchedBypassId || req.signedCookies.bypassid;
 		res.locals.ip = {
 			raw: `${pseudoIp}.BP`,
-			single: `${pseudoIp}.BP`,
+			cloak: `${pseudoIp}.BP`,
 		};
 		return next();
 	}
@@ -38,10 +38,10 @@ module.exports = (req, res, next) => {
 			qrange = createCIDR(ipStr, 64).toString();
 			hrange = createCIDR(ipStr, 48).toString();
 		}
-		const single = `${hashIp(hrange).substring(0,8)}.${hashIp(qrange).substring(0,7)}.${hashIp(ipStr).substring(0,7)}.IP`;
+		const cloak = `${hashIp(hrange).substring(0,8)}.${hashIp(qrange).substring(0,7)}.${hashIp(ipStr).substring(0,7)}.IP`;
 		res.locals.ip = {
-			raw: ipHashPermLevel === -1 ? single : ipStr,
-			single,
+			raw: ipHashPermLevel === -1 ? cloak : ipStr,
+			cloak,
 		}
 		next();
 	} catch(e)  {

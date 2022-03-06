@@ -192,7 +192,7 @@ async function wipe() {
 	await CustomPages.db.createIndex({ 'board': 1, 'page': 1 }, { unique: true })
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
-	await Bans.db.createIndex({ 'ip.single': 1 , 'board': 1 })
+	await Bans.db.createIndex({ 'ip.cloak': 1 , 'board': 1 })
 	await Bans.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
 	await Bypass.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 })
 	await Captchas.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes

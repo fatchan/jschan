@@ -23,7 +23,7 @@ block content
 		if posts.length === 0
 			p No posts.
 		else
-			- const ip = permLevel > ipHashPermLevel ? posts[0].ip.single : posts[0].ip.raw;
+			- const ip = permLevel > ipHashPermLevel ? posts[0].ip.cloak : posts[0].ip.raw;
 			if postId || (queryIp && queryIp === ip)
 				h4.no-m-p Post history for #{ip}
 					|

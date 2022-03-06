@@ -40,7 +40,7 @@ module.exports = {
 			if (isIP(ip)) {
 				query['ip.raw'] = ip;
 			} else {
-				query['ip.single'] = ip;
+				query['ip.cloak'] = ip;
 			}
 		}
 		if (permLevel > config.get.ipHashPermLevel) {
@@ -467,7 +467,7 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		const statsIp = (config.get.statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.single;
+		const statsIp = (config.get.statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.cloak;
 		await Stats.updateOne(board._id, statsIp, data.thread == null);
 
 		//add backlinks to the posts this post quotes
@@ -559,8 +559,8 @@ module.exports = {
 				];
 			} else {
 				query['$or'] = [
-					{ 'ip.single': ip },
-					{ 'globalreports.ip.single': ip }
+					{ 'ip.cloak': ip },
+					{ 'globalreports.ip.cloak': ip }
 				];
 			}
 		}

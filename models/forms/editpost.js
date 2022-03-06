@@ -51,7 +51,7 @@ todo: handle some more situations
 					const banExpiry = new Date(globalSettings.filterBanDuration + banDate.getTime());
 					const ban = {
 						'ip': {
-							'single': res.locals.ip.single,
+							'cloak': res.locals.ip.cloak,
 							'raw': res.locals.ip.raw,
 						},
 						'type': 'single',
@@ -163,7 +163,7 @@ todo: handle some more situations
 		message: req.body.log_message || null,
 		user: req.session.user,
 		ip: {
-			single: res.locals.ip.single,
+			cloak: res.locals.ip.cloak,
 			raw: res.locals.ip.raw,
 		}
 	});

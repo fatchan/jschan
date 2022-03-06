@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
 	if (postId && +postId === parseInt(postId) && Number.isSafeInteger(+postId)) {
 		const fetchedPost = await Posts.getPost(req.params.board, +postId, true);
 		if (fetchedPost) {
-			ip = decodeQueryIP({ ip: fetchedPost.ip.single }, res.locals.permlevel);
+			ip = decodeQueryIP({ ip: fetchedPost.ip.cloak }, res.locals.permlevel);
 		}
 	}
 

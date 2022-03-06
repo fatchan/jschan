@@ -24,7 +24,7 @@ module.exports = async (req, res, next) => {
 		if (isIP(ipMatch)) {
 			filter['ip.raw'] = ipMatch;
 		} else {
-			filter['ip.single'] = ipMatch;
+			filter['ip.cloak'] = ipMatch;
 		}
 	}
 

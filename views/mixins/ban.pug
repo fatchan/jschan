@@ -10,7 +10,7 @@ mixin ban(ban, banpage)
 			else
 				| Global
 		td= ban.reason
-		- const ip = permLevel > ipHashPermLevel ? ban.ip.single : ban.ip.raw;
+		- const ip = permLevel > ipHashPermLevel ? ban.ip.cloak : ban.ip.raw;
 		if permLevel > ipHashPermLevel
 			td #{ip}#{ban.type === 'half' ? '.*.*' : (ban.type === 'quarter' ? '.*' : '')}
 		else

@@ -144,7 +144,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
 				const ban = {
 					'ip': {
-						'single': res.locals.ip.single,
+						'cloak': res.locals.ip.cloak,
 						'raw': res.locals.ip.raw,
 					},
 					'type': 'single',
@@ -612,15 +612,15 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		//dont emit thread to this socket, because the room onyl exists when the thread is open
 		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
 	}
-	const { raw, single } = data.ip;
+	const { raw, cloak } = data.ip;
 	//but emit it to manage pages because they need to get all posts through socket including thread
-	Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { single, raw: null } });
-	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-hashed`, 'newPost', { ...projectedPost, ip: { single, raw: null } });
+	Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { cloak, raw: null } });
+	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-hashed`, 'newPost', { ...projectedPost, ip: { cloak, raw: null } });
 	if (ipHashPermLevel > -1) {
 		//small optimisation for boards where this is manually set to -1 for privacy, no need to emit to rooms that cant be accessed
 		//even if they are empty it will create extra communication noise in redis, socket adapter, etc.
-		Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single, raw } });
-		Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { single, raw } });
+		Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { cloak, raw } });
+		Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { cloak, raw } });
 	}
 
 	//now add other pages to be built in background

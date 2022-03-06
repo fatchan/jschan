@@ -40,7 +40,7 @@ block content
 									|   
 									a(href=`?username=${log.user}`) [+]
 								td
-									- const logIp = permLevel > ipHashPermLevel ? log.ip.single : log.ip.raw;
+									- const logIp = permLevel > ipHashPermLevel ? log.ip.cloak : log.ip.raw;
 									| #{logIp}
 								td #{log.actions}
 								td

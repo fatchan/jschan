@@ -118,13 +118,13 @@ module.exports = async (req, res, next) => {
 		}
 		const postsBefore = res.locals.posts.length;
 		if (req.body.delete_ip_board || req.body.delete_ip_global || req.body.delete_ip_thread) {
-			const deletePostIps = res.locals.posts.map(x => x.ip.single);
+			const deletePostIps = res.locals.posts.map(x => x.ip.cloak);
 			const deletePostMongoIds = res.locals.posts.map(x => x._id)
 			let query = {
 				'_id': {
 					'$nin': deletePostMongoIds
 				},
-				'ip.single': {
+				'ip.cloak': {
 					'$in': deletePostIps
 				}
 			};
@@ -314,7 +314,7 @@ module.exports = async (req, res, next) => {
 					message: message,
 					user: logUser,
 					ip: {
-						single: res.locals.ip.single,
+						cloak: res.locals.ip.cloak,
 						raw: res.locals.ip.raw
 					}
 				};
