@@ -1,3 +1,6 @@
+### 0.4.0
+  - Hashed IPs now use an irc-style "cloaking".
+
 ### 0.3.2
   - Minor bugfix to post moving.
 
