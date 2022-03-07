@@ -1,3 +1,6 @@
+### 0.3.3
+  - Minor bugfix to filenames of expanded images being incorrectly truncated in some circumstances, when "image loading bars" is enabled.
+
 ### 0.3.2
   - Minor bugfix to post moving.
 
