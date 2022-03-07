@@ -154,7 +154,7 @@ async function wipe() {
 	const db = Mongo.db;
 
 	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
-		'modlog','news', 'posts', 'poststats', 'ratelimit', 'bypass'];
+		'modlog','news', 'posts', 'poststats', 'ratelimit', 'bypass', 'roles'];
 	for (const name of collectionNames) {
 		//drop collection so gulp reset can be run again. ignores error of dropping non existing collection first time
 		await db.dropCollection(name).catch(e => {});
