@@ -45,6 +45,10 @@ class syncedField {
 		}
 		for (let field of this.fields) {
 			field.value = localStorage.getItem(this.key);
+			if (field.tagName === 'SELECT') {
+				const changeEvent = new Event("change");
+				field.dispatchEvent(changeEvent);
+			}
 			!this.oneWay && field.addEventListener('input', (e) => { this.update(e) }, false);
 		}
 	}
@@ -62,5 +66,8 @@ window.addEventListener('settingsReady', () => {
 
 	new syncedField('input[name="postpassword"]', 'postpassword');
 	new syncedField('input[name="name"]', 'name');
+
+	const boardUri = window.location.pathname.split('/')[1];
+	new syncedField('select[name="customflag"]', `customflag-${boardUri}`);
 
 });
