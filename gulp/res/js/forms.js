@@ -133,14 +133,7 @@ class postFormHandler {
 	}
 
 	reset() {
-		const savedName = this.form.elements.name && this.form.elements.name.value;
 		this.form.reset();
-		if (this.form.elements.name) {
-			this.form.elements.name.value = savedName;
-		}
-		if (this.form.elements.postpassword) {
-			this.form.elements.postpassword.value = localStorage.getItem('postpassword');
-		}
 		this.updateFlagField();
 		this.updateMessageBox();
 		this.files = [];

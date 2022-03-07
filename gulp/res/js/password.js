@@ -44,22 +44,33 @@ class syncedField {
 			settingsFields[0].addEventListener('input', (e) => { this.update(e) }, false);
 		}
 		for (let field of this.fields) {
-			field.value = localStorage.getItem(this.key);
-			if (field.tagName === 'SELECT') {
-				const changeEvent = new Event("change");
-				field.dispatchEvent(changeEvent);
-			}
 			!this.oneWay && field.addEventListener('input', (e) => { this.update(e) }, false);
+			field.form && field.form.addEventListener('reset', (e) => {
+				setTimeout(() => {
+					this.set(localStorage.getItem(this.key));
+				}, 0);
+			}, false);
 		}
+		this.set(localStorage.getItem(this.key));
 	}
 	update(e) {
 		if (this.persistent) {
 			setLocalStorage(this.key, e.target.value);
 		}
+		this.set(e.target.value);
+	}
+	set(val) {
 		for (let field of this.fields) {
-			field.value = e.target.value;
+			field.value = val;
+			if (field.tagName === 'SELECT') {
+				//necessary to set selectedIndex here?
+				const changeEvent = new Event("change");
+				field.dispatchEvent(changeEvent);
+			}
 		}
 	}
+
+
 }
 
 window.addEventListener('settingsReady', () => {
