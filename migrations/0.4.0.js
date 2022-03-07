@@ -1,6 +1,7 @@
 'use strict';
 
 const Permission = require(__dirname+'/../helpers/permission.js')
+	, Permissions = require(__dirname+'/../helpers/permissions.js')
 	, { Binary } = require('mongodb');
 
 module.exports = async(db, redis) => {
