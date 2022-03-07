@@ -1,10 +1,15 @@
 extends ../layout.pug
+include ../mixins/boardheader.pug
+include ../mixins/managenav.pug
 
 block head
-	title Edit Custom Page
+	title /#{board._id}/ - Edit Custom Page
 
 block content
-	h1.board-title Edit Custom Page
+	+boardheader('Edit Custom Page')
+	br
+	+managenav('custompages', true)
+	hr(size=1)
 	include ../includes/stickynav.pug
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action=`/forms/board/${board._id}/editcustompage` method='POST')

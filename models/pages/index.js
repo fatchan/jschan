@@ -5,6 +5,7 @@ module.exports = {
 	blockBypass: require(__dirname+'/blockbypass.js'),
 	register: require(__dirname+'/register.js'),
 	account: require(__dirname+'/account.js'),
+	myPermissions: require(__dirname+'/mypermissions.js'),
 	home: require(__dirname+'/home.js'),
 	login: require(__dirname+'/login.js'),
 	create: require(__dirname+'/create.js'),

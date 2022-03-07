@@ -6,40 +6,52 @@ block head
 block content
 	.board-header
 		h1.board-title Welcome, #{user.username}
-		h4.board-description Account type: #{authLevelNames[user.authLevel]}
 	br
 	hr(size=1)
 	h4.no-m-p General:
 	ul
-		if user.authLevel <= 1
-			li
-				a(href='/globalmanage/recent.html') Global management
-				|  -  
-				a(href=`/globalmanage/reports.html`) Reports
-					if globalReportCount > 0
-						b  (#{globalReportCount})
-				| ,  
-				a(href=`/globalmanage/bans.html`) Bans
-				| ,  
-				a(href=`/globalmanage/recent.html`) Recent
-				| ,  
-				a(href=`/globalmanage/boards.html`) Boards
-				| ,  
-				a(href=`/globalmanage/globallogs.html`) Logs
-				if user.authLevel < 1
-					| ,  
-					a(href=`/globalmanage/accounts.html`) Accounts
-					| ,  
-					a(href=`/globalmanage/news.html`) News
-					| ,  
-					a(href=`/globalmanage/settings.html`) Settings
-		if enableUserBoardCreation || user.authLevel <= 1
+		if permissions.get(Permissions.CREATE_ACCOUNT)
 			li: a(href='/create.html') Create a board
-		if !enableUserAccountCreation && user.authLevel <= 1
+		if permissions.get(Permissions.CREATE_BOARD)
 			li: a(href='/register.html') Register an account
 		li: a(href='/changepassword.html') Change password
+		li: a(href='/mypermissions.html') My Permissions
 	form(action='/forms/logout' method='post')
 		input(type='submit' value='Log out')
+
+	if permissions.hasAny(Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_GLOBAL_BANS, Permissions.MANAGE_GLOBAL_BOARDS, Permissions.MANAGE_GLOBAL_LOGS, Permissions.MANAGE_GLOBAL_ACCOUNTS, Permissions.MANAGE_GLOBAL_NEWS, Permissions.MANAGE_GLOBAL_SETTINGS)
+		hr(size=1)
+		h4.no-m-p Global management:
+		ul
+			li
+				if permissions.get(Permissions.MANAGE_GLOBAL_GENERAL)
+					a(href=`/globalmanage/recent.html`) Recent
+					|   
+					a(href=`/globalmanage/reports.html`) Reports
+						if globalReportCount > 0
+							b  (#{globalReportCount})
+				if permissions.get(Permissions.MANAGE_GLOBAL_BANS)
+					|   
+					a(href=`/globalmanage/bans.html`) Bans
+				if permissions.get(Permissions.MANAGE_GLOBAL_BOARDS)
+					|   
+					a(href=`/globalmanage/boards.html`) Boards
+				if permissions.get(Permissions.MANAGE_GLOBAL_LOGS)
+					|   
+					a(href=`/globalmanage/globallogs.html`) Logs
+				if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
+					|   
+					a(href=`/globalmanage/accounts.html`) Accounts
+				if permissions.get(Permissions.MANAGE_GLOBAL_ROLES)
+					|   
+					a(href=`/globalmanage/roles.html`) Roles
+				if permissions.get(Permissions.MANAGE_GLOBAL_NEWS)
+					|   
+					a(href=`/globalmanage/news.html`) News
+				if permissions.get(Permissions.MANAGE_GLOBAL_SETTINGS)
+					|   
+					a(href=`/globalmanage/settings.html`) Settings
+
 	hr(size=1)
 	h4.no-m-p Boards you own:
 	if user.ownedBoards && user.ownedBoards.length > 0
@@ -49,50 +61,69 @@ block content
 					a(href=`/${b}/index.html`) /#{b}/
 					|  -  
 					a(href=`/${b}/manage/index.html`) Mod Index
-					| ,  
+					|    
 					a(href=`/${b}/manage/catalog.html`) Mod Catalog
-					| ,  
+					|   
 					a(href=`/${b}/manage/recent.html`) Recent
-					| ,  
+					|   
 					a(href=`/${b}/manage/reports.html`) Reports
 						if boardReportCountMap[b]
 							b  (#{boardReportCountMap[b]})
-					| ,  
+					|   
 					a(href=`/${b}/manage/bans.html`) Bans
-					| ,  
+					|   
 					a(href=`/${b}/manage/logs.html`) Logs
-					| ,  
+					|   
 					a(href=`/${b}/manage/settings.html`) Settings
-					| ,  
+					|   
 					a(href=`/${b}/manage/assets.html`) Assets
-					| ,  
+					|   
 					a(href=`/${b}/manage/custompages.html`) Custom Pages
+					|   
+					a(href=`/${b}/manage/staff.html`) Staff
 	else
 		p None
+
 	hr(size=1)
-	h4.no-m-p Boards you moderate:
-	if user.modBoards && user.modBoards.length > 0
+	h4.no-m-p Boards you are staff on:
+	if user.staffBoards && user.staffBoards.length > 0
 		ul
-			for b in user.modBoards
+			for b in user.staffBoards
 				li
-					a(href=`/${b}/index.html`) /#{b}/
-					|  -  
-					a(href=`/${b}/manage/index.html`) Mod Index
-					| ,  
-					a(href=`/${b}/manage/catalog.html`) Mod Catalog
-					| ,  
-					a(href=`/${b}/manage/recent.html`) Recent
-					| ,  
-					a(href=`/${b}/manage/reports.html`) Reports
-						if boardReportCountMap[b]
-							b  (#{boardReportCountMap[b]})
-					| ,  
-					a(href=`/${b}/manage/bans.html`) Bans
-					| ,  
-					a(href=`/${b}/manage/logs.html`) Logs
+					if permissions.get(Permissions.MANAGE_BOARD_GENERAL) || boardPermissions[b].get(Permissions.MANAGE_BOARD_GENERAL)
+						a(href=`/${b}/index.html`) /#{b}/
+						|  -  
+						a(href=`/${b}/manage/index.html`) Mod Index
+						|    
+						a(href=`/${b}/manage/catalog.html`) Mod Catalog
+						|   
+						a(href=`/${b}/manage/recent.html`) Recent
+						|   
+						a(href=`/${b}/manage/reports.html`) Reports
+							if boardReportCountMap[b]
+								b  (#{boardReportCountMap[b]})
+					if permissions.get(Permissions.MANAGE_BOARD_BANS) || boardPermissions[b].get(Permissions.MANAGE_BOARD_BANS)
+						|   
+						a(href=`/${b}/manage/bans.html`) Bans
+					if permissions.get(Permissions.MANAGE_BOARD_LOGS) || boardPermissions[b].get(Permissions.MANAGE_BOARD_LOGS)
+						|   
+						a(href=`/${b}/manage/logs.html`) Logs
+					if permissions.get(Permissions.MANAGE_BOARD_SETTINGS) || boardPermissions[b].get(Permissions.MANAGE_BOARD_SETTINGS)
+						|   
+						a(href=`/${b}/manage/settings.html`) Settings
+					if permissions.get(Permissions.MANAGE_BOARD_CUSTOMISATION) || boardPermissions[b].get(Permissions.MANAGE_BOARD_CUSTOMISATION)
+						|   
+						a(href=`/${b}/manage/assets.html`) Assets
+					if permissions.get(Permissions.MANAGE_BOARD_CUSTOMISATION) || boardPermissions[b].get(Permissions.MANAGE_BOARD_CUSTOMISATION)
+						|   
+						a(href=`/${b}/manage/custompages.html`) Custom Pages
+					if permissions.get(Permissions.MANAGE_BOARD_STAFF) || boardPermissions[b].get(Permissions.MANAGE_BOARD_STAFF)
+						|   
+						a(href=`/${b}/manage/staff.html`) Staff
 	else
 		p None
-	if user.modBoards.length > 0 ||  user.ownedBoards.length > 0
+
+	if user.staffBoards.length > 0 ||  user.ownedBoards.length > 0
 		hr(size=1)
 		h4.no-m-p Resign from a staff position:
 		.form-wrapper.flexleft.mt-10
@@ -105,7 +136,7 @@ block content
 							each board in user.ownedBoards
 								option(value=board) #{board}
 						optgroup(label='You moderate')
-							each board in user.modBoards
+							each board in user.staffBoards
 								option(value=board) #{board}
 				.row
 					.label I'm sure

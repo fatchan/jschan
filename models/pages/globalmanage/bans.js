@@ -1,6 +1,7 @@
 'use strict';
 
-const { Bans } = require(__dirname+'/../../../db/');
+const { Bans } = require(__dirname+'/../../../db/')
+	, Permissions = require(__dirname+'/../../../helpers/permissions.js');
 
 module.exports = async (req, res, next) => {
 
@@ -15,6 +16,8 @@ module.exports = async (req, res, next) => {
 	.set('Cache-Control', 'private, max-age=5')
 	.render('globalmanagebans', {
 		csrf: req.csrfToken(),
+		permissions: res.locals.permissions,
+		viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
 		bans,
 	});
 

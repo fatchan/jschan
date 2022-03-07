@@ -1,12 +1,13 @@
 'use strict';
 
-const Posts = require(__dirname+'/../../../db/posts.js');
+const Posts = require(__dirname+'/../../../db/posts.js')
+	, Permissions = require(__dirname+'/../../../helpers/permissions.js');
 
 module.exports = async (req, res, next) => {
 
 	let reports;
 	try {
-		reports = await Posts.getReports(req.params.board, res.locals.permLevel);
+		reports = await Posts.getReports(req.params.board, res.locals.permissions);
 	} catch (err) {
 		return next(err)
 	}
@@ -21,6 +22,8 @@ module.exports = async (req, res, next) => {
 		res.render('managereports', {
 			csrf: req.csrfToken(),
 			reports,
+			permissions: res.locals.permissions,
+			viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
 		});
 	}
 

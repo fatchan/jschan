@@ -11,19 +11,18 @@ const { outputFile } = require('fs-extra')
 	, { addCallback } = require(__dirname+'/../redis.js')
 	, { version } = require(__dirname+'/../package.json')
 	, templateDirectory = path.join(__dirname+'/../views/pages/')
+	, Permissions = require(__dirname+'/permissions.js')
 	, config = require(__dirname+'/../config.js');
 
-let { enableUserBoardCreation, enableUserAccountCreation, archiveLinksURL,
-		lockWait, globalLimits, boardDefaults, cacheTemplates, reverseImageLinksURL,
-		meta, enableWebring, captchaOptions, globalAnnouncement } = config.get
+let { archiveLinksURL, lockWait, globalLimits, boardDefaults, cacheTemplates, 
+		reverseImageLinksURL, meta, enableWebring, captchaOptions, globalAnnouncement } = config.get
 	, renderLocals = null;
 
-const  updateLocals = () => {
-	({ enableUserBoardCreation, enableUserAccountCreation, archiveLinksURL,
-		lockWait, globalLimits, boardDefaults, cacheTemplates, reverseImageLinksURL,
-		meta, enableWebring, captchaOptions, globalAnnouncement } = config.get);
+const updateLocals = () => {
+	({ archiveLinksURL, lockWait, globalLimits, boardDefaults, cacheTemplates,
+		reverseImageLinksURL, meta, enableWebring, captchaOptions, globalAnnouncement } = config.get);
 	renderLocals = {
-		authLevelNames: ['Admin', 'Global Staff', 'Global Board Owner', 'Global Board Mod', 'Regular User'],
+		Permissions,
 		cache: cacheTemplates,
 		archiveLinksURL,
 		reverseImageLinksURL,
@@ -33,8 +32,6 @@ const  updateLocals = () => {
 		defaultTheme: boardDefaults.theme,
 		defaultCodeTheme: boardDefaults.codeTheme,
 		postFilesSize: formatSize(globalLimits.postFilesSize.max),
-		enableUserAccountCreation,
-		enableUserBoardCreation,
 		globalLimits,
 		enableWebring,
 		captchaType: captchaOptions.type,

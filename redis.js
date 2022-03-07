@@ -6,8 +6,9 @@ const Redis = require('ioredis')
 	, subscriber = new Redis(secrets.redis)
 	, publisher = new Redis(secrets.redis)
 	, messageCallbacks = {
-		'config': [], //others in future?
-	}
+		'config': [],
+		'roles': [],
+	};
 
 module.exports = {
 
@@ -28,9 +29,17 @@ module.exports = {
 					return console.error(err);
 				}
 			});
+			subscriber.subscribe('roles', (err, count) => {
+				if (err) {
+					return console.error(err);
+				}
+			});
 			subscriber.on("message", (channel, message) => {
 				secrets.debugLogs && console.log(`Subscriber message from channel ${channel}`);
-				const data = JSON.parse(message);
+				let data;
+				if (message) {
+					data = JSON.parse(message);
+				}
 				messageCallbacks[channel].forEach(cb => {
 					cb(data);
 				});

@@ -2,6 +2,7 @@
 
 const { Modlogs } = require(__dirname+'/../../../db/')
 	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
+	, Permissions = require(__dirname+'/../../../helpers/permissions.js')
 //	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
 	, limit = 50;
 
@@ -40,6 +41,8 @@ module.exports = async (req, res, next) => {
 		queryString,
 		username,
 		uri,
+		permissions: res.locals.permissions,
+		viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
 //posterid here
 		logs,
 		page,

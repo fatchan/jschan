@@ -5,7 +5,7 @@ const imageHash = require('imghash').hash
 
 module.exports = async (req, res, next) => {
 	const { hashImages } = config.get;
-	if (hashImages && res.locals.numFiles > 0 && res.locals.permLevel > 1) {
+	if (hashImages && res.locals.numFiles > 0) {
 		const hashPromises = [];
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			const mainType = req.files.file[i].mimetype.split('/')[0];

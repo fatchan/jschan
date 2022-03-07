@@ -1,6 +1,7 @@
 'use strict';
 
-const editAccounts = require(__dirname+'/../../models/forms/editaccounts.js')
+const editRole = require(__dirname+'/../../models/forms/editrole.js')
+	, { Roles } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
@@ -9,28 +10,29 @@ const editAccounts = require(__dirname+'/../../models/forms/editaccounts.js')
 module.exports = {
 
 	paramConverter: paramConverter({
-		allowedArrays: ['checkedaccounts'],
-		numberFields: ['auth_level'],
+		objectIdFields: ['roleid'],
 	}),
 
 	controller: async (req, res, next) => {
 
 		const errors = await checkSchema([
-			{ result: lengthBody(req.body.checkedaccounts, 1), expected: false, error: 'Must select at least one account' },
-			{ result: !existsBody(req.body.auth_level) || numberBody(req.body.auth_level, 0, 4), expected: true, error: 'Invalid account type' },
-			{ result: existsBody(req.body.auth_level) || existsBody(req.body.delete_account), expected: true, error: 'Missing account type or delete action' }
+			{ result: existsBody(req.body.roleid), expected: true, error: 'Missing role id' },
+			{ result: async () => {
+				res.locals.editingRole = await Roles.findOne(req.body.roleid);
+				return res.locals.editingRole != null && res.locals.editingRole.name !== 'ROOT';
+			}, blocking: true, expected: true, error: "You can't edit this role" },
 		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'errors': errors,
-				'redirect': '/globalmanage/accounts.html'
-			})
+				'redirect': req.headers.referer || `/${req.params.board}/manage/roles.html`,
+			});
 		}
 
 		try {
-			await editAccounts(req, res, next);
+			await editRole(req, res, next);
 		} catch (err) {
 			return next(err);
 		}

@@ -2,16 +2,16 @@
 
 const escapeRegExp = require(__dirname+'/escaperegexp.js')
 	, { isIP } = require('net')
-	, config = require(__dirname+'/../config.js')
+	, Permissions = require(__dirname+'/permissions.js');
 
-module.exports = (query, permLevel) => {
-	const { ipHashPermLevel } = config.get;
+module.exports = (query, permissions) => {
 	if (query.ip && typeof query.ip === 'string') {
 		const decoded = decodeURIComponent(query.ip);
-		if (permLevel <= ipHashPermLevel || !isIP(decoded)) {
-			//if they have perm to view raw IP, or its NOT a raw ip, return
-			return decoded;
+		//if is IP but no permission, return null
+		if (isIP(decoded) && !permissions.get(Permissions.VIEW_RAW_IP)) {
+			return null;
 		}
+		return decoded; //otherwise return ip/cloak query
 	}
 	return null; //else, no ip filter
 }

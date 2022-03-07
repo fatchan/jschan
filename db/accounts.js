@@ -25,21 +25,26 @@ module.exports = {
 		}
 	},
 
-	findOne: (username) => {
-		return db.findOne({ '_id': username });
+	findOne: async (username) => {
+		const account = await db.findOne({ '_id': username });
+		//hmmm
+		if (account != null) {
+			account.permissions = account.permissions.toString('base64');
+		}
+		return account;
 	},
 
-	insertOne: async (original, username, password, authLevel) => {
+	insertOne: async (original, username, password, permissions) => {
 		// hash the password
 		const passwordHash = await bcrypt.hash(password, 12);
 		//add to db
 		const res = await db.insertOne({
 			'_id': username,
 			original,
-			authLevel,
 			passwordHash,
+			'permissions': Mongo.Binary(permissions.array),
 			'ownedBoards': [],
-			'modBoards': []
+			'staffBoards': []
 		});
 		cache.del(`users:${username}`);
 		return res;
@@ -58,6 +63,30 @@ module.exports = {
 		return res;
 	},
 
+	setAccountPermissions: async (username, permissions) => {
+		const res = await db.updateOne({
+			'_id': username
+		}, {
+			'$set': {
+				'permissions': Mongo.Binary(permissions.array),
+			}
+		});
+		cache.del(`users:${username}`);
+		return res;
+	},
+
+	setNewRolePermissions: async (oldPermissions, permissions) => {
+		const res = await db.updateMany({
+			'permissions': Mongo.Binary(oldPermissions.array),
+		}, {
+			'$set': {
+				'permissions': Mongo.Binary(permissions.array),
+			}
+		});
+		cache.deletePattern(`users:*`);
+		return res;
+	},
+
 	updateLastActiveDate: (username) => {
 		return db.updateOne({
 			'_id': username
@@ -65,7 +94,7 @@ module.exports = {
 			'$set': {
 				lastActiveDate: new Date()
 			}
-		})
+		});
 	},
 
 	find: (filter, skip=0, limit=0) => {
@@ -73,8 +102,6 @@ module.exports = {
 			'projection': {
 				'passwordHash': 0
 			}
-		}).sort({
-			'authLevel': 1
 		}).skip(skip).limit(limit).toArray();
 	},
 
@@ -120,35 +147,35 @@ module.exports = {
 		return res;
     },
 
-	addModBoard: async (usernames, board) => {
+	addStaffBoard: async (usernames, board) => {
 		const res = await db.updateMany({
 			'_id': {
 				'$in': usernames
 			}
 		}, {
 			'$addToSet': {
-				'modBoards': board
+				'staffBoards': board
 			}
 		});
 		cache.del(usernames.map(n => `users:${n}`));
 		return res;
 	},
 
-	removeModBoard: async (usernames, board) => {
+	removeStaffBoard: async (usernames, board) => {
 		const res = await db.updateMany({
 			'_id': {
 				'$in': usernames
 			}
 		}, {
 			'$pull': {
-				'modBoards': board
+				'staffBoards': board
 			}
 		});
 		cache.del(usernames.map(n => `users:${n}`));
 		return res;
 	},
 
-	getOwnedOrModBoards: (usernames) => {
+	getOwnedOrStaffBoards: (usernames) => {
 		return db.find({
 			'_id': {
 				'$in': usernames
@@ -160,7 +187,7 @@ module.exports = {
 					},
 				},
 				{
-					'modBoards.0': {
+					'staffBoards.0': {
 						'$exists': true
 					}
 				}
@@ -168,24 +195,9 @@ module.exports = {
 		}, {
 			'projection': {
 				'ownedBoards': 1,
-				'modBoards': 1,
+				'staffBoards': 1,
 			}
 		}).toArray();
-	},
-
-	setLevel: async (usernames, level) => {
-		//increase users auth level
-		const res = await db.updateMany({
-			'_id': {
-				'$in': usernames
-			}
-		}, {
-			'$set': {
-				'authLevel': level
-			}
-		});
-		cache.del(usernames.map(n => `users:${n}`));
-		return res;
 	},
 
 	deleteAll: () => {

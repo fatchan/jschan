@@ -1,19 +1,28 @@
-mixin globalmanagenav(selected)
+mixin globalmanagenav(selected, upLevel)
 	nav.pages
-		a(href='reports.html' class=(selected === 'reports' ? 'bold' : '')) [Reports]
-		|  
-		a(href='bans.html' class=(selected === 'bans' ? 'bold' : '')) [Bans]
-		|  
-		a(href='recent.html' class=(selected === 'recent' ? 'bold' : '')) [Recent]
-		|  
-		a(href='boards.html' class=(selected === 'boards' ? 'bold' : '')) [Boards]
-		|  
-		a(href='globallogs.html' class=(selected === 'logs' ? 'bold' : '')) [Logs]
-		if permLevel === 0
+		if permissions.get(Permissions.MANAGE_GLOBAL_GENERAL)
+			a(href=`${upLevel ? '../' : ''}recent.html` class=(selected === 'recent' ? 'bold' : '')) [Recent]
 			|  
-			a(href='accounts.html' class=(selected === 'accounts' ? 'bold' : '')) [Accounts]
+			a(href=`${upLevel ? '../' : ''}reports.html` class=(selected === 'reports' ? 'bold' : '')) [Reports]
+		if permissions.get(Permissions.MANAGE_GLOBAL_BANS)
 			|  
-			a(href='news.html' class=(selected === 'news' ? 'bold' : '')) [News]
+			a(href=`${upLevel ? '../' : ''}bans.html` class=(selected === 'bans' ? 'bold' : '')) [Bans]
+		if permissions.get(Permissions.MANAGE_GLOBAL_BOARDS)
 			|  
-			a(href='settings.html' class=(selected === 'settings' ? 'bold' : '')) [Settings]
+			a(href=`${upLevel ? '../' : ''}boards.html` class=(selected === 'boards' ? 'bold' : '')) [Boards]
+		if permissions.get(Permissions.MANAGE_GLOBAL_LOGS)
+			|  
+			a(href=`${upLevel ? '../' : ''}globallogs.html` class=(selected === 'logs' ? 'bold' : '')) [Logs]
+		if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
+			|  
+			a(href=`${upLevel ? '../' : ''}accounts.html` class=(selected === 'accounts' ? 'bold' : '')) [Accounts]
+		if permissions.get(Permissions.MANAGE_GLOBAL_ROLES)
+			|  
+			a(href=`${upLevel ? '../' : ''}roles.html` class=(selected === 'roles' ? 'bold' : '')) [Roles]
+		if permissions.get(Permissions.MANAGE_GLOBAL_NEWS)
+			|  
+			a(href=`${upLevel ? '../' : ''}news.html` class=(selected === 'news' ? 'bold' : '')) [News]
+		if permissions.get(Permissions.MANAGE_GLOBAL_SETTINGS)
+			|  
+			a(href=`${upLevel ? '../' : ''}settings.html` class=(selected === 'settings' ? 'bold' : '')) [Settings]
 

@@ -11,7 +11,7 @@ const { CustomPages } = require(__dirname+'/../../db/')
 module.exports = async (req, res, next) => {
 
 	const message = prepareMarkdown(req.body.message, false);
-	const { message: markdownPage } = await messageHandler(message, null, null, res.locals.permLevel);
+	const { message: markdownPage } = await messageHandler(message, null, null, res.locals.permissions);
 	const editedDate = new Date();
 
 	const oldPage = await CustomPages.findOneAndUpdate(req.body.page_id, req.params.board,

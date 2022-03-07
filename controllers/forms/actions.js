@@ -1,6 +1,7 @@
 'use strict';
 
 const { Posts } = require(__dirname+'/../../db/')
+	, Permissions = require(__dirname+'/../../helpers/permissions.js')
 	, config = require(__dirname+'/../../config.js')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
@@ -23,21 +24,21 @@ module.exports = {
 
 		const { globalLimits } = config.get;
 
-		res.locals.actions = actionChecker(req);
+		res.locals.actions = actionChecker(req, res);
 
 		const errors = await checkSchema([
 			{ result: lengthBody(req.body.checkedposts, 1), expected: false, blocking: true, error: 'Must select at least one post' },
 			{ result: lengthBody(res.locals.actions.validActions, 1), expected: false, blocking: true, error: 'No actions selected' },
-			{ result: lengthBody(req.body.checkedposts, 1, globalLimits.multiInputs.posts.anon), permLevel: 3, expected: false, error: `Must not select >${globalLimits.multiInputs.posts.anon} posts per request` },
+			{ result: lengthBody(req.body.checkedposts, 1, globalLimits.multiInputs.posts.anon), permission: Permissions.MANAGE_BOARD_GENERAL, expected: false, error: `Must not select >${globalLimits.multiInputs.posts.anon} posts per request` },
 			{ result: lengthBody(req.body.checkedposts, 1, globalLimits.multiInputs.posts.staff), expected: false, error: `Must not select >${globalLimits.multiInputs.posts.staff} posts per request` },
 			{ result: (existsBody(req.body.report_ban) && !req.body.checkedreports), expected: false, error: 'Must select post and reports to ban reporter' },
 			{ result: (existsBody(req.body.checkedreports) && !req.body.report_ban), expected: false, error: 'Must select a report action if checked reports' },
 			{ result: (existsBody(req.body.checkedreports) && !req.body.checkedposts), expected: false, error: 'Must check parent post if checking reports for report action' },
 			{ result: (existsBody(req.body.checkedreports) && existsBody(req.body.checkedposts) && lengthBody(req.body.checkedreports, 1, req.body.checkedposts.length*5)), expected: false, error: 'Invalid number of reports checked' },
-			{ result: (res.locals.permLevel > res.locals.actions.authRequired), expected: false, blocking: true, error: 'No permission' },
-			{ result: (existsBody(req.body.delete) && !res.locals.board.settings.userPostDelete), permLevel: 3, expected: false, error: 'User post deletion is disabled on this board' },
-			{ result: (existsBody(req.body.spoiler) && !res.locals.board.settings.userPostSpoiler), permLevel: 3, expected: false, error: 'User file spoiling is disabled on this board' },
-			{ result: (existsBody(req.body.unlink_file) && !res.locals.board.settings.userPostUnlink), permLevel: 3, expected: false, error: 'User file unlinking is disabled on this board' },
+			{ result: res.locals.actions.hasPermission, expected: true, blocking: true, error: 'No permission' },
+			{ result: (existsBody(req.body.delete) && !res.locals.board.settings.userPostDelete), permission: Permissions.MANAGE_BOARD_GENERAL, expected: false, error: 'User post deletion is disabled on this board' },
+			{ result: (existsBody(req.body.spoiler) && !res.locals.board.settings.userPostSpoiler), permission: Permissions.MANAGE_BOARD_GENERAL, expected: false, error: 'User file spoiling is disabled on this board' },
+			{ result: (existsBody(req.body.unlink_file) && !res.locals.board.settings.userPostUnlink), permission: Permissions.MANAGE_BOARD_GENERAL, expected: false, error: 'User file unlinking is disabled on this board' },
 			{ result: (existsBody(req.body.edit) && lengthBody(req.body.checkedposts, 1, 1)), expected: false, error: 'Must select only 1 post for edit action' },
 			{ result: lengthBody(req.body.postpassword, 0, globalLimits.fieldLength.postpassword), expected: false, error: `Password must be ${globalLimits.fieldLength.postpassword} characters or less` },
 			{ result: lengthBody(req.body.report_reason, 0, globalLimits.fieldLength.report_reason), expected: false, error: `Report must be ${globalLimits.fieldLength.report_reason} characters or less` },
@@ -52,7 +53,7 @@ module.exports = {
 				}
 				return true;
 			}, expected: true, error: 'Destination thread for move does not exist' },
-		], res.locals.permLevel);
+		], res.locals.permissions);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {

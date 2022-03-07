@@ -11,7 +11,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	const liveElem = document.getElementById('livetext');
 	const livetext = (isThread || isRecent) && liveElem ? liveElem.childNodes[1] : null;
 	let room = liveElem && liveElem.dataset.room;
-	const permLevel = liveElem ? liveElem.dataset.permLevel : 4;
+	const viewRawIp = liveElem && liveElem.dataset.viewRawIp === 'true';
 	const updateButton = document.getElementById('updatepostsbutton');
 	const updateLive = (message, color, showRelativeTime) => {
 		livecolor.style.backgroundColor = color;
@@ -66,8 +66,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		lastPostIds[postData.board] = postData.postId;
 		//create a new post
 		const postHtml = post({
-			ipHashPermLevel,
-			permLevel,
+			viewRawIp,
 			post: postData,
 			modview: isModView,
 			manage: (isRecent && !isGlobalRecent),

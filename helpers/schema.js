@@ -58,10 +58,13 @@ module.exports = {
 	},
 
 	//check the actual schema
-	checkSchema: async (schema, permLevel) => {
+	checkSchema: async (schema, permissions) => {
 		const errors = [];
-		//filter check if my perm level is lower than the requirement. e.g. bypass filters checks
-		const filteredSchema = schema.filter(c => c.permLevel == null || c.permLevel < permLevel);
+		//filter to checks with no permission or ones we dont have permission to skip.
+		let filteredSchema = schema;
+		if (permissions) {
+			filteredSchema = filteredSchema.filter(c => c.permission == null || !permissions.get(c.permission));
+		}
 		for (let check of filteredSchema) {
 			const result = await (typeof check.result === 'function' ? check.result() : check.result);
 			const expected = (check.expected || false);

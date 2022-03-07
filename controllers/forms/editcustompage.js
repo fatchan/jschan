@@ -47,7 +47,7 @@ module.exports = {
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'errors': errors,
-				'redirect': req.headers.referer || '/${req.params.board}/manage/custompages.html'
+				'redirect': req.headers.referer || `/${req.params.board}/manage/custompages.html`,
 			});
 		}
 

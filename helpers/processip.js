@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
 	}
 
 	//ip for normal user
-	const { ipHeader, ipHashPermLevel } = config.get;
+	const { dontStoreRawIps, ipHeader } = config.get;
 	const ip = req.headers[ipHeader] || req.connection.remoteAddress;
 	try {
 		const ipParsed = parse(ip);
@@ -40,9 +40,11 @@ module.exports = (req, res, next) => {
 		}
 		const cloak = `${hashIp(hrange).substring(0,8)}.${hashIp(qrange).substring(0,7)}.${hashIp(ipStr).substring(0,7)}.IP`;
 		res.locals.ip = {
-			raw: ipHashPermLevel === -1 ? cloak : ipStr,
+			raw: dontStoreRawIps === true ? cloak : ipStr,
 			cloak,
 		}
+		//#426
+		//console.log(`net-${hashIp(hrange).substring(0,6)}.${hashIp(qrange).substring(0,4)}.${hashIp(ipStr).substring(0,4)}.IP`)
 		next();
 	} catch(e)  {
 		console.error('Ip parse failed', e);

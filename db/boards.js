@@ -17,6 +17,10 @@ module.exports = {
 		} else {
 			board = await db.findOne({ '_id': name });
 			if (board) {
+				//should really handle this in every db find
+				for (let staff in board.staff) {
+					board.staff[staff].permissions = board.staff[staff].permissions.toString('base64');
+				}
 				cache.set(`board:${name}`, board, 3600);
 				if (board.banners.length > 0) {
 					cache.sadd(`banners:${name}`, board.banners);
@@ -28,6 +32,18 @@ module.exports = {
 		return board;
 	},
 
+	getStaffPerms: async (boards, username) => {
+		return db.find({
+			'_id': {
+				'$in': boards,
+			}
+		}, {
+			'projection': {
+				[`staff.${username}.permissions`]: 1,
+			}
+		}).toArray();
+	},
+
 	randomBanner: async (name) => {
 		let banner = await cache.srand(`banners:${name}`);
 		if (!banner) {
@@ -37,17 +53,6 @@ module.exports = {
 			}
 		}
 		return banner;
-	},
-
-	setOwner: (board, username) => {
-		cache.del(`board:${board}`);
-		return db.updateOne({
-			'_id': board
-		}, {
-			'$set': {
-				'owner': username
-			}
-		});
 	},
 
 	insertOne: (data) => {
@@ -86,17 +91,64 @@ module.exports = {
 		return db.deleteMany({});
 	},
 
-	removeModerator: (board, username) => {
+	addStaff: async (board, username, permissions, setOwner=false) => {
+		const update = {
+			'$set': {
+				[`staff.${username}`]: {
+					'permissions': Mongo.Binary(permissions.array),
+					'addedDate': new Date(),
+				},
+			},
+		};
+		if (setOwner === true) {
+			update['$set']['owner'] = username;
+		}
+		const res = db.updateOne({
+			'_id': board,
+		}, update);
 		cache.del(`board:${board}`);
+		return res;
+	},
+
+	removeStaff: (board, usernames) => {
+		cache.del(`board:${board}`);
+		const unsetObject = usernames.reduce((acc, username) => {
+			acc[`staff.${username}`] = "";
+			return acc;
+		}, {});
 		return db.updateOne(
 			{
 				'_id': board,
 			}, {
-				'$pull': {
-					'settings.moderators': username
-				}
+				'$unset': unsetObject,
 			}
 		);
+	},
+
+	setStaffPermissions: (board, username, permissions, setOwner = false) => {
+		cache.del(`board:${board}`);
+		const update = {
+			'$set': {
+				[`staff.${username}.permissions`]: Mongo.Binary(permissions.array),
+			}
+		};
+		if (setOwner === true) {
+			update['$set']['owner'] = username;
+		}
+		return db.updateOne({
+			'_id': board,
+		}, update);
+	},
+
+	setOwner: (board, username = null) => {
+		cache.del(`board:${board}`);
+		return db.updateOne({
+			'_id': board,
+		}, {
+			'$set': {
+				'owner': null,
+			},
+		});
 	},
 
 	addToArray: (board, key, list) => {
@@ -218,10 +270,9 @@ module.exports = {
 			}
 			if (filter.filter_abandoned) {
 				addedFilter['owner'] = null;
-				addedFilter['settings.moderators'] = [];
 			}
 			addedFilter['webring'] = false;
-			projection['settings.moderators'] = 1;
+			projection['staff'] = 1;
 			projection['owner'] = 1;
 		}
 		if (filter.search) {
@@ -277,7 +328,6 @@ module.exports = {
 			}
 			if (filter.filter_abandoned) {
 				addedFilter['owner'] = null;
-				addedFilter['settings.moderators'] = [];
 			}
 			addedFilter['webring'] = false;
 		}

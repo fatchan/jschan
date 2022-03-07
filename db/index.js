@@ -6,6 +6,7 @@ module.exports = {
 	Boards: require(__dirname+'/boards.js'),
 	Stats: require(__dirname+'/stats.js'),
 	Accounts: require(__dirname+'/accounts.js'),
+	Roles: require(__dirname+'/roles.js'),
 	Bans: require(__dirname+'/bans.js'),
 	Captchas: require(__dirname+'/captchas.js'),
 	Files: require(__dirname+'/files.js'),

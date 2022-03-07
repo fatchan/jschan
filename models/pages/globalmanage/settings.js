@@ -12,6 +12,7 @@ module.exports = async (req, res, next) => {
 	.render('globalmanagesettings', {
 		csrf: req.csrfToken(),
 		settings: config.get,
+		permissions: res.locals.permissions,
 		countryNamesMap,
 		countryCodes,
 		themes,
