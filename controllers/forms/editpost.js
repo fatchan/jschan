@@ -43,7 +43,7 @@ module.exports = {
 
 		if (res.locals.permLevel > 1) { //if not global staff or above
 			const ratelimitUser = await Ratelimits.incrmentQuota(req.session.user, 'edit', rateLimitCost.editPost);
-			const ratelimitIp = res.locals.anonymizer ? 0 : (await Ratelimits.incrmentQuota(res.locals.ip.single, 'edit', rateLimitCost.editPost));
+			const ratelimitIp = res.locals.anonymizer ? 0 : (await Ratelimits.incrmentQuota(res.locals.ip.cloak, 'edit', rateLimitCost.editPost));
 			if (ratelimitUser > 100 || ratelimitIp > 100) {
 				return dynamicResponse(req, res, 429, 'message', {
 					'title': 'Ratelimited',

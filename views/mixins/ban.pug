@@ -10,8 +10,11 @@ mixin ban(ban, banpage)
 			else
 				| Global
 		td= ban.reason
-		- const ip = permLevel > ipHashPermLevel ? ban.ip.single.slice(-10) : ban.ip.raw;
-		td #{ip}
+		- const ip = permLevel > ipHashPermLevel ? ban.ip.cloak : ban.ip.raw;
+		if permLevel > ipHashPermLevel
+			td #{ip}#{ban.type === 'half' ? '.*.*' : (ban.type === 'quarter' ? '.*' : '')}
+		else
+			td #{ip}
 		td #{ban.type}
 		td #{(!banpage || ban.showUser === true) ? ban.issuer : 'Hidden User'}
 		- const banDate = new Date(ban.date);

@@ -3,6 +3,7 @@
 const { Modlogs } = require(__dirname+'/../../../db/')
 	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
 	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
+	, { isIP } = require('net')
 	, limit = 50;
 
 module.exports = async (req, res, next) => {
@@ -19,10 +20,12 @@ module.exports = async (req, res, next) => {
         filter.board = uri;
     }
 	const ipMatch = decodeQueryIP(req.query, res.locals.permLevel);
-	if (ipMatch instanceof RegExp) {
-		filter['ip.single'] = ipMatch;
-	} else if (typeof ipMatch === 'string') {
-		filter['ip.raw'] = ipMatch;
+	if (ipMatch != null) {
+		if (isIP(ipMatch)) {
+			filter['ip.raw'] = ipMatch;
+		} else {
+			filter['ip.cloak'] = ipMatch;
+		}
 	}
 
 	let logs, maxPage;

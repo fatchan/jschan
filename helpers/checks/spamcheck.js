@@ -57,7 +57,7 @@ module.exports = async (req, res) => {
 			'_id': {
 				'$gt': sameContentSameIpMongoId
 			},
-			'ip.single': res.locals.ip.single,
+			'ip.cloak': res.locals.ip.cloak,
 			'$or': contentOr
 		});
 	}
@@ -69,7 +69,7 @@ module.exports = async (req, res) => {
 			'_id': {
 				'$gt': anyContentSameIpMongoId
 			},
-			'ip.single': res.locals.ip.single
+			'ip.cloak': res.locals.ip.cloak
 		})
 	}
 

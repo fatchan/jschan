@@ -1,3 +1,6 @@
+### 0.4.0
+  - Hashed IPs now use an irc-style "cloaking".
+
 ### 0.3.3
   - Minor bugfix to filenames of expanded images being incorrectly truncated in some circumstances, when "image loading bars" is enabled.
 

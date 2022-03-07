@@ -12,10 +12,8 @@ module.exports = (req, res, next) => {
 	if (res.locals.anonymizer) {
 		const pseudoIp = res.locals.preFetchedBypassId || req.signedCookies.bypassid;
 		res.locals.ip = {
-			raw: pseudoIp,
-			single: pseudoIp,
-			qrange: pseudoIp,
-			hrange: pseudoIp,
+			raw: `${pseudoIp}.BP`,
+			cloak: `${pseudoIp}.BP`,
 		};
 		return next();
 	}
@@ -31,8 +29,8 @@ module.exports = (req, res, next) => {
 			zeroElide: false,
 			zeroPad: false,
 		});
-		let qrange = ''
-			, hrange = '';
+		let qrange
+			, hrange;
 		if (ipKind === 'ipv4') {
 			qrange = createCIDR(ipStr, 24).toString();
 			hrange = createCIDR(ipStr, 16).toString();
@@ -40,11 +38,10 @@ module.exports = (req, res, next) => {
 			qrange = createCIDR(ipStr, 64).toString();
 			hrange = createCIDR(ipStr, 48).toString();
 		}
+		const cloak = `${hashIp(hrange).substring(0,8)}.${hashIp(qrange).substring(0,7)}.${hashIp(ipStr).substring(0,7)}.IP`;
 		res.locals.ip = {
-			raw: ipHashPermLevel === -1 ? hashIp(ipStr) : ipStr,
-			single: hashIp(ipStr),
-			qrange: hashIp(qrange),
-			hrange: hashIp(hrange),
+			raw: ipHashPermLevel === -1 ? cloak : ipStr,
+			cloak,
 		}
 		next();
 	} catch(e)  {

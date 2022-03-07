@@ -22,7 +22,7 @@ module.exports = {
 				$ne: true
 			}
 		}).forEach(post => {
-			const randomIP = createHash('sha256').update(tempIpHashSecret + post.ip.single).digest('base64');
+			const randomIP = createHash('sha256').update(tempIpHashSecret + post.ip.cloak).digest('base64');
 			bulkWrites.push({
 				updateOne: {
 					filter: {
@@ -31,10 +31,8 @@ module.exports = {
 					update: {
 						$set: {
 							'ip.pruned': true,
-							'ip.raw': randomIP,
-							'ip.single': randomIP,
-							'ip.qrange': randomIP,
-							'ip.hrange': randomIP,
+							'ip.raw': `${randomIP.slice(-10)}.PRUNED`,
+							'ip.cloak': `${randomIP.slice(-10)}.PRUNED`,
 						}
 					}
 				}

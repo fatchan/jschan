@@ -10,15 +10,19 @@ module.exports = {
 
 	find: (ip, board) => {
 		let ipQuery;
-		if (typeof ip === 'object') { //object with hash and ranges in bancheck
+		if (typeof ip === 'object') {
 			ipQuery = {
-				'$in': [ip.single, ip.qrange, ip.hrange] //gets single and range ban in 1 query
+				'$in': [
+					ip.cloak, //full ip
+					ip.cloak.split('.').slice(0,2).join('.'), //qrange
+					ip.cloak.split('.').slice(0,1).join('.'), //hrange
+				],
 			}
 		} else {
 			ipQuery = ip;
 		}
 		return db.find({
-			'ip.single': ipQuery,
+			'ip.cloak': ipQuery,
 			'board': {
 				'$in': [board, null]
 			}
@@ -42,7 +46,7 @@ module.exports = {
 			'_id': {
 				'$in': ids
 			},
-			'ip.single': ip,
+			'ip.cloak': ip,
 			'allowAppeal': true,
 			'appeal': null
 		}, {
