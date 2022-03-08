@@ -49,12 +49,12 @@ module.exports = {
 
 	//check if value is included in a set or array, usually for blacklist or whitelist
 	inArrayBody: (data, list) => {
-		return data && list[list.constructor.name === 'Array' ? 'includes' : 'has'](data);
+		return data !== null && list[list.constructor.name === 'Array' ? 'includes' : 'has'](data);
 	},
 
 	//the opposite kinda, check if the data includes any of the values in the array
 	arrayInBody: (filters, data) => {
-		return data && filters.some(filter => data.includes(filter));
+		return data !== null && filters.some(filter => data.includes(filter));
 	},
 
 	//check the actual schema
