@@ -1,5 +1,7 @@
 ### 0.4.0
   - Hashed IPs now use an irc-style "cloaking".
+    - Ranges are now combined in the IP instead of being only available in the JSON and not shown in management pages.
+    - IPs will end with .IP, bypasses will end in .BP and pruned ips will end in .PRUNED
   - New permission system. No more "levels" shit.
     - Boards no longer have "moderators" but "staff".
     - New "staff" page in board management, to add/remove/edit staff.
@@ -10,6 +12,7 @@
   - Better continuity between pages like "news", "accounts", "custompages", "staff" and the associated editieng page. The manage/globalmaange navbar stays in place with the appropriate section highlighted.
   - More linking between moderation interfaces e.g. globals board list will now show direct link to view the owners account.
   - Made some board and page titles more consistent.
+  - Custom flag selection is now saved like name and post password.
   - Bugfixes.
 
 ### 0.3.3
