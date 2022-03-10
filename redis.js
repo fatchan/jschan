@@ -114,7 +114,7 @@ module.exports = {
 				try {
 					results = await pipeline.exec();
 				} catch(e) {
-					reject(e);
+					return reject(e);
 				}
 				const data = {};
 				for (let i = 0; i < results.length; i++) {
