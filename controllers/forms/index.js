@@ -27,6 +27,7 @@ module.exports = {
 	loginController: require(__dirname+'/login.js'),
 	registerController: require(__dirname+'/register.js'),
 	changePasswordController: require(__dirname+'/changepassword.js'),
+	deleteSessionsController: require(__dirname+'/deletesessions.js'),
 	deleteAccountsController: require(__dirname+'/deleteaccounts.js'),
 	globalSettingsController: require(__dirname+'/globalsettings.js'),
 	createBoardController: require(__dirname+'/create.js'),

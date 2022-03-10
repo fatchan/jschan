@@ -30,7 +30,7 @@ const express  = require('express')
 		resignController, deleteAccountController, loginController, registerController, changePasswordController,
 		deleteAccountsController, editAccountController, globalSettingsController, createBoardController, makePostController,
 		addStaffController, deleteStaffController, editStaffController, editCustomPageController, editPostController,
-		editRoleController, newCaptcha, blockBypass, logout } = require(__dirname+'/forms/index.js');
+		editRoleController, newCaptcha, blockBypass, logout, deleteSessionsController } = require(__dirname+'/forms/index.js');
 
 
 //make new post
@@ -119,6 +119,7 @@ router.post('/register', geoAndTor, torPreBypassCheck, processIp, useSession, se
 router.post('/changepassword', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController.paramConverter, changePasswordController.controller);
 router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, resignController.paramConverter, resignController.controller);
 router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteAccountController.controller);
+router.post('/deletesessions', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteSessionsController.paramConverter, deleteSessionsController.controller);
 
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptcha);
