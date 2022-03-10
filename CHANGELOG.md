@@ -15,6 +15,9 @@
   - Custom flag selection is now saved like name and post password.
   - Bugfixes.
 
+### 0.3.4
+  - Minor bugfix, saving board settings with empty custom CSS was incorrectly returning an error if there were global filters for css.
+
 ### 0.3.3
   - Minor bugfix to filenames of expanded images being incorrectly truncated in some circumstances, when "image loading bars" is enabled.
 
