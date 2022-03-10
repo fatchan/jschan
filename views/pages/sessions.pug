@@ -5,10 +5,10 @@ block head
 
 block content
 	.board-header
-		h1.board-title Login Sessions
+		h1.board-title Active Sessions
 	br
 	hr(size=1)
-	h4.mv-5 Login sessions:
+	h4.mv-5 Active sessions:
 	form.form-post.nogrow(action=`/forms/deletesessions` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		.table-container.flex-left.text-center
