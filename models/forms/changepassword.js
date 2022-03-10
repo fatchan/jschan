@@ -35,7 +35,10 @@ module.exports = async (req, res, next) => {
 	}
 
 	//change the password
-	await Accounts.changePassword(username, newPassword);
+	await Promise.all([
+		Accounts.changePassword(username, newPassword),
+		redis.deletePattern(`sess:*:${username}`),
+	]);
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
