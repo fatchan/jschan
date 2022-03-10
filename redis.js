@@ -96,6 +96,41 @@ module.exports = {
 		}
 	},
 
+	getPattern: (pattern) => {
+		return new Promise((resolve, reject) => {
+			const stream = sharedClient.scanStream({
+				match: pattern
+			});
+			const dataMap = {};
+			stream.on('data', async (keys) => {
+				if (keys.length > 0) {
+					stream.pause(); //dont want end() called during this, its async
+					const pipeline = sharedClient.pipeline();
+					for (let i = 0; i < keys.length; i++) {
+						pipeline.get(keys[i]);
+					}
+					let results;
+					try {
+						results = await pipeline.exec();
+					} catch (e) {
+						stream.destroy();
+						reject(e);
+					}
+					for (let i = 0; i < results.length; i++) {
+						dataMap[keys[i]] = JSON.parse(results[i][1]);
+					}
+					stream.resume();
+				}
+			});
+			stream.on('end', () => {
+				resolve(dataMap);
+			});
+			stream.on('error', (err) => {
+				reject(err);
+			});
+		});
+	},
+
 	deletePattern: (pattern) => {
 		return new Promise((resolve, reject) => {
 			const stream = sharedClient.scanStream({

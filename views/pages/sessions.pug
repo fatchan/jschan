@@ -1,0 +1,27 @@
+extends ../layout.pug
+
+block head
+	title Login Sessions
+
+block content
+	.board-header
+		h1.board-title Login Sessions
+	br
+	hr(size=1)
+	h4.mv-5 Login sessions:
+	form.form-post.nogrow(action=`/forms/deletesessions` method='POST' enctype='application/x-www-form-urlencoded')
+		input(type='hidden' name='_csrf' value=csrf)
+		.table-container.flex-left.text-center
+			table
+				tr
+					th
+					th ID
+					th Expires
+				each session, sessionId in sessions
+					tr(class=(sessionId === currentSessionKey ? 'bold' : ''))
+						td: input(type='checkbox', name='checkedsessionids' value=sessionId)
+						td #{sessionId} #{sessionId === currentSessionKey ? '(current)' : ''}
+						- const expiryDate = new Date(session.cookie.expires)
+						td: time.reltime(datetime=expiryDate.toISOString()) #{expiryDate.toLocaleString(undefined, {hourCycle:'h23'})}
+		h4.mv-5 Delete Selected:
+		input(type='submit', value='delete')
