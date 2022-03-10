@@ -59,7 +59,7 @@ module.exports = async (req, res, next) => {
 
 	//and delete any of their active sessions
 	await Promise.all(req.body.checkedaccounts.map((username) => {
-		return cache.deletePattern('sess:*:${username}');
+		return cache.deletePattern(`sess:*:${username}`);
 	}));
 
 	return dynamicResponse(req, res, 200, 'message', {
