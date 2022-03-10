@@ -9,6 +9,7 @@ module.exports = async (req, res, next) => {
 	res
 	.set('Cache-Control', 'private, max-age=5')
 	.render('sessions', {
+		csrf: req.csrfToken(),
 		user: res.locals.user,
 		permissions: res.locals.permissions,
 		currentSessionKey: `sess:${req.sessionID}`,
