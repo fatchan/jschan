@@ -101,29 +101,26 @@ module.exports = {
 			const stream = sharedClient.scanStream({
 				match: pattern
 			});
-			const dataMap = {};
-			stream.on('data', async (keys) => {
-				if (keys.length > 0) {
-					stream.pause(); //dont want end() called during this, its async
-					const pipeline = sharedClient.pipeline();
-					for (let i = 0; i < keys.length; i++) {
-						pipeline.get(keys[i]);
-					}
-					let results;
-					try {
-						results = await pipeline.exec();
-					} catch (e) {
-						stream.destroy();
-						reject(e);
-					}
-					for (let i = 0; i < results.length; i++) {
-						dataMap[keys[i]] = JSON.parse(results[i][1]);
-					}
-					stream.resume();
-				}
+			let allKeys = [];
+			stream.on('data', (keys) => {
+				allKeys = allKeys.concat(keys);
 			});
-			stream.on('end', () => {
-				resolve(dataMap);
+			stream.on('end', async () => {
+				const pipeline = sharedClient.pipeline();
+				for (let i = 0; i < allKeys.length; i++) {
+					pipeline.get(allKeys[i]);
+				}
+				let results;
+				try {
+					results = await pipeline.exec();
+				} catch(e) {
+					reject(e);
+				}
+				const data = {};
+				for (let i = 0; i < results.length; i++) {
+					data[allKeys[i]] = JSON.parse(results[i][1]);
+				}
+				resolve(data);
 			});
 			stream.on('error', (err) => {
 				reject(err);
