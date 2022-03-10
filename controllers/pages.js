@@ -65,7 +65,7 @@ hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageReports);
 router.get('/:board/manage/recent.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
 hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageRecent);
 router.get('/:board/manage/mypermissions.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageMyPermissions);
+hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), manageMyPermissions);
 router.get('/:board/manage/logs.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
 hasPerms.one(Permissions.MANAGE_BOARD_LOGS), csrf, manageLogs);
 router.get('/:board/manage/bans.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
@@ -118,7 +118,7 @@ router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
 
 //accounts
 router.get('/account.html', useSession, sessionRefresh, isLoggedIn, calcPerms, csrf, account); //page showing boards you are mod/owner of, links to password rese, logout, etc
-router.get('/mypermissions.html', useSession, sessionRefresh, isLoggedIn, calcPerms, csrf, myPermissions);
+router.get('/mypermissions.html', useSession, sessionRefresh, isLoggedIn, calcPerms, myPermissions);
 router.get('/login.html', login);
 router.get('/register.html', register);
 router.get('/changepassword.html', changePassword);
