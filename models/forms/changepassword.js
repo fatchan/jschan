@@ -2,6 +2,7 @@
 
 const bcrypt = require('bcrypt')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, redis = require(__dirname+'/../../redis.js')
 	, { Accounts } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
