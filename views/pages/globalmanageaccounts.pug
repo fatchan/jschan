@@ -20,7 +20,7 @@ block content
 				.label Board URI
 				input(type='text' name='uri' value=uri)
 			input(type='submit', value='Filter')
-		h4.no-m-p Accounts:
+		h4.mv-5 Accounts:
 		if accounts && accounts.length > 0
 			form.form-post.nogrow(action=`/forms/global/deleteaccounts` method='POST' enctype='application/x-www-form-urlencoded')
 				input(type='hidden' name='_csrf' value=csrf)
@@ -65,7 +65,7 @@ block content
 										a(href=`/mypermissions.html`) [View]
 				.pages.mv-5
 					include ../includes/pages.pug
-				h4.no-m-p Delete Selected:
+				h4.mv-5 Delete Selected:
 				input(type='submit', value='delete')
 		else
 			p No results.
