@@ -197,5 +197,6 @@ module.exports = async(db, redis) => {
 	await redis.deletePattern('globalsettings');
 	console.log('Clearing user and board cache');
 	await redis.deletePattern('board:*');
-	await redis.deletePattern('users:*');
+	console.log('Deleting all sessions from redis (logs all users out)');
+	await redis.deletePattern('sess:*');
 };

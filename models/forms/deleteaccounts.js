@@ -57,9 +57,14 @@ module.exports = async (req, res, next) => {
 
 	const amount = await Accounts.deleteMany(req.body.checkedaccounts).then(res => res.deletedCount);
 
+	//and delete any of their active sessions
+	await Promise.all(req.body.checkedaccounts.map((username) => {
+		return cache.deletePattern(`sess:*:${username}`);
+	}));
+
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
-		'message': `${req.body.delete_account ? 'Deleted' : 'Edited'} ${amount} accounts`,
+		'message': `Deleted ${amount} accounts`,
 		'redirect': '/globalmanage/accounts.html'
 	});
 

@@ -96,6 +96,38 @@ module.exports = {
 		}
 	},
 
+	getPattern: (pattern) => {
+		return new Promise((resolve, reject) => {
+			const stream = sharedClient.scanStream({
+				match: pattern
+			});
+			let allKeys = [];
+			stream.on('data', (keys) => {
+				allKeys = allKeys.concat(keys);
+			});
+			stream.on('end', async () => {
+				const pipeline = sharedClient.pipeline();
+				for (let i = 0; i < allKeys.length; i++) {
+					pipeline.get(allKeys[i]);
+				}
+				let results;
+				try {
+					results = await pipeline.exec();
+				} catch(e) {
+					return reject(e);
+				}
+				const data = {};
+				for (let i = 0; i < results.length; i++) {
+					data[allKeys[i]] = JSON.parse(results[i][1]);
+				}
+				resolve(data);
+			});
+			stream.on('error', (err) => {
+				reject(err);
+			});
+		});
+	},
+
 	deletePattern: (pattern) => {
 		return new Promise((resolve, reject) => {
 			const stream = sharedClient.scanStream({

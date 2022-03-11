@@ -2,6 +2,7 @@
   - Hashed IPs now use an irc-style "cloaking".
     - Ranges are now combined in the IP instead of being only available in the JSON and not shown in management pages.
     - IPs will end with .IP, bypasses will end in .BP and pruned ips will end in .PRUNED
+  - Users can now list/delete their active login sessions.
   - New permission system. No more "levels" shit.
     - Boards no longer have "moderators" but "staff".
     - New "staff" page in board management, to add/remove/edit staff.
