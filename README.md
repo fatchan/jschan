@@ -18,11 +18,11 @@ Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general)
 - [x] User created boards ala infinity
 - [x] Multiple files per post
 - [x] Basic antispam & multiple captcha options
-- [x] Read-only JSON api
+- [x] API ([documentation](http://fatchan.gitgud.site/jschan-docs/))
 - [x] Multi-select moderation actions
-- [x] Websocket update threads w/o polling
-- [x] Webring w/proxy support (compatible with [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring) versions)
+- [x] Webring +proxy support (compatible with [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring) versions)
 - [x] Manage everything from the web panel
+- [x] Detailed accounts perimssions system
 - [x] Works properly with anonymizer networks
 
 ## License
