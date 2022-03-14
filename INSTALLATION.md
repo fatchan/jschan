@@ -41,12 +41,17 @@ NOTE: If you plan to use animated .gif thumbnails, ffmpeg >=4.3.1 is recommended
 **5. Install Node.js**
 
 For easy installation, use [node version manager](https://github.com/nvm-sh/nvm) "nvm".
+
 Install nvm then run the following commands to get the LTS version of nodejs.
 ```bash
 $ nvm install --lts
 $ nvm use --lts
 ```
-You can repeat this process in future to update node versions.
+
+In future, to install newer LTS node version, latest npm, and reinstall global packages:
+```bash
+$ nvm install --lts --reinstall-packages-from=$(node --version) --latest-npm
+```
 
 You may install Node.js yourself without nvm if you prefer.
 
