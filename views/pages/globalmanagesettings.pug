@@ -160,17 +160,18 @@ block content
 							option(value='google', selected=settings.captchaOptions.type === 'google') Google
 							option(value='hcaptcha', selected=settings.captchaOptions.type === 'hcaptcha') Hcaptcha
 					.row
-						.label Generate Limit
-						input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
-					.row
-						.label Image Size
-						input(type='number' name='captcha_options_image_size' value=settings.captchaOptions.grid.imageSize)
+						.label Grid Image Size
+						input(type='number' name='captcha_options_grid_image_size' value=settings.captchaOptions.grid.imageSize)
 					.row
 						.label Grid Size
 						input(type='number' name='captcha_options_grid_size' value=settings.captchaOptions.grid.size)
 					.row
 						.label Grid Icon Offset
 						input(type='number' name='captcha_options_grid_icon_y_offset' value=settings.captchaOptions.grid.iconYOffset)
+
+					.row
+						.label Generate Limit
+						input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
 					.row
 						.label Minimum Distortions
 						input(type='number' name='captcha_options_num_distorts_min' value=settings.captchaOptions.numDistorts.min)

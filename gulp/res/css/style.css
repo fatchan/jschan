@@ -703,7 +703,7 @@ details.actions div {
 
 div.captchafield {
 	padding: 0px;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-columns: var(--captcha-grid-size);
 	display: grid;
 	width: var(--captcha-w);
 	height: var(--captcha-w);

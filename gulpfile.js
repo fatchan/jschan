@@ -297,6 +297,7 @@ async function css() {
     --attachment-img: url('/file/attachment.png');
     --spoiler-img: url('/file/spoiler.png');
     --audio-img: url('/file/audio.png');
+    --captcha-grid-size: ${`1fr `.repeat(config.get.captchaOptions.grid.size)};
     --thumbnail-size: ${config.get.thumbSize}px;
     --captcha-w: ${captchaWidth}px;
     --captcha-h: ${captchaHeight}px;

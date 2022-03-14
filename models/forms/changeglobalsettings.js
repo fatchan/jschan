@@ -19,7 +19,6 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		'globalAnnouncement.raw': ['deletehtml', 'custompages'],
 		'meta.siteName': ['deletehtml', 'scripts', 'custompages'],
 		'meta.url': ['deletehtml', 'scripts', 'custompages'],
-		'captchaOptions.type': ['deletehtml', 'css', 'scripts', 'custompages'],
 		'archiveLinksURL': ['deletehtml', 'custompages'],
 		'reverseImageLinksURL': ['deletehtml', 'custompages'],
 		'enableWebring': ['deletehtml', 'custompages'],
@@ -34,6 +33,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		//these will make it easier to keep updated and include objects where any/all property change needs tasks
 		//basically, it expands to all of globalLimits.fieldLength.* or frontendScriptDefault.*
 		//it could be calculated in compareSettings with *, but im just precompiling it now. probably a tiny bit faster not doing it each time
+		...includeChildren(template, 'captchaOptions', ['deletehtml', 'css', 'scripts', 'custompages']),
 		...includeChildren(template, 'globalLimits.fieldLength', ['deletehtml', 'custompages']),
 		...includeChildren(template, 'frontendScriptDefault', ['scripts']),
 	});
