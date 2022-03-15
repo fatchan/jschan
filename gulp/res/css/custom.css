@@ -29,3 +29,7 @@ table.boardtable th:nth-child(1) {
 .obscuremail::after {
 	content: "@";
 }
+.phishing-warning {
+	top: 38px;
+	background: darkred;
+}

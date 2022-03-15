@@ -60,12 +60,12 @@ setDefaultLocalStorage('codetheme', 'default');
 setDefaultLocalStorage('customcss', '');
 setDefaultLocalStorage('overboardsettings', '{"add":"","rem":"","include_default":true}');
 
-// clearnet onion mirror niggers
-/*
+// clearnet onion mirror niggers, or phishers!
 const validHosts = [
 	'fatchan.org', 'www.fatchan.org',
-	'cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion', 'www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion', 
+	'cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion', 'www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion',
 	'fatchan.loki', 'www.fatchan.loki',
+	'imageboard.loki', 'www.imageboard.loki',
 	'fatchan.net', 'www.fatchan.net',
 	'fatchan.to', 'www.fatchan.to',
 	'fatchan.top', 'www.fatchan.top',
@@ -75,21 +75,18 @@ const validHosts = [
 	'fatchan.is', 'www.fatchan.is',
 ];
 if (!validHosts.some(h => h === location.hostname)) {
-	//fuck off
+	const navBar = document.querySelector('nav.navbar');
+	if (navBar) {
+		const warningBar = document.createElement('nav');
+		warningBar.classList.add('navbar', 'phishing-warning', 'user-id', 'text-center');
+		const warningText = document.createElement('b');
+		warningText.textContent = 'WARNING: You are not visiting a genuine fatchan domain or mirror. You could get phished!';
+		warningBar.appendChild(warningText);
+		navBar.insertAdjacentElement('afterend', warningBar);
+	}
 }
-*/
 
-/*
-if ('serviceWorker' in navigator) {
-	navigator.serviceWorker.register('/serviceWorker.js')
-		.then(function(registration) {
-			console.log('ServiceWorker registration successful with scope: ', registration.scope);
-		}).catch(function(err) {
-			console.log('ServiceWorker registration failed: ', err);
-		});
-}
-*/
-
+// brave idiots on tor
 if (!crypto.subtle &&
 	location.pathname !== '/brave.html' &&
 	(location.hostname === 'cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion' || location.hostname === 'www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion')) {
