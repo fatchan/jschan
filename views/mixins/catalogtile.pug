@@ -57,9 +57,9 @@ mixin catalogtile(post, index, overboard=false)
 				.row.ct-r1
 					- const file = post.files[0]
 					+catalogfile(postURL, post, file, false)
-				if post.files.length > 1
-					.row.ct-r2.wrap
-						each file, fileindex in post.files.slice(1)
-							+catalogfile(postURL, post, file, true)
+				//-if post.files.length > 1
+				//-	.row.ct-r2.wrap
+				//-		each file, fileindex in post.files.slice(1)
+				//-			+catalogfile(postURL, post, file, true)
 		if post.message
 			pre.no-m-p.post-message !{post.message}

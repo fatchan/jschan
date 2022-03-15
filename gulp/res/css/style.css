@@ -272,13 +272,13 @@ object {
 	padding: 5px;
 	margin: 5px;
 	text-align: center;
-	height: 340px;
-	width: 280px;
+	height: 320px;
+	width: 220px;
 	overflow: hidden;
 	border: 1px solid var(--post-outline-color);
 	box-sizing: border-box;
 	flex-grow: 1;
-	max-width: 280px;
+	max-width: 220px;
 }
 
 .catalog-tile:focus {
@@ -589,7 +589,7 @@ td pre {
 		opacity: 1;
 	}
 	50% {
-		opacity: 0.5;
+		opacity: 0.4;
 	}
 }
 .post-container, #float .post-container, .stickynav, .pages, .catalog-tile, #livetext, #threadstats, .bottom-reply, .collapse {
