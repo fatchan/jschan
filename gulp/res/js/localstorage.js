@@ -64,6 +64,7 @@ setDefaultLocalStorage('overboardsettings', '{"add":"","rem":"","include_default
 const validHosts = [
 	'fatchan.org', 'www.fatchan.org',
 	'cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion', 'www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion',
+	'chan.loki', 'www.chan.loki',
 	'fatchan.loki', 'www.fatchan.loki',
 	'imageboard.loki', 'www.imageboard.loki',
 	'fatchan.net', 'www.fatchan.net',
@@ -75,15 +76,17 @@ const validHosts = [
 	'fatchan.is', 'www.fatchan.is',
 ];
 if (!validHosts.some(h => h === location.hostname)) {
-	const navBar = document.querySelector('nav.navbar');
-	if (navBar) {
-		const warningBar = document.createElement('nav');
-		warningBar.classList.add('navbar', 'phishing-warning', 'user-id', 'text-center');
-		const warningText = document.createElement('b');
-		warningText.textContent = 'WARNING: You are not visiting a genuine fatchan domain or mirror. You could get phished!';
-		warningBar.appendChild(warningText);
-		navBar.insertAdjacentElement('afterend', warningBar);
-	}
+	window.addEventListener('DOMContentLoaded', (event) => {
+		const navBar = document.querySelector('nav.navbar');
+		if (navBar) {
+			const warningBar = document.createElement('nav');
+			warningBar.classList.add('navbar', 'phishing-warning', 'user-id', 'text-center');
+			const warningText = document.createElement('b');
+			warningText.textContent = 'WARNING: You are not visiting a genuine fatchan domain or mirror. You could get phished!';
+			warningBar.appendChild(warningText);
+			navBar.insertAdjacentElement('afterend', warningBar);
+		}
+	});
 }
 
 // brave idiots on tor
