@@ -19,7 +19,6 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		'globalAnnouncement.raw': ['deletehtml', 'custompages'],
 		'meta.siteName': ['deletehtml', 'scripts', 'custompages'],
 		'meta.url': ['deletehtml', 'scripts', 'custompages'],
-		'captchaOptions.type': ['deletehtml', 'css', 'scripts', 'custompages'],
 		'archiveLinksURL': ['deletehtml', 'custompages'],
 		'reverseImageLinksURL': ['deletehtml', 'custompages'],
 		'enableWebring': ['deletehtml', 'custompages'],
@@ -34,6 +33,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		//these will make it easier to keep updated and include objects where any/all property change needs tasks
 		//basically, it expands to all of globalLimits.fieldLength.* or frontendScriptDefault.*
 		//it could be calculated in compareSettings with *, but im just precompiling it now. probably a tiny bit faster not doing it each time
+		...includeChildren(template, 'captchaOptions', ['deletehtml', 'css', 'scripts', 'custompages']),
 		...includeChildren(template, 'globalLimits.fieldLength', ['deletehtml', 'custompages']),
 		...includeChildren(template, 'frontendScriptDefault', ['scripts']),
 	});
@@ -46,13 +46,8 @@ module.exports = async (req, res, next) => {
 	const announcement = req.body.global_announcement === null ? null : prepareMarkdown(req.body.global_announcement, false);
 	let markdownAnnouncement = oldSettings.globalAnnouncement.markdown;
 	if (announcement !== oldSettings.globalAnnouncement.raw) {
-		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null, res.locals.permLevel))
+		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null, res.locals.permissions))
 	}
-
-	const newMarkdownPermLevels = Object.keys(oldSettings.permLevels.markdown).reduce((acc, val) => {
-		acc[val] = numberSetting(req.body[`perm_levels_markdown_${val}`], oldSettings.permLevels.markdown[val]);
-		return acc;
-	}, {});
 
 	const newSettings = {
 		filters: arraySetting(req.body.filters, oldSettings.filters),
@@ -105,11 +100,6 @@ module.exports = async (req, res, next) => {
 			expireAfterTime: numberSetting(req.body.block_bypass_expire_after_time, oldSettings.blockBypass.expireAfterTime),
 			bypassDnsbl: booleanSetting(req.body.block_bypass_bypass_dnsbl, oldSettings.blockBypass.bypassDnsbl),
 		},
-		ipHashPermLevel: numberSetting(req.body.ip_hash_perm_level, oldSettings.ipHashPermLevel),
-		deleteBoardPermLevel: numberSetting(req.body.delete_board_perm_level, oldSettings.deleteBoardPermLevel),
-		permLevels: {
-			markdown: newMarkdownPermLevels,
-		},
 		pruneImmediately: booleanSetting(req.body.prune_immediately, oldSettings.pruneImmediately),
 		hashImages: booleanSetting(req.body.hash_images, oldSettings.hashImages),
 		rateLimitCost: {
@@ -125,6 +115,7 @@ module.exports = async (req, res, next) => {
 		cacheTemplates: booleanSetting(req.body.cache_templates, oldSettings.cacheTemplates),
 		lockWait: numberSetting(req.body.lock_wait, oldSettings.lockWait),
 		pruneModlogs: numberSetting(req.body.prune_modlogs, oldSettings.pruneModlogs),
+		dontStoreRawIps: booleanSetting(req.body.dont_store_raw_ips, oldSettings.dontStoreRawIps),
 		pruneIps: numberSetting(req.body.prune_ips, oldSettings.pruneIps),
 		enableWebring: booleanSetting(req.body.enable_webring, oldSettings.enableWebring),
 		following: arraySetting(req.body.webring_following, oldSettings.following),
@@ -134,8 +125,6 @@ module.exports = async (req, res, next) => {
 			enabled: booleanSetting(req.body.webring_proxy_enabled, oldSettings.proxy.enabled),
 			address: trimSetting(req.body.webring_proxy_address, oldSettings.proxy.address),
 		},
-		enableUserBoardCreation: booleanSetting(req.body.enable_user_board_creation, oldSettings.enableUserBoardCreation),
-		enableUserAccountCreation: booleanSetting(req.body.enable_user_account_creation, oldSettings.enableUserAccountCreation),
 		thumbExtension: trimSetting(req.body.thumb_extension, oldSettings.thumbExtension),
 		highlightOptions: {
 			languageSubset: arraySetting(req.body.highlight_options_language_subset, oldSettings.highlightOptions.languageSubset),

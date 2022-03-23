@@ -12,11 +12,11 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
-		const { modBoards, ownedBoards } = res.locals.user;
+		const { staffBoards, ownedBoards } = res.locals.user;
 
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.confirm), expected: true, error: 'Missing confirmation' },
-			{ result: (numberBody(ownedBoards.length, 0, 0) && numberBody(modBoards.length, 0, 0)), expected: true, error: 'You cannot delete your account while you hold staff position on any board' },
+			{ result: (numberBody(ownedBoards.length, 0, 0) && numberBody(staffBoards.length, 0, 0)), expected: true, error: 'You cannot delete your account while you hold staff position on any board' },
 		]);
 
 		if (errors.length > 0) {

@@ -1,6 +1,7 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../../db/')
+	, roleManager = require(__dirname+'/../../../helpers/rolemanager.js')
 	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
 	, limit = 20;
 
@@ -20,7 +21,7 @@ module.exports = async (req, res, next) => {
 				'ownedBoards': uri
 			},
 			{
-				'modBoards': uri
+				'staffBoards': uri
 			},
 		];
 	}
@@ -40,12 +41,15 @@ module.exports = async (req, res, next) => {
 	.set('Cache-Control', 'private, max-age=5')
 	.render('globalmanageaccounts', {
 		csrf: req.csrfToken(),
+		permissions: res.locals.permissions,
+		user: res.locals.user,
 		queryString,
 		username,
 		uri,
 		accounts,
 		page,
 		maxPage,
+		roleNameMap: roleManager.roleNameMap,
 	});
 
 }

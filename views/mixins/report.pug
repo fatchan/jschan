@@ -2,7 +2,7 @@ mixin report(r, manage=false)
 	.reports.post-container
 		input.post-check(type='checkbox', name='checkedreports' value=r.id)
 		|  
-		- const ip = permLevel > ipHashPermLevel ? r.ip.single.slice(-10) : r.ip.raw;
+		- const ip = viewRawIp === true ? r.ip.raw : r.ip.cloak;
 		a.bold(href=`${manage ? 'recent.html' : ''}?ip=${encodeURIComponent(ip)}`) [#{ip}]
 		|  
 		- const reportDate = new Date(r.date);

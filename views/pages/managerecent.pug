@@ -5,7 +5,7 @@ include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
 
 block head
-	title /#{board._id}/ - Manage
+	title /#{board._id}/ - Recent Posts
 
 block content
 	+boardheader('Recent Posts')
@@ -13,21 +13,22 @@ block content
 	.wrapbar
 		+managenav('recent')
 		if page === 1 && !postId && !queryIp
-			.jsonly#livetext(data-perm-level=permLevel data-room=`${board._id}-manage-recent-${permLevel > ipHashPermLevel ? 'hashed' : 'raw'}`)
+			.jsonly#livetext(data-view-raw-ip=(viewRawIp?'true':'false') data-room=`${board._id}-manage-recent-${viewRawIp === true ? 'raw' : 'hashed'}`)
 				.dot#livecolor
 				|  Connecting... 
 				input.postform-style.ml-5.di#updatepostsbutton(type='button' value='Update')
 	form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
-		hr(size=1)
 		input(type='hidden' name='_csrf' value=csrf)
 		if posts.length === 0
+			hr(size=1)
 			p No posts.
 		else
-			- const ip = permLevel > ipHashPermLevel ? posts[0].ip.single.slice(-10) : posts[0].ip.raw;
+			hr(size=1)
+			- const ip = viewRawIp === true ? posts[0].ip.raw : posts[0].ip.cloak;
 			if postId || (queryIp && queryIp === ip)
 				h4.no-m-p Post history for #{ip}
 					|
-					if permLevel < 2
+					if permissions.get(Permissions.MANAGE_GLOBAL_GENERAL)
 						|  
 						a(href=`/globalmanage/recent.html?ip=${encodeURIComponent(ip)}`) [See Global Post History]
 				hr(size=1)

@@ -21,12 +21,12 @@ module.exports = {
 			{ result: existsBody(req.body.confirm), expected: true, error: 'Missing confirmation' },
 			{ result: existsBody(req.body.uri), expected: true, error: 'Missing URI' },
 			{ result: alphaNumericRegex.test(req.body.uri), blocking: true, expected: true, error: 'URI must contain a-z 0-9 only'},
-			{ result: (req.params.board === req.body.uri), expected: true, error: 'URI does not match current board' },
+			{ result: req.params.board == null || (req.params.board === req.body.uri), expected: true, error: 'URI does not match current board' },
 			{ result: async () => {
 				board = await Boards.findOne(req.body.uri);
 				return board != null;
 			}, expected: true, error: `Board /${req.body.uri}/ does not exist` }
-		], res.locals.permLevel);
+		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {

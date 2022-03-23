@@ -3,15 +3,16 @@
 const Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts } = require(__dirname+'/../../db/')
 	, timeUtils = require(__dirname+'/../timeutils.js')
+	, Permissions = require(__dirname+'/../permissions.js')
 	, config = require(__dirname+'/../../config.js');
 
 module.exports = async (req, res) => {
 
-	const { sameContentSameIp, sameContentAnyIp, anyContentSameIp } = config.get.floodTimers;
-
-	if (res.locals.permLevel <= 1) { //global staff bypass spam check
+	if (res.locals.permissions.get(Permissions.BYPASS_SPAMCHECK)) {
 		return false;
 	}
+
+	const { sameContentSameIp, sameContentAnyIp, anyContentSameIp } = config.get.floodTimers;
 
 	if (sameContentSameIp === 0
 		&& sameContentAnyIp === 0
@@ -57,7 +58,7 @@ module.exports = async (req, res) => {
 			'_id': {
 				'$gt': sameContentSameIpMongoId
 			},
-			'ip.single': res.locals.ip.single,
+			'ip.cloak': res.locals.ip.cloak,
 			'$or': contentOr
 		});
 	}
@@ -69,7 +70,7 @@ module.exports = async (req, res) => {
 			'_id': {
 				'$gt': anyContentSameIpMongoId
 			},
-			'ip.single': res.locals.ip.single
+			'ip.cloak': res.locals.ip.cloak
 		})
 	}
 

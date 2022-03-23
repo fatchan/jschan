@@ -5,34 +5,35 @@ include ../mixins/boardheader.pug
 include ../mixins/managenav.pug
 
 block head
-	title /#{board._id}/ - Manage
+	title /#{board._id}/ - Settings
 
 block content
 	+boardheader('Settings')
 	br
 	+managenav('settings')
-	hr(size=1)
-	h4.no-m-p Transfer ownership:
-	.form-wrapper.flexleft.mt-10
-		form.form-post(action=`/forms/board/${board._id}/transfer`, enctype='application/x-www-form-urlencoded', method='POST')
-			input(type='hidden' name='_csrf' value=csrf)
-			.row
-				.label New owner username
-				input(type='text' name='username' placeholder=board.owner required)
-			input(type='submit', value='submit')
-	hr(size=1)
-	h4.no-m-p Delete board:
-	.form-wrapper.flexleft.mt-10
-		form.form-post(action=`/forms/board/${board._id}/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
-			input(type='hidden' name='_csrf' value=csrf)
-			.row
-				.label Board URI
-				input(type='text' name='uri' required)
-			.row
-				.label I'm sure
-				label.postform-style.ph-5
-					input(type='checkbox', name='confirm', value='true' required)
-			input(type='submit', value='submit')
+	if permissions.get(Permissions.MANAGE_BOARD_OWNER)
+		hr(size=1)
+		h4.no-m-p Transfer ownership:
+		.form-wrapper.flexleft.mt-10
+			form.form-post(action=`/forms/board/${board._id}/transfer`, enctype='application/x-www-form-urlencoded', method='POST')
+				input(type='hidden' name='_csrf' value=csrf)
+				.row
+					.label New owner username
+					input(type='text' name='username' placeholder=board.owner required)
+				input(type='submit', value='submit')
+		hr(size=1)
+		h4.no-m-p Delete board:
+		.form-wrapper.flexleft.mt-10
+			form.form-post(action=`/forms/board/${board._id}/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
+				input(type='hidden' name='_csrf' value=csrf)
+				.row
+					.label Board URI
+					input(type='text' name='uri' required)
+				.row
+					.label I'm sure
+					label.postform-style.ph-5
+						input(type='checkbox', name='confirm', value='true' required)
+				input(type='submit', value='submit')
 	hr(size=1)
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
@@ -50,9 +51,6 @@ block content
 					.row
 						.label Tags
 						textarea(name='tags' placeholder='Newline separated, max 10') #{board.tags.join('\n')}
-					.row
-						.label Moderators
-						textarea(name='moderators' placeholder='Newline separated, max 10') #{board.settings.moderators.join('\n')}
 					.row
 						.label Announcement
 						textarea(name='announcement' placeholder='Supports post styling') #{board.settings.announcement.raw}

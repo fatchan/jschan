@@ -1,7 +1,9 @@
 'use strict';
 
 const { Boards, Accounts } = require(__dirname+'/../../db/')
+	, { Binary } = require(__dirname+'/../../db/db.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, roleManager = require(__dirname+'/../../helpers/rolemanager.js')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, restrictedURIs = new Set(['captcha', 'forms', 'randombanner', 'all'])
 	, { ensureDir } = require('fs-extra')
@@ -48,12 +50,17 @@ module.exports = async (req, res, next) => {
 		'ips': 0,
 		'lastPostTimestamp': null,
 		'webring': false,
+		'staff': {
+			[owner]: {
+				'permissions': Binary(roleManager.roles.BOARD_OWNER.array),
+				'addedDate': new Date(),
+			},
+		},
 		'flags': {},
 		'assets': [],
 		'settings': {
 			name,
 			description,
-			'moderators': [],
 			...boardDefaults
 		}
 	}

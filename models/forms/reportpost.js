@@ -9,7 +9,7 @@ module.exports = (req, res) => {
 		'reason': req.body.report_reason,
 		'date': new Date(),
 		'ip': {
-			'single': res.locals.ip.single,
+			'cloak': res.locals.ip.cloak,
 			'raw': res.locals.ip.raw
 		}
 	}

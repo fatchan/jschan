@@ -100,6 +100,7 @@ class postFormHandler {
 
 	constructor(form) {
 		this.form = form;
+		this.resetOnSubmit = this.form.dataset.resetOnSubmit == "true";
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message');
 		this.captchaField = form.querySelector('.captchafield') || form.querySelector('.g-recaptcha') || form.querySelector('.h-captcha');
@@ -133,14 +134,7 @@ class postFormHandler {
 	}
 
 	reset() {
-		const savedName = this.form.elements.name && this.form.elements.name.value;
 		this.form.reset();
-		if (this.form.elements.name) {
-			this.form.elements.name.value = savedName;
-		}
-		if (this.form.elements.postpassword) {
-			this.form.elements.postpassword.value = localStorage.getItem('postpassword');
-		}
 		this.updateFlagField();
 		this.updateMessageBox();
 		this.files = [];
@@ -264,8 +258,9 @@ class postFormHandler {
 					}
 					//dont reset on edit, keep the new values in there. todo: add exceptions/better handling for this situation
 					const formAction = this.form.getAttribute('action');
-					if (formAction !== '/forms/editpost'
-						&& !formAction.endsWith('/settings')) {
+					if (this.resetOnSubmit) {
+//formAction !== '/forms/editpost'
+//!formAction.endsWith('/settings')) {
 						this.reset();
 					}
 				} else {

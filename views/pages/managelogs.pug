@@ -5,7 +5,7 @@ include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
 
 block head
-	title /#{board._id}/ - Manage
+	title /#{board._id}/ - Logs
 
 block content
 	+boardheader('Logs')
@@ -40,7 +40,7 @@ block content
 									|   
 									a(href=`?username=${log.user}`) [+]
 								td
-									- const logIp = permLevel > ipHashPermLevel ? log.ip.single.slice(-10) : log.ip.raw;
+									- const logIp = viewRawIp === true ? log.ip.raw : log.ip.cloak;
 									| #{logIp}
 								td #{log.actions}
 								td

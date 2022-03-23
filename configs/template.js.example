@@ -67,37 +67,11 @@ module.exports = {
 
 	//block bypasses
 	blockBypass: {
-		enabled: true,
+		enabled: false,
 		forceAnonymizers: true,
 		expireAfterUses: 50, //however many (attempted) posts per block bypass captcha
 		expireAfterTime: 86400000, //expiry in ms regardless if the limit was reached, default 1 day
 		bypassDnsbl: false,
-	},
-
-	// permission level required to see UNHASHED ips. -1 for ips to be hashed even for root user. not recommended to change after installation
-	ipHashPermLevel: 0,
-
-	// permission level required to delete boards
-	deleteBoardPermLevel: 2,
-
-	//todo: migrate the above 2 into this
-	permLevels: {
-		markdown: {
-			pink: 4,
-			green: 4,
-			bold: 4,
-			underline: 4,
-			strike: 4,
-			italic: 4,
-			title: 4,
-			spoiler: 4,
-			mono: 4,
-			code: 4,
-			link: 4,
-			detected: 4,
-			dice: 4,
-			fortune: 0,
-		},
 	},
 
 	/* delete files immediately rather than pruning later. usually disabled to prevent re-thumbnailing and processing commonly
@@ -136,13 +110,11 @@ module.exports = {
 	//option to prune ips on posts older than x days
 	pruneIps: 0,
 
+	//dont store raw ips at all (in jschan), not counting webservers or whatever else.
+	dontStoreRawIps: false,
+
 	//enable the webring (also copy configs/webring.json.example -> configs/webring.json and edit)
 	enableWebring: false,
-
-	//let all users create new boards
-	enableUserBoardCreation: false,
-	//let all users register new accounts
-	enableUserAccountCreation: true,
 
 	//extension for thumbnails that do not contain transparency (png will be used)
 	thumbExtension: '.jpg',

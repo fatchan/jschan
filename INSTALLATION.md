@@ -41,12 +41,17 @@ NOTE: If you plan to use animated .gif thumbnails, ffmpeg >=4.3.1 is recommended
 **5. Install Node.js**
 
 For easy installation, use [node version manager](https://github.com/nvm-sh/nvm) "nvm".
+
 Install nvm then run the following commands to get the LTS version of nodejs.
 ```bash
 $ nvm install --lts
 $ nvm use --lts
 ```
-You can repeat this process in future to update node versions.
+
+In future, to install newer LTS node version, latest npm, and reinstall global packages:
+```bash
+$ nvm install --lts --reinstall-packages-from=$(node --version) --latest-npm
+```
 
 You may install Node.js yourself without nvm if you prefer.
 
@@ -141,3 +146,99 @@ $ pm2 restart ecosystem.config.js --env production
 #if something breaks, check and read the logs, they will help figure out what went wrong
 $ pm2 logs
 ```
+
+-----
+
+## Advanced
+
+This is an optional section for people who know what they are doing.
+
+Here are some additional "advanced" things you can do with your jschan installation:
+
+#### Performance tweaks
+
+**Using unix sockets for nginx, tor, redis, and mongodb:**
+
+If you run an instance with local redis, mongodb, tor, nginx, etc then you can (usually) net some performance improvement by making them communicate with unix sockets rather than TCP. No more localhost. The biggest disadvantage is making sure each component that communicates using a given socket has the correct permissions set. Generally, creating a socket that is owned by a group to which you add both components is good enough.
+
+This example is for nginx <-> tor daemon communication. You should be able to work out redis and mongodb yourself based on this.
+
+In the nginx `server {}` block:
+
+```nginx
+listen unix:/var/run/nginx-tor.sock;
+allow "unix:";
+deny all;
+```
+
+In your torrc:
+
+```
+HiddenServicePort 80 unix:/var/run/nginx-tor.sock
+```
+
+sudo systemctl restart tor && sudo systemctl restart nginx
+
+**Don't use pm2/nodejs clustering:**
+
+By default, the "chan" pm2 process (the main web serving component of jschan backend) will be "clustered". In nodejs this means that you can have multiple processes e.g. sharing the same port, whereby the "master" will accept connections and pass the handlers over to each process in a round-robin fashion. The pm2 master process handles all this and allows for nice things like zero downtime reloads. The downside is that there is a slight overhead associated with having that single thread accept connections and delegate them to each worker. Instead, you can run each chan process on a sequential port, starting from the port in configs/secrets.js. Then you can configure multiple ip:ports in nginx to connect to each nodejs process independently. Note: pm2 reload will no longer give zero downtime restarts this way.
+
+
+1. Change the `exec_mode` in ecosystem.config.js and some code in server.js for listening to the ports:
+
+```diff
+diff --git a/ecosystem.config.js b/ecosystem.config.js
+index fc000094..f2b53c1b 100644
+--- a/ecosystem.config.js
++++ b/ecosystem.config.js
+@@ -30,0 +31 @@ module.exports = {
++               exec_mode: 'fork',
+diff --git a/server.js b/server.js
+index f9e19dbc..1630dce0 100644
+--- a/server.js
++++ b/server.js
+@@ -152 +152 @@ const express = require('express')
+-       server.listen(port, '127.0.0.1', () => {
++       server.listen(port+parseInt(process.env.NODE_APP_INSTANCE), '127.0.0.1', () => {
+```
+
+2. Change the `upstream` block in your jschan sites-available nginx config to have a backend for each chan process, like so:
+
+```nginx
+upstream chan {
+	server 127.0.0.1:7000;
+	server 127.0.0.1:7001;
+	server 127.0.0.1:7002;
+	server 127.0.0.1:7003;
+}
+```
+
+You will need to match the number of servers to however many chan processes you are running, which by default is (number of cpu threads/2)
+
+3. pm2 restart all && sudo systemctl restart nginx
+
+#### Customisation
+
+Customisation is pretty easy. As long as you format whatever you are customising properly e.g. pug templates, css, etc and have correct syntax for javascript files, the build system will handle the rest for you. Here are some things you can do:
+
+**Custom pages**
+
+To add additional custom pages which will be at the root of your site, add a .pug file to views/custompages/. See rules.pug or faq.pug as an example. These will get added to the root of your site just like /rules.html and /faq.html.
+
+Pug template language reference: https://pugjs.org/api/getting-started.html
+
+To build all custompages, run `gulp custompages`.
+
+**Custom CSS & themes**
+
+All css files in gulp/res/css/ will get combined and minified into the main style.css for the site. If you want to edit the css, it is advised to not edit gulp/res/css/style.css directly as this can change between updates. Instead, add a "custom.css" (example name only) to the same folder with what ever css you want. This will be included after style.css so rules will take precedence.
+
+Theme files in gulp/res/css/themes/ can also be edited, if desired. You can also create new themes copying their general format of including variables inside `:root{}`.
+
+To build all css files, run `gulp css`. For some situations, such as adding or removing themes, you should run `gulp` and `pm2 restart all` because scripts and templates containing the theme selector dropdowns and server-side checks for valid theme names will need to be updated.
+
+#### Handy nginx stuff
+
+For detecting and automatically updating Tor exit node lists, see [tools/update_tor_exits.sh](tools/update_tor_exits.sh)
+
+For updating the GeoIP database for nginx, see [tools/update_geoip.sh](tools/update_geoip.sh)

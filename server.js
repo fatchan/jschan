@@ -12,12 +12,12 @@ const config = require(__dirname+'/config.js')
 	, cookieParser = require('cookie-parser')
 	, { port, cookieSecret, debugLogs, google, hcaptcha } = require(__dirname+'/configs/secrets.js')
 	, Mongo = require(__dirname+'/db/db.js')
-	, Socketio = require(__dirname+'/socketio.js')
 	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
 	, commit = require(__dirname+'/helpers/commit.js')
 	, { version } = require(__dirname+'/package.json')
 	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
-	, CachePugTemplates = require('cache-pug-templates');
+	, CachePugTemplates = require('cache-pug-templates')
+	, Permissions = require(__dirname+'/helpers/permissions.js');
 
 (async () => {
 
@@ -35,6 +35,10 @@ const config = require(__dirname+'/config.js')
 	debugLogs && console.log('CONNECTING TO REDIS');
 	const redis = require(__dirname+'/redis.js');
 
+	// load roles early
+	const roleManager = require(__dirname+'/helpers/rolemanager.js');
+	await roleManager.load();
+
 	// disable useless express header
 	app.disable('x-powered-by');
 	//query strings
@@ -48,6 +52,7 @@ const config = require(__dirname+'/config.js')
 	const sessionMiddleware = require(__dirname+'/helpers/usesession.js');
 
 	// connect socketio
+	const Socketio = require(__dirname+'/socketio.js');
 	debugLogs && console.log('STARTING WEBSOCKET');
 	Socketio.connect(server, sessionMiddleware);
 
@@ -65,19 +70,15 @@ const config = require(__dirname+'/config.js')
 
 	const loadAppLocals = () => {
 		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions, archiveLinksURL,
-			enableUserBoardCreation, enableUserAccountCreation, reverseImageLinksURL,
-			debugLogs, ipHashPermLevel, meta, enableWebring, globalAnnouncement } = config.get;
+			reverseImageLinksURL, debugLogs, meta, enableWebring, globalAnnouncement } = config.get;
 		//cache loaded templates
 		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
 		//default settings
-		app.locals.authLevelNames = ['Admin', 'Global Staff', 'Global Board Owner', 'Global Board Mod', 'Regular User'];
-		app.locals.enableUserAccountCreation = enableUserAccountCreation;
-		app.locals.enableUserBoardCreation = enableUserBoardCreation;
+		app.locals.Permissions = Permissions;
 		app.locals.defaultTheme = boardDefaults.theme;
 		app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 		app.locals.globalLimits = globalLimits;
-		app.locals.ipHashPermLevel = ipHashPermLevel;
 		app.locals.archiveLinksURL = archiveLinksURL;
 		app.locals.reverseImageLinksURL = reverseImageLinksURL;
 		app.locals.enableWebring = enableWebring;

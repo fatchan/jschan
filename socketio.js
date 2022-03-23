@@ -1,9 +1,12 @@
 'use strict';
 
 const { redis: redisConfig } = require(__dirname+'/configs/secrets.js')
-	, hasPerms = require(__dirname+'/helpers/checks/hasperms.js')
+	, { Boards } = require(__dirname+'/db/')
 	, config = require(__dirname+'/config.js')
-	, roomRegex = /^(?<roomBoard>[a-z0-9]+)-(?<roomName>[a-z0-9-]+)$/i;
+	, roomRegex = /^(?<roomBoard>[a-z0-9]+)-(?<roomName>[a-z0-9-]+)$/i
+	, calcPerms = require(__dirname+'/helpers/checks/calcperms.js')
+	, Permissions = require(__dirname+'/helpers/permissions.js')
+	, Permission = require(__dirname+'/helpers/permission.js');
 
 module.exports = {
 
@@ -31,42 +34,49 @@ module.exports = {
 					cb();
 				}
 			});
-			socket.on('room', room => {
+			socket.on('room', async (room) => {
+
+				//check if a valid formatted room name
 				const roomMatch = room.match(roomRegex);
 				if (roomMatch && roomMatch.groups) {
 					const { roomBoard, roomName } = roomMatch.groups;
-					const { user } = socket.request.locals;
-					let requiredAuth = 4; //default level is 4, anyone cos of public rooms
-					let authLevel = user ? user.authLevel : 4;
-					/* todo: maybe this could be a bit more flexible to support
-						other *-hashed/raw pages, but its good for now */
+
+					let hasPermission = true;
+
+					//permission to manage/globalmanage based on MANAGE_GLOBAL/BOARD permissions
 					if (room === 'globalmanage-recent-raw'
 						|| room === 'globalmanage-recent-hashed') {
-						//if its globalmanage, level 1 required
-						requiredAuth = 1;
-					} else if (roomName === 'manage-recent-hashed'
-						|| roomName === 'manage-recent-raw') {
-						requiredAuth = 3; //board mod minimum
-						if (user && authLevel === 4) {
-							if (user.ownedBoards.includes(roomBoard)) {
-								authLevel = 2; //user is BO
-							} else if (user.modBoards.includes(roomBoard)) {
-								authLevel = 3; //user is mod
-							}
+						socket.request.locals.board = null;
+						socket.request.locals.permissions = calcPerms(socket.request, socket.request);
+						hasPermission = socket.request.locals.permissions.get(Permissions.MANAGE_GLOBAL_GENERAL);
+					} else {
+						/* unlike normal endpoints, we cant get board from params and compare staffBoards and ownerBoards
+						to roomBoard, so we need to put this here, in the room event and use the internal calcPerms after,
+						instead of using a io.use( calcPermsMiddleware() after sessionRefresh() */
+						socket.request.locals.board = await Boards.findOne(roomBoard);
+						socket.request.locals.permissions = calcPerms(socket.request, socket.request);
+						if (roomName === 'manage-recent-hashed'
+							|| roomName === 'manage-recent-raw') {
+							hasPermission = socket.request.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL);
 						}
 					}
+
+					//if raw, must have room permission AND raw ip permission
 					if (room.endsWith('-raw')) {
-						//if its a -raw room, prioritise ipHashPermLevel
-						requiredAuth = Math.min(requiredAuth, config.get.ipHashPermLevel);
+						hasPermission = hasPermission && socket.request.locals.permissions.get(Permissions.VIEW_RAW_IP);
 					}
-					if (authLevel <= requiredAuth) {
-						//user has perms to join
+
+					//user has perms to join
+					if (hasPermission === true) {
 						socket.join(room);
 						return socket.send('joined');
 					}
+
 				}
-				//otherwise just disconnect them
+
+				//invalid room or no perms
 				socket.disconnect(true);
+
 			});
 		});
 	},

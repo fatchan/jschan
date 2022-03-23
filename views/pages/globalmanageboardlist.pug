@@ -4,7 +4,7 @@ include ../mixins/globalmanagenav.pug
 include ../mixins/boardtable.pug
 
 block head
-	title Manage
+	title Boards
 
 block content
 	h1.board-title Global Management
@@ -46,7 +46,7 @@ block content
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
 		h4.text-center.mv-10 Board List:
-		+boardtable(true, true)
+		+boardtable(true, true, permissions.get(Permissions.GLOBAL_MANAGE_ACCOUNTS))
 			each board in localBoards
 				tr
 					td 
@@ -57,10 +57,15 @@ block content
 							if board.settings.unlistedLocal === true
 								span.help(title='Unlisted') &#x1F441;&#xFE0F;
 								|  
-							if !board.owner && board.settings.moderators.length === 0
+							if !board.owner
 								span.help(title='Abandoned') &#x1F3DA;&#xFE0F;
 								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
+					if permissions.get(Permissions.GLOBAL_MANAGE_ACCOUNTS)
+						if board.owner
+							td: a(href=`/globalmanage/accounts.html?username=${board.owner}`) #{board.owner}
+						else
+							td -
 					td #{board.settings.description}
 					td #{board.pph}
 					td #{board.ppd}

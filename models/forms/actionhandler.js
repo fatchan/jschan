@@ -17,6 +17,7 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, getAffectedBoards = require(__dirname+'/../../helpers/affectedboards.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, Permissions = require(__dirname+'/../../helpers/permissions.js')
 	, buildQueue = require(__dirname+'/../../queue.js')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/secrets.js')
 	, threadRegex = /\/[a-z0-9]+\/(?:manage\/)?thread\/(\d+)\.html/i
@@ -34,7 +35,8 @@ module.exports = async (req, res, next) => {
 	}
 
 	//if user isnt staff, and they put an action that requires password, e.g. delete/spoiler, then filter posts to only matching password
-	if (res.locals.permLevel >= 4 && res.locals.actions.numPasswords > 0) {
+	const isStaffOrGlobal = res.locals.permissions.hasAny(Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_BOARD_GENERAL);
+	if (!isStaffOrGlobal && res.locals.actions.numPasswords > 0) {
 		let passwordPosts = [];
 		if (req.body.postpassword && req.body.postpassword.length > 0) {
 			//hash their input and make it a buffer
@@ -96,8 +98,8 @@ module.exports = async (req, res, next) => {
 		messages.push(message);
 	}
 	if (deleting) {
-		if (res.locals.permLevel >= 4) {
-			//delete protection. this could only be single board actions obvously with permLevel >=4
+		if (!isStaffOrGlobal) {
+			//OP delete protection. for old or many replied OPs
 			const { deleteProtectionAge, deleteProtectionCount } = res.locals.board.settings;
 			if (deleteProtectionAge > 0 || deleteProtectionCount > 0) {
 				const protectedThread = res.locals.posts.some(p => {
@@ -118,13 +120,13 @@ module.exports = async (req, res, next) => {
 		}
 		const postsBefore = res.locals.posts.length;
 		if (req.body.delete_ip_board || req.body.delete_ip_global || req.body.delete_ip_thread) {
-			const deletePostIps = res.locals.posts.map(x => x.ip.single);
+			const deletePostIps = res.locals.posts.map(x => x.ip.cloak);
 			const deletePostMongoIds = res.locals.posts.map(x => x._id)
 			let query = {
 				'_id': {
 					'$nin': deletePostMongoIds
 				},
-				'ip.single': {
+				'ip.cloak': {
 					'$in': deletePostIps
 				}
 			};
@@ -296,7 +298,8 @@ module.exports = async (req, res, next) => {
 		const logDate = new Date(); //all events current date
 		const message = req.body.log_message || null;
 		let logUser;
-		if (res.locals.permLevel < 4) { //if staff
+		//could even do if (req.session.user) {...}, but might cause cross-board log username contamination
+		if (isStaffOrGlobal) {
 			logUser = req.session.user;
 		} else {
 			logUser = 'Unregistered User';
@@ -314,7 +317,7 @@ module.exports = async (req, res, next) => {
 					message: message,
 					user: logUser,
 					ip: {
-						single: res.locals.ip.single,
+						cloak: res.locals.ip.cloak,
 						raw: res.locals.ip.raw
 					}
 				};

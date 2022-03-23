@@ -23,6 +23,7 @@ const path = require('path')
 	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
 	, fixGifs = require(__dirname+'/../../helpers/files/fixgifs.js')
 	, timeUtils = require(__dirname+'/../../helpers/timeutils.js')
+	, Permissions = require(__dirname+'/../../helpers/permissions.js')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, spamCheck = require(__dirname+'/../../helpers/checks/spamcheck.js')
 	, config = require(__dirname+'/../../config.js')
@@ -34,7 +35,7 @@ const path = require('path')
 module.exports = async (req, res, next) => {
 
 	const { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		strictFiltering, animatedGifThumbnails, audioThumbnails, ipHashPermLevel } = config.get;
+		strictFiltering, animatedGifThumbnails, audioThumbnails, dontStoreRawIps } = config.get;
 
 	//spam/flood check
 	const flood = await spamCheck(req, res);
@@ -51,12 +52,13 @@ module.exports = async (req, res, next) => {
 	let redirect = `/${req.params.board}/`
 	let salt = null;
 	let thread = null;
+	const isStaffOrGlobal = res.locals.permissions.hasAny(Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_BOARD_GENERAL);
 	const { filterBanDuration, filterMode, filters, blockedCountries, threadLimit, ids, userPostSpoiler,
 		lockReset, captchaReset, pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
 		sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 		captchaMode, lockMode, allowedFileTypes, customFlags, geoFlags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
-	if (res.locals.permLevel >= 4
-		&& res.locals.country
+	if (!isStaffOrGlobal
+		&& res.locals.country //permission for this or nah?
 		&& blockedCountries.includes(res.locals.country.code)) {
 		await deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 403, 'message', {
@@ -66,7 +68,7 @@ module.exports = async (req, res, next) => {
 		});
 	}
 	if ((lockMode === 2 || (lockMode === 1 && !req.body.thread)) //if board lock, or thread lock and its a new thread
-		&& res.locals.permLevel >= 4) { //and not staff
+		&& !isStaffOrGlobal) { //and not staff
 		await deleteTempFiles(req).catch(e => console.error);
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
@@ -86,7 +88,7 @@ module.exports = async (req, res, next) => {
 		}
 		salt = thread.salt;
 		redirect += `thread/${req.body.thread}.html`
-		if (thread.locked && res.locals.permLevel >= 4) {
+		if (thread.locked && !isStaffOrGlobal) {
 			await deleteTempFiles(req).catch(e => console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
@@ -104,7 +106,7 @@ module.exports = async (req, res, next) => {
 		}
 	}
 	//filters
-	if (res.locals.permLevel > 1) { //global staff bypass filters
+	if (!res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
 		const { filters: globalFilters, filterMode: globalFilterMode,
 			filterBanDuration: globalFilterBanDuration } = config.get;
 		let hitGlobalFilter = false
@@ -123,8 +125,9 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		if (globalFilters && globalFilters.length > 0 && globalFilterMode > 0) {
 			hitGlobalFilter = globalFilters.some(filter => { return allContents.includes(filter.toLowerCase()) });
 		}
-		//board-specific filters (doesnt use strict filtering)
-		if (!hitGlobalFilter && res.locals.permLevel >= 4 && filterMode > 0 && filters && filters.length > 0) {
+		//board-specific filters
+		if (!hitGlobalFilter && !res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL)
+			&& filterMode > 0 && filters && filters.length > 0) {
 			const localFilterContents = res.locals.board.settings.strictFiltering ? allContents : concatContents;
 			hitLocalFilter = filters.some(filter => { return localFilterContents.includes(filter.toLowerCase()) });
 		}
@@ -144,7 +147,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
 				const ban = {
 					'ip': {
-						'single': res.locals.ip.single,
+						'cloak': res.locals.ip.cloak,
 						'raw': res.locals.ip.raw,
 					},
 					'type': 'single',
@@ -165,7 +168,6 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				});
 			}
 		}
-
 	}
 
 	//for r9k messages. usually i wouldnt process these if its not enabled e.g. flags and IDs but in this case I think its necessary
@@ -173,7 +175,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	if (req.body.message && req.body.message.length > 0) {
 		const noQuoteMessage = req.body.message.replace(/>>\d+/g, '').replace(/>>>\/\w+(\/\d*)?/gm, '').trim();
 		messageHash = createHash('sha256').update(noQuoteMessage).digest('base64');
-		if (res.locals.permLevel >= 4 && (req.body.thread && messageR9KMode === 1) || messageR9KMode === 2) {
+		if ((req.body.thread && messageR9KMode === 1) || messageR9KMode === 2) {
 			const postWithExistingMessage = await Posts.checkExistingMessage(res.locals.board._id, (messageR9KMode === 2 ? null : req.body.thread), messageHash);
 			if (postWithExistingMessage != null) {
 				await deleteTempFiles(req).catch(e => console.error);
@@ -191,7 +193,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	if (res.locals.numFiles > 0) {
 
 		//unique files check
-		if (res.locals.permLevel >= 4 && (req.body.thread && fileR9KMode === 1) || fileR9KMode === 2) {
+		if ((req.body.thread && fileR9KMode === 1) || fileR9KMode === 2) {
 			const filesHashes = req.files.file.map(f => f.sha256);
 			const postWithExistingFiles = await Posts.checkExistingFiles(res.locals.board._id, (fileR9KMode === 2 ? null : req.body.thread), filesHashes);
 			if (postWithExistingFiles != null) {
@@ -242,7 +244,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 			//get metadata
 			let processedFile = {
 				filename: file.filename,
-				spoiler: (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler && req.body.spoiler.includes(file.sha256),
+				spoiler: (!isStaffOrGlobal || userPostSpoiler) && req.body.spoiler && req.body.spoiler.includes(file.sha256),
 				hash: file.sha256,
 				originalFilename: req.body.strip_filename && req.body.strip_filename.includes(file.sha256) ? file.filename : file.name,
 				mimetype: file.mimetype,
@@ -418,19 +420,19 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	}
 
 	//spoiler files only if board settings allow
-	const spoiler = (res.locals.permLevel >= 4 || userPostSpoiler) && req.body.spoiler_all ? true : false;
+	const spoiler = (!isStaffOrGlobal || userPostSpoiler) && req.body.spoiler_all ? true : false;
 
 	//forceanon and sageonlyemail only allow sage email
-	let email = (res.locals.permLevel < 4 || (!forceAnon && !sageOnlyEmail) || req.body.email === 'sage') ? req.body.email : null;
+	let email = (!isStaffOrGlobal || (!forceAnon && !sageOnlyEmail) || req.body.email === 'sage') ? req.body.email : null;
 	//disablereplysubject
-	let subject = (res.locals.permLevel >= 4 && req.body.thread && disableReplySubject) ? null : req.body.subject;
+	let subject = (!isStaffOrGlobal && req.body.thread && disableReplySubject) ? null : req.body.subject;
 
 	//get name, trip and cap
-	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel,
-		res.locals.board.settings, res.locals.board.owner, res.locals.user ? res.locals.user.username : null);
+	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permissions,
+		res.locals.board.settings, res.locals.board.owner, res.locals.board.staff, res.locals.user ? res.locals.user.username : null);
 	//get message, quotes and crossquote array
 	const nomarkup = prepareMarkdown(req.body.message, true);
-	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread, res.locals.permLevel);
+	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread, res.locals.permissions);
 
 	//build post data for db. for some reason all the property names are lower case :^)
 	const now = Date.now()
@@ -609,18 +611,17 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		'cyclic': data.cyclic,
 	}
 	if (data.thread) {
-		//dont emit thread to this socket, because the room onyl exists when the thread is open
+		//dont emit thread to this socket, because the room only exists when the thread is open
 		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
 	}
-	const { raw, single } = data.ip;
+	const { raw, cloak } = data.ip;
 	//but emit it to manage pages because they need to get all posts through socket including thread
-	Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw: null } });
-	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-hashed`, 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw: null } });
-	if (ipHashPermLevel > -1) {
-		//small optimisation for boards where this is manually set to -1 for privacy, no need to emit to rooms that cant be accessed
-		//even if they are empty it will create extra communication noise in redis, socket adapter, etc.
-		Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw } });
-		Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { single: single.slice(-10), raw } });
+	Socketio.emitRoom('globalmanage-recent-hashed', 'newPost', { ...projectedPost, ip: { cloak, raw: null } });
+	Socketio.emitRoom(`${res.locals.board._id}-manage-recent-hashed`, 'newPost', { ...projectedPost, ip: { cloak, raw: null } });
+	if (!dontStoreRawIps) {
+        //no need to emit to these rooms if raw IPs are not stored
+		Socketio.emitRoom('globalmanage-recent-raw', 'newPost', { ...projectedPost, ip: { cloak, raw } });
+		Socketio.emitRoom(`${res.locals.board._id}-manage-recent-raw`, 'newPost', { ...projectedPost, ip: { cloak, raw } });
 	}
 
 	//now add other pages to be built in background

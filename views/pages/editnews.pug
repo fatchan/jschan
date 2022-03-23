@@ -1,10 +1,15 @@
 extends ../layout.pug
+include ../mixins/globalmanagenav.pug
 
 block head
 	title Edit News
 
 block content
-	h1.board-title Edit News
+	h1.board-title Global Management
+	br
+	+globalmanagenav('news', true)
+	hr(size=1)
+	h4.no-m-p Edit newspost:
 	include ../includes/stickynav.pug
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/global/editnews' method='POST')

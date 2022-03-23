@@ -3,7 +3,7 @@ include ../mixins/ban.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Manage
+	title Logs
 
 block content
 	h1.board-title Global Management
@@ -52,7 +52,7 @@ block content
 									|   
 									a(href=`?username=${log.user}`) [+]
 								td
-									- const logIp = permLevel > ipHashPermLevel ? log.ip.single.slice(-10) : log.ip.raw;
+									- const logIp = viewRawIp === true ? log.ip.raw : log.ip.cloak;
 									a(href=`recent.html?ip=${encodeURIComponent(logIp)}`) #{logIp}
 									|   
 									a(href=`?ip=${encodeURIComponent(logIp)}`) [+]

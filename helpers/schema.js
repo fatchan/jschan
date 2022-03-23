@@ -49,19 +49,22 @@ module.exports = {
 
 	//check if value is included in a set or array, usually for blacklist or whitelist
 	inArrayBody: (data, list) => {
-		return data && list[list.constructor.name === 'Array' ? 'includes' : 'has'](data);
+		return data !== null && list[list.constructor.name === 'Array' ? 'includes' : 'has'](data);
 	},
 
 	//the opposite kinda, check if the data includes any of the values in the array
 	arrayInBody: (filters, data) => {
-		return data && filters.some(filter => data.includes(filter));
+		return data !== null && filters.some(filter => data.includes(filter));
 	},
 
 	//check the actual schema
-	checkSchema: async (schema, permLevel) => {
+	checkSchema: async (schema, permissions) => {
 		const errors = [];
-		//filter check if my perm level is lower than the requirement. e.g. bypass filters checks
-		const filteredSchema = schema.filter(c => c.permLevel == null || c.permLevel < permLevel);
+		//filter to checks with no permission or ones we dont have permission to skip.
+		let filteredSchema = schema;
+		if (permissions) {
+			filteredSchema = filteredSchema.filter(c => c.permission == null || !permissions.get(c.permission));
+		}
 		for (let check of filteredSchema) {
 			const result = await (typeof check.result === 'function' ? check.result() : check.result);
 			const expected = (check.expected || false);

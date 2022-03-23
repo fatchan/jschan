@@ -1,7 +1,8 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../db/')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
+	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, roleManager = require(__dirname+'/../../helpers/rolemanager.js');
 
 module.exports = async (req, res, next) => {
 
@@ -21,7 +22,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	// add account to db. password is hashed in db model func for easier tests
-	await Accounts.insertOne(original, username, password, 4);
+	await Accounts.insertOne(original, username, password, roleManager.roles.ANON);
 
 	return res.redirect('/login.html');
 

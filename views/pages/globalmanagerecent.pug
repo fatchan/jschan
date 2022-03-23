@@ -3,7 +3,7 @@ include ../mixins/globalmanagenav.pug
 include ../mixins/post.pug
 
 block head
-	title Manage
+	title Recent Posts
 
 block content
 	h1.board-title Global Management
@@ -11,7 +11,7 @@ block content
 	.wrapbar
 		+globalmanagenav('recent')
 		if page === 1 && !ip
-			.jsonly#livetext(data-perm-level=permLevel data-room=`globalmanage-recent-${permLevel > ipHashPermLevel ? 'hashed' : 'raw'}`)
+			.jsonly#livetext(data-view-raw-ip=(viewRawIp?'true':'false') data-room=`globalmanage-recent-${viewRawIp === true ? 'raw' : 'hashed'}`)
 				.dot#livecolor
 				|  Connecting... 
 				input.postform-style.ml-5.di#updatepostsbutton(type='button' value='Update')

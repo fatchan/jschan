@@ -9,6 +9,7 @@ module.exports = async (req, res, next) => {
 	.set('Cache-Control', 'private, max-age=5')
 	.render('managesettings', {
 		csrf: req.csrfToken(),
+		permissions: res.locals.permissions,
 		countryNamesMap,
 		countryCodes,
 		themes,

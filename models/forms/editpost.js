@@ -19,13 +19,14 @@ todo: handle some more situations
 - last activity date
 - correct bump date when editing thread or last post in a thread
 - allow for regular users (OP ONLY) and option for staff to disable in board settings
+- different permission levels for historical posts when remarked up (or not, fuck that)
 */
 
 	const { previewReplies, strictFiltering } = config.get;
 	const { board, post } = res.locals;
 
 	//filters
-	if (res.locals.permLevel > 1) { //global staff bypass filters for edit
+	if (res.locals.permissions.get(BYPASS_FILTERS)) { //global staff bypass filters for edit
 		const globalSettings = config.get;
 		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
 			let hitGlobalFilter = false
@@ -51,7 +52,7 @@ todo: handle some more situations
 					const banExpiry = new Date(globalSettings.filterBanDuration + banDate.getTime());
 					const ban = {
 						'ip': {
-							'single': res.locals.ip.single,
+							'cloak': res.locals.ip.cloak,
 							'raw': res.locals.ip.raw,
 						},
 						'type': 'single',
@@ -82,11 +83,11 @@ todo: handle some more situations
 		messageHash = createHash('sha256').update(noQuoteMessage).digest('base64');
 	}
 	//new name, trip and cap
-	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permLevel,
-		board.settings, board.owner, res.locals.user ? res.locals.user.username : null);
+	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permissions,
+		board.settings, board.owner, board.staff, res.locals.user ? res.locals.user.username : null);
 	//new message and quotes
 	const nomarkup = prepareMarkdown(req.body.message, false);
-	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread, res.locals.permLevel);
+	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread, res.locals.permissions);
 	//todo: email and subject (probably dont need any transformation since staff bypass limits on forceanon, and it doesnt have to account for sage/etc
 
 	//intersection/difference of quotes sets for linking and unlinking
@@ -163,7 +164,7 @@ todo: handle some more situations
 		message: req.body.log_message || null,
 		user: req.session.user,
 		ip: {
-			single: res.locals.ip.single,
+			cloak: res.locals.ip.cloak,
 			raw: res.locals.ip.raw,
 		}
 	});

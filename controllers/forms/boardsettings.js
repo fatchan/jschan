@@ -1,7 +1,7 @@
-
 'use strict';
 
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
+	, Permissions = require(__dirname+'/../../helpers/permissions.js')
 	, { themes, codeThemes } = require(__dirname+'/../../helpers/themes.js')
 	, { Ratelimits } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
@@ -33,7 +33,7 @@ module.exports = {
 			{ result: lengthBody(req.body.tags, 0, 2000), expected: false, error: 'Tags length must be 2000 characters or less' },
 			{ result: lengthBody(req.body.filters, 0, 20000), expected: false, error: 'Filters length must be 20000 characters or less' },
 			{ result: lengthBody(req.body.custom_css, 0, globalLimits.customCss.max), expected: false, error: `Custom CSS must be ${globalLimits.customCss.max} characters or less` },
-			{ result: arrayInBody(globalLimits.customCss.filters, req.body.custom_css), permLevel: 1, expected: false, error: `Custom CSS strict mode is enabled and does not allow the following: "${globalLimits.customCss.filters.join('", "')}"` },
+			{ result: arrayInBody(globalLimits.customCss.filters, req.body.custom_css), permission: Permissions.ROOT, expected: false, error: `Custom CSS strict mode is enabled and does not allow the following: "${globalLimits.customCss.filters.join('", "')}"` },
 			{ result: lengthBody(req.body.moderators, 0, 500), expected: false, error: 'Moderators length must be 500 characters orless' },
 			{ result: lengthBody(req.body.name, 1, globalLimits.fieldLength.boardname), expected: false, error: `Board name must be 1-${globalLimits.fieldLength.boardname} characters` },
 			{ result: lengthBody(req.body.default_name, 0, 50), expected: false, error: 'Anon name must be 50 characters or less' },
@@ -73,7 +73,7 @@ module.exports = {
 			{ result: numberBody(req.body.delete_protection_count, 0), expected: true, error: 'Invalid OP thread reply count delete protection' },
 			{ result: inArrayBody(req.body.theme, themes), expected: true, error: 'Invalid theme' },
 			{ result: inArrayBody(req.body.code_theme, codeThemes), expected: true, error: 'Invalid code theme' },
-		], res.locals.permLevel);
+		], res.locals.permissions);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
@@ -83,9 +83,9 @@ module.exports = {
 			});
 		}
 
-		if (res.locals.permLevel > 1) { //if not global staff or above
+		if (!res.locals.permissions.get(Permissions.BYPASS_RATELIMITS)) {
 			const ratelimitBoard = await Ratelimits.incrmentQuota(req.params.board, 'settings', rateLimitCost.boardSettings); //2 changes a minute
-			const ratelimitIp = res.locals.anonymizer ? 0 : (await Ratelimits.incrmentQuota(res.locals.ip.single, 'settings', rateLimitCost.boardSettings));
+			const ratelimitIp = res.locals.anonymizer ? 0 : (await Ratelimits.incrmentQuota(res.locals.ip.cloak, 'settings', rateLimitCost.boardSettings));
 			if (ratelimitBoard > 100 || ratelimitIp > 100) {
 				return dynamicResponse(req, res, 429, 'message', {
 					'title': 'Ratelimited',

@@ -34,7 +34,6 @@ block content
 					b Misc.
 					ul.mv-0
 						li: a(href='#moderation') How does moderation work?
-						li: a(href='#staff-and-permissions') How do staff, users and permissions work?
 						li: a(href='#antispam') What do the board settings for antispam do?
 						li: a(href='#archive-reverse-url-format') What is the archive/reverse image search link url format?
 	.table-container.flex-center.mv-5
@@ -333,15 +332,6 @@ block content
 				th: a(href='#moderation') How does moderation work?
 			tr
 				td.post-message
-					b General
-					p
-						| Moderation is very simple. Moderation permissions are different between regular users, board staff (board owner or moderator) and globals (global staff or admin). 
-						| By default, regular users can delete, spoiler or remove the files from their own posts, provided a matching post password is supplied. They can also report or global report posts. 
-						| Board staff have near full power over posts on their board including removing posts, stickying, spoilering, etc. even for other users posts without the need for a password. They also have access to board specific management page.
-						| Global staff have full power over all posts on all boards, can access the board specific management page for any board and additionally have access to the global management page.
-						| More details on the specifics of permission levels is available 
-						a(href='#staff-and-permissions') here
-						| .
 					b Local vs. Global reports
 					p
 						| There exists the concept of "local" and "global" reports. Reporting a post locally will show the post along with reports on the report page for that particular board, and the reports 
@@ -358,32 +348,18 @@ block content
 						| Some moderation interfaces, for example the ban duration when moderating posts, or the ban duration for post filtering use a shorthand for times/length. This format supports years, months, weeks, days, hours, minutes and seconds.
 						| An input of "3mo" would mean 3 months and "1y2mo3w4d5h6m7s" would mean 1 year, 2 months, 3 weeks, 4 days, 5 hours, 6 minutes and 7 seconds. Units of time should be in descending order, so "2w1mo" is invalid.
 						| However you may use "6w" for example to input 6 weeks, and are not required to use "1mo2w".
-	.table-container.flex-center.mv-5
-		.anchor#staff-and-permissions
+		.anchor#make-a-board
 		table
 			tr
-				th: a(href='#staff-and-permissions') How do staff, users and permissions work?
+				th: a(href='#make-a-board') How do I make my own board?
 			tr
 				td
 					p
-						| There are 5 levels of permissions on the site with 0 being the highest level of privilege and 4 the lowest. In this list "Regular user" refers to somebody who is either not logged in or is not owner/mod of the board. For example if a user creates their own board, they do not have the "Board owner" permissions on other boards. Each board can have one owner and multiple moderators. Ownership can be transferred.
-						ol(start='0')
-							li Admin: All permissions
-							li Global staff: All permissions on all boards excluding account management and news updates
-							li Board owner: Permissions to board-specific settings, reports, banners and bans and some post actions
-							li Board moderator: Permissions to manage board-specific reports, bans and some post actions
-							li Regular user: Permissions to report/delete/spoiler posts
-						| Post actions refers to reporting, deleting, stickying, etc. More details on these permissions:
-						ol(start='0')
-							li Admin: All actions
-							li Global staff: All below, delete files, delete-by-ip-global and global ban
-							li Board owner: Same as board moderator
-							li Board moderator: All below, move/merge, ban, delete-by-ip, sticky/sage/lock/cycle
-							li Regular user: Reports, and post spoiler/delete/unlink if the board has them enabled
-						| Administrators can set account types for users on the global management accounts page. Normally only Admin (level 0), Global Staff (level 1) and Regular User (level 4) are assigned here.
-						| Level 2 or 3 permission is handled internally for users on boards they own or moderate, while their account remains listed as "Regular User". However admins can manually assign Global Board Owner (level 2) and Global Board Mod (level 3)
-						| to grant an account board owner or moderation permissions on all boards, but without access to the global moderation interfaces. If assigning Global Board Owner (level 2), they will have access to the board settings
-						| and the ability to reassign board owners.
+						a(href='/register.html') Register
+						|  an account, then 
+						a(href='/create.html') create a board
+						|. Please avoid making excessive amounts of boards, duplicate or boards similar to an existing one unless you expect that many users will migrate to the new board for whatever reason e.g. tyrannical moderation.
+>>>>>>> master
 	.table-container.flex-center.mv-5
 		.anchor#antispam
 		table

@@ -4,14 +4,14 @@ include ../mixins/managenav.pug
 include ../mixins/custompage.pug
 
 block head
-	title /#{board._id}/ - Manage
+	title /#{board._id}/ - Custom Pages
 
 block content
 	+boardheader('Custom Pages')
 	br
 	+managenav('custompages')
 	hr(size=1)
-	h4.no-m-p Add Custom Page:
+	h4.mv-5 Add Custom Page:
 	.form-wrapper.flexleft
 		form.form-post(action=`/forms/board/${board._id}/addcustompages`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)

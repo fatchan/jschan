@@ -1,6 +1,9 @@
 'use strict';
 
 const config = require(__dirname+'/config.js')
+	, { Binary } = require('mongodb')
+	, Permission = require(__dirname+'/helpers/permission.js')
+	, Permissions = require(__dirname+'/helpers/permissions.js')
 	, { hcaptcha, google } = require(__dirname+'/configs/secrets.js')
 	, gulp = require('gulp')
 	, fs = require('fs-extra')
@@ -151,7 +154,7 @@ async function wipe() {
 	const db = Mongo.db;
 
 	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
-		'modlog','news', 'posts', 'poststats', 'ratelimit', 'bypass'];
+		'modlog','news', 'posts', 'poststats', 'ratelimit', 'bypass', 'roles'];
 	for (const name of collectionNames) {
 		//drop collection so gulp reset can be run again. ignores error of dropping non existing collection first time
 		await db.dropCollection(name).catch(e => {});
@@ -159,7 +162,7 @@ async function wipe() {
 	}
 
 	const { Boards, Posts, Captchas, Ratelimits, News, CustomPages,
-		Accounts, Files, Stats, Modlogs, Bans, Bypass } = require(__dirname+'/db/');
+		Accounts, Files, Stats, Modlogs, Bans, Bypass, Roles } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
@@ -167,6 +170,7 @@ async function wipe() {
 		Captchas.deleteAll(),
 		Ratelimits.deleteAll(),
 		Accounts.deleteAll(),
+		Roles.deleteAll(),
 		Posts.deleteAll(),
 		Boards.deleteAll(),
 		Bans.deleteAll(),
@@ -183,6 +187,7 @@ async function wipe() {
 	await Boards.db.createIndex({tags: 1})
 	await Boards.db.createIndex({uri: 1})
 	await Boards.db.createIndex({lastPostTimestamp:1})
+	await Roles.db.dropIndexes()
 	await Bans.db.dropIndexes()
 	await Captchas.db.dropIndexes()
 	await Ratelimits.db.dropIndexes()
@@ -190,9 +195,10 @@ async function wipe() {
 	await Modlogs.db.dropIndexes()
 	await CustomPages.db.dropIndexes()
 	await CustomPages.db.createIndex({ 'board': 1, 'page': 1 }, { unique: true })
+	await Roles.db.createIndex({ 'permissions': 1 }, { unique: true })
 	await Modlogs.db.createIndex({ 'board': 1 })
 	await Files.db.createIndex({ 'count': 1 })
-	await Bans.db.createIndex({ 'ip.single': 1 , 'board': 1 })
+	await Bans.db.createIndex({ 'ip.cloak': 1 , 'board': 1 })
 	await Bans.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 }) //custom expiry, i.e. it will expire when current date > than this date
 	await Bypass.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 })
 	await Captchas.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 300 }) //captchas valid for 5 minutes
@@ -202,8 +208,47 @@ async function wipe() {
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } })
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } })
 
+	const ANON = new Permission()
+	ANON.setAll([
+		Permissions.USE_MARKDOWN_PINKTEXT, Permissions.USE_MARKDOWN_GREENTEXT, Permissions.USE_MARKDOWN_BOLD, 
+		Permissions.USE_MARKDOWN_UNDERLINE, Permissions.USE_MARKDOWN_STRIKETHROUGH, Permissions.USE_MARKDOWN_TITLE, 
+		Permissions.USE_MARKDOWN_ITALIC, Permissions.USE_MARKDOWN_SPOILER, Permissions.USE_MARKDOWN_MONO, 
+		Permissions.USE_MARKDOWN_CODE, Permissions.USE_MARKDOWN_DETECTED, Permissions.USE_MARKDOWN_LINK, 
+		Permissions.USE_MARKDOWN_DICE, Permissions.USE_MARKDOWN_FORTUNE, Permissions.CREATE_BOARD, 
+		Permissions.CREATE_ACCOUNT
+	]);
+	const BOARD_STAFF = new Permission(ANON.base64)
+	BOARD_STAFF.setAll([
+		Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS, 
+	]);
+	const BOARD_OWNER = new Permission(BOARD_STAFF.base64)
+	BOARD_OWNER.setAll([
+		Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF, Permissions.MANAGE_BOARD_CUSTOMISATION, 
+		Permissions.MANAGE_BOARD_SETTINGS,
+	]);
+	const GLOBAL_STAFF = new Permission(BOARD_OWNER.base64);
+	GLOBAL_STAFF.setAll([
+		Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_GLOBAL_BANS, Permissions.MANAGE_GLOBAL_LOGS, Permissions.MANAGE_GLOBAL_NEWS, 
+		Permissions.MANAGE_GLOBAL_BOARDS, Permissions.MANAGE_GLOBAL_SETTINGS, Permissions.MANAGE_BOARD_OWNER, Permissions.BYPASS_FILTERS, 
+		Permissions.BYPASS_BANS, Permissions.BYPASS_SPAMCHECK, Permissions.BYPASS_RATELIMITS,
+	]);
+	const ADMIN = new Permission(GLOBAL_STAFF.base64);
+	ADMIN.setAll([
+		Permissions.MANAGE_GLOBAL_ACCOUNTS, Permissions.MANAGE_GLOBAL_ROLES, Permissions.VIEW_RAW_IP, 
+	]);
+	const ROOT = new Permission();
+	ROOT.setAll(Permission.allPermissions);
+	await Roles.db.insertMany([
+		{ name: 'ANON', permissions: Binary(ANON.array) },
+		{ name: 'BOARD_STAFF', permissions: Binary(BOARD_STAFF.array) },
+		{ name: 'BOARD_OWNER', permissions: Binary(BOARD_OWNER.array) },
+		{ name: 'GLOBAL_STAFF', permissions: Binary(GLOBAL_STAFF.array) },
+		{ name: 'ADMIN', permissions: Binary(ADMIN.array) },
+		{ name: 'ROOT', permissions: Binary(ROOT.array) },
+	]);
+
 	const randomPassword = randomBytes(20).toString('base64')
-	await Accounts.insertOne('admin', 'admin', randomPassword, 0);
+	await Accounts.insertOne('admin', 'admin', randomPassword, ROOT);
 	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 
 	await db.collection('version').replaceOne({
@@ -252,6 +297,7 @@ async function css() {
     --attachment-img: url('/file/attachment.png');
     --spoiler-img: url('/file/spoiler.png');
     --audio-img: url('/file/audio.png');
+    --captcha-grid-size: ${`1fr `.repeat(config.get.captchaOptions.grid.size)};
     --thumbnail-size: ${config.get.thumbSize}px;
     --captcha-w: ${captchaWidth}px;
     --captcha-h: ${captchaHeight}px;
@@ -354,7 +400,7 @@ async function custompages() {
 	])
 	.pipe(gulppug({
 		locals: {
-			authLevelNames: ['Admin', 'Global Staff', 'Global Board Owner', 'Global Board Mod', 'Regular User'],
+			Permissions,
 			early404Fraction: config.get.early404Fraction,
 			early404Replies: config.get.early404Replies,
 			meta: config.get.meta,
@@ -386,7 +432,6 @@ const codeThemes = ['${codeThemes.join("', '")}'];
 const captchaType = '${config.get.captchaOptions.type}';
 const captchaGridSize = ${config.get.captchaOptions.grid.size};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
-const ipHashPermLevel = ${config.get.ipHashPermLevel};
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
 `;

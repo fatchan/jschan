@@ -22,29 +22,27 @@ const greentextRegex = /^&gt;((?!&gt;\d+|&gt;&gt;&#x2F;\w+(&#x2F;\d*)?|&gt;&gt;#
 	, config = require(__dirname+'/../../config.js')
 	, diceroll = require(__dirname+'/diceroll.js')
 	, fortune = require(__dirname+'/fortune.js')
-	, linkmatch = require(__dirname+'/linkmatch.js');
+	, linkmatch = require(__dirname+'/linkmatch.js')
+	, Permissions = require(__dirname+'/../permissions.js');
 
 let replacements = []
-	, markdownPermLevels;
 
 const updateMarkdownPerms = () => {
-	markdownPermLevels = config.get.permLevels.markdown;
 	replacements = [
-		{ permLevel: markdownPermLevels.pink, regex: pinktextRegex, cb: (permLevel, match, pinktext) => `<span class='pinktext'>&lt;${pinktext}</span>` },
-		{ permLevel: markdownPermLevels.green, regex: greentextRegex, cb: (permLevel, match, greentext) => `<span class='greentext'>&gt;${greentext}</span>` },
-		{ permLevel: markdownPermLevels.bold, regex: boldRegex, cb: (permLevel, match, bold) => `<span class='bold'>${bold}</span>` },
-		{ permLevel: markdownPermLevels.underline, regex: underlineRegex, cb: (permLevel, match, underline) => `<span class='underline'>${underline}</span>` },
-		{ permLevel: markdownPermLevels.strike, regex: strikeRegex, cb: (permLevel, match, strike) => `<span class='strike'>${strike}</span>` },
-		{ permLevel: markdownPermLevels.title, regex: titleRegex, cb: (permLevel, match, title) => `<span class='title'>${title}</span>` },
-		{ permLevel: markdownPermLevels.italic, regex: italicRegex, cb: (permLevel, match, italic) => `<span class='em'>${italic}</span>` },
-		{ permLevel: markdownPermLevels.spoiler, regex: spoilerRegex, cb: (permLevel, match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
-		{ permLevel: markdownPermLevels.mono, regex: monoRegex, cb: (permLevel, match, mono) => `<span class='mono'>${mono}</span>` },
-		{ permLevel: markdownPermLevels.detected, regex: detectedRegex, cb: (permLevel, match, detected) => `<span class='detected'>&lpar;&lpar;&lpar; ${detected} &rpar;&rpar;&rpar;</span>` },
-		{ permLevel: markdownPermLevels.link, regex: linkRegex, cb: linkmatch },
-		{ permLevel: markdownPermLevels.dice, regex: diceroll.regexMarkdown, cb: diceroll.markdown },
-		{ permLevel: markdownPermLevels.fortune, regex: fortune.regex, cb: fortune.markdown },
+		{ permission: Permissions.USE_MARKDOWN_PINKTEXT, regex: pinktextRegex, cb: (permissions, match, pinktext) => `<span class='pinktext'>&lt;${pinktext}</span>` },
+		{ permission: Permissions.USE_MARKDOWN_GREENTEXT, regex: greentextRegex, cb: (permissions, match, greentext) => `<span class='greentext'>&gt;${greentext}</span>` },
+		{ permission: Permissions.USE_MARKDOWN_BOLD, regex: boldRegex, cb: (permissions, match, bold) => `<span class='bold'>${bold}</span>` },
+		{ permission: Permissions.USE_MARKDOWN_UNDERLINE, regex: underlineRegex, cb: (permissions, match, underline) => `<span class='underline'>${underline}</span>` },
+		{ permission: Permissions.USE_MARKDOWN_STRIKETHROUGH, regex: strikeRegex, cb: (permissions, match, strike) => `<span class='strike'>${strike}</span>` },
+		{ permission: Permissions.USE_MARKDOWN_TITLE, regex: titleRegex, cb: (permissions, match, title) => `<span class='title'>${title}</span>` },
+		{ permission: Permissions.USE_MARKDOWN_ITALIC, regex: italicRegex, cb: (permissions, match, italic) => `<span class='em'>${italic}</span>` },
+		{ permission: Permissions.USE_MARKDOWN_SPOILER, regex: spoilerRegex, cb: (permissions, match, spoiler) => `<span class='spoiler'>${spoiler}</span>` },
+		{ permission: Permissions.USE_MARKDOWN_MONO, regex: monoRegex, cb: (permissions, match, mono) => `<span class='mono'>${mono}</span>` },
+		{ permission: Permissions.USE_MARKDOWN_DETECTED, regex: detectedRegex, cb: (permissions, match, detected) => `<span class='detected'>&lpar;&lpar;&lpar; ${detected} &rpar;&rpar;&rpar;</span>` },
+		{ permission: Permissions.USE_MARKDOWN_LINK, regex: linkRegex, cb: linkmatch },
+		{ permission: Permissions.USE_MARKDOWN_DICE, regex: diceroll.regexMarkdown, cb: diceroll.markdown },
+		{ permission: Permissions.USE_MARKDOWN_FORTUNE, regex: fortune.regex, cb: fortune.markdown },
 	];
-	//todo: add any missing perm levels so no migration required so people can add custom markdown on their own. maybe give these a name property and give it a class
 };
 
 updateMarkdownPerms();
@@ -67,7 +65,7 @@ module.exports = {
 		return chunks.join('');
 	},
 
-	markdown: (text, permLevel=4) => {
+	markdown: (text, permissions) => {
 		const chunks = text.split(splitRegex);
 		const { highlightOptions } = config.get;
 		for (let i = 0; i < chunks.length; i++) {
@@ -75,8 +73,8 @@ module.exports = {
 			if (i % 2 === 0) {
 				const escaped = escape(chunks[i]);
 				const newlineFix = escaped.replace(/^\r?\n/,''); //fix ending newline because of codeblock
-				chunks[i] = module.exports.processRegularChunk(newlineFix, permLevel);
-			} else if (permLevel <= markdownPermLevels.code){
+				chunks[i] = module.exports.processRegularChunk(newlineFix, permissions);
+			} else if (permissions.get(Permissions.USE_MARKDOWN_CODE)){
 				chunks[i] = module.exports.processCodeChunk(chunks[i], highlightOptions);
 			}
 		}
@@ -106,12 +104,12 @@ module.exports = {
 		return `<span class='code'>${escape(trimFix)}</span>`;
 	},
 
-	processRegularChunk: (text, permLevel) => {
-		//so theoretically now with some more options in the global manage page you can set permissions or enable/disable markdowns
-		const allowedReplacements = replacements.filter(r => r.permLevel >= permLevel);
+	processRegularChunk: (text, permissions) => {
+		//filter replacements based on their permissions
+		const allowedReplacements = replacements.filter(r => permissions.get(r.permission));
 		for (let i = 0; i < allowedReplacements.length; i++) {
 			//could bind more variables here and make them available as additional arguments. would pass more args -> markdown -> procesRegularChunk, etc.
-			text = text.replace(allowedReplacements[i].regex, allowedReplacements[i].cb.bind(null, permLevel));
+			text = text.replace(allowedReplacements[i].regex, allowedReplacements[i].cb.bind(null, permissions));
 		}
 		return text;
 	},

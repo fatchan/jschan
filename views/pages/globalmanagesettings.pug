@@ -2,7 +2,7 @@ extends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Manage
+	title Settings
 
 block content
 	h1.board-title Global Management
@@ -42,7 +42,13 @@ block content
 						.label Secure Cookies
 						label.postform-style.ph-5
 							input(type='checkbox', name='secure_cookies', value='true' checked=settings.secureCookies)
-
+					.row
+						.label Don't store raw IPs
+						label.postform-style.ph-5
+							input(type='checkbox', name='dont_store_raw_ips', value='true' checked=settings.dontStoreRawIps)
+					.row
+						.label Prune IPs Days
+						input(type='number', name='prune_ips' value=settings.pruneIps)
 					.row
 						h4.mv-5 Server
 					.row
@@ -118,44 +124,8 @@ block content
 						.label Prune Modlogs Days
 						input(type='number', name='prune_modlogs' value=settings.pruneModlogs)
 					.row
-						.label Prune IPs Days
-						input(type='number', name='prune_ips' value=settings.pruneIps)
-
-					.row
 					row
-						h4.mv-5 Permissions
-					.row
-						.label Raw IP Perm Level
-						select(name='ip_hash_perm_level')
-							option(value='-1', selected=settings.ipHashPermLevel === -1) Nobody
-							option(value='0', selected=settings.ipHashPermLevel === 0) Admin
-							option(value='1', selected=settings.ipHashPermLevel === 1) Global Staff
-							option(value='2', selected=settings.ipHashPermLevel === 2) Board Owner
-							option(value='3', selected=settings.ipHashPermLevel === 3) Board Mod
-					.row
-						.label Delete Board Perm Level
-						select(name='delete_board_perm_level')
-							option(value='0', selected=settings.deleteBoardPermLevel === 0) Admin
-							option(value='1', selected=settings.deleteBoardPermLevel === 1) Global Staff
-							option(value='2', selected=settings.deleteBoardPermLevel === 2) Board Owner
-							option(value='3', selected=settings.deleteBoardPermLevel === 3) Board Mod
-					.row
-						.label Allow User Account Creation
-						label.postform-style.ph-5
-							input(type='checkbox', name='enable_user_account_creation' value='true' checked=settings.enableUserAccountCreation)
-					.row
-						.label Allow User Board Creation
-						label.postform-style.ph-5
-							input(type='checkbox', name='enable_user_board_creation' value='true' checked=settings.enableUserBoardCreation)
-					each markdownName in Object.keys(settings.permLevels.markdown)
-						.row
-							.label #{markdownName} Markdown
-							select(name=`perm_levels_markdown_${markdownName}`)
-								option(value='0', selected=settings.permLevels.markdown[markdownName] === 0) Admin
-								option(value='1', selected=settings.permLevels.markdown[markdownName] === 1) Global Staff
-								option(value='2', selected=settings.permLevels.markdown[markdownName] === 2) Board Owner
-								option(value='3', selected=settings.permLevels.markdown[markdownName] === 3) Board Mod
-								option(value='4', selected=settings.permLevels.markdown[markdownName] === 4) Everybody
+						h4.mv-5 Limits
 					.row
 						.label Default Ban Duration
 						input(type='text', name='default_ban_duration',  placeholder='e.g. 1w', value=settings.defaultBanDuration)
@@ -190,17 +160,18 @@ block content
 							option(value='google', selected=settings.captchaOptions.type === 'google') Google
 							option(value='hcaptcha', selected=settings.captchaOptions.type === 'hcaptcha') Hcaptcha
 					.row
-						.label Generate Limit
-						input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
-					.row
-						.label Image Size
-						input(type='number' name='captcha_options_image_size' value=settings.captchaOptions.grid.imageSize)
+						.label Grid Image Size
+						input(type='number' name='captcha_options_grid_image_size' value=settings.captchaOptions.grid.imageSize)
 					.row
 						.label Grid Size
 						input(type='number' name='captcha_options_grid_size' value=settings.captchaOptions.grid.size)
 					.row
 						.label Grid Icon Offset
 						input(type='number' name='captcha_options_grid_icon_y_offset' value=settings.captchaOptions.grid.iconYOffset)
+
+					.row
+						.label Generate Limit
+						input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
 					.row
 						.label Minimum Distortions
 						input(type='number' name='captcha_options_num_distorts_min' value=settings.captchaOptions.numDistorts.min)

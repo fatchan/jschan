@@ -6,8 +6,9 @@ const Redis = require('ioredis')
 	, subscriber = new Redis(secrets.redis)
 	, publisher = new Redis(secrets.redis)
 	, messageCallbacks = {
-		'config': [], //others in future?
-	}
+		'config': [],
+		'roles': [],
+	};
 
 module.exports = {
 
@@ -28,9 +29,17 @@ module.exports = {
 					return console.error(err);
 				}
 			});
+			subscriber.subscribe('roles', (err, count) => {
+				if (err) {
+					return console.error(err);
+				}
+			});
 			subscriber.on("message", (channel, message) => {
 				secrets.debugLogs && console.log(`Subscriber message from channel ${channel}`);
-				const data = JSON.parse(message);
+				let data;
+				if (message) {
+					data = JSON.parse(message);
+				}
 				messageCallbacks[channel].forEach(cb => {
 					cb(data);
 				});
@@ -85,6 +94,38 @@ module.exports = {
 		} else {
 			return sharedClient.del(keyOrKeys);
 		}
+	},
+
+	getPattern: (pattern) => {
+		return new Promise((resolve, reject) => {
+			const stream = sharedClient.scanStream({
+				match: pattern
+			});
+			let allKeys = [];
+			stream.on('data', (keys) => {
+				allKeys = allKeys.concat(keys);
+			});
+			stream.on('end', async () => {
+				const pipeline = sharedClient.pipeline();
+				for (let i = 0; i < allKeys.length; i++) {
+					pipeline.get(allKeys[i]);
+				}
+				let results;
+				try {
+					results = await pipeline.exec();
+				} catch(e) {
+					return reject(e);
+				}
+				const data = {};
+				for (let i = 0; i < results.length; i++) {
+					data[allKeys[i]] = JSON.parse(results[i][1]);
+				}
+				resolve(data);
+			});
+			stream.on('error', (err) => {
+				reject(err);
+			});
+		});
 	},
 
 	deletePattern: (pattern) => {

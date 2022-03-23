@@ -2,6 +2,7 @@
 
 const bcrypt = require('bcrypt')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, redis = require(__dirname+'/../../redis.js')
 	, { Accounts } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {
@@ -35,7 +36,10 @@ module.exports = async (req, res, next) => {
 	}
 
 	//change the password
-	await Accounts.changePassword(username, newPassword);
+	await Promise.all([
+		Accounts.changePassword(username, newPassword),
+		redis.deletePattern(`sess:*:${username}`),
+	]);
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',

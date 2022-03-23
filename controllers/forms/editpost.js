@@ -1,6 +1,7 @@
 'use strict';
 
 const editPost = require(__dirname+'/../../models/forms/editpost.js')
+	, Permissions = require(__dirname+'/../../helpers/permissions.js')
 	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
 	, config = require(__dirname+'/../../config.js')
 	, { Ratelimits, Posts, Boards } = require(__dirname+'/../../db/')
@@ -41,9 +42,9 @@ module.exports = {
 			});
 		}
 
-		if (res.locals.permLevel > 1) { //if not global staff or above
+		if (!res.locals.permissions.get(Permissions.BYPASS_RATELIMITS)) {
 			const ratelimitUser = await Ratelimits.incrmentQuota(req.session.user, 'edit', rateLimitCost.editPost);
-			const ratelimitIp = res.locals.anonymizer ? 0 : (await Ratelimits.incrmentQuota(res.locals.ip.single, 'edit', rateLimitCost.editPost));
+			const ratelimitIp = res.locals.anonymizer ? 0 : (await Ratelimits.incrmentQuota(res.locals.ip.cloak, 'edit', rateLimitCost.editPost));
 			if (ratelimitUser > 100 || ratelimitIp > 100) {
 				return dynamicResponse(req, res, 429, 'message', {
 					'title': 'Ratelimited',

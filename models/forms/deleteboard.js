@@ -17,7 +17,7 @@ module.exports = async (uri, board) => {
 	}
 	await Promise.all([
 		Accounts.removeOwnedBoard(board.owner, uri), //remove board from owner account
-		board.settings.moderators.length > 0 ? Accounts.removeModBoard(board.settings.moderators, uri) : void 0, //remove board from mods accounts
+		Object.keys(board.staff).length > 0 ? Accounts.removeStaffBoard(Object.keys(board.staff), uri) : void 0, //remove staffboard from staff accounts
 		Modlogs.deleteBoard(uri), //modlogs for the board
 		Bans.deleteBoard(uri), //bans for the board
 		Stats.deleteBoard(uri), //stats for the board
@@ -26,7 +26,7 @@ module.exports = async (uri, board) => {
 		remove(`${uploadDirectory}/json/${uri}/`), //json
 		remove(`${uploadDirectory}/banner/${uri}/`), //banners
 		remove(`${uploadDirectory}/flag/${uri}/`), //flags
-		remove(`${uploadDirectory}/asset/${uri}/`), //flags
+		remove(`${uploadDirectory}/asset/${uri}/`), //assets
 	]);
 
 }

@@ -16,25 +16,31 @@ module.exports = async (req, res, next) => {
 	if (req.body.ban || req.body.global_ban) {
 		const banBoard = req.body.global_ban ? null : req.params.board;
 		const ipPosts = res.locals.posts.reduce((acc, post) => {
-			if (!acc[post.ip.single]) {
-				acc[post.ip.single] = [];
+			if (!acc[post.ip.cloak]) {
+				acc[post.ip.cloak] = [];
 			}
-			acc[post.ip.single].push(post);
+			acc[post.ip.cloak].push(post);
 			return acc;
 		}, {});
 		for (let ip in ipPosts) {
 			const thisIpPosts = ipPosts[ip];
 			let type = 'single';
 			let banIp = {
-				single: ip,
-				raw: thisIpPosts[0].ip.raw
+				cloak: thisIpPosts[0].ip.cloak,
+				raw: thisIpPosts[0].ip.raw,
 			};
 			if (req.body.ban_h) {
 				type = 'half';
-				banIp.single = thisIpPosts[0].ip.hrange;
+				banIp.cloak = thisIpPosts[0].ip.cloak
+					.split('.')
+					.slice(0,1)
+					.join('.');
 			} else if (req.body.ban_q) {
 				type = 'quarter';
-				banIp.single = thisIpPosts[0].ip.qrange;
+				banIp.cloak = thisIpPosts[0].ip.cloak
+					.split('.')
+					.slice(0,2)
+					.join('.');
 			}
 			bans.push({
 				type,

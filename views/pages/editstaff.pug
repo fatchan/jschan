@@ -1,0 +1,34 @@
+extends ../layout.pug
+include ../mixins/boardheader.pug
+include ../mixins/managenav.pug
+
+block head
+	title /#{board._id}/ - Edit Staff Permissions
+
+block content
+	+boardheader('Edit Staff Permissions')
+	br
+	+managenav('staff', true)
+	hr(size=1)
+	h4.mv-5 Edit board permissions for "#{staffUsername}"
+		|
+		if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
+			|  
+			a(href=`/globalmanage/editaccount/${staffUsername}.html`) [Edit Account Permissions]
+	- const jsonPermissions = staffPermissions.toJSON();
+	.form-wrapper.flexleft
+		form(action=`/forms/board/${board._id}/editstaff` method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			input(type='hidden' name='username' value=staffUsername)
+			//-for perm in Object.keys(jsonPermissions)
+			for perm, index in Object.keys(jsonPermissions).filter(p => p.startsWith('MANAGE_BOARD_'))
+				if jsonPermissions[perm].title && index > 0
+					hr(size=1)
+					h4.mv-5 #{jsonPermissions[perm].title}
+				.row
+					label.postform-style.ph-5
+						- const checkDisabled = !perm.startsWith('MANAGE_BOARD_') || perm === 'MANAGE_BOARD_GENERAL' || (!permissions.get(Permissions.MANAGE_BOARD_OWNER) && (perm==='MANAGE_BOARD_OWNER' || perm==='MANAGE_BOARD_STAFF'));
+						input(type='checkbox' name=perm value=1 checked=jsonPermissions[perm].state disabled=checkDisabled)
+					.rlabel #{jsonPermissions[perm].label}
+					p #{jsonPermissions[perm].desc}
+			input(type='submit', value='Save')

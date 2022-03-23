@@ -1,8 +1,10 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
+	, { isIP } = require('net')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
+	, Permissions = require(__dirname+'/../helpers/permissions.js')
 	, db = Mongo.db.collection('posts')
 	, config = require(__dirname+'/../config.js');
 
@@ -21,7 +23,7 @@ module.exports = {
 		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
 	},
 
-	getBoardRecent: async (offset=0, limit=20, ip, board, permLevel) => {
+	getBoardRecent: async (offset=0, limit=20, ip, board, permissions) => {
 		const query = {};
 		if (board) {
 			query['board'] = board;
@@ -35,12 +37,14 @@ module.exports = {
 		} else {
 			projection['globalreports'] = 0;
 		}
-		if (ip instanceof RegExp) {
-			query['ip.single'] = ip;
-		} else if (typeof ip === 'string') {
-			query['ip.raw'] = ip;
+		if (ip != null) {
+			if (isIP(ip)) {
+				query['ip.raw'] = ip;
+			} else {
+				query['ip.cloak'] = ip;
+			}
 		}
-		if (permLevel > config.get.ipHashPermLevel) {
+		if (!permissions.get(Permissions.VIEW_RAW_IP)) {
 			projection['ip.raw'] = 0;
 			//MongoError, why cant i just projection['reports.ip.raw'] = 0;
 			if (board) {
@@ -54,21 +58,6 @@ module.exports = {
 		}).sort({
 			'_id': -1
 		}).skip(offset).limit(limit).toArray();
-		posts.forEach(p => {
-			//kill me
-			p.ip.single = p.ip.single.slice(-10);
-			p.ip.qrange = p.ip.qrange.slice(-10);
-			p.ip.hrange = p.ip.hrange.slice(-10);
-			if (board) {
-				p.reports.forEach(r => {
-					r.ip.single = r.ip.single.slice(-10);
-				});
-			} else {
-				p.globalreports.forEach(r => {
-					r.ip.single = r.ip.single.slice(-10);
-				});
-			}
-		});
 		return posts;
 	},
 
@@ -482,7 +471,7 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		const statsIp = (config.get.statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.single;
+		const statsIp = (config.get.statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.cloak;
 		await Stats.updateOne(board._id, statsIp, data.thread == null);
 
 		//add backlinks to the posts this post quotes
@@ -532,13 +521,13 @@ module.exports = {
 		})
 	},
 
-	getReports: async (board, permLevel) => {
+	getReports: async (board, permissions) => {
 		const projection = {
 			'salt': 0,
 			'password': 0,
 			'globalreports': 0,
 		};
-		if (permLevel > config.get.ipHashPermLevel) {
+		if (!permissions.get(Permissions.VIEW_RAW_IP)) {
 			projection['ip.raw'] = 0;
 			projection['reports'] = { ip: { raw: 0 } };
 		}
@@ -548,24 +537,16 @@ module.exports = {
 			},
 			'board': board
 		}, { projection }).toArray();
-		posts.forEach(p => {
-			p.ip.single = p.ip.single.slice(-10);
-			p.ip.qrange = p.ip.qrange.slice(-10);
-			p.ip.hrange = p.ip.hrange.slice(-10);
-			p.reports.forEach(r => {
-				r.ip.single = r.ip.single.slice(-10);
-			});
-		});
 		return posts;
 	},
 
-	getGlobalReports: async (offset=0, limit, ip, permLevel) => {
+	getGlobalReports: async (offset=0, limit, ip, permissions) => {
 		const projection = {
 			'salt': 0,
 			'password': 0,
 			'reports': 0,
 		};
-		if (permLevel > config.get.ipHashPermLevel) {
+		if (!permissions.get(Permissions.VIEW_RAW_IP)) {
 			projection['ip.raw'] = 0;
 			projection['globalreports'] = { ip: { raw: 0 } };
 		}
@@ -574,26 +555,20 @@ module.exports = {
 				'$exists': true
 			}
 		}
-		if (ip instanceof RegExp) {
-			query['$or'] = [
-				{ 'ip.single': ip },
-				{ 'globalreports.ip.single': ip }
-			];
-		} else if (typeof ip === 'string') {
-			query['$or'] = [
-				{ 'ip.raw': ip },
-				{ 'globalreports.ip.raw': ip }
-			];
+		if (ip != null) {
+			if (isIP(ip)) {
+				query['$or'] = [
+					{ 'ip.raw': ip },
+					{ 'globalreports.ip.raw': ip }
+				];
+			} else {
+				query['$or'] = [
+					{ 'ip.cloak': ip },
+					{ 'globalreports.ip.cloak': ip }
+				];
+			}
 		}
 		const posts = await db.find(query, { projection }).skip(offset).limit(limit).toArray();
-		posts.forEach(p => {
-			p.ip.single = p.ip.single.slice(-10);
-			p.ip.qrange = p.ip.qrange.slice(-10);
-			p.ip.hrange = p.ip.hrange.slice(-10);
-			p.globalreports.forEach(r => {
-				r.ip.single = r.ip.single.slice(-10);
-			});
-		});
 		return posts;
 	},
 

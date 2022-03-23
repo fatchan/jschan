@@ -12,16 +12,14 @@ module.exports = (req, res, next) => {
 	if (res.locals.anonymizer) {
 		const pseudoIp = res.locals.preFetchedBypassId || req.signedCookies.bypassid;
 		res.locals.ip = {
-			raw: pseudoIp,
-			single: pseudoIp,
-			qrange: pseudoIp,
-			hrange: pseudoIp,
+			raw: `${pseudoIp}.BP`,
+			cloak: `${pseudoIp}.BP`,
 		};
 		return next();
 	}
 
 	//ip for normal user
-	const { ipHeader, ipHashPermLevel } = config.get;
+	const { dontStoreRawIps, ipHeader } = config.get;
 	const ip = req.headers[ipHeader] || req.connection.remoteAddress;
 	try {
 		const ipParsed = parse(ip);
@@ -31,8 +29,8 @@ module.exports = (req, res, next) => {
 			zeroElide: false,
 			zeroPad: false,
 		});
-		let qrange = ''
-			, hrange = '';
+		let qrange
+			, hrange;
 		if (ipKind === 'ipv4') {
 			qrange = createCIDR(ipStr, 24).toString();
 			hrange = createCIDR(ipStr, 16).toString();
@@ -40,12 +38,13 @@ module.exports = (req, res, next) => {
 			qrange = createCIDR(ipStr, 64).toString();
 			hrange = createCIDR(ipStr, 48).toString();
 		}
+		const cloak = `${hashIp(hrange).substring(0,8)}.${hashIp(qrange).substring(0,7)}.${hashIp(ipStr).substring(0,7)}.IP`;
 		res.locals.ip = {
-			raw: ipHashPermLevel === -1 ? hashIp(ipStr) : ipStr,
-			single: hashIp(ipStr),
-			qrange: hashIp(qrange),
-			hrange: hashIp(hrange),
+			raw: dontStoreRawIps === true ? cloak : ipStr,
+			cloak,
 		}
+		//#426
+		//console.log(`net-${hashIp(hrange).substring(0,6)}.${hashIp(qrange).substring(0,4)}.${hashIp(ipStr).substring(0,4)}.IP`)
 		next();
 	} catch(e)  {
 		console.error('Ip parse failed', e);

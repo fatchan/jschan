@@ -20,12 +20,12 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 							input.post-check(type='checkbox', name='checkedposts' value=post.postId)
 						| 
 					if manage
-						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.raw;
+						- const ip = viewRawIp === true ? post.ip.raw : post.ip.cloak;
 						a.bold(href=`${upLevel ? '../' : ''}recent.html?ip=${encodeURIComponent(ip)}`) [#{ip}]
 					else if modview
 						a.bold(href=`${upLevel ? '../' : ''}recent.html?postid=${post.postId}`) [+]
 					else if globalmanage
-						- const ip = permLevel > ipHashPermLevel ? post.ip.single.slice(-10) : post.ip.raw;
+						- const ip = viewRawIp === true ? post.ip.raw : post.ip.cloak;
 						a.bold(href=`?ip=${encodeURIComponent(ip)}`) [#{ip}]
 					| 
 					if !post.thread

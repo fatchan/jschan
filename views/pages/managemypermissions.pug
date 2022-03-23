@@ -1,0 +1,20 @@
+extends ../layout.pug
+include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
+include ../mixins/mypermissions.pug
+
+block head
+	title /#{board._id}/ - My Permissions
+
+block content
+	+boardheader('My Permissions')
+	br
+	+managenav('staff')
+	hr(size=1)
+	h4.mv-5 Board-specific permissions
+		|
+		if permissions.get(Permissions.MANAGE_BOARD_STAFF) && user.staffBoards.includes(board._id)
+			|  
+			a(href=`/${board._id}/manage/editstaff/${user.username}.html`) [Edit]
+	- const jsonPermissions = permissions.toJSON();
+	+mypermissions(jsonPermissions, Object.keys(jsonPermissions).filter(p => p.startsWith('MANAGE_BOARD_')))

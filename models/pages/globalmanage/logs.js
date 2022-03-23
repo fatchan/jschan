@@ -2,7 +2,9 @@
 
 const { Modlogs } = require(__dirname+'/../../../db/')
 	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
+	, Permissions = require(__dirname+'/../../../helpers/permissions.js')
 	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
+	, { isIP } = require('net')
 	, limit = 50;
 
 module.exports = async (req, res, next) => {
@@ -18,11 +20,13 @@ module.exports = async (req, res, next) => {
     if (uri && !Array.isArray(uri)) {
         filter.board = uri;
     }
-	const ipMatch = decodeQueryIP(req.query, res.locals.permLevel);
-	if (ipMatch instanceof RegExp) {
-		filter['ip.single'] = ipMatch;
-	} else if (typeof ipMatch === 'string') {
-		filter['ip.raw'] = ipMatch;
+	const ipMatch = decodeQueryIP(req.query, res.locals.permissions);
+	if (ipMatch != null) {
+		if (isIP(ipMatch)) {
+			filter['ip.raw'] = ipMatch;
+		} else {
+			filter['ip.cloak'] = ipMatch;
+		}
 	}
 
 	let logs, maxPage;
@@ -40,9 +44,12 @@ module.exports = async (req, res, next) => {
 	.set('Cache-Control', 'private, max-age=5')
 	.render('globalmanagelogs', {
 		csrf: req.csrfToken(),
+		permissions: res.locals.permissions,
 		queryString,
 		username,
 		uri,
+		permissions: res.locals.permissions,
+		viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
 		ip: ipMatch ? req.query.ip : null,
 		logs,
 		page,
