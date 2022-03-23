@@ -22,7 +22,7 @@ Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general)
 - [x] Multi-select moderation actions
 - [x] Webring +proxy support (compatible with [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring) versions)
 - [x] Manage everything from the web panel
-- [x] Detailed accounts perimssions system
+- [x] Detailed accounts permissions system
 - [x] Works properly with anonymizer networks
 
 ## License
