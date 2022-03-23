@@ -2,21 +2,21 @@
 Hash: SHA256
 
 Contact: mailto:tom@69420.me
-Expires: Tue, 22 Mar 2022 00:00 +1100
+Expires: 2024-03-23T00:00:00.000Z
 Encryption: https://fatchan.org/file/no-cd/pubkey.asc
 Preferred-Languages: en
 Canonical: https://fatchan.org/.well-known/security.txt
 -----BEGIN PGP SIGNATURE-----
 
-iQGzBAEBCAAdFiEE9/vuBNwQh8OAtFnjESiEqlffQLEFAmBYPLIACgkQESiEqlff
-QLHyPQv6AvSTr9pjYxuT2lybN52Du+xKWNpKfhwr8/077zPGSL49LPdnNVv6UNBa
-vYx8kAy5rcMsqkQCruK7pMfyg7aMre1J8iM/hkDv8GA2A3U5lvrVJu/AZVSyXUcj
-G+mAZ0QW+DtLmmSYirTH3uGdwUE6IHEkO31AmO1ALCcAZkumxIciJ83nB9FO7ob5
-oP87wZLDWUygS2sekAIeV22v3vLB/382xBEWMRdDNNR7Co1ess4WIOyZzY1/Qrdq
-pz919Rth+OXyy65h7GJgn5bPq026opXc8mV9XRJ+MXc71yT1WD9ZkyKm86D8cN6z
-eTNhRnc96lmS1fLSHzIPU/5aZVSbZ+qMeKZABTDldXPgTRpTRzpLul/B0roFcFJw
-/fBdcvda2zozXRP+b9tWs0olVEdHDOj/687LPpIGhUsKSwyg7NC2+M+tff54BGWz
-igcs5a5j+SCoZbXRSEh7Dl7U0CVxIESisbzce/jpyHaauaW0/TvXoZ5GofGP1TAB
-dt1Y+Sl7
-=faaT
+iQGzBAEBCAAdFiEE9/vuBNwQh8OAtFnjESiEqlffQLEFAmI64kAACgkQESiEqlff
+QLF+Gwv/UdiZifqiq3Hc5qHv/DAo9rlOKnlaYGwwagfE9swa+mQpxDaNqm7ZY5YS
+GMuIkKoXCMn5iIFNPVzdqsO3BOYKDMJJzOUN3qBNJExZjd9tzrt6hYsXRkAJzVjN
+k5TOf1txElaEyfRhDv9MCnvGusJnlasjPo0OtrMMXbnH2ziPbmHpP4aEsyNS8pJJ
+7XY09kFUHcUN5hvNoPYrOIIRV0CIqsB4/dEF5kjmzJ1G7pohm4AGC1bbdgSDviFX
+jQYiJMHEYHRG86dd1CEouSiILfpbKzFoaaxljyndnQZvri0kBwu6uJ1wPFDrr713
+nPJv66XFfsWmzMua81L3uKV2zklDeIO173oGQt49FcOJvOV2igCSskRy2Cfyofwr
+7DS7XF2Zxyq9tx/eLpfm5G4Yv2nyk1oTUldOpcWQ+pvBkxopHr3ZzoSrarvBal6g
+2kT3tcN6zUyW8cQLjEr5723119auADbXAe2i8IXMEMmHc5MEa0UwEcLiQpQtpOeX
+HYwaNR4c
+=+X/v
 -----END PGP SIGNATURE-----
