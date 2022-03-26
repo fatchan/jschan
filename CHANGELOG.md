@@ -1,3 +1,7 @@
+### 0.4.1
+  - Fix not properly skipping dnsbl with block bypass when configured to do so, give the better frame popup, and skip if already solved board captcha, etc.
+  - Minor bugfix to flag saving.
+
 ### 0.4.0
   - Hashed IPs now use an irc-style "cloaking".
     - Ranges are now combined in the IP instead of being only available in the JSON and not shown in management pages.
