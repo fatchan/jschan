@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
 			}
 			return next(); //already solved
 		}
-		//otherwise, bad block bypass or dnsbl cant be bypassed
+		//otherwise dnsbl cant be bypassed
 		const ip = req.headers[ipHeader] || req.connection.remoteAddress;
 		let isBlacklisted = await cache.get(`blacklisted:${ip}`);
 		if (isBlacklisted === null) { //not cached
@@ -33,7 +33,6 @@ module.exports = async (req, res, next) => {
 				'title': 'Forbidden',
 				'message': `Your request was blocked because your IP address is listed on a blacklist.`,
 				'redirect': req.headers.referer || '/',
-				'link': blockBypass.bypassDnsbl ? { text: 'Solve block bypass', href: '/bypass.html' } : null,
 			});
 		}
 	}
