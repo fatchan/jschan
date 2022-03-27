@@ -1,6 +1,7 @@
 'use strict';
 
 const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
+	, Permissions = require(__dirname+'/../../helpers/permissions.js')
 	, { createHash } = require('crypto')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
@@ -26,7 +27,7 @@ todo: handle some more situations
 	const { board, post } = res.locals;
 
 	//filters
-	if (res.locals.permissions.get(BYPASS_FILTERS)) { //global staff bypass filters for edit
+	if (res.locals.permissions.get(Permissions.BYPASS_FILTERS)) { //global staff bypass filters for edit
 		const globalSettings = config.get;
 		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
 			let hitGlobalFilter = false
