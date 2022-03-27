@@ -146,7 +146,7 @@ class postFormHandler {
 	}
 
 	updateFlagField() {
-		if (this.customFlagInput) {
+		if (this.customFlagInput && this.customFlagInput.options.selectedIndex !== -1) {
 			this.selectedFlagImage.src = this.customFlagInput.options[this.customFlagInput.options.selectedIndex].dataset.src || '';
 		}
 	}
