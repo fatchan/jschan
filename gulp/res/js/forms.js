@@ -128,6 +128,7 @@ class postFormHandler {
 					height: tegakiHeight,
 				});
 				Tegaki.resetLayers();
+				Tegaki.setColorPalette(2);
 			});
 		}
 		this.fileInput = form.querySelector('input[type="file"]');

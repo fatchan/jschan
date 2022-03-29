@@ -27,8 +27,8 @@
 .tegaki-airbrush:before { content: '💨'; } /* '' */
 .tegaki-fast-fw:before { content: '\e810'; } /* '' */
 .tegaki-fast-bw:before { content: '\e811'; } /* '' */
-.tegaki-left-open:before { content: '\e812'; } /* '' */
-.tegaki-right-open:before { content: '\e813'; } /* '' */
+.tegaki-left-open:before { content: '⬅️'; } /* '' */
+.tegaki-right-open:before { content: '➡️'; } /* '' */
 .tegaki-eraser:before { content: '✏️'; transform: rotate(180deg); } /* '' */
 .tegaki-pipette:before { content: '💉'; } /* '' */
 

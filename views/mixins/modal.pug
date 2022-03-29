@@ -161,9 +161,9 @@ mixin modal(data)
 								input#hovercachelist-clear(type='button' value='Clear')
 							.row
 								.label Tegaki Size
-								input.mr-1#tegakiwidth-setting(type='number')
+								input.mr-1.w50#tegakiwidth-setting(type='number')
 								.postform-style.ph-5.mr-1 × 
-								input.mr-1#tegakiheight-setting(type='number')
+								input.mr-1.w50#tegakiheight-setting(type='number')
 
 					.row.mt-5
 						.label Custom CSS
@@ -171,7 +171,7 @@ mixin modal(data)
 
 					.row.mt-5
 						form.text-center#filter-form
-							table
+							table.fw
 								tbody#advancedfilters
 									tr
 										th(colspan=4) Post Filters
