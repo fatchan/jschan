@@ -327,6 +327,8 @@ module.exports = {
 		notificationsYousOnly: true, //only show notifications for posts that quote you
 		showYous: true, //show (You) next to name on your posts, and quotes linking to your post
 		hideDeletedPostContent: false, //hide the message and files from marked deleted posts from websocket
+		tegakiWidth: 500, //default canvas size for tegaki drawings
+		tegakiHeight: 500,
 	},
 
 	//default board settings when a board is created
@@ -354,6 +356,7 @@ module.exports = {
 		ids: false, //show per thread poster ID based on ip
 		geoFlags: false, //show geo flags, requires nginx setup
 		customFlags: false, //show custom flags
+		enableTegaki: true,
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
 		userPostUnlink: true, //alow user to unlink files fomr their post

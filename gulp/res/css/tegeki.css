@@ -15,22 +15,22 @@
 .tegaki-pen:before { content: '🖊️'; } /* '' */
 .tegaki-down-open:before { content: '⬇️'; } /* '' */
 .tegaki-up-open:before { content: '⬆️'; } /* '' */
-.tegaki-level-down:before { content: '⬇️'; } /* '' */
+.tegaki-level-down:before { content: '⤵️'; } /* '' */
 .tegaki-pencil:before { content: '✏️'; } /* '' */
 .tegaki-play:before { content: '▶️'; } /* '' */
 .tegaki-bucket:before { content: '🪣'; } /* '' */
 .tegaki-pause:before { content: '⏸️'; } /* '' */
-.tegaki-blur:before { content: '\e80b'; } /* '' */
+.tegaki-blur:before { content: '👆'; } /* '' */
 .tegaki-to-start:before { content: '\e80c'; } /* '' */
 .tegaki-watercolor:before { content: '\e80d'; } /* '' */
-.tegaki-tone:before { content: '\e80e'; } /* '' */
-.tegaki-airbrush:before { content: '\e80f'; } /* '' */
+.tegaki-tone:before { content: '🕶️'; } /* '' */
+.tegaki-airbrush:before { content: '💨'; } /* '' */
 .tegaki-fast-fw:before { content: '\e810'; } /* '' */
 .tegaki-fast-bw:before { content: '\e811'; } /* '' */
 .tegaki-left-open:before { content: '\e812'; } /* '' */
 .tegaki-right-open:before { content: '\e813'; } /* '' */
-.tegaki-eraser:before { content: '\f12d'; } /* '' */
-.tegaki-pipette:before { content: '\f1fb'; } /* '' */
+.tegaki-eraser:before { content: '✏️'; transform: rotate(180deg); } /* '' */
+.tegaki-pipette:before { content: '💉'; } /* '' */
 
 .tegaki-disabled,
 .tegaki-disabled::after,
@@ -67,8 +67,8 @@
   height: 100%;
   top: 0;
   left: 0;
-  background-color: #a3b1bf;
-  color: #222;
+  background-color: var(--post-color);
+  color: var(--font-color);
   font-family: arial, sans-serif;
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -86,7 +86,7 @@
 }
 
 #tegaki > div {
-  background-color: #8d99a6;
+  background-color: var(--background-rest);
 }
 
 #tegaki-menu-cnt {
@@ -134,7 +134,7 @@
 }
 
 #tegaki-status-version {
-  color: #a3b1bf;
+  color: var(--post-color);
   font-size: 11px;
   margin-left: auto;
 }
@@ -143,7 +143,7 @@
   font-size: 12px;
   padding-left: 4px;
   padding-right: 18px;
-  border-right: 2px solid #a3b1bf;
+  border-right: 2px solid var(--post-color);
 }
 
 .tegaki-replay-mode #tegaki-menu-bar {
@@ -158,7 +158,7 @@
 #tegaki-replay-controls {
   padding-right: 10px;
   padding-left: 10px;
-  border-right: 2px solid #a3b1bf;
+  border-right: 2px solid var(--post-color);
   font-size: 11px;
 }
 
@@ -167,8 +167,8 @@
   width: 100px;
   height: 24px;
   margin: 0 4px;
-  border-left: 1px solid #a3b1bf;
-  border-right: 1px solid #a3b1bf;
+  border-left: 1px solid var(--post-color);
+  border-right: 1px solid var(--post-color);
   /*background-color: rgba(0, 0, 0, 0.25);*/
 }
 
@@ -176,7 +176,7 @@
   display: inline-block;
   width: 36px;
   height: 100%;
-  background-color: #a3b1bf;
+  background-color: var(--post-color);
 }
 
 #tegaki-replay-controls > span {
@@ -222,7 +222,7 @@
 }
 
 .tegaki-toolmode-grp {
-  border-left: 1px solid #a3b1bf;
+  border-left: 1px solid var(--post-color);
   padding: 0 18px;
 }
 
@@ -250,7 +250,7 @@
 }
 
 .tegaki-tool-btn:hover {
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: var(--darken);
 }
 
 .tegaki-tool-btn:before {
@@ -495,7 +495,7 @@
   font-size: 12px;
   font-weight: bold;
   margin-bottom: 6px;
-  background-color: #a3b1bf;
+  background-color: var(--post-color);
   padding: 1px 4px;
 }
 
@@ -585,16 +585,16 @@
   height: 84px;
   min-height: 84px;
   overflow: auto;
-  background-color: #8d99a6;
+  background-color: var(--post-color);
   display: flex;
   flex-direction: column;
-  border: 1px solid #a3b1bf;
+  border: 1px solid var(--post-color);
   resize: vertical;
 }
 
 .tegaki-layers-cell {
   box-sizing: border-box;
-  box-shadow: 0 1px 0 0px #a3b1bf;
+  box-shadow: 0 1px 0 0px var(--post-color);
   padding: 0;
   height: 28px;
   flex-shrink: 0;
@@ -605,7 +605,7 @@
 
 .tegaki-layers-cell-s,
 .tegaki-layers-cell-a {
-  background-color: #a3b1bf7f;
+  background-color: var(--post-color);
 }
 
 .tegaki-layers-cell-a {

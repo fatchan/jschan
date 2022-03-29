@@ -442,6 +442,12 @@ block content
 						.label Only Notify (You)s
 						label.postform-style.ph-5
 							input(type='checkbox', name='frontend_script_default_notifications_yous_only', value='true' checked=settings.frontendScriptDefault.notificationsYousOnly)
+					.row
+						.label Tegaki Width
+						input(type='number', name='frontend_script_default_tegaki_width', value=settings.frontendScriptDefault.tegakiWidth)
+					.row
+						.label Tegaki Height
+						input(type='number', name='frontend_script_default_tegaki_height', value=settings.frontendScriptDefault.tegakiHeight)
 
 					.row
 						h4.mv-5 Files & Thumbnails
@@ -675,6 +681,10 @@ block content
 						.label Custom Flags
 						label.postform-style.ph-5
 							input(type='checkbox', name='board_defaults_custom_flags', value='true' checked=settings.boardDefaults.customFlags)
+					.row
+						.label Enable Tegaki
+						label.postform-style.ph-5
+							input(type='checkbox', name='board_defaults_enable_tegaki', value='true' checked=settings.boardDefaults.enableTegaki)
 					.row
 						.label User Post Deletion
 						label.postform-style.ph-5
