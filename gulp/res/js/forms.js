@@ -127,6 +127,7 @@ class postFormHandler {
 					width: tegakiWidth,
 					height: tegakiHeight,
 				});
+				Tegaki.resetLayers();
 			});
 		}
 		this.fileInput = form.querySelector('input[type="file"]');
