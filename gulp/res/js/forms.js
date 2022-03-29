@@ -110,6 +110,24 @@ class postFormHandler {
 		}
 		this.minimal = this.form.elements.minimal;
 		this.files = [];
+		this.tegakiButton = form.querySelector('#tegaki-button');
+		if (this.tegakiButton) {
+			this.tegakiButton.addEventListener('click', () => {
+
+				Tegaki.open({
+					onDone: () => {
+						Tegaki.flatten().toBlob(b => {
+							this.addFile(new File([b], 'tegaki.png', { type: 'image/png' }));
+						}, 'image/png');
+					},
+					onCancel: () => { console.log('Closing...')},
+					width: 380,
+					height: 380
+				});
+
+
+			});
+		}
 		this.fileInput = form.querySelector('input[type="file"]');
 		if (this.fileInput) {
 			this.fileRequired = this.fileInput.required;
