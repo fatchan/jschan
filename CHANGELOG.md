@@ -1,5 +1,6 @@
 ### 0.4.1
   - Fix not properly skipping dnsbl with block bypass when configured to do so, give the better frame popup, and skip if already solved board captcha, etc.
+  - Fix sessions list page showing expiry dates far in the past
   - Minor bugfix to flag saving.
 
 ### 0.4.0
