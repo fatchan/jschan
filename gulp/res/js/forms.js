@@ -96,8 +96,8 @@ function recaptchaCallback(response) {
 	recaptchaResponse = response;
 }
 
-let tegakiWidth = localStorage.getItem('tegakiheight-setting')
-let tegakiHeight = localStorage.getItem('tegakiwidth-setting')
+let tegakiWidth = localStorage.getItem('tegakiwidth-setting');
+let tegakiHeight = localStorage.getItem('tegakiheight-setting');
 
 class postFormHandler {
 
