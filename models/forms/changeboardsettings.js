@@ -26,6 +26,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		'codetheme': ['board', 'threads', 'catalog', 'other'],
 		'announcement.raw': ['board', 'threads', 'catalog', 'other'],
 		'customCss': ['board', 'threads', 'catalog', 'other'],
+		'enableTegaki': ['board', 'threads', 'catalog'],
 	});
 
 module.exports = async (req, res, next) => {
@@ -65,6 +66,7 @@ module.exports = async (req, res, next) => {
 		'ids': booleanSetting(req.body.ids),
 		'geoFlags': booleanSetting(req.body.geo_flags),
 		'customFlags': booleanSetting(req.body.custom_flags),
+		'enableTegaki': booleanSetting(req.body.enable_tegaki),
 		'forceAnon': booleanSetting(req.body.force_anon),
 		'sageOnlyEmail': booleanSetting(req.body.sage_only_email),
 		'userPostDelete': booleanSetting(req.body.user_post_delete),

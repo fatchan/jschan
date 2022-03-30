@@ -50,6 +50,8 @@ setDefaultLocalStorage('yous-setting', settings.showYous);
 setDefaultLocalStorage('threadwatcher', settings.threadWatcher);
 setDefaultLocalStorage('threadwatcher-minimise', false);
 setDefaultLocalStorage('disableboardcss', false);
+setDefaultLocalStorage('tegakiwidth-setting', settings.tegakiWidth);
+setDefaultLocalStorage('tegakiheight-setting', settings.tegakiHeight);
 
 setDefaultLocalStorage('filters1', '[]');
 setDefaultLocalStorage('yous', '[]');

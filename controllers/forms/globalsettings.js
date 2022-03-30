@@ -30,7 +30,8 @@ module.exports = {
 			'board_defaults_lock_mode', 'board_defaults_file_r9k_mode', 'board_defaults_message_r9k_mode', 'board_defaults_captcha_mode', 'board_defaults_tph_trigger',
 			'board_defaults_pph_trigger', 'board_defaults_tph_trigger_action', 'board_defaults_pph_trigger_action', 'board_defaults_captcha_reset', 'board_defaults_lock_reset',
 			'board_defaults_thread_limit', 'board_defaults_reply_limit', 'board_defaults_bump_limit', 'board_defaults_max_files', 'board_defaults_min_thread_message_length',
-			'board_defaults_min_reply_message_length', 'board_defaults_max_thread_message_length', 'board_defaults_max_reply_message_length', 'board_defaults_filter_mode', 'board_defaults_delete_protection_count']
+			'board_defaults_min_reply_message_length', 'board_defaults_max_thread_message_length', 'board_defaults_max_reply_message_length', 'board_defaults_filter_mode',
+			'board_defaults_delete_protection_count', 'frontend_script_default_tegaki_height', 'frontend_script_default_tegaki_width']
 	}),
 
 	controller: async (req, res, next) => {
@@ -174,6 +175,9 @@ module.exports = {
 			{ result: minmaxBody(req.body.board_defaults_min_thread_message_length, req.body.board_defaults_max_thread_message_length), expected: true, error: 'Board defaults thread message length min must be less than max' },
 			{ result: minmaxBody(req.body.board_defaults_min_reply_message_length, req.body.board_defaults_max_reply_message_length), expected: true, error: 'Board defaults reply message length min must be less than max' },
 			{ result: numberBody(req.body.board_defaults_filter_mode, 0, 2), expected: true, error: 'Board defaults filter mode must be a number from 0-2' },
+			{ result: numberBody(req.body.frontend_script_default_volume, 0, 100), expected: true, error: 'Default volume must be a number from 0-100' },
+			{ result: numberBody(req.body.frontend_script_default_tegaki_width), expected: true, error: 'Tegaki width must be a number' },
+			{ result: numberBody(req.body.frontend_script_default_tegaki_height), expected: true, error: 'Tegaki height must be a number' },
 			{ result: numberBody(req.body.board_defaults_filter_ban_duration), expected: true, error: 'Board defaults filter ban duration must be a number' },
 			{ result: numberBody(req.body.board_defaults_delete_protection_age, 0), expected: true, error: 'Invalid board defaults OP thread age delete protection' },
 			{ result: numberBody(req.body.board_defaults_delete_protection_count, 0), expected: true, error: 'Invalid board defaults OP thread reply count delete protection' },

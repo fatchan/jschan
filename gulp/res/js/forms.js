@@ -96,6 +96,9 @@ function recaptchaCallback(response) {
 	recaptchaResponse = response;
 }
 
+let tegakiWidth = localStorage.getItem('tegakiwidth-setting');
+let tegakiHeight = localStorage.getItem('tegakiheight-setting');
+
 class postFormHandler {
 
 	constructor(form) {
@@ -110,6 +113,24 @@ class postFormHandler {
 		}
 		this.minimal = this.form.elements.minimal;
 		this.files = [];
+		this.tegakiButton = form.querySelector('.tegaki-button');
+		if (this.tegakiButton) {
+			this.tegakiButton.addEventListener('click', () => {
+				Tegaki.open({
+					onCancel: () => {},
+					onDone: () => {
+						Tegaki.flatten().toBlob(b => {
+							this.addFile(new File([b], 'tegaki.png', { type: 'image/png' }));
+							Tegaki.resetLayers();
+						}, 'image/png');
+					},
+					width: tegakiWidth,
+					height: tegakiHeight,
+				});
+				Tegaki.resetLayers();
+				Tegaki.setColorPalette(2);
+			});
+		}
 		this.fileInput = form.querySelector('input[type="file"]');
 		if (this.fileInput) {
 			this.fileRequired = this.fileInput.required;
@@ -503,5 +524,21 @@ window.addEventListener('settingsReady', () => {
 			new postFormHandler(forms[i]);
 		}
 	}
+
+	const tegakiWidthSetting = document.getElementById('tegakiwidth-setting');
+	const changeTegakiWidthSetting = (e) => {
+		tegakiWidth = parseInt(e.target.value);
+		setLocalStorage('tegakiwidth-setting', tegakiWidth);
+	}
+	tegakiWidthSetting.value = tegakiWidth;
+	tegakiWidthSetting.addEventListener('change', changeTegakiWidthSetting, false);
+
+	const tegakiHeightSetting = document.getElementById('tegakiheight-setting');
+	const changeTegakiHeightSetting = (e) => {
+		tegakiHeight = parseInt(e.target.value);
+		setLocalStorage('tegakiheight-setting', tegakiHeight);
+	}
+	tegakiHeightSetting.value = tegakiHeight;
+	tegakiHeightSetting.addEventListener('change', changeTegakiHeightSetting, false);
 
 });
