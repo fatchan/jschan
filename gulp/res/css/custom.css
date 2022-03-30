@@ -33,3 +33,6 @@ table.boardtable th:nth-child(1) {
 	top: 38px;
 	background: darkred;
 }
+.more {
+	display: list-item;
+}

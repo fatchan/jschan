@@ -164,34 +164,36 @@ mixin modal(data)
 						.label Custom CSS
 						textarea#customcss-setting(rows=7)
 
-					.row.mt-5
-						form.text-center#filter-form
-							table
-								tbody#advancedfilters
-									tr
-										th(colspan=4) Post Filters
-									tr
-										td Type
-										td Value
-										td Regex?
-										td: input.right#filters-clear(type='button' value='Clear')
-									tr
-										td: select(name='type')
-											option(value='fname') Name
-											option(value='ftrip') Tripcode
-											option(value='fsub') Subject
-											option(value='fmsg') Message
-										td
-											input#filter-value-input(required type='text' name='value')
-										td
-											input(type='checkbox' name='regex')
-										td: input.right(type='submit' value='Add')
-					.row.mt-5
-						.label
-							| Import/Export Settings
-							small.title Do NOT import untrusted settings data!
-							small Export does not include post password or (You)'s
-						textarea#import-export-setting(type='text')
-					.row
-						input.mr-1#export-setting(type='button' value='Export')
-						input#import-setting(type='button' value='Import')
+					details.fw.mt-5
+						summary.label.more More
+						.row.mt-5
+							form.text-center#filter-form
+								table
+									tbody#advancedfilters
+										tr
+											th(colspan=4) Post Filters
+										tr
+											td Type
+											td Value
+											td Regex?
+											td: input.right#filters-clear(type='button' value='Clear')
+										tr
+											td: select(name='type')
+												option(value='fname') Name
+												option(value='ftrip') Tripcode
+												option(value='fsub') Subject
+												option(value='fmsg') Message
+											td
+												input#filter-value-input(required type='text' name='value')
+											td
+												input(type='checkbox' name='regex')
+											td: input.right(type='submit' value='Add')
+						.row.mt-5
+							.label
+								| Import/Export Settings
+								small.title Do NOT import untrusted settings data!
+								small Export does not include post password or (You)'s
+							textarea#import-export-setting(type='text')
+						.row
+							input.mr-1#export-setting(type='button' value='Export')
+							input#import-setting(type='button' value='Import')
