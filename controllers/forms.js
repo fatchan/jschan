@@ -20,7 +20,7 @@ const express  = require('express')
 	, useSession = require(__dirname+'/../helpers/usesession.js')
 	, sessionRefresh = require(__dirname+'/../helpers/sessionrefresh.js')
 	, dnsblCheck = require(__dirname+'/../helpers/checks/dnsbl.js')
-	, blockBypassCheck = require(__dirname+'/../helpers/checks/blockbypass.js')
+	, blockBypass = require(__dirname+'/../helpers/checks/blockbypass.js')
 	, fileMiddlewares = require(__dirname+'/../helpers/filemiddlewares.js')
 //controllers
 	, { deleteBoardController, editBansController, appealController, globalActionController,
@@ -30,14 +30,14 @@ const express  = require('express')
 		resignController, deleteAccountController, loginController, registerController, changePasswordController,
 		deleteAccountsController, editAccountController, globalSettingsController, createBoardController, makePostController,
 		addStaffController, deleteStaffController, editStaffController, editCustomPageController, editPostController,
-		editRoleController, newCaptcha, blockBypass, logout, deleteSessionsController } = require(__dirname+'/forms/index.js');
+		editRoleController, newCaptchaForm, blockBypassForm, logoutForm, deleteSessionsController } = require(__dirname+'/forms/index.js');
 
 
 //make new post
 router.post('/board/:board/post', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, fileMiddlewares.posts,
-makePostController.paramConverter, verifyCaptcha, numFiles, blockBypassCheck, dnsblCheck, imageHashes, makePostController.controller);
+makePostController.paramConverter, verifyCaptcha, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, makePostController.controller);
 router.post('/board/:board/modpost', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn,
-hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), fileMiddlewares.posts, makePostController.paramConverter, csrf, numFiles, blockBypassCheck, dnsblCheck, makePostController.controller); //mod post has token instead of captcha
+hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), fileMiddlewares.posts, makePostController.paramConverter, csrf, numFiles, blockBypass.middleware, dnsblCheck, makePostController.controller); //mod post has token instead of captcha
 
 //post actions
 router.post('/board/:board/actions', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, actionController.paramConverter, verifyCaptcha, actionController.controller); //public, with captcha
@@ -114,7 +114,7 @@ router.post('/create', geoAndTor, torPreBypassCheck, processIp, useSession, sess
 
 //accounts
 router.post('/login', useSession, loginController.paramConverter, loginController.controller);
-router.post('/logout', useSession, logout);
+router.post('/logout', useSession, logoutForm);
 router.post('/register', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, calcPerms, registerController.paramConverter, registerController.controller);
 router.post('/changepassword', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController.paramConverter, changePasswordController.controller);
 router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, resignController.paramConverter, resignController.controller);
@@ -122,9 +122,9 @@ router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLog
 router.post('/deletesessions', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteSessionsController.paramConverter, deleteSessionsController.controller);
 
 //removes captcha cookie, for refreshing for noscript users
-router.post('/newcaptcha', newCaptcha);
+router.post('/newcaptcha', newCaptchaForm);
 //solve captcha for block bypass
-router.post('/blockbypass', geoAndTor, processIp, verifyCaptcha, blockBypass);
+router.post('/blockbypass', geoAndTor, processIp, verifyCaptcha, blockBypassForm);
 
 module.exports = router;
 

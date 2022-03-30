@@ -1,6 +1,7 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../db/')
+	, { DAY } = require(__dirname+'/timeutils.js')
 	, cache = require(__dirname+'/../redis.js');
 
 module.exports = async (req, res, next) => {
@@ -21,6 +22,7 @@ module.exports = async (req, res, next) => {
 					'staffBoards': account.staffBoards,
 					'ownedBoards': account.ownedBoards,
 				};
+				req.session.expires = new Date(Date.now() + DAY);
 				cache.set(`users:${req.session.user}`, res.locals.user, 3600);
 			}
 		}

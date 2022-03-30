@@ -39,8 +39,8 @@ module.exports = {
 	editRoleController: require(__dirname+'/editrole.js'),
 
 	//these dont have a "real" controller
-	newCaptcha: require(__dirname+'/../../models/forms/newcaptcha.js'),
-	blockBypass: require(__dirname+'/../../models/forms/blockbypass.js'),
-	logout: require(__dirname+'/../../models/forms/logout.js'),
+	newCaptchaForm: require(__dirname+'/../../models/forms/newcaptcha.js'),
+	blockBypassForm: require(__dirname+'/../../models/forms/blockbypass.js'),
+	logoutForm: require(__dirname+'/../../models/forms/logout.js'),
 
 };
