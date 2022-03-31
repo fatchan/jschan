@@ -512,6 +512,10 @@ table {
 	width: 700px;
 }
 
+#tegakiwidth-setting, #tegakiheight-setting {
+	max-width: 50px;
+}
+
 .w900 {
 	width: 900px;
 }

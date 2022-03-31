@@ -1,0 +1,659 @@
+.tegaki-icon:before {
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1em;
+}
+
+.tegaki-cancel:before { content: '❌'; }
+.tegaki-plus:before { content: '➕'; }
+.tegaki-minus:before { content: '➖'; }
+.tegaki-pen:before { content: '🖊️'; } /* '' */
+.tegaki-down-open:before { content: '⬇️'; } /* '' */
+.tegaki-up-open:before { content: '⬆️'; } /* '' */
+.tegaki-level-down:before { content: '⤵️'; } /* '' */
+.tegaki-pencil:before { content: '✏️'; } /* '' */
+.tegaki-play:before { content: '▶️'; } /* '' */
+.tegaki-bucket:before { content: '🪣'; } /* '' */
+.tegaki-pause:before { content: '⏸️'; } /* '' */
+.tegaki-blur:before { content: '👆'; } /* '' */
+.tegaki-to-start:before { content: '\e80c'; } /* '' */
+.tegaki-watercolor:before { content: '\e80d'; } /* '' */
+.tegaki-tone:before { content: '🕶️'; } /* '' */
+.tegaki-airbrush:before { content: '💨'; } /* '' */
+.tegaki-fast-fw:before { content: '\e810'; } /* '' */
+.tegaki-fast-bw:before { content: '\e811'; } /* '' */
+.tegaki-left-open:before { content: '⬅️'; } /* '' */
+.tegaki-right-open:before { content: '➡️'; } /* '' */
+.tegaki-eraser:before { content: '✏️'; transform: rotate(180deg); } /* '' */
+.tegaki-pipette:before { content: '💉'; } /* '' */
+
+.tegaki-disabled,
+.tegaki-disabled::after,
+.tegaki-disabled::before {
+  opacity: 0.35;
+}
+
+.tegaki-hidden {
+  display: none !important;
+}
+
+.tegaki-invis {
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.tegaki-replay-mode #tegaki-tools-cnt,
+.tegaki-replay-mode #tegaki-toolmode-bar,
+.tegaki-replay-mode .tegaki-ctrlgrp,
+.tegaki-replay-mode .tegaki-layers-cell,
+.tegaki-replay-mode #tegaki-layers-ctrl {
+  pointer-events: none;
+}
+
+.tegaki-replay-mode #tegaki-ctrlgrp-zoom,
+.tegaki-replay-mode #tegaki-ctrlgrp-layers {
+  pointer-events: auto;
+}
+
+#tegaki {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: var(--post-color);
+  color: var(--font-color);
+  font-family: arial, sans-serif;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  z-index: 9999;
+  display: grid;
+  grid-template-columns: 40px 1fr 160px;
+  grid-template-rows: 24px 1fr 18px;
+  grid-gap: 2px;
+}
+
+#tegaki input {
+  color: inherit;
+}
+
+#tegaki > div {
+  background-color: var(--background-rest);
+}
+
+#tegaki-menu-cnt {
+  grid-area: 1 / 1 / 2 / 4;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+}
+
+#tegaki-tools-cnt {
+  grid-area: 2 / 1 / 4 / 2;
+  padding: 4px;
+}
+
+#tegaki-canvas-cnt {
+  grid-area: 2 / 2 / 3 / 3;
+  overflow: auto;
+  display: flex;
+  touch-action: none;
+}
+
+#tegaki-ctrl-cnt {
+  grid-area: 2 / 3 / 4 / 4;
+  padding: 6px;
+  overflow: hidden auto;
+}
+
+#tegaki-status-cnt {
+  grid-area: 3 / 2 / 4 / 3;
+  line-height: 18px;
+  display: flex;
+}
+
+#tegaki-status-cnt > div {
+  padding: 0 4px;
+}
+
+#tegaki-status-replay {
+  color: #a61930;
+}
+
+#tegaki-status-output {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+#tegaki-status-version {
+  color: var(--post-color);
+  font-size: 11px;
+  margin-left: auto;
+}
+
+#tegaki-menu-bar {
+  font-size: 12px;
+  padding-left: 4px;
+  padding-right: 18px;
+  border-right: 2px solid var(--post-color);
+}
+
+.tegaki-replay-mode #tegaki-menu-bar {
+  padding-right: 4px;
+}
+
+.tegaki-menu-lbl {
+  margin: 0 2px;
+  vertical-align: middle;
+}
+
+#tegaki-replay-controls {
+  padding-right: 10px;
+  padding-left: 10px;
+  border-right: 2px solid var(--post-color);
+  font-size: 11px;
+}
+
+#tegaki-replay-timeline {
+  display: inline-block;
+  width: 100px;
+  height: 24px;
+  margin: 0 4px;
+  border-left: 1px solid var(--post-color);
+  border-right: 1px solid var(--post-color);
+  /*background-color: rgba(0, 0, 0, 0.25);*/
+}
+
+#tegaki-replay-timeline-fill {
+  display: inline-block;
+  width: 36px;
+  height: 100%;
+  background-color: var(--post-color);
+}
+
+#tegaki-replay-controls > span {
+  vertical-align: middle;
+}
+
+#tegaki-replay-controls .tegaki-ui-cb-w {
+  margin-right: 4px;
+}
+
+#tegaki-replay-speed-lbl {
+  width: 28px;
+  display: inline-block;
+  text-align: center;
+}
+
+#tegaki-replay-speed-lbl::before {
+  content: '×';
+}
+
+#tegaki-replay-now-lbl,
+#tegaki-replay-end-lbl {
+  display: inline-block;
+  max-width: 50px;
+  min-width: 30px;
+  overflow: hidden;
+  text-align: center;
+  margin: 0 4px;
+}
+
+#tegaki-toolmode-bar {
+  font-size: 11px;
+  margin-left: 4px;
+  line-height: 24px;
+}
+
+.tegaki-toolmode-lbl {
+  margin-right: 6px;
+}
+
+.tegaki-toolmode-lbl::after {
+  content: ':';
+}
+
+.tegaki-toolmode-grp {
+  border-left: 1px solid var(--post-color);
+  padding: 0 18px;
+}
+
+#tegaki canvas {
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+#tegaki .tegaki-smooth-layers #tegaki-cursor-layer {
+  image-rendering: auto;
+}
+
+.tegaki-tool-active {
+  color: #f2f3f4;
+}
+
+.tegaki-tool-btn {
+  width: 32px;
+  height: 32px;
+  display: block;
+  margin: auto;
+}
+
+.tegaki-tool-btn:hover {
+  background-color: var(--darken);
+}
+
+.tegaki-tool-btn:before {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+
+.tegaki-mb-btn {
+  cursor: default;
+  text-decoration: none;
+  display: inline-block;
+  padding: 0 6px;
+  word-spacing: -1px;
+  position: relative;
+  line-height: 24px;
+  height: 24px;
+}
+
+.tegaki-mb-btn:hover:not(.tegaki-disabled),
+.tegaki-ui-btn:hover:not(.tegaki-disabled) {
+  background-color: rgba(0, 0, 0, 0.10);
+}
+
+.tegaki-sw-btn {
+  display: inline;
+  padding: 2px 6px;
+  margin: 0 2px;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.15), -1px -1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.tegaki-sw-btn:hover:not(.tegaki-sw-btn-a) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.tegaki-sw-btn-a {
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: -1px -1px 0 rgba(0, 0, 0, 0.15), 1px 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+#tegaki-toolmode-bar .tegaki-mb-btn-a {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.10);
+}
+
+#tegaki-toolmode-bar .tegaki-mb-btn.tegaki-mb-btn-a:hover {
+  color: inherit;
+}
+
+#tegaki-debug {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#tegaki-debug canvas {
+  width: 75px;
+  height: 75px;
+  display: block;
+  border: 1px solid black;
+}
+
+.tegaki-backdrop {
+  overflow: hidden;
+}
+
+.tegaki-hidden {
+  display: none !important;
+}
+
+.tegaki-strike {
+  text-decoration: line-through;
+}
+
+#tegaki-layers {
+  position: relative;
+  font-size: 0;
+  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.25);
+  contain: content;
+}
+
+#tegaki-layers canvas {
+  width: 100%;
+  height: 100%;
+}
+
+#tegaki-layers:empty {
+  display: none;
+}
+
+#tegaki-layers-wrap {
+  margin: auto;
+  padding: 50px;
+}
+
+#tegaki-layers canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#tegaki-finish-btn {
+  font-weight: bold;
+}
+
+/* generic ui */
+.tegaki-alpha-bg,
+.tegaki-alpha-bg-xs {
+  background-color: #fefefe;
+  background-image:
+    linear-gradient(45deg, #cacaca 25%, transparent 25%, transparent 75%, #cacaca 75%, #cacaca),
+    linear-gradient(45deg, #cacaca 25%, transparent 25%, transparent 75%, #cacaca 75%, #cacaca);
+}
+
+.tegaki-alpha-bg {
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+
+.tegaki-alpha-bg-xs {
+  background-size: 6px 6px;
+  background-position: 0 0, 3px 3px;
+}
+
+.tegaki-ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.tegaki-ui-cb {
+  display: inline-block;
+  vertical-align: middle;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #222;
+  cursor: default;
+  margin-right: 4px;
+}
+
+.tegaki-ui-cb::after,
+.tegaki-ui-cb-a::after {
+  display: block;
+  content: ' ';
+  width: 6px;
+  height: 6px;
+  margin-top: 2px;
+  margin-left: 2px;
+}
+
+.tegaki-ui-cb-a::after {
+  background-color: #222;
+}
+
+.tegaki-ui-cb-w:hover .tegaki-ui-cb::after,
+.tegaki-ui-cb:hover::after {
+  background-color: #555;
+}
+
+.tegaki-ui-ellipsis::after {
+  content: '...';
+  letter-spacing: -1px;
+}
+
+.tegaki-ui-borderless {
+  border: none;
+}
+
+.tegaki-ui-btn {
+  display: inline-block;
+}
+
+.tegaki-ui-btn:before {
+  height: 24px;
+  width: 24px;
+  line-height: 24px;
+  font-size: 14px;
+}
+
+.tegaki-stealth-input {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: none;
+}
+
+.tegaki-stealth-input:hover:not(.tegaki-disabled) {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tegaki-range-lbl,
+.tegaki-range-lbl-xs {
+  display: inline-block;
+  text-align: center;
+  vertical-align: top;
+}
+
+.tegaki-range-lbl {
+  width: 28px;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.tegaki-range-lbl-xs {
+  width: 20px;
+  font-size: 10px;
+}
+
+.tegaki-label-xs {
+  font-size: 10px;
+  vertical-align: top;
+}
+
+.tegaki-lbl-c::after {
+  content: ':';
+}
+
+.tegaki-lbl-p::after {
+  content: '%';
+  margin-left: 1px;
+}
+
+.tegaki-drag-lbl:not(.tegaki-disabled) {
+  cursor: ew-resize;
+}
+
+.tegaki-disabled .tegaki-drag-lbl {
+  cursor: auto;
+}
+
+/* control groups */
+.tegaki-ctrlgrp {
+  margin-bottom: 10px;
+}
+
+.tegaki-ctrlgrp:last-child {
+  margin-bottom: 0;
+}
+
+.tegaki-ctrlgrp-title {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  background-color: var(--post-color);
+  padding: 1px 4px;
+}
+
+.tegaki-ctrlrow {
+  font-size: 11px;
+}
+
+.tegaki-ctrlrow:not(:last-child) {
+  margin-bottom: 6px;
+}
+
+.tegaki-ctrl-range {
+  width: calc(100% - 34px);
+  padding: 0;
+  margin: 0;
+  height: 14px;
+}
+
+/* zoom ctrl group */
+#tegaki-zoom-lbl {
+  display: inline-block;
+  font-size: 12px;
+  float: right;
+  height: 24px;
+  line-height: 24px;
+}
+
+/* color ctrl group */
+#tegaki-color-ctrl {
+  display: flex;
+}
+
+#tegaki-palette-switcher {
+  align-self: center;
+  margin-left: auto;
+}
+
+.tegaki-color-grid {
+  display: grid;
+  grid-gap: 4px;
+  margin-top: 6px;
+}
+
+.tegaki-color-grid-20 {
+  grid-template-columns: repeat(auto-fill, 20px);
+  grid-auto-rows: 20px;
+}
+
+.tegaki-color-grid-15 {
+  grid-template-columns: repeat(auto-fill, 15px);
+  grid-auto-rows: 15px;
+}
+
+.tegaki-color-btn {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+#tegaki-color,
+#tegaki-colorpicker {
+  padding: 0;
+  border: 0;
+  display: block;
+  width: 28px;
+  height: 28px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+/* layers ctrl group */
+#tegaki-ctrlgrp-layers {
+  position: relative;
+}
+
+#tegaki-layers-opts {
+  height: 18px;
+  display: flex;
+}
+
+#tegaki-layer-alpha-cell {
+  margin-left: auto;
+}
+
+#tegaki-layers-ctrl {
+  margin-top: 4px;
+}
+
+#tegaki-layers-grid {
+  height: 84px;
+  min-height: 84px;
+  overflow: auto;
+  background-color: var(--post-color);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--post-color);
+  resize: vertical;
+}
+
+.tegaki-layers-cell {
+  box-sizing: border-box;
+  box-shadow: 0 1px 0 0px var(--post-color);
+  padding: 0;
+  height: 28px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.tegaki-layers-cell-s,
+.tegaki-layers-cell-a {
+  background-color: var(--post-color);
+}
+
+.tegaki-layers-cell-a {
+  font-weight: bold;
+}
+
+.tegaki-layers-cell-v {
+  margin: 0 6px 0 4px;
+}
+
+.tegaki-layers-cell-v .tegaki-ui-cb {
+  vertical-align: unset;
+  margin: 0;
+}
+
+.tegaki-layers-cell-p {
+  margin-right: 6px;
+}
+
+.tegaki-layers-cell-p canvas {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+  vertical-align: middle;
+}
+
+.tegaki-layers-cell-s .tegaki-layers-cell-p canvas {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 1.0);
+}
+
+.tegaki-layers-cell-n {
+  font-size: 11px;
+  margin-right: 1px;
+  min-width: 20px;
+}
+
+.tegaki-layers-cell-d {
+  box-shadow: inset 0 -2px 0 0 #000;
+  z-index: 2;
+}
+
+#tegaki-layers-grid.tegaki-layers-cell-d {
+  box-shadow: 0 -2px 0 0px #000;
+}
+
+#tegaki-layers-cell-dx {
+  position: absolute;
+  background: transparent;
+  width: 100%;
+  height: 32px;
+  margin-top: -32px;
+}
+

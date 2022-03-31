@@ -47,6 +47,9 @@ section.form-wrapper.flex-center
 					span File#{maxFiles > 1 ? 's' : ''}
 						if fileRequired
 							span.required *
+						if board.settings.enableTegaki && board.settings.allowedFileTypes.image === true
+							|  
+							span.dummy-link.tegaki-button.jsonly 🖌️
 					|
 					| 
 					if maxFiles > 1
