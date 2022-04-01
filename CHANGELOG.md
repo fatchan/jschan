@@ -1,3 +1,7 @@
+### 0.5.1
+  - Small change to expanding spoilered files.
+  - Bugfix outdated bans template mixin.
+
 ### 0.5.0
   - Add tegaki.js (oekaki). Has board toggle and settings option for default canvas size.
 
