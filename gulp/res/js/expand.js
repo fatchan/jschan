@@ -89,6 +89,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			const fileHref = fileAnchor.href;
 			const type = this.dataset.type;
 			const thumbElement = fileAnchor.firstChild;
+			const isSpoilered = thumbElement.classList.contains('spoilerimg');
 			const fileName = this.previousSibling;
 			const pfs = this.closest('.post-file-src');
 			let expandedElement = type === 'image' ? thumbElement.nextSibling : fileAnchor.nextSibling;
@@ -100,8 +101,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				switch(type) {
 					case 'image':
 						e.preventDefault();
-						fileAnchor.style.minWidth = fileAnchor.offsetWidth+'px';
-						fileAnchor.style.minHeight = fileAnchor.offsetHeight+'px';
+						if (!isSpoilered) {
+							fileAnchor.style.minWidth = fileAnchor.offsetWidth+'px';
+							fileAnchor.style.minHeight = fileAnchor.offsetHeight+'px';
+						}
 						thumbElement.style.opacity = '0.5';
 						thumbElement.style.cursor = 'wait'
 						if (localStorage.getItem('imageloadingbars') == 'true') {
@@ -179,7 +182,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 							expandedElement.style.backgroundSize = 'contain';
 							expandedElement.style.minWidth = thumbElement.width+'px';
 							expandedElement.style.paddingTop = thumbElement.height+'px';
-						} else {
+						} else if (!isSpoilered) {
 							expandedElement.style.minWidth = fileAnchor.offsetWidth+'px';
 							expandedElement.style.minHeight = fileAnchor.offsetHeight+'px';
 						}
