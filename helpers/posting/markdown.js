@@ -59,7 +59,7 @@ module.exports = {
 			//every other chunk will be a code block
 			if (i % 2 === 0) {
 				chunks[i] = chunks[i].replace(
-					diceroll.regexPrepare, diceroll.prepare(force));
+					diceroll.regexPrepare, diceroll.prepare.bind(null, force));
 			}
 		}
 		return chunks.join('');

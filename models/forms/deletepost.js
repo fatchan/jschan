@@ -5,12 +5,10 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts, Files } = require(__dirname+'/../../db/')
 	, Socketio = require(__dirname+'/../../socketio.js')
-	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
-	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
+	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
+	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, config = require(__dirname+'/../../config.js')
 	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
-	, sanitize = require('sanitize-html')
-	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
 
 module.exports = async (posts, board, all=false) => {
 
@@ -127,9 +125,8 @@ module.exports = async (posts, board, all=false) => {
 			await Promise.all(remarkupPosts.map(async post => { //doing these all at once
 				if (post.nomarkup && post.nomarkup.length > 0) { //is this check even necessary? how would it have a quote with no message
 					//redo the markup
-					let message = markdown(post.nomarkup);
-					const { quotedMessage, threadQuotes, crossQuotes } = await quoteHandler.process(post.board, message, post.thread);
-					message = sanitize(quotedMessage, sanitizeOptions.after);
+					const nomarkup = prepareMarkdown(post.nomarkup, false);
+					const { message, quotes, crossquotes } = await messageHandler(nomarkup, post.board, post.thread, null);
 					bulkWrites.push({
 						'updateOne': {
 							'filter': {
@@ -137,8 +134,8 @@ module.exports = async (posts, board, all=false) => {
 							},
 							'update': {
 								'$set': {
-									'quotes': threadQuotes,
-									'crossquotes': crossQuotes,
+									'quotes': quotes,
+									'crossquotes': crossquotes,
 									'message': message
 								}
 							}

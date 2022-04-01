@@ -1,3 +1,7 @@
+### 0.5.2
+  - Fix regression in remarkup of posts during moving, deleting, cyclic threads, etc due to permissions.
+  - Small internal change to how dicerolls are processed.
+
 ### 0.5.1
   - Small change to expanding spoilered files.
   - Bugfix outdated bans template mixin.
