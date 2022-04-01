@@ -121,6 +121,7 @@ class postFormHandler {
 					onDone: () => {
 						Tegaki.flatten().toBlob(b => {
 							this.addFile(new File([b], 'tegaki.png', { type: 'image/png' }));
+							this.updateFilesText();
 							Tegaki.resetLayers();
 						}, 'image/png');
 					},
