@@ -694,6 +694,7 @@ details.actions div {
 	margin-right: 1px;
 	position: absolute;
     right: 0;
+	padding: 8px;
 }
 
 .floatactions[open] #action-menu:hover {
@@ -701,8 +702,8 @@ details.actions div {
 }
 
 .floatactions[open] #action-menu::before {
-	content: "X";
-	font-size: 10pt!important;
+	content: "×";
+	font-size: initial!important;
 }
 
 div.captchafield {
