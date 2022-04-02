@@ -5,7 +5,7 @@ module.exports = {
 	regexPrepare: /##(?<numdice>[1-9][0-9]{0,1})d(?<numsides>1[0-9]{1,8}|[2-9][0-9]{0,8})(?:(?<operator>[+-])(?<modifier>[1-9][0-9]{0,8}))?(?<value>=[1-9][0-9]{0,8})?/gmi,
 	regexMarkdown: /##(?<numdice>[1-9][0-9]{0,1})d(?<numsides>1[0-9]{1,8}|[2-9][0-9]{0,8})(?:(?<operator>[+-])(?<modifier>[1-9][0-9]{0,8}))?&#x3D;(?<value>[1-9][0-9]{0,8})/gmi,
 
-	prepare: (force) => (match, numdice, numsides, operator, modifier, value) => {
+	prepare: (force, match, numdice, numsides, operator, modifier, value) => {
 		if (!force && value) {
 			return match;
 		}

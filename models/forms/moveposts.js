@@ -4,11 +4,9 @@ const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.
 	, { remove } = require('fs-extra')
 	, { Posts } = require(__dirname+'/../../db/')
 	, Socketio = require(__dirname+'/../../socketio.js')
-	, quoteHandler = require(__dirname+'/../../helpers/posting/quotes.js')
-	, { markdown } = require(__dirname+'/../../helpers/posting/markdown.js')
+	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
+	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
 	, { createHash } = require('crypto')
-	, sanitize = require('sanitize-html')
-	, sanitizeOptions = require(__dirname+'/../../helpers/posting/sanitizeoptions.js');
 
 module.exports = async (req, res) => {
 
@@ -128,14 +126,13 @@ module.exports = async (req, res) => {
 				postUpdate.userId = userId;
 			}
 			if (post.nomarkup && post.nomarkup.length > 0) {
-				let message = markdown(post.nomarkup);
-				let { quotedMessage, threadQuotes, crossQuotes } = await quoteHandler.process(post.board, message, post.thread); // req.body.move_to_thread);
-				message = sanitize(quotedMessage, sanitizeOptions.after);
+				const nomarkup = prepareMarkdown(post.nomarkup, false);
+				const { message, quotes, crossquotes } = await messageHandler(nomarkup, post.board, post.thread, null);
 				bulkWrites.push({
 					'updateMany': {
 						'filter': {
 							'_id': {
-								'$in': threadQuotes.map(q => q._id)
+								'$in': quotes.map(q => q._id)
 							}
 						},
 						'update': {
@@ -145,8 +142,8 @@ module.exports = async (req, res) => {
 						}
 					}
 				});
-				postUpdate.quotes = threadQuotes;
-				postUpdate.crossquotes = crossQuotes;
+				postUpdate.quotes = quotes;
+				postUpdate.crossquotes = crossquotes;
 				postUpdate.message = message;
 			}
 			if (Object.keys(postUpdate).length > 0) {

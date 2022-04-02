@@ -4,7 +4,7 @@
 const quoteHandler = require(__dirname+'/quotes.js')
 	, { markdown } = require(__dirname+'/markdown.js')
 	, sanitizeOptions = require(__dirname+'/sanitizeoptions.js')
-	, Permission = require(__dirname+'/../permissions.js')
+	, Permission = require(__dirname+'/../permission.js')
 	, roleManager = require(__dirname+'/../rolemanager.js')
 	, sanitize = require('sanitize-html');
 
