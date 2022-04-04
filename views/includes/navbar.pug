@@ -7,6 +7,6 @@ unless minimal
 				.rainbow +Webring
 		a.nav-item#overboardlink(href='/overboard.html') Overboard
 		a.nav-item(href='/account.html') Account
-		if board
-			a.nav-item(href=`/${board._id}/manage/reports.html`) Manage
+		if !modview && board
+			a.nav-item(href=`/${board._id}/manage/${managePage || 'index.html'}`) Manage
 		a.jsonly.nav-item.right#settings
