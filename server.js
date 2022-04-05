@@ -153,7 +153,7 @@ const config = require(__dirname+'/config.js')
 	})
 
 	//listen
-	server.listen(port, '127.0.0.1', () => {
+	server.listen(port, (process.env.JSCHAN_IP || '127.0.0.1'), () => {
 		new CachePugTemplates({ app, views }).start();
 		debugLogs && console.log(`LISTENING ON :${port}`);
 		//let PM2 know that this is ready for graceful reloads and to serialise startup

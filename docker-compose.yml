@@ -1,0 +1,37 @@
+version: "3.5"
+services:
+
+  redis:
+    image: redis:alpine
+
+  mongodb:
+    image: mongo:latest
+
+  nginx:
+    image: nginx:stable
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/jschan.conf
+      - ./configs/nginx/snippets/:/etc/nginx/snippets/
+      - ./docker/jschan_clearnet_routes.conf/:/etc/nginx/snippets/jschan_clearnet_routes.conf
+    ports:
+      - "8080:81"
+    depends_on:
+      - jschan
+
+  jschan:
+    build:
+      context: .
+      dockerfile: ./docker/jschan-Dockerfile
+      network: jschan_default
+    volumes:
+      - ./docker/secrets.js:/opt/configs/secrets.js
+    environment:
+      - NODE_ENV=development
+      - JSCHAN_IP=0.0.0.0
+    depends_on: 
+      - redis
+      - mongodb
+
+networks:
+  default:
+    name: jschan_default

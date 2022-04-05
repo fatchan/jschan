@@ -1,0 +1,16 @@
+FROM node:16
+
+WORKDIR /opt
+ENV NODE_ENV development
+
+COPY . /opt/
+COPY ./docker/secrets.js /opt/configs/secrets.js
+
+RUN npm install
+RUN npm run-script setup
+RUN gulp reset
+RUN gulp
+
+EXPOSE 7000
+
+CMD [ "pm2-runtime", "start", "ecosystem.config.js" ]
