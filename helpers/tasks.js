@@ -30,6 +30,7 @@ module.exports = {
 	buildBanners: async (options) => {
 		const label = `/${options.board._id}/banners.html`;
 		const start = process.hrtime();
+		options.managePage = 'assets.html';
 		const { html } = await render(label, 'banners.pug', options, {
 			'name': `/${options.board._id}/banners.json`,
 			'data': options.board.banners
@@ -45,6 +46,7 @@ module.exports = {
 		if (!options.board._id) {
 			options.board = await Boards.findOne(options.board);
 		}
+		options.managePage = 'catalog.html';
 		const threads = await Posts.getCatalog(options.board._id);
 		const { html, json } = await render(label, 'catalog.pug', {
 			...options,
@@ -64,6 +66,7 @@ module.exports = {
 		if (!options.board._id) {
 			options.board = await Boards.findOne(options.board);
 		}
+		options.managePage = `thread/${options.threadId}.html`;
 		const thread = await Posts.getThread(options.board._id, options.threadId);
 		if (!thread) {
 			return; //this thread may have been an OP that was deleted
@@ -87,11 +90,13 @@ module.exports = {
 		if (!options.maxPage) {
 			options.maxPage = Math.min(Math.ceil((await Posts.getPages(options.board._id)) / 10), Math.ceil(options.board.settings.threadLimit/10));
 		}
+		const pageText = options.page === 1 ? 'index' : options.page;
+		options.managePage = `${pageText}.html`;
 		const { html, json } = await render(label, 'board.pug', {
 			...options,
 			threads,
 		}, {
-			'name': `/${options.board._id}/${options.page === 1 ? 'index' : options.page}.json`,
+			'name': `/${options.board._id}/${pageText}.json`,
 			'data': threads
 		});
 		const end = process.hrtime(start);
@@ -123,12 +128,14 @@ module.exports = {
 				spliceStart = spliceStart - 1;
 			}
 			const pageThreads = threads.splice(0,10);
+			const pageText = i === 1 ? 'index' : i;
 			buildArray.push(
-				render(`${options.board._id}/${i === 1 ? 'index' : i}.html`, 'board.pug', {
+				render(`${options.board._id}/${pageText}.html`, 'board.pug', {
 					board: options.board,
 					threads: pageThreads,
 					maxPage,
 					page: i,
+					managePage: `${pageText}.html`,
 				}, {
 					'name': `/${options.board._id}/${i === 1 ? 'index' : i}.json`,
 					'data': pageThreads
@@ -165,6 +172,7 @@ module.exports = {
 		if (!options.board._id) {
 			options.board = await Boards.findOne(options.board);
 		}
+		options.managePage = 'custompages.html';
 		const { html } = await render(label, 'custompage.pug', {
 			...options,
 		});
@@ -190,6 +198,7 @@ module.exports = {
 		if (!options.logs) {
 			options.logs = await Modlogs.findBetweenDate(options.board, options.startDate, options.endDate);
 		}
+		options.managePage = 'logs.html';
 		const { html } = await render(label, 'modlog.pug', {
 			...options
 		});
@@ -225,7 +234,8 @@ module.exports = {
 		}
 		const { html } = await render(label, 'modloglist.pug', {
 			board: options.board,
-			dates
+			dates,
+			managePage: 'logs.html',
 		});
 		const end = process.hrtime(start);
 		debugLogs && console.log(timeDiffString(label, end));

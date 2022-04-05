@@ -1,3 +1,7 @@
+### 0.5.3
+  - Visual bugfix to custom flag saving.
+  - Make "Manage" navbar link go to the current page in modview, instead of defaulting to reports page.
+
 ### 0.5.2
   - Fix regression in remarkup of posts during moving, deleting, cyclic threads, etc due to permissions.
   - Small internal change to how dicerolls are processed.
