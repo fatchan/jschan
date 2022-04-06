@@ -64,6 +64,21 @@ services:
       - redis
       - mongodb
 
+  jschan-test:
+    build:
+      context: .
+      dockerfile: ./docker/jschan/Dockerfile-test
+      network: jschan_default
+    environment:
+      - MONGO_USERNAME=jschan
+      - MONGO_PASSWORD=changeme
+      - REDIS_PASSWORD=changeme
+    volumes:
+      - ./docker/static:/opt/static/
+    depends_on:
+      - redis
+      - mongodb
+
 networks:
   default:
     name: jschan_default
