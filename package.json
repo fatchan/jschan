@@ -52,8 +52,11 @@
     "uid-safe": "^2.1.5",
     "unix-crypt-td-js": "^1.1.4"
   },
+  "devDependencies": {
+    "jest": "^27.5.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "setup": "npm i -g pm2 gulp && gulp generate-favicon && gulp default",
     "start": "pm2 start ecosystem.config.js --env production",
     "start-dev": "pm2 start ecosystem.config.js --env development"
