@@ -45,7 +45,7 @@ services:
       - HCAPTCHA_SECRETKEY=0x0000000000000000000000000000000000000000
     volumes:
       - ./docker/static:/opt/static/
-    depends_on: 
+    depends_on:
       - redis
       - mongodb
 
@@ -60,7 +60,7 @@ services:
       - REDIS_PASSWORD=changeme
     volumes:
       - ./docker/static:/opt/static/
-    depends_on: 
+    depends_on:
       - redis
       - mongodb
 

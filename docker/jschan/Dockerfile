@@ -11,8 +11,13 @@ RUN npm install
 
 RUN npm install -g pm2 gulp
 
-RUN rm /opt/gulp/res/js/socket.io.js
-
 COPY ./docker/jschan/secrets.js ./configs/secrets.js
+
+#i fucking hate docker
+ENV MONGO_USERNAME jschan
+ENV MONGO_PASSWORD changeme
+ENV REDIS_PASSWORD changeme
+
+RUN gulp generate-favicon
 
 CMD ["/bin/sh", "-c", "gulp; pm2-runtime start ecosystem.config.js"]
