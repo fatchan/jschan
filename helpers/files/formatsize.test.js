@@ -1,6 +1,6 @@
 const formatSize = require('./formatsize.js');
 
-describe('helpers/files/formatsize.js', () => {
+describe('formatSize() - convert bytes to human readable file size', () => {
 	const cases = [
 		{in: 1024, out: "1KB"},
 		{in: Math.pow(1024, 2), out: "1MB"},
