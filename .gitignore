@@ -3,6 +3,7 @@ backup.sh
 configs/*.json
 configs/*.js
 static/*
+docker/static/*
 gulp/res/js/socket.io.js
 /gulp/res/css/codethemes
 gulp/res/css/locals.css
