@@ -3,7 +3,7 @@
 const path = require('path')
 	, { createHash, randomBytes } = require('crypto')
 	, randomBytesAsync = require('util').promisify(randomBytes)
-	, { remove, pathExists, stat: fsStat } = require('fs-extra')
+	, { remove, emptyDir, pathExists, stat: fsStat } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Socketio = require(__dirname+'/../../socketio.js')
@@ -628,7 +628,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	if (enableCaptcha) {
 		if (res.locals.board.settings.captchaMode == 2) {
 			//only delete threads if all posts require threads, otherwise just build board pages for thread captcha
-			await remove(`${uploadDirectory}/html/${req.params.board}/thread/`); //not deleting json cos it doesnt need to be
+			await emptyDir(`${uploadDirectory}/html/${req.params.board}/thread/`); //not deleting json cos it doesnt need to be
 		}
 		const endPage = Math.ceil(threadLimit/10);
 		buildQueue.push({
