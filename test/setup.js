@@ -27,6 +27,23 @@ module.exports = () => describe('login and create test board', () => {
 			.then(json => json.token);
 	});
 
+	test('delete test board if exists',  async () => {
+		const params = new URLSearchParams();
+		params.append('_csrf', csrfToken);
+		params.append('uri', 'test');
+		params.append('confirm', 'true');
+		const response = await fetch('http://localhost/forms/board/test/deleteboard', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect([200, 404]).toContain(response.status)
+	});
+
 	test('create test board',  async () => {
 		const params = new URLSearchParams();
 		params.append('uri', 'test');
