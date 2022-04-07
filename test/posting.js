@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-describe('Test posting', () => {
+module.exports = () => describe('Test posting', () => {
 
 	let threadId;
 	test('post new thread',  async () => {

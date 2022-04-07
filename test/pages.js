@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-describe('Test loading dynamic pages', () => {
+module.exports = () => describe('Test loading dynamic pages', () => {
 
 	test('/boards.html',  async () => {
 		const response = await fetch('http://localhost/boards.html');

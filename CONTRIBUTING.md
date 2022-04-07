@@ -31,7 +31,7 @@ Read the code to understand, but basically:
   * TAB for indentation.
   * Please include comments.
 
-## Running tests
+## Running tests (WIP)
 
 Make sure these still pass after your changes, or adjust them to meet the new expected results.
 
@@ -40,12 +40,12 @@ There is a "jschan-test" service in the `docker-compose.yml` file that will run 
 You can also Run them locally if you have an instance setup (or for quickly running unit tests):
 
 ```bash
-#unit tests only
+#unit tests
 npm run test
 # OR npm run test:unit
 
-#integration tests only
-npm run test:integration
+#integration tests
+TEST_ADMIN_PASSWORD=<password from jschan-reset docker> npm run test:integration
 
 #all tests
 npm run test:all
