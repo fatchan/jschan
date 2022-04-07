@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
 
 	const { name, description } = req.body
 		, uri = req.body.uri.toLowerCase()
-		, tags = req.body.tags.split(/\r?\n/).filter(n => n)
+		, tags = (req.body.tags || '').split(/\r?\n/).filter(n => n)
 		, owner = req.session.user;
 
 	if (restrictedURIs.has(uri)) {
