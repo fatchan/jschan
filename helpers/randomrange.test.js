@@ -13,8 +13,8 @@ describe('randomRange() - return number with secure crypto', () => {
 	for(let i in cases) {
 		test(`randomRange should output ${cases[i].in.min}<=out<=${cases[i].in.max} for an input of ${cases[i].in.min}, ${cases[i].in.max}`, async () => {
 			const output = await randomRange(cases[i].in.min, cases[i].in.max);
-			expect(output).toBeGreaterThanOrEqual(cases[i].in.min);
-			expect(output).toBeLessThanOrEqual(cases[i].in.max);
+			expect(output).toBeGreaterThanOrEqual(Math.floor(cases[i].in.min));
+			expect(output).toBeLessThanOrEqual(Math.floor(cases[i].in.max));
 		});
 	}
 
