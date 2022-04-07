@@ -478,6 +478,11 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		});
 	}
 
+	let threadPage = null;
+	if (data.thread) {
+		threadPage = await Posts.getThreadPage(req.params.board, data.thread);
+	}
+
 	const { postId, postMongoId } = await Posts.insertOne(res.locals.board, data, thread, res.locals.anonymizer);
 
 	let enableCaptcha = false; //make this returned from some function, refactor and move the next section to another file
@@ -641,7 +646,6 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		});
 	} else if (data.thread) {
 		//refersh pages
-		const threadPage = await Posts.getThreadPage(req.params.board, thread);
 		if (data.email === 'sage' || thread.bumplocked) {
 			//refresh the page that the thread is on
 			buildQueue.push({
