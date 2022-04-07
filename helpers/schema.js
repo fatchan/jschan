@@ -31,11 +31,11 @@ module.exports = {
 		if (maxNew == null) {
 			maxNew = maxOld;
 		}
-		const varMin = Math.min(minOld, minNew);
+		const varMin = minNew;
 		if (isNaN(varMin)) {
 			varMin = minOld;
 		}
-		const varMax = Math.max(maxOld, maxNew);
+		const varMax = maxNew;
 		if (isNaN(varMax)) {
 			varMax = maxOld;
 		}
