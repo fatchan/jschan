@@ -56,7 +56,10 @@
     "jest": "^27.5.1"
   },
   "scripts": {
-    "test": "jest --verbose",
+    "test": "npm run test:unit",
+    "test:unit": "jest --verbose --testPathIgnorePatterns=./test/",
+    "test:integration": "jest --verbose --testPathPattern=./test/",
+    "test:all": "jest --verbose",
     "setup": "npm i -g pm2 gulp && gulp generate-favicon && gulp default",
     "start": "pm2 start ecosystem.config.js --env production",
     "start-dev": "pm2 start ecosystem.config.js --env development"

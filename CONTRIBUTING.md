@@ -31,5 +31,28 @@ Read the code to understand, but basically:
   * TAB for indentation.
   * Please include comments.
 
+## Running tests
+
+Make sure these still pass after your changes, or adjust them to meet the new expected results.
+
+There is a "jschan-test" service in the `docker-compose.yml` file that will run all the tests in a jschan instance using the docker instance. See the advanced section of installation for some instruction on how to use this.
+
+You can also Run them locally if you have an instance setup (or for quickly running unit tests):
+
+```bash
+#unit tests only
+npm run test
+# OR npm run test:unit
+
+#integration tests only
+npm run test:integration
+
+#all tests
+npm run test:all
+
+#specific test(s)
+npm run test:all <filename|regex>
+```
+
 Thanks,
 Tom
