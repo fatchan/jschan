@@ -9,7 +9,7 @@ describe('trimSetting, numberSetting, booleanSetting, arraySetting', () => {
 		{ in: null, out: 'OLDSETTING' },
 	];
 	for(let i in trimCases) {
-		test(`should output ${trimCases[i].out} for an input of ${trimCases[i].in}`, () => {
+		test(`trimSetting should output ${trimCases[i].out} for an input of ${trimCases[i].in}`, () => {
 			expect(trimSetting(trimCases[i].in, 'OLDSETTING')).toStrictEqual(trimCases[i].out);
 		});
 	}
@@ -23,7 +23,7 @@ describe('trimSetting, numberSetting, booleanSetting, arraySetting', () => {
 		{ in: 'string', out: 'OLDSETTING' },
 	];
 	for(let i in numberCases) {
-		test(`should output ${numberCases[i].out} for an input of ${numberCases[i].in}`, () => {
+		test(`numberSetting should output ${numberCases[i].out} for an input of ${numberCases[i].in}`, () => {
 			expect(numberSetting(numberCases[i].in, 'OLDSETTING')).toStrictEqual(numberCases[i].out);
 		});
 	}
@@ -38,7 +38,7 @@ describe('trimSetting, numberSetting, booleanSetting, arraySetting', () => {
 		{ in: [1], out: true },
 	];
 	for(let i in booleanCases) {
-		test(`should output ${booleanCases[i].out} for an input of ${booleanCases[i].in}`, () => {
+		test(`booleanSetting should output ${booleanCases[i].out} for an input of ${booleanCases[i].in}`, () => {
 			expect(booleanSetting(booleanCases[i].in)).toStrictEqual(booleanCases[i].out);
 		});
 	}
@@ -61,7 +61,7 @@ describe('trimSetting, numberSetting, booleanSetting, arraySetting', () => {
 xxx`, out: ['  hello  ', '123', 'xxx'] },
 	];
 	for(let i in arrayCases) {
-		test(`should output ${arrayCases[i].out} for an input of ${arrayCases[i].in}`, () => {
+		test(`arraySetting should output ${arrayCases[i].out} for an input of ${arrayCases[i].in}`, () => {
 			expect(arraySetting(arrayCases[i].in, 'OLDSETTING', 10)).toStrictEqual(arrayCases[i].out);
 		});
 	}
