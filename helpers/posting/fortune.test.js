@@ -1,12 +1,9 @@
 const fortune = require('./fortune.js');
 
 describe('fortune markdown', () => {
-	const cases = [
-		{ in: '##fortune', out: "<span class='title'>" },
-	];
-	for(let i in cases) {
-		test(`should contain ${cases[i].out} for an input of ${cases[i].in}`, () => {
-			expect(cases[i].in.replace(fortune.regex, fortune.markdown.bind(null, false))).toContain(cases[i].out)
-		});
-	}
+	test(`should contain a random fortune for an input of ##fortune`, () => {
+		const output = '##fortune'.replace(fortune.regex, fortune.markdown.bind(null, false));
+		const hasFortuneText = fortune.fortunes.some(f => output.includes(f));
+		expect(hasFortuneText).toBe(true);
+	});
 });
