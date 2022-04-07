@@ -4,9 +4,9 @@ const { buildCatalog } = require(__dirname+'/../../helpers/tasks.js');
 
 module.exports = async (req, res, next) => {
 
-	let html;
+	let html, json;
 	try {
-		({ html } = await buildCatalog({ board: res.locals.board }));
+		({ html, json } = await buildCatalog({ board: res.locals.board }));
 	} catch (err) {
 		return next(err);
 	}
