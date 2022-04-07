@@ -1,4 +1,3 @@
-
 const fetch = require('node-fetch');
 
 module.exports = () => describe('login and create test board', () => {

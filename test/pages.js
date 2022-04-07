@@ -2,72 +2,58 @@ const fetch = require('node-fetch');
 
 module.exports = () => describe('Test loading a bunch of pages', () => {
 
-	test('/boards.html',  async () => {
-		const response = await fetch('http://localhost/boards.html');
-		expect(response.ok).toBe(true);
+	const urls = [
+		'boards.html',
+		'boards.json',
+		'boards.json?search=test&sort=popularity&direction=desc',
+		'boards.html?search=test&sort=popularity&direction=desc',
+		'overboard.html',
+		'overboard.json',
+		'overboard.html?add=test&rem=abc',
+		'overboard.json?add=test&rem=abc',
+		'index.html',
+		'news.html',
+		'rules.html',
+		'faq.html',
+		'globalmanage/recent.html',
+		'globalmanage/reports.html',
+		'globalmanage/bans.html',
+		'globalmanage/boards.html',
+		'globalmanage/globallogs.html',
+		'globalmanage/accounts.html',
+		'globalmanage/roles.html',
+		'globalmanage/news.html',
+		'globalmanage/settings.html',
+	]
+
+	let sessionCookie
+	test('login as admin',  async () => {
+		const params = new URLSearchParams();
+		params.append('username', 'admin');
+		params.append('password', process.env.TEST_ADMIN_PASSWORD);
+		const response = await fetch('http://localhost/forms/login', {
+			headers: {
+				'x-using-xhr': 'true',
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		const rawHeaders = response.headers.raw();
+		expect(rawHeaders['set-cookie']).toBeDefined();
+		expect(rawHeaders['set-cookie'][0]).toMatch(/^connect\.sid/);
+		sessionCookie = rawHeaders['set-cookie'][0];
 	});
 
-	test('/boards.json',  async () => {
-		const response = await fetch('http://localhost/boards.json');
-		expect(response.ok).toBe(true);
-		expect((await response.json()).boards.length).toBeGreaterThan(0);
-	});
-
-	test('/boards.html with query search for existing board',  async () => {
-		const response = await fetch('http://localhost/boards.html?search=test&sort=popularity&direction=desc');
-		expect(response.ok).toBe(true);
-	});
-
-	test('/boards.json with query search for existing board',  async () => {
-		const response = await fetch('http://localhost/boards.json?search=test&sort=popularity&direction=desc');
-		expect(response.ok).toBe(true);
-		expect((await response.json()).boards.length).toBeGreaterThan(0);
-	});
-
-	test('/boards.json with query search for not existing board',  async () => {
-		const response = await fetch('http://localhost/boards.json?search=notexistingboard');
-		expect(response.ok).toBe(true);
-		expect((await response.json()).boards.length).toBe(0);
-	});
-
-	test('/overboard.html',  async () => {
-		const response = await fetch('http://localhost/overboard.html');
-		expect(response.ok).toBe(true);
-	});
-
-	test('/overboard.json',  async () => {
-		const response = await fetch('http://localhost/overboard.json');
-		expect(response.ok).toBe(true);
-	});
-
-	test('/overboard.html with query',  async () => {
-		const response = await fetch('http://localhost/overboard.html?add=test&rem=abc');
-		expect(response.ok).toBe(true);
-	});
-
-	test('/overboard.json with query',  async () => {
-		const response = await fetch('http://localhost/overboard.json?add=test&rem=abc');
-		expect(response.ok).toBe(true);
-	});
-
-	test('/index.html',  async () => {
-		const response = await fetch('http://localhost/index.html');
-		expect(response.ok).toBe(true);
-	});
-
-	test('/news.html',  async () => {
-		const response = await fetch('http://localhost/news.html');
-		expect(response.ok).toBe(true);
-	});
-
-	test('/rules.html',  async () => {
-		const response = await fetch('http://localhost/rules.html');
-		expect(response.ok).toBe(true);
-	});
-
-	test('/faq.html',  async () => {
-		const response = await fetch('http://localhost/faq.html');
-		expect(response.ok).toBe(true);
-	});
+	urls.forEach(u => {
+		test(u,  async () => {
+			const response = await fetch(`http://localhost/${u}`, {
+				headers: {
+					cookie: sessionCookie,
+				},
+			});
+			expect(response.ok).toBe(true);
+		});
+	})
 
 });
