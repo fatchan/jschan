@@ -13,14 +13,31 @@ module.exports = {
 	db,
 
 	getThreadPage: async (board, thread) => {
-		const threadsBefore = await db.countDocuments({
-			'board': board,
-			'thread': null,
-			'bumped': {
-				'$gte': thread.bumped
+		const threadsBefore = await db.aggregate([
+			{
+				'$match': {
+					'thread': null,
+					'board': board,
+				}
+			}, {
+				'$project': {
+					'sticky': 1,
+					'bumped': 1,
+					'postId': 1,
+					'board': 1,
+					'thread': 1
+				}
+			}, {
+				'$sort': {
+					'sticky': -1,
+					'bumped': -1
+				}
 			}
-		});
-		return Math.ceil(threadsBefore/10) || 1; //1 because 0 threads before is page 1
+		]).toArray();
+		//is there a way to do this in the db with an aggregation stage, instead of in js?
+		const threadIndex = threadsBefore.findIndex((e) => e.postId === thread);
+		const threadPage = Math.max(1, Math.ceil((threadIndex+1)/10));
+		return threadPage;
 	},
 
 	getBoardRecent: async (offset=0, limit=20, ip, board, permissions) => {
@@ -615,6 +632,55 @@ module.exports = {
 		}
 
 		return oldThreads.concat(early404Threads);
+	},
+
+	getMinimalThreads: (boards) => {
+		return db.aggregate([
+			{
+				'$match': {
+					'thread': null,
+					'board': {
+						'$in': boards,
+					}
+				}
+			}, {
+				'$project': {
+					'sticky': 1,
+					'bumped': 1,
+					'postId': 1,
+					'board': 1,
+					'thread': 1,
+				}
+			}, {
+				'$sort': {
+					'sticky': -1,
+					'bumped': -1,
+				}
+			}, {
+				'$group': {
+					'_id': '$board',
+					'posts': {
+						'$push': '$$CURRENT',
+					}
+				}
+			}, {
+				'$group': {
+					'_id': null,
+					'posts': {
+						'$push': {
+							'k': '$_id',
+							'v': '$posts',
+						}
+					}
+				}
+			}, {
+				'$replaceRoot': {
+					'newRoot': {
+						'$arrayToObject': '$posts',
+					}
+				}
+			}
+		]).toArray().then(r => r[0]);
 	},
 
 	fixLatest: (boards) => {
