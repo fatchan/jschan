@@ -6,6 +6,7 @@ module.exports = () => describe('Test posting', () => {
 	test('post new thread',  async () => {
 		const params = new URLSearchParams();
 		params.append('message', Math.random());
+		params.append('captcha', '000000');
 		const response = await fetch('http://localhost/forms/board/test/post', {
 			headers: {
 				'x-using-xhr': 'true',
@@ -22,6 +23,7 @@ module.exports = () => describe('Test posting', () => {
 		const params = new URLSearchParams();
 		params.append('message', Math.random());
 		params.append('thread', threadId);
+		params.append('captcha', '000000');
 		const response = await fetch('http://localhost/forms/board/test/post', {
 			headers: {
 				'x-using-xhr': 'true',
@@ -38,6 +40,7 @@ module.exports = () => describe('Test posting', () => {
 		params.append('message', `>>${threadId}
 >>${replyId}`);
 		params.append('thread', threadId);
+		params.append('captcha', '000000');
 		const response = await fetch('http://localhost/forms/board/test/post', {
 			headers: {
 				'x-using-xhr': 'true',
@@ -50,6 +53,7 @@ module.exports = () => describe('Test posting', () => {
 
 	test('post reply with all markdowns',  async () => {
 		const params = new URLSearchParams();
+		params.append('captcha', '000000');
 		params.append('message', `>greentext
 <pinktext
 ==title==
@@ -84,6 +88,45 @@ int main() {...}
 			body: params
 		});
 		expect(response.ok).toBe(true);
+	});
+
+	jest.setTimeout(5*60*1000); //give a generous timeout
+	test('post 100 threads with 10 replies each',  async () => {
+		const threadParams = new URLSearchParams();
+		threadParams.append('message', Math.random());
+		threadParams.append('captcha', '000000');
+		const promises = [];
+		for (let t = 0; t < 100; t++) {
+			const promise = fetch('http://localhost/forms/board/test/post', {
+				headers: {
+					'x-using-xhr': 'true',
+				},
+				method: 'POST',
+				body: threadParams
+			}).then(async (response) => {
+				expect(response.ok).toBe(true);
+				const thread = (await response.json()).postId;
+				for (let r = 0; r < 10; r++) {
+					const replyParams = new URLSearchParams();
+					replyParams.append('message', Math.random());
+					replyParams.append('thread', thread);
+					replyParams.append('captcha', '000000');
+					const promise2 = await fetch('http://localhost/forms/board/test/post', {
+						headers: {
+							'x-using-xhr': 'true',
+						},
+						method: 'POST',
+						body: replyParams
+					}).then(async (response2) => {
+						expect(response2.ok).toBe(true);
+					});
+					promises.push(promise2);
+				}
+			});
+			promises.push(promise);
+		}
+		await Promise.all(promises); //wait for all posts to go through
+		jest.setTimeout(5*1000); //back to normal timeout
 	});
 
 });
