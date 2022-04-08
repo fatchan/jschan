@@ -36,3 +36,12 @@ table.boardtable th:nth-child(1) {
 .more {
 	display: list-item;
 }
+#settingsmodal, .floatactions[open], .modal {
+	padding: 10px;
+	border: 3px solid var(--darken);
+	border-radius: 5px;
+	box-shadow: 0 0 5px 0 #00000050;
+}
+#actionform #action-menu {
+	right: 10px;
+}
