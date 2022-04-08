@@ -265,6 +265,74 @@ module.exports = () => describe('Test post modactions', () => {
 		expect(response.ok).toBe(true);
 	});
 
+	test('test local report + global report',  async () => {
+		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
+		const randomThreadId = threads[Math.floor(Math.random() * threads.length)].postId;
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			report: '1',
+			global_report: '1',
+			report_reason: 'test',
+			checkedposts: randomThreadId,
+		});
+		const response = await fetch('http://localhost/forms/board/test/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('test post editing, add a bunch of markdown',  async () => {
+		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
+		const randomThreadId = threads[Math.floor(Math.random() * threads.length)].postId;
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			board: 'test',
+			postId: randomThreadId,
+			subject: 'NEW SUBJECT',
+			email: 'NEW EMAIL',
+			name: 'NEW NAME',
+			message: `>greentext
+<pinktext
+==title==
+''bold''
+__underline__
+~strikethrough~~
+||spoiler text||
+**italic**
+(((detected)))
+##2d9+3
+https://example.com
+[Board Rules](https://your.imageboard/a/custompage/rules.html)(staff only)
+>>123
+>>>/test/
+>>>/test/123
+\`inline monospace\`
+[code]language
+int main() {...}
+[/code]
+
+[code]aa
+∧＿∧
+( ・ω・) Let's try that again.
+[/code]`,
+			log_message: 'test edit',
+		});
+		const response = await fetch('http://localhost/forms/editpost', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
 	test('test banning',  async () => {
 		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
 		const randomThreadId = threads[Math.floor(Math.random() * threads.length)].postId;
