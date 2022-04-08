@@ -1,4 +1,6 @@
 const fetch = require('node-fetch');
+const FormData = require('form-data');
+const fs = require('fs-extra');
 
 module.exports = () => describe('Test post modactions', () => {
 
@@ -331,6 +333,67 @@ int main() {...}
 			body: params,
 		});
 		expect(response.ok).toBe(true);
+	});
+
+	let postId;
+	test('make post with image',  async () => {
+		const threadParams = new FormData({
+			message: Math.random(),
+			captcha: '000000',
+		});
+		const filePath = 'gulp/res/img/flags.png';
+		const fileSizeInBytes = fs.statSync(filePath).size;
+		const fileStream = fs.createReadStream(filePath);
+		threadParams.append('file', fileStream, { knownLength: fileSizeInBytes });
+		const response = await fetch('http://localhost/forms/board/test/post', {
+			headers: {
+				'x-using-xhr': 'true',
+				...threadParams.getHeaders(),
+			},
+			method: 'POST',
+			body: threadParams
+		});
+		expect(response.ok).toBe(true);
+		postId = (await response.json()).postId;
+	});
+
+	test('spoiler the file in a post',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			spoiler: '1',
+			checkedposts: postId,
+		});
+		const response = await fetch('http://localhost/forms/board/test/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('make post with already spoilered image',  async () => {
+		const threadParams = new FormData({
+			message: Math.random(),
+			captcha: '000000',
+			spoiler_all: '1',
+		});
+		const filePath = 'gulp/res/img/flags.png';
+		const fileSizeInBytes = fs.statSync(filePath).size;
+		const fileStream = fs.createReadStream(filePath);
+		threadParams.append('file', fileStream, { knownLength: fileSizeInBytes });
+		const response = await fetch('http://localhost/forms/board/test/post', {
+			headers: {
+				'x-using-xhr': 'true',
+				...threadParams.getHeaders(),
+			},
+			method: 'POST',
+			body: threadParams
+		});
+		expect(response.ok).toBe(true);
+		postId = (await response.json()).postId;
 	});
 
 	test('test banning',  async () => {
