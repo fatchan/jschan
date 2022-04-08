@@ -527,7 +527,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	}
 
 	//for cyclic threads, delete posts beyond bump limit
-	if (thread && thread.cyclic && thread.replyposts > replyLimit) {
+	if (thread && thread.cyclic && thread.replyposts >= replyLimit) {
 		const cyclicOverflowPosts = await Posts.db.find({
 			'thread': data.thread,
 			'board': req.params.board
