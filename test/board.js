@@ -229,4 +229,58 @@ testing 123`
 		expect(response2.status).toBe(404);
 	});
 
+	test('add staff',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			username: 'test',
+		});
+		const response = await fetch('http://localhost/forms/board/test/addstaff', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+	});
+
+	test('edit staff permission',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			username: 'test',
+			MANAGE_BOARD_BANS: '1',
+			MANAGE_BOARD_LOGS: '1',
+			MANAGE_BOARD_SETTINGS: '1',
+		});
+		const response = await fetch('http://localhost/forms/board/test/editstaff', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+	});
+
+	test('remove staff',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedstaff: 'test',
+		});
+		const response = await fetch('http://localhost/forms/board/test/deletestaff', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+	});
+
 });
