@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-module.exports = () => describe('delete testa and cleanup', () => {
+module.exports = () => describe('delete tests and cleanup', () => {
 
 	let sessionCookie
 		, csrfToken;
@@ -29,13 +29,13 @@ module.exports = () => describe('delete testa and cleanup', () => {
 	test('delete_ip_thread test',  async () => {
 		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
 		//delete a reply and check if the OP is deleted (ip is the same for all posts atm)
-		const randomThreadId = threads[Math.floor(Math.random() * threads.length)].postId;
+		const randomThreadId = threads.find(t => t.replyposts > 0).postId;
 		const thread = await fetch(`http://localhost/test/thread/${randomThreadId}.json`).then(res => res.json());
-		const reply = thread.replies[Math.floor(Math.random() * thread.replies.length)];
+		const post = thread.replies[Math.floor(Math.random() * thread.replies.length)];
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
 			delete_ip_thread: '1',
-			checkedposts: reply.postId,
+			checkedposts: post.postId,
 		});
 		const response = await fetch('http://localhost/forms/board/test/modactions', {
 			headers: {
@@ -87,6 +87,23 @@ module.exports = () => describe('delete testa and cleanup', () => {
 			redirect: 'manual',
 		});
 		expect([200, 404]).toContain(response.status)
+	});
+
+	test('delete test account',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedaccounts: 'test',
+		});
+		const response = await fetch('http://localhost/forms/global/deleteaccounts', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
 	});
 
 });

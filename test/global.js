@@ -136,21 +136,4 @@ testing 123`
 		expect(response.ok).toBe(true);
 	});
 
-	test('delete test account',  async () => {
-		const params = new URLSearchParams({
-			_csrf: csrfToken,
-			checkedaccounts: 'test',
-		});
-		const response = await fetch('http://localhost/forms/global/deleteaccounts', {
-			headers: {
-				'x-using-xhr': 'true',
-				'cookie': sessionCookie,
-			},
-			method: 'POST',
-			body: params,
-			redirect: 'manual',
-		})
-		expect(response.ok).toBe(true);
-	});
-
 });
