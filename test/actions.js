@@ -449,6 +449,89 @@ int main() {...}
 		expect(response.ok).toBe(true);
 	});
 
+	test('test global ban',  async () => {
+		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
+		const randomThreadId = threads[Math.floor(Math.random() * threads.length)].postId;
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			global_ban: '1',
+			checkedposts: randomThreadId,
+		});
+		const response = await fetch('http://localhost/forms/board/test/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	let banId
+	test('deny ban appeal',  async () => {
+		const banPage = await fetch('http://localhost/globalmanage/bans.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkString = 'name="checkedbans" value="';
+		const checkIndex = banPage.indexOf(checkString);
+		banId = banPage.substring(checkIndex+checkString.length, checkIndex+checkString.length+24);
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedbans: banId,
+			option: 'deny_appeal',
+		});
+		const response = await fetch('http://localhost/forms/global/editbans', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+	});
+
+	test('edit ban duration',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedbans: banId,
+			option: 'edit',
+			ban_duration: '3d',
+		});
+		const response = await fetch('http://localhost/forms/global/editbans', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+	});
+
+	test('remove ban',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedbans: banId,
+			option: 'unban',
+		});
+		const response = await fetch('http://localhost/forms/global/editbans', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+	});
+
 	test('test ban + qrange + non-appealable + show post in ban + hide name in modlog + modlog message + ban reason',  async () => {
 		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
 		const randomThreadId = threads[Math.floor(Math.random() * threads.length)].postId;
