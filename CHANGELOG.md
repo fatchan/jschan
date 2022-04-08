@@ -1,5 +1,5 @@
 ### 0.5.3
-  - Visual bugfix to custom flag saving.
+  - Add testing framework. Allows to test individual code, simulated requests and check for regressions after changes. Will be made more comprehensive over time.
   - Make "Manage" navbar link go to the current page in modview, instead of defaulting to reports page.
   - Fix some obscure bugs with incorrect post ordering/pages not rebuilding after making a post, or submitting post actions.
   - Many bugfixes
