@@ -2,6 +2,7 @@
   - Visual bugfix to custom flag saving.
   - Make "Manage" navbar link go to the current page in modview, instead of defaulting to reports page.
   - Fix some obscure bugs with incorrect post ordering/pages not rebuilding after making a post, or submitting post actions.
+  - Many bugfixes
 
 ### 0.5.2
   - Fix regression in remarkup of posts during moving, deleting, cyclic threads, etc due to permissions.
