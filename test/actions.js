@@ -267,9 +267,12 @@ module.exports = () => describe('Test post modactions', () => {
 		expect(response.ok).toBe(true);
 	});
 
+	let reportedPost;
 	test('test local report + global report',  async () => {
 		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
-		const randomThreadId = threads[Math.floor(Math.random() * threads.length)].postId;
+		const randomThread = threads[Math.floor(Math.random() * threads.length)];
+		reportedPost = randomThread;
+		const randomThreadId = randomThread.postId;
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
 			report: '1',
@@ -420,6 +423,58 @@ int main() {...}
 			checkedposts: postId,
 		});
 		const response = await fetch('http://localhost/forms/board/test/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('ban reporter for local report',  async () => {
+		const reportsPage = await fetch('http://dev-jschan/globalmanage/reports.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkString = 'name="checkedreports" value="';
+		const checkIndex = reportsPage.indexOf(checkString);
+		const reportId = reportsPage.substring(checkIndex+checkString.length, checkIndex+checkString.length+24);
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			report_ban: '1',
+			checkedposts: reportedPost.postId,
+			checkedreports: reportId,
+		});
+		const response = await fetch('http://localhost/forms/board/test/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('ban reporter for global report',  async () => {
+		const reportsPage = await fetch('http://dev-jschan/globalmanage/reports.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkString = 'name="checkedreports" value="';
+		const checkIndex = reportsPage.indexOf(checkString);
+		const reportId = reportsPage.substring(checkIndex+checkString.length, checkIndex+checkString.length+24);
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			global_report_ban: '1',
+			globalcheckedposts: reportedPost._id,
+			checkedreports: reportId,
+		});
+		const response = await fetch('http://localhost/forms/global/actions', {
 			headers: {
 				'x-using-xhr': 'true',
 				'cookie': sessionCookie,
