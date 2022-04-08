@@ -156,4 +156,77 @@ module.exports = () => describe('test some global form submissions', () => {
 		expect(response.ok).toBe(true);
 	});
 
+	test('add custompage',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			page: 'test',
+			title: 'test',
+			message: `==This is a test custompage==
+wow
+>very cool
+testing 123`
+		});
+		const response = await fetch('http://localhost/forms/board/test/addcustompages', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+		const response2 = await fetch('http://localhost/test/custompage/test.html');
+		expect(response2.ok).toBe(true);
+	});
+
+	test('edit and rename/move custompage',  async () => {
+		const custompagesPage = await fetch('http://localhost/test/manage/custompages.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const custompageId = custompagesPage.match(/href="\/test\/manage\/editcustompage\/([0-9a-f]{24}).html"/)[1];
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			page_id: custompageId,
+			page: 'test2',
+			title: 'test2',
+			message: 'test2',
+		});
+		const response = await fetch('http://localhost/forms/board/test/editcustompage', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+		const response2 = await fetch('http://localhost/test/custompage/test.html');
+		expect(response2.status).toBe(404);
+		const response3 = await fetch('http://localhost/test/custompage/test2.html');
+		expect(response3.status).toBe(200);
+	});
+
+	test('delete custompage',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedcustompages: 'test2',
+		});
+		const response = await fetch('http://localhost/forms/board/test/deletecustompages', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+		const response2 = await fetch('http://localhost/test/custompage/test2.html');
+		expect(response2.status).toBe(404);
+	});
+
 });
