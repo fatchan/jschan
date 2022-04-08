@@ -1,0 +1,70 @@
+version: "3.5"
+services:
+
+  redis:
+    command: redis-server --requirepass changeme
+    image: redis:alpine
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=jschan
+      - MONGO_INITDB_ROOT_PASSWORD=changeme
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+      args:
+        ENABLED_MODULES: geoip
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/static/:/path/to/jschan/static/
+    depends_on:
+      - jschan
+
+  jschan:
+    build:
+      context: .
+      dockerfile: ./docker/jschan/Dockerfile
+      network: jschan_default
+    environment:
+      - NODE_ENV=development
+      - JSCHAN_IP=0.0.0.0
+      - NO_CAPTCHA=1
+      - MONGO_USERNAME=jschan
+      - MONGO_PASSWORD=changeme
+      - REDIS_PASSWORD=changeme
+      - COOKIE_SECRET=changeme
+      - TRIPCODE_SECRET=changeme
+      - IP_HASH_SECRET=changeme
+      - POST_PASSWORD_SECRET=changeme
+      - GOOGLE_SITEKEY=changeme
+      - GOOGLE_SECRETKEY=changeme
+      - HCAPTCHA_SITEKEY=10000000-ffff-ffff-ffff-000000000001
+      - HCAPTCHA_SECRETKEY=0x0000000000000000000000000000000000000000
+    volumes:
+      - ./docker/static:/opt/static/
+    depends_on:
+      - redis
+      - mongodb
+
+  jschan-reset:
+    build:
+      context: .
+      dockerfile: ./docker/jschan/Dockerfile-reset
+      network: jschan_default
+    environment:
+      - MONGO_USERNAME=jschan
+      - MONGO_PASSWORD=changeme
+      - REDIS_PASSWORD=changeme
+    volumes:
+      - ./docker/static:/opt/static/
+    depends_on:
+      - redis
+      - mongodb
+
+networks:
+  default:
+    name: jschan_default

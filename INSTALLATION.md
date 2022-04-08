@@ -242,3 +242,21 @@ To build all css files, run `gulp css`. For some situations, such as adding or r
 For detecting and automatically updating Tor exit node lists, see [tools/update_tor_exits.sh](tools/update_tor_exits.sh)
 
 For updating the GeoIP database for nginx, see [tools/update_geoip.sh](tools/update_geoip.sh)
+
+
+#### Docker
+
+Experimental, strictly for development only.
+
+Basically:
+
+```bash
+docker-compose up -d mongodb redis
+
+#on the first run, or to "gulp reset" later:
+docker-compose up jschan-reset
+
+docker-compose up -d jschan
+
+docker-compose up -d nginx
+```

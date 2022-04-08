@@ -1,6 +1,6 @@
 'use strict';
 
-const { ObjectId } = require(__dirname+'/../db/db.js')
+const { ObjectId } = require('mongodb')
 	, timeFieldRegex = /^(?<YEAR>[\d]+y)?(?<MONTH>[\d]+mo)?(?<WEEK>[\d]+w)?(?<DAY>[\d]+d)?(?<HOUR>[\d]+h)?(?<MINUTE>[\d]+m)?(?<SECOND>[\d]+s)?$/
 	, timeUtils = require(__dirname+'/timeutils.js')
 	, dynamicResponse = require(__dirname+'/dynamic.js')

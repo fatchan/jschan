@@ -10,6 +10,10 @@ const { Captchas } = require(__dirname+'/../../db/')
 
 module.exports = async (captchaInput, captchaId) => {
 
+	if (process.env.NO_CAPTCHA) {
+		return true;
+	}
+
 	const { captchaOptions } = config.get;
 
 	//check if captcha field in form is valid
