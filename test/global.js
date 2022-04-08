@@ -98,4 +98,59 @@ testing 123`
 		expect(response.ok).toBe(true);
 	});
 
+	test('register test account',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			username: 'test',
+			password: 'test',
+			passwordconfirm: 'test',
+			captcha: '000000',
+		});
+		const response = await fetch('http://localhost/forms/register', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.status).toBe(302);
+	});
+
+	test('edit account permission',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			username: 'test',
+			template: 'fz/P4B//gAA=',
+		});
+		const response = await fetch('http://localhost/forms/global/editaccount', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+	});
+
+	test('delete test account',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedaccounts: 'test',
+		});
+		const response = await fetch('http://localhost/forms/global/deleteaccounts', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+	});
+
 });
