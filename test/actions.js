@@ -434,7 +434,7 @@ int main() {...}
 	});
 
 	test('ban reporter for local report',  async () => {
-		const reportsPage = await fetch('http://dev-jschan/globalmanage/reports.html', {
+		const reportsPage = await fetch('http://dev-jschan/test/manage/reports.html', {
 			headers: {
 				'cookie': sessionCookie,
 			},
@@ -447,6 +447,23 @@ int main() {...}
 			report_ban: '1',
 			checkedposts: reportedPost.postId,
 			checkedreports: reportId,
+		});
+		const response = await fetch('http://localhost/forms/board/test/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('dismiss local report',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			dismiss: '1',
+			checkedposts: reportedPost.postId,
 		});
 		const response = await fetch('http://localhost/forms/board/test/modactions', {
 			headers: {
@@ -482,6 +499,32 @@ int main() {...}
 			method: 'POST',
 			body: params,
 		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('remove global report ban',  async () => {
+		const banPage = await fetch('http://localhost/globalmanage/bans.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkString = 'name="checkedbans" value="';
+		const checkIndex = banPage.indexOf(checkString);
+		banId = banPage.substring(checkIndex+checkString.length, checkIndex+checkString.length+24);
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedbans: banId,
+			option: 'unban',
+		});
+		const response = await fetch('http://localhost/forms/global/editbans', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
 		expect(response.ok).toBe(true);
 	});
 
