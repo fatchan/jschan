@@ -22,15 +22,15 @@ module.exports = async (posts, deleting) => {
 		boardThreadMap[post.board].threads.add(threadId);
 	}
 
-	const beforePages = {};
-	const threadBoards = Object.keys(boardThreadMap);
+	const numPagesBeforeActions = {};
+	const affectedBoardNames = Object.keys(boardThreadMap);
 	//get number of pages for each before actions for deleting old pages and changing page nav numbers incase number of pages changes
 	if (deleting) {
-		await Promise.all(threadBoards.map(async board => {
-			beforePages[board] = Math.ceil((await Posts.getPages(board)) / 10);
+		await Promise.all(affectedBoardNames.map(async board => {
+			numPagesBeforeActions[board] = Math.ceil((await Posts.getPages(board)) / 10);
 		}));
 	}
 
-	return { boardThreadMap, beforePages, threadBoards };
+	return { boardThreadMap, numPagesBeforeActions, affectedBoardNames };
 
 }

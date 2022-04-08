@@ -1,0 +1,8 @@
+node_modules/
+static/
+docker/jschan/Dockerfile
+docker/jschan/Dockerfile-reset
+docker/nginx/Dockerfile
+docker/static/
+tools/
+gulp/res/js/socket.io.js

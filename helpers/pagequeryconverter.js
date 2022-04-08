@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = (query, limit) => {
+	query = query || {};
 	const nopage = { ...query };
 	delete nopage.page;
 	const queryString = new URLSearchParams(nopage).toString();

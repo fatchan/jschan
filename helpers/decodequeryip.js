@@ -5,7 +5,7 @@ const escapeRegExp = require(__dirname+'/escaperegexp.js')
 	, Permissions = require(__dirname+'/permissions.js');
 
 module.exports = (query, permissions) => {
-	if (query.ip && typeof query.ip === 'string') {
+	if (query && query.ip && typeof query.ip === 'string') {
 		const decoded = decodeURIComponent(query.ip);
 		//if is IP but no permission, return null
 		if (isIP(decoded) && !permissions.get(Permissions.VIEW_RAW_IP)) {

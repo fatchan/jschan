@@ -703,7 +703,7 @@ details.actions div {
 
 .floatactions[open] #action-menu::before {
 	content: "×";
-	font-size: initial !important;
+	font-size: initial!important;
 }
 
 div.captchafield {

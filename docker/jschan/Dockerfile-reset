@@ -1,0 +1,20 @@
+FROM node:16
+
+WORKDIR /opt
+
+COPY . .
+
+RUN npm install
+
+RUN npm i -g pm2 gulp
+
+COPY ./docker/jschan/secrets.js ./configs/secrets.js
+
+#i fucking hate docker
+ENV MONGO_USERNAME jschan
+ENV MONGO_PASSWORD changeme
+ENV REDIS_PASSWORD changeme
+
+RUN gulp generate-favicon
+
+CMD ["/bin/sh", "-c", "gulp reset; gulp"]

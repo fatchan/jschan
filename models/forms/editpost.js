@@ -216,8 +216,7 @@ todo: handle some more situations
 	}
 
 	if (post.thread === null || postInPreviewPosts) {
-		const thread = post.thread === null ? post : (await Posts.getPost(board._id, post.thread));
-		const threadPage = await Posts.getThreadPage(board._id, thread);
+		const threadPage = await Posts.getThreadPage(board._id, post.thread || post.postId);
 		//rebuild index page if its a thread or visible in preview posts
 		buildQueue.push({
 			'task': 'buildBoard',

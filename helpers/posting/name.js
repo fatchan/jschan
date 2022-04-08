@@ -68,7 +68,7 @@ module.exports = async (inputName, permissions, boardSettings, boardOwner, board
 				if (capcodeInput && capcodeInput.toLowerCase() !== staffLevel.toLowerCase()) {
 					capcode = `${staffLevel} ${capcodeInput.replace(staffLevelsRegex, '').trim()}`;
 				}
-				capcode = `## ${capcode}`;
+				capcode = `## ${capcode.trim()}`;
 			}
 		}
 	}

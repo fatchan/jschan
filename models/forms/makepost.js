@@ -3,7 +3,7 @@
 const path = require('path')
 	, { createHash, randomBytes } = require('crypto')
 	, randomBytesAsync = require('util').promisify(randomBytes)
-	, { remove, pathExists, stat: fsStat } = require('fs-extra')
+	, { remove, emptyDir, pathExists, stat: fsStat } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Socketio = require(__dirname+'/../../socketio.js')
@@ -478,6 +478,11 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		});
 	}
 
+	let threadPage = null;
+	if (data.thread) {
+		threadPage = await Posts.getThreadPage(req.params.board, data.thread);
+	}
+
 	const { postId, postMongoId } = await Posts.insertOne(res.locals.board, data, thread, res.locals.anonymizer);
 
 	let enableCaptcha = false; //make this returned from some function, refactor and move the next section to another file
@@ -522,7 +527,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	}
 
 	//for cyclic threads, delete posts beyond bump limit
-	if (thread && thread.cyclic && thread.replyposts > replyLimit) {
+	if (thread && thread.cyclic && thread.replyposts >= replyLimit) {
 		const cyclicOverflowPosts = await Posts.db.find({
 			'thread': data.thread,
 			'board': req.params.board
@@ -628,7 +633,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 	if (enableCaptcha) {
 		if (res.locals.board.settings.captchaMode == 2) {
 			//only delete threads if all posts require threads, otherwise just build board pages for thread captcha
-			await remove(`${uploadDirectory}/html/${req.params.board}/thread/`); //not deleting json cos it doesnt need to be
+			await emptyDir(`${uploadDirectory}/html/${req.params.board}/thread/`); //not deleting json cos it doesnt need to be
 		}
 		const endPage = Math.ceil(threadLimit/10);
 		buildQueue.push({
@@ -641,7 +646,6 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 		});
 	} else if (data.thread) {
 		//refersh pages
-		const threadPage = await Posts.getThreadPage(req.params.board, thread);
 		if (data.email === 'sage' || thread.bumplocked) {
 			//refresh the page that the thread is on
 			buildQueue.push({

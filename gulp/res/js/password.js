@@ -60,6 +60,7 @@ class syncedField {
 		this.set(e.target.value);
 	}
 	set(val) {
+		if (val === null) { return; }
 		for (let field of this.fields) {
 			field.value = val;
 			if (field.tagName === 'SELECT') {

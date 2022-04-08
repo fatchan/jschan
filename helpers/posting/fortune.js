@@ -4,6 +4,8 @@ const fortunes = ['example1', 'example2', 'example3'];
 
 module.exports = {
 
+	fortunes,
+
 	regex: /##fortune/gmi,
 
 	markdown: () => {
