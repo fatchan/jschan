@@ -36,7 +36,7 @@ module.exports = async (req, res, next) => {
 			csrf: req.csrfToken(),
 			posts,
 			permissions: res.locals.permissions,
-			viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP) && !dontStoreRawIps,
+			viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
 			page,
 			postId,
 			queryIp: ip ? req.query.ip : null,
