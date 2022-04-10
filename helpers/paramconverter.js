@@ -33,7 +33,7 @@ module.exports = (options) => {
 
 		/* check all body fields, body-parser prevents this array being too big, so no worry.
 		   whitelist for fields that can be arrays, and convert singular of those fields to 1 length array */
-		const bodyFields = Object.keys(req.body);
+		const bodyFields = Object.keys(req.body || {});
 		for (let i = 0; i < bodyFields.length; i++) {
 			const key = bodyFields[i];
 			const val = req.body[key];
@@ -50,7 +50,7 @@ module.exports = (options) => {
 		//process trimFields to remove excess white space
 		for (let i = 0; i < trimFields.length; i++) {
 			const field = trimFields[i];
-			if (req.body[field]) {
+			if (req.body[field] != null) {
 				//trimEnd() because trailing whitespace doesnt affect how a post appear and if it is all whitespace, trimEnd will get it all anyway
 				req.body[field] = req.body[field].trimEnd() || null;
 			}
@@ -106,26 +106,30 @@ module.exports = (options) => {
 		try {
 			for (let i = 0; i < objectIdFields.length; i++) {
 				const field = objectIdFields[i];
-				if (req.body[field]) {
+				if (req.body[field] != null) {
 					req.body[field] = ObjectId(req.body[field]);
 				}
 			}
 			for (let i = 0; i < objectIdParams.length; i++) {
 				const field = objectIdParams[i];
-				if (req.params[field]) {
+				if (req.params[field] != null) {
 					req.params[field] = ObjectId(req.params[field]);
 				}
 			}
 			for (let i = 0; i < objectIdArrays.length; i++) {
 				const field = objectIdArrays[i];
-				if (req.body[field]) {
-					req.body[field] = req.body[field].map(ObjectId);
+				if (req.body[field] != null) {
+					req.body[field] = req.body[field]
+						.filter(o => o) //objectid(null) doesnt throw, lol
+						.map(ObjectId);
 				}
 			}
 			for (let i = 0; i < numberArrays.length; i++) {
 				const field = numberArrays[i];
-				if (req.body[field]) {
-					req.body[field] = req.body[field].map(Number);
+				if (req.body[field] != null) {
+					req.body[field] = req.body[field]
+						.map(n => parseInt(n, 10))
+						.filter(n => !isNaN(n) && Number.isSafeInteger(n));
 				}
 			}
 		} catch (e) {
@@ -136,17 +140,31 @@ module.exports = (options) => {
 		}
 
 		//thread id
-		if (processThreadIdParam && req.params.id) {
-			req.params.id = +req.params.id;
+		if (processThreadIdParam && req.params.id != null) {
+			req.params.id = parseInt(req.params.id, 10);
+			if (isNaN(req.params.id)) {
+				req.params.id = null;
+			}
 		}
 
 		//moglog date
-		if (processDateParam && req.params.date) {
-			let [ month, day, year ] = req.params.date.split('-');
-			month = month-1;
-			const date = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
-			if (date !== 'Invalid Date') {
-				res.locals.date = { month, day, year, date };
+		if (processDateParam && req.params.date != null) {
+			if (req.params.date.match(/\d\d-\d\d-\d\d\d\d/)) {
+				let [ month, day, year ] = req.params.date.split('-');
+				month = month-1;
+				const date = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+				if (isNaN(date) || date === 'Invalid Date') {
+					res.locals.date = null;
+				} else {
+					res.locals.date = {
+						date,
+						month,
+						day: date.getDate(),
+						year:date.getFullYear(),
+					};
+				}
+			} else {
+				res.locals.date = null;
 			}
 		}
 
