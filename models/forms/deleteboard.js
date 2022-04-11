@@ -2,7 +2,7 @@
 
 const { CustomPages, Accounts, Boards, Stats, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, { remove } = require('fs-extra');
 
 module.exports = async (uri, board) => {

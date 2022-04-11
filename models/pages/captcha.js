@@ -1,7 +1,7 @@
 'use strict';
 
 const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
-	, config = require(__dirname+'/../../config.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {
@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
 		return next(); //only grid and text captcha continue
 	}
 
-	const generateCaptcha = require(__dirname+`/../../helpers/captcha/generators/${captchaOptions.type}.js`);
+	const generateCaptcha = require(__dirname+`/../../lib/captcha/generators/${captchaOptions.type}.js`);
 
 	if (!production && req.cookies['captchaid'] != null) {
 		return res.redirect(`/captcha/${req.cookies['captchaid']}.jpg`);

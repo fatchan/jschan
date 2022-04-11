@@ -1,7 +1,7 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../db/')
-	, redis = require(__dirname+'/../../redis.js');
+	, redis = require(__dirname+'/../../lib/redis/redis.js');
 
 module.exports = async (username) => {
 

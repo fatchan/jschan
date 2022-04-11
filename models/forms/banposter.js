@@ -1,7 +1,7 @@
 'use strict';
 
 const { Bans } = require(__dirname+'/../../db/')
-	, config = require(__dirname+'/../../config.js');
+	, config = require(__dirname+'/../../lib/misc/config.js');
 
 module.exports = async (req, res, next) => {
 

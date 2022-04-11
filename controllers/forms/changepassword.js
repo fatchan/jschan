@@ -1,10 +1,10 @@
 'use strict';
 
 const changePassword = require(__dirname+'/../../models/forms/changepassword.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 

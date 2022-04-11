@@ -2,15 +2,14 @@
 
 const fetch = require('node-fetch')
 	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
-	, config = require(__dirname+'/../../config.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
-	, Redis = require(__dirname+'/../../redis.js')
+	, Redis = require(__dirname+'/../../lib/redis/redis.js')
 	, { Boards } = require(__dirname+'/../../db/')
 	, { outputFile } = require('fs-extra')
 	, SocksProxyAgent = require('socks-proxy-agent')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, timeDiffString = require(__dirname+'/../../helpers/timediffstring.js')
-	, timeUtils = require(__dirname+'/../../helpers/timeutils.js');
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
+	, timeUtils = require(__dirname+'/../../lib/converter/timeutils.js');
 
 module.exports = {
 
@@ -122,7 +121,7 @@ module.exports = {
 		await outputFile(`${uploadDirectory}/json/webring.json`, JSON.stringify(json));
 
 		const end = process.hrtime(start);
-		debugLogs && console.log(timeDiffString(label, end));
+		debugLogs && console.log(timeUtils.timeDiffString(label, end));
 	},
 	interval: timeUtils.MINUTE*15,
 	immediate: true,

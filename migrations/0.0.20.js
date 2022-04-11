@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs-extra')
-	, uploadDirectory = require(__dirname+'/../helpers/files/uploadDirectory.js')
+	, uploadDirectory = require(__dirname+'/../lib/file/uploaddirectory.js')
 
 module.exports = async(db, redis) => {
 	console.log('put thumbs in a folder');

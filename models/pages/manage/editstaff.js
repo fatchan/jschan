@@ -1,6 +1,6 @@
 'use strict';
 
-const Permission = require(__dirname+'/../../../helpers/permission.js');
+const Permission = require(__dirname+'/../../../lib/permission/permission.js');
 
 module.exports = async (req, res, next) => {
 

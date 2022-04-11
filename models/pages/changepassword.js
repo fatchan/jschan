@@ -1,6 +1,6 @@
 'use strict';
 
-const { buildChangePassword } = require(__dirname+'/../../helpers/tasks.js');
+const { buildChangePassword } = require(__dirname+'/../../lib/build/tasks.js');
 
 module.exports = async (req, res, next) => {
 

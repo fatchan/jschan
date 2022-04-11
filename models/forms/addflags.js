@@ -2,16 +2,16 @@
 
 const path = require('path')
 	, { remove } = require('fs-extra')
-	, config = require(__dirname+'/../../config.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, moveUpload = require(__dirname+'/../../helpers/files/moveupload.js')
-	, mimeTypes = require(__dirname+'/../../helpers/files/mimetypes.js')
-	, imageIdentify = require(__dirname+'/../../helpers/files/imageidentify.js')
-	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { countryCodesSet } = require(__dirname+'/../../helpers/countries.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
+	, moveUpload = require(__dirname+'/../../lib/file/moveupload.js')
+	, mimeTypes = require(__dirname+'/../../lib/file/mimetypes.js')
+	, imageIdentify = require(__dirname+'/../../lib/file/image/imageidentify.js')
+	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, { countryCodesSet } = require(__dirname+'/../../lib/misc/countries.js')
 	, { Boards } = require(__dirname+'/../../db/')
-	, buildQueue = require(__dirname+'/../../queue.js');
+	, buildQueue = require(__dirname+'/../../lib/build/queue.js');
 
 module.exports = async (req, res, next) => {
 

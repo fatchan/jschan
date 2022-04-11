@@ -5,7 +5,7 @@ process
 	.on('unhandledRejection', console.error);
 
 const Mongo = require(__dirname+'/db/db.js')
-	, config = require(__dirname+'/config.js');
+	, config = require(__dirname+'/lib/misc/config.js');
 
 (async () => {
 
@@ -13,8 +13,8 @@ const Mongo = require(__dirname+'/db/db.js')
 	await Mongo.checkVersion();
 	await config.load();
 
-	const tasks = require(__dirname+'/helpers/tasks.js')
-		, { queue } = require(__dirname+'/queue.js')
+	const tasks = require(__dirname+'/lib/build/tasks.js')
+		, { queue } = require(__dirname+'/lib/build/queue.js')
 
 	queue
 		.on('error', console.error)

@@ -1,8 +1,8 @@
 'use strict';
 
 const { Posts, Boards } = require(__dirname+'/../../db/')
-	, cache = require(__dirname+'/../../redis.js')
-	, config = require(__dirname+'/../../config.js');
+	, cache = require(__dirname+'/../../lib/redis/redis.js')
+	, config = require(__dirname+'/../../lib/misc/config.js');
 
 module.exports = async (req, res, next) => {
 

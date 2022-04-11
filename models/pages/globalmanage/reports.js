@@ -1,9 +1,9 @@
 'use strict';
 
 const { Posts } = require(__dirname+'/../../../db/')
-	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
-	, Permissions = require(__dirname+'/../../../helpers/permissions.js')
-	, decodeQueryIP = require(__dirname+'/../../../helpers/decodequeryip.js')
+	, pageQueryConverter = require(__dirname+'/../../../lib/input/pagequeryconverter.js')
+	, Permissions = require(__dirname+'/../../../lib/permission/permissions.js')
+	, decodeQueryIP = require(__dirname+'/../../../lib/input/decodequeryip.js')
 	, limit = 20;
 
 module.exports = async (req, res, next) => {

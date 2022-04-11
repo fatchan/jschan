@@ -1,8 +1,8 @@
 'use strict';
 
 const { Boards } = require(__dirname+'/../../../db/')
-	, { relativeColor, relativeString } = require(__dirname+'/../../../helpers/timeutils.js')
-	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
+	, { relativeColor, relativeString } = require(__dirname+'/../../../lib/converter/timeutils.js')
+	, pageQueryConverter = require(__dirname+'/../../../lib/input/pagequeryconverter.js')
 	, limit = 20;
 
 module.exports = async (req, res, next) => {

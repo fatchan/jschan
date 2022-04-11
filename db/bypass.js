@@ -1,7 +1,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, config = require(__dirname+'/../config.js')
+	, config = require(__dirname+'/../lib/misc/config.js')
 	, db = Mongo.db.collection('bypass');
 
 module.exports = {

@@ -1,10 +1,10 @@
 'use strict';
 
 const { remove } = require('fs-extra')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, { Boards } = require(__dirname+'/../../db/')
-	, buildQueue = require(__dirname+'/../../queue.js');
+	, buildQueue = require(__dirname+'/../../lib/build/queue.js');
 
 module.exports = async (req, res, next) => {
 

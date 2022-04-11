@@ -1,11 +1,11 @@
 'use strict';
 
 const addAssets = require(__dirname+'/../../models/forms/addassets.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
-	, config = require(__dirname+'/../../config.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 //almost a copy of banners code, since it can be handled the same. maybe refactor both into 1 with a "type" arg or something
 //or allowing 2 types to accommodate flags too where they are named (not the object.keys & .values use in manageassets template)

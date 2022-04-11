@@ -1,14 +1,14 @@
 'use strict';
 
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
-	, deleteTempFiles = require(__dirname+'/../../helpers/files/deletetempfiles.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
-	, config = require(__dirname+'/../../config.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { Files } = require(__dirname+'/../../db/')
-	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 

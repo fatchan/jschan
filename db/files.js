@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
-	, formatSize = require(__dirname+'/../helpers/files/formatsize.js')
+	, formatSize = require(__dirname+'/../lib/converter/formatsize.js')
 	, db = Mongo.db.collection('files')
 
 module.exports = {

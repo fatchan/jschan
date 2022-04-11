@@ -2,11 +2,11 @@
 
 const { Roles, Accounts } = require(__dirname+'/../../db/')
 	, { Binary } = require(__dirname+'/../../db/db.js')
-	, redis = require(__dirname+'/../../redis.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, roleManager = require(__dirname+'/../../helpers/rolemanager.js')
-	, Permissions = require(__dirname+'/../../helpers/permissions.js')
-	, Permission = require(__dirname+'/../../helpers/permission.js');
+	, redis = require(__dirname+'/../../lib/redis/redis.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js')
+	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, Permission = require(__dirname+'/../../lib/permission/permission.js');
 
 module.exports = async (req, res, next) => {
 

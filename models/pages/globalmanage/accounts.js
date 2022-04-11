@@ -1,8 +1,8 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../../db/')
-	, roleManager = require(__dirname+'/../../../helpers/rolemanager.js')
-	, pageQueryConverter = require(__dirname+'/../../../helpers/pagequeryconverter.js')
+	, roleManager = require(__dirname+'/../../../lib/permission/rolemanager.js')
+	, pageQueryConverter = require(__dirname+'/../../../lib/input/pagequeryconverter.js')
 	, limit = 20;
 
 module.exports = async (req, res, next) => {
