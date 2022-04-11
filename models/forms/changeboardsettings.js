@@ -11,7 +11,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
 	, { countryCodes } = require(__dirname+'/../../lib/misc/countries.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../lib/input/setting.js')
-	, { compareSettings } = require(__dirname+'/../../lib/input/setting.js')
+	, { compareSettings } = require(__dirname+'/../../lib/input/settingsdiff.js')
 	, validCountryCodes = new Set(countryCodes)
 	, settingChangeEntries = Object.entries({
 		'userPostDelete': ['board', 'catalog', 'threads'],
