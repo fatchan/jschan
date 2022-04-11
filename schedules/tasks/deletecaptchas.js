@@ -1,7 +1,7 @@
 'use strict';
 
-const deleteOld = require(__dirname+'/../../helpers/files/deleteold.js')
-	, timeUtils = require(__dirname+'/../../helpers/timeutils.js');
+const deleteOld = require(__dirname+'/../../lib/file/deleteold.js')
+	, timeUtils = require(__dirname+'/../../lib/converter/timeutils.js');
 
 module.exports = {
 

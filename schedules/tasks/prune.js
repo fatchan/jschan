@@ -3,8 +3,8 @@
 const Files = require(__dirname+'/../../db/files.js')
 	, { debugLogs } =  require(__dirname+'/../../configs/secrets.js')
 	, { remove } = require('fs-extra')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, timeUtils = require(__dirname+'/../../helpers/timeutils.js');
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
+	, timeUtils = require(__dirname+'/../../lib/converter/timeutils.js');
 
 module.exports = {
 

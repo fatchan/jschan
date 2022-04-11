@@ -1,6 +1,6 @@
 'use strict';
 
-const { buildCaptcha } = require(__dirname+'/../../helpers/tasks.js');
+const { buildCaptcha } = require(__dirname+'/../../lib/build/tasks.js');
 
 module.exports = async (req, res, next) => {
 

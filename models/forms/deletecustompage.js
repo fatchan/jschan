@@ -1,9 +1,9 @@
 'use strict';
 
-const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, { remove } = require('fs-extra')
 	, { CustomPages } = require(__dirname+'/../../db/')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js');
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js');
 
 module.exports = async (req, res, next) => {
 

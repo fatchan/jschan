@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require(__dirname+'/../config.js');
+const config = require(__dirname+'/../lib/misc/config.js');
 
 module.exports = async(db, redis) => {
 	console.log('Adding bumplimit field to boards on posts');

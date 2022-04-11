@@ -1,13 +1,13 @@
 'use strict';
 
-const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, { remove } = require('fs-extra')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts, Files } = require(__dirname+'/../../db/')
-	, Socketio = require(__dirname+'/../../socketio.js')
-	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
-	, config = require(__dirname+'/../../config.js')
+	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
+	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
+	, messageHandler = require(__dirname+'/../../lib/post/message.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
 
 module.exports = async (posts, board, all=false) => {

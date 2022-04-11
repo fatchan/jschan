@@ -4,9 +4,9 @@ const Mongo = require(__dirname+'/db.js')
 	, { isIP } = require('net')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
-	, Permissions = require(__dirname+'/../helpers/permissions.js')
+	, Permissions = require(__dirname+'/../lib/permission/permissions.js')
 	, db = Mongo.db.collection('posts')
-	, config = require(__dirname+'/../config.js');
+	, config = require(__dirname+'/../lib/misc/config.js');
 
 module.exports = {
 

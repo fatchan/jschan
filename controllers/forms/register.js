@@ -1,13 +1,13 @@
 'use strict';
 
-const alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
-	, Permissions = require(__dirname+'/../../helpers/permissions.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, config = require(__dirname+'/../../config.js')
+const alphaNumericRegex = require(__dirname+'/../../lib/input/alphanumregex.js')
+	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, registerAccount = require(__dirname+'/../../models/forms/register.js')
-	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 

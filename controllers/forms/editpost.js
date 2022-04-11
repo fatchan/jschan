@@ -1,13 +1,13 @@
 'use strict';
 
 const editPost = require(__dirname+'/../../models/forms/editpost.js')
-	, Permissions = require(__dirname+'/../../helpers/permissions.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, config = require(__dirname+'/../../config.js')
+	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { Ratelimits, Posts, Boards } = require(__dirname+'/../../db/')
-	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 

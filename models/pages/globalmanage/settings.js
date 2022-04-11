@@ -1,9 +1,9 @@
 'use strict';
 
-const cache = require(__dirname+'/../../../redis.js')
-	, config = require(__dirname+'/../../../config.js')
-	, { themes, codeThemes } = require(__dirname+'/../../../helpers/themes.js')
-	, { countryNamesMap, countryCodes } = require(__dirname+'/../../../helpers/countries.js');
+const cache = require(__dirname+'/../../../lib/redis/redis.js')
+	, config = require(__dirname+'/../../../lib/misc/config.js')
+	, { themes, codeThemes } = require(__dirname+'/../../../lib/misc/themes.js')
+	, { countryNamesMap, countryCodes } = require(__dirname+'/../../../lib/misc/countries.js');
 
 module.exports = async (req, res, next) => {
 

@@ -1,10 +1,10 @@
 'use strict';
 
-const config = require(__dirname+'/../../config.js')
+const config = require(__dirname+'/../../lib/misc/config.js')
 	, { Boards } = require(__dirname+'/../../db/')
-	, cache = require(__dirname+'/../../redis.js')
-	, { relativeColor, relativeString } = require(__dirname+'/../../helpers/timeutils.js')
-	, pageQueryConverter = require(__dirname+'/../../helpers/pagequeryconverter.js')
+	, cache = require(__dirname+'/../../lib/redis/redis.js')
+	, { relativeColor, relativeString } = require(__dirname+'/../../lib/converter/timeutils.js')
+	, pageQueryConverter = require(__dirname+'/../../lib/input/pagequeryconverter.js')
 	, limit = 30;
 
 module.exports = async (req, res, next) => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const { buildCreate } = require(__dirname+'/../../helpers/tasks.js');
+const { buildCreate } = require(__dirname+'/../../lib/build/tasks.js');
 
 module.exports = async (req, res, next) => {
 

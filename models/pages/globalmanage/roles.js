@@ -1,7 +1,7 @@
 'use strict';
 
 const { Roles } = require(__dirname+'/../../../db/')
-	, roleManager = require(__dirname+'/../../../helpers/rolemanager.js');
+	, roleManager = require(__dirname+'/../../../lib/permission/rolemanager.js');
 
 module.exports = async (req, res, next) => {
 

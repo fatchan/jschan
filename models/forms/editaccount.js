@@ -1,9 +1,9 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../db/')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, Permissions = require(__dirname+'/../../helpers/permissions.js')
-	, Permission = require(__dirname+'/../../helpers/permission.js');
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, Permission = require(__dirname+'/../../lib/permission/permission.js');
 
 module.exports = async (req, res, next) => {
 

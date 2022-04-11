@@ -1,8 +1,8 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../db/')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, roleManager = require(__dirname+'/../../helpers/rolemanager.js');
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js');
 
 module.exports = async (req, res, next) => {
 

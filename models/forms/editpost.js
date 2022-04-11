@@ -1,16 +1,16 @@
 'use strict';
 
 const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
-	, Permissions = require(__dirname+'/../../helpers/permissions.js')
+	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
 	, { createHash } = require('crypto')
 	, Mongo = require(__dirname+'/../../db/db.js')
-	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
-	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
-	, config = require(__dirname+'/../../config.js')
-	, buildQueue = require(__dirname+'/../../queue.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { buildThread } = require(__dirname+'/../../helpers/tasks.js')
+	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
+	, messageHandler = require(__dirname+'/../../lib/post/message.js')
+	, nameHandler = require(__dirname+'/../../lib/post/name.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
+	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js')
 	, { remove } = require('fs-extra');
 
 module.exports = async (req, res, next) => {
