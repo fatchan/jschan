@@ -35,7 +35,7 @@ mixin ban(ban, banpage)
 			else 
 				| &#10799;
 		td
-			if ban.allowAppeal
+			if ban.allowAppeal && !ban.appeal
 				| &#10003;
 			else 
 				| &#10799;

@@ -4,7 +4,7 @@ form.form-post(action=`/forms/appeal`, enctype='application/x-www-form-urlencode
 			+ban(ban, true)
 	- const allowAppeal = bans.filter(ban => ban.allowAppeal === true && !ban.appeal).length > 0;
 	if allowAppeal === true
-		h4.no-m-p Appeal bans:
+		h4.no-m-p Appeal:
 			.form-wrapper.flexleft.mt-10
 				input(type='hidden' name='_csrf' value=csrf)
 				.row

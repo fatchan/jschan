@@ -163,7 +163,8 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 				};
 				const insertedResult = await Bans.insertOne(ban);
 				ban._id = insertedResult.insertedId;
-				return res.status(403).render('ban', {
+				ban.ip.raw = null; //for dynamicresponse
+				return dynamicResponse(req, res, 403, 'ban', {
 					bans: [ban]
 				});
 			}

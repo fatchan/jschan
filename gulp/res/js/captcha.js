@@ -29,7 +29,7 @@ class CaptchaController {
 		clearTimeout(this.refreshTimer); //this wont throw an error if its null, so no need to check
 		const captchaAge = this.captchaAge();
 		if (captchaAge != null) {
-			console.log('Refreshing captcha in ', 300000-captchaAge)
+			console.log('Refreshing captcha in ', 300000-captchaAge);
 			this.refreshTimer = setTimeout(() => {
 				this.refreshCaptchas();
 			}, 300000-captchaAge);
