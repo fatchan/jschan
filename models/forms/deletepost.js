@@ -5,9 +5,8 @@ const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts, Files } = require(__dirname+'/../../db/')
 	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
-	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
-	, messageHandler = require(__dirname+'/../../lib/post/message.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
+	, deleteQuotes = require(__dirname+'/../../lib/post/deletequotes.js')
 	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
 
 module.exports = async (posts, board, all=false) => {
@@ -68,7 +67,7 @@ module.exports = async (posts, board, all=false) => {
 		}
 	}
 
-	const bulkWrites = [];
+	let bulkWrites = [];
 	const backlinkRebuilds = new Set();
 	if (all === false) { //no need to rebuild quotes when deleting all posts for a board
 		const deleteThreadMap = {};
@@ -122,27 +121,7 @@ module.exports = async (posts, board, all=false) => {
 		//get posts that quoted deleted posts so we can remarkup them
 		if (backlinkRebuilds.size > 0) {
 			const remarkupPosts = await Posts.globalGetPosts([...backlinkRebuilds]);
-			await Promise.all(remarkupPosts.map(async post => { //doing these all at once
-				if (post.nomarkup && post.nomarkup.length > 0) { //is this check even necessary? how would it have a quote with no message
-					//redo the markup
-					const nomarkup = prepareMarkdown(post.nomarkup, false);
-					const { message, quotes, crossquotes } = await messageHandler(nomarkup, post.board, post.thread, null);
-					bulkWrites.push({
-						'updateOne': {
-							'filter': {
-								'_id': post._id
-							},
-							'update': {
-								'$set': {
-									'quotes': quotes,
-									'crossquotes': crossquotes,
-									'message': message
-								}
-							}
-						}
-					});
-				}
-			}));
+			bulkWrites = bulkWrites.concat(deleteQuotes(allPosts, remarkupPosts));
 		}
 	}
 
