@@ -6,6 +6,7 @@ javascript:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:
     - 'npm install'
+    - 'npm install jest -g'
     - 'jest --ci --reporters=default --reporters=jest-junit --testPathIgnorePatterns=./test/'
   artifacts:
     when: always
