@@ -38,6 +38,11 @@ function doModal(data, postcallback, loadcallback) {
 		document.body.insertAdjacentHTML('afterbegin', modalHtml);
 		const modals = document.getElementsByClassName('modal');
 		const modalBgs = document.getElementsByClassName('modal-bg');
+		window.dispatchEvent(new CustomEvent('showModal', {
+			detail: {
+				modal: modals[0],
+			}
+		}));
 		if (modals.length > 1) {
 			const latestModalIndex = parseInt(document.defaultView.getComputedStyle(modals[1], null).getPropertyValue('z-index'));
 			//from appeals, or holding enter. make sure they show up above the previous modal
