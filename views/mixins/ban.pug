@@ -14,8 +14,9 @@ mixin ban(ban, banpage)
 		if viewRawIp === true
 			td #{ip}
 		else
-			td #{ip}#{ban.type === 'half' ? '.*.*' : (ban.type === 'quarter' ? '.*' : '')}
-		td #{ban.type}
+			td #{ip}#{ban.type === 'hrange' ? '.*.*' : (ban.type === 'qrange' ? '.*' : '')}
+		td #{ban.category === 0 ? 'IP' : ban.category === 1 ? 'Bypass' : 'Pruned IP'}
+		td #{ban.type === 0 ? 'Single' : ban.type === 1 ? 'Quarter' : 'Half'}
 		td #{(!banpage || ban.showUser === true) ? ban.issuer : 'Hidden User'}
 		- const banDate = new Date(ban.date);
 		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(undefined, {hourCycle:'h23'})}

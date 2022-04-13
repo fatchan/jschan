@@ -8,7 +8,7 @@ mixin modal(data)
 		if data.bans
 			h1.board-title Banned!
 			.row#modalbanned
-				- const bans = data.bans
+				- const bans = data.bans;
 				include ../includes/banform.pug
 		if data.message || data.messages || data.error || data.errors
 			.row

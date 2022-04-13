@@ -150,7 +150,8 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 						'cloak': res.locals.ip.cloak,
 						'raw': res.locals.ip.raw,
 					},
-					'type': 'single',
+					'category': res.locals.anonymizer ? 1 : 0, //no 2, because that only happens during pruning
+					'type': 0,
 					'reason': `${hitGlobalFilter ? 'global ' :''}word filter auto ban`,
 					'board': banBoard,
 					'posts': null,

@@ -15,6 +15,14 @@ else
 			label.postform-style.ph-5
 				input(type='radio' name='option' value='deny_appeal')
 		.row
+			.label Upgrade Ban
+			label.postform-style.ph-5
+				input(type='radio' name='option' value='upgrade')
+			select(name='upgrade')
+				option(value='')
+				option(value='1') Narrow Range
+				option(value='2') Wide Range
+		.row
 			.label Edit Duration
 			label.postform-style.ph-5.mr-1
 				input(type='radio' name='option' value='edit')
