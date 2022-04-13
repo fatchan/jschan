@@ -1,6 +1,6 @@
 'use strict';
 
-const hashIp = require(__dirname+'/../lib/haship.js')
+const hashIp = require(__dirname+'/../lib/misc/haship.js')
 	, { createCIDR, parse } = require('ip6addr')
 	, config = require(__dirname+'/../lib/misc/config.js')
     , Permission = require(__dirname+'/../lib/permission/permission.js')
