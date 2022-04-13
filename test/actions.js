@@ -7,7 +7,7 @@ module.exports = () => describe('Test post modactions', () => {
 	let sessionCookie
 		, csrfToken;
 
-	test.only('login as admin',  async () => {
+	test('login as admin',  async () => {
 		const params = new URLSearchParams();
 		params.append('username', 'admin');
 		params.append('password', process.env.TEST_ADMIN_PASSWORD);
@@ -593,7 +593,7 @@ int main() {...}
 		expect(response.ok).toBe(true);
 	});
 
-	test.only('test upgrade a ban to qrange',  async () => {
+	test('test upgrade a ban to qrange',  async () => {
 
 		const banPage = await fetch('http://localhost/globalmanage/bans.html', {
 			headers: {
