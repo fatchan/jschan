@@ -41,9 +41,9 @@ module.exports = {
 					},
 					'board': board,
 					//bypass or pruned IP bans aren't upgraded, duh!
-					'category': 0,
+					'type': 0,
 					//dont allow half -> quarter
-					'type': {
+					'range': {
 						'$lt': upgradeType
 					}
 				}
@@ -51,7 +51,7 @@ module.exports = {
 				'$project': {
 					'_id': 1,
 					'board': 1,
-					'type': {
+					'range': {
 						//mongoloidDB
 						'$literal': upgradeType,
 					},

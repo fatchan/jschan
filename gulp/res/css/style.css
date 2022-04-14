@@ -1338,11 +1338,14 @@ hr + .thread {
 	margin-top: -5px;
 }
 
-.scrolltable {
-	max-height: 160px;
-	overflow-y: auto;
-	overflow-x: hidden;
-	border: 1px solid var(--box-border-color);
+.bantable {
+  max-width: unset;
+  word-break: keep-all;
+  white-space: nowrap;
+}
+
+.bantable td, .bantable th {
+	padding: 5px 10px;
 }
 
 tr:nth-child(odd) {

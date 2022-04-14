@@ -23,33 +23,33 @@ module.exports = async (req, res, next) => {
 			return acc;
 		}, {});
 		for (let ip in ipPosts) {
-			const banCategory = ip.endsWith('.IP') ? 0 :
+			const banType = ip.endsWith('.IP') ? 0 :
 				ip.endsWith('.BP') ? 1 :
 			 	2;
 			/* should we at some point filter these to not bother banning pruned ips,
 				and/or not range banning bypasses (since it does nothing)? */
 			const thisIpPosts = ipPosts[ip];
-			let type = 0;
+			let banRange = 0;
 			let banIp = {
 				cloak: thisIpPosts[0].ip.cloak,
 				raw: thisIpPosts[0].ip.raw,
 			};
 			if (req.body.ban_h) {
-				type = 2;
+				banRange = 2;
 				banIp.cloak = thisIpPosts[0].ip.cloak
 					.split('.')
 					.slice(0,1)
 					.join('.');
 			} else if (req.body.ban_q) {
-				type = 1;
+				banRange = 1;
 				banIp.cloak = thisIpPosts[0].ip.cloak
 					.split('.')
 					.slice(0,2)
 					.join('.');
 			}
 			bans.push({
-				type,
-				'category': banCategory,
+				'range': banRange,
+				'type': banType,
 				'ip': banIp,
 				'reason': banReason,
 				'board': banBoard,
@@ -87,9 +87,13 @@ module.exports = async (req, res, next) => {
 			}
 			ips = ips.filter(n => n);
 			[...new Set(ips)].forEach(ip => {
+				const banType = ip.endsWith('.IP') ? 0 :
+					ip.endsWith('.BP') ? 1 :
+				 	2;
 				bans.push({
+					'type': banType,
+					'range': 0,
 					'ip': ip,
-					'type': 0,
 					'reason': banReason,
 					'board': banBoard,
 					'posts': null,
