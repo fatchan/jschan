@@ -5,7 +5,7 @@ Demo/test instance: [Clearnet](https://fatchan.org), [Tor hidden service](http:/
 
 API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/) - Gitgud pages link: http://fatchan.gitgud.site/jschan-docs/#introduction
 
-Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general)
+Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc.fatpeople.lol/#general) ([lokinet](http://1xrifkakfwgg7z43ydm6cgsfnwb7ks7rwhcjpatk98d694y4g5go.loki/#general))
 
 ## Features
 - [x] User created boards ala infinity
