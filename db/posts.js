@@ -2,6 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, { isIP } = require('net')
+	, { DAY } = require(__dirname+'/../lib/converter/timeutils.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, Permissions = require(__dirname+'/../lib/permission/permissions.js')
@@ -706,6 +707,24 @@ module.exports = {
 				}
 			}
 		]).toArray();
+	},
+
+	hotThreads: async () => {
+		const listedBoards = await Boards.getLocalListed();
+		return db.find({
+			'board': {
+				'$in': listedBoards
+			},
+			'thread': null,
+			'date': {
+				//created in last 7 days
+				'$gte': new Date(Date.now() - (7 * DAY))
+			},
+		}).sort({
+			'replyposts': -1
+		})
+		.limit(5) //top 5 threads
+		.toArray();
 	},
 
 	deleteMany: (ids) => {
