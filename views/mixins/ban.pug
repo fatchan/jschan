@@ -16,7 +16,7 @@ mixin ban(ban, banpage)
 		else
 			td #{ip}#{'.*'.repeat(ban.range)}
 		td #{ban.type === 0 ? 'IP' : ban.type === 1 ? 'Bypass' : 'Pruned IP'}
-		td #{ban.range === 0 ? 'Single' : ban.range === 1 ? 'Quarter' : 'Half'}
+		td #{ban.range === 0 ? 'Single' : ban.range === 1 ? 'Narrow' : 'Wide'}
 		td #{(!banpage || ban.showUser === true) ? ban.issuer : 'Hidden User'}
 		- const banDate = new Date(ban.date);
 		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(undefined, {hourCycle:'h23'})}
