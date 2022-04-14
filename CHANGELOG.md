@@ -1,7 +1,7 @@
 ### 0.6.0
   - Bans+Appeal form will now appear in the modal popup when js enabled, instead of a dodgy workaround which often caused posting bugs and broke over Tor.
   - Bans can now be "upgraded" retroactively to expand single IP bans to qrange/hrange bans.
-  - The ban table now has a column or whether a ban is of an IP or Bypass ID. (Or pruned IP, if you were dumb enough to ban one of those)
+  - Ban table now shows columns for "Type" (IP/Bypass/Pruned) and "Range" (Single/Narrow/Wide).
   - Big refactor of backend, the awfully named and disorganised "helpers" is now the more appropriately named and better organised "lib".
   - Some form and input handling code made more robust based on test feedback.
   - More tests.
