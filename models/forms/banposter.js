@@ -23,12 +23,11 @@ module.exports = async (req, res, next) => {
 			return acc;
 		}, {});
 		for (let ip in ipPosts) {
+			//should we at some point filter these to not bother banning pruned ips?
 			const banType = ip.endsWith('.IP') ? 0 :
 				ip.endsWith('.BP') ? 1 :
 			 	2;
 			const thisIpPosts = ipPosts[ip];
-			/* should we at some point filter these to not bother banning pruned ips,
-				and/or not range banning bypasses (since it does nothing)? */
 			let banRange = 0;
 			let banIp = {
 				cloak: thisIpPosts[0].ip.cloak,
