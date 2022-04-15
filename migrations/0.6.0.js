@@ -17,14 +17,14 @@ module.exports = async(db, redis) => {
 		},
 	});
 	await db.collection('bans').updateMany({
-		'range': 'qrange'
+		'range': 'quarter'
 	}, {
 		'$set': {
 			'range': 1,
 		},
 	});
 	await db.collection('bans').updateMany({
-		'range': 'hrange'
+		'range': 'half'
 	}, {
 		'$set': {
 			'range': 2,
