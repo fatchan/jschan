@@ -94,6 +94,11 @@ module.exports = {
 	//allow custom overboard (user pick what boards to show)
 	allowCustomOverboard: true,
 
+	//how many hot threads show on homepage. 0 disabled
+	hotThreadsLimit: 5,
+	//how many replies the thread needs to be "hot"
+	hotThreadsThreshold: 10,
+
 	//default url format/links for archive and reverse image search links, %s will be replaced by the url
 	archiveLinksURL: 'https://archive.today/?run=1&url=%s',
 	reverseImageLinksURL: 'https://tineye.com/search?url=%s',

@@ -93,6 +93,12 @@ block content
 						.label Template Generation Lock Time
 						input(type='number' name='lock_wait' value=settings.lockWait)
 					.row
+						.label Hot Threads Limit
+						input(type='number' name='hot_threads_limit' value=settings.hotThreadsLimit)
+					.row
+						.label Hot Threads Threshold
+						input(type='number' name='hot_threads_threshold' value=settings.hotThreadsThreshold)
+					.row
 						.label Overboard Index Thread Limit
 						input(type='number' name='overboard_limit' value=settings.overboardLimit)
 					.row

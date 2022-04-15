@@ -2,6 +2,7 @@
   - Bans+Appeal form will now appear in the modal popup when js enabled, instead of a dodgy workaround which often caused posting bugs and broke over Tor.
   - Bans can now be "upgraded" retroactively to expand single IP bans to qrange/hrange bans.
   - Ban table now shows columns for "Type" (IP/Bypass/Pruned) and "Range" (Single/Narrow/Wide).
+  - Global setting to show some popular threads from listed boards on the homepage, with adjustible limit (0=disabled) and threshold. (courtesy ptchan.org)
   - Big refactor of backend, the awfully named and disorganised "helpers" is now the more appropriately named and better organised "lib".
   - Some form and input handling code made more robust based on test feedback.
   - More tests.

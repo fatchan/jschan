@@ -710,6 +710,10 @@ module.exports = {
 	},
 
 	hotThreads: async () => {
+		const { hotThreadsLimit, hotThreadsThreshold } = config.get;
+		if (hotThreadsLimit === 0){ //0 limit = no limit in mongodb
+			return [];
+		}
 		const listedBoards = await Boards.getLocalListed();
 		return db.find({
 			'board': {
@@ -720,10 +724,13 @@ module.exports = {
 				//created in last 7 days
 				'$gte': new Date(Date.now() - (7 * DAY))
 			},
+			'replyposts': {
+				'$gte': hotThreadsThreshold,
+			}
 		}).sort({
 			'replyposts': -1
 		})
-		.limit(5) //top 5 threads
+		.limit(hotThreadsLimit)
 		.toArray();
 	},
 
