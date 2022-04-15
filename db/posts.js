@@ -711,6 +711,7 @@ module.exports = {
 
 	hotThreads: async () => {
 		const { hotThreadsLimit, hotThreadsThreshold } = config.get;
+console.log(hotThreadsLimit, hotThreadsThreshold)
 		if (hotThreadsLimit === 0){ //0 limit = no limit in mongodb
 			return [];
 		}

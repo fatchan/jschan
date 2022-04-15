@@ -26,9 +26,9 @@ module.exports = async (req, res, next) => {
 			const banType = ip.endsWith('.IP') ? 0 :
 				ip.endsWith('.BP') ? 1 :
 			 	2;
+			const thisIpPosts = ipPosts[ip];
 			/* should we at some point filter these to not bother banning pruned ips,
 				and/or not range banning bypasses (since it does nothing)? */
-			const thisIpPosts = ipPosts[ip];
 			let banRange = 0;
 			let banIp = {
 				cloak: thisIpPosts[0].ip.cloak,
@@ -87,8 +87,8 @@ module.exports = async (req, res, next) => {
 			}
 			ips = ips.filter(n => n);
 			[...new Set(ips)].forEach(ip => {
-				const banType = ip.endsWith('.IP') ? 0 :
-					ip.endsWith('.BP') ? 1 :
+				const banType = ip.cloak.endsWith('.IP') ? 0 :
+					ip.cloak.endsWith('.BP') ? 1 :
 				 	2;
 				bans.push({
 					'type': banType,
