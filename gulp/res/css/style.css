@@ -1446,6 +1446,10 @@ row.wrap.sb .col {
 	flex-basis: calc(50% - 5px);
 }
 
+#hotposts td:nth-child(1) {
+	white-space: nowrap;
+}
+
 @media only screen and (max-height: 400px) {
 	.modal {
 		top: 5px;
@@ -1483,6 +1487,9 @@ row.wrap.sb .col {
 		vertical-align: top;
 		margin-left: 3px;
 		width: 1em;
+	}
+	#hotposts td:nth-child(3) {
+		display: none;
 	}
 	#settings::after {
 		content: "\2699"!important;

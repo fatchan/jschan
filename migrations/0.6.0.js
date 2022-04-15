@@ -53,4 +53,15 @@ module.exports = async(db, redis) => {
 			'type': 2,
 		},
 	});
+
+	console.log('Add options for adjusting hot threads to globalsettings');
+	await db.collection('globalsettings').updateOne({ _id: 'globalsettings' }, {
+		'$set': {
+			'hotThreadsLimit': 5,
+			'hotThreadsThreshold': 10,
+		},
+	});
+	console.log('Clearing globalsettings cache');
+	await redis.deletePattern('globalsettings');
+
 };
