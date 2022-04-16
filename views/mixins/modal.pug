@@ -165,15 +165,14 @@ mixin modal(data)
 								.postform-style.ph-5.mr-1 × 
 								input.mr-1.w50#tegakiheight-setting(type='number')
 
-					.row.mt-5
-						.label Custom CSS
-						textarea#customcss-setting(rows=7)
-
 					details.fw.mt-5
 						summary.label.more More
 						.row.mt-5
+							.label Custom CSS
+							textarea#customcss-setting(rows=7)
+						.row.mt-5
 							form.text-center#filter-form
-								table
+								table.fw
 									tbody#advancedfilters
 										tr
 											th(colspan=4) Post Filters
