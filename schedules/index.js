@@ -5,8 +5,8 @@ process
 	.on('unhandledRejection', console.error);
 
 const Mongo = require(__dirname+'/../db/db.js')
-	, config = require(__dirname+'/../config.js')
-	, { addCallback } = require(__dirname+'/../redis.js');
+	, config = require(__dirname+'/../lib/misc/config.js')
+	, { addCallback } = require(__dirname+'/../lib/redis/redis.js');
 
 (async () => {
 
@@ -25,7 +25,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 	})
 
 	//update board stats and homepage task, use cron and bull for proper timing
-	require(__dirname+'/../queue.js').push({
+	require(__dirname+'/../lib/build/queue.js').push({
 		'task': 'updateStats',
 		'options': {}
 	}, {

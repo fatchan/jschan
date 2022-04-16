@@ -1,11 +1,11 @@
 'use strict';
 
-const uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, { remove } = require('fs-extra')
 	, { Posts } = require(__dirname+'/../../db/')
-	, Socketio = require(__dirname+'/../../socketio.js')
-	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
+	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
+	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
+	, messageHandler = require(__dirname+'/../../lib/post/message.js')
 	, { createHash } = require('crypto')
 
 module.exports = async (req, res) => {

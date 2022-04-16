@@ -1,17 +1,17 @@
 'use strict';
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, config = require(__dirname+'/../../config.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, buildQueue = require(__dirname+'/../../queue.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
+	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, { remove } = require('fs-extra')
 	, deletePosts = require(__dirname+'/deletepost.js')
-	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
-	, { countryCodes } = require(__dirname+'/../../helpers/countries.js')
-	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
-	, { compareSettings } = require(__dirname+'/../../helpers/settingsdiff.js')
+	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
+	, messageHandler = require(__dirname+'/../../lib/post/message.js')
+	, { countryCodes } = require(__dirname+'/../../lib/misc/countries.js')
+	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../lib/input/setting.js')
+	, { compareSettings } = require(__dirname+'/../../lib/input/settingsdiff.js')
 	, validCountryCodes = new Set(countryCodes)
 	, settingChangeEntries = Object.entries({
 		'userPostDelete': ['board', 'catalog', 'threads'],

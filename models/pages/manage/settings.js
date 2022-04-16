@@ -1,7 +1,7 @@
 'use strict';
 
-const { themes, codeThemes } = require(__dirname+'/../../../helpers/themes.js')
-	, { countryNamesMap, countryCodes } = require(__dirname+'/../../../helpers/countries.js')
+const { themes, codeThemes } = require(__dirname+'/../../../lib/misc/themes.js')
+	, { countryNamesMap, countryCodes } = require(__dirname+'/../../../lib/misc/countries.js')
 
 module.exports = async (req, res, next) => {
 

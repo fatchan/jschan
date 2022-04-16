@@ -29,6 +29,49 @@ module.exports = {
 		}).toArray();
 	},
 
+	upgrade: async (board, ids, upgradeType) => {
+		const substrProjection = upgradeType === 1
+			? ['$ip.cloak', 0, 16]
+			: ['$ip.cloak', 0, 8];
+		const aggregateCursor = await db.aggregate([
+			{
+				'$match': {
+					'_id': {
+						'$in': ids,
+					},
+					'board': board,
+					//bypass or pruned IP bans aren't upgraded, duh!
+					'type': 0,
+					//dont allow half -> quarter
+					'range': {
+						'$lt': upgradeType
+					}
+				}
+			}, {
+				'$project': {
+					'_id': 1,
+					'board': 1,
+					'range': {
+						//mongoloidDB
+						'$literal': upgradeType,
+					},
+					'ip.cloak': {
+						'$substr': substrProjection,
+					},
+					'ip.raw': '$ip.raw',
+				}
+			}, {
+				'$merge': {
+					'into': 'bans',
+				}
+			}
+		]);
+		//changing the order of these will result in a differene explain() output! nice.
+		const aggregateExplained = await aggregateCursor.explain();
+		await aggregateCursor.toArray();
+		return aggregateExplained;
+	},
+
 	markSeen: (ids) => {
 		return db.updateMany({
 			'_id': {

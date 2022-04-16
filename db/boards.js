@@ -1,9 +1,9 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, cache = require(__dirname+'/../redis.js')
-	, dynamicResponse = require(__dirname+'/../helpers/dynamic.js')
-	, escapeRegExp = require(__dirname+'/../helpers/escaperegexp.js')
+	, cache = require(__dirname+'/../lib/redis/redis.js')
+	, dynamicResponse = require(__dirname+'/../lib/misc/dynamic.js')
+	, escapeRegExp = require(__dirname+'/../lib/input/escaperegexp.js')
 	, db = Mongo.db.collection('boards');
 
 module.exports = {

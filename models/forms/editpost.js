@@ -1,16 +1,16 @@
 'use strict';
 
 const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
-	, Permissions = require(__dirname+'/../../helpers/permissions.js')
+	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
 	, { createHash } = require('crypto')
 	, Mongo = require(__dirname+'/../../db/db.js')
-	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
-	, nameHandler = require(__dirname+'/../../helpers/posting/name.js')
-	, config = require(__dirname+'/../../config.js')
-	, buildQueue = require(__dirname+'/../../queue.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, { buildThread } = require(__dirname+'/../../helpers/tasks.js')
+	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
+	, messageHandler = require(__dirname+'/../../lib/post/message.js')
+	, nameHandler = require(__dirname+'/../../lib/post/name.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
+	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js')
 	, { remove } = require('fs-extra');
 
 module.exports = async (req, res, next) => {
@@ -56,7 +56,8 @@ todo: handle some more situations
 							'cloak': res.locals.ip.cloak,
 							'raw': res.locals.ip.raw,
 						},
-						'type': 'single',
+						'type': res.locals.anonymizer ? 1 : 0,
+						'range': 0,
 						'reason': 'global word filter auto ban',
 						'board': null,
 						'posts': null,
@@ -69,7 +70,8 @@ todo: handle some more situations
 					};
  					const insertedResult = await Bans.insertOne(ban);
 					ban._id = insertedResult.insertedId;
-					return res.status(403).render('ban', {
+					ban.ip.raw = null; //for dynamicresponse
+					return dynamicResponse(req, res, 403, 'ban', {
 						bans: [ban]
 					});
 				}

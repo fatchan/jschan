@@ -1,6 +1,6 @@
 'use strict';
 
-const redis = require(__dirname+'/../../redis.js');
+const redis = require(__dirname+'/../../lib/redis/redis.js');
 
 module.exports = async (req, res, next) => {
 

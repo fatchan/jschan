@@ -1,14 +1,14 @@
 'use strict';
 
 const { Posts } = require(__dirname+'/../../db/')
-	, Permissions = require(__dirname+'/../../helpers/permissions.js')
-	, config = require(__dirname+'/../../config.js')
+	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, actionChecker = require(__dirname+'/../../helpers/checks/actionchecker.js')
-	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, actionChecker = require(__dirname+'/../../lib/input/actionchecker.js')
+	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 

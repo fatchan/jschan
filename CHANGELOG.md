@@ -1,8 +1,18 @@
+### 0.6.0
+  - Bans+Appeal form will now appear in the modal popup when js enabled, instead of a dodgy workaround which often caused posting bugs and broke over Tor.
+  - Bans can now be "upgraded" retroactively to expand single IP bans to qrange/hrange bans.
+  - Ban table now shows columns for "Type" (IP/Bypass/Pruned) and "Range" (Single/Narrow/Wide).
+  - Global setting to show some popular threads from listed boards on the homepage, with adjustible limit (0=disabled) and threshold. (courtesy ptchan.org)
+  - Big refactor of backend, the awfully named and disorganised "helpers" is now the more appropriately named and better organised "lib".
+  - Some form and input handling code made more robust based on test feedback.
+  - More tests.
+  - Bugfixes.
+
 ### 0.5.3
   - Add testing framework. Allows to test individual code, simulated requests and check for regressions after changes. Will be made more comprehensive over time.
   - Make "Manage" navbar link go to the current page in modview, instead of defaulting to reports page.
   - Fix some obscure bugs with incorrect post ordering/pages not rebuilding after making a post, or submitting post actions.
-  - Many bugfixes
+  - Many bugfixes.
 
 ### 0.5.2
   - Fix regression in remarkup of posts during moving, deleting, cyclic threads, etc due to permissions.

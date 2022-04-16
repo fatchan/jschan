@@ -1,15 +1,15 @@
 'use strict';
 
-const config = require(__dirname+'/config.js')
+const config = require(__dirname+'/lib/misc/config.js')
 	, { Binary } = require('mongodb')
-	, Permission = require(__dirname+'/helpers/permission.js')
-	, Permissions = require(__dirname+'/helpers/permissions.js')
+	, Permission = require(__dirname+'/lib/permission/permission.js')
+	, Permissions = require(__dirname+'/lib/permission/permissions.js')
 	, { hcaptcha, google } = require(__dirname+'/configs/secrets.js')
 	, gulp = require('gulp')
 	, fs = require('fs-extra')
 	, semver = require('semver')
-	, uploadDirectory = require(__dirname+'/helpers/files/uploadDirectory.js')
-	, commit = require(__dirname+'/helpers/commit.js')
+	, uploadDirectory = require(__dirname+'/lib/file/uploaddirectory.js')
+	, commit = require(__dirname+'/lib/misc/commit.js')
 	, replace = require('gulp-replace')
 	, less = require('gulp-less')
 	, concat = require('gulp-concat')
@@ -21,7 +21,7 @@ const config = require(__dirname+'/config.js')
 	, gulppug = require('gulp-pug')
 	, { migrateVersion, version } = require(__dirname+'/package.json')
 	, { randomBytes } = require('crypto')
-	, Redis = require(__dirname+'/redis.js')
+	, Redis = require(__dirname+'/lib/redis/redis.js')
 	, Mongo = require(__dirname+'/db/db.js')
 	, paths = {
 		styles: {
@@ -389,7 +389,7 @@ function deletehtml() {
 }
 
 async function custompages() {
-	const formatSize = require(__dirname+'/helpers/files/formatsize.js');
+	const formatSize = require(__dirname+'/lib/converter/formatsize.js');
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/404.pug`,
@@ -425,7 +425,7 @@ async function custompages() {
 }
 
 async function scripts() {
-	const { themes, codeThemes } = require(__dirname+'/helpers/themes.js');
+	const { themes, codeThemes } = require(__dirname+'/lib/misc/themes.js');
 	try {
 		const locals = `const themes = ['${themes.join("', '")}'];
 const codeThemes = ['${codeThemes.join("', '")}'];

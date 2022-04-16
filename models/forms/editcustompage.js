@@ -1,12 +1,12 @@
 'use strict';
 
 const { CustomPages } = require(__dirname+'/../../db/')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, { remove } = require('fs-extra')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, buildQueue = require(__dirname+'/../../queue.js')
-	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, messageHandler = require(__dirname+'/../../helpers/posting/message.js');
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
+	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
+	, messageHandler = require(__dirname+'/../../lib/post/message.js');
 
 module.exports = async (req, res, next) => {
 

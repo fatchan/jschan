@@ -4,7 +4,7 @@ process
 	.on('uncaughtException', console.error)
 	.on('unhandledRejection', console.error);
 
-const config = require(__dirname+'/config.js')
+const config = require(__dirname+'/lib/misc/config.js')
 	, express = require('express')
 	, path = require('path')
 	, app = express()
@@ -12,12 +12,12 @@ const config = require(__dirname+'/config.js')
 	, cookieParser = require('cookie-parser')
 	, { port, cookieSecret, debugLogs, google, hcaptcha } = require(__dirname+'/configs/secrets.js')
 	, Mongo = require(__dirname+'/db/db.js')
-	, dynamicResponse = require(__dirname+'/helpers/dynamic.js')
-	, commit = require(__dirname+'/helpers/commit.js')
+	, dynamicResponse = require(__dirname+'/lib/misc/dynamic.js')
+	, commit = require(__dirname+'/lib/misc/commit.js')
 	, { version } = require(__dirname+'/package.json')
-	, formatSize = require(__dirname+'/helpers/files/formatsize.js')
+	, formatSize = require(__dirname+'/lib/converter/formatsize.js')
 	, CachePugTemplates = require('cache-pug-templates')
-	, Permissions = require(__dirname+'/helpers/permissions.js');
+	, Permissions = require(__dirname+'/lib/permission/permissions.js');
 
 (async () => {
 
@@ -33,10 +33,10 @@ const config = require(__dirname+'/config.js')
 
 	// connect to redis
 	debugLogs && console.log('CONNECTING TO REDIS');
-	const redis = require(__dirname+'/redis.js');
+	const redis = require(__dirname+'/lib/redis/redis.js');
 
 	// load roles early
-	const roleManager = require(__dirname+'/helpers/rolemanager.js');
+	const roleManager = require(__dirname+'/lib/permission/rolemanager.js');
 	await roleManager.load();
 
 	// disable useless express header
@@ -49,10 +49,10 @@ const config = require(__dirname+'/config.js')
 	app.use(cookieParser(cookieSecret));
 
 	// session store
-	const sessionMiddleware = require(__dirname+'/helpers/usesession.js');
+	const sessionMiddleware = require(__dirname+'/lib/middleware/permission/usesession.js');
 
 	// connect socketio
-	const Socketio = require(__dirname+'/socketio.js');
+	const Socketio = require(__dirname+'/lib/misc/socketio.js');
 	debugLogs && console.log('STARTING WEBSOCKET');
 	Socketio.connect(server, sessionMiddleware);
 
@@ -60,7 +60,7 @@ const config = require(__dirname+'/config.js')
 	app.set('trust proxy', 1);
 
 	//self explanatory middlewares
-	const referrerCheck = require(__dirname+'/helpers/referrercheck.js');
+	const referrerCheck = require(__dirname+'/lib/middleware/misc/referrercheck.js');
 	app.use(referrerCheck);
 
 	// use pug view engine

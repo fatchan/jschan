@@ -1,10 +1,10 @@
 'use strict';
 
-const hashIp = require(__dirname+'/../helpers/haship.js')
+const hashIp = require(__dirname+'/../lib/misc/haship.js')
 	, { createCIDR, parse } = require('ip6addr')
-	, config = require(__dirname+'/../config.js')
-    , Permission = require(__dirname+'/../helpers/permission.js')
-	, Permissions = require(__dirname+'/../helpers/permissions.js')
+	, config = require(__dirname+'/../lib/misc/config.js')
+    , Permission = require(__dirname+'/../lib/permission/permission.js')
+	, Permissions = require(__dirname+'/../lib/permission/permissions.js')
 	, { Binary } = require('mongodb');
 
 module.exports = async(db, redis) => {

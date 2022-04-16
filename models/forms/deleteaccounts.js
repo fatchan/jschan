@@ -1,8 +1,8 @@
 'use strict';
 
 const { Accounts, Boards } = require(__dirname+'/../../db/')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, cache = require(__dirname+'/../../redis.js');
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, cache = require(__dirname+'/../../lib/redis/redis.js');
 
 module.exports = async (req, res, next) => {
 

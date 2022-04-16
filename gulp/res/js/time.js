@@ -115,14 +115,24 @@ window.addEventListener('settingsReady', function(event) {
 
 });
 
-window.addEventListener('addPost', function(e) {
-
-	const newPostDates = e.detail.post.querySelectorAll('.reltime');
-	for (let date of newPostDates) {
-		if (!e.detail.hover) {
+const handleDateUpdates = (parentElem, temporary = false) => {
+	const newDateElems = parentElem.querySelectorAll('.reltime');
+	for (let date of newDateElems) {
+		if (!temporary) {
+			/* temporary e.g. floated posts, don't want to have their
+				date elements pushed/tracked in the dates array */
 			dates.push(date);
 		}
 		changeDateFormat(date);
 	}
+}
 
+window.addEventListener('addPost', function(e) {
+	handleDateUpdates(e.detail.post, e.detail.hover);
 });
+
+window.addEventListener('showModal', function(e) {
+console.log(e.detail, e.detail.modal)
+	handleDateUpdates(e.detail.modal);
+});
+

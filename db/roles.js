@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, db = Mongo.db.collection('roles')
-	, cache = require(__dirname+'/../redis.js');
+	, cache = require(__dirname+'/../lib/redis/redis.js');
 
 module.exports = {
 

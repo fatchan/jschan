@@ -1,8 +1,8 @@
 'use strict';
 
 const { Bypass } = require(__dirname+'/../../db/')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, config = require(__dirname+'/../../config.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {

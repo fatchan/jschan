@@ -593,6 +593,35 @@ int main() {...}
 		expect(response.ok).toBe(true);
 	});
 
+	test('test upgrade a ban to qrange',  async () => {
+
+		const banPage = await fetch('http://localhost/globalmanage/bans.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkString = 'name="checkedbans" value="';
+		const checkIndex = banPage.indexOf(checkString);
+		banId = banPage.substring(checkIndex+checkString.length, checkIndex+checkString.length+24);
+
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedbans: banId,
+			option: 'upgrade',
+			upgrade: 1,
+		});
+		const response = await fetch('http://localhost/forms/global/editbans', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		})
+		expect(response.ok).toBe(true);
+	});
+
 	test('edit ban duration',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,

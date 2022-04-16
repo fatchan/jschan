@@ -52,7 +52,29 @@ block content
 						td
 							- const newsDate = new Date(post.date);
 							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
-
+	if hotThreads && hotThreads.length > 0
+		.table-container.flex-center.mv-5
+			table#hotposts
+				tr(colspan=3) 
+				each post, i in hotThreads
+					tr
+						td.text-center
+							span.help(title='Hot Thread') 🔥
+							|  #{post.replyposts + post.replyfiles}
+						td 
+							- const threadLink = `/${post.board}/thread/${post.postId}.html#${post.postId}`;
+							a.quote(href=threadLink)
+								if post.subject
+									| #{post.subject.substring(0,30)}#{post.subject.length > 30 ? '...' : ''}
+									if post.nomarkup
+										|  - 
+								if post.nomarkup
+									| #{post.nomarkup.substring(0,40)}#{post.nomarkup.length > 40 ? '...' : ''}
+								if !post.nomarkup && !post.subject
+									| >>>/#{post.board}/#{post.postId}
+						td
+							- const bumpDate = new Date(post.bumped);
+							time.right.reltime(datetime=bumpDate.toISOString()) #{bumpDate.toLocaleString(undefined, {hourCycle:'h23'})}
 	if boards && boards.length > 0
 		+boardtable(true, false)
 			each board in boards

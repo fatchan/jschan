@@ -2,16 +2,16 @@
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 	, { setConfig } = require(__dirname+'/../../db/db.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
-	, buildQueue = require(__dirname+'/../../queue.js')
-	, redis = require(__dirname+'/../../redis.js')
-	, config = require(__dirname+'/../../config.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
+	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
+	, redis = require(__dirname+'/../../lib/redis/redis.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
-	, { prepareMarkdown } = require(__dirname+'/../../helpers/posting/markdown.js')
-	, messageHandler = require(__dirname+'/../../helpers/posting/message.js')
-	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../helpers/setting.js')
-	, { includeChildren, compareSettings } = require(__dirname+'/../../helpers/settingsdiff.js')
+	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
+	, messageHandler = require(__dirname+'/../../lib/post/message.js')
+	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../lib/input/setting.js')
+	, { includeChildren, compareSettings } = require(__dirname+'/../../lib/input/settingsdiff.js')
 	, { remove } = require('fs-extra')
 	, template = require(__dirname+'/../../configs/template.js.example')
 	, settingChangeEntries = Object.entries({
@@ -109,6 +109,8 @@ module.exports = async (req, res, next) => {
 		},
 		overboardLimit: numberSetting(req.body.overboard_limit, oldSettings.overboardLimit),
 		overboardCatalogLimit: numberSetting(req.body.overboard_catalog_limit, oldSettings.overboardCatalogLimit),
+		hotThreadsLimit: numberSetting(req.body.hot_threads_limit, oldSettings.hotThreadsLimit),
+		hotThreadsThreshold: numberSetting(req.body.hot_threads_threshold, oldSettings.hotThreadsThreshold),
 		allowCustomOverboard: booleanSetting(req.body.allow_custom_overboard, oldSettings.allowCustomOverboard),
 		archiveLinksURL: trimSetting(req.body.archive_links, oldSettings.archiveLinksURL),
 		reverseImageLinksURL: trimSetting(req.body.reverse_links, oldSettings.reverseImageLinksURL),

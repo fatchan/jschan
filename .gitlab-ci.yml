@@ -1,0 +1,16 @@
+image: node:latest
+
+javascript:
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  script:
+    - 'npm install'
+    - 'npm install jest -g'
+    - 'cp configs/secrets.js.example configs/secrets.js'
+    - 'jest --ci --reporters=default --reporters=jest-junit --testPathIgnorePatterns=./test/'
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml

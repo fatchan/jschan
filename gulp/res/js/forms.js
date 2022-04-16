@@ -31,11 +31,27 @@ async function videoThumbnail(file) {
 	});
 }
 
-function doModal(data, postcallback) {
+function doModal(data, postcallback, loadcallback) {
 	try {
 		const modalHtml = modal({ modal: data });
 		let checkInterval;
 		document.body.insertAdjacentHTML('afterbegin', modalHtml);
+		const modals = document.getElementsByClassName('modal');
+		const modalBgs = document.getElementsByClassName('modal-bg');
+		window.dispatchEvent(new CustomEvent('showModal', {
+			detail: {
+				modal: modals[0],
+			}
+		}));
+		if (modals.length > 1) {
+			const latestModalIndex = parseInt(document.defaultView.getComputedStyle(modals[1], null).getPropertyValue('z-index'));
+			//from appeals, or holding enter. make sure they show up above the previous modal
+			modals[0].style.zIndex = latestModalIndex + 3;
+			modalBgs[0].style.zIndex = latestModalIndex + 2;
+		}
+		if (loadcallback != null) {
+			loadcallback();
+		}
 		document.getElementById('modalclose').onclick = () => {
 			removeModal();
 			clearInterval(checkInterval);
@@ -46,9 +62,9 @@ function doModal(data, postcallback) {
 		};
 		const modalframe = document.getElementById('modalframe');
 		if (modalframe) {
-			//if theres a modal frame and user has default theme, style it
 			if (localStorage.getItem('theme') === 'default') {
 				modalframe.onload = () => {
+					//if theres a modal frame and user has default theme, style it
 					const currentTheme = document.head.querySelector('#theme').href;
 					modalframe.contentDocument.styleSheets[1].ownerNode.href = currentTheme;
 				}
@@ -64,7 +80,7 @@ function doModal(data, postcallback) {
 			}
 		}
 	} catch(e) {
-		console.error(e)
+		console.error(e);
 	}
 }
 
@@ -202,8 +218,7 @@ class postFormHandler {
 				postData.set('captcha', captchaResponse);
 			}
 		}
-		if (this.banned
-			|| this.minimal
+		if (this.minimal
 			|| (postData instanceof URLSearchParams && postData.get('edit') === '1')) {
 			return true;
 		} else {
@@ -251,9 +266,7 @@ class postFormHandler {
 						if (xhr.responseURL
 							&& xhr.responseURL !== `${location.origin}${this.form.getAttribute('action')}`) {
 							window.location = xhr.responseURL;
-							return;
-						} else if (xhr.responseText) {
-							//
+							return; //edits
 						}
 					} else {
 						if (json.postId) {
@@ -278,11 +291,7 @@ class postFormHandler {
 							forceUpdate();
 						}
 					}
-					//dont reset on edit, keep the new values in there. todo: add exceptions/better handling for this situation
-					const formAction = this.form.getAttribute('action');
 					if (this.resetOnSubmit) {
-//formAction !== '/forms/editpost'
-//!formAction.endsWith('/settings')) {
 						this.reset();
 					}
 				} else {
@@ -301,15 +310,32 @@ class postFormHandler {
 							if (captcha) {
 								captcha.dispatchEvent(new Event('click'));
 							}
+						} else if (json.bans) {
+							doModal(json, null, () => {
+								const modalBanned = document.getElementById('modalbanned');
+								const modalBanForm = modalBanned.querySelector('form');
+								const modalAppealHandler = new postFormHandler(modalBanForm);
+								for (let modalFormElement of modalAppealHandler.form.elements) {
+									//for ease of appeal, pre-check all the bans in this case.
+									if (modalFormElement.type === 'checkbox') {
+										modalFormElement.checked = true;
+									}
+								}
+								const appealCaptcha = modalAppealHandler.captchaField;
+								if (appealCaptcha) {
+									captchaController.setupCaptchaField(appealCaptcha);
+								}
+							});
+						} else {
+							doModal(json, () => {
+								this.formSubmit(e);
+							});
 						}
-						doModal(json, () => {
-							this.formSubmit(e);
-						});
 					} else {
-//for bans, post form to show TODO: make modal support bans json and send dynamicresponse from it (but what about appeals, w/ captcha, etc?)
-						this.clearFiles(); //dont resubmit files
-						this.banned = true;
-						this.form.dispatchEvent(new Event('submit'));
+						doModal({
+							'title': 'Error',
+							'message': 'Something broke'
+						});
 					}
 				}
 				this.submit.value = this.originalSubmitText;

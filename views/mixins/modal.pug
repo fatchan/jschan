@@ -1,9 +1,15 @@
+include ../mixins/ban.pug
 mixin modal(data)
 	.modal-bg(style=data.hidden?'display:none':'')
 	.modal(id=(data.settings ? 'settingsmodal' : '') style=data.hidden?'display:none':'')
 		.row
 			p.bold #{data.title}
 			a.close.postform-style#modalclose ×
+		if data.bans
+			h1.board-title Banned!
+			.row#modalbanned
+				- const bans = data.bans;
+				include ../includes/banform.pug
 		if data.message || data.messages || data.error || data.errors
 			.row
 				ul.nomarks

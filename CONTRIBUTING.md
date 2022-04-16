@@ -4,7 +4,7 @@ Thanks for considering contributing.
 
 Some links:
   * [Kanban board](https://gitgud.io/fatchan/jschan/-/boards/4780) already has issues in swim lanes.
-  * IRC: [irc.fatpeople.lol #general](ircs://irc.fatpeople.lol:6697/general)
+  * IRC: [irc.fatpeople.lol #general](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc.fatpeople.lol/#general) ([lokinet](http://1xrifkakfwgg7z43ydm6cgsfnwb7ks7rwhcjpatk98d694y4g5go.loki/#general))
 
 ## LICENSE?
 
@@ -31,7 +31,7 @@ Read the code to understand, but basically:
   * TAB for indentation.
   * Please include comments.
 
-## Running tests (WIP)
+## Running tests
 
 Make sure these still pass after your changes, or adjust them to meet the new expected results.
 

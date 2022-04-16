@@ -1,8 +1,8 @@
 'use strict';
 
 const bcrypt = require('bcrypt')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, redis = require(__dirname+'/../../redis.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, redis = require(__dirname+'/../../lib/redis/redis.js')
 	, { Accounts } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {

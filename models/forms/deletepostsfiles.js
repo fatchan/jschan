@@ -1,9 +1,9 @@
 'use strict';
 
 const { Files } = require(__dirname+'/../../db/')
-	, config = require(__dirname+'/../../config.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
-	, deletePostFiles = require(__dirname+'/../../helpers/files/deletepostfiles.js');
+	, deletePostFiles = require(__dirname+'/../../lib/file/deletepostfiles.js');
 
 module.exports = async (posts, unlinkOnly) => {
 

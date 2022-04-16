@@ -15,3 +15,5 @@ gulp/res/js/modal.js
 gulp/res/icons/*
 tmp/
 .idea/
+coverage/
+junit.xml

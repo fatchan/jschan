@@ -2,12 +2,12 @@
 
 const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, { Binary } = require(__dirname+'/../../db/db.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, roleManager = require(__dirname+'/../../helpers/rolemanager.js')
-	, uploadDirectory = require(__dirname+'/../../helpers/files/uploadDirectory.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js')
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, restrictedURIs = new Set(['captcha', 'forms', 'randombanner', 'all'])
 	, { ensureDir } = require('fs-extra')
-	, config = require(__dirname+'/../../config.js');
+	, config = require(__dirname+'/../../lib/misc/config.js');
 
 module.exports = async (req, res, next) => {
 

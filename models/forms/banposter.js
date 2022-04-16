@@ -1,7 +1,7 @@
 'use strict';
 
 const { Bans } = require(__dirname+'/../../db/')
-	, config = require(__dirname+'/../../config.js');
+	, config = require(__dirname+'/../../lib/misc/config.js');
 
 module.exports = async (req, res, next) => {
 
@@ -23,27 +23,32 @@ module.exports = async (req, res, next) => {
 			return acc;
 		}, {});
 		for (let ip in ipPosts) {
+			//should we at some point filter these to not bother banning pruned ips?
+			const banType = ip.endsWith('.IP') ? 0 :
+				ip.endsWith('.BP') ? 1 :
+			 	2;
 			const thisIpPosts = ipPosts[ip];
-			let type = 'single';
+			let banRange = 0;
 			let banIp = {
 				cloak: thisIpPosts[0].ip.cloak,
 				raw: thisIpPosts[0].ip.raw,
 			};
 			if (req.body.ban_h) {
-				type = 'half';
+				banRange = 2;
 				banIp.cloak = thisIpPosts[0].ip.cloak
 					.split('.')
 					.slice(0,1)
 					.join('.');
 			} else if (req.body.ban_q) {
-				type = 'quarter';
+				banRange = 1;
 				banIp.cloak = thisIpPosts[0].ip.cloak
 					.split('.')
 					.slice(0,2)
 					.join('.');
 			}
 			bans.push({
-				type,
+				'range': banRange,
+				'type': banType,
 				'ip': banIp,
 				'reason': banReason,
 				'board': banBoard,
@@ -81,9 +86,13 @@ module.exports = async (req, res, next) => {
 			}
 			ips = ips.filter(n => n);
 			[...new Set(ips)].forEach(ip => {
+				const banType = ip.cloak.endsWith('.IP') ? 0 :
+					ip.cloak.endsWith('.BP') ? 1 :
+				 	2;
 				bans.push({
+					'type': banType,
+					'range': 0,
 					'ip': ip,
-					'type': 'single',
 					'reason': banReason,
 					'board': banBoard,
 					'posts': null,

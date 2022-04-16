@@ -2,9 +2,9 @@
 
 const Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts } = require(__dirname+'/../../db/')
-	, config = require(__dirname+'/../../config.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { createHash, randomBytes } = require('crypto')
-	, timeUtils = require(__dirname+'/../../helpers/timeutils.js');
+	, timeUtils = require(__dirname+'/../../lib/converter/timeutils.js');
 
 module.exports = {
 

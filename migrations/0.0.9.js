@@ -1,6 +1,6 @@
 'use strict';
 
-const hashIp = require(__dirname+'/../helpers/haship.js');
+const hashIp = require(__dirname+'/../lib/misc/haship.js');
 
 module.exports = async(db, redis) => {
 	console.log('change bans index');

@@ -2,13 +2,13 @@
 
 const editAccount = require(__dirname+'/../../models/forms/editaccount.js')
 	, { Accounts } = require(__dirname+'/../../db/')
-	, alphaNumericRegex = require(__dirname+'/../../helpers/checks/alphanumregex.js')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
-	, paramConverter = require(__dirname+'/../../helpers/paramconverter.js')
-	, Permissions = require(__dirname+'/../../helpers/permissions.js')
-	, roleManager = require(__dirname+'/../../helpers/rolemanager.js')
+	, alphaNumericRegex = require(__dirname+'/../../lib/input/alphanumregex.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
+	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../helpers/schema.js');
+		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 

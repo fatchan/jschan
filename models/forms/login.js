@@ -1,7 +1,7 @@
 'use strict';
 
 const bcrypt = require('bcrypt')
-	, dynamicResponse = require(__dirname+'/../../helpers/dynamic.js')
+	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { Accounts } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res, next) => {

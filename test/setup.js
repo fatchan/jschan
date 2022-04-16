@@ -87,6 +87,8 @@ module.exports = () => describe('login and create test board', () => {
 			early_404_fraction: '3',
 			early_404_replies: '5',
 			max_recent_news: '5',
+			hot_threads_limit: '5',
+			hot_threads_threshold: '10',
 			captcha_options_type: 'text',
 			captcha_options_grid_image_size: '120',
 			captcha_options_grid_size: '4',

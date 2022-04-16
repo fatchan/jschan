@@ -3,7 +3,7 @@
 const Mongo = require(__dirname+'/db.js')
 	, db = Mongo.db.collection('accounts')
 	, bcrypt = require('bcrypt')
-	, cache = require(__dirname+'/../redis.js');
+	, cache = require(__dirname+'/../lib/redis/redis.js');
 
 module.exports = {
 
