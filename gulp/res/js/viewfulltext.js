@@ -60,10 +60,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 		const updatePostMessageEvent = new CustomEvent('updatePostMessage', {
 			detail: {
+				nonotify: true,
 				post: parentPost,
 				postId: postJson.postId,
 				json: postJson,
-				viewfulltext: true,
 			}
 		});
 		window.dispatchEvent(updatePostMessageEvent);

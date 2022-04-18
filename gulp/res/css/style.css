@@ -203,7 +203,10 @@ pre {
 #settings::after {
 	content: "Settings";
 }
-
+.expand-omitted {
+	vertical-align: bottom;
+	margin-right: 5px;
+}
 #postform-dragHandle, #threadwatcher-dragHandle {
 	flex-grow: 1;
 	background: var(--darken);
