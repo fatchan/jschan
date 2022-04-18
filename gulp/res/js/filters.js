@@ -58,7 +58,8 @@ const anyFilterMatches = (filteringPost) => {
 	const { board, postId, userId, name, subject, tripcode } = filteringPost.dataset;
 	const postMessage = filteringPost.querySelector('.post-message');
 	const message = postMessage ? postMessage.textContent : null;
-	return fid.has(userId)
+	return single.has(`${board}-${postId}`)
+		|| fid.has(userId)
 		|| fname.has(name)
 		|| ftrip.has(tripcode)
 		|| fsub.has(tripcode)
@@ -315,6 +316,7 @@ togglePostsHidden(getHiddenElems(), true);
 
 window.addEventListener('addPost', function(e) {
 	const newPost = e.detail.post;
+console.log(newPost)
 	if (anyFilterMatches(newPost)) {
 		newPost.classList.add('hidden');
 	}
