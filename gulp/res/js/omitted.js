@@ -3,9 +3,12 @@ window.addEventListener('DOMContentLoaded', () => {
 	let loading = {};
 
 	const hideOmitted = (e) => {
+		e.target.nextSibling.style.display = 'unset';
 		const thread = e.target.closest('.thread');
-		let replies = Array.from(thread.querySelectorAll('.post-container'));
-		replies = replies.slice(1, replies.length-5);
+		let replies = Array.from(thread.querySelectorAll('.post-container:not(.op)'));
+		if (e.target.dataset.shown > 0) {
+			replies = replies.slice(0, -parseInt(e.target.dataset.shown));
+		}
 		replies.forEach(r => {
 			r.previousSibling.remove();
 			r.remove();
@@ -18,16 +21,17 @@ window.addEventListener('DOMContentLoaded', () => {
 		const threadId = e.target.dataset.thread;
 		const board = e.target.dataset.board;
 		const parentPost = e.target.closest('.post-container');
-		const firstPreviewReply = parentPost.nextSibling.nextSibling; //the first preview reply
+		const firstPreviewReply = parentPost.nextSibling && parentPost.nextSibling.nextSibling; //the first preview reply
 		const jsonPath = `/${board}/thread/${threadId}.json`;
 		let hovercache = localStorage.getItem(`hovercache-${jsonPath}`);
 		let replies;
 		if (hovercache) {
 			hovercache = JSON.parse(hovercache);
 			//if we have the first preview reply in cache, the cache is fresh enough to show the omitted posts
-			if (hovercache.replies.find(r => r.postId == firstPreviewReply.dataset.postId)) {
+			if (firstPreviewReply && hovercache.replies.find(r => r.postId == firstPreviewReply.dataset.postId)) {
 				replies = hovercache.replies;
 			}
+			//note: will always fetch (on new page load) for sticky preview replies = 0
 		}
 		if (!replies) {
 			e.target.style.cursor = 'wait';
@@ -56,15 +60,17 @@ window.addEventListener('DOMContentLoaded', () => {
 		if (!replies) {
 			return;
 		}
+		e.target.nextSibling.style.display = 'none';
 		e.target.src = '/file/minus.png';
 		e.target.dataset.open = true;
-		replies
-			.reverse()
-			.filter(r => r.postId < firstPreviewReply.dataset.postId)
-			.forEach(r => {
+		replies = replies.reverse();
+		if (firstPreviewReply) {
+			replies = replies.filter(r => r.postId < firstPreviewReply.dataset.postId);
+		}
+		replies.forEach(r => {
 			newPost(r, {
-				insertPoint: parentPost.nextSibling, //anchor before first previewreply
-				insertPosition: 'beforebegin',
+				insertPoint: firstPreviewReply ? parentPost.nextSibling : parentPost,
+				insertPosition: firstPreviewReply ? 'beforebegin' : 'afterend',
 			});
 		});
 	};

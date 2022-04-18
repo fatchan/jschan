@@ -316,7 +316,6 @@ togglePostsHidden(getHiddenElems(), true);
 
 window.addEventListener('addPost', function(e) {
 	const newPost = e.detail.post;
-console.log(newPost)
 	if (anyFilterMatches(newPost)) {
 		newPost.classList.add('hidden');
 	}
