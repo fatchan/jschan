@@ -219,6 +219,10 @@ block content
 						label.postform-style.ph-5
 							input(type='checkbox', name='strict_filtering', value='true', checked=settings.strictFiltering)
 					.row
+						.label Filter Bans Appealable
+						label.postform-style.ph-5
+							input(type='checkbox', name='filter_ban_appealable', value='true', checked=settings.filterBanAppealable)
+					.row
 						.label Filter Mode
 						select(name='filter_mode')
 							option(value='0', selected=settings.filterMode === 0) Do nothing

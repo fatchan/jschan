@@ -54,6 +54,7 @@ module.exports = async (req, res, next) => {
 		filterMode: numberSetting(req.body.filter_mode, oldSettings.filterMode),
 		strictFiltering: booleanSetting(req.body.strict_filtering, oldSettings.strictFiltering),
 		filterBanDuration: numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
+		filterBanAppealable: booleanSetting(req.body.filter_ban_appealable),
 		allowedHosts: arraySetting(req.body.allowed_hosts, oldSettings.allowedHosts),
 		countryCodeHeader: trimSetting(req.body.country_code_header, oldSettings.countryCodeHeader),
 		ipHeader: trimSetting(req.body.ip_header, oldSettings.ipHeader),
