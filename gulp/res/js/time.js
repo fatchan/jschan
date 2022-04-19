@@ -132,7 +132,6 @@ window.addEventListener('addPost', function(e) {
 });
 
 window.addEventListener('showModal', function(e) {
-console.log(e.detail, e.detail.modal)
 	handleDateUpdates(e.detail.modal);
 });
 
