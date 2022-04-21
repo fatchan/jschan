@@ -1,3 +1,6 @@
+### 0.6.2
+  - Hotfix webring.
+
 ### 0.6.1
   - +/- button to expand a thread and see the omitted posts from index pages.
   - Option for global filter bans to be not appealable.
