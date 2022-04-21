@@ -91,7 +91,7 @@ const handleNewYous = (e) => {
 	//toggle for any quotes in a new post that quote (you)
 	toggleQuotes(youHoverQuotes, yousEnabled);
 	//if not a hover newpost, and enabled/for yous, send notification
-	if (!e.detail.viewfulltext && !e.detail.hover && notificationsEnabled && !isYou) {
+	if (!e.detail.nonotify && !e.detail.hover && notificationsEnabled && !isYou) {
 		if (notificationYousOnly && !quotesYou) {
 			return; //only send notif for (you) if setting
 		}

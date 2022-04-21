@@ -28,6 +28,7 @@ module.exports = {
 	strictFiltering: false,
 	filterMode: 0,
 	filterBanDuration: 0,
+	filterBanAppealable: true,
 
 	//settings for captchas
 	captchaOptions: {

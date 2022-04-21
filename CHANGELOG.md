@@ -1,3 +1,7 @@
+### 0.6.1
+  - +/- button to expand a thread and see the omitted posts from index pages.
+  - Option for global filter bans to be not appealable.
+
 ### 0.6.0
   - Bans+Appeal form will now appear in the modal popup when js enabled, instead of a dodgy workaround which often caused posting bugs and broke over Tor.
   - Bans can now be "upgraded" retroactively to expand single IP bans to qrange/hrange bans.

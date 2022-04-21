@@ -151,7 +151,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					json: postJson,
 					post: hoveredPost,
 					postId: postJson.postId,
-					hover: true
+					hover: true,
+					nonotify: true,
 				}
 			});
 			window.dispatchEvent(newPostEvent);

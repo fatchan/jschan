@@ -3,6 +3,7 @@ let scrollEnabled = localStorage.getItem('scroll') == 'true';
 let socket;
 let socketPingInterval;
 let forceUpdate;
+let newPost;
 
 window.addEventListener('settingsReady', function(event) { //after domcontentloaded
 
@@ -59,9 +60,9 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		}
 	};
 
-	const newPost = (data) => {
+	newPost = (data, options = {}) => {
 		//insert at end of thread, but insert at top for globalmanage
-		console.log('got new post', data);
+		//console.log('got new post', data);
 		const postData = data;
 		lastPostIds[postData.board] = postData.postId;
 		//create a new post
@@ -75,7 +76,9 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			...extraLocals,
 		});
 		let insertPoint;
-		if (isRecent) {
+		if (options.insertPoint) {
+			insertPoint = options.insertPoint;
+		} else if (isRecent) {
 			const firstHr = document.querySelector('hr');
 			const newHr = document.createElement('hr');
 			const threadWrapper = document.createElement('div');
@@ -86,7 +89,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		} else {
 			insertPoint = document.querySelector('.thread');
 		}
-		insertPoint.insertAdjacentHTML('beforeend', postHtml);
+		insertPoint.insertAdjacentHTML(options.insertPosition || 'beforeend', postHtml);
 		if (isRecent) {
 			//cap the recent pages to 20 posts so they dont grow to infinity
 			Array.from(document.querySelectorAll('.thread'))
@@ -110,7 +113,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 					quotedPostData.appendChild(newRepliesDiv);
 					replies = newRepliesDiv;
 				}
-				if (new RegExp(`>>${postData.postId}(\s|$)`).test(replies.innerText)) {
+				if (new RegExp(`>>${postData.postId}(\\s|$)`).test(replies.innerText)) {
 					//reply link already exists (probably from a late catch up)
 					continue;
 				}
@@ -124,7 +127,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			}
 		}
 		const newPostAnchor = document.getElementById(postData.postId);
-		const newPost = newPostAnchor.nextSibling;
+		const newPostElement = newPostAnchor.nextSibling;
 		if (scrollEnabled) {
 			if (isGlobalRecent) {
 				window.scrollTo(0, 0); //recent pages are reverse sort, so just go to top
@@ -134,7 +137,8 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		}
 		const newPostEvent = new CustomEvent('addPost', {
 			detail: {
-				post: newPost,
+				nonotify: options.nonotify,
+				post: newPostElement,
 				postId: postData.postId,
 				json: postData
 			}

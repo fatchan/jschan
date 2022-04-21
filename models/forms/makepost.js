@@ -34,7 +34,7 @@ const path = require('path')
 
 module.exports = async (req, res, next) => {
 
-	const { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
+	const { filterBanAppealable, checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
 		strictFiltering, animatedGifThumbnails, audioThumbnails, dontStoreRawIps } = config.get;
 
 	//spam/flood check
@@ -158,7 +158,7 @@ ${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).
 					'issuer': 'system', //what should i call this
 					'date': banDate,
 					'expireAt': banExpiry,
-					'allowAppeal': true, //should i make this configurable if appealable?
+					'allowAppeal': hitGlobalFilter ? filterBanAppealable : true,
 					'showUser': true,
 					'seen': false
 				};

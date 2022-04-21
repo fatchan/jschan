@@ -1,7 +1,7 @@
 {
   "name": "jschan",
-  "version": "0.6.0",
-  "migrateVersion": "0.6.0",
+  "version": "0.6.1",
+  "migrateVersion": "0.6.1",
   "description": "",
   "main": "server.js",
   "dependencies": {
@@ -21,7 +21,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "form-data": "^4.0.0",
     "fs": "0.0.1-security",
-    "fs-extra": "^10.0.1",
+    "fs-extra": "^10.1.0",
     "gm": "git+https://gitgud.io/fatchan/gm.git",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
@@ -45,10 +45,10 @@
     "redlock": "^4.2.0",
     "sanitize-html": "^2.7.0",
     "saslprep": "^1.0.3",
-    "semver": "^7.3.6",
+    "semver": "^7.3.7",
     "socket.io": "^4.4.1",
     "socket.io-redis": "^6.1.1",
-    "socks-proxy-agent": "^6.1.1",
+    "socks-proxy-agent": "^6.2.0",
     "uid-safe": "^2.1.5",
     "unix-crypt-td-js": "^1.1.4"
   },

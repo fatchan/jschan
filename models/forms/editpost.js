@@ -23,7 +23,7 @@ todo: handle some more situations
 - different permission levels for historical posts when remarked up (or not, fuck that)
 */
 
-	const { previewReplies, strictFiltering } = config.get;
+	const { filterBanAppealable, previewReplies, strictFiltering } = config.get;
 	const { board, post } = res.locals;
 
 	//filters
@@ -64,7 +64,7 @@ todo: handle some more situations
 						'issuer': 'system', //what should i call this
 						'date': banDate,
 						'expireAt': banExpiry,
-						'allowAppeal': true, //should i make this configurable if appealable?
+						'allowAppeal': filterBanAppealable,
 						'showUser': true,
 						'seen': false
 					};
