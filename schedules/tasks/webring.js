@@ -7,7 +7,7 @@ const fetch = require('node-fetch')
 	, Redis = require(__dirname+'/../../lib/redis/redis.js')
 	, { Boards } = require(__dirname+'/../../db/')
 	, { outputFile } = require('fs-extra')
-	, SocksProxyAgent = require('socks-proxy-agent')
+	, { SocksProxyAgent } = require('socks-proxy-agent')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, timeUtils = require(__dirname+'/../../lib/converter/timeutils.js');
 
