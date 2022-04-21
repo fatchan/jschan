@@ -204,6 +204,9 @@ pre {
 	content: "Settings";
 }
 .expand-omitted {
+	background-color: var(--post-color);
+	border: 1px solid var(--font-color);
+	border-radius: 2px;
 	vertical-align: bottom;
 	margin-right: 5px;
 }

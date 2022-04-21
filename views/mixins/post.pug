@@ -158,7 +158,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					| Message too long. #[a.viewfulltext(href=`${postURL}#${post.postId}`) View the full text]
 			if post.omittedposts || post.omittedfiles
 				div.cb.mt-5.ml-5
-					img.jsonly.dummy-link.expand-omitted(height='18' width='18' data-shown=post.replies.length data-board=post.board data-thread=post.postId src='/file/plus.png')
+					img.jsonly.dummy-link.expand-omitted(height='12' width='12' data-shown=post.replies.length data-board=post.board data-thread=post.postId src='/file/plus.png')
 					- const ompo = post.omittedposts;
 					- const omfi = post.omittedfiles;
 					span
@@ -174,6 +174,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 						if post.previewbacklinks.length < post.backlinks.length
 							- const ombls = post.backlinks.length-post.previewbacklinks.length;
 							| + #[a(href=`${postURL}#${post.postId}`) #{ombls} earlier]
+							|  
 			else if post.backlinks && post.backlinks.length > 0
 				div.replies.mt-5.ml-5 Replies: 
 					each backlink in post.backlinks

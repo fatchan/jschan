@@ -5,7 +5,8 @@ window.addEventListener('DOMContentLoaded', () => {
 	const hideOmitted = (e) => {
 		e.target.nextSibling.style.display = 'unset';
 		const thread = e.target.closest('.thread');
-		let replies = Array.from(thread.querySelectorAll('.post-container:not(.op)'));
+		const posts = Array.from(thread.querySelectorAll('.post-container'));
+		let replies = posts.slice(1);
 		if (e.target.dataset.shown > 0) {
 			replies = replies.slice(0, -parseInt(e.target.dataset.shown));
 		}
@@ -52,7 +53,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			if (json) {
 				setLocalStorage(`hovercache-${jsonPath}`, JSON.stringify(json));
 				hoverCacheList.value = Object.keys(localStorage).filter(k => k.startsWith('hovercache'));
-				replies = json.replies;
+				replies = [...json.replies];
 			} else {
 				return localStorage.removeItem(`hovercache-${jsonPath}`); //thread deleted
 			}
@@ -60,10 +61,16 @@ window.addEventListener('DOMContentLoaded', () => {
 		if (!replies) {
 			return;
 		}
+		const opReplies = parentPost.querySelector('.replies');
+		if (opReplies && opReplies.innerText.includes('+')) {
+			const earlierLink = opReplies.lastElementChild;
+			earlierLink.previousSibling.remove();
+			earlierLink.remove();
+		}
+		replies = replies.reverse();
 		e.target.nextSibling.style.display = 'none';
 		e.target.src = '/file/minus.png';
 		e.target.dataset.open = true;
-		replies = replies.reverse();
 		if (firstPreviewReply) {
 			replies = replies.filter(r => r.postId < firstPreviewReply.dataset.postId);
 		}
