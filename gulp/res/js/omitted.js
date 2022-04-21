@@ -69,6 +69,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 		replies.forEach(r => {
 			newPost(r, {
+				nonotify: true,
 				insertPoint: firstPreviewReply ? parentPost.nextSibling : parentPost,
 				insertPosition: firstPreviewReply ? 'beforebegin' : 'afterend',
 			});

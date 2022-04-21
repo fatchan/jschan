@@ -62,7 +62,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 
 	newPost = (data, options = {}) => {
 		//insert at end of thread, but insert at top for globalmanage
-		console.log('got new post', data);
+		//console.log('got new post', data);
 		const postData = data;
 		lastPostIds[postData.board] = postData.postId;
 		//create a new post
@@ -137,7 +137,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		}
 		const newPostEvent = new CustomEvent('addPost', {
 			detail: {
-				nonotify: true,
+				nonotify: options.nonotify,
 				post: newPostElement,
 				postId: postData.postId,
 				json: postData
