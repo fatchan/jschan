@@ -1,3 +1,6 @@
+### 0.6.3
+  - Bugfix when setting empty board tags, and other multiline settings.
+
 ### 0.6.2
   - Hotfix webring.
 

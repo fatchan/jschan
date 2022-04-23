@@ -122,7 +122,7 @@ module.exports = async (req, res, next) => {
 	await Boards.updateOne(req.params.board, {
 		'$set':  {
 			'settings': newSettings,
-			'tags': arraySetting(req.body.tags, oldSettings.tags, 10),
+			'tags': arraySetting(req.body.tags, res.locals.board.tags, 10),
 		}
 	});
 
