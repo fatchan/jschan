@@ -56,3 +56,6 @@ table.boardtable th:nth-child(1) {
 		transform: unset;
 	}
 }
+.post-data {
+	padding-bottom: 2px;
+}
