@@ -60,7 +60,7 @@ module.exports = {
 		if (!res.locals.posts || res.locals.posts.length === 0) {
 			return dynamicResponse(req, res, 404, 'message', {
 				'title': 'Not found',
-				'errors': 'Selected posts not found',
+				'error': 'Selected posts not found',
 				'redirect': '/globalmanage/reports.html'
 			})
 		}
