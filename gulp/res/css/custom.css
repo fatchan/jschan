@@ -59,3 +59,20 @@ table.boardtable th:nth-child(1) {
 .post-data {
 	padding-bottom: 2px;
 }
+@keyframes glint {
+	0% {
+		background-position: -500%;
+	}
+	100% {
+		background-position: 500%;
+	}
+}
+span.post-capcode[data-cap="## Admin"] {
+	display: inline-block;
+	animation: glint ease infinite 5s;
+	background: linear-gradient(90deg, var(--capcode-color), #fff, var(--capcode-color));
+	background-repeat: no-repeat;
+	background-size: 30%;
+	background-clip: text;
+	-webkit-background-clip: text;
+}
