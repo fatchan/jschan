@@ -349,6 +349,7 @@ async function css() {
 	return gulp.src([
 			`${paths.styles.src}/locals.css`,
 			`${paths.styles.src}/style.css`,
+			`${paths.styles.src}/tegaki.css`, //make sure any custom.css also goes after this
 			`${paths.styles.src}/*.css`,
 			`!${paths.styles.src}/nscaptcha.css`,
 		])
