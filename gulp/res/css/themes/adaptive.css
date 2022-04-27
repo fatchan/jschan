@@ -32,12 +32,12 @@
 }
 
 .anchor:target + .post-container, .post-container.highlighted {
-	border: 1px solid var(--highlighted-post-outline-color) /*!important*/;
+	border: 1px solid var(--highlighted-post-outline-color) ;
 }
 
 #float .post-container, #livetext, #threadstats, .navbar, .catalog-tile, .pages, .post-container, .stickynav, .collapse, .bottom-reply {
-	border-width: 1px/*!important*/;
-	border-color: black/*!important*/;
+	border-width: 1px;
+	border-color: black;
 }
 
 .navbar{
@@ -45,7 +45,7 @@
 }
 
 .post-container.op {
-	border-color: transparent/*!important*/;
+	border-color: transparent;
 }
 
 table {
@@ -110,11 +110,10 @@ tr:nth-child(2n+1) {
 		filter: invert(5%);
 	}
 	.post-info, .post-container:target .post-info, .post-container.highlighted .post-info {
-		background:none/*!important*/;
-		border:none/*!important*/;
+		background:none;
+		border:none;
 	}
 	#float .post-container, #livetext, #threadstats, .navbar, .catalog-tile, .pages, .post-container, .stickynav, .collapse, .bottom-reply {
 		border-color: var(--post-outline-color);
 	}
 }
-
