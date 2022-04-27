@@ -1,3 +1,7 @@
+### 0.6.4
+  - Add "adaptive" theme that switches between "clear" and "tomorrow" based on the device system theme, using prefers-color-scheme media query.
+  - Minor bugfixes.
+
 ### 0.6.3
   - Bugfix when setting empty board tags, and other multiline settings.
 
