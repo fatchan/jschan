@@ -7,6 +7,8 @@ const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
 	, nameHandler = require(__dirname+'/../../lib/post/name.js')
+	, getFilterStrings = require(__dirname+'/../../lib/post/getfilterstrings.js')
+	, filterActions = require(__dirname+'/../../lib/post/filteractions.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
@@ -27,54 +29,18 @@ todo: handle some more situations
 	const { board, post } = res.locals;
 
 	//filters
-	if (res.locals.permissions.get(Permissions.BYPASS_FILTERS)) { //global staff bypass filters for edit
-		const globalSettings = config.get;
-		if (globalSettings && globalSettings.filters.length > 0 && globalSettings.filterMode > 0) {
+	if (res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
+		//only global filters are checked, because anybody who could edit bypasses board filters
+		const { filters, filterMode, filterBanDuration } = config.get;
+		if (filters.length > 0 && filterMode > 0) {
 			let hitGlobalFilter = false
-				, ban
-				, concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|${res.locals.numFiles > 0 ? req.files.file.map(f => f.name).join('|') : ''}`.toLowerCase()
-				, allContents = concatContents;
-			if (strictFiltering) {
-				allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); //removing diacritics
-				allContents += concatContents.replace(/[\u200B-\u200D\uFEFF]/g, ''); //removing ZWS
-				allContents += concatContents.replace(/[^a-zA-Z0-9.-]+/gm, ''); //removing anything thats not alphamnumeric or . and -
-				allContents += concatContents.split(/(\%[^\%]+)/).map(part => { try { return decodeURIComponent(part) } catch(e) { return '' } }).join(''); //catch pedophile spammers url-fu with encoding
-			}
-			//global filters
-			hitGlobalFilter = globalSettings.filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
+				, ban;
+			const [combinedString, strictCombinedString] = getFilterStrings(req, res, strictFiltering);
+			hitGlobalFilter = filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
+			//block/ban edit
 			if (hitGlobalFilter) {
-				if (globalSettings.filterMode === 1) {
-					return dynamicResponse(req, res, 400, 'message', {
-						'title': 'Bad request',
-						'message': 'Your edit was blocked by a global word filter',
-					});
-				} else {
-					const banDate = new Date();
-					const banExpiry = new Date(globalSettings.filterBanDuration + banDate.getTime());
-					const ban = {
-						'ip': {
-							'cloak': res.locals.ip.cloak,
-							'raw': res.locals.ip.raw,
-						},
-						'type': res.locals.anonymizer ? 1 : 0,
-						'range': 0,
-						'reason': 'global word filter auto ban',
-						'board': null,
-						'posts': null,
-						'issuer': 'system', //what should i call this
-						'date': banDate,
-						'expireAt': banExpiry,
-						'allowAppeal': filterBanAppealable,
-						'showUser': true,
-						'seen': false
-					};
- 					const insertedResult = await Bans.insertOne(ban);
-					ban._id = insertedResult.insertedId;
-					ban.ip.raw = null; //for dynamicresponse
-					return dynamicResponse(req, res, 403, 'ban', {
-						bans: [ban]
-					});
-				}
+				return filterActions(req, res, hitGlobalFilter, 0, globalFilterMode,
+					0, globalFilterBanDuration, null, filterBanAppealable, null);
 			}
 		}
 	}
