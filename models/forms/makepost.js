@@ -7,9 +7,11 @@ const path = require('path')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
-	, { Stats, Posts, Boards, Files, Bans } = require(__dirname+'/../../db/')
+	, { Stats, Posts, Boards, Files } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../lib/redis/redis.js')
 	, nameHandler = require(__dirname+'/../../lib/post/name.js')
+	, getFilterStrings = require(__dirname+'/../../lib/post/getfilterstrings.js')
+	, filterActions = require(__dirname+'/../../lib/post/filteractions.js')
 	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
 	, moveUpload = require(__dirname+'/../../lib/file/moveupload.js')
@@ -105,71 +107,39 @@ module.exports = async (req, res, next) => {
 			});
 		}
 	}
+
 	//filters
 	if (!res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
+
+		//deconstruct global filter settings to differnt names, else they would conflict with the respective board-level setting
 		const { filters: globalFilters, filterMode: globalFilterMode,
 			filterBanDuration: globalFilterBanDuration } = config.get;
+
 		let hitGlobalFilter = false
 			, hitLocalFilter = false
 			, ban;
-		let concatContents = `|${req.body.name}|${req.body.message}|${req.body.subject}|${req.body.email}|\
-${res.locals.numFiles > 0 ? req.files.file.map(f => f.name+'|'+(f.phash || '')).join('|') : ''}`.toLowerCase();
-		let allContents = concatContents;
-		if (strictFiltering || res.locals.board.settings.strictFiltering) { //strict filtering adds a few transformations of the text to try and match filters when sers use techniques like zalgo, ZWS, markdown, multi-line, etc.
-			allContents += concatContents.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); //removing diacritics
-			allContents += concatContents.replace(/[\u200B-\u200D\uFEFF]/g, ''); //removing ZWS
-			allContents += concatContents.replace(/[^a-zA-Z0-9.-]+/gm, ''); //removing anything thats not alphamnumeric or . and -
-			allContents += concatContents.split(/(\%[^\%]+)/).map(part => { try { return decodeURIComponent(part) } catch(e) { return '' } }).join(''); //catch pedophile spammers url-fu with encoding
-		}
-		//global filters
+		let [combinedString, strictCombinedString] = getFilterStrings(req, res, strictFiltering || res.locals.board.settings.strictFiltering);
+
+		//compare to global filters
 		if (globalFilters && globalFilters.length > 0 && globalFilterMode > 0) {
-			hitGlobalFilter = globalFilters.some(filter => { return allContents.includes(filter.toLowerCase()) });
+			hitGlobalFilter = globalFilters.some(filter => { return strictCombinedString.includes(filter.toLowerCase()) });
 		}
-		//board-specific filters
+
+		//compare to board filters
 		if (!hitGlobalFilter && !res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL)
 			&& filterMode > 0 && filters && filters.length > 0) {
-			const localFilterContents = res.locals.board.settings.strictFiltering ? allContents : concatContents;
+			const localFilterContents = res.locals.board.settings.strictFiltering === true ? strictCombinedString : combinedString;
 			hitLocalFilter = filters.some(filter => { return localFilterContents.includes(filter.toLowerCase()) });
 		}
+
+		//block post/apply bans if an active filter matched
 		if (hitGlobalFilter || hitLocalFilter) {
 			await deleteTempFiles(req).catch(e => console.error);
-			const useFilterMode = hitGlobalFilter ? globalFilterMode : filterMode; //global override local filter
-			if (useFilterMode === 1) {
-				return dynamicResponse(req, res, 400, 'message', {
-					'title': 'Bad request',
-					'message': 'Your post was blocked by a word filter',
-					'redirect': redirect
-				});
-			} else { //otherwise filter mode must be 2
-				const useFilterBanDuration = hitGlobalFilter ? globalFilterBanDuration : filterBanDuration;
-				const banBoard = hitGlobalFilter ? null : res.locals.board._id;
-				const banDate = new Date();
-				const banExpiry = new Date(useFilterBanDuration + banDate.getTime());
-				const ban = {
-					'ip': {
-						'cloak': res.locals.ip.cloak,
-						'raw': res.locals.ip.raw,
-					},
-					'type': res.locals.anonymizer ? 1 : 0,
-					'range': 0,
-					'reason': `${hitGlobalFilter ? 'global ' :''}word filter auto ban`,
-					'board': banBoard,
-					'posts': null,
-					'issuer': 'system', //what should i call this
-					'date': banDate,
-					'expireAt': banExpiry,
-					'allowAppeal': hitGlobalFilter ? filterBanAppealable : true,
-					'showUser': true,
-					'seen': false
-				};
-				const insertedResult = await Bans.insertOne(ban);
-				ban._id = insertedResult.insertedId;
-				ban.ip.raw = null; //for dynamicresponse
-				return dynamicResponse(req, res, 403, 'ban', {
-					bans: [ban]
-				});
-			}
+			return filterActions(req, res, hitGlobalFilter, filterMode, globalFilterMode,
+				filterBanDuration, globalFilterBanDuration, globalFilterBanDuration,
+				filterBanAppealable, redirect);
 		}
+
 	}
 
 	//for r9k messages. usually i wouldnt process these if its not enabled e.g. flags and IDs but in this case I think its necessary

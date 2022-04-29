@@ -37,7 +37,6 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-
 	//todo: add a settings for defaults
 	const newBoard = {
 		'_id': uri,
@@ -74,7 +73,5 @@ module.exports = async (req, res, next) => {
 		ensureDir(`${uploadDirectory}/flag/${uri}`),
 		ensureDir(`${uploadDirectory}/asset/${uri}`),
 	]);
-
-	return res.redirect(`/${uri}/index.html`);
 
 }

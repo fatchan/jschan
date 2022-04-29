@@ -657,3 +657,18 @@
   margin-top: -32px;
 }
 
+/* Improved mobile compatibility by moving the tools to
+   the bottom of the screen in portrait mode*/
+@media only screen and (max-width:600px) {
+	#tegaki {
+		grid-template-columns: 40px 1fr 0px;
+		grid-template-rows: 24px 1fr 300px;
+	}
+	#tegaki-ctrl-cnt {
+		grid-area: 3/2/3/2;
+		z-index: 1;
+	}
+	#tegaki-layers-wrap {
+		padding: 10px;
+	}
+}

@@ -37,7 +37,7 @@ const express  = require('express')
 router.post('/board/:board/post', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, fileMiddlewares.posts,
 makePostController.paramConverter, verifyCaptcha, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, makePostController.controller);
 router.post('/board/:board/modpost', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn,
-hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), fileMiddlewares.posts, makePostController.paramConverter, csrf, numFiles, blockBypass.middleware, dnsblCheck, makePostController.controller); //mod post has token instead of captcha
+hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), fileMiddlewares.posts, makePostController.paramConverter, csrf, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, makePostController.controller); //mod post has token instead of captcha
 
 //post actions
 router.post('/board/:board/actions', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, actionController.paramConverter, verifyCaptcha, actionController.controller); //public, with captcha

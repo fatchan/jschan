@@ -1,3 +1,10 @@
+### 0.6.5
+  - Portrait mode support for tegaki, improves the experience particularly on mobile devices.
+  - Small refactor of filtering.
+  - Modlog pruning now only deletes log entries older than the specified date when new modlogs are added, as originally intended.
+  - Add a few extra things to server logs when debugLogs is true.
+  - Minor bugfixes.
+
 ### 0.6.4
   - Add "adaptive" theme that switches between "clear" and "tomorrow" based on the device system theme, using prefers-color-scheme media query.
   - Minor bugfixes.
