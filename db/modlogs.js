@@ -88,8 +88,9 @@ module.exports = {
 		const monthOld = Mongo.ObjectId.createFromTime(Math.floor(date.getTime()/1000));
 		return db.deleteMany({
 			'_id': {
-				'$lt': monthOld
-			}
+				'$lt': monthOld,
+			},
+			'board': board,
 		});
 	},
 
