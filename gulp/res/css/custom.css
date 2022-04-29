@@ -46,8 +46,8 @@ table.boardtable th:nth-child(1) {
 	right: 10px;
 }
 #settingsmodal {
-	top: 50%;
-	transform: translateY(-50%);
+	top: 40%;
+	transform: translateY(-40%);
 	max-height: calc(100% - 10px);
 }
 @media only screen and (max-width:600px) {
@@ -75,4 +75,21 @@ span.post-capcode[data-cap="## Admin"] {
 	background-size: 30%;
 	background-clip: text;
 	-webkit-background-clip: text;
+}
+
+@media only screen and (max-width:600px) {
+
+	#tegaki {
+		grid-template-columns: 40px 1fr 0px;
+		grid-template-rows: 24px 1fr 325px;
+	}
+
+	#tegaki-ctrl-cnt {
+		grid-area: 3/2/3/2;
+		z-index: 1;
+	}
+
+	#tegaki-layers-wrap {
+		padding: 10px;
+	}
 }

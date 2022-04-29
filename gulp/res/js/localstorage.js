@@ -91,9 +91,12 @@ if (!validHosts.some(h => h === location.hostname)) {
 	});
 }
 
-// brave idiots on tor
-if (!crypto.subtle &&
-	location.pathname !== '/brave.html' &&
-	(location.hostname === 'cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion' || location.hostname === 'www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion')) {
-	location = '/brave.html';
+if ((location.hostname === 'cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion'
+		|| location.hostname === 'www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion')
+	&& location.pathname !== '/brave.html') {
+	if (!crypto.subtle) {
+		location = '/problem.html';
+	} else if (navigator.brave != null) {
+		location = '/brave.html'; //send them to the gulag
+	}
 }

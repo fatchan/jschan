@@ -1,0 +1,14 @@
+extends ../layout.pug
+
+block head
+	title Browser Problem?
+
+block content
+	.table-container.flex-center.mv-10
+		table.table-body
+			tr.table-row
+				td.text-center
+					h3.mt-5 Hey, we noticed something funny about your Tor Browser.
+					p When browsing Tor hidden services (.onion), you should be using Tor Browser.
+					p Are you using something else, or perhaps using an outdated version?
+					p #[a.bold(rel='nofollow' referrerpolicy='same-origin' target='_blank' href='https://www.torproject.org/download/') Get the latest Tor Browser], then try again.
