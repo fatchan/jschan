@@ -1,6 +1,7 @@
 'use strict';
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, { setConfig } = require(__dirname+'/../../db/db.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
@@ -345,6 +346,8 @@ module.exports = async (req, res, next) => {
 			}
 		});
 	}
+
+	debugLogs && console.log('global settings changed');
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',

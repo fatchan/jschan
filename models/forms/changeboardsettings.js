@@ -1,6 +1,7 @@
 'use strict';
 
 const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
@@ -214,6 +215,8 @@ module.exports = async (req, res, next) => {
 	if (promises.length > 0) {
 		await Promise.all(promises);
 	}
+
+	debugLogs && console.log(req.params.board, 'board settings changed');
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
