@@ -29,7 +29,7 @@ todo: handle some more situations
 	const { board, post } = res.locals;
 
 	//filters
-	if (res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
+	if (!res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
 		//only global filters are checked, because anybody who could edit bypasses board filters
 		const { filters, filterMode, filterBanDuration } = config.get;
 		if (filters.length > 0 && filterMode > 0) {
