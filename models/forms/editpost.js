@@ -36,11 +36,11 @@ todo: handle some more situations
 			let hitGlobalFilter = false
 				, ban;
 			const [combinedString, strictCombinedString] = getFilterStrings(req, res, strictFiltering);
-			hitGlobalFilter = filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
+			hitGlobalFilter = filters.some(filter => { return strictCombinedString.includes(filter.toLowerCase()) });
 			//block/ban edit
 			if (hitGlobalFilter) {
-				return filterActions(req, res, hitGlobalFilter, 0, globalFilterMode,
-					0, globalFilterBanDuration, null, filterBanAppealable, null);
+				return filterActions(req, res, hitGlobalFilter, 0, filterMode,
+					0, filterBanDuration, null, filterBanAppealable, null);
 			}
 		}
 	}
