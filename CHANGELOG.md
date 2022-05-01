@@ -1,3 +1,6 @@
+### 0.6.6
+  - Post editing bugfix.
+
 ### 0.6.5
   - Portrait mode support for tegaki, improves the experience particularly on mobile devices.
   - Small refactor of filtering.
