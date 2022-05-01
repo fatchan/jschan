@@ -29,18 +29,18 @@ todo: handle some more situations
 	const { board, post } = res.locals;
 
 	//filters
-	if (res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
+	if (!res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
 		//only global filters are checked, because anybody who could edit bypasses board filters
 		const { filters, filterMode, filterBanDuration } = config.get;
 		if (filters.length > 0 && filterMode > 0) {
 			let hitGlobalFilter = false
 				, ban;
 			const [combinedString, strictCombinedString] = getFilterStrings(req, res, strictFiltering);
-			hitGlobalFilter = filters.some(filter => { return allContents.includes(filter.toLowerCase()) });
+			hitGlobalFilter = filters.some(filter => { return strictCombinedString.includes(filter.toLowerCase()) });
 			//block/ban edit
 			if (hitGlobalFilter) {
-				return filterActions(req, res, hitGlobalFilter, 0, globalFilterMode,
-					0, globalFilterBanDuration, null, filterBanAppealable, null);
+				return filterActions(req, res, hitGlobalFilter, 0, filterMode,
+					0, filterBanDuration, null, filterBanAppealable, null);
 			}
 		}
 	}
