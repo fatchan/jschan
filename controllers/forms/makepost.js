@@ -7,8 +7,7 @@ const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { Files } = require(__dirname+'/../../db/')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -21,7 +20,7 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
-		const { pruneImmediately, globalLimits, disableAnonymizerFilePosting } = config.get;
+		const { globalLimits, disableAnonymizerFilePosting } = config.get;
 
 		const hasNoMandatoryFile = globalLimits.postFiles.max !== 0 && res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0;
 			//maybe add more duplicates here?
@@ -51,7 +50,7 @@ module.exports = {
 		]);
 
 		if (errors.length > 0) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'errors': errors,
@@ -62,11 +61,11 @@ module.exports = {
 		try {
 			await makePost(req, res, next);
 		} catch (err) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			if (res.locals.numFiles > 0) {
 				const incedFiles = req.files.file.filter(x => x.inced === true && x.filename != null);
 				const incedFileNames = incedFiles.map(x => x.filename);
-				await Files.decrement(incedFileNames).catch(e => console.error);
+				await Files.decrement(incedFileNames).catch(console.error);
 				await pruneFiles(incedFileNames);
 			}
 			return next(err);
@@ -74,4 +73,4 @@ module.exports = {
 
 	}
 
-}
+};

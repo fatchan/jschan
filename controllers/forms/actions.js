@@ -7,8 +7,7 @@ const { Posts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, actionChecker = require(__dirname+'/../../lib/input/actionchecker.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -60,7 +59,7 @@ module.exports = {
 				'title': 'Bad request',
 				'errors': errors,
 				'redirect': `/${req.params.board}/`
-			})
+			});
 		}
 
 		try {
@@ -74,7 +73,7 @@ module.exports = {
 				'title': 'Not found',
 				'error': 'Selected posts not found',
 				'redirect': `/${req.params.board}/`
-			})
+			});
 		}
 
 		if (req.body.edit) {
@@ -106,4 +105,4 @@ module.exports = {
 
 	}
 
-}
+};

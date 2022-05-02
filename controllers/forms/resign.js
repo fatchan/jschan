@@ -5,8 +5,7 @@ const { Boards } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, alphaNumericRegex = require(__dirname+'/../../lib/input/alphanumregex.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -30,8 +29,8 @@ module.exports = {
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'errors': errors,
-				'redirect': `/account.html`
-			})
+				'redirect': '/account.html'
+			});
 		}
 
 		try {
@@ -42,4 +41,4 @@ module.exports = {
 
 	}
 
-}
+};

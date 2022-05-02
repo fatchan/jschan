@@ -3,9 +3,7 @@
 const addAssets = require(__dirname+'/../../models/forms/addassets.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
-	, config = require(__dirname+'/../../lib/misc/config.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, config = require(__dirname+'/../../lib/misc/config.js');
 
 //almost a copy of banners code, since it can be handled the same. maybe refactor both into 1 with a "type" arg or something
 //or allowing 2 types to accommodate flags too where they are named (not the object.keys & .values use in manageassets template)
@@ -27,21 +25,21 @@ module.exports = {
 		}
 
 		if (errors.length > 0) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'errors': errors,
 				'redirect': `/${req.params.board}/manage/assets.html`
-			})
+			});
 		}
 
 		try {
 			await addAssets(req, res, next);
 		} catch (err) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return next(err);
 		}
 
 	}
 
-}
+};

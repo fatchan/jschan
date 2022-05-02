@@ -55,59 +55,59 @@ router.get('/randombanner', randombanner); //random banner
 
 //board manage pages
 router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageCatalog);
+	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageCatalog);
 router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageBoard);
+	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageBoard);
 router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, threadParamConverter, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, Posts.exists, manageThread);
+	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, Posts.exists, manageThread);
 router.get('/:board/manage/reports.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageReports);
+	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageReports);
 router.get('/:board/manage/recent.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageRecent);
+	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageRecent);
 router.get('/:board/manage/mypermissions.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), manageMyPermissions);
+	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), manageMyPermissions);
 router.get('/:board/manage/logs.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_LOGS), csrf, manageLogs);
+	hasPerms.one(Permissions.MANAGE_BOARD_LOGS), csrf, manageLogs);
 router.get('/:board/manage/bans.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_BANS), csrf, manageBans);
+	hasPerms.one(Permissions.MANAGE_BOARD_BANS), csrf, manageBans);
 router.get('/:board/manage/settings.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, manageSettings);
+	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, manageSettings);
 router.get('/:board/manage/assets.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, manageAssets);
+	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, manageAssets);
 router.get('/:board/manage/custompages.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, manageCustomPages);
+	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, manageCustomPages);
 router.get('/:board/manage/editcustompage/:custompageid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, custompageParamConverter, editCustomPage);
+	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, custompageParamConverter, editCustomPage);
 router.get('/:board/manage/staff.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, manageStaff);
+	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, manageStaff);
 router.get('/:board/manage/editstaff/:staffusername([a-zA-Z0-9]{1,50}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
-hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, editStaff);
+	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, editStaff);
 
 //global manage pages
 router.get('/globalmanage/reports.(html|json)', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_GENERAL), csrf, globalManageReports);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_GENERAL), csrf, globalManageReports);
 router.get('/globalmanage/recent.(html|json)', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_GENERAL), csrf, globalManageRecent);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_GENERAL), csrf, globalManageRecent);
 router.get('/globalmanage/globallogs.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_LOGS), csrf, globalManageLogs);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_LOGS), csrf, globalManageLogs);
 router.get('/globalmanage/bans.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_BANS), csrf, globalManageBans);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_BANS), csrf, globalManageBans);
 router.get('/globalmanage/boards.(html|json)', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_BOARDS), globalManageBoards);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_BOARDS), globalManageBoards);
 router.get('/globalmanage/news.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_NEWS), csrf, globalManageNews);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_NEWS), csrf, globalManageNews);
 router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), csrf, globalManageAccounts);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), csrf, globalManageAccounts);
 router.get('/globalmanage/roles.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), csrf, globalManageRoles);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), csrf, globalManageRoles);
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), csrf, globalManageSettings);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), csrf, globalManageSettings);
 router.get('/globalmanage/editnews/:newsid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_NEWS), csrf, newsParamConverter, editNews);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_NEWS), csrf, newsParamConverter, editNews);
 router.get('/globalmanage/editaccount/:accountusername([a-zA-Z0-9]{1,50}).html', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), csrf, editAccount);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), csrf, editAccount);
 router.get('/globalmanage/editrole/:roleid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms,
-hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), csrf, roleParamConverter, editRole);
+	hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), csrf, roleParamConverter, editRole);
 //TODO: edit post edit page form, like editnews/editaccount/editrole endpoint
 
 //captcha

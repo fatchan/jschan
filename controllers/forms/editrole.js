@@ -4,8 +4,7 @@ const editRole = require(__dirname+'/../../models/forms/editrole.js')
 	, { Roles } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -20,7 +19,7 @@ module.exports = {
 			{ result: async () => {
 				res.locals.editingRole = await Roles.findOne(req.body.roleid);
 				return res.locals.editingRole != null && res.locals.editingRole.name !== 'ROOT';
-			}, blocking: true, expected: true, error: "You can't edit this role" },
+			}, blocking: true, expected: true, error: 'You can\'t edit this role' },
 		]);
 
 		if (errors.length > 0) {
@@ -39,4 +38,4 @@ module.exports = {
 
 	}
 
-}
+};

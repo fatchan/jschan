@@ -2,11 +2,9 @@
 
 const addStaff = require(__dirname+'/../../models/forms/addstaff.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { Accounts } = require(__dirname+'/../../db/')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -15,8 +13,6 @@ module.exports = {
 	}),
 
 	controller: async (req, res, next) => {
-
-		const { globalLimits } = config.get;
 
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.username), expected: true, error: 'Missing staff username' },
@@ -45,4 +41,4 @@ module.exports = {
 
 	}
 
-}
+};
