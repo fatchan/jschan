@@ -1,8 +1,8 @@
 image: node:latest
 
 # Code linting
-linting:
-  stage: eslint
+eslint:
+  stage: .pre
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:
@@ -12,8 +12,8 @@ linting:
   allow_failure: true
 
 # Run tests
-testing:
-  stage: unit-tests
+unit-tests:
+  stage: test
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:

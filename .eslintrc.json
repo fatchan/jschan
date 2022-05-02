@@ -1,5 +1,18 @@
 {
-	"ignorePatterns": ["docker/", "tmp/", "static/", "gulp/res/css/", "gulp/res/icons/", "gulp/res/img/", "tools/", "views/", "node_modules/", "gulp/res/js/tegaki.js"],
+	"ignorePatterns": [
+		"docker/", "tmp/", "static/", "gulp/res/css/", "gulp/res/icons/", "gulp/res/img/", "tools/", "views/", "node_modules/",
+		"gulp/res/js/tegaki.js",
+		"gulp/res/js/locals.js",
+		"gulp/res/js/post.js",
+		"gulp/res/js/modal.js",
+		"gulp/res/js/uploaditem.js",
+		"gulp/res/js/pugfilter.js",
+		"gulp/res/js/captchaformsection.js",
+		"gulp/res/js/watchedthread.js",
+		"gulp/res/js/threadwatcher.js",
+		"gulp/res/js/socket.io.js",
+		"gulp/res/js/tegaki.js"
+	],
     "env": {
         "node": true,
         "browser": true,
