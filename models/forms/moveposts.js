@@ -84,7 +84,6 @@ module.exports = async (req, res) => {
 		}
 	}
 
-
 	//increase file/reply count in thread we are moving the posts to
 	const { replyposts, replyfiles } = res.locals.posts.reduce((acc, p) => {
 		acc.replyposts += 1;

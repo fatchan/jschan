@@ -104,7 +104,6 @@ module.exports = async (req, res, next) => {
 		messages.push(message);
 	}
 
-
 	if (deleting) {
 
 		//OP delete protection. for old OPs or with a lot of replies

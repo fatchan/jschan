@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'error': 'Custom page does not exist',
-			'redirect': req.headers.referer || '/${req.params.board}/manage/custompages.html'
+			'redirect': req.headers.referer || `/${req.params.board}/manage/custompages.html`
 		});
 	}
 

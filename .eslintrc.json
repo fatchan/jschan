@@ -44,6 +44,11 @@
         "semi": [
             "error",
             "always"
+        ],
+        "curly": ["error"],
+        "no-multiple-empty-lines": ["error", { "max": 1 }],
+        "no-template-curly-in-string": [
+        	"error"
         ]
     }
 }

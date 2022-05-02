@@ -27,4 +27,3 @@ const Mongo = require(__dirname+'/db/db.js')
 
 })();
 
-

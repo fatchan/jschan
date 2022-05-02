@@ -31,7 +31,6 @@ const express  = require('express')
 		addStaffController, deleteStaffController, editStaffController, editCustomPageController, editPostController,
 		editRoleController, newCaptchaForm, blockBypassForm, logoutForm, deleteSessionsController } = require(__dirname+'/forms/index.js');
 
-
 //make new post
 router.post('/board/:board/post', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, fileMiddlewares.posts,
 	makePostController.paramConverter, verifyCaptcha, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, makePostController.controller);
