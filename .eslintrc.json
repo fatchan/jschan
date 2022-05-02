@@ -2,7 +2,6 @@
 	"ignorePatterns": [
 		"docker/", "tmp/", "static/", "gulp/res/css/", "gulp/res/icons/", "gulp/res/img/", "tools/", "views/", "node_modules/",
 		"gulp/res/js/pugfilters.js",
-		"gulp/res/js/tegaki.js",
 		"gulp/res/js/locals.js",
 		"gulp/res/js/post.js",
 		"gulp/res/js/modal.js",
