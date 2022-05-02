@@ -14,7 +14,7 @@ eslint:
   stage: .pre
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-  script:gb
+  script:
     - 'npm i -g eslint-cli'
     - 'npm i eslint --save-dev'
     - 'node node_modules/eslint/bin/eslint.js ./'
