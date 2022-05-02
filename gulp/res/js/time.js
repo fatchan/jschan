@@ -1,3 +1,4 @@
+/* globals SERVER_TIMEZONE setLocalStorage */
 let relativeTime = localStorage.getItem('relative') == 'true';
 let hour24 = localStorage.getItem('24hour') == 'true';
 let localTime = localStorage.getItem('localtime') == 'true';
@@ -34,7 +35,7 @@ const relativeTimeString = (date) => {
 		ret = `${amount} hour`;
 	} else if (difference < DAY*6.5) {
 		amount = Math.round(difference / DAY);
-		ret = `${amount} day`;;
+		ret = `${amount} day`;
 	} else if (difference < WEEK*3.5) {
 		amount = Math.round(difference / WEEK);
 		ret = `${amount} week`;
@@ -46,7 +47,7 @@ const relativeTimeString = (date) => {
 		ret = `${amount} year`;
 	}
 	return `${ret}${amount > 1 ? 's' : ''} ${isFuture ? 'from now' :  'ago'}`;
-}
+};
 
 const changeDateFormat = (date) => {
 	const options = {
@@ -64,17 +65,17 @@ const changeDateFormat = (date) => {
 		date.innerText = dateString;
 		date.removeAttribute('title');
 	}
-}
+};
 
 const updateDates = () => {
 	for (let i = 0; i < dates.length; i++) {
 		changeDateFormat(dates[i]);
 	}
-}
+};
 
 updateDates();
 
-window.addEventListener('settingsReady', function(event) {
+window.addEventListener('settingsReady', function() {
 
 	let relativeInterval = relativeTime ? setInterval(updateDates, MINUTE) : void 0;
 
@@ -84,7 +85,7 @@ window.addEventListener('settingsReady', function(event) {
 		setLocalStorage('24hour', hour24);
 		updateDates();
 		console.log('toggling 24h time', hour24);
-	}
+	};
 	hour24Setting.checked = hour24;
 	hour24Setting.addEventListener('change', togglehour24, false);
 
@@ -94,7 +95,7 @@ window.addEventListener('settingsReady', function(event) {
 		setLocalStorage('localtime', localTime);
 		updateDates();
 		console.log('toggling local time', localTime);
-	}
+	};
 	localTimeSetting.checked = localTime;
 	localTimeSetting.addEventListener('change', toggleLocalTime, false);
 
@@ -109,7 +110,7 @@ window.addEventListener('settingsReady', function(event) {
 			clearInterval(relativeInterval);
 		}
 		console.log('toggling relative time', relativeTime);
-	}
+	};
 	relativeTimeSetting.checked = relativeTime;
 	relativeTimeSetting.addEventListener('change', togglerelativeTime, false);
 
@@ -125,7 +126,7 @@ const handleDateUpdates = (parentElem, temporary = false) => {
 		}
 		changeDateFormat(date);
 	}
-}
+};
 
 window.addEventListener('addPost', function(e) {
 	handleDateUpdates(e.detail.post, e.detail.hover);

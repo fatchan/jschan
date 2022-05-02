@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* globals setDefaultLocalStorage settings */
 const isCatalog = /^\/(\w+\/(manage\/)?)?catalog.html/.test(window.location.pathname);
 const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
 const isModView = /\/\w+\/manage\/(thread\/)?(index|\d+).html/.test(window.location.pathname);

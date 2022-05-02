@@ -1,4 +1,5 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+/* globals isManage isModView setLocalStorage hoverCacheList */
+window.addEventListener('DOMContentLoaded', () => {
 
 	let loading = {};
 
@@ -54,7 +55,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			return; //post was deleted or missing, handle somehow
 		}
 		this.parentNode.remove();
-		const messageParent = parentPost.querySelector('.post-message')
+		const messageParent = parentPost.querySelector('.post-message');
 		if (messageParent) {
 			messageParent.innerHTML = postJson.message;
 		}
@@ -67,7 +68,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			}
 		});
 		window.dispatchEvent(updatePostMessageEvent);
-	}
+	};
 
 	const viewFullTextLinks = document.getElementsByClassName('viewfulltext');
 

@@ -1,4 +1,5 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+/* globals isThread setLocalStorage */
+window.addEventListener('DOMContentLoaded', () => {
 
 	const postForm = document.querySelector('#postform');
 	const topPostButton = document.querySelector('a[href="#postform"]');
@@ -39,7 +40,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		const index = messageBox.selectionStart;
 		messageBox.value = `${messageBox.value.substr(0,index)}${str}${messageBox.value.substr(index)}`;
 		messageBox.setSelectionRange(index+str.length, index+str.length); //this scroll anyway, no need to set scrolltop
-	}
+	};
 
 	const addQuote = function(number) {
 		openPostForm();
@@ -61,7 +62,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		addToMessageBox(quoteText);
 		messageBox.focus();
 		messageBox.dispatchEvent(new Event('input'));
-	}
+	};
 
 	const quote = function(e) {
 		const quoteNum = this.textContent.trim();

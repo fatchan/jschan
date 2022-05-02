@@ -1,3 +1,4 @@
+/* globals isRecent isGlobalRecent isThread post extraLocals isModView io setLocalStorage */
 let liveEnabled = localStorage.getItem('live') == 'true';
 let scrollEnabled = localStorage.getItem('scroll') == 'true';
 let socket;
@@ -5,7 +6,7 @@ let socketPingInterval;
 let forceUpdate;
 let newPost;
 
-window.addEventListener('settingsReady', function(event) { //after domcontentloaded
+window.addEventListener('settingsReady', function() { //after domcontentloaded
 
 	let supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window;
 	const livecolor = document.getElementById('livecolor');
@@ -14,10 +15,10 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 	let room = liveElem && liveElem.dataset.room;
 	const viewRawIp = liveElem && liveElem.dataset.viewRawIp === 'true';
 	const updateButton = document.getElementById('updatepostsbutton');
-	const updateLive = (message, color, showRelativeTime) => {
+	const updateLive = (message, color) => {
 		livecolor.style.backgroundColor = color;
 		livetext.nodeValue = `${message}`;
-	}
+	};
 	let lastPostIds = {};
 	let liveTimeout;
 	const postContainers = document.getElementsByClassName('post-container');
@@ -36,13 +37,13 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		postContainer.setAttribute('data-mark', data.mark);
 		//handle any special cases for different marks
 		switch (data.type) {
-			case "delete":
-			case "move":
+			case 'delete':
+			case 'move':
 				if (postContainer.classList.contains('op')) {
 					//moved or delete OPs then apply to whole thread
 					const postContainers = document.getElementsByClassName('post-container');
 					Array.from(postContainers).forEach(e => {
-						e.classList.add('marked')
+						e.classList.add('marked');
 						e.setAttribute('data-mark', data.mark);
 					});
 					//remove new reply buttons and postform
@@ -147,7 +148,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		setTimeout(() => {
 			window.dispatchEvent(newPostEvent);
 		}, 50);
-	}
+	};
 
 	let jsonParts = window.location.pathname.replace(/\.html$/, '.json').split('/');
 	let jsonPath;
@@ -178,7 +179,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		}
 		updateLive('Updated', 'green');
 		return newPosts.length;
-	}
+	};
 
 	let interval = 5000;
 	let intervalStart;
@@ -197,7 +198,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			intervalStart = Date.now();
 			liveTimeout = setTimeout(forceUpdate, interval);
 		}
-	}
+	};
 
 	setInterval(() => {
 		if (liveEnabled && intervalStart) {
@@ -225,7 +226,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 					const latency = Date.now() - pingStart;
 					updateLive(`Connected for live posts (${latency}ms)`, '#0de600');
 				});
-			}
+			};
 			socket.on('connect', async () => {
 				console.log('socket connected');
 				await fetchNewPosts();
@@ -266,7 +267,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 			socket.on('reconnect_failed', (e) => {
 				updateLive('Failed reconnecting', 'orange');
 				console.error(e);
-				console.log('failed to reconnnect, falling back to polling')
+				console.log('failed to reconnnect, falling back to polling');
 				socket.close();
 				supportsWebSockets = false;
 				enableLive();
@@ -296,7 +297,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		liveEnabled ? enableLive() : disableLive();
 		console.log('toggling live posts', liveEnabled);
 		setLocalStorage('live', liveEnabled);
-	}
+	};
 	liveSetting.checked = liveEnabled;
 	liveSetting.addEventListener('change', toggleLive, false);
 
@@ -305,7 +306,7 @@ window.addEventListener('settingsReady', function(event) { //after domcontentloa
 		scrollEnabled = !scrollEnabled;
 		console.log('toggling post scrolling', scrollEnabled);
 		setLocalStorage('scroll', scrollEnabled);
-	}
+	};
 	scrollSetting.checked = scrollEnabled;
 	scrollSetting.addEventListener('change', toggleScroll, false);
 

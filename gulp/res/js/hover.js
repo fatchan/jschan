@@ -1,4 +1,5 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+/* globals isManage isModView extraLocals deleteStartsWith setLocalStorage post */
+window.addEventListener('DOMContentLoaded', () => {
 
 	const quotes = document.getElementsByClassName('quote');
 	let hoverLoading = {};
@@ -16,14 +17,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 				mq.style.textDecoration = mq.style.textDecoration == '' ? 'none' : '';
 			}
 		}
-	}
+	};
 
 	const isVisible = (e) => {
 		const top = e.getBoundingClientRect().top;
 		const bottom = e.getBoundingClientRect().bottom;
 		const height = window.innerHeight;
 		return top >= 38 && bottom <= height;
-	}
+	};
 
 	const setFloatPos = (quote, float, xpos, ypos) => {
 		const quotepos = quote.getBoundingClientRect();
@@ -50,7 +51,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		} else {
 			float.style.top = '42px';
 		}
-	}
+	};
 
 	const floatPost = (quote, post, xpos, ypos) => {
 		const clone = document.createElement('div');
@@ -147,7 +148,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		if (postJson) {
 			//need this event so handlers like post hiding still apply to hover introduced posts
 			const newPostEvent = new CustomEvent('addPost', {
-	 		   detail: {
+				detail: {
 					json: postJson,
 					post: hoveredPost,
 					postId: postJson.postId,
@@ -160,7 +161,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		if (hovering || isVisible(hoveredPost)) {
 			toggleDottedUnderlines(hoveredPost, thisId);
 		}
-	}
+	};
 
 	for (let i = 0; i < quotes.length; i++) {
 		quotes[i].addEventListener('mouseover', toggleHighlightPost, false);
@@ -171,7 +172,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		if (e.detail.hover) {
 			return; //dont need to handle hovered posts for this
 		}
-		const post = e.detail.post;
 		const newquotes = document.getElementsByClassName('quote'); //to get backlinks from replying posts. just an easy way. could make more efficient and only do necessary ones later.
 		for (let i = 0; i < newquotes.length; i++) {
 			newquotes[i].removeEventListener('mouseover', toggleHighlightPost);
@@ -191,15 +191,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 });
 
-window.addEventListener('settingsReady', function(e) {
-	hoverCacheList = document.getElementById('hovercachelist-setting');
+const hoverCacheList = document.getElementById('hovercachelist-setting');
+window.addEventListener('settingsReady', function() {
 	hoverCacheList.value = Object.keys(localStorage).filter(k => k.startsWith('hovercache'));
 	const hoverCacheListClearButton = document.getElementById('hovercachelist-clear');
 	const clearHoverCacheList = () => {
 		deleteStartsWith('hovercache');
 		hoverCacheList.value = '';
 		console.log('cleared cache');
-	}
+	};
 	hoverCacheListClearButton.addEventListener('click', clearHoverCacheList, false);
 });
 

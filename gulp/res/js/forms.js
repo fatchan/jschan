@@ -1,3 +1,4 @@
+/* globals modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem */
 const forms = document.getElementsByTagName('form');
 const modalClasses = ['modal', 'modal-bg'];
 function removeModal() {
@@ -67,7 +68,7 @@ function doModal(data, postcallback, loadcallback) {
 					//if theres a modal frame and user has default theme, style it
 					const currentTheme = document.head.querySelector('#theme').href;
 					modalframe.contentDocument.styleSheets[1].ownerNode.href = currentTheme;
-				}
+				};
 			}
 			if (postcallback) {
 				checkInterval = setInterval(() => {
@@ -84,31 +85,8 @@ function doModal(data, postcallback, loadcallback) {
 	}
 }
 
-const checkTypes = ['checkbox', 'radio'];
-function isCheckBox(element) {
-	return checkTypes.includes(element.type)
-}
-
-function formToJSON(form) {
-	const data = {};
-	for (element of form.elements) {
-		if (element.name /*&& element.value*/ && (!isCheckBox(element) || element.checked)) {
-			if (isCheckBox(element) && data[element.name]) {
-				if (Array.isArray(data[element.name])) {
-					data[element.name] = data[element.name].push(element.value);
-				} else {
-					data[element.name] = [data[element.name], element.value];
-				}
-			} else {
-				data[element.name] = element.value;
-			}
-		}
-	}
-	return JSON.stringify(data);
-}
-
 let recaptchaResponse = null;
-function recaptchaCallback(response) {
+function recaptchaCallback(response) { // eslint-disable-line
 	recaptchaResponse = response;
 }
 
@@ -119,7 +97,7 @@ class postFormHandler {
 
 	constructor(form) {
 		this.form = form;
-		this.resetOnSubmit = this.form.dataset.resetOnSubmit == "true";
+		this.resetOnSubmit = this.form.dataset.resetOnSubmit == 'true';
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = form.querySelector('#message');
 		this.captchaField = form.querySelector('.captchafield') || form.querySelector('.g-recaptcha') || form.querySelector('.h-captcha');
@@ -230,14 +208,14 @@ class postFormHandler {
 			//show progress on file uploads
 			xhr.onloadstart = () => {
 				this.submit.value = '0%';
-			}
+			};
 			xhr.upload.onprogress = (ev) => {
 				const progress = Math.floor((ev.loaded / ev.total) * 100);
 				this.submit.value = `${progress}%`;
-			}
+			};
 			xhr.onload = () => {
 				this.submit.value = this.originalSubmitText;
-			}
+			};
 		}
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
@@ -282,7 +260,7 @@ class postFormHandler {
 						if (json.message || json.messages || json.error || json.errors) {
 							doModal(json);
 						} else if (socket && socket.connected) {
-							window.location.hash = json.postId
+							window.location.hash = json.postId;
 						} else {
 							if (!isThread) {
 								return window.location = json.redirect;
@@ -340,7 +318,7 @@ class postFormHandler {
 				}
 				this.submit.value = this.originalSubmitText;
 			}
-		}
+		};
 		xhr.onerror = (err) => {
 			console.error(err); //why is this error fucking useless
 			doModal({
@@ -349,7 +327,7 @@ class postFormHandler {
 			});
 			this.submit.disabled = false;
 			this.submit.value = this.originalSubmitText;
-		}
+		};
 		xhr.open(this.form.getAttribute('method'), this.form.getAttribute('action'), true);
 		if (!this.minimal) {
 			xhr.setRequestHeader('x-using-xhr', true);
@@ -375,7 +353,7 @@ class postFormHandler {
 			if (f.name === name && f.size === size) {
 				fileIndex = index;
 			}
-		})
+		});
 		this.files.splice(fileIndex, 1);
 		this.updateFilesText();
 	}
@@ -394,7 +372,7 @@ class postFormHandler {
 			} else {
 				//can old browsers just fuck off please?
 				const bufferFileReader = new FileReader();
-				await new Promise((res, rej) => {
+				await new Promise(res => {
 					bufferFileReader.addEventListener('loadend', res);
 					bufferFileReader.readAsArrayBuffer(file);
 				});
@@ -413,13 +391,13 @@ class postFormHandler {
 			stripFilenames: this.fileUploadList.dataset.stripFilenames === 'true',
 			name: file.name,
 			hash: fileHash,
-		}
+		};
 		switch (file.type.split('/')[0]) {
 			case 'image':
 				item.url = URL.createObjectURL(file);
 				break;
 			case 'audio':
-				item.url = '/file/audio.png'
+				item.url = '/file/audio.png';
 				break;
 			case 'video':
 				try {
@@ -427,11 +405,11 @@ class postFormHandler {
 					item.url = URL.createObjectURL(thumbnailBlob);
 				} catch (err) {
 					//couldnt create video thumb for some reason
-					item.url = '/file/video.png'
+					item.url = '/file/video.png';
 				}
 				break;
 			default:
-				item.url = '/file/attachment.png'
+				item.url = '/file/attachment.png';
 				break;
 		}
 		const uploadItemHtml = uploaditem({ uploaditem: item });
@@ -440,7 +418,7 @@ class postFormHandler {
 		const lastClose = fileElem.querySelector('.close');
 		lastClose.addEventListener('click', () => {
 			this.removeFile(fileElem, file.name, file.size);
-		})
+		});
 		this.fileUploadList.style.display = 'unset';
 	}
 
@@ -467,7 +445,7 @@ class postFormHandler {
 		this.files = []; //empty file list
 		this.fileInput.value = null; //remove the files for real
 		if (this.fileRequired) { //reset to required if clearing files
-			this.fileInput.setAttribute('required', true)
+			this.fileInput.setAttribute('required', true);
 		}
 		this.updateFilesText();
 	}
@@ -507,7 +485,7 @@ class postFormHandler {
 	}
 
 	//add file by normal file form, but add instead of replacing files
-	fileInputChange(e) {
+	fileInputChange() {
 		const newFiles = this.fileInput.files;
 		for (let i = 0; i < newFiles.length; i++) {
 			this.addFile(newFiles[i]);
@@ -556,7 +534,7 @@ window.addEventListener('settingsReady', () => {
 	const changeTegakiWidthSetting = (e) => {
 		tegakiWidth = parseInt(e.target.value);
 		setLocalStorage('tegakiwidth-setting', tegakiWidth);
-	}
+	};
 	tegakiWidthSetting.value = tegakiWidth;
 	tegakiWidthSetting.addEventListener('change', changeTegakiWidthSetting, false);
 
@@ -564,7 +542,7 @@ window.addEventListener('settingsReady', () => {
 	const changeTegakiHeightSetting = (e) => {
 		tegakiHeight = parseInt(e.target.value);
 		setLocalStorage('tegakiheight-setting', tegakiHeight);
-	}
+	};
 	tegakiHeightSetting.value = tegakiHeight;
 	tegakiHeightSetting.addEventListener('change', changeTegakiHeightSetting, false);
 

@@ -1,4 +1,5 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+/* globals modal themes codeThemes */
+window.addEventListener('DOMContentLoaded', () => {
 
 	let settingsModal;
 	let settingsBg;
@@ -6,12 +7,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	const hideSettings = () => {
 		settingsModal.style.display = 'none';
 		settingsBg.style.display = 'none';
-	}
+	};
 
-	const openSettings = (data) => {
+	const openSettings = () => {
 		settingsModal.style.display = 'unset';
 		settingsBg.style.display = 'unset';
-	}
+	};
 
 	const modalHtml = modal({
 		modal: {
@@ -24,7 +25,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 	});
 
-	const inserted = document.body.insertAdjacentHTML('afterbegin', modalHtml);
+	document.body.insertAdjacentHTML('afterbegin', modalHtml);
 	settingsBg = document.getElementsByClassName('modal-bg')[0];
 	settingsModal = document.getElementsByClassName('modal')[0];
 
