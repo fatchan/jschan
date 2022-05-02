@@ -8,7 +8,7 @@ eslint:
   script:
     - 'npm i -g eslint-cli'
     - 'npm i eslint --save-dev'
-    - 'node node_modules\eslint\bin\eslint.js'
+    - 'node node_modules/eslint/bin/eslint.js'
   allow_failure: true
 
 # Run tests
