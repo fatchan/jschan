@@ -1,7 +1,19 @@
 image: node:latest
 
-javascript:
-  stage: test
+# Code linting
+linting:
+  stage: eslint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  script:
+    - 'npm i -g eslint-cli'
+    - 'npm i eslint --save-dev'
+    - 'node node_modules\eslint\bin\eslint.js'
+  allow_failure: true
+
+# Run tests
+testing:
+  stage: unit-tests
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:
@@ -14,3 +26,5 @@ javascript:
     reports:
       junit:
         - junit.xml
+        
+  #TODO: stage: integration-tests

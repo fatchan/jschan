@@ -53,6 +53,8 @@
     "unix-crypt-td-js": "^1.1.4"
   },
   "devDependencies": {
+    "eslint": "^8.14.0",
+    "eslint-plugin-jest": "^26.1.5",
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
     "jest-junit": "^13.1.0"

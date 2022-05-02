@@ -1,0 +1,36 @@
+{
+	"ignorePatterns": ["docker/", "tmp/", "static/", "gulp/res/css/", "gulp/res/icons/", "gulp/res/img/", "tools/", "views/", "node_modules/", "gulp/res/js/tegaki.js"],
+    "env": {
+        "node": true,
+        "browser": true,
+        "commonjs": true,
+        "es2021": true,
+        "jest/globals": true
+    },
+    "plugins": [
+    	"jest"
+    ],
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+        "indent": [
+            "error",
+            "tab",
+            { "SwitchCase": 1, "ignoreComments": true, "MemberExpression": 1 }
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
+    }
+}
