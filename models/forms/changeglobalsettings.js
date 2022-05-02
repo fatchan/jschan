@@ -1,8 +1,7 @@
 'use strict';
 
-const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+const { Boards } = require(__dirname+'/../../db/')
 	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
-	, { setConfig } = require(__dirname+'/../../db/db.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
@@ -39,7 +38,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		...includeChildren(template, 'frontendScriptDefault', ['scripts']),
 	});
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const promises = [];
 	const oldSettings = config.get;
@@ -47,7 +46,7 @@ module.exports = async (req, res, next) => {
 	const announcement = req.body.global_announcement === null ? null : prepareMarkdown(req.body.global_announcement, false);
 	let markdownAnnouncement = oldSettings.globalAnnouncement.markdown;
 	if (announcement !== oldSettings.globalAnnouncement.raw) {
-		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null, res.locals.permissions))
+		({ message: markdownAnnouncement } = await messageHandler(announcement, null, null, res.locals.permissions));
 	}
 
 	const newSettings = {
@@ -355,4 +354,4 @@ module.exports = async (req, res, next) => {
 		'redirect': '/globalmanage/settings.html'
 	});
 
-}
+};

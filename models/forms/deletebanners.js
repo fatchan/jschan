@@ -7,7 +7,7 @@ const { remove } = require('fs-extra')
 	, { Boards } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
@@ -17,16 +17,16 @@ module.exports = async (req, res, next) => {
 	}));
 
 	//remove from db
-	const amount = await Boards.removeBanners(req.params.board, req.body.checkedbanners);
+	const amount = await Boards.removeBanners(req.params.board, req.body.checkedbanners).then(result => result.deletedCount);
 
 	//update res locals banners in memory
 	res.locals.board.banners = res.locals.board.banners.filter(banner => {
-		 return !req.body.checkedbanners.includes(banner);
+		return !req.body.checkedbanners.includes(banner);
 	});
 
 	//rebuild public banners page
 	buildQueue.push({
-        'task': 'buildBanners',
+		'task': 'buildBanners',
 		'options': {
 			'board': res.locals.board,
 		}
@@ -34,7 +34,7 @@ module.exports = async (req, res, next) => {
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
-		'message': `Deleted banners.`,
+		'message': `Deleted ${amount} banners.`,
 		'redirect': redirect
 	});
-}
+};

@@ -4,10 +4,10 @@ const hashIp = require(__dirname+'/../lib/misc/haship.js');
 
 module.exports = async(db, redis) => {
 	console.log('change bans index');
-	await db.collection('bans').dropIndex("ip_1_board_1");
+	await db.collection('bans').dropIndex('ip_1_board_1');
 	await db.collection('bans').createIndex({ 'ip.single': 1 , 'board': 1 });
 	console.log('adjusting ip on posts and clearing reports');
-	const promises = []
+	const promises = [];
 	await db.collection('posts').find().forEach(doc => {
 		promises.push(db.collection('posts').updateOne({
 			'_id':doc._id
@@ -20,9 +20,9 @@ module.exports = async(db, redis) => {
 				'reports': [], //easier than fixing reports
 				'globalreports': [], //easier than fixing reports
 			}
-		}))
+		}));
 	});
-	console.log('adjusting ip in modlogs')
+	console.log('adjusting ip in modlogs');
 	await db.collection('modlog').find().forEach(doc => {
 		promises.push(db.collection('modlog').updateOne({
 			'_id':doc._id
@@ -33,9 +33,9 @@ module.exports = async(db, redis) => {
 					'single': hashIp(doc.ip)
 				}
 			}
-		}))
+		}));
 	});
-	console.log('adjust ip in bans, set null type and remove saved posts')
+	console.log('adjust ip in bans, set null type and remove saved posts');
 	await db.collection('bans').find().forEach(doc => {
 		promises.push(db.collection('bans').updateOne({
 			'_id':doc._id
@@ -48,7 +48,7 @@ module.exports = async(db, redis) => {
 				'type': null,
 				'posts': null //easier than fixing all saved posts
 			}
-		}))
+		}));
 	});
 	await Promise.all(promises);
 	console.log('Cleared boards cache');

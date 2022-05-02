@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = async(db, redis) => {
+module.exports = async(db) => {
 
 	console.log('remove older phashes');
 	await db.collection('posts').updateMany({}, {

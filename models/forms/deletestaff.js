@@ -3,7 +3,7 @@
 const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	//only a ROOT could do this, per the permission bypass in the controller
 	const deletingBoardOwner = req.body.checkedstaff.some(s => s === res.locals.board.owner);
@@ -21,4 +21,4 @@ module.exports = async (req, res, next) => {
 		'redirect': `/${req.params.board}/manage/staff.html`,
 	});
 
-}
+};

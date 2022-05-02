@@ -29,4 +29,4 @@ module.exports = async (uri, board) => {
 		remove(`${uploadDirectory}/asset/${uri}/`), //assets
 	]);
 
-}
+};

@@ -1,7 +1,6 @@
 'use strict';
 
-const path = require('path')
-	, { remove, pathExists } = require('fs-extra')
+const { remove, pathExists } = require('fs-extra')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, moveUpload = require(__dirname+'/../../lib/file/moveupload.js')
@@ -12,7 +11,7 @@ const path = require('path')
 	, { Boards } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const { globalLimits, checkRealMimeTypes } = config.get;
 	const redirect = `/${req.params.board}/manage/assets.html`;
@@ -20,13 +19,13 @@ module.exports = async (req, res, next) => {
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		if (!mimeTypes.allowed(req.files.file[i].mimetype, {
 				//banners can be static image or animated (gif, apng, etc)
-				image: true,
-				animatedImage: true,
-				video: false,
-				audio: false,
-				other: false
-			})) {
-			await deleteTempFiles(req).catch(e => console.error);
+			image: true,
+			animatedImage: true,
+			video: false,
+			audio: false,
+			other: false
+		})) {
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -37,7 +36,7 @@ module.exports = async (req, res, next) => {
 		// check for any mismatching supposed mimetypes from the actual file mimetype
 		if (checkRealMimeTypes) {
 			if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
-				deleteTempFiles(req).catch(e => console.error);
+				deleteTempFiles(req).catch(console.error);
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
 					'message': `Mime type mismatch for file "${req.files.file[i].name}"`,
@@ -56,7 +55,7 @@ module.exports = async (req, res, next) => {
 			|| geometry.height > globalLimits.bannerFiles.height
 			|| (globalLimits.bannerFiles.forceAspectRatio === true
 				&& (geometry.width/geometry.height !== 3))) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': `Invalid file ${req.files.file[i].name}. Max banner dimensions are ${globalLimits.bannerFiles.width}x${globalLimits.bannerFiles.height}${globalLimits.bannerFiles.forceAspectRatio === true ? ' and must be a 3:1 aspect ratio' : '' }.`,
@@ -89,7 +88,7 @@ module.exports = async (req, res, next) => {
 
 	}
 
-	deleteTempFiles(req).catch(e => console.error);
+	deleteTempFiles(req).catch(console.error);
 
 	// no new banners
 	if (filenames.length === 0) {
@@ -109,7 +108,7 @@ module.exports = async (req, res, next) => {
 	if (filenames.length > 0) {
 		//add public banners page to build queue
 		buildQueue.push({
-	        'task': 'buildBanners',
+			'task': 'buildBanners',
 			'options': {
 				'board': res.locals.board,
 			}
@@ -122,4 +121,4 @@ module.exports = async (req, res, next) => {
 		'redirect': redirect
 	});
 
-}
+};

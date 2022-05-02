@@ -2,12 +2,11 @@
 
 const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, { remove } = require('fs-extra')
-	, Mongo = require(__dirname+'/../../db/db.js')
 	, { Posts, Files } = require(__dirname+'/../../db/')
 	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, deleteQuotes = require(__dirname+'/../../lib/post/deletequotes.js')
-	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
+	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js');
 
 module.exports = async (posts, board, all=false) => {
 
@@ -27,7 +26,7 @@ module.exports = async (posts, board, all=false) => {
 	}, []);
 
 	//get posts from all threads
-	let threadPosts = []
+	let threadPosts = [];
 	if (all === false && threads.length > 0) {
 		if (board) {
 			//if this is board-specific, we can use a single query
@@ -48,7 +47,7 @@ module.exports = async (posts, board, all=false) => {
 	const allPosts = posts.concat(threadPosts);
 
 	//get files for ref counting, backlinks for post re-markup, mongoids for deleting
-	const { postFiles, postBacklinks, postMongoIds } = allPosts.reduce((acc, post) => {
+	const { postFiles, postMongoIds } = allPosts.reduce((acc, post) => {
 		if (post.files.length > 0) {
 			acc.postFiles = acc.postFiles.concat(post.files);
 		}
@@ -60,7 +59,7 @@ module.exports = async (posts, board, all=false) => {
 	}, { postFiles: [], postBacklinks: [], postMongoIds: [] });
 
 	if (postFiles.length > 0) {
-		const fileNames = postFiles.map(x => x.filename)//[...new Set(postFiles.map(x => x.filename))];
+		const fileNames = postFiles.map(x => x.filename);//[...new Set(postFiles.map(x => x.filename))];
 		await Files.decrement(fileNames);
 		if (pruneImmediately) {
 			await pruneFiles(fileNames);
@@ -75,7 +74,7 @@ module.exports = async (posts, board, all=false) => {
 			const thread = threads[i];
 			//if exists, add to set, else make the set
 			if (!deleteThreadMap[thread.board]) {
-				 deleteThreadMap[thread.board] = new Set();
+				deleteThreadMap[thread.board] = new Set();
 			}
 			deleteThreadMap[thread.board].add(thread.postId);
 		}
@@ -133,12 +132,12 @@ module.exports = async (posts, board, all=false) => {
 	if (threads.length > 0) {
 		//delete the html/json for threads
 		await Promise.all(threads.map(thread => {
-			remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`)
-			remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
+			remove(`${uploadDirectory}/html/${thread.board}/thread/${thread.postId}.html`);
+			remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`);
 		}));
 	}
 
 	//hooray!
 	return { action: deletedPosts > 0, message:`Deleted ${threads.length > 0 ? (threads.length + ' thread' + (threads.length > 1 ? 's' : '')) : ''} ${threads.length > 0 && deletedPosts-threads.length > 0 ? 'and' : ''} ${deletedPosts-threads.length > 0 ? (deletedPosts-threads.length + ' post' + (deletedPosts-threads.length > 1 ? 's' : '')) : ''}` };
 
-}
+};

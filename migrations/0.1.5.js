@@ -1,7 +1,6 @@
 'use strict';
 
-const config = require(__dirname+'/../lib/misc/config.js')
-	, fs = require('fs-extra')
+const fs = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../lib/file/uploaddirectory.js');
 
 module.exports = async(db, redis) => {

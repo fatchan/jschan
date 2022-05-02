@@ -26,7 +26,6 @@ module.exports = async (req, res, next) => {
 				return res.status(429).redirect('/file/ratelimit.png');
 			}
 		}
-		let id;
 		const captchaCount = await Captchas.db.estimatedDocumentCount();
 		if (captchaCount >= captchaOptions.generateLimit) {
 			//TODOs: round robin sample? store in redis? only sample random with longer than x expiry?
@@ -49,4 +48,4 @@ module.exports = async (req, res, next) => {
 		})
 		.redirect(`/captcha/${captchaId}.jpg`);
 
-}
+};

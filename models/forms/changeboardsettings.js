@@ -1,6 +1,6 @@
 'use strict';
 
-const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
+const { Boards, Posts } = require(__dirname+'/../../db/')
 	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
@@ -30,7 +30,7 @@ const { Boards, Posts, Accounts } = require(__dirname+'/../../db/')
 		'enableTegaki': ['board', 'threads', 'catalog'],
 	});
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const { globalLimits } = config.get;
 
@@ -43,7 +43,7 @@ module.exports = async (req, res, next) => {
 	const announcement = req.body.announcement === null ? null : prepareMarkdown(req.body.announcement, false);
 	let markdownAnnouncement = oldSettings.announcement.markdown;
 	if (announcement !== oldSettings.announcement.raw) {
-		({ message: markdownAnnouncement } = await messageHandler(announcement, req.params.board, null, res.locals.permissions))
+		({ message: markdownAnnouncement } = await messageHandler(announcement, req.params.board, null, res.locals.permissions));
 	}
 
 	if (req.body.countries) {
@@ -152,7 +152,7 @@ module.exports = async (req, res, next) => {
 			}
 			if (newSettings.captchaMode === 0) {
 				rebuildTasks.add('board')
-					.add('catalog')
+					.add('catalog');
 			}
 		}
 		//do rebuilding and pruning if max number of pages is changed and any threads are pruned
@@ -224,4 +224,4 @@ module.exports = async (req, res, next) => {
 		'redirect': `/${req.params.board}/manage/settings.html`
 	});
 
-}
+};

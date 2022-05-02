@@ -18,14 +18,14 @@ module.exports = async (req, res, next) => {
 	}
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('board', {
-		modview: true,
-		page,
-		maxPage,
-		threads,
-		board: res.locals.board,
-		csrf: req.csrfToken(),
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('board', {
+			modview: true,
+			page,
+			maxPage,
+			threads,
+			board: res.locals.board,
+			csrf: req.csrfToken(),
+		});
 
-}
+};

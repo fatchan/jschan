@@ -5,7 +5,7 @@ const { Accounts } = require(__dirname+'/../../db/')
 	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
 	, Permission = require(__dirname+'/../../lib/permission/permission.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	let updatingPermissions;
 
@@ -48,8 +48,8 @@ module.exports = async (req, res, next) => {
 		updatingPermissions.set(Permissions.USE_MARKDOWN_DICE, (req.body.USE_MARKDOWN_DICE != null));
 		updatingPermissions.set(Permissions.USE_MARKDOWN_FORTUNE, (req.body.USE_MARKDOWN_FORTUNE != null));
 		if (res.locals.permissions.get(Permissions.ROOT)) {
-			updatingPermissions.set(Permissions.MANAGE_GLOBAL_ACCOUNTS, (req.body.MANAGE_GLOBAL_ACCOUNTS != null))
-			updatingPermissions.set(Permissions.MANAGE_GLOBAL_ROLES, (req.body.MANAGE_GLOBAL_ROLES != null))
+			updatingPermissions.set(Permissions.MANAGE_GLOBAL_ACCOUNTS, (req.body.MANAGE_GLOBAL_ACCOUNTS != null));
+			updatingPermissions.set(Permissions.MANAGE_GLOBAL_ROLES, (req.body.MANAGE_GLOBAL_ROLES != null));
 			updatingPermissions.set(Permissions.ROOT, (req.body.ROOT != null));
 		}
 	}
@@ -61,7 +61,7 @@ module.exports = async (req, res, next) => {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'errors': 'Account does not exist',
-			'redirect': req.headers.referer || `/globalmanage/accounts.html`,
+			'redirect': req.headers.referer || '/globalmanage/accounts.html',
 		});
 	}
 
@@ -71,4 +71,4 @@ module.exports = async (req, res, next) => {
 		'redirect': `/globalmanage/editaccount/${req.body.username}.html`,
 	});
 
-}
+};

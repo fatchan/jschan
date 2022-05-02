@@ -5,7 +5,7 @@ const { Bypass } = require(__dirname+'/../../db/')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, production = process.env.NODE_ENV === 'production';
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const { secureCookies, blockBypass } = config.get;
 	const bypass = await Bypass.getBypass(res.locals.anonymizer);
@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
 		'secure': production && secureCookies && (req.headers['x-forwarded-proto'] === 'https'),
 		'sameSite': 'strict',
 		'signed': true,
-	})
+	});
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'minimal': req.body.minimal,
@@ -25,4 +25,4 @@ module.exports = async (req, res, next) => {
 		'message': 'Completed block bypass, you may go back and make your post.',
 	});
 
-}
+};

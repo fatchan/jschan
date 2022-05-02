@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
 	try {
 		reports = await Posts.getGlobalReports(offset, limit, ipMatch, res.locals.permissions);
 	} catch (err) {
-		return next(err)
+		return next(err);
 	}
 
 	res.set('Cache-Control', 'private, max-age=5');
@@ -39,4 +39,4 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-}
+};

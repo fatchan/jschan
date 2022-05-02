@@ -1,9 +1,8 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
-	, Boards = require(__dirname+'/boards.js')
 	, formatSize = require(__dirname+'/../lib/converter/formatsize.js')
-	, db = Mongo.db.collection('files')
+	, db = Mongo.db.collection('files');
 
 module.exports = {
 
@@ -53,7 +52,7 @@ module.exports = {
 							}
 						}
 					}
-				})
+				});
 			});
 		return db.bulkWrite(bulkWrites);
 	},
@@ -78,13 +77,13 @@ module.exports = {
 					count: stats.count,
 					totalSize: stats.size,
 					totalSizeString: formatSize(stats.size)
-				}
+				};
 			} else {
 				return {
 					count: 0,
 					totalSize: 0,
 					totalSizeString: '0B'
-				}
+				};
 			}
 		});
 	},
@@ -93,4 +92,4 @@ module.exports = {
 		return db.deleteMany({});
 	}
 
-}
+};

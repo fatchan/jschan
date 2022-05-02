@@ -17,13 +17,13 @@ module.exports = async (req, res, next) => {
 	//accountPermissions.applyInheritance();
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('editaccount', {
-		csrf: req.csrfToken(),
-		board: res.locals.board,
-		accountUsername: req.params.accountusername,
-		accountPermissions,
-		roles: roleManager.roles,
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('editaccount', {
+			csrf: req.csrfToken(),
+			board: res.locals.board,
+			accountUsername: req.params.accountusername,
+			accountPermissions,
+			roles: roleManager.roles,
+		});
 
-}
+};

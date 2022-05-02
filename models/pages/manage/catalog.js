@@ -12,12 +12,12 @@ module.exports = async (req, res, next) => {
 	}
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('catalog', {
-		modview: true,
-		threads,
-		board: res.locals.board,
-		csrf: req.csrfToken(),
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('catalog', {
+			modview: true,
+			threads,
+			board: res.locals.board,
+			csrf: req.csrfToken(),
+		});
 
-}
+};

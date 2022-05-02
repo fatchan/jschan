@@ -9,7 +9,7 @@ const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, { ensureDir } = require('fs-extra')
 	, config = require(__dirname+'/../../lib/misc/config.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const { boardDefaults } = config.get;
 
@@ -62,7 +62,7 @@ module.exports = async (req, res, next) => {
 			description,
 			...boardDefaults
 		}
-	}
+	};
 
 	await Promise.all([
 		Boards.insertOne(newBoard),
@@ -74,4 +74,4 @@ module.exports = async (req, res, next) => {
 		ensureDir(`${uploadDirectory}/asset/${uri}`),
 	]);
 
-}
+};

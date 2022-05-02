@@ -1,8 +1,6 @@
 'use strict';
 
-const hashIp = require(__dirname+'/../lib/misc/haship.js');
-
-module.exports = async(db, redis) => {
+module.exports = async(db) => {
 	console.log('update moglog postids to postlinks');
 	await db.collection('modlog').updateMany({},
 		[{
@@ -11,7 +9,7 @@ module.exports = async(db, redis) => {
 					{
 						$arrayToObject: {
 							$map: {
-								input: "$postIds",
+								input: '$postIds',
 								as: 'postId',
 								in: {
 									k: 'postId',
@@ -23,7 +21,7 @@ module.exports = async(db, redis) => {
 				]
 			}
 		}
-	]);
+		]);
 	await db.collection('modlog').updateMany({}, {
 		'$unset': {
 			'postIds': ''

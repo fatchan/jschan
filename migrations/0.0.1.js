@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = async(db, redis) => {
+module.exports = async(db) => {
 	console.log('Creating bypass collection');
 	await db.createCollection('bypass');
 	console.log('Creating bypass collection index');

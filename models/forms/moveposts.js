@@ -6,7 +6,7 @@ const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
 	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
-	, { createHash } = require('crypto')
+	, { createHash } = require('crypto');
 
 module.exports = async (req, res) => {
 
@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
 //note: needs debugging
 //		if (post.crossquotes.filter(c => c.thread === req.body.move_to_thread).length > 0) {
 			//a crossquote is in the thread we move to, so need to remarkup and add backlinks to those posts
-			backlinkRebuilds.add(post._id);
+		backlinkRebuilds.add(post._id);
 //		}
 		//get backlinks for posts to remarkup
 		for (let i = 0; i < post.backlinks.length; i++) {
@@ -96,7 +96,7 @@ module.exports = async (req, res) => {
 		'updateOne': {
 			'filter': {
 				'postId': req.body.move_to_thread,
-                'board': req.params.board
+				'board': req.params.board
 			},
 			'update': {
 				'$inc': {
@@ -181,11 +181,11 @@ module.exports = async (req, res) => {
 				remove(`${uploadDirectory}/json/${thread.board}/thread/${thread.postId}.json`)
 			]);
 		}));
-   	}
+	}
 
 	return {
 		message: 'Moved posts',
 		action: movedPosts > 0,
 	};
 
-}
+};

@@ -6,7 +6,7 @@ const { News } = require(__dirname+'/../../db/')
 	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const message = prepareMarkdown(req.body.message, false);
 	const { message: markdownNews } = await messageHandler(message, null, null, res.locals.permissions);
@@ -32,4 +32,4 @@ module.exports = async (req, res, next) => {
 		'redirect': '/globalmanage/news.html'
 	});
 
-}
+};

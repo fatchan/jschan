@@ -2,7 +2,7 @@
 
 module.exports = async(db, redis) => {
 
-	console.log('unfucking any broken board tags')
+	console.log('unfucking any broken board tags');
 	await db.collection('boards').updateMany({
 		'webring': false,
 		'tags': null,

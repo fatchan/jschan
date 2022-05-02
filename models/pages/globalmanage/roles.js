@@ -3,17 +3,17 @@
 const { Roles } = require(__dirname+'/../../../db/')
 	, roleManager = require(__dirname+'/../../../lib/permission/rolemanager.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const allRoles = await Roles.find();
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('globalmanageroles', {
-		csrf: req.csrfToken(),
-		permissions: res.locals.permissions,
-		allRoles,
-		roleNameMap: roleManager.roleNameMap,
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('globalmanageroles', {
+			csrf: req.csrfToken(),
+			permissions: res.locals.permissions,
+			allRoles,
+			roleNameMap: roleManager.roleNameMap,
+		});
 
-}
+};

@@ -57,6 +57,7 @@ module.exports = () => describe('test some global form submissions', () => {
 		bannerId = bannerSubstring.substring(0, bannerSubstring.lastIndexOf('"'));
 	});
 
+	let flagId;
 	test('add flag',  async () => {
 		const fileParams = new FormData();
 		const filePath = 'gulp/res/img/flags.png';
@@ -118,7 +119,7 @@ module.exports = () => describe('test some global form submissions', () => {
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -135,7 +136,7 @@ module.exports = () => describe('test some global form submissions', () => {
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -152,7 +153,7 @@ module.exports = () => describe('test some global form submissions', () => {
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -174,7 +175,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 		const response2 = await fetch('http://localhost/test/custompage/test.html');
 		expect(response2.ok).toBe(true);
@@ -202,7 +203,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 		const response2 = await fetch('http://localhost/test/custompage/test.html');
 		expect(response2.status).toBe(404);
@@ -223,7 +224,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 		const response2 = await fetch('http://localhost/test/custompage/test2.html');
 		expect(response2.status).toBe(404);
@@ -242,7 +243,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -262,7 +263,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -279,7 +280,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 

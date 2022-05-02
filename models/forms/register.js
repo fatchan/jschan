@@ -4,7 +4,7 @@ const { Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const original = req.body.username; //stored but not used yet
 	const username = original.toLowerCase(); //lowercase to prevent duplicates with mixed case
@@ -26,4 +26,4 @@ module.exports = async (req, res, next) => {
 
 	return res.redirect('/login.html');
 
-}
+};

@@ -17,7 +17,7 @@ module.exports = {
 					ip.cloak.split('.').slice(0,2).join('.'), //qrange
 					ip.cloak.split('.').slice(0,1).join('.'), //hrange
 				],
-			}
+			};
 		} else {
 			ipQuery = ip;
 		}
@@ -179,4 +179,4 @@ module.exports = {
 		return db.deleteMany({});
 	},
 
-}
+};

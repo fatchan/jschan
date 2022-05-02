@@ -70,7 +70,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 
 	const loadAppLocals = () => {
 		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions, archiveLinksURL,
-			reverseImageLinksURL, debugLogs, meta, enableWebring, globalAnnouncement } = config.get;
+			reverseImageLinksURL, meta, enableWebring, globalAnnouncement } = config.get;
 		//cache loaded templates
 		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
@@ -91,7 +91,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 		app.locals.hcaptchaSiteKey = hcaptcha.siteKey;
 		app.locals.captchaGridSize = captchaOptions.grid.size;
 		app.locals.globalAnnouncement = globalAnnouncement;
-	}
+	};
 	loadAppLocals();
 	redis.addCallback('config', loadAppLocals);
 
@@ -108,10 +108,10 @@ const config = require(__dirname+'/lib/misc/config.js')
 	//404 catchall
 	app.get('*', (req, res) => {
 		res.status(404).render('404');
-	})
+	});
 
 	// catch any unhandled errors
-	app.use((err, req, res, next) => {
+	app.use((err, req, res) => {
 		let errStatus = 500;
 		let errMessage = 'Internal Server Error';
 		if (err.code === 'EBADCSRFTOKEN') {
@@ -150,7 +150,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 			'error': errMessage,
 			'redirect': req.headers.referer || '/'
 		});
-	})
+	});
 
 	//listen
 	server.listen(port, (process.env.JSCHAN_IP || '127.0.0.1'), () => {
@@ -178,7 +178,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 			debugLogs && console.log('DISCONNECTING MONGODB');
 			Mongo.client.close();
 			//close redis connection
-			debugLogs && console.log('DISCONNECTING REDIS')
+			debugLogs && console.log('DISCONNECTING REDIS');
 			redis.close();
 			// now close without error
 			process.exit(0);

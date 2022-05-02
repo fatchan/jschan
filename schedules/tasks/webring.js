@@ -3,7 +3,6 @@
 const fetch = require('node-fetch')
 	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
-	, Mongo = require(__dirname+'/../../db/db.js')
 	, Redis = require(__dirname+'/../../lib/redis/redis.js')
 	, { Boards } = require(__dirname+'/../../db/')
 	, { outputFile } = require('fs-extra')
@@ -16,7 +15,7 @@ module.exports = {
 	func: async () => {
 
 		const { meta, logo, following, blacklist, proxy } = config.get;
-		const label = `updating webring`;
+		const label = 'updating webring';
 		const start = process.hrtime();
 
 		const agent = proxy.enabled ? new SocksProxyAgent(require('url').parse(proxy.address)) : null;
@@ -36,8 +35,8 @@ module.exports = {
 						'User-Agent':''
 					}
 				})
-				.then(res => res.json())
-				.catch(e => {});
+					.then(res => res.json())
+					.catch(() => {});
 			}));
 			for (let i = 0; i < rings.length; i++) {
 				const ring = rings[i];
@@ -117,7 +116,7 @@ module.exports = {
 					lastPostTimestamp: b.lastPostTimestamp,
 				};
 			}),
-		}
+		};
 		await outputFile(`${uploadDirectory}/json/webring.json`, JSON.stringify(json));
 
 		const end = process.hrtime(start);

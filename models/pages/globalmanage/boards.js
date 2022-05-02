@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
 	if (sort === 'activity') {
 		sort = {
 			'lastPostTimestamp': direction
-		}
+		};
 	} else {
 		sort = {
 			'ips': direction,
@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
 	if (req.query.search && search) {
 		filter = {
 			'search': search
-		}
+		};
 	}
 	filter.filter_sfw = req.query.filter_sfw != null;
 	filter.filter_abandoned = req.query.filter_abandoned != null;
@@ -53,7 +53,7 @@ module.exports = async (req, res, next) => {
 				localBoards[i].lastPostTimestamp = {
 					text: relativeString(now, lastPostDate),
 					color: relativeColor(now, lastPostDate)
-				}
+				};
 			}
 		}
 	}
@@ -77,4 +77,4 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-}
+};

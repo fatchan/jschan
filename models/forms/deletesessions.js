@@ -6,4 +6,4 @@ module.exports = async (sessionIds) => {
 
 	await redis.del(sessionIds);
 
-}
+};

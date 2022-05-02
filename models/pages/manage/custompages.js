@@ -8,14 +8,14 @@ module.exports = async (req, res, next) => {
 	try {
 		customPages = await CustomPages.find(req.params.board);
 	} catch (err) {
-		return next(err)
+		return next(err);
 	}
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('managecustompages', {
-		csrf: req.csrfToken(),
-		customPages,
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('managecustompages', {
+			csrf: req.csrfToken(),
+			customPages,
+		});
 
-}
+};

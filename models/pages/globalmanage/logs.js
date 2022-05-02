@@ -11,15 +11,15 @@ module.exports = async (req, res, next) => {
 
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 
-    let filter = {};
+	let filter = {};
 	const username = (typeof req.query.username === 'string' ? req.query.username : null);
-    if (username && !Array.isArray(username)) {
-        filter.user = username;
-    }
+	if (username && !Array.isArray(username)) {
+		filter.user = username;
+	}
 	const uri = (typeof req.query.uri === 'string' ? req.query.uri : null);
-    if (uri && !Array.isArray(uri)) {
-        filter.board = uri;
-    }
+	if (uri && !Array.isArray(uri)) {
+		filter.board = uri;
+	}
 	const ipMatch = decodeQueryIP(req.query, res.locals.permissions);
 	if (ipMatch != null) {
 		if (isIP(ipMatch)) {
@@ -37,23 +37,22 @@ module.exports = async (req, res, next) => {
 		]);
 		maxPage = Math.ceil(maxPage/limit);
 	} catch (err) {
-		return next(err)
+		return next(err);
 	}
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('globalmanagelogs', {
-		csrf: req.csrfToken(),
-		permissions: res.locals.permissions,
-		queryString,
-		username,
-		uri,
-		permissions: res.locals.permissions,
-		viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
-		ip: ipMatch ? req.query.ip : null,
-		logs,
-		page,
-		maxPage,
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('globalmanagelogs', {
+			csrf: req.csrfToken(),
+			permissions: res.locals.permissions,
+			queryString,
+			username,
+			uri,
+			viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
+			ip: ipMatch ? req.query.ip : null,
+			logs,
+			page,
+			maxPage,
+		});
 
-}
+};

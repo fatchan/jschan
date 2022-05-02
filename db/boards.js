@@ -87,7 +87,7 @@ module.exports = {
 		}, update);
 	},
 
-	deleteAll: (board) => {
+	deleteAll: () => {
 		return db.deleteMany({});
 	},
 
@@ -113,7 +113,7 @@ module.exports = {
 	removeStaff: (board, usernames) => {
 		cache.del(`board:${board}`);
 		const unsetObject = usernames.reduce((acc, username) => {
-			acc[`staff.${username}`] = "";
+			acc[`staff.${username}`] = '';
 			return acc;
 		}, {});
 		return db.updateOne(
@@ -146,7 +146,7 @@ module.exports = {
 			'_id': board,
 		}, {
 			'$set': {
-				'owner': null,
+				'owner': username,
 			},
 		});
 	},
@@ -187,7 +187,7 @@ module.exports = {
 	addBanners: (board, filenames) => {
 		cache.del(`board:${board}`);
 		cache.del(`banners:${board}`);
-		return module.exports.addToArray(board, 'banners', filenames)
+		return module.exports.addToArray(board, 'banners', filenames);
 	},
 
 	removeAssets: (board, filenames) => {
@@ -197,7 +197,7 @@ module.exports = {
 
 	addAssets: (board, filenames) => {
 		cache.del(`board:${board}`);
-		return module.exports.addToArray(board, 'assets', filenames)
+		return module.exports.addToArray(board, 'assets', filenames);
 	},
 
 	setFlags: (board, flags) => {
@@ -284,10 +284,10 @@ module.exports = {
 			];
 		}
 		return db.find(addedFilter, { projection })
-		.sort(sort)
-		.skip(skip)
-		.limit(limit)
-		.toArray();
+			.sort(sort)
+			.skip(skip)
+			.limit(limit)
+			.toArray();
 	},
 
 	webringBoards: () => {
@@ -360,13 +360,13 @@ module.exports = {
 					}
 				}
 			])
-			.toArray()
-			.then(res => {
-				if (res.length > 0 && res[0].sites) {
-					return res[0].sites.sort((a, b) => a.localeCompare(b));
-				}
-				return [];
-			});
+				.toArray()
+				.then(res => {
+					if (res.length > 0 && res[0].sites) {
+						return res[0].sites.sort((a, b) => a.localeCompare(b));
+					}
+					return [];
+				});
 			cache.set('webringsites', webringSites);
 		}
 		return webringSites;
@@ -413,11 +413,11 @@ module.exports = {
 				}
 			}
 		])
-		.toArray()
-		.then(res => {
-			res.sort((a, b) => a._id ? 1 : -1);
-			return res;
-		});
+			.toArray()
+			.then(res => {
+				res.sort(a => a._id ? 1 : -1);
+				return res;
+			});
 	},
 
 	exists: async (req, res, next) => {
@@ -485,4 +485,4 @@ module.exports = {
 		return increment.value.sequence_value;
 	},
 
-}
+};

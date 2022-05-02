@@ -15,13 +15,13 @@ module.exports = async (req, res, next) => {
 	}
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('thread', {
-		modview: true,
-		upLevel: true,
-		board: res.locals.board,
-		thread,
-		csrf: req.csrfToken(),
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('thread', {
+			modview: true,
+			upLevel: true,
+			board: res.locals.board,
+			thread,
+			csrf: req.csrfToken(),
+		});
 
-}
+};

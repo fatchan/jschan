@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = async(db, redis) => {
+module.exports = async(db) => {
 	console.log('adding markdown db entry for fortune example');
 	await db.collection('globalsettings').updateOne({ _id: 'globalsettings' }, {
 		'$set': {

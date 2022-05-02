@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = async(db, redis) => {
+module.exports = async(db) => {
 	console.log('setting webring:false to boards');
 	await db.collection('boards').updateMany({}, {
 		'$set': {

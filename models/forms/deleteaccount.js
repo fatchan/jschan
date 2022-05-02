@@ -10,4 +10,4 @@ module.exports = async (username) => {
 		redis.deletePattern(`sess:*:${username}`),
 	]);
 
-}
+};

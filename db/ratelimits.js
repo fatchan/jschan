@@ -27,11 +27,11 @@ module.exports = {
 			{
 				'upsert': true
 			}
-		).then(r => { return r.value ? r.value.sequence_value : 0 });
+		).then(r => { return r.value ? r.value.sequence_value : 0; });
 	},
 
 	deleteAll: () => {
 		return db.deleteMany({});
 	},
 
-}
+};

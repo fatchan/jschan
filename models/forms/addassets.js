@@ -1,31 +1,28 @@
 'use strict';
 
-const path = require('path')
-	, { remove, pathExists } = require('fs-extra')
+const { remove, pathExists } = require('fs-extra')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, moveUpload = require(__dirname+'/../../lib/file/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../lib/file/mimetypes.js')
-	, imageIdentify = require(__dirname+'/../../lib/file/image/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, { Boards } = require(__dirname+'/../../db/')
-	, buildQueue = require(__dirname+'/../../lib/build/queue.js');
+	, { Boards } = require(__dirname+'/../../db/');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
-	const { globalLimits, checkRealMimeTypes } = config.get;
+	const { checkRealMimeTypes } = config.get;
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		if (!mimeTypes.allowed(req.files.file[i].mimetype, {
-				image: true,
-				animatedImage: true,
-				video: false,
-				audio: false,
-				other: false
-			})) {
-			await deleteTempFiles(req).catch(e => console.error);
+			image: true,
+			animatedImage: true,
+			video: false,
+			audio: false,
+			other: false
+		})) {
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -35,7 +32,7 @@ module.exports = async (req, res, next) => {
 		// check for any mismatching supposed mimetypes from the actual file mimetype
 		if (checkRealMimeTypes) {
 			if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
-				deleteTempFiles(req).catch(e => console.error);
+				deleteTempFiles(req).catch(console.error);
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
 					'message': `Mime type mismatch for file "${req.files.file[i].name}"`,
@@ -69,7 +66,7 @@ module.exports = async (req, res, next) => {
 
 	}
 
-	deleteTempFiles(req).catch(e => console.error);
+	deleteTempFiles(req).catch(console.error);
 
 	// no new assets
 	if (filenames.length === 0) {
@@ -92,4 +89,4 @@ module.exports = async (req, res, next) => {
 		'redirect': redirect
 	});
 
-}
+};

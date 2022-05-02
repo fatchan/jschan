@@ -6,28 +6,27 @@ const path = require('path')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, moveUpload = require(__dirname+'/../../lib/file/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../lib/file/mimetypes.js')
-	, imageIdentify = require(__dirname+'/../../lib/file/image/imageidentify.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { countryCodesSet } = require(__dirname+'/../../lib/misc/countries.js')
 	, { Boards } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
-	const { globalLimits, checkRealMimeTypes } = config.get;
+	const { checkRealMimeTypes } = config.get;
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
 	// check all mime types before we try saving anything
 	for (let i = 0; i < res.locals.numFiles; i++) {
 		if (!mimeTypes.allowed(req.files.file[i].mimetype, {
-				image: true,
-				animatedImage: true, //gif flags? i guess lol
-				video: false,
-				audio: false,
-				other: false
-			})) {
-			await deleteTempFiles(req).catch(e => console.error);
+			image: true,
+			animatedImage: true, //gif flags? i guess lol
+			video: false,
+			audio: false,
+			other: false
+		})) {
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
@@ -40,7 +39,7 @@ module.exports = async (req, res, next) => {
 	if (checkRealMimeTypes) {
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
-				deleteTempFiles(req).catch(e => console.error);
+				deleteTempFiles(req).catch(console.error);
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
 					'message': `Mime type mismatch for file "${req.files.file[i].name}"`,
@@ -72,7 +71,7 @@ module.exports = async (req, res, next) => {
 
 	}
 
-	deleteTempFiles(req).catch(e => console.error);
+	deleteTempFiles(req).catch(console.error);
 
 	const updatedFlags = { ...res.locals.board.flags, ...newFlags };
 
@@ -101,4 +100,4 @@ module.exports = async (req, res, next) => {
 		'redirect': redirect
 	});
 
-}
+};

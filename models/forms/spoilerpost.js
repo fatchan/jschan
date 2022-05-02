@@ -4,7 +4,7 @@ module.exports = (posts) => {
 
 	// filter to ones not spoilered
 	const filteredPosts = posts.filter(post => {
-  		return !post.spoiler && post.files.length > 0;
+		return !post.spoiler && post.files.length > 0;
 	});
 
 	if (filteredPosts.length === 0) {
@@ -21,4 +21,4 @@ module.exports = (posts) => {
 		}
 	};
 
-}
+};

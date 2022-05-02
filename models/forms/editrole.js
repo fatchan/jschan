@@ -1,14 +1,13 @@
 'use strict';
 
 const { Roles, Accounts } = require(__dirname+'/../../db/')
-	, { Binary } = require(__dirname+'/../../db/db.js')
 	, redis = require(__dirname+'/../../lib/redis/redis.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js')
 	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
 	, Permission = require(__dirname+'/../../lib/permission/permission.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	let rolePermissions = new Permission(res.locals.editingRole.permissions);
 	rolePermissions.set(Permissions.VIEW_RAW_IP, (req.body.VIEW_RAW_IP != null));
@@ -46,18 +45,18 @@ module.exports = async (req, res, next) => {
 	rolePermissions.set(Permissions.USE_MARKDOWN_DICE, (req.body.USE_MARKDOWN_DICE != null));
 	rolePermissions.set(Permissions.USE_MARKDOWN_FORTUNE, (req.body.USE_MARKDOWN_FORTUNE != null));
 	if (res.locals.permissions.get(Permissions.ROOT)) {
-		rolePermissions.set(Permissions.MANAGE_GLOBAL_ACCOUNTS, (req.body.MANAGE_GLOBAL_ACCOUNTS != null))
-		rolePermissions.set(Permissions.MANAGE_GLOBAL_ROLES, (req.body.MANAGE_GLOBAL_ROLES != null))
+		rolePermissions.set(Permissions.MANAGE_GLOBAL_ACCOUNTS, (req.body.MANAGE_GLOBAL_ACCOUNTS != null));
+		rolePermissions.set(Permissions.MANAGE_GLOBAL_ROLES, (req.body.MANAGE_GLOBAL_ROLES != null));
 		rolePermissions.set(Permissions.ROOT, (req.body.ROOT != null));
 	}
 	rolePermissions.applyInheritance();
 
-	const existingRoleName = roleManager.roleNameMap[rolePermissions.base64]
+	const existingRoleName = roleManager.roleNameMap[rolePermissions.base64];
 	if (existingRoleName) {
 		return dynamicResponse(req, res, 409, 'message', {
 			'title': 'Conflict',
 			'error': `Another role already exists with those same permissions: "${existingRoleName}"`,
-			'redirect': req.headers.referer || `/globalmanage/roles.html`,
+			'redirect': req.headers.referer || '/globalmanage/roles.html',
 		});
 	}
 
@@ -67,12 +66,12 @@ module.exports = async (req, res, next) => {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'error': 'Role does not exist',
-			'redirect': req.headers.referer || `/globalmanage/roles.html`,
+			'redirect': req.headers.referer || '/globalmanage/roles.html',
 		});
 	}
 
 	const oldPermissions = new Permission(res.locals.editingRole.permissions);
-	await Accounts.setNewRolePermissions(oldPermissions, rolePermissions)
+	await Accounts.setNewRolePermissions(oldPermissions, rolePermissions);
 
 	redis.redisPublisher.publish('roles', null);
 
@@ -82,4 +81,4 @@ module.exports = async (req, res, next) => {
 		'redirect': `/globalmanage/editrole/${req.body.roleid}.html`,
 	});
 
-}
+};

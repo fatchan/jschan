@@ -34,22 +34,22 @@ module.exports = async (req, res, next) => {
 		]);
 		maxPage = Math.ceil(maxPage/limit);
 	} catch (err) {
-		return next(err)
+		return next(err);
 	}
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('globalmanageaccounts', {
-		csrf: req.csrfToken(),
-		permissions: res.locals.permissions,
-		user: res.locals.user,
-		queryString,
-		username,
-		uri,
-		accounts,
-		page,
-		maxPage,
-		roleNameMap: roleManager.roleNameMap,
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('globalmanageaccounts', {
+			csrf: req.csrfToken(),
+			permissions: res.locals.permissions,
+			user: res.locals.user,
+			queryString,
+			username,
+			uri,
+			accounts,
+			page,
+			maxPage,
+			roleNameMap: roleManager.roleNameMap,
+		});
 
-}
+};

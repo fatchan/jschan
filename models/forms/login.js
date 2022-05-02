@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { Accounts } = require(__dirname+'/../../db/');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const username = req.body.username.toLowerCase();
 	const password = req.body.password;
@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
 	if (goto == null || !/^\/[0-9a-zA-Z][0-9a-zA-Z._/-]*$/.test(goto)) {
 		goto = '/account.html';
 	}
-	const failRedirect = `/login.html${goto ? '?goto='+encodeURIComponent(goto) : ''}`
+	const failRedirect = `/login.html${goto ? '?goto='+encodeURIComponent(goto) : ''}`;
 
 	//fetch an account
 	const account = await Accounts.findOne(username);
@@ -48,4 +48,4 @@ module.exports = async (req, res, next) => {
 		'redirect': failRedirect
 	});
 
-}
+};

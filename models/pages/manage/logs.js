@@ -10,17 +10,17 @@ module.exports = async (req, res, next) => {
 
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 
-    let filter = {
+	let filter = {
 		board: req.params.board
 	};
 	const username = typeof req.query.username === 'string' ? req.query.username : null;
-    if (username) {
-        filter.user = username;
-    }
+	if (username) {
+		filter.user = username;
+	}
 	const uri = typeof req.query.uri === 'string' ? req.query.uri : null;
-    if (uri) {
-        filter.board = uri;
-    }
+	if (uri) {
+		filter.board = uri;
+	}
 //todo fetch log entry by id and then get ip and hash
 
 	let logs, maxPage;
@@ -31,22 +31,22 @@ module.exports = async (req, res, next) => {
 		]);
 		maxPage = Math.ceil(maxPage/limit);
 	} catch (err) {
-		return next(err)
+		return next(err);
 	}
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('managelogs', {
-		csrf: req.csrfToken(),
-		queryString,
-		username,
-		uri,
-		permissions: res.locals.permissions,
-		viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
+		.set('Cache-Control', 'private, max-age=5')
+		.render('managelogs', {
+			csrf: req.csrfToken(),
+			queryString,
+			username,
+			uri,
+			permissions: res.locals.permissions,
+			viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
 //posterid here
-		logs,
-		page,
-		maxPage,
-	});
+			logs,
+			page,
+			maxPage,
+		});
 
-}
+};

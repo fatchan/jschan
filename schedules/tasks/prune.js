@@ -13,7 +13,7 @@ module.exports = {
 			'count': {
 				'$lte': 0
 			}
-		}
+		};
 		if (fileNames) {
 			query['_id'] = {
 				'$in': fileNames
@@ -30,10 +30,10 @@ module.exports = {
 			debugLogs && console.log('Pruning', file._id);
 			return Promise.all(
 				[remove(`${uploadDirectory}/file/${file._id}`)]
-				.concat(file.exts ? file.exts.filter(ext => ext).map(ext => {
-					remove(`${uploadDirectory}/file/thumb/${file._id.split('.')[0]}${ext}`)
-				}) : [])
-			)
+					.concat(file.exts ? file.exts.filter(ext => ext).map(ext => {
+						remove(`${uploadDirectory}/file/thumb/${file._id.split('.')[0]}${ext}`);
+					}) : [])
+			);
 		}));
 	},
 	interval: timeUtils.DAY,

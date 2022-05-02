@@ -47,4 +47,4 @@ module.exports = {
 	immediate: true,
 	condition: 'pruneIps',
 
-}
+};
