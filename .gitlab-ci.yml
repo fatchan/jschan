@@ -1,14 +1,23 @@
 image: node:latest
 
+# Cache modules in between jobs
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - .npm/
+
+before_script:
+  - npm ci --cache .npm --prefer-offline
+
 # Code linting
 eslint:
   stage: .pre
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-  script:
+  script:gb
     - 'npm i -g eslint-cli'
     - 'npm i eslint --save-dev'
-    - 'node node_modules/eslint/bin/eslint.js'
+    - 'node node_modules/eslint/bin/eslint.js ./'
   allow_failure: true
 
 # Run tests
