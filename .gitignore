@@ -21,9 +21,10 @@ gulp/res/js/locals.js
 gulp/res/js/post.js
 gulp/res/js/modal.js
 gulp/res/js/captchaformsection.js
-gulp/res/js/pugfiulters.js
+gulp/res/js/pugfilters.js
 gulp/res/js/threadwatcher.js
 gulp/res/js/watchedthread.js
+gulp/res/js/uploaditem.js
 gulp/res/js/socket.io.js
 
 # some ide and testing files, artefacts, etc
