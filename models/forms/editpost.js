@@ -38,7 +38,7 @@ todo: handle some more situations
 			//block/ban edit
 			if (hitGlobalFilter) {
 				return filterActions(req, res, hitGlobalFilter, 0, filterMode,
-					0, filterBanDuration, null, filterBanAppealable, null);
+					0, filterBanDuration, filterBanAppealable, null);
 			}
 		}
 	}

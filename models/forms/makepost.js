@@ -134,8 +134,7 @@ module.exports = async (req, res) => {
 		if (hitGlobalFilter || hitLocalFilter) {
 			await deleteTempFiles(req).catch(console.error);
 			return filterActions(req, res, hitGlobalFilter, filterMode, globalFilterMode,
-				filterBanDuration, globalFilterBanDuration, globalFilterBanDuration,
-				filterBanAppealable, redirect);
+				filterBanDuration, globalFilterBanDuration, filterBanAppealable, redirect);
 		}
 
 	}
