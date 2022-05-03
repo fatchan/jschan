@@ -29,7 +29,7 @@ unit-tests:
     - 'npm install'
     - 'npm install jest -g'
     - 'cp configs/secrets.js.example configs/secrets.js'
-    - 'jest --ci --reporters=default --reporters=jest-junit --testPathIgnorePatterns=./test/'
+    - 'jest --ci --verbose --reporters=default --reporters=jest-junit --testPathIgnorePatterns=./test/ --collectCoverage --coverageReporters text --coverageReporters cobertura'
   artifacts:
     when: always
     reports:
