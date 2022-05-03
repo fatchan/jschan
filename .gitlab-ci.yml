@@ -35,5 +35,5 @@ unit-tests:
     reports:
       junit:
         - junit.xml
-        
+      cobertura: coverage/cobertura-coverage.xml
   #TODO: stage: integration-tests

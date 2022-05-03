@@ -62,7 +62,7 @@
   "scripts": {
     "test": "npm run test:unit",
     "test:unit": "jest --verbose --testPathIgnorePatterns=./test/",
-    "test:coverage": "jest --verbose --testPathIgnorePatterns=./test/ --collectCoverage",
+    "test:coverage": "jest --verbose --testPathIgnorePatterns=./test/ --collectCoverage --coverageReporters cobertura",
     "test:integration": "jest --verbose --testPathPattern=./test/",
     "test:all": "jest --verbose",
     "setup": "npm i -g pm2 gulp && gulp generate-favicon && gulp default",

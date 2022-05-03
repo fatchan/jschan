@@ -66,5 +66,7 @@ npm run test:all
 npm run test:all <filename|regex>
 ```
 
+Linting, code coverage and test results are reported in merge requests. Improvements to add tests and/or improve test coverage are welcomed.
+
 Thanks,
 Tom
