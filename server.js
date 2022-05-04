@@ -1,5 +1,7 @@
 'use strict';
 
+1;
+
 process
 	.on('uncaughtException', console.error)
 	.on('unhandledRejection', console.error);
