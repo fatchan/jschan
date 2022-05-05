@@ -35,7 +35,7 @@ module.exports = {
 				'pph': 1,
 				'tph': 1
 			}
-		})
+		});
 	},
 
 	updateBoards: () => {
@@ -61,8 +61,8 @@ module.exports = {
 					'pph': {
 						$first: {
 							$filter: {
-							input: '$pph',
-							as: 'hr',
+								input: '$pph',
+								as: 'hr',
 								cond: {
 									$eq: [ '$$hr.hour', (new Date().getHours()||24)-1 ]
 								},
@@ -136,4 +136,4 @@ module.exports = {
 		return db.deleteMany({});
 	},
 
-}
+};

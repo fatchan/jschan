@@ -1,7 +1,8 @@
+/* globals setLocalStorage */
 let customCSSString = localStorage.getItem('customcss');
 let disableBoardCss = localStorage.getItem('disableboardcss') == 'true';
 
-window.addEventListener('settingsReady', function(event) {
+window.addEventListener('settingsReady', function() {
 
 	//for main theme
 	const themePicker = document.getElementById('theme-setting');
@@ -20,15 +21,15 @@ window.addEventListener('settingsReady', function(event) {
 	}, false);
 
 	//custom CSS for users
-    const customCSSSetting = document.getElementById('customcss-setting');
-    const editCustomCSS = (change) => {
-        customCSSString = customCSSSetting.value;
-        console.log('editing custom CSS', customCSSString.length);
-        setLocalStorage('customcss', customCSSString); //what if this gets too long?
+	const customCSSSetting = document.getElementById('customcss-setting');
+	const editCustomCSS = () => {
+		customCSSString = customCSSSetting.value;
+		console.log('editing custom CSS', customCSSString.length);
+		setLocalStorage('customcss', customCSSString); //what if this gets too long?
 		changeTheme('customcss');
-    }
-    customCSSSetting.value = customCSSString;
-    customCSSSetting.addEventListener('input', editCustomCSS, false);
+	};
+	customCSSSetting.value = customCSSString;
+	customCSSSetting.addEventListener('input', editCustomCSS, false);
 
 	//for main theme
 	const disableBoardCssInput = document.getElementById('disableboardcss-setting');
@@ -63,7 +64,7 @@ function toggleBoardCss() {
 function changeTheme(type) {
 	switch(type) {
 		case 'theme':
-		case 'codetheme':
+		case 'codetheme': {
 			const theme = localStorage.getItem(type);
 			let tempLink = document.getElementById(`custom${type}`);
 			let defaultLink = document.getElementById(type);
@@ -98,11 +99,12 @@ function changeTheme(type) {
 					tempLink.innerHTML = css;
 					//remove temp inline style since we dont need it anymore
 					tempLink.remove();
-				}
+				};
 				themeLink.href = path;
 				document.head.appendChild(themeLink);
 			}
 			break;
+		}
 		case 'customcss':
 			customCSSLink.innerHTML = localStorage.getItem('customcss');
 			break;

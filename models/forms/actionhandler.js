@@ -81,7 +81,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	const messages = [];
-	const modlogActions = []
+	const modlogActions = [];
 	const combinedQuery = {};
 	let recalculateThreadMetadata = false;
 
@@ -99,11 +99,10 @@ module.exports = async (req, res, next) => {
 			modlogActions.push('Global ban reporter');
 		}
 		if (action) {
-			combinedQuery[action] = { ...combinedQuery[action], ...query}
+			combinedQuery[action] = { ...combinedQuery[action], ...query};
 		}
 		messages.push(message);
 	}
-
 
 	if (deleting) {
 
@@ -130,7 +129,7 @@ module.exports = async (req, res, next) => {
 
 		if (req.body.delete_ip_board || req.body.delete_ip_global || req.body.delete_ip_thread) {
 			const deletePostIps = res.locals.posts.map(x => x.ip.cloak);
-			const deletePostMongoIds = res.locals.posts.map(x => x._id)
+			const deletePostMongoIds = res.locals.posts.map(x => x._id);
 			let query = {
 				'_id': {
 					'$nin': deletePostMongoIds
@@ -214,14 +213,14 @@ module.exports = async (req, res, next) => {
 					modlogActions.push('Delete files');
 				}
 				recalculateThreadMetadata = true;
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
+				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		} else if (req.body.spoiler) {
 			const { message, action, query } = spoilerPosts(res.locals.posts);
 			if (action) {
 				modlogActions.push('Spoiler files');
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
+				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
@@ -230,7 +229,7 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = bumplockPosts(res.locals.posts);
 			if (action) {
 				modlogActions.push('Bumplock');
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
+				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
@@ -238,7 +237,7 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = lockPosts(res.locals.posts);
 			if (action) {
 				modlogActions.push('Lock');
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
+				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
@@ -246,7 +245,7 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = stickyPosts(res.locals.posts, req.body.sticky);
 			if (action) {
 				modlogActions.push('Sticky');
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
+				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
@@ -254,7 +253,7 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = cyclePosts(res.locals.posts);
 			if (action) {
 				modlogActions.push('Cycle');
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
+				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
@@ -263,7 +262,7 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = reportPosts(req, res);
 			if (action) {
 				//no modlog entry for making reports
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
+				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		} else if (req.body.dismiss || req.body.global_dismiss) {
@@ -274,7 +273,7 @@ module.exports = async (req, res, next) => {
 				} else if (req.body.global_dismiss) {
 					modlogActions.push('Dismiss global reports');
 				}
-				combinedQuery[action] = { ...combinedQuery[action], ...query}
+				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
@@ -388,7 +387,7 @@ module.exports = async (req, res, next) => {
 				'postId': {
 					'$in': boardThreadMap[threadBoard].threads
 				}
-			})
+			});
 		}
 		let threadsEachBoard = [];
 		if (queryOrs.length > 0) {
@@ -397,7 +396,7 @@ module.exports = async (req, res, next) => {
 				'$or': queryOrs
 			}).toArray();
 		}
-		const selectedThreads = res.locals.posts.filter(post => post.thread === null)
+		const selectedThreads = res.locals.posts.filter(post => post.thread === null);
 		threadsEachBoard = threadsEachBoard.concat(selectedThreads);
 
 		//recalculate replies and image counts if necessary
@@ -432,7 +431,7 @@ module.exports = async (req, res, next) => {
 						const aggregateSet = {
 							'replyposts': replyAggregate.replyposts,
 							'replyfiles': replyAggregate.replyfiles,
-						}
+						};
 						if (!threads[i].bumplocked) {
 							aggregateSet['bumped'] = replyAggregate.bumped;
 						}
@@ -625,4 +624,4 @@ module.exports = async (req, res, next) => {
 		redirect,
 	});
 
-}
+};

@@ -24,7 +24,7 @@ module.exports = async (req, res, next) => {
 	try {
 		posts = await Posts.getBoardRecent(offset, limit, ip, req.params.board, res.locals.permissions);
 	} catch (err) {
-		return next(err)
+		return next(err);
 	}
 
 	res.set('Cache-Control', 'private, max-age=5');
@@ -43,4 +43,4 @@ module.exports = async (req, res, next) => {
 			queryString,
 		});
 	}
-}
+};

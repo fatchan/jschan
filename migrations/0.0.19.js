@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = async(db, redis) => {
+module.exports = async(db) => {
 	console.log('fixing index for custompages');
 	try {
 		await db.collection('custompages').dropIndex('board_1_url_1');

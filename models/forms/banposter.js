@@ -3,7 +3,7 @@
 const { Bans } = require(__dirname+'/../../db/')
 	, config = require(__dirname+'/../../lib/misc/config.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const { defaultBanDuration } = config.get;
 	const banDate = new Date();
@@ -26,7 +26,7 @@ module.exports = async (req, res, next) => {
 			//should we at some point filter these to not bother banning pruned ips?
 			const banType = ip.endsWith('.IP') ? 0 :
 				ip.endsWith('.BP') ? 1 :
-			 	2;
+					2;
 			const thisIpPosts = ipPosts[ip];
 			let banRange = 0;
 			let banIp = {
@@ -88,7 +88,7 @@ module.exports = async (req, res, next) => {
 			[...new Set(ips)].forEach(ip => {
 				const banType = ip.cloak.endsWith('.IP') ? 0 :
 					ip.cloak.endsWith('.BP') ? 1 :
-				 	2;
+						2;
 				bans.push({
 					'type': banType,
 					'range': 0,
@@ -111,7 +111,7 @@ module.exports = async (req, res, next) => {
 	const numBans = await Bans.insertMany(bans).then(result => result.insertedCount);
 
 	const query = {
-        message: `Added ${numBans} bans`,
+		message: `Added ${numBans} bans`,
 	};
 
 	if ((req.body.ban || req.body.global_ban ) && req.body.ban_reason) {
@@ -124,4 +124,4 @@ module.exports = async (req, res, next) => {
 
 	return query;
 
-}
+};

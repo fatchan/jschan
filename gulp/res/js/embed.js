@@ -1,11 +1,12 @@
+/* globals isCatalog */
 if (!isCatalog) { //dont show embed buttons in catalog
-	window.addEventListener('DOMContentLoaded', (event) => {
+	window.addEventListener('DOMContentLoaded', () => {
 
 		const linkSelector = '.post-message a:not(.quote)'; //get links that arent quotes
 
 		const supportedEmbeds = [
 			{
-				linkRegex: /^https?\:\/\/(?:www\.|m\.)?(?:youtube\.com|youtu\.?be)\//i,
+				linkRegex: /^https?:\/\/(?:www\.|m\.)?(?:youtube\.com|youtu\.?be)\//i,
 				toHtml: (url) => {
 					try {
 						const urlObject = new URL(url);
@@ -19,7 +20,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 				}
 			},
 			{
-				linkRegex: /^https?\:\/\/(?:www\.)?bitchute\.com\/video\/[a-z0-9]{12}\//i,
+				linkRegex: /^https?:\/\/(?:www\.)?bitchute\.com\/video\/[a-z0-9]{12}\//i,
 				toHtml: (url) => {
 					try {
 						const urlObject = new URL(url);
@@ -43,7 +44,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 				embedSpan.firstElementChild.textContent = 'Close';
 			}
 			embedSpan.dataset.open = embedSpan.dataset.open === 'true' ? 'false' : 'true';
-		}
+		};
 
 		const addEmbedButtons = (l) => {
 			for (let i = 0; i < l.length; i++) {
@@ -70,7 +71,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 		const links = Array.from(document.querySelectorAll(linkSelector));
 		addEmbedButtons(links);
 
-		updateEmbedLinks = (e) => {
+		const updateEmbedLinks = (e) => {
 			if (e.detail.hover) {
 				return;
 			}
@@ -82,7 +83,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 						&& link.nextSibling.classList.contains('dummy-link'));
 				});
 			addEmbedButtons(newlinks);
-		}
+		};
 
 		window.addEventListener('addPost', updateEmbedLinks);
 		window.addEventListener('updatePostMessage', updateEmbedLinks);

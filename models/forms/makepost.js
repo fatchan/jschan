@@ -1,7 +1,6 @@
 'use strict';
 
-const path = require('path')
-	, { createHash, randomBytes } = require('crypto')
+const { createHash, randomBytes } = require('crypto')
 	, randomBytesAsync = require('util').promisify(randomBytes)
 	, { remove, emptyDir, pathExists, stat: fsStat } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
@@ -34,7 +33,7 @@ const path = require('path')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const { filterBanAppealable, checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
 		strictFiltering, animatedGifThumbnails, audioThumbnails, dontStoreRawIps } = config.get;
@@ -42,7 +41,7 @@ module.exports = async (req, res, next) => {
 	//spam/flood check
 	const flood = await spamCheck(req, res);
 	if (flood) {
-		deleteTempFiles(req).catch(e => console.error);
+		deleteTempFiles(req).catch(console.error);
 		return dynamicResponse(req, res, 429, 'message', {
 			'title': 'Flood detected',
 			'message': 'Please wait before making another post, or a post similar to another user',
@@ -51,18 +50,18 @@ module.exports = async (req, res, next) => {
 	}
 
 	// check if this is responding to an existing thread
-	let redirect = `/${req.params.board}/`
+	let redirect = `/${req.params.board}/`;
 	let salt = null;
 	let thread = null;
 	const isStaffOrGlobal = res.locals.permissions.hasAny(Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_BOARD_GENERAL);
 	const { filterBanDuration, filterMode, filters, blockedCountries, threadLimit, ids, userPostSpoiler,
-		lockReset, captchaReset, pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
+		pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
 		sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 		captchaMode, lockMode, allowedFileTypes, customFlags, geoFlags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
 	if (!isStaffOrGlobal
 		&& res.locals.country //permission for this or nah?
 		&& blockedCountries.includes(res.locals.country.code)) {
-		await deleteTempFiles(req).catch(e => console.error);
+		await deleteTempFiles(req).catch(console.error);
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': `Your country "${res.locals.country.name}" is not allowed to post on this board`,
@@ -71,7 +70,7 @@ module.exports = async (req, res, next) => {
 	}
 	if ((lockMode === 2 || (lockMode === 1 && !req.body.thread)) //if board lock, or thread lock and its a new thread
 		&& !isStaffOrGlobal) { //and not staff
-		await deleteTempFiles(req).catch(e => console.error);
+		await deleteTempFiles(req).catch(console.error);
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'message': lockMode === 1 ? 'Thread creation locked' : 'Board locked',
@@ -81,7 +80,7 @@ module.exports = async (req, res, next) => {
 	if (req.body.thread) {
 		thread = await Posts.getPost(req.params.board, req.body.thread, true);
 		if (!thread || thread.thread != null) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': 'Thread does not exist',
@@ -89,9 +88,9 @@ module.exports = async (req, res, next) => {
 			});
 		}
 		salt = thread.salt;
-		redirect += `thread/${req.body.thread}.html`
+		redirect += `thread/${req.body.thread}.html`;
 		if (thread.locked && !isStaffOrGlobal) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': 'Thread Locked',
@@ -99,7 +98,7 @@ module.exports = async (req, res, next) => {
 			});
 		}
 		if (thread.replyposts >= replyLimit && !thread.cyclic) { //reply limit
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'message': 'Thread reached reply limit',
@@ -116,28 +115,26 @@ module.exports = async (req, res, next) => {
 			filterBanDuration: globalFilterBanDuration } = config.get;
 
 		let hitGlobalFilter = false
-			, hitLocalFilter = false
-			, ban;
-		let [combinedString, strictCombinedString] = getFilterStrings(req, res, strictFiltering || res.locals.board.settings.strictFiltering);
+			, hitLocalFilter = false;
+		let  { combinedString, strictCombinedString } = getFilterStrings(req, res, strictFiltering || res.locals.board.settings.strictFiltering);
 
 		//compare to global filters
 		if (globalFilters && globalFilters.length > 0 && globalFilterMode > 0) {
-			hitGlobalFilter = globalFilters.some(filter => { return strictCombinedString.includes(filter.toLowerCase()) });
+			hitGlobalFilter = globalFilters.some(filter => { return strictCombinedString.includes(filter.toLowerCase()); });
 		}
 
 		//compare to board filters
 		if (!hitGlobalFilter && !res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL)
 			&& filterMode > 0 && filters && filters.length > 0) {
 			const localFilterContents = res.locals.board.settings.strictFiltering === true ? strictCombinedString : combinedString;
-			hitLocalFilter = filters.some(filter => { return localFilterContents.includes(filter.toLowerCase()) });
+			hitLocalFilter = filters.some(filter => { return localFilterContents.includes(filter.toLowerCase()); });
 		}
 
 		//block post/apply bans if an active filter matched
 		if (hitGlobalFilter || hitLocalFilter) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return filterActions(req, res, hitGlobalFilter, filterMode, globalFilterMode,
-				filterBanDuration, globalFilterBanDuration, globalFilterBanDuration,
-				filterBanAppealable, redirect);
+				filterBanDuration, globalFilterBanDuration, filterBanAppealable, redirect);
 		}
 
 	}
@@ -150,7 +147,7 @@ module.exports = async (req, res, next) => {
 		if ((req.body.thread && messageR9KMode === 1) || messageR9KMode === 2) {
 			const postWithExistingMessage = await Posts.checkExistingMessage(res.locals.board._id, (messageR9KMode === 2 ? null : req.body.thread), messageHash);
 			if (postWithExistingMessage != null) {
-				await deleteTempFiles(req).catch(e => console.error);
+				await deleteTempFiles(req).catch(console.error);
 				return dynamicResponse(req, res, 409, 'message', {
 					'title': 'Conflict',
 					'message': `Messages must be unique ${messageR9KMode === 1 ? 'in this thread' : 'on this board'}. Your message is not unique.`,
@@ -169,7 +166,7 @@ module.exports = async (req, res, next) => {
 			const filesHashes = req.files.file.map(f => f.sha256);
 			const postWithExistingFiles = await Posts.checkExistingFiles(res.locals.board._id, (fileR9KMode === 2 ? null : req.body.thread), filesHashes);
 			if (postWithExistingFiles != null) {
-				await deleteTempFiles(req).catch(e => console.error);
+				await deleteTempFiles(req).catch(console.error);
 				const conflictingFiles = req.files.file
 					.filter(f => postWithExistingFiles.files.some(fx => fx.hash === f.sha256))
 					.map(f => f.name)
@@ -185,7 +182,7 @@ module.exports = async (req, res, next) => {
 		//basic mime type check
 		for (let i = 0; i < res.locals.numFiles; i++) {
 			if (!mimeTypes.allowed(req.files.file[i].mimetype, allowedFileTypes)) {
-				await deleteTempFiles(req).catch(e => console.error);
+				await deleteTempFiles(req).catch(console.error);
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': 'Bad request',
 					'message': `Mime type "${req.files.file[i].mimetype}" for "${req.files.file[i].name}" not allowed`,
@@ -198,7 +195,7 @@ module.exports = async (req, res, next) => {
 		if (checkRealMimeTypes) {
 			for (let i = 0; i < res.locals.numFiles; i++) {
 				if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
-					deleteTempFiles(req).catch(e => console.error);
+					deleteTempFiles(req).catch(console.error);
 					return dynamicResponse(req, res, 400, 'message', {
 						'title': 'Bad request',
 						'message': `Mime type mismatch for file "${req.files.file[i].name}"`,
@@ -233,14 +230,14 @@ module.exports = async (req, res, next) => {
 			let [type, subtype] = processedFile.mimetype.split('/');
 			//check if already exists
 			const existsFull = await pathExists(`${uploadDirectory}/file/${processedFile.filename}`);
-			processedFile.sizeString = formatSize(processedFile.size)
+			processedFile.sizeString = formatSize(processedFile.size);
 			const saveFull = async () => {
 				await Files.increment(processedFile);
 				req.files.file[i].inced = true;
 				if (!existsFull) {
 					await moveUpload(file, processedFile.filename, 'file');
 				}
-			}
+			};
 			if (mimeTypes.other.has(processedFile.mimetype)) {
 				//"other" mimes from config, overrides main type to avoid codec issues in browser or ffmpeg for unsupported filetypes
 				processedFile.hasThumb = false;
@@ -256,7 +253,7 @@ module.exports = async (req, res, next) => {
 						try {
 							imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
 						} catch (e) {
-							await deleteTempFiles(req).catch(e => console.error);
+							await deleteTempFiles(req).catch(console.error);
 							return dynamicResponse(req, res, 400, 'message', {
 								'title': 'Bad request',
 								'message': `The server failed to process "${req.files.file[i].name}". Possible unsupported or corrupt file.`,
@@ -294,7 +291,7 @@ module.exports = async (req, res, next) => {
 						break;
 					}
 					case 'audio':
-					case 'video':
+					case 'video': {
 						//video metadata
 						const audioVideoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
 						processedFile.duration = audioVideoData.format.duration;
@@ -303,7 +300,7 @@ module.exports = async (req, res, next) => {
 						if (videoStreams.length > 0) {
 							processedFile.thumbextension = thumbExtension;
 							processedFile.geometry = {width: videoStreams[0].coded_width, height: videoStreams[0].coded_height};
-							processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`
+							processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`;
 							processedFile.hasThumb = true;
 							await saveFull();
 							if (!existsThumb) {
@@ -336,6 +333,7 @@ module.exports = async (req, res, next) => {
 							}
 						}
 						break;
+					}
 					default:
 						throw new Error(`invalid file mime type: ${processedFile.mimetype}`);
 				}
@@ -360,7 +358,7 @@ module.exports = async (req, res, next) => {
 		}
 	}
 	// because express middleware is autistic i need to do this
-	deleteTempFiles(req).catch(e => console.error);
+	deleteTempFiles(req).catch(console.error);
 
 	let userId = null;
 	if (!salt) {
@@ -407,7 +405,7 @@ module.exports = async (req, res, next) => {
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread, res.locals.permissions);
 
 	//build post data for db. for some reason all the property names are lower case :^)
-	const now = Date.now()
+	const now = Date.now();
 	const data = {
 		'date': new Date(now),
 		'u': now,
@@ -433,7 +431,7 @@ module.exports = async (req, res, next) => {
 		quotes, //posts this post replies to
 		crossquotes, //quotes to other threads in same board
 		'backlinks': [], //posts replying to this post
-	}
+	};
 
 	if (!req.body.thread) {
 		//if this is a thread, add thread specific properties
@@ -458,7 +456,6 @@ module.exports = async (req, res, next) => {
 	const { postId, postMongoId } = await Posts.insertOne(res.locals.board, data, thread, res.locals.anonymizer);
 
 	let enableCaptcha = false; //make this returned from some function, refactor and move the next section to another file
-	const pphTriggerActive = (pphTriggerAction > 0 && pphTrigger > 0);
 	const tphTriggerActive = (tphTriggerAction > 0 && tphTrigger > 0);
 	if (pphTriggerAction || tphTriggerActive) { //if a trigger is enabled
 		const triggerUpdate = {
@@ -487,7 +484,7 @@ module.exports = async (req, res, next) => {
 					return true;
 				}
 				return false;
-			}
+			};
 			const updatedPphTrigger = pphTriggerUpdate && calcTriggerMode(triggerUpdate, pphTrigger, pphTriggerAction, hourPosts.pph);
 			const updatedTphTrigger = tphTriggerUpdate && calcTriggerMode(triggerUpdate, tphTrigger, tphTriggerAction, hourPosts.tph);
 			if (updatedPphTrigger || updatedTphTrigger) {
@@ -586,7 +583,7 @@ module.exports = async (req, res, next) => {
 		'locked': data.locked,
 		'bumplocked': data.bumplocked,
 		'cyclic': data.cyclic,
-	}
+	};
 	if (data.thread) {
 		//dont emit thread to this socket, because the room only exists when the thread is open
 		Socketio.emitRoom(`${res.locals.board._id}-${data.thread}`, 'newPost', projectedPost);
@@ -665,4 +662,4 @@ module.exports = async (req, res, next) => {
 		}
 	});
 
-}
+};

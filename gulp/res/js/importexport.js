@@ -1,3 +1,4 @@
+/* globals setLocalStorage */
 window.addEventListener('settingsReady', () => {
 
 	const settingNames = ['volume','loop','imageloadingbars','live','scroll','localtime','relative','24hour','notifications','hiddenimages', 'threadwatcher'
@@ -14,7 +15,7 @@ window.addEventListener('settingsReady', () => {
 			return acc;
 		}, {});
 		importExportText.value = JSON.stringify(settingsData);
-	}
+	};
 	exportSettingsButton.addEventListener('click', exportSettings, false);
 
 	const importSettingsButton = document.getElementById('import-setting');
@@ -32,7 +33,7 @@ window.addEventListener('settingsReady', () => {
 				console.error(e);
 			}
 		}
-	}
+	};
 	importSettingsButton.addEventListener('click', importSettings, false);
 
 });

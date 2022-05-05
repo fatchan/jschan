@@ -13,26 +13,26 @@ module.exports = {
 			addedFilter['$or'] = [
 				{ uri: filter.search },
 				{ tags: filter.search }
-			]
+			];
 		}
 		const addedSort = {};
 		if (sort.ips) {
-				addedSort['uniqueUsers'] = sort.ips
+			addedSort['uniqueUsers'] = sort.ips;
 		}
 		if (sort.pph) {
-				addedSort['postsPerHour'] = sort.pph
+			addedSort['postsPerHour'] = sort.pph;
 		}
 		if (sort.sequence_value) {
-				addedSort['totalPosts'] = sort.sequence_value
+			addedSort['totalPosts'] = sort.sequence_value;
 		}
 		if (sort.lastPostTimestamp) {
-				addedSort['lastPostTimestamp'] = sort.lastPostTimestamp
+			addedSort['lastPostTimestamp'] = sort.lastPostTimestamp;
 		}
 		return db.find(addedFilter)
-		.sort(addedSort)
-		.skip(skip)
-		.limit(limit)
-		.toArray();
+			.sort(addedSort)
+			.skip(skip)
+			.limit(limit)
+			.toArray();
 	},
 
 	count: (filter) => {
@@ -41,7 +41,7 @@ module.exports = {
 			addedFilter['$or'] = [
 				{ uri: filter.search },
 				{ tags: filter.search }
-			]
+			];
 		}
 		return db.countDocuments(addedFilter);
 	},
@@ -50,4 +50,4 @@ module.exports = {
 		return db.deleteMany({});
 	},
 
-}
+};

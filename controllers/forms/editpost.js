@@ -4,10 +4,9 @@ const editPost = require(__dirname+'/../../models/forms/editpost.js')
 	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
-	, { Ratelimits, Posts, Boards } = require(__dirname+'/../../db/')
+	, { Ratelimits, Posts } = require(__dirname+'/../../db/')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody, numberBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -32,7 +31,7 @@ module.exports = {
 			{ result: async () => {
 				res.locals.post = await Posts.getPost(req.body.board, req.body.postId);
 				return res.locals.post != null;
-			}, expected: true, error: `Post doesn't exist` }
+			}, expected: true, error: 'Post doesn\'t exist' }
 		]);
 
 		if (errors.length > 0) {
@@ -61,4 +60,4 @@ module.exports = {
 
 	}
 
-}
+};

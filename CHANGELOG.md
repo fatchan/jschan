@@ -1,3 +1,8 @@
+### 0.7.0
+  - ESLint has been added as a dev dependency. This does "linting" to enforce code style and find and fix some mistakes.
+  - Updated CONTRIBUTING.md information
+  - Bugfixes
+
 ### 0.6.6
   - Post editing bugfix.
 

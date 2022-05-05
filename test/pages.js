@@ -24,9 +24,9 @@ module.exports = () => describe('Test loading a bunch of pages', () => {
 		'globalmanage/roles.html',
 		'globalmanage/news.html',
 		'globalmanage/settings.html',
-	]
+	];
 
-	let sessionCookie
+	let sessionCookie;
 	test('login as admin',  async () => {
 		const params = new URLSearchParams();
 		params.append('username', 'admin');
@@ -54,6 +54,6 @@ module.exports = () => describe('Test loading a bunch of pages', () => {
 			});
 			expect(response.ok).toBe(true);
 		});
-	})
+	});
 
 });

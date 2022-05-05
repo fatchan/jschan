@@ -6,4 +6,4 @@ describe('run integration tests', () => {
 	require('./board.js')();
 	require('./pages.js')();
 	require('./cleanup.js')();
-})
+});

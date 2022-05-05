@@ -13,4 +13,4 @@ module.exports = {
 	editNews: require(__dirname+'/editnews.js'),
 	editAccount: require(__dirname+'/editaccount.js'),
 	editRole: require(__dirname+'/editrole.js'),
-}
+};

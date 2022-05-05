@@ -1,3 +1,4 @@
+/* globals setLocalStorage */
 class Dragable {
 
 	constructor(handle, target) {
@@ -107,7 +108,7 @@ class Dragable {
 	}
 
 	//stopped dragging
-	stopDrag(e) {
+	stopDrag() {
 		if (this.draging) {
 			this.draging = false;
 			this.handle.style.cursor = 'grab';

@@ -1,3 +1,4 @@
+/* globals setLocalStorage */
 let imageSources = new Set(JSON.parse(localStorage.getItem('hiddenimages')));
 let imageSourcesList;
 
@@ -8,18 +9,18 @@ const toggleSource = (source, state) => {
 	images.forEach(i => i.classList[state?'add':'remove']('vh'));
 	const buttons = document.querySelectorAll(`a.hide-image[data-src="${source}"]`);
 	buttons.forEach(b => b.textContent = state ? 'Show' : 'Hide');
-}
+};
 
 toggleAllHidden(true);
 
 const toggleHandler = (e) => {
-	const thumbSource = e.target.dataset.src
+	const thumbSource = e.target.dataset.src;
 	const hidden = imageSources.has(thumbSource);
 	imageSources[hidden?'delete':'add'](thumbSource);
 	imageSourcesList.value = [...imageSources];
 	setLocalStorage('hiddenimages', JSON.stringify([...imageSources]));
 	toggleSource(thumbSource, !hidden);
-}
+};
 
 document.querySelectorAll('.hide-image').forEach(el => {
 	el.addEventListener('click', toggleHandler, false);
@@ -27,10 +28,10 @@ document.querySelectorAll('.hide-image').forEach(el => {
 
 const handleHiddenImages = (e) => {
 	//hide any images from this post that should already be hidden
-	const hasHiddenImages = e.detail.json.files.forEach(f => {
+	e.detail.json.files.forEach(f => {
 		let hideFilename = '/file/';
 		if (f.hasThumb) {
-			hideFilename += `thumb/${f.hash}${f.thumbextension}`
+			hideFilename += `thumb/${f.hash}${f.thumbextension}`;
 		} else {
 			hideFilename += f.filename;
 		}
@@ -45,7 +46,7 @@ const handleHiddenImages = (e) => {
 			hideButtons[i].addEventListener('click', toggleHandler, false);
 		}
 	}
-}
+};
 
 window.addEventListener('addPost', handleHiddenImages, false);
 
@@ -60,7 +61,7 @@ window.addEventListener('settingsReady', () => {
 		imageSourcesList.value = '';
 		setLocalStorage('hiddenimages', '[]');
 		console.log('cleared hidden images list');
-	}
+	};
 	imageSourcesListClearButton.addEventListener('click', clearImageSources, false);
 
 });

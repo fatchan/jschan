@@ -1,3 +1,4 @@
+/* globals captchaType captchaGridSize captchaformsection */
 const captchaCookieRegex = /captchaid=(.[^;]*)/ig;
 class CaptchaController {
 
@@ -73,11 +74,11 @@ class CaptchaController {
 			}
 			this.refreshing = false;
 			e && e.target.classList.remove('spin');
-		}
+		};
 		xhr.onerror = () => {
 			this.refreshing = false;
 			e && e.target.classList.remove('spin');
-		}
+		};
 		xhr.open('GET', '/captcha', true);
 		xhr.send(null);
 	}
@@ -126,7 +127,7 @@ class CaptchaController {
 			captchaDiv.appendChild(captchaImg);
 			captchaDiv.appendChild(refreshDiv);
 			this.startRefreshTimer();
-		}
+		};
 	}
 
 }

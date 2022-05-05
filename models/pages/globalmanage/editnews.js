@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
 	try {
 		news = await News.findOne(req.params.newsid);
 	} catch (err) {
-		return next(err)
+		return next(err);
 	}
 
 	if (!news) {
@@ -16,11 +16,11 @@ module.exports = async (req, res, next) => {
 	}
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('editnews', {
-		csrf: req.csrfToken(),
-		permissions: res.locals.permissions,
-		news,
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('editnews', {
+			csrf: req.csrfToken(),
+			permissions: res.locals.permissions,
+			news,
+		});
 
-}
+};

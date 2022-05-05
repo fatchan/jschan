@@ -1,6 +1,6 @@
 'use strict';
 
-const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
+const { Posts, Modlogs } = require(__dirname+'/../../db/')
 	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
 	, { createHash } = require('crypto')
 	, Mongo = require(__dirname+'/../../db/db.js')
@@ -12,10 +12,9 @@ const { Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js')
-	, { remove } = require('fs-extra');
+	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 /*
 todo: handle some more situations
@@ -33,14 +32,13 @@ todo: handle some more situations
 		//only global filters are checked, because anybody who could edit bypasses board filters
 		const { filters, filterMode, filterBanDuration } = config.get;
 		if (filters.length > 0 && filterMode > 0) {
-			let hitGlobalFilter = false
-				, ban;
-			const [combinedString, strictCombinedString] = getFilterStrings(req, res, strictFiltering);
-			hitGlobalFilter = filters.some(filter => { return strictCombinedString.includes(filter.toLowerCase()) });
+			let hitGlobalFilter = false;
+			const { strictCombinedString } = getFilterStrings(req, res, strictFiltering);
+			hitGlobalFilter = filters.some(filter => { return strictCombinedString.includes(filter.toLowerCase()); });
 			//block/ban edit
 			if (hitGlobalFilter) {
 				return filterActions(req, res, hitGlobalFilter, 0, filterMode,
-					0, filterBanDuration, null, filterBanAppealable, null);
+					0, filterBanDuration, filterBanAppealable, null);
 			}
 		}
 	}
@@ -97,7 +95,7 @@ todo: handle some more situations
 	}
 
 	//update the post
-	const postId = await Posts.db.updateOne({
+	await Posts.db.updateOne({
 		board: req.body.board,
 		postId: post.postId
 	}, {
@@ -180,7 +178,7 @@ todo: handle some more situations
 		}).sort({
 			'postId': -1
 		}).limit(previewReplies).toArray();
-		postInPreviewPosts = threadPreviewPosts.some(p => p.postId <= post.postId)
+		postInPreviewPosts = threadPreviewPosts.some(p => p.postId <= post.postId);
 	}
 
 	if (post.thread === null || postInPreviewPosts) {
@@ -205,4 +203,4 @@ todo: handle some more situations
 		});
 	}
 
-}
+};

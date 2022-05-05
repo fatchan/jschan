@@ -1,3 +1,4 @@
+/* globals setLocalStorage hoverCacheList newPost */
 window.addEventListener('DOMContentLoaded', () => {
 
 	let loading = {};

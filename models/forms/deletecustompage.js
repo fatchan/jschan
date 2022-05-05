@@ -5,7 +5,7 @@ const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, { CustomPages } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const deletedCount = await CustomPages.deleteMany(req.body.checkedcustompages, req.params.board).then(res => res.deletedCount);
 
@@ -18,7 +18,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	await Promise.all(req.body.checkedcustompages.map(page => {
-		remove(`${uploadDirectory}/html/${req.params.board}/custompage/${page}.html`)
+		remove(`${uploadDirectory}/html/${req.params.board}/custompage/${page}.html`);
 	}));
 
 	return dynamicResponse(req, res, 200, 'message', {
@@ -27,4 +27,4 @@ module.exports = async (req, res, next) => {
 		'redirect': `/${req.params.board}/manage/custompages.html`
 	});
 
-}
+};

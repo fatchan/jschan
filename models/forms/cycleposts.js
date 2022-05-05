@@ -1,12 +1,12 @@
 'use strict';
 
-const { NumberInt } = require(__dirname+'/../../db/db.js')
+const { NumberInt } = require(__dirname+'/../../db/db.js');
 
 module.exports = (posts) => {
 
 	const filteredposts = posts.filter(post => {
-		return !post.thread
-	})
+		return !post.thread;
+	});
 
 	if (filteredposts.length === 0) {
 		return {
@@ -24,4 +24,4 @@ module.exports = (posts) => {
 		}
 	};
 
-}
+};

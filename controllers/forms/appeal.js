@@ -3,10 +3,8 @@
 const appealBans = require(__dirname+'/../../models/forms/appeal.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, { Bans } = require(__dirname+'/../../db')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, numberBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -60,4 +58,4 @@ module.exports = {
 
 	}
 
-}
+};

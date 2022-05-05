@@ -8,7 +8,7 @@ const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardse
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+		inArrayBody, arrayInBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -49,16 +49,16 @@ module.exports = {
 			{ result: minmaxBody(req.body.min_reply_message_length, req.body.max_reply_message_length), expected: true, error: 'Min and max reply message lengths must not violate eachother' },
 			{ result: numberBodyVariable(req.body.min_thread_message_length, res.locals.board.settings.minThreadMessageLength,
 				req.body.min_thread_message_length, maxThread, req.body.max_thread_message_length), expected: true,
-				error: `Min thread message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Thread Message Length" (currently ${res.locals.board.settings.maxThreadMessageLength})` },
+			error: `Min thread message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Thread Message Length" (currently ${res.locals.board.settings.maxThreadMessageLength})` },
 			{ result: numberBodyVariable(req.body.min_reply_message_length, res.locals.board.settings.minReplyMessageLength,
 				req.body.min_reply_message_length, maxReply, req.body.max_reply_message_length), expected: true,
-				error: `Min reply message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Reply Message Length" (currently ${res.locals.board.settings.maxReplyMessageLength})` },
+			error: `Min reply message length must be 0-${globalLimits.fieldLength.message} and not more than "Max Reply Message Length" (currently ${res.locals.board.settings.maxReplyMessageLength})` },
 			{ result: numberBodyVariable(req.body.max_thread_message_length, res.locals.board.settings.minThreadMessageLength,
 				req.body.min_thread_message_length, globalLimits.fieldLength.message, globalLimits.fieldLength.message), expected: true,
-				error: `Max thread message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Thread Message Length" (currently ${res.locals.board.settings.minThreadMessageLength})` },
+			error: `Max thread message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Thread Message Length" (currently ${res.locals.board.settings.minThreadMessageLength})` },
 			{ result: numberBodyVariable(req.body.max_reply_message_length, res.locals.board.settings.minReplyMessageLength,
 				req.body.min_reply_message_length, globalLimits.fieldLength.message, globalLimits.fieldLength.message), expected: true,
-				error: `Max reply message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Reply Message Length" (currently ${res.locals.board.settings.minReplyMessageLength})` },
+			error: `Max reply message length must be 0-${globalLimits.fieldLength.message} and not less than "Min Reply Message Length" (currently ${res.locals.board.settings.minReplyMessageLength})` },
 			{ result: numberBody(req.body.lock_mode, 0, 2), expected: true, error: 'Invalid lock mode' },
 			{ result: numberBody(req.body.captcha_mode, 0, 2), expected: true, error: 'Invalid captcha mode' },
 			{ result: numberBody(req.body.filter_mode, 0, 2), expected: true, error: 'Invalid filter mode' },
@@ -103,4 +103,4 @@ module.exports = {
 
 	}
 
-}
+};

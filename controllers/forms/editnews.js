@@ -3,8 +3,7 @@
 const editNews = require(__dirname+'/../../models/forms/editnews.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody, numberBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -40,4 +39,4 @@ module.exports = {
 
 	}
 
-}
+};

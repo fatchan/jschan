@@ -83,7 +83,7 @@ module.exports = {
 				'permissions': Mongo.Binary(permissions.array),
 			}
 		});
-		cache.deletePattern(`users:*`);
+		cache.deletePattern('users:*');
 		return res;
 	},
 
@@ -135,7 +135,7 @@ module.exports = {
 		return res;
 	},
 
-    removeOwnedBoard: async (username, board) => {
+	removeOwnedBoard: async (username, board) => {
 		const res = await db.updateOne({
 			'_id': username
 		}, {
@@ -145,7 +145,7 @@ module.exports = {
 		});
 		cache.del(`users:${username}`);
 		return res;
-    },
+	},
 
 	addStaffBoard: async (usernames, board) => {
 		const res = await db.updateMany({
@@ -204,4 +204,4 @@ module.exports = {
 		return db.deleteMany({});
 	},
 
-}
+};

@@ -3,8 +3,7 @@
 const deleteFlags = require(__dirname+'/../../models/forms/deleteflags.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -23,7 +22,7 @@ module.exports = {
 				'title': 'Bad request',
 				'errors': errors,
 				'redirect': `/${req.params.board}/manage/assets.html`
-			})
+			});
 		}
 
 		for (let i = 0; i < req.body.checkedflags.length; i++) {
@@ -32,7 +31,7 @@ module.exports = {
 					'title': 'Bad request',
 					'message': 'Invalid flags selected',
 					'redirect': `/${req.params.board}/manage/assets.html`
-				})
+				});
 			}
 		}
 
@@ -45,4 +44,4 @@ module.exports = {
 
 	}
 
-}
+};

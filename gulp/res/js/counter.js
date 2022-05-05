@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+window.addEventListener('DOMContentLoaded', () => {
 
 	const messageBox = document.getElementById('message');
 
@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			}
 		};
 
-		const updateLength = function(e) {
+		const updateLength = function() {
 			if (messageBox.value.length > maxLength) {
 				messageBox.value = messageBox.value.substring(0,maxLength);
 			}

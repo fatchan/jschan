@@ -22,7 +22,7 @@ const Mongo = require(__dirname+'/../db/db.js')
 		Object.values(schedules).forEach(sc => {
 			sc.update();
 		});
-	})
+	});
 
 	//update board stats and homepage task, use cron and bull for proper timing
 	require(__dirname+'/../lib/build/queue.js').push({

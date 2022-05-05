@@ -1,7 +1,6 @@
 'use strict';
 
 const Posts = require(__dirname+'/../../db/posts.js')
-	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, { buildBoard } = require(__dirname+'/../../lib/build/tasks.js');
 
 module.exports = async (req, res, next) => {
@@ -28,4 +27,4 @@ module.exports = async (req, res, next) => {
 		return res.send(html);
 	}
 
-}
+};

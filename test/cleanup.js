@@ -67,7 +67,7 @@ module.exports = () => describe('delete tests and cleanup', () => {
 			body: params,
 		});
 		expect(response.ok).toBe(true);
-		await new Promise((resolve) => { setTimeout(resolve, 1000) }); //wait for async builds
+		await new Promise((resolve) => { setTimeout(resolve, 1000); }); //wait for async builds
 		const response2 = await fetch('http://localhost/test/catalog.json').then(res => res.json());
 		expect(response2.length).toBe(0);
 	});
@@ -86,7 +86,7 @@ module.exports = () => describe('delete tests and cleanup', () => {
 			body: params,
 			redirect: 'manual',
 		});
-		expect([200, 404]).toContain(response.status)
+		expect([200, 404]).toContain(response.status);
 	});
 
 	test('delete test account',  async () => {
@@ -102,7 +102,7 @@ module.exports = () => describe('delete tests and cleanup', () => {
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 

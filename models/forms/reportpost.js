@@ -12,7 +12,7 @@ module.exports = (req, res) => {
 			'cloak': res.locals.ip.cloak,
 			'raw': res.locals.ip.raw
 		}
-	}
+	};
 
 	const ret = {
 		message: `Reported ${res.locals.posts.length} post${res.locals.posts.length > 1 ? 's' : ''}`,
@@ -22,7 +22,7 @@ module.exports = (req, res) => {
 	const query = {
 		'$each': [report],
 		'$slice': -5 //limit number of  reports
-	}
+	};
 	if (req.body.global_report) {
 		ret.query['globalreports'] = query;
 	}
@@ -32,4 +32,4 @@ module.exports = (req, res) => {
 
 	return ret;
 
-}
+};

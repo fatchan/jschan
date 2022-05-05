@@ -3,9 +3,7 @@
 const uploadBanners = require(__dirname+'/../../models/forms/uploadbanners.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
-	, config = require(__dirname+'/../../lib/misc/config.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, config = require(__dirname+'/../../lib/misc/config.js');
 
 module.exports = {
 
@@ -25,21 +23,21 @@ module.exports = {
 		}
 
 		if (errors.length > 0) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': 'Bad request',
 				'errors': errors,
 				'redirect': `/${req.params.board}/manage/assets.html`
-			})
+			});
 		}
 
 		try {
 			await uploadBanners(req, res, next);
 		} catch (err) {
-			await deleteTempFiles(req).catch(e => console.error);
+			await deleteTempFiles(req).catch(console.error);
 			return next(err);
 		}
 
 	}
 
-}
+};

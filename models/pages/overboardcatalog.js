@@ -26,7 +26,7 @@ module.exports = async (req, res, next) => {
 			.map(b => b.trim())
 			.filter(b => b)
 			.sort();
-		addBoards = [...new Set(addList)]
+		addBoards = [...new Set(addList)];
 		removeBoardsSet = new Set(removeList);
 		removeBoards = [...removeBoardsSet];
 		includeDefault = req.query.include_default === 'true';
@@ -41,7 +41,7 @@ module.exports = async (req, res, next) => {
 	let threads = (await cache.get(`catalog:${cacheQueryString}`)) || [];
 	if (!threads || threads.length === 0) {
 		try {
-			let listedBoards = []
+			let listedBoards = [];
 			if (includeDefault) {
 				listedBoards = await Boards.getLocalListed();
 			}
@@ -56,7 +56,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	res
-	.set('Cache-Control', 'public, max-age=60')
+		.set('Cache-Control', 'public, max-age=60');
 
 	if (req.path === '/catalog.json') {
 		res.json({
@@ -74,5 +74,4 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-
-}
+};

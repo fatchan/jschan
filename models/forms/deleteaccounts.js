@@ -4,7 +4,7 @@ const { Accounts, Boards } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, cache = require(__dirname+'/../../lib/redis/redis.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const accountsWithBoards = await Accounts.getOwnedOrStaffBoards(req.body.checkedaccounts);
 	if (accountsWithBoards.length > 0) {
@@ -22,7 +22,7 @@ module.exports = async (req, res, next) => {
 						},
 						'update': {
 							'$unset': {
-								[`staff.${acc.username}`]: "",
+								[`staff.${acc.username}`]: '',
 							}
 						}
 					}
@@ -43,7 +43,7 @@ module.exports = async (req, res, next) => {
 								'owner': null,
 							},
 							'$unset': {
-								[`staff.${acc.username}`]: "",
+								[`staff.${acc.username}`]: '',
 							},
 						}
 					}
@@ -68,4 +68,4 @@ module.exports = async (req, res, next) => {
 		'redirect': '/globalmanage/accounts.html'
 	});
 
-}
+};

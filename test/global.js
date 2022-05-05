@@ -44,7 +44,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 		const newsPage = await fetch('http://localhost/globalmanage/news.html', {
 			headers: {
@@ -70,7 +70,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 		const newsPage = await fetch('http://localhost/globalmanage/news.html', {
 			headers: {
@@ -94,7 +94,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -114,7 +114,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.status).toBe(302);
 	});
 
@@ -132,7 +132,7 @@ testing 123`
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 

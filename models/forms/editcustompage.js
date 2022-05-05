@@ -8,7 +8,7 @@ const { CustomPages } = require(__dirname+'/../../db/')
 	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const message = prepareMarkdown(req.body.message, false);
 	const { message: markdownPage } = await messageHandler(message, null, null, res.locals.permissions);
@@ -21,7 +21,7 @@ module.exports = async (req, res, next) => {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'error': 'Custom page does not exist',
-			'redirect': req.headers.referer || '/${req.params.board}/manage/custompages.html'
+			'redirect': req.headers.referer || `/${req.params.board}/manage/custompages.html`
 		});
 	}
 
@@ -55,4 +55,4 @@ module.exports = async (req, res, next) => {
 		'redirect': `/${req.params.board}/manage/custompages.html`,
 	});
 
-}
+};

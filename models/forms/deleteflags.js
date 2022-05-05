@@ -6,7 +6,7 @@ const { remove } = require('fs-extra')
 	, { Boards } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
@@ -39,7 +39,7 @@ module.exports = async (req, res, next) => {
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
-		'message': `Deleted flags.`,
+		'message': 'Deleted flags.',
 		'redirect': redirect
 	});
-}
+};

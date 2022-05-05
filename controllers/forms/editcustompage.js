@@ -4,8 +4,7 @@ const editCustomPage = require(__dirname+'/../../models/forms/editcustompage.js'
 	, { CustomPages } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js')
+	, { checkSchema, lengthBody, numberBody, existsBody } = require(__dirname+'/../../lib/input/schema.js')
 	, config = require(__dirname+'/../../lib/misc/config.js');
 
 module.exports = {
@@ -59,4 +58,4 @@ module.exports = {
 
 	}
 
-}
+};

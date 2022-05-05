@@ -3,11 +3,9 @@
 const alphaNumericRegex = require(__dirname+'/../../lib/input/alphanumregex.js')
 	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, config = require(__dirname+'/../../lib/misc/config.js')
 	, registerAccount = require(__dirname+'/../../models/forms/register.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -34,7 +32,7 @@ module.exports = {
 				'title': 'Bad request',
 				'errors': errors,
 				'redirect': '/register.html'
-			})
+			});
 		}
 
 		try {
@@ -45,4 +43,4 @@ module.exports = {
 
 	}
 
-}
+};

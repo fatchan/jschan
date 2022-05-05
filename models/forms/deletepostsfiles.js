@@ -27,13 +27,13 @@ module.exports = async (posts, unlinkOnly) => {
 
 	if (files.length == 0) {
 		return {
-			 message: 'No files found'
+			message: 'No files found'
 		};
 	}
 
 	if (files.length > 0) {
 		const fileNames = files.map(x => x.filename);
-        await Files.decrement(fileNames);
+		await Files.decrement(fileNames);
 		if (pruneImmediately) {
 			await pruneFiles(fileNames);
 		}
@@ -60,4 +60,4 @@ module.exports = async (posts, unlinkOnly) => {
 		};
 	}
 
-}
+};

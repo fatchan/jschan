@@ -2,7 +2,7 @@
 
 const secrets = require(__dirname+'/../configs/secrets.js')
 	, { MongoClient, ObjectId, Int32, Binary } = require('mongodb')
-	, { migrateVersion } = require(__dirname+'/../package.json')
+	, { migrateVersion } = require(__dirname+'/../package.json');
 
 module.exports = {
 
@@ -38,4 +38,4 @@ module.exports = {
 
 	Binary,
 
-}
+};

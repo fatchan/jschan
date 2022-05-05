@@ -2,8 +2,7 @@
 
 const hashIp = require(__dirname+'/../lib/misc/haship.js')
 	, { createCIDR, parse } = require('ip6addr')
-	, config = require(__dirname+'/../lib/misc/config.js')
-    , Permission = require(__dirname+'/../lib/permission/permission.js')
+	, Permission = require(__dirname+'/../lib/permission/permission.js')
 	, Permissions = require(__dirname+'/../lib/permission/permissions.js')
 	, { Binary } = require('mongodb');
 
@@ -67,7 +66,7 @@ module.exports = async(db, redis) => {
 			'posts': null,
 		}
 	});
-	console.log('clearing reports')
+	console.log('clearing reports');
 	await db.collection('posts').updateMany({}, {
 		'$set':{
 			'reports': [],
@@ -83,7 +82,7 @@ module.exports = async(db, redis) => {
 // PERMISSIONS UPDATE
 	console.log('making db changes for permissions update');
 	console.log('setting new permission templates to replace old permission "levels"');
-	const ANON = new Permission()
+	const ANON = new Permission();
 	ANON.setAll([
 		Permissions.USE_MARKDOWN_PINKTEXT, Permissions.USE_MARKDOWN_GREENTEXT, Permissions.USE_MARKDOWN_BOLD, 
 		Permissions.USE_MARKDOWN_UNDERLINE, Permissions.USE_MARKDOWN_STRIKETHROUGH, Permissions.USE_MARKDOWN_TITLE, 
@@ -92,11 +91,11 @@ module.exports = async(db, redis) => {
 		Permissions.USE_MARKDOWN_DICE, Permissions.USE_MARKDOWN_FORTUNE, Permissions.CREATE_BOARD, 
 		Permissions.CREATE_ACCOUNT
 	]);
-	const BOARD_STAFF = new Permission(ANON.base64)
+	const BOARD_STAFF = new Permission(ANON.base64);
 	BOARD_STAFF.setAll([
 		Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS, 
 	]);
-	const BOARD_OWNER = new Permission(BOARD_STAFF.base64)
+	const BOARD_OWNER = new Permission(BOARD_STAFF.base64);
 	BOARD_OWNER.setAll([
 		Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF, Permissions.MANAGE_BOARD_CUSTOMISATION, 
 		Permissions.MANAGE_BOARD_SETTINGS,
@@ -142,7 +141,7 @@ module.exports = async(db, redis) => {
 	console.log('renaming account modBoards->staffBoards');
 	await db.collection('accounts').updateMany({}, {
 		'$unset': {
-			'authLevel': "",
+			'authLevel': '',
 		},
 		'$rename': {
 			'modBoards': 'staffBoards',
@@ -175,7 +174,7 @@ module.exports = async(db, redis) => {
 		staffObject[board.owner] = {
 			permissions: Binary(BOARD_OWNER.array),
 			addedDate: new Date(),
-		}
+		};
 		return {
 			'updateOne': {
 				'filter': {

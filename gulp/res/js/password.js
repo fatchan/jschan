@@ -1,3 +1,4 @@
+/* globals setDefaultLocalStorage setLocalStorage */
 const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/';
 const generatePassword = () => {
 	try {
@@ -9,15 +10,15 @@ const generatePassword = () => {
 	} catch (e) { /* Uncaught DOMException: The operation failed for an operation-specific reason, thanks firefox */ }
 	return new Array(20)
 		.fill(null)
-		.map(x => charset[Math.floor(Math.random()*charset.length)])
+		.map(() => charset[Math.floor(Math.random()*charset.length)])
 		.join('');
-}
+};
 
 setDefaultLocalStorage('postpassword', generatePassword());
 
 class syncedField {
 	constructor(selector, key, oneWay=false, persistent=true) {
-		this.fields = []
+		this.fields = [];
 		this.selector = selector;
 		this.key = key;
 		this.oneWay = oneWay;
@@ -41,11 +42,11 @@ class syncedField {
 		}
 
 		if (this.oneWay) {
-			settingsFields[0].addEventListener('input', (e) => { this.update(e) }, false);
+			settingsFields[0].addEventListener('input', (e) => { this.update(e); }, false);
 		}
 		for (let field of this.fields) {
-			!this.oneWay && field.addEventListener('input', (e) => { this.update(e) }, false);
-			field.form && field.form.addEventListener('reset', (e) => {
+			!this.oneWay && field.addEventListener('input', (e) => { this.update(e); }, false);
+			field.form && field.form.addEventListener('reset', () => {
 				setTimeout(() => {
 					this.set(localStorage.getItem(this.key));
 				}, 0);
@@ -65,12 +66,11 @@ class syncedField {
 			field.value = val;
 			if (field.tagName === 'SELECT') {
 				//necessary to set selectedIndex here?
-				const changeEvent = new Event("change");
+				const changeEvent = new Event('change');
 				field.dispatchEvent(changeEvent);
 			}
 		}
 	}
-
 
 }
 

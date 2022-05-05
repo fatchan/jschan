@@ -65,7 +65,7 @@ module.exports = () => describe('Test post modactions', () => {
 		}
 		await Promise.all(promises); //wait for all posts to go through
 		jest.setTimeout(5*1000); //back to normal timeout
-		await new Promise((resolve) => { setTimeout(resolve, 1000) }); //wait for async builds
+		await new Promise((resolve) => { setTimeout(resolve, 1000); }); //wait for async builds
 	});
 
 	test('bumplock, lock, and sticky 5 random posts from /test/',  async () => {
@@ -89,7 +89,7 @@ module.exports = () => describe('Test post modactions', () => {
 			body: params,
 		});
 		expect(response.ok).toBe(true);
-		await new Promise((resolve) => { setTimeout(resolve, 1000) }); //wait for async builds
+		await new Promise((resolve) => { setTimeout(resolve, 1000); }); //wait for async builds
 	});
 
 	test('remove the bumplock, lock and sticky on any threads',  async () => {
@@ -524,7 +524,7 @@ int main() {...}
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -566,7 +566,7 @@ int main() {...}
 		expect(response.ok).toBe(true);
 	});
 
-	let banId
+	let banId;
 	test('deny ban appeal',  async () => {
 		const banPage = await fetch('http://localhost/globalmanage/bans.html', {
 			headers: {
@@ -589,7 +589,7 @@ int main() {...}
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -618,7 +618,7 @@ int main() {...}
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -637,7 +637,7 @@ int main() {...}
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 
@@ -655,7 +655,7 @@ int main() {...}
 			method: 'POST',
 			body: params,
 			redirect: 'manual',
-		})
+		});
 		expect(response.ok).toBe(true);
 	});
 

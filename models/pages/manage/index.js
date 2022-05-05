@@ -15,4 +15,4 @@ module.exports = {
 	editCustomPage: require(__dirname+'/editcustompage.js'),
 	manageStaff: require(__dirname+'/staff.js'),
 	editStaff: require(__dirname+'/editstaff.js'),
-}
+};

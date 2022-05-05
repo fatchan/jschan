@@ -2,9 +2,9 @@
 
 const { News } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
+	, buildQueue = require(__dirname+'/../../lib/build/queue.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	await News.deleteMany(req.body.checkednews);
 
@@ -19,4 +19,4 @@ module.exports = async (req, res, next) => {
 		'redirect': '/globalmanage/news.html'
 	});
 
-}
+};

@@ -98,7 +98,7 @@ module.exports = {
 				//array for overboard
 				threadsQuery['board'] = {
 					'$in': board
-				}
+				};
 			} else {
 				threadsQuery['board'] = board;
 			}
@@ -110,15 +110,15 @@ module.exports = {
 			threadsSort = {
 				'sticky': -1,
 				'bumped': -1
-			}
+			};
 		}
 		const threads = await db.find(threadsQuery, {
 			projection
 		})
-		.sort(threadsSort)
-		.skip(10*(page-1))
-		.limit(limit)
-		.toArray();
+			.sort(threadsSort)
+			.skip(10*(page-1))
+			.limit(limit)
+			.toArray();
 
 		// add last n posts in reverse order to preview
 		await Promise.all(threads.map(async thread => {
@@ -142,14 +142,14 @@ module.exports = {
 				thread.previewbacklinks = [];
 				if (previewRepliesLimit > 0) {
 					const firstPreviewId = thread.replies[0].postId;
-					const latestPreviewBacklink = thread.backlinks.find(bl => { return bl.postId >= firstPreviewId });
+					const latestPreviewBacklink = thread.backlinks.find(bl => { return bl.postId >= firstPreviewId; });
 					if (latestPreviewBacklink != null) {
 						const latestPreviewIndex = thread.backlinks.map(bl => bl.postId).indexOf(latestPreviewBacklink.postId);
 						thread.previewbacklinks = thread.backlinks.slice(latestPreviewIndex);
 					}
 				}
 				//count omitted image and posts
-				const numPreviewFiles = replies.reduce((acc, post) => { return acc + post.files.length }, 0);
+				const numPreviewFiles = replies.reduce((acc, post) => { return acc + post.files.length; }, 0);
 				thread.omittedfiles = thread.replyfiles - numPreviewFiles;
 				thread.omittedposts = thread.replyposts - replies.length;
 			}
@@ -245,7 +245,7 @@ module.exports = {
 				projection,
 			}),
 			module.exports.getThreadPosts(board, id, projection)
-		])
+		]);
 		// attach the replies to the thread post
 		if (thread && replies) {
 			thread.replies = replies;
@@ -287,13 +287,13 @@ module.exports = {
 
 		const threadsQuery = {
 			thread: null,
-		}
+		};
 		if (board) {
 			if (Array.isArray(board)) {
 				//array for overboard catalog
 				threadsQuery['board'] = {
 					'$in': board
-				}
+				};
 			} else {
 				threadsQuery['board'] = board;
 			}
@@ -305,7 +305,7 @@ module.exports = {
 			threadsSort = {
 				'sticky': -1,
 				'bumped': -1
-			}
+			};
 		}
 		// get all threads for catalog
 		return db.find(threadsQuery, {
@@ -317,9 +317,9 @@ module.exports = {
 				'globalreports': 0,
 			}
 		})
-		.limit(catalogLimit)
-		.sort(threadsSort)
-		.toArray();
+			.limit(catalogLimit)
+			.sort(threadsSort)
+			.toArray();
 
 	},
 
@@ -352,12 +352,12 @@ module.exports = {
 		const query = {
 			'board': board,
 			'messagehash': hash,
-		}
+		};
 		if (thread !== null) {
 			query['$or'] = [
 				{ 'thread': thread },
 				{ 'postId': thread },
-			]
+			];
 		}
 		const postWithExistingMessage = await db.findOne(query, {
 			'projection': {
@@ -373,12 +373,12 @@ module.exports = {
 			'files.hash': {
 				'$in': hashes
 			}
-		}
+		};
 		if (thread !== null) {
 			query['$or'] = [
 				{ 'thread': thread },
 				{ 'postId': thread },
-			]
+			];
 		}
 		const postWithExistingFiles = await db.findOne(query, {
 			'projection': {
@@ -446,7 +446,7 @@ module.exports = {
 		}).toArray();
 	},
 
-	insertOne: async (board, data, thread, tor) => {
+	insertOne: async (board, data, thread, anonymizer) => {
 		const sageEmail = data.email === 'sage';
 		const bumpLocked = thread && thread.bumplocked === 1;
 		const bumpLimited = thread && thread.replyposts >= board.settings.bumpLimit;
@@ -456,24 +456,24 @@ module.exports = {
 			const filter = {
 				'postId': data.thread,
 				'board': board._id
-			}
+			};
 			//update thread reply and reply file count
 			const query = {
 				'$inc': {
 					'replyposts': 1,
 					'replyfiles': data.files.length
 				}
-			}
+			};
 			//if post email is not sage, and thread not bumplocked, set bump date
 			
 			if (!saged) {
 				query['$set'] = {
 					'bumped': new Date()
-				}
+				};
 			} else if (bumpLimited && !cyclic) {
 				query['$set'] = {
 					'bumplocked': 1
-				}
+				};
 			}
 			//update the thread
 			await db.updateOne(filter, query);
@@ -489,7 +489,7 @@ module.exports = {
 		//insert the post itself
 		const postMongoId = await db.insertOne(data).then(result => result.insertedId); //_id of post
 
-		const statsIp = (config.get.statsCountAnonymizers === false && res.locals.anonymizer === true) ? null : data.ip.cloak;
+		const statsIp = (config.get.statsCountAnonymizers === false && anonymizer === true) ? null : data.ip.cloak;
 		await Stats.updateOne(board._id, statsIp, data.thread == null);
 
 		//add backlinks to the posts this post quotes
@@ -536,7 +536,7 @@ module.exports = {
 			'globalreports.0': {
 				'$exists': true
 			}
-		})
+		});
 	},
 
 	getReports: async (board, permissions) => {
@@ -572,7 +572,7 @@ module.exports = {
 			'globalreports.0': {
 				'$exists': true
 			}
-		}
+		};
 		if (ip != null) {
 			if (isIP(ip)) {
 				query['$or'] = [
@@ -733,8 +733,8 @@ module.exports = {
 		}).sort({
 			'replyposts': -1
 		})
-		.limit(hotThreadsLimit)
-		.toArray();
+			.limit(hotThreadsLimit)
+			.toArray();
 	},
 
 	deleteMany: (ids) => {
@@ -745,7 +745,7 @@ module.exports = {
 		});
 	},
 
-	deleteAll: (board) => {
+	deleteAll: () => {
 		return db.deleteMany();
 	},
 
@@ -793,4 +793,4 @@ module.exports = {
 		next();
 	}
 
-}
+};

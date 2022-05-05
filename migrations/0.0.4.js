@@ -9,7 +9,7 @@ module.exports = async(db, redis) => {
 			'settings.webring': 'settings.unlistedWebring'
 		}
 	});
-	console.log('upadting renamed fields to proper values')
+	console.log('upadting renamed fields to proper values');
 	await db.collection('boards').updateMany({
 		'settings.lockMode': true,
 	}, {
@@ -32,5 +32,5 @@ module.exports = async(db, redis) => {
 		}
 	});
 	console.log('clearing boards cache');
-	await redis.deletePattern('board:*')
+	await redis.deletePattern('board:*');
 };

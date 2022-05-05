@@ -6,8 +6,7 @@ const removeBans = require(__dirname+'/../../models/forms/removebans.js')
 	, editBans = require(__dirname+'/../../models/forms/editbans.js')
 	, upgradeBans = require(__dirname+'/../../models/forms/upgradebans.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody, numberBody, inArrayBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -73,4 +72,4 @@ module.exports = {
 
 	}
 
-}
+};

@@ -1,6 +1,27 @@
 image: node:latest
 
-javascript:
+# Cache modules in between jobs
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - .npm/
+
+before_script:
+  - npm ci --cache .npm --prefer-offline
+
+# Code linting
+eslint:
+  stage: .pre
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  script:
+    - 'npm i -g eslint-cli'
+    - 'npm i eslint --save-dev'
+    - 'node node_modules/eslint/bin/eslint.js ./'
+  allow_failure: true
+
+# Run tests
+unit-tests:
   stage: test
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
@@ -8,9 +29,11 @@ javascript:
     - 'npm install'
     - 'npm install jest -g'
     - 'cp configs/secrets.js.example configs/secrets.js'
-    - 'jest --ci --reporters=default --reporters=jest-junit --testPathIgnorePatterns=./test/'
+    - 'jest --ci --verbose --reporters=default --reporters=jest-junit --testPathIgnorePatterns=./test/ --collectCoverage --coverageReporters text --coverageReporters cobertura'
   artifacts:
     when: always
     reports:
       junit:
         - junit.xml
+      cobertura: coverage/cobertura-coverage.xml
+  #TODO: stage: integration-tests

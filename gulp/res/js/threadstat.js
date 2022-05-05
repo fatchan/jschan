@@ -1,4 +1,5 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+/* globals isThread */
+window.addEventListener('DOMContentLoaded', () => {
 
 	const statsElem = document.getElementById('threadstats');
 	const idElems = Array.from(document.getElementsByClassName('user-id'));
@@ -7,7 +8,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	const incrementMap = (id) => {
 		idMap.set(id, idMap.get(id)+1 || 1);
-	}
+	};
 
 	const updateCounts = (updateId) => {
 		for (let i = 0; i < idElems.length; i++) {
@@ -17,7 +18,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			idElems[i].setAttribute('data-count', ` (${count})`);
 			idElems[i].setAttribute('title', `Double click to highlight (${count})`);
 		}
-	}
+	};
 
 	const toggleHighlightPosts = (e) => {
 		const id = e.target.innerText;
@@ -27,7 +28,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		for (let i = 0; i < idPosts.length; i++) {
 			idPosts[i].classList[isHighlighted ? 'remove' : 'add']('highlighted');
 		}
-	}
+	};
 
 	//map count of starting ids
 	for (let i = 0; i < idElems.length; i++) {

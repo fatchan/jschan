@@ -1,8 +1,9 @@
-window.addEventListener('DOMContentLoaded', (event) => {
+/* globals setLocalStorage isCatalog */
+window.addEventListener('DOMContentLoaded', () => {
 
 	const actionFooter = document.querySelector('#action-menu');
 	if (actionFooter) {
-		actionFooter.addEventListener('click', (e) => {
+		actionFooter.addEventListener('click', () => {
 			if (!actionFooter.parentElement.classList.contains('floatactions')) {
 				actionFooter.scrollIntoView();
 			} else {
@@ -13,7 +14,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 	const volumeSetting = document.getElementById('volume-setting');
 	let volumeLevel = localStorage.getItem('volume');
-	const changeVolume = (change) => {
+	const changeVolume = () => {
 		volumeLevel = volumeSetting.value;
 		const allMedia = document.querySelectorAll('audio,video');
 		for (let i = 0; i < allMedia.length; i++) {
@@ -21,27 +22,27 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		}
 		console.log('adjusting default volume', volumeLevel);
 		setLocalStorage('volume', volumeLevel);
-	}
+	};
 	volumeSetting.value = volumeLevel;
 	volumeSetting.addEventListener('change', changeVolume, false);
 
 	const loopSetting = document.getElementById('loop-setting');
 	let loopEnabled = localStorage.getItem('loop') == 'true';
-	const toggleLoop = (change) => {
+	const toggleLoop = () => {
 		loopEnabled = loopSetting.checked;
 		console.log('toggling video/audio looping', loopEnabled);
 		setLocalStorage('loop', loopEnabled);
-	}
+	};
 	loopSetting.checked = loopEnabled;
 	loopSetting.addEventListener('change', toggleLoop, false);
 
 	const imageloadingbarsSetting = document.getElementById('imageloadingbars-setting');
 	let imageloadingbarsEnabled = localStorage.getItem('imageloadingbars') == 'true';
-	const toggleImageloadingbars = (change) => {
+	const toggleImageloadingbars = () => {
 		imageloadingbarsEnabled = imageloadingbarsSetting.checked;
 		console.log('toggling video/audio imageloadingbarsing', imageloadingbarsEnabled);
 		setLocalStorage('imageloadingbars', imageloadingbarsEnabled);
-	}
+	};
 	imageloadingbarsSetting.checked = imageloadingbarsEnabled;
 	imageloadingbarsSetting.addEventListener('change', toggleImageloadingbars, false);
 
@@ -74,7 +75,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 					expanded.play();
 				}
 			}
-		}
+		};
 
 		const expand = function(e) {
 			if (e.target.nodeName === 'VIDEO' || e.target.nodeName === 'AUDIO') {
@@ -106,7 +107,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 							fileAnchor.style.minHeight = fileAnchor.offsetHeight+'px';
 						}
 						thumbElement.style.opacity = '0.5';
-						thumbElement.style.cursor = 'wait'
+						thumbElement.style.cursor = 'wait';
 						if (localStorage.getItem('imageloadingbars') == 'true') {
 							const request = new XMLHttpRequest();
 							request.onprogress = (e) => {
@@ -118,10 +119,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
 									pfs.setAttribute('data-loading', progress);
 									pfs.style = `--data-loading: ${progressWidth}px`;
 								}
-							}
+							};
 							expandedElement = document.createElement('img');
 							source = expandedElement;
-							const loaded = function(e) {
+							const loaded = function() {
 								pfs.removeAttribute('data-loading');
 								pfs.removeAttribute('style');
 								const blob = this.response;
@@ -130,9 +131,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 									thumbElement.style.cursor = '';
 									fileAnchor.appendChild(expandedElement);
 									toggle(thumbElement, expandedElement, fileName, pfs);
-								}
+								};
 								source.src = window.URL.createObjectURL(blob);
-							}
+							};
 							request.onload = loaded;
 							request.responseType = 'blob';
 							request.open('GET', fileHref, true);
@@ -145,12 +146,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 								thumbElement.style.cursor = '';
 								fileAnchor.appendChild(expandedElement);
 								toggle(thumbElement, expandedElement, fileName, pfs);
-							}
+							};
 							source.src = fileHref;
 						}
 						break;
 					case 'video':
-					case 'audio':
+					case 'audio': {
 						e.preventDefault();
 						expandedElement = document.createElement(type);
 						const closeSpan = document.createElement('span');
@@ -190,9 +191,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 						fileAnchor.appendChild(closeSpan);
 						toggle(thumbElement, expandedElement, fileName, pfs);
 						source.src = fileHref;
-						break;
-					deault:
 						return;
+					}
 				}
 			}
 		};
@@ -201,7 +201,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 			for (let i = 0; i < t.length; i++) {
 				t[i].addEventListener('click', expand, false);
 			}
-		}
+		};
 
 		addExpandEvent(thumbs);
 

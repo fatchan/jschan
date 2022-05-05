@@ -6,8 +6,7 @@ const { Posts } = require(__dirname+'/../../db/')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
 	, actionChecker = require(__dirname+'/../../lib/input/actionchecker.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -48,7 +47,7 @@ module.exports = {
 				'title': 'Bad request',
 				'errors': errors,
 				'redirect': '/globalmanage/reports.html'
-			})
+			});
 		}
 
 		//get posts with global ids only
@@ -62,7 +61,7 @@ module.exports = {
 				'title': 'Not found',
 				'error': 'Selected posts not found',
 				'redirect': '/globalmanage/reports.html'
-			})
+			});
 		}
 
 		if (req.body.edit) {
@@ -83,4 +82,4 @@ module.exports = {
 
 	}
 
-}
+};

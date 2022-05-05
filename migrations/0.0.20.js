@@ -1,9 +1,9 @@
 'use strict';
 
 const fs = require('fs-extra')
-	, uploadDirectory = require(__dirname+'/../lib/file/uploaddirectory.js')
+	, uploadDirectory = require(__dirname+'/../lib/file/uploaddirectory.js');
 
-module.exports = async(db, redis) => {
+module.exports = async(db) => {
 	console.log('put thumbs in a folder');
 	await fs.ensureDir(`${uploadDirectory}/file/thumb/`);
 	await db.collection('files')

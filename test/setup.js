@@ -40,7 +40,7 @@ module.exports = () => describe('login and create test board', () => {
 			body: params,
 			redirect: 'manual',
 		});
-		expect([200, 404]).toContain(response.status)
+		expect([200, 404]).toContain(response.status);
 	});
 
 	test('create test board',  async () => {
@@ -56,7 +56,7 @@ module.exports = () => describe('login and create test board', () => {
 			body: params,
 			redirect: 'manual',
 		});
-		expect([302, 409]).toContain(response.status)
+		expect([302, 409]).toContain(response.status);
 	});
 
 	test('change global settings, disable antispam',  async () => {

@@ -3,7 +3,7 @@
 const fs = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../lib/file/uploaddirectory.js');
 
-module.exports = async(db, redis) => {
+module.exports = async(db) => {
 	console.log('adding flags customisation');
 	await fs.ensureDir(`${uploadDirectory}/flag/`);
 	const template = require(__dirname+'/../configs/template.js.example');

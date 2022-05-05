@@ -3,8 +3,7 @@
 const deleteAccounts = require(__dirname+'/../../models/forms/deleteaccounts.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody, arrayInBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { checkSchema, lengthBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -23,7 +22,7 @@ module.exports = {
 				'title': 'Bad request',
 				'errors': errors,
 				'redirect': '/globalmanage/accounts.html'
-			})
+			});
 		}
 
 		try {
@@ -34,4 +33,4 @@ module.exports = {
 
 	}
 
-}
+};

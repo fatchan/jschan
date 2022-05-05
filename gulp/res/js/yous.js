@@ -1,3 +1,4 @@
+/* globals setLocalStorage */
 let notificationsEnabled = localStorage.getItem('notifications') == 'true';
 let notificationYousOnly = localStorage.getItem('notification-yous-only') == 'true';
 let yousEnabled = localStorage.getItem('yous-setting') == 'true';
@@ -10,7 +11,7 @@ const toggleQuotes = (quotes, state) => {
 	quotes.forEach(q => {
 		q.classList[state?'add':'remove']('you');
 	});
-}
+};
 
 const toggleOne = (you, state) => {
 	const [board, postId] = you.split('-');
@@ -25,12 +26,12 @@ const toggleOne = (you, state) => {
 	if (quotes) {
 		toggleQuotes(quotes, state);
 	}
-}
+};
 
 const formatNotificationOptions = (postData) => {
 	const notificationOptions = {
 		body: postData.nomarkup ? postData.nomarkup.substring(0,100) : ''
-	}
+	};
 	if (postData.files.length > 0) {
 		//tries to use a thumb instead of full files, will be lighter on bandwidth and able to show for video and some audio too
 		let notificationImageURL;
@@ -54,7 +55,7 @@ const formatNotificationOptions = (postData) => {
 		}
 	}
 	return notificationOptions;
-}
+};
 
 if (yousEnabled) {
 	toggleAllYous(yousEnabled);
@@ -62,7 +63,7 @@ if (yousEnabled) {
 
 const handleNewYous = (e) => {
 	const postYou = `${e.detail.json.board}-${e.detail.postId}`;
-	const isYou = window.myPostId == e.detail.postId
+	const isYou = window.myPostId == e.detail.postId;
 	if (isYou) {
 		//save you
 		savedYous.add(postYou);
@@ -84,7 +85,7 @@ const handleNewYous = (e) => {
 		.filter(y => savedYous.has(y))
 		.map(y => {
 			const [board, postId] = y.split('-');
-			return e.detail.post.querySelectorAll(`.quote[href^="/${board}/"][href$="#${postId}"]`)
+			return e.detail.post.querySelectorAll(`.quote[href^="/${board}/"][href$="#${postId}"]`);
 		}).reduce((acc, array) => {
 			return acc.concat(Array.from(array)); //handle duplicate of same quote
 		}, []);
@@ -105,7 +106,7 @@ const handleNewYous = (e) => {
 			console.log('failed to send notification', e);
 		}
 	}
-}
+};
 
 window.addEventListener('addPost', handleNewYous, false);
 window.addEventListener('updatePostMessage', handleNewYous, false);
@@ -123,7 +124,7 @@ window.addEventListener('settingsReady', () => {
 		yousList.value = '';
 		setLocalStorage('yous', '[]');
 		console.log('cleared yous');
-	}
+	};
 	yousListClearButton.addEventListener('click', clearYousList, false);
 
 	const yousSetting = document.getElementById('yous-setting');
@@ -132,7 +133,7 @@ window.addEventListener('settingsReady', () => {
 		setLocalStorage('yous-setting', yousEnabled);
 		toggleAllYous(yousEnabled);
 		console.log('toggling yous', yousEnabled);
-	}
+	};
 	yousSetting.checked = yousEnabled;
 	yousSetting.addEventListener('change', toggleYousSetting, false);
 
@@ -141,7 +142,7 @@ window.addEventListener('settingsReady', () => {
 		notificationYousOnly = !notificationYousOnly;
 		setLocalStorage('notification-yous-only', notificationYousOnly);
 		console.log('toggling notification only for yous', yousEnabled);
-	}
+	};
 	notificationYousOnlySetting.checked = notificationYousOnly;
 	notificationYousOnlySetting.addEventListener('change', toggleNotificationYousOnlySetting, false);
 
@@ -149,7 +150,7 @@ window.addEventListener('settingsReady', () => {
 	const toggleNotifications = async () => {
 		notificationsEnabled = !notificationsEnabled;
 		if (notificationsEnabled) {
-			const result = await Notification.requestPermission()
+			const result = await Notification.requestPermission();
 			if (result != 'granted') {
 				//user denied permission popup
 				notificationsEnabled = false;
@@ -159,7 +160,7 @@ window.addEventListener('settingsReady', () => {
 		}
 		console.log('toggling notifications', notificationsEnabled);
 		setLocalStorage('notifications', notificationsEnabled);
-	}
+	};
 	notificationSetting.checked = notificationsEnabled;
 	notificationSetting.addEventListener('change', toggleNotifications, false);
 

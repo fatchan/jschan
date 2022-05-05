@@ -16,4 +16,4 @@ module.exports = {
 	Modlogs: require(__dirname+'/modlogs.js'),
 	Bypass: require(__dirname+'/bypass.js'),
 
-}
+};

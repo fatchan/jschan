@@ -1,6 +1,6 @@
 {
   "name": "jschan",
-  "version": "0.6.6",
+  "version": "0.7.0",
   "migrateVersion": "0.6.5",
   "description": "",
   "main": "server.js",
@@ -53,6 +53,8 @@
     "unix-crypt-td-js": "^1.1.4"
   },
   "devDependencies": {
+    "eslint": "^8.14.0",
+    "eslint-plugin-jest": "^26.1.5",
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
     "jest-junit": "^13.1.0"
@@ -60,7 +62,7 @@
   "scripts": {
     "test": "npm run test:unit",
     "test:unit": "jest --verbose --testPathIgnorePatterns=./test/",
-    "test:coverage": "jest --verbose --testPathIgnorePatterns=./test/ --collectCoverage",
+    "test:coverage": "jest --verbose --testPathIgnorePatterns=./test/ --collectCoverage --coverageReporters cobertura",
     "test:integration": "jest --verbose --testPathPattern=./test/",
     "test:all": "jest --verbose",
     "setup": "npm i -g pm2 gulp && gulp generate-favicon && gulp default",

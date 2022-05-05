@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 	, redis = require(__dirname+'/../../lib/redis/redis.js')
 	, { Accounts } = require(__dirname+'/../../db/');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const username = req.body.username.toLowerCase();
 	const password = req.body.password;
@@ -47,4 +47,4 @@ module.exports = async (req, res, next) => {
 		'redirect': '/login.html'
 	});
 
-}
+};

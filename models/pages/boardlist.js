@@ -62,7 +62,7 @@ module.exports = async (req, res, next) => {
 		if (req.query.search && search) {
 			filter = {
 				'search': search
-			}
+			};
 		}
 
 		try {
@@ -81,14 +81,14 @@ module.exports = async (req, res, next) => {
 				boards[i].lastPostTimestamp = {
 					text: relativeString(now, lastPostDate),
 					color: relativeColor(now, lastPostDate)
-				}
+				};
 			}
 		}
 		cache.set(`boardlist:${cacheQueryString}`, { boards, maxPage }, 60);
 	}
 
 	res
-	.set('Cache-Control', 'public, max-age=60');
+		.set('Cache-Control', 'public, max-age=60');
 
 	if (req.path === '/boards.json') {
 		res.json({
@@ -110,4 +110,4 @@ module.exports = async (req, res, next) => {
 		});
 	}
 
-}
+};

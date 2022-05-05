@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
 			res.locals.permissions.get(Permissions.MANAGE_GLOBAL_GENERAL) ? Posts.getGlobalReportsCount() : 0,
 		]));
 	} catch (err) {
-		return next(err)
+		return next(err);
 	}
 
 	if (boardReportCounts && boardReportCounts.length > 0) {
@@ -46,14 +46,14 @@ module.exports = async (req, res, next) => {
 	}
 
 	res
-	.set('Cache-Control', 'private, max-age=5')
-	.render('account', {
-		csrf: req.csrfToken(),
-		user: res.locals.user,
-		permissions: res.locals.permissions,
-		boardPermissions,
-		boardReportCountMap,
-		globalReportCount,
-	});
+		.set('Cache-Control', 'private, max-age=5')
+		.render('account', {
+			csrf: req.csrfToken(),
+			user: res.locals.user,
+			permissions: res.locals.permissions,
+			boardPermissions,
+			boardReportCountMap,
+			globalReportCount,
+		});
 
-}
+};

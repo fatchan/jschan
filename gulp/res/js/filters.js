@@ -1,3 +1,4 @@
+/* globals setLocalStorage filters isCatalog captchaController threadWatcher */
 const getFiltersFromLocalStorage = () => {
 	const savedFilters = JSON.parse(localStorage.getItem('filters1'));
 	return savedFilters.reduce((acc, filter) => {
@@ -27,16 +28,16 @@ let { single, fid, fname, ftrip, fsub, fmsg, fnamer, ftripr, fsubr, fmsgr } = ge
 let filtersTable;
 const updateFiltersTable = () => {
 	[...filtersTable.children].slice(3).forEach(row => row.remove());
-	filtersTable.insertAdjacentHTML('beforeend', filters({filterArr: JSON.parse(localStorage.getItem('filters1'))}))
+	filtersTable.insertAdjacentHTML('beforeend', filters({filterArr: JSON.parse(localStorage.getItem('filters1'))}));
 	const closeButtons = filtersTable.querySelectorAll('.close');
 	for (let elem of closeButtons) {
 		let { type: closeType, data: closeData } = elem.dataset;
 		if (closeType.endsWith('r')) {
 			closeData = new RegExp(closeData, 'i');
 		}
-		elem.addEventListener('click', () => { toggleFilter(closeType, closeData) });
+		elem.addEventListener('click', () => { toggleFilter(closeType, closeData); });
 	}
-}
+};
 
 const updateSavedFilters = () => {
 	setLocalStorage('filters1', JSON.stringify([
@@ -67,8 +68,8 @@ const anyFilterMatches = (filteringPost) => {
 		|| fnamer.some(r => r.test(name))
 		|| ftripr.some(r => r.test(tripcode))
 		|| fsubr.some(r => r.test(subject))
-		|| fmsgr.some(r => r.test(message))
-}
+		|| fmsgr.some(r => r.test(message));
+};
 
 const togglePostsHidden = (posts, state, single) => {
 	for (let elem of posts) {
@@ -99,16 +100,17 @@ const getPostsByMessage = (data, regex=false) => {
 	const postMessages = [...document.querySelectorAll(`.${isCatalog ? 'catalog-tile': 'post-container' } .post-message`)];
 	const matchingMessages = postMessages.filter(m => (regex ? data.test(m.textContent) : m.textContent.includes(data)));
 	return matchingMessages.map(m => m.closest(`.${isCatalog ? 'catalog-tile': 'post-container' }`));
-}
+};
 
 const getPostsByFilter = (type, data) => {
 	let posts = [];
 	switch (type) {
-		case 'single':
+		case 'single': {
 			const [dataBoard, dataPostId] = data.split('-');
 			const singlePost = document.querySelector(`[data-board="${dataBoard}"][data-post-id="${dataPostId}"]`);
 			posts = singlePost ? [singlePost] : [];
 			break;
+		}
 		case 'fid':
 			posts = document.querySelectorAll(`[data-user-id="${data}"]`);
 			break;
@@ -197,7 +199,7 @@ const toggleFilter = (filterType, filterData, state) => {
 	setFilterState(filterType, filterData, state);
 	togglePostsHidden(posts, state, filterType === 'single');
 	updateSavedFilters();
-}
+};
 
 //i guess this works, lmfao and saves ton of time
 let actionForm, modalBg, moderatingPost;
@@ -215,7 +217,7 @@ const cancelModeratePost = (e) => {
 	modalBg.style.zIndex = 4;
 	actionForm.removeAttribute('open');
 	moderatingPost = null;
-}
+};
 const moderatePost = (postContainer) => {
 	moderatingPost = postContainer;
 	actionForm.classList.add('floatactions');
@@ -236,11 +238,11 @@ const moderatePost = (postContainer) => {
 	if (actionCaptcha) {
 		captchaController.loadCaptcha(actionCaptcha);
 	}
-}
+};
 
-const postMenuChange = function(e) {
+const postMenuChange = function() {
 	const postContainer = this.closest(isCatalog ? '.catalog-tile': '.post-container');
-	const postDataset = postContainer.dataset
+	const postDataset = postContainer.dataset;
 	const filterType = this.value;
 	const hiding = !postContainer.classList.contains('hidden');
 	this.value = '';
@@ -263,11 +265,12 @@ const postMenuChange = function(e) {
 			break;
 		case 'moderate':
 			return moderatePost(postContainer);
-		case 'watch':
+		case 'watch': {
 			const postMessage = postContainer.querySelector('.post-message');
-			const watcherSubject = (postDataset.subject || (postMessage && postMessage.textContent) || "No subject").substring(0, 25);
+			const watcherSubject = (postDataset.subject || (postMessage && postMessage.textContent) || 'No subject').substring(0, 25);
 			threadWatcher.add(postDataset.board, postDataset.postId, { subject: watcherSubject, unread: 0, updatedDate: new Date() });
 			return;
+		}
 	}
 	toggleFilter(filterType, filterData, hiding);
 };
@@ -332,7 +335,7 @@ window.addEventListener('updatePostMessage', function(e) {
 	}
 });
 
-window.addEventListener('settingsReady', function(e) {
+window.addEventListener('settingsReady', function() {
 
 	actionForm = document.getElementById('actionform');
 	if (actionForm) {
@@ -352,7 +355,7 @@ window.addEventListener('settingsReady', function(e) {
 		const val = isRegex ? new RegExp(filtersForm.elements.value.value, 'i') : filtersForm.elements.value.value;
 		console.log('adding filter', type, val);
 		toggleFilter(type, val, true);
-	})
+	});
 
 	const filterClearButton = document.getElementById('filters-clear');
 	const clearFilters = () => {
@@ -370,7 +373,7 @@ window.addEventListener('settingsReady', function(e) {
 		togglePostsHidden(document.querySelectorAll(`.${isCatalog ? 'catalog-tile': 'post-container' }`), false);
 		updateSavedFilters();
 		console.log('cleared hidden posts');
-	}
+	};
 	filterClearButton.addEventListener('click', clearFilters, false);
 
 });

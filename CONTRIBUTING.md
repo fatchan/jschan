@@ -23,13 +23,25 @@ Write clear commit messages. One line is fine for smaller changes, or multiple l
     > 
     > A paragraph describing what changed and its impact."
 
-## Coding conventions
+## Coding style
 
-Read the code to understand, but basically:
+  - Tab indentation
+    - Switch cases indented 1 level
+    - Member expressions indented 1 level
+    - Comment indentation ignored
+  - Unix linebreaks
+  - Single quotes
+  - Always include semicolon
 
-  * [standardjs](https://standardjs.com/) style for the most part, with some modifications.
-  * TAB for indentation.
-  * Please include comments.
+ESLint will enforce this (and pick up some other minor code issues). Run ESLint:
+
+```bash
+#whole project
+eslint ./
+
+#specific directory/file
+eslint /path/to/whatever
+```
 
 ## Running tests
 
@@ -53,6 +65,8 @@ npm run test:all
 #specific test(s)
 npm run test:all <filename|regex>
 ```
+
+Linting, code coverage and test results are reported in merge requests. Improvements to add tests and/or improve test coverage are welcomed.
 
 Thanks,
 Tom

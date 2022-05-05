@@ -1,3 +1,4 @@
+/* globals setLocalStorage setDefaultLocalStorage settings */
 const renderCSSLink = document.createElement('style');
 renderCSSLink.type = 'text/css';
 renderCSSLink.id = 'rendercss';
@@ -39,19 +40,19 @@ class CssToggle {
 			}
 		}
 	}
-};
+}
 
 //define the css
-const hidePostStubsCss = `.post-container.hidden, .catalog-tile.hidden { display: none;margin-top: -1.5em;height: 0; }`;
-const hideDeletedPostContentCss = `.post-container.marked[data-mark="Deleted"] .post-data { display: none; }`;
-const hideThumbnailsCss = `.file-thumb, .catalog-thumb { visibility: hidden !important; }`;
-const hideRecursiveCss = `.op.hidden ~ .anchor, .op.hidden ~ .post-container { display: none; }`;
-const heightUnlimitCss = `img, video { max-height: unset; }`;
-const crispCss = `img { image-rendering: crisp-edges; }`;
-const nonColorIdsCss = `.user-id { background: transparent none repeat scroll 0% 0% !important; border-color: transparent; text-shadow: none; color: var(--font-color); }`;
-const alwaysShowSpoilersCss = `.spoiler { color: var(--font-color) !important; background: transparent none repeat scroll 0% 0%; outline: 1px solid black; cursor: auto; }`;
-const smoothScrollingCss = `html { scroll-behavior: smooth; }`;
-const threadWatcherCss = `#threadwatcher { display: flex; }`;
+const hidePostStubsCss = '.post-container.hidden, .catalog-tile.hidden { display: none;margin-top: -1.5em;height: 0; }';
+const hideDeletedPostContentCss = '.post-container.marked[data-mark="Deleted"] .post-data { display: none; }';
+const hideThumbnailsCss = '.file-thumb, .catalog-thumb { visibility: hidden !important; }';
+const hideRecursiveCss = '.op.hidden ~ .anchor, .op.hidden ~ .post-container { display: none; }';
+const heightUnlimitCss = 'img, video { max-height: unset; }';
+const crispCss = 'img { image-rendering: crisp-edges; }';
+const nonColorIdsCss = '.user-id { background: transparent none repeat scroll 0% 0% !important; border-color: transparent; text-shadow: none; color: var(--font-color); }';
+const alwaysShowSpoilersCss = '.spoiler { color: var(--font-color) !important; background: transparent none repeat scroll 0% 0%; outline: 1px solid black; cursor: auto; }';
+const smoothScrollingCss = 'html { scroll-behavior: smooth; }';
+const threadWatcherCss = '#threadwatcher { display: flex; }';
 
 //make classes with css
 new CssToggle('hiderecursive-setting', 'hiderecursive', settings.hideRecursive, hideRecursiveCss);

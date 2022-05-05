@@ -1,3 +1,4 @@
+/* globals setLocalStorage Dragable threadwatcher watchedthread */
 class ThreadWatcher {
 
 	init() {
@@ -63,7 +64,7 @@ class ThreadWatcher {
 		if (json && json.replies) {
 			const newData = {
 				...data,
-				subject: (json.subject || json.nomarkup || "No subject").substring(0, 25),
+				subject: (json.subject || json.nomarkup || 'No subject').substring(0, 25),
 			};
 			const updatedDate = new Date(data.updatedDate);
 			const newPosts = json.replies.filter(r => new Date(r.date) > updatedDate);
@@ -245,7 +246,7 @@ class ThreadWatcher {
 		const watchedThreadElem = this.threadWatcher.lastChild;
 		const closeButton = watchedThreadElem.querySelector('.close');
 		//when x button clicked, call remove
-		closeButton.addEventListener('click', e => this.remove(board, postId));
+		closeButton.addEventListener('click', () => this.remove(board, postId));
 	}
 
 	//delete the actual row from the watcher

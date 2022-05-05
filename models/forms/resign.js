@@ -3,7 +3,7 @@
 const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const moderatesBoard = res.locals.user.staffBoards.includes(req.body.board);
 	const ownsBoard = res.locals.user.ownedBoards.includes(req.body.board);
@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
 		return dynamicResponse(req, res, 400, 'message', {
 			'title': 'Bad request',
 			'message': 'You do not own or moderate that board',
-			'redirect': `/account.html`
+			'redirect': '/account.html'
 		});
 	}
 
@@ -31,7 +31,7 @@ module.exports = async (req, res, next) => {
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
 		'message': `Resigned from ${ownsBoard ? 'owner' : 'staff'} position on /${req.body.board}/`,
-		'redirect': `/account.html`
+		'redirect': '/account.html'
 	});
 
-}
+};

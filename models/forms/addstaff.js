@@ -4,7 +4,7 @@ const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	await Promise.all([
 		Accounts.addStaffBoard([req.body.username], res.locals.board._id),
@@ -17,4 +17,4 @@ module.exports = async (req, res, next) => {
 		'redirect': `/${req.params.board}/manage/staff.html`,
 	});
 
-}
+};

@@ -12,8 +12,8 @@ module.exports = {
 		return db.find({}).sort({
 			'_id': -1
 		})
-		.limit(limit)
-		.toArray();
+			.limit(limit)
+			.toArray();
 	},
 
 	findOne: (id) => {
@@ -44,11 +44,11 @@ module.exports = {
 			'_id': {
 				'$in': ids
 			}
-		})
+		});
 	},
 
 	deleteAll: () => {
 		return db.deleteMany({});
 	},
 
-}
+};

@@ -1,7 +1,5 @@
 'use strict';
 
-const fs = require('fs-extra');
-
 module.exports = async(db, redis) => {
 	console.log('moving globalsettings from redis into mongodb');
 	const oldSettings = await redis.get('globalsettings');

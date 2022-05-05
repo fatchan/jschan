@@ -2,7 +2,7 @@
 
 const { Bans } = require(__dirname+'/../../db/');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req) => {
 
 	const nReturned = await Bans.upgrade(req.params.board, req.body.checkedbans, req.body.upgrade)
 		.then(explain => {
@@ -14,4 +14,4 @@ module.exports = async (req, res, next) => {
 
 	return nReturned;
 
-}
+};

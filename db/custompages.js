@@ -14,8 +14,8 @@ module.exports = {
 		}).sort({
 			'_id': -1
 		})
-		.limit(limit)
-		.toArray();
+			.limit(limit)
+			.toArray();
 	},
 
 	//browsing board
@@ -80,4 +80,4 @@ module.exports = {
 		return db.deleteMany({});
 	},
 
-}
+};

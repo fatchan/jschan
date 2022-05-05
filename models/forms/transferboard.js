@@ -4,7 +4,7 @@ const { Boards, Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
 
 	const newOwner = res.locals.newOwner;
 
@@ -38,4 +38,4 @@ module.exports = async (req, res, next) => {
 		'redirect': `/${req.params.board}/index.html`
 	});
 
-}
+};
