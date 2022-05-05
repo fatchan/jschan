@@ -191,8 +191,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
-const hoverCacheList = document.getElementById('hovercachelist-setting');
+let hoverCacheList;
 window.addEventListener('settingsReady', function() {
+	hoverCacheList = document.getElementById('hovercachelist-setting');
 	hoverCacheList.value = Object.keys(localStorage).filter(k => k.startsWith('hovercache'));
 	const hoverCacheListClearButton = document.getElementById('hovercachelist-clear');
 	const clearHoverCacheList = () => {
