@@ -15,7 +15,7 @@ block content
 					pre.no-m-p
 						| The site administrator should edit views/pages/home.pug, then run "pm2 reload all" and "gulp html" to customise this page.
 	if recentNews && recentNews.length > 0
-		.table-container.flex-center.mv-5
+		.table-container.flex-center.mv-10
 			table.newstable
 				tr
 					th(colspan=3) Latest News
@@ -29,7 +29,7 @@ block content
 							- const newsDate = new Date(post.date);
 							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
 	if hotThreads && hotThreads.length > 0
-		.table-container.flex-center.mv-5
+		.table-container.flex-center.mv-10
 			table#hotposts
 				tr(colspan=3) 
 				each post, i in hotThreads
