@@ -95,10 +95,10 @@ if (!validHosts.some(h => h === location.hostname)) {
 
 if ((location.hostname === 'cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion'
 		|| location.hostname === 'www.cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion')
-	&& location.pathname !== '/brave.html') {
-	if (!crypto.subtle) {
-		location = '/problem.html';
-	} else if (navigator.brave != null) {
+		&& !(location.pathname === '/problem.html' || location.pathname === '/brave.html')) {
+	if (navigator.brave != null) {
 		location = '/brave.html'; //send them to the gulag
+	} else if (!crypto.subtle) {
+		location = '/problem.html';
 	}
 }
