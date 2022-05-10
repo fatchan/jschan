@@ -1,64 +1,77 @@
-#selected-flag {
-	image-rendering: crisp-edges;
-	image-rendering: pixelated;
-	-ms-interpolation-mode: nearest-neighbor;
-}
+/* Subtle animation for smooth color change on mouseover some things */
 .catalog-tile, .post-container {
     transition: background-color 80ms, border-color 80ms;
 }
 a {
     transition: color 100ms;
 }
+
+/* First column of table width capped to 150px */
 table.boardtable th:nth-child(1) {
 	min-width: 150px;
 }
+
+/* Slimmer footer */
 .footer {
 	line-height: 1.5em;
 }
-.corner-logo {
-	background: right bottom / contain no-repeat url("/file/mascotcorner.png")!important;
-}
+
+/* Make the "aa" Shift-JIS art use the non-antialised font, because it looks better imo */
 .aa {
 	font-family: Mona, "MS Pgothic", "MS P繧ｴ繧ｷ繝�け", IPAMonaPGothic, "IPA 繝｢繝翫� P繧ｴ繧ｷ繝�け", submona !important;
+}
+
+/* Set size of custom images added on homepage and for mobile */
+.corner-logo {
+	background: right bottom / contain no-repeat url("/file/mascotcorner.png")!important;
 }
 @media only screen and (max-width: 500px) {
 	.corner-logo {
 		background-size: 75px;
 	}
 }
+
+/* Style for special anti-spam on email shown on faq */
 .obscuremail::after {
 	content: "@";
 }
+
+/* Style for the custom phishing-warning class added to phishing domain/mirrors when js enabled */
 .phishing-warning {
 	top: 38px;
 	background: darkred;
 }
+
+/* Make the custom "more" section i njs settings have an arrow for affordance */
 .more {
 	display: list-item;
 }
+
+/* Rounded and increased border on modals, floating actions and settings */
 #settingsmodal, .floatactions[open], .modal {
 	padding: 10px;
 	border: 3px solid var(--darken);
 	border-radius: 5px;
 	box-shadow: 0 0 5px 0 #00000050;
 }
+/* And because of ^, slightly move the position of the "x" close button */
 #actionform #action-menu {
 	right: 10px;
 }
+
+/* More centered js setting modal */
 #settingsmodal {
 	top: 40%;
 	transform: translateY(-40%);
 	max-height: calc(100% - 10px);
 }
-@media only screen and (max-width:600px) {
-	#settingsmodal {
-		top: 5px;
-		transform: unset;
-	}
-}
-.post-data {
+
+/* A bit more padding on bottom of post data -- preference */
+.post-container.op .post-data {
 	padding-bottom: 2px;
 }
+
+/* Subtle animation for Admin capcode only */
 @keyframes glint {
 	0% {
 		background-position: -500%;
@@ -77,19 +90,9 @@ span.post-capcode[data-cap="## Admin"] {
 	-webkit-background-clip: text;
 }
 
-@media only screen and (max-width:600px) {
-
-	#tegaki {
-		grid-template-columns: 40px 1fr 0px;
-		grid-template-rows: 24px 1fr 325px;
-	}
-
-	#tegaki-ctrl-cnt {
-		grid-area: 3/2/3/2;
-		z-index: 1;
-	}
-
-	#tegaki-layers-wrap {
-		padding: 10px;
-	}
+/* Make custom flag selection preview pixelated */
+#selected-flag {
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+	-ms-interpolation-mode: nearest-neighbor;
 }

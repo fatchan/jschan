@@ -34,7 +34,7 @@ block content
 						| 💬 
 						a(href='/faq.html#irc') Join the IRC
 	if recentNews && recentNews.length > 0 || globalAnnouncement.markdown
-		.table-container.flex-center.mv-5
+		.table-container.flex-center.mv-10
 			table.newstable
 				tr
 					th(colspan=3) Latest News
@@ -53,7 +53,7 @@ block content
 							- const newsDate = new Date(post.date);
 							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
 	if hotThreads && hotThreads.length > 0
-		.table-container.flex-center.mv-5
+		.table-container.flex-center.mv-10
 			table#hotposts
 				tr(colspan=3) 
 				each post, i in hotThreads
