@@ -1,6 +1,6 @@
 {
   "name": "jschan",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "migrateVersion": "0.6.5",
   "description": "",
   "main": "server.js",
@@ -15,8 +15,8 @@
     "csurf": "^1.11.0",
     "del": "^6.0.0",
     "dnsbl": "^3.2.0",
-    "express": "^4.17.3",
-    "express-session": "^1.17.2",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
     "file-type": "^16.5.3",
     "fluent-ffmpeg": "^2.1.2",
     "form-data": "^4.0.0",
@@ -37,7 +37,7 @@
     "imghash": "^0.0.9",
     "ioredis": "^4.28.5",
     "ip6addr": "^0.2.5",
-    "mongodb": "^4.5.0",
+    "mongodb": "^4.6.0",
     "node-fetch": "^2.6.7",
     "path": "^0.12.7",
     "pm2": "^5.2.0",
@@ -46,18 +46,18 @@
     "sanitize-html": "^2.7.0",
     "saslprep": "^1.0.3",
     "semver": "^7.3.7",
-    "socket.io": "^4.4.1",
+    "socket.io": "^4.5.0",
     "socket.io-redis": "^6.1.1",
     "socks-proxy-agent": "^6.2.0",
     "uid-safe": "^2.1.5",
     "unix-crypt-td-js": "^1.1.4"
   },
   "devDependencies": {
-    "eslint": "^8.14.0",
-    "eslint-plugin-jest": "^26.1.5",
+    "eslint": "^8.15.0",
+    "eslint-plugin-jest": "^26.2.2",
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
-    "jest-junit": "^13.1.0"
+    "jest-junit": "^13.2.0"
   },
   "scripts": {
     "test": "npm run test:unit",
