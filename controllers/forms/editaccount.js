@@ -2,11 +2,10 @@
 
 const editAccount = require(__dirname+'/../../models/forms/editaccount.js')
 	, { Accounts } = require(__dirname+'/../../db/')
-	, alphaNumericRegex = require(__dirname+'/../../lib/input/alphanumregex.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js')
-	, { checkSchema, lengthBody, inArrayBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { alphaNumericRegex, checkSchema, lengthBody, inArrayBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
