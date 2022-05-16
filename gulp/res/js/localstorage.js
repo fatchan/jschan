@@ -38,28 +38,33 @@ function setDefaultLocalStorage(key, value) {
 }
 
 //todo: just make the localstorage name match the names of settings and put a loop
-setDefaultLocalStorage('volume', settings.defaultVolume);
-setDefaultLocalStorage('loop', settings.loop);
-setDefaultLocalStorage('imageloadingbars', settings.imageLoadingBars);
-setDefaultLocalStorage('live', settings.live);
-setDefaultLocalStorage('scroll', settings.scrollToPosts);
-setDefaultLocalStorage('localtime', settings.localTime);
-setDefaultLocalStorage('relative', settings.relativeTime);
-setDefaultLocalStorage('24hour', settings.hour24Time);
-setDefaultLocalStorage('notifications', settings.notificationsEnabled);
-setDefaultLocalStorage('notification-yous-only', settings.notificationsYousOnly);
-setDefaultLocalStorage('yous-setting', settings.showYous);
-setDefaultLocalStorage('threadwatcher', settings.threadWatcher);
-setDefaultLocalStorage('threadwatcher-minimise', false);
-setDefaultLocalStorage('disableboardcss', false);
-setDefaultLocalStorage('tegakiwidth-setting', settings.tegakiWidth);
-setDefaultLocalStorage('tegakiheight-setting', settings.tegakiHeight);
+const localStorageDefaults = {
+	'volume': settings.defaultVolume,
+	'loop': settings.loop,
+	'imageloadingbars': settings.imageLoadingBars,
+	'live': settings.live,
+	'scroll': settings.scrollToPosts,
+	'localtime': settings.localTime,
+	'relative': settings.relativeTime,
+	'24hour': settings.hour24Time,
+	'notifications': settings.notificationsEnabled,
+	'notification-yous-only': settings.notificationsYousOnly,
+	'yous-setting': settings.showYous,
+	'threadwatcher': settings.threadWatcher,
+	'threadwatcher-minimise': false,
+	'disableboardcss': false,
+	'tegakiwidth-setting': settings.tegakiWidth,
+	'tegakiheight-setting': settings.tegakiHeight,
+	'filters1': '[]',
+	'yous': '[]',
+	'watchlist': '[]',
+	'name': '',
+	'theme': 'default',
+	'codetheme': 'default',
+	'customcss': '',
+	'overboardsettings': '{"add":"","rem":"","include_default":true}',
+};
 
-setDefaultLocalStorage('filters1', '[]');
-setDefaultLocalStorage('yous', '[]');
-setDefaultLocalStorage('watchlist', '[]');
-setDefaultLocalStorage('name', '');
-setDefaultLocalStorage('theme', 'default');
-setDefaultLocalStorage('codetheme', 'default');
-setDefaultLocalStorage('customcss', '');
-setDefaultLocalStorage('overboardsettings', '{"add":"","rem":"","include_default":true}');
+Object
+	.entries(localStorageDefaults)
+	.map(entry => setDefaultLocalStorage(entry[0], entry[1]));
