@@ -28,7 +28,6 @@ module.exports = async (req, res, next) => {
 		}
 		const captchaCount = await Captchas.db.estimatedDocumentCount();
 		if (captchaCount >= captchaOptions.generateLimit) {
-			//TODOs: round robin sample? store in redis? only sample random with longer than x expiry?
 			const captchaSample = await Captchas.randomSample();
 			const randomCaptcha = captchaSample[0];
 			captchaId = randomCaptcha._id;

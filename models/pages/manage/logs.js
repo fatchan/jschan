@@ -21,7 +21,6 @@ module.exports = async (req, res, next) => {
 	if (uri) {
 		filter.board = uri;
 	}
-//todo fetch log entry by id and then get ip and hash
 
 	let logs, maxPage;
 	try {
@@ -43,7 +42,6 @@ module.exports = async (req, res, next) => {
 			uri,
 			permissions: res.locals.permissions,
 			viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
-//posterid here
 			logs,
 			page,
 			maxPage,

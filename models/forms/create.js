@@ -37,7 +37,6 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	//todo: add a settings for defaults
 	const newBoard = {
 		'_id': uri,
 		owner,
