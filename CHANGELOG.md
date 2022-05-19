@@ -1,4 +1,5 @@
 ### 0.7.1
+  - Show sticky level on hover (title property) of pin icon.
   - Small frontend and backend refactors
   - Update dependencies
 
