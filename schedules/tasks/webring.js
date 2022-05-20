@@ -29,15 +29,15 @@ module.exports = {
 			let rings = await Promise.all(toVisit.map(url => {
 				visited.set(url, (visited.get(url)||1));
 				return fetch(url, {
-					timeout: 20000,
+					timeout: 60000,
 					agent,
 					headers: {
-						'User-Agent':''
+						'User-Agent':'jschan webring (https://gitgud.io/fatchan/jschan/)'
 					}
 				})
 					.then(res => res.json())
 					.catch(e => {
-	//					console.warn('webring', url, 'failed:', e.type);
+						console.warn('webring', url, 'failed:', e.type);
 					});
 			}));
 			for (let i = 0; i < rings.length; i++) {
