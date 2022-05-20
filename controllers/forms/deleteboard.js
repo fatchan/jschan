@@ -3,9 +3,8 @@
 const { Boards } = require(__dirname+'/../../db/')
 	, deleteBoard = require(__dirname+'/../../models/forms/deleteboard.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, alphaNumericRegex = require(__dirname+'/../../lib/input/alphanumregex.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { alphaNumericRegex, checkSchema, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 

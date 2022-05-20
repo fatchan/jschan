@@ -73,8 +73,8 @@ block content
 								if !post.nomarkup && !post.subject
 									| >>>/#{post.board}/#{post.postId}
 						td
-							- const bumpDate = new Date(post.bumped);
-							time.right.reltime(datetime=bumpDate.toISOString()) #{bumpDate.toLocaleString(undefined, {hourCycle:'h23'})}
+							- const postedDate = new Date(post.date);
+							time.right.reltime(datetime=postedDate.toISOString()) #{postedDate.toLocaleString(undefined, {hourCycle:'h23'})}
 	if boards && boards.length > 0
 		+boardtable(true, false)
 			each board in boards

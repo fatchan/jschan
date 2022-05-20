@@ -1,3 +1,8 @@
+### 0.7.1
+  - Show sticky level on hover (title property) of pin icon.
+  - Small frontend and backend refactors
+  - Update dependencies
+
 ### 0.7.0
   - ESLint has been added as a dev dependency. This does "linting" to enforce code style and find and fix some mistakes.
   - Updated CONTRIBUTING.md information
