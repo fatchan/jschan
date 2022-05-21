@@ -347,12 +347,12 @@ async function css() {
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(paths.styles.dest));
 	return gulp.src([
-			`${paths.styles.src}/locals.css`,
-			`${paths.styles.src}/style.css`,
-			`${paths.styles.src}/tegaki.css`,
-			`${paths.styles.src}/*.css`,
-			`!${paths.styles.src}/nscaptcha.css`,
-		])
+		`${paths.styles.src}/locals.css`,
+		`${paths.styles.src}/style.css`,
+		`${paths.styles.src}/tegaki.css`,
+		`${paths.styles.src}/*.css`,
+		`!${paths.styles.src}/nscaptcha.css`,
+	])
 		.pipe(concat('style.css'))
 		.pipe(less())
 		.pipe(cleanCSS())

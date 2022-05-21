@@ -1,4 +1,3 @@
-const numCpus = require('os').cpus().length;
 module.exports = {
 	// Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
 	apps : [{
