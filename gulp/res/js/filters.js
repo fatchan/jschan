@@ -1,4 +1,4 @@
-/* globals setLocalStorage filters isCatalog captchaController threadWatcher */
+/* globals setLocalStorage pugfilters isCatalog captchaController threadWatcher */
 const getFiltersFromLocalStorage = () => {
 	const savedFilters = JSON.parse(localStorage.getItem('filters1'));
 	return savedFilters.reduce((acc, filter) => {
@@ -28,7 +28,7 @@ let { single, fid, fname, ftrip, fsub, fmsg, fnamer, ftripr, fsubr, fmsgr } = ge
 let filtersTable;
 const updateFiltersTable = () => {
 	[...filtersTable.children].slice(3).forEach(row => row.remove());
-	filtersTable.insertAdjacentHTML('beforeend', filters({filterArr: JSON.parse(localStorage.getItem('filters1'))}));
+	filtersTable.insertAdjacentHTML('beforeend', pugfilters({filterArr: JSON.parse(localStorage.getItem('filters1'))}));
 	const closeButtons = filtersTable.querySelectorAll('.close');
 	for (let elem of closeButtons) {
 		let { type: closeType, data: closeData } = elem.dataset;

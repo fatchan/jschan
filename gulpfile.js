@@ -428,6 +428,8 @@ async function custompages() {
 async function scripts() {
 	const { themes, codeThemes } = require(__dirname+'/lib/misc/themes.js');
 	try {
+
+		// compile some locals/variables needed from configs in fe scripts
 		const locals = `const themes = ['${themes.join('\', \'')}'];
 const codeThemes = ['${codeThemes.join('\', \'')}'];
 const captchaType = '${config.get.captchaOptions.type}';
@@ -437,21 +439,28 @@ const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
-		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
-		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
-		fs.writeFileSync('gulp/res/js/uploaditem.js', pug.compileFileClient(`${paths.pug.src}/includes/uploaditem.pug`, { compileDebug: false, debug: false, name: 'uploaditem' }));
-		fs.writeFileSync('gulp/res/js/pugfilters.js', pug.compileFileClient(`${paths.pug.src}/includes/filters.pug`, { compileDebug: false, debug: false, name: 'filters' }));
-		fs.writeFileSync('gulp/res/js/captchaformsection.js', pug.compileFileClient(`${paths.pug.src}/includes/captchaformsection.pug`, { compileDebug: false, debug: false, name: 'captchaformsection' }));
-		fs.writeFileSync('gulp/res/js/watchedthread.js', pug.compileFileClient(`${paths.pug.src}/includes/watchedthread.pug`, { compileDebug: false, debug: false, name: 'watchedthread' }));
-		fs.writeFileSync('gulp/res/js/threadwatcher.js', pug.compileFileClient(`${paths.pug.src}/includes/threadwatcher.pug`, { compileDebug: false, debug: false, name: 'threadwatcher' }));
+
+		//compile some pug client side functions
+		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher']
+			.forEach(templateName => {
+				const compilationOptions = { compileDebug: false, debug: false, name: templateName };
+				const compiledClient = pug.compileFileClient(`${paths.pug.src}/includes/${templateName}.pug`, compilationOptions);
+				fs.writeFileSync(`gulp/res/js/${templateName}.js`, compiledClient);
+			});
+
+		//symlink socket.io file
 		fs.symlinkSync(__dirname+'/node_modules/socket.io/client-dist/socket.io.min.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
+
 	} catch (e) {
+
+		//ignore EEXIST, probably the socket.io
 		if (e.code !== 'EEXIST') {
 			console.log(e);
 		}
+
 	}
 	gulp.src([
-			//put scripts in order for dependencies
+		//put scripts in order for dependencies
 		`${paths.scripts.src}/locals.js`,
 		`${paths.scripts.src}/localstorage.js`,
 		`${paths.scripts.src}/modal.js`,
