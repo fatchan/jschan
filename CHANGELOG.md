@@ -1,6 +1,5 @@
 ### 0.7.1
   - Show sticky level on hover (title property) of pin icon.
-  - Minor reduction in frontend script size by removing duplicated inline pug runtime functions.
   - Small frontend and backend refactors
   - Update dependencies
 

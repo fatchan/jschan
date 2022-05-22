@@ -6,6 +6,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 	, Permissions = require(__dirname+'/lib/permission/permissions.js')
 	, { hcaptcha, google } = require(__dirname+'/configs/secrets.js')
 	, gulp = require('gulp')
+//	, pugRuntime = require('pug-runtime/build')
 	, fs = require('fs-extra')
 	, semver = require('semver')
 	, uploadDirectory = require(__dirname+'/lib/file/uploaddirectory.js')
@@ -440,11 +441,19 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 
+//		const pugRuntimeFuncs = pugRuntime(['classes', 'style', 'attr', 'escape']);
+//		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);
+		
 		//compile some pug client side functions
 		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher']
 			.forEach(templateName => {
-				const compilationOptions = { compileDebug: false, debug: false, name: templateName };
-				const compiledClient = pug.compileFileClient(`${paths.pug.src}/includes/${templateName}.pug`, compilationOptions);
+				const compilationOptions = {
+					compileDebug: false,
+					debug: false,
+					name: templateName,
+					inlineRuntimeFunctions: true, //note pugRuntime above, will fix pending issue open on pug github
+				};
+				const compiledClient = pug.compileFileClient(`${paths.pug.src}includes/${templateName}.pug`, compilationOptions);
 				fs.writeFileSync(`gulp/res/js/${templateName}.js`, compiledClient);
 			});
 
@@ -459,10 +468,12 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		}
 
 	}
+
 	gulp.src([
 		//put scripts in order for dependencies
 		`${paths.scripts.src}/locals.js`,
 		`${paths.scripts.src}/localstorage.js`,
+		`${paths.scripts.src}/pugruntime.js`,
 		`${paths.scripts.src}/modal.js`,
 		`${paths.scripts.src}/pugfilters.js`,
 		`${paths.scripts.src}/post.js`,
@@ -486,6 +497,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		.pipe(concat('all.js'))
 		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
+
 	return gulp.src([
 		`${paths.scripts.src}/saveoverboard.js`,
 		`${paths.scripts.src}/hidefileinput.js`,
@@ -500,6 +512,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		.pipe(concat('render.js'))
 		.pipe(uglify({compress:false}))
 		.pipe(gulp.dest(paths.scripts.dest));
+
 }
 
 async function migrate() {
