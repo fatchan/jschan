@@ -473,7 +473,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		//put scripts in order for dependencies
 		`${paths.scripts.src}/locals.js`,
 		`${paths.scripts.src}/localstorage.js`,
-		`${paths.scripts.src}/pugruntime.js`,
+//		`${paths.scripts.src}/pugruntime.js`,
 		`${paths.scripts.src}/modal.js`,
 		`${paths.scripts.src}/pugfilters.js`,
 		`${paths.scripts.src}/post.js`,
