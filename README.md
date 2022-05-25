@@ -7,6 +7,8 @@ API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/)
 
 Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc.fatpeople.lol/#general)
 
+![screenshots](collage.gif "screenshots")
+
 ## Features
 - [x] User created boards ala infinity
 - [x] Multiple files per post
