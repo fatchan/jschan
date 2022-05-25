@@ -7,8 +7,6 @@ API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/)
 
 Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc.fatpeople.lol/#general)
 
-![screenshots](collage.gif "screenshots")
-
 ## Features
 - [x] User created boards ala infinity
 - [x] Multiple files per post
@@ -18,6 +16,8 @@ Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general) OR: [we
 - [x] Manage everything from the web panel
 - [x] Detailed accounts permissions system
 - [x] Works properly with anonymizer networks
+
+![screenshots](collage.gif "screenshots")
 
 ## License
 GNU AGPLv3, see [LICENSE](LICENSE).
