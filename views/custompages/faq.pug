@@ -69,7 +69,12 @@ block content
 					ul
 						li: a(href='https://gitgud.io/fatchan/jschan/-/issues' rel='nofollow' referrerpolicy='same-origin' target='_blank') Gitgud issue tracker
 						li #[a(href='ircs://irc.fatpeople.lol:6697/general') IRC] (#[a(href='https://irc.fatpeople.lol/') Webchat])
-						li #[a(href='https://getsession.org' rel='nofollow' referrerpolicy='same-origin' target='_blank') Session], ID (ONS name): #[span.mono fatchan]
+						li
+							| #[a(href='https://getsession.org' rel='nofollow' referrerpolicy='same-origin' target='_blank') Session], ID (ONS name): #[span.mono fatchan]
+							| 
+							details
+								summary QR Code
+								img(src='/file/session-qr.png' loading='lazy')
 						li Email contact#[span.obscuremail]fatpeople.lol
 					| For disclosure of sensitive issues such as those related to site security, please refer to 
 					a(href='/.well-known/security.txt') security.txt
