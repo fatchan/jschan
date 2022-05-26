@@ -1,12 +1,19 @@
 ### 0.7.1
   - Show sticky level on hover (title property) of pin icon.
-  - Small frontend and backend refactors
-  - Update dependencies
+  - Reduce frontend script size by ~10KB. More improvement to come in future updates.
+  - Change homepage hot threads to show creation date rather than last bumped.
+  - Fix incorrectly hiding "create board"/"register an account" on account page because of permission issue.
+  - Don't allow setting global limit for post password length below what the frontend automatically generates.
+  - Fix the generate-favicon gulp task not versioning correctly causing cache issues.
+  - Small frontend and backend refactors.
+  - Add screenshot image animated with light/dark theme in README.
+  - Publish some dependencies to npmjs for faster installation.
+  - Update dependencies.
 
 ### 0.7.0
   - ESLint has been added as a dev dependency. This does "linting" to enforce code style and find and fix some mistakes.
-  - Updated CONTRIBUTING.md information
-  - Bugfixes
+  - Updated CONTRIBUTING.md information.
+  - Bugfixes.
 
 ### 0.6.6
   - Post editing bugfix.
