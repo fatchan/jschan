@@ -64,9 +64,11 @@ module.exports = {
 			await deleteTempFiles(req).catch(console.error);
 			if (res.locals.numFiles > 0) {
 				const incedFiles = req.files.file.filter(x => x.inced === true && x.filename != null);
-				const incedFileNames = incedFiles.map(x => x.filename);
-				await Files.decrement(incedFileNames).catch(console.error);
-				await pruneFiles(incedFileNames);
+				if (incedFiles.length > 0) {
+					const incedFileNames = incedFiles.map(x => x.filename);
+					await Files.decrement(incedFileNames).catch(console.error);
+					await pruneFiles(incedFileNames);
+				}
 			}
 			return next(err);
 		}
