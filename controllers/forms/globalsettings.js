@@ -140,7 +140,7 @@ module.exports = {
 			{ result: numberBody(req.body.global_limits_field_length_name), expected: true, error: 'Global limit name field length must be a number' },
 			{ result: numberBody(req.body.global_limits_field_length_email), expected: true, error: 'Global limit email field length must be a number' },
 			{ result: numberBody(req.body.global_limits_field_length_subject), expected: true, error: 'Global limit subject field length must be a number' },
-			{ result: numberBody(req.body.global_limits_field_length_postpassword), expected: true, error: 'Global limit postpassword field length must be a number' },
+			{ result: numberBody(req.body.global_limits_field_length_postpassword, 20), expected: true, error: 'Global limit postpassword field length must be a number >=20' },
 			{ result: numberBody(req.body.global_limits_field_length_message), expected: true, error: 'Global limit message field length must be a number' },
 			{ result: numberBody(req.body.global_limits_field_length_report_reason), expected: true, error: 'Global limit report reason field length must be a number' },
 			{ result: numberBody(req.body.global_limits_field_length_ban_reason), expected: true, error: 'Global limit ban reason field length must be a number' },

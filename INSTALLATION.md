@@ -11,8 +11,6 @@
 - Graphicsmagick+Imagemagick - identify and thumbnail images, generate captchas
 - Ffmpeg - identify and thumbnail audio, video and gifs
 
------
-
 **0. Read the LICENSE**
 
 **1. Setup server with some basics**
@@ -147,13 +145,19 @@ $ pm2 restart ecosystem.config.js --env production
 $ pm2 logs
 ```
 
------
+## Help! Something didn't work!!!1!!1
+
+If you are sure you did everything correctly and you still can't get it working, you can ask for help in the IRC (linked in [README](README.md)).
+
+Be polite, ask [smart questions](http://www.catb.org/~esr/faqs/smart-questions.html), and keep in mind nobody is obliged to help you. 
 
 ## Advanced
 
 This is an optional section for people who know what they are doing.
 
 Here are some additional "advanced" things you can do with your jschan installation:
+
+<details><summary>Advanced</summary>
 
 #### Performance tweaks
 
@@ -181,8 +185,9 @@ sudo systemctl restart tor && sudo systemctl restart nginx
 
 **Don't use pm2/nodejs clustering:**
 
-By default, the "chan" pm2 process (the main web serving component of jschan backend) will be "clustered". In nodejs this means that you can have multiple processes e.g. sharing the same port, whereby the "master" will accept connections and pass the handlers over to each process in a round-robin fashion. The pm2 master process handles all this and allows for nice things like zero downtime reloads. The downside is that there is a slight overhead associated with having that single thread accept connections and delegate them to each worker. Instead, you can run each chan process on a sequential port, starting from the port in configs/secrets.js. Then you can configure multiple ip:ports in nginx to connect to each nodejs process independently. Note: pm2 reload will no longer give zero downtime restarts this way.
+By default, the "chan" pm2 process (the main web serving component of jschan backend) will be "clustered". In nodejs this means that you can have multiple processes e.g. sharing the same port, whereby the "master" will accept connections and pass the handlers over to each process in a round-robin fashion. The pm2 master process handles all this and allows for nice things like zero downtime reloads. The downside is that there is a slight overhead associated with having that single thread accept connections and delegate them to each worker. Instead, you can run each chan process on a sequential port, starting from the port in configs/secrets.js. Then you can configure multiple ip:ports in nginx to connect to each nodejs process independently. 
 
+**Note: pm2 reload will no longer give zero downtime restarts this way.**
 
 1. Change the `exec_mode` in ecosystem.config.js and some code in server.js for listening to the ports:
 
@@ -215,7 +220,7 @@ upstream chan {
 
 You will need to match the number of servers to however many chan processes you are running, which by default is (number of cpu threads/2)
 
-3. pm2 restart all && sudo systemctl restart nginx
+3. pm2 restart ecosystem.config.js --env production && sudo systemctl restart nginx
 
 #### Customisation
 
@@ -260,3 +265,5 @@ docker-compose up -d jschan
 
 docker-compose up -d nginx
 ```
+
+</details>

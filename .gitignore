@@ -26,6 +26,7 @@ gulp/res/js/captchaformsection.js
 gulp/res/js/pugfilters.js
 gulp/res/js/threadwatcher.js
 gulp/res/js/watchedthread.js
+gulp/res/js/pugruntime.js
 gulp/res/js/uploaditem.js
 gulp/res/js/socket.io.js
 

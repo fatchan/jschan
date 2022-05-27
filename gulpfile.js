@@ -6,6 +6,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 	, Permissions = require(__dirname+'/lib/permission/permissions.js')
 	, { hcaptcha, google } = require(__dirname+'/configs/secrets.js')
 	, gulp = require('gulp')
+//	, pugRuntime = require('pug-runtime/build')
 	, fs = require('fs-extra')
 	, semver = require('semver')
 	, uploadDirectory = require(__dirname+'/lib/file/uploaddirectory.js')
@@ -116,7 +117,7 @@ gulp.task('generate-favicon', function(done) {
 		},
 		versioning: {
 			paramName: 'v',
-			paramValue: 'xQ7mAqrA0R'
+			paramValue: commit
 		},
 		markupFile: FAVICON_DATA_FILE
 	}, function() {
@@ -428,6 +429,8 @@ async function custompages() {
 async function scripts() {
 	const { themes, codeThemes } = require(__dirname+'/lib/misc/themes.js');
 	try {
+
+		// compile some locals/variables needed from configs in fe scripts
 		const locals = `const themes = ['${themes.join('\', \'')}'];
 const codeThemes = ['${codeThemes.join('\', \'')}'];
 const captchaType = '${config.get.captchaOptions.type}';
@@ -437,23 +440,40 @@ const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
-		fs.writeFileSync('gulp/res/js/post.js', pug.compileFileClient(`${paths.pug.src}/includes/post.pug`, { compileDebug: false, debug: false, name: 'post' }));
-		fs.writeFileSync('gulp/res/js/modal.js', pug.compileFileClient(`${paths.pug.src}/includes/modal.pug`, { compileDebug: false, debug: false, name: 'modal' }));
-		fs.writeFileSync('gulp/res/js/uploaditem.js', pug.compileFileClient(`${paths.pug.src}/includes/uploaditem.pug`, { compileDebug: false, debug: false, name: 'uploaditem' }));
-		fs.writeFileSync('gulp/res/js/pugfilters.js', pug.compileFileClient(`${paths.pug.src}/includes/filters.pug`, { compileDebug: false, debug: false, name: 'filters' }));
-		fs.writeFileSync('gulp/res/js/captchaformsection.js', pug.compileFileClient(`${paths.pug.src}/includes/captchaformsection.pug`, { compileDebug: false, debug: false, name: 'captchaformsection' }));
-		fs.writeFileSync('gulp/res/js/watchedthread.js', pug.compileFileClient(`${paths.pug.src}/includes/watchedthread.pug`, { compileDebug: false, debug: false, name: 'watchedthread' }));
-		fs.writeFileSync('gulp/res/js/threadwatcher.js', pug.compileFileClient(`${paths.pug.src}/includes/threadwatcher.pug`, { compileDebug: false, debug: false, name: 'threadwatcher' }));
+
+//		const pugRuntimeFuncs = pugRuntime(['classes', 'style', 'attr', 'escape']);
+//		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);
+		
+		//compile some pug client side functions
+		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher']
+			.forEach(templateName => {
+				const compilationOptions = {
+					compileDebug: false,
+					debug: false,
+					name: templateName,
+					inlineRuntimeFunctions: true, //note pugRuntime above, will fix pending issue open on pug github
+				};
+				const compiledClient = pug.compileFileClient(`${paths.pug.src}includes/${templateName}.pug`, compilationOptions);
+				fs.writeFileSync(`gulp/res/js/${templateName}.js`, compiledClient);
+			});
+
+		//symlink socket.io file
 		fs.symlinkSync(__dirname+'/node_modules/socket.io/client-dist/socket.io.min.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
+
 	} catch (e) {
+
+		//ignore EEXIST, probably the socket.io
 		if (e.code !== 'EEXIST') {
 			console.log(e);
 		}
+
 	}
+
 	gulp.src([
-			//put scripts in order for dependencies
+		//put scripts in order for dependencies
 		`${paths.scripts.src}/locals.js`,
 		`${paths.scripts.src}/localstorage.js`,
+//		`${paths.scripts.src}/pugruntime.js`,
 		`${paths.scripts.src}/modal.js`,
 		`${paths.scripts.src}/pugfilters.js`,
 		`${paths.scripts.src}/post.js`,
@@ -475,8 +495,9 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`!${paths.scripts.src}/timezone.js`,
 	])
 		.pipe(concat('all.js'))
-		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:true}))
 		.pipe(gulp.dest(paths.scripts.dest));
+
 	return gulp.src([
 		`${paths.scripts.src}/saveoverboard.js`,
 		`${paths.scripts.src}/hidefileinput.js`,
@@ -489,8 +510,9 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`${paths.scripts.src}/time.js`,
 	])
 		.pipe(concat('render.js'))
-		.pipe(uglify({compress:false}))
+		.pipe(uglify({compress:true}))
 		.pipe(gulp.dest(paths.scripts.dest));
+
 }
 
 async function migrate() {
