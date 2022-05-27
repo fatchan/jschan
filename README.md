@@ -16,6 +16,8 @@ Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general) OR: [we
 - [x] Manage everything from the web panel
 - [x] Detailed accounts permissions system
 - [x] Works properly with anonymizer networks
+- [x] Looks good on all screen sizes
+- [x] Lots of themes, and auto light/dark theme
 
 ![screenshots](collage.gif "screenshots")
 
