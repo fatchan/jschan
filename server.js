@@ -111,7 +111,8 @@ const config = require(__dirname+'/lib/misc/config.js')
 	});
 
 	// catch any unhandled errors
-	app.use((err, req, res) => {
+	app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+
 		let errStatus = 500;
 		let errMessage = 'Internal Server Error';
 		if (err.code === 'EBADCSRFTOKEN') {
