@@ -3,7 +3,7 @@ case captchaType
 		div(class='g-recaptcha' data-sitekey=`${googleRecaptchaSiteKey}` data-theme='dark' data-size='compact' data-callback='recaptchaCallback')
 		noscript Please enable JavaScript to solve the captcha.
 	when 'hcaptcha'
-		div(class='h-captcha' data-sitekey=`${hcaptchaSiteKey}` data-theme='dark' data-size='compact' data-callback='recaptchaCallback')
+		div(class='h-captcha' data-sitekey=`${hcaptchaSiteKey}` data-theme='dark' data-size='normal' data-callback='recaptchaCallback')
 		noscript Please enable JavaScript to solve the captcha.
 	when 'text'
 		noscript.no-m-p
