@@ -198,7 +198,7 @@ module.exports = async (req, res) => {
 					deleteTempFiles(req).catch(console.error);
 					return dynamicResponse(req, res, 400, 'message', {
 						'title': 'Bad request',
-						'message': `Mime type mismatch for file "${req.files.file[i].name}"`,
+						'message': `Mime type ${req.files.file[i].realMimetype ? '"' + req.files.file[i].realMimetype + '" ' : ''}invalid for file "${req.files.file[i].name}"`,
 						'redirect': redirect
 					});
 				}

@@ -458,7 +458,6 @@ module.exports = async (req, res, next) => {
 		/*
 			Get a minimal data of the threads for each affected board, used to get the page of a thread later.
 			Using the proper ordering of threads, to account for sticky, bumplocks, etc.
-			Todo: this even worth it or just rebuilding all pages is quicker instead?
 		*/
 		const pageBounds = threadsEachBoard.reduce((acc, t) => {
 			if (!acc[t.board]) { acc[t.board] = { first: null, last: null }; }

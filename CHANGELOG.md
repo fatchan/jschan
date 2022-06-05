@@ -1,7 +1,23 @@
+### 0.7.1
+  - Show sticky level on hover (title property) of pin icon.
+  - Reduce frontend script size by ~10KB. More improvement to come in future updates.
+  - Change homepage hot threads to show creation date rather than last bumped.
+  - Don't allow setting global limit for post password length below what the frontend automatically generates.
+  - When strict mime validation is enabled, actually tell the user what the server thinks the mime is in the mismatch error message.
+  - Make IP pruning schedule also apply to modlogs.
+  - Fix incorrectly hiding "create board"/"register an account" on account page because of permission issue.
+  - Fix the nginx configuration script putting commas in CSP if you say yes to recaptcha/hcaptcha.
+  - Fix recaptcha/hcaptcha causing an issue for scrolling to new posts in some (chrom*) browsers.
+  - Fix the generate-favicon gulp task not versioning correctly causing cache issues.
+  - Small frontend and backend refactors.
+  - Add screenshot image animated with light/dark theme in README.
+  - Publish some dependencies to npmjs for faster installation.
+  - Update dependencies.
+
 ### 0.7.0
   - ESLint has been added as a dev dependency. This does "linting" to enforce code style and find and fix some mistakes.
-  - Updated CONTRIBUTING.md information
-  - Bugfixes
+  - Updated CONTRIBUTING.md information.
+  - Bugfixes.
 
 ### 0.6.6
   - Post editing bugfix.

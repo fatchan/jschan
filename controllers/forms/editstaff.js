@@ -1,10 +1,9 @@
 'use strict';
 
 const editStaff = require(__dirname+'/../../models/forms/editstaff.js')
-	, alphaNumericRegex = require(__dirname+'/../../lib/input/alphanumregex.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, { alphaNumericRegex, checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 

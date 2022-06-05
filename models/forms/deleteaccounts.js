@@ -49,7 +49,6 @@ module.exports = async (req, res) => {
 					}
 				});
 				cache.del(acc.ownedBoards.map(b => `board:${b}`));
-				//todo: use list of board with no owners for claims
 			}
 		}
 		await Boards.db.bulkWrite(bulkWrites);

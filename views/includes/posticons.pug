@@ -1,7 +1,7 @@
 if post.sticky || post.bumplocked || post.locked || post.cyclic
 	span.post-icons
 		if post.sticky
-			img(src='/file/sticky.png' height='14' width='14' title='Sticky')
+			img(src='/file/sticky.png' height='14' width='14' title=`Sticky (${post.sticky})`)
 			| 
 		if post.bumplocked
 			img(src='/file/bumplock.png' height='14' width='14' title='Bumplocked')
