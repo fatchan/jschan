@@ -592,6 +592,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 		if (window.myPostId == e.detail.postId) {
 			window.location.hash = e.detail.postId;
+			e.detail.post.previousSibling.scrollIntoView();
 		}
 	});
 

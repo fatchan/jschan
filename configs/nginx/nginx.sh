@@ -161,16 +161,16 @@ sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-
 
 if [ "$GOOGLE_CAPTCHA" == "y" ]; then
 	#add google captcha CSP exceptions
-	sudo sed -i "s|script-src|script-src https://www.google.com/recaptcha/, https://www.gstatic.com/recaptcha/ |g" /etc/nginx/snippets/*
-	sudo sed -i "s|frame-src|frame-src https://www.google.com/recaptcha/, https://recaptcha.google.com/recaptcha/ |g" /etc/nginx/snippets/*
+	sudo sed -i "s|script-src|script-src https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ |g" /etc/nginx/snippets/*
+	sudo sed -i "s|frame-src|frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/ |g" /etc/nginx/snippets/*
 fi
 
 if [ "$H_CAPTCHA" == "y" ]; then
 	#add hcaptcha CSP exceptions
-	sudo sed -i "s|script-src|script-src https://hcaptcha.com, https://*.hcaptcha.com |g" /etc/nginx/snippets/*
-	sudo sed -i "s|frame-src|frame-src https://hcaptcha.com, https://*.hcaptcha.com |g" /etc/nginx/snippets/*
-	sudo sed -i "s|style-src|style-src https://hcaptcha.com, https://*.hcaptcha.com |g" /etc/nginx/snippets/*
-	sudo sed -i "s|connect-src|connect-src https://hcaptcha.com, https://*.hcaptcha.com |g" /etc/nginx/snippets/*
+	sudo sed -i "s|script-src|script-src https://hcaptcha.com https://*.hcaptcha.com |g" /etc/nginx/snippets/*
+	sudo sed -i "s|frame-src|frame-src https://hcaptcha.com https://*.hcaptcha.com |g" /etc/nginx/snippets/*
+	sudo sed -i "s|style-src|style-src https://hcaptcha.com https://*.hcaptcha.com |g" /etc/nginx/snippets/*
+	sudo sed -i "s|connect-src|connect-src https://hcaptcha.com https://*.hcaptcha.com |g" /etc/nginx/snippets/*
 fi
 
 if [ "$ROBOTS_TXT_DISALLOW" == "y" ]; then
