@@ -10,7 +10,7 @@ form.form-post(action=`/forms/appeal`, enctype='application/x-www-form-urlencode
 				.row
 					.label Message
 					textarea(rows='5' name='message' required)
-				if captchaType === 'text'
+				if captchaOptions.type === 'text'
 					include ./captchasidelabel.pug
 				else
 					include ./captchafieldrow.pug

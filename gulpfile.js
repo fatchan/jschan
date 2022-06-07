@@ -414,11 +414,10 @@ async function custompages() {
 				defaultTheme: config.get.boardDefaults.theme,
 				defaultCodeTheme: config.get.boardDefaults.codeTheme,
 				postFilesSize: formatSize(config.get.globalLimits.postFilesSize.max),
-				captchaType: config.get.captchaOptions.type,
 				googleRecaptchaSiteKey: google.siteKey,
 				hcaptchaSiteKey: hcaptcha.siteKey,
-				captchaGridSize: config.get.captchaOptions.grid.size,
 				globalAnnouncement: config.get.globalAnnouncement,
+				captchaOptions: config.get.captchaOptions,
 				commit,
 				version,
 			}

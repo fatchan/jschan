@@ -19,7 +19,7 @@ block content
 			.row
 				.label Tags
 				textarea(name='tags' placeholder='Newline separated, max 10')
-			if captchaType === 'text'
+			if captchaOptions.type === 'text'
 				include ../includes/captchasidelabel.pug
 			else
 				include ../includes/captchafieldrow.pug

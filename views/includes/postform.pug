@@ -79,7 +79,7 @@ section.form-wrapper.flex-center
 							option(value=flag[0] data-src=`/flag/${board._id}/${flag[1]}`) #{flag[0]}
 					img.jsonly#selected-flag
 		if ((board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2) && !modview
-			if captchaType === 'text'
+			if captchaOptions.type === 'text'
 				include ./captchasidelabel.pug
 			else
 				include ./captchaexpand.pug

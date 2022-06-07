@@ -34,7 +34,15 @@ module.exports = {
 	captchaOptions: {
 		type: 'text',
 		generateLimit: 250,
+		text: {
+			wave: false,
+			line: false,
+			paint: false,
+		},
 		grid: {
+			falses: ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧'],
+			trues: ['●','■','♞','♦','▼','▲','♜','✦','♚','♞','♛','♝','♟','♣'],
+			question: 'Select the solid/filled icons',
 			size: 4,
 			imageSize: 120,
 			iconYOffset: 15,

@@ -12,7 +12,8 @@ module.exports = {
 
 	paramConverter: paramConverter({
 		timeFields: ['ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
-		trimFields: ['allowed_hosts', 'dnsbl_blacklists', 'other_mime_types', 'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links'],
+		trimFields: ['captcha_options_grid_question', 'captcha_options_grid_trues', 'captcha_options_grid_falses','allowed_hosts', 'dnsbl_blacklists', 'other_mime_types',
+			'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links'],
 		numberFields: ['filter_mode', 'auth_level',
 			'captcha_options_generate_limit', 'captcha_options_grid_size',  'captcha_options_grid_image_size', 'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max',
 			'captcha_options_distortion', 'captcha_options_grid_icon_y_offset', 'flood_timers_same_content_same_ip', 'flood_timers_same_content_any_ip', 'flood_timers_any_content_same_ip',
