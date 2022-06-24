@@ -1,3 +1,8 @@
+### 0.7.2
+  - Add playlist generating bookmarklet script to README
+  - Bugfix some captcha generations causing server error due to bad random number range.
+  - Fix UTF8-filenames not being decoded corectly (busboy made this not the default in a recent update).
+
 ### 0.7.1
   - Show sticky level on hover (title property) of pin icon.
   - Reduce frontend script size by ~10KB. More improvement to come in future updates.
