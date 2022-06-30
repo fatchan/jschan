@@ -4,6 +4,7 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, themeHelper = require(__dirname+'/../../lib/misc/themes.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
+	, { fontPaths } = require(__dirname+'/../../lib/misc/fonts.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody } = require(__dirname+'/../../lib/input/schema.js');
@@ -13,8 +14,8 @@ module.exports = {
 	paramConverter: paramConverter({
 		timeFields: ['ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
 		trimFields: ['captcha_options_grid_question', 'captcha_options_grid_trues', 'captcha_options_grid_falses','allowed_hosts', 'dnsbl_blacklists', 'other_mime_types',
-			'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links'],
-		numberFields: ['filter_mode', 'auth_level',
+			'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links', 'captcha_options_text_font'],
+		numberFields: ['filter_mode', 'auth_level', 'captcha_options_text_wave', 'captcha_options_text_paint', 'captcha_options_text_noise',
 			'captcha_options_generate_limit', 'captcha_options_grid_size',  'captcha_options_grid_image_size', 'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max',
 			'captcha_options_distortion', 'captcha_options_grid_icon_y_offset', 'flood_timers_same_content_same_ip', 'flood_timers_same_content_any_ip', 'flood_timers_any_content_same_ip',
 			'block_bypass_expire_after_uses', 'rate_limit_cost_captcha', 'rate_limit_cost_board_settings', 'rate_limit_cost_edit_post',
@@ -58,7 +59,7 @@ module.exports = {
 			}, expected: false, error: 'Extra mime types must be like type/subtype' },
 			{ result: () => {
 				if (req.body.archive_links) {
-					/* eslint-disable no-useless-escape */						
+					/* eslint-disable no-useless-escape */
 					return /https?\:\/\/[^\s<>\[\]{}|\\^]+%s[^\s<>\[\]{}|\\^]*/i.test(req.body.archive_links);
 				}
 				return false;
@@ -87,6 +88,10 @@ module.exports = {
 			{ result: numberBody(req.body.captcha_options_num_distorts_max, 0, 10), expected: true, error: 'Captcha options max distorts must be a number from 0-10' },
 			{ result: minmaxBody(req.body.captcha_options_num_distorts_min, req.body.captcha_options_num_distorts_max), expected: true, error: 'Captcha options distorts min must be less than max' },
 			{ result: numberBody(req.body.captcha_options_distortion, 0, 50), expected: true, error: 'Captcha options distortion must be a number from 0-50' },
+			{ result: inArrayBody(req.body.captcha_options_text_font, fontPaths), expected: true, error: 'Invalid captcha options text font' },
+			{ result: numberBody(req.body.captcha_options_text_wave, 0, 10), expected: true, error: 'Captcha options text wave effect strength must be a number form 0-10' },
+			{ result: numberBody(req.body.captcha_options_text_paint, 0, 10), expected: true, error: 'Captcha options text paint effect strength must be a number from 0-10' },
+			{ result: numberBody(req.body.captcha_options_text_noise, 0, 10), expected: true, error: 'Captcha options text noise effect strength must be a number from 0-10' },
 			{ result: numberBody(req.body.dnsbl_cache_time), expected: true, error: 'Invalid dnsbl cache time' },
 			{ result: numberBody(req.body.flood_timers_same_content_same_ip), expected: true, error: 'Invalid flood time same content same ip' },
 			{ result: numberBody(req.body.flood_timers_same_content_any_ip), expected: true, error: 'Invalid flood time same contenet any ip' },

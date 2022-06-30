@@ -35,9 +35,11 @@ module.exports = {
 		type: 'text',
 		generateLimit: 250,
 		text: {
+			font: 'default',
 			wave: false,
-			line: false,
-			paint: false,
+			line: 0,
+			paint: 2,
+			noise: 0,
 		},
 		grid: {
 			falses: ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧'],

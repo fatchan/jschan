@@ -26,6 +26,7 @@ block content
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/global/settings`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
+			input.row(type='submit', value='save settings')
 			.row.wrap.sb
 				.col.mr-5
 
@@ -193,20 +194,26 @@ block content
 						h4.mv-5 Text Captcha Options
 					.row
 						.label Font
-						select(name='captcha_options_text_font' disabled)
-							option(selected=true) Default
+						select(name='captcha_options_text_font')
+							option(value='default' selected=(settings.captchaOptions.text.font === 'default')) Default
+							each font in fontList
+								option(value=font.path selected=(settings.captchaOptions.text.font === font.path)) #{font.name}
 					.row
 						.label Strikethrough Effect
 						label.postform-style.ph-5
 							input(type='checkbox', name='captcha_options_text_line', value='true' checked=settings.captchaOptions.text.line)
 					.row
-						.label Wave Effect
+						.label Wave Effect Strength
 						label.postform-style.ph-5
-							input(type='checkbox', name='captcha_options_text_wave', value='true' checked=settings.captchaOptions.text.wave)
+							input(type='range' name='captcha_options_text_wave' min='0' max='10' value=settings.captchaOptions.text.wave)
 					.row
-						.label Paint Effect
+						.label Paint Effect Strength
 						label.postform-style.ph-5
-							input(type='checkbox', name='captcha_options_text_paint', value='true' checked=settings.captchaOptions.text.text)
+							input(type='range' name='captcha_options_text_paint' min='0' max='10' value=settings.captchaOptions.text.paint)
+					.row
+						.label Noise Effect Strength
+						label.postform-style.ph-5
+							input(type='range' name='captcha_options_text_noise' min='0' max='10' value=settings.captchaOptions.text.noise)
 					.row
 						h4.mv-5 Captcha Distortion
 					.row

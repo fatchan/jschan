@@ -5,9 +5,11 @@ module.exports = async(db, redis) => {
 	await db.collection('globalsettings').updateOne({ _id: 'globalsettings' }, {
 		'$set': {
 			'captchaOptions.text': {
+				'font': 'default',
 				'line': false,
-				'wave': false,
-				'paint': false,
+				'wave': 0,
+				'paint': 2,
+				'noise': 0,
 			},
 			'captchaOptions.grid.falses': ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧'],
 			'captchaOptions.grid.trues': ['●','■','♞','♦','▼','▲','♜','✦','♚','♞','♛','♝','♟','♣'],
