@@ -37,6 +37,8 @@ Interested in contributing to jschan development? See [CONTRIBUTING.md](CONTRIBU
 Here are some other projects related to jschan that you might find useful. Unless explicitly specified here, they are not officially endorsed or otherwise guaranteed to work or be safe and should be used at your own risk.
  - [myumyu/globalafk](https://gitgud.io/myumyu/globalafk/) - "A simple python script that sends ugly notifications when something happens on a jschan imageboard that you moderate."
  - [ussaohelcim/ptchina-playlist](https://github.com/ussaohelcim/ptchina-playlist) - A bookmarklet script that will take all mp3, mp4 and webm files from a thread and download them as an m3u playlist that you can play in an external media player.
+ - [ussaohelcim/jschan-api-sdk](https://github.com/ussaohelcim/jschan-api-sdk) - JavaScript/TypeScript SDK for jschan.
+ - [ussaohelcim/jschan-api-types](https://github.com/ussaohelcim/jschan-api-types) - TypeScript typings for the above SDK.
 
 ## For generous people
 
