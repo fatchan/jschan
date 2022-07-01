@@ -191,6 +191,14 @@ block content
 						.label Question Text
 						input(type='text' name='captcha_options_grid_question' value=settings.captchaOptions.grid.question)
 					.row
+						.label Edge Effect Strength
+						label.postform-style.ph-5
+							input(type='range' name='captcha_options_grid_edge' min='0' max='50' value=settings.captchaOptions.grid.edge)
+					.row
+						.label Noise Effect Strength
+						label.postform-style.ph-5
+							input(type='range' name='captcha_options_grid_noise' min='0' max='10' value=settings.captchaOptions.grid.noise)
+					.row
 						h4.mv-5 Text Captcha Options
 					.row
 						.label Font

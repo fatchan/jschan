@@ -14,6 +14,8 @@ module.exports = async(db, redis) => {
 			'captchaOptions.grid.falses': ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧'],
 			'captchaOptions.grid.trues': ['●','■','♞','♦','▼','▲','♜','✦','♚','♞','♛','♝','♟','♣'],
 			'captchaOptions.grid.question': 'Select the solid/filled icons',
+			'captchaOptions.grid.noise': 0,
+			'captchaOptions.grid.edge': 25,
 		},
 	});
 	console.log('Clearing globalsettings cache');

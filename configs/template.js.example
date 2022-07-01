@@ -48,6 +48,8 @@ module.exports = {
 			size: 4,
 			imageSize: 120,
 			iconYOffset: 15,
+			edge: 25,
+			noise: 0,
 		},
 		numDistorts: {
 			min: 2,
