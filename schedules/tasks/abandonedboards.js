@@ -14,13 +14,13 @@ module.exports = {
 			return;
 		}
 
-		const abandonedBoards = await Boards.getAbandoned();
+		const abandonedBoards = await Boards.getAbandoned(config.get.abandonedBoardAction);
 		if (abandonedBoards.length === 0) {
 			return;
 		}
 
 		if (config.get.abandonedBoardAction <= 2) {
-			debugLogs && console.log(`Unlisting${config.get.abandonedBoardAction === 2 ? '+Locking' : ''} ${abandonedBoards.length} abandoned boards.`);
+			debugLogs && console.log(`Locking${config.get.abandonedBoardAction === 2 ? '+Unlisting' : ''} ${abandonedBoards.length} abandoned boards.`);
 			const abandonedURIs = abandonedBoards.map(b => b._id);
 			Boards.unlistMany(abandonedURIs);
 		} else { //must be 2

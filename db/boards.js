@@ -311,20 +311,35 @@ module.exports = {
 		}).toArray();
 	},
 	
-	getAbandoned: () => {
-		return db.find({
+	getAbandoned: (action=0) => {
+		const filter = {
 			'webring': false,
 			'owner': null,
-		}).toArray();
+		};
+		if (action === 1) {
+			//if just locking, only match unlocked boards
+			filter['settings.lockMode'] = { '$lt': 2 };
+		} else if (action === 2) {
+			//if locking+unlisting, match ones that satisfy any of the conditions
+			filter['$or'] = [
+				{ 'settings.unlistedWebring': false },
+				{ 'settings.unlistedLocal': false },
+				{ 'settings.lockMode': { '$lt': 2 } },
+			];
+		}
+		//else we return boards purely based on owner: null because they are going to be deleted anyway
+		return db
+			.find(filter)
+			.toArray();
 	},
 
 	unlistMany: (boards) => {
 		const update = {
-			'settings.unlistedLocal': true,
-			'settings.unlistedWebring': true,
+			'settings.lockMode': 2,
 		};
 		if (config.get.abandonedBoardAction === 2) {
-			update['settings.lockMode'] = 2;
+			update['settings.unlistedLocal'] = true;
+			update['settings.unlistedWebring'] = true;
 		}
 		cache.srem('boards:listed', boards);
 		cache.del(boards.map(b => `board:${b}`));
