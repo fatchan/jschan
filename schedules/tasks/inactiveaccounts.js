@@ -1,7 +1,6 @@
 'use strict';
 
-const fetch = require('node-fetch')
-	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
+const { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, Redis = require(__dirname+'/../../lib/redis/redis.js')
 	, { Boards, Accounts } = require(__dirname+'/../../db/')
@@ -22,7 +21,6 @@ module.exports = {
 
 		const cacheDeleteSet = new Set()
 			, boardBulkWrites = []
-			, accountBulkWrites = []
 			, inactiveWithBoards = inactiveAccounts.filter(acc => {
 				//only deal with boards if they have any (acc deletes still processed later)
 				return acc.ownedBoards.length > 0 || acc.staffBoards.length > 0;
