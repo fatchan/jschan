@@ -2,7 +2,6 @@
 
 const { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
-	, Redis = require(__dirname+'/../../lib/redis/redis.js')
 	, { Boards } = require(__dirname+'/../../db/')
 	, timeUtils = require(__dirname+'/../../lib/converter/timeutils.js')
 	, deleteBoard = require(__dirname+'/../../models/forms/deleteboard.js');
