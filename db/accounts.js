@@ -3,7 +3,8 @@
 const Mongo = require(__dirname+'/db.js')
 	, db = Mongo.db.collection('accounts')
 	, bcrypt = require('bcrypt')
-	, cache = require(__dirname+'/../lib/redis/redis.js');
+	, cache = require(__dirname+'/../lib/redis/redis.js')
+	, { MONTH } = require(__dirname+'/../lib/converter/timeutils.js');
 
 module.exports = {
 
@@ -97,6 +98,14 @@ module.exports = {
 		});
 	},
 
+	getInactive: (duration=(MONTH*3)) => {
+		return db.find({
+			'lastActiveDate': {
+				'$lt': new Date(Date.now() - duration),
+			},
+		}).toArray();
+	},
+
 	find: (filter, skip=0, limit=0) => {
 		return db.find(filter, {
 			'projection': {
@@ -169,6 +178,21 @@ module.exports = {
 		}, {
 			'$pull': {
 				'staffBoards': board
+			}
+		});
+		cache.del(usernames.map(n => `users:${n}`));
+		return res;
+	},
+
+	clearStaffAndOwnedBoards: async (usernames) => {
+		const res = await db.updateMany({
+			'_id': {
+				'$in': usernames
+			}
+		}, {
+			'$set': {
+				'staffBoards': [],
+				'ownedBoards': [],
 			}
 		});
 		cache.del(usernames.map(n => `users:${n}`));
