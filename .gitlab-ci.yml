@@ -13,8 +13,7 @@ before_script:
 eslint:
   stage: .pre
   rules:
-    - if: $GITLAB_USER_LOGIN == 'fatchan'
-    - if: $CI_COMMIT_MESSAGE =~ /\[ci]/
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:
     - 'npm i -g eslint-cli'
     - 'npm i eslint --save-dev'
