@@ -92,7 +92,7 @@ module.exports = {
 	},
 
 	interval: timeUtils.DAY,
-	immediate: true,
+	immediate: false,
 	condition: 'inactiveAccountAction'
 
 };

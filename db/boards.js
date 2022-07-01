@@ -4,7 +4,8 @@ const Mongo = require(__dirname+'/db.js')
 	, cache = require(__dirname+'/../lib/redis/redis.js')
 	, dynamicResponse = require(__dirname+'/../lib/misc/dynamic.js')
 	, escapeRegExp = require(__dirname+'/../lib/input/escaperegexp.js')
-	, db = Mongo.db.collection('boards');
+	, db = Mongo.db.collection('boards')
+	, config = require(__dirname+'/../lib/misc/config.js');
 
 module.exports = {
 
@@ -308,6 +309,32 @@ module.exports = {
 				'tags': 1,
 			}
 		}).toArray();
+	},
+	
+	getAbandoned: () => {
+		return db.find({
+			'webring': false,
+			'owner': null,
+		}).toArray();
+	},
+
+	unlistMany: (boards) => {
+		const update = {
+			'settings.unlistedLocal': true,
+			'settings.unlistedWebring': true,
+		};
+		if (config.get.abandonedBoardAction === 2) {
+			update['settings.lockMode'] = 2;
+		}
+		cache.srem('boards:listed', boards);
+		cache.del(boards.map(b => `board:${b}`));
+		return db.updateMany({
+			'_id': {
+				'$in': boards,
+			},
+		}, {
+			'$set': update,
+		});
 	},
 
 	count: (filter, showSensitive=false, webringSites=false) => {

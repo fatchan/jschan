@@ -69,8 +69,8 @@ module.exports = {
 				return false;
 			}, expected: true, error: 'Invalid reverse image search links URL format, must be a link containing %s where the url param belongs.' },
 			{ result: numberBody(req.body.inactive_account_time), expected: true, error: 'Invalid inactive account time' },
-			{ result: numberBody(req.body.inactive_account_action, 0, 3), expected: true, error: 'Inactive account action must be a number from 0-3' },
-			{ result: numberBody(req.body.abandoned_board_action, 0, 2), expected: true, error: 'Abandoned board action must be a number from 0-2' },
+			{ result: numberBody(req.body.inactive_account_action, 0, 2), expected: true, error: 'Inactive account action must be a number from 0-2' },
+			{ result: numberBody(req.body.abandoned_board_action, 0, 3), expected: true, error: 'Abandoned board action must be a number from 0-3' },
 			{ result: lengthBody(req.body.global_announcement, 0, 10000), expected: false, error: 'Global announcement must not exceed 10000 characters' },
 			{ result: lengthBody(req.body.filters, 0, 50000), expected: false, error: 'Filter text cannot exceed 50000 characters' },
 			{ result: numberBody(req.body.filter_mode, 0, 2), expected: true, error: 'Filter mode must be a number from 0-2' },
