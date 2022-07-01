@@ -4,7 +4,8 @@ const Mongo = require(__dirname+'/db.js')
 	, cache = require(__dirname+'/../lib/redis/redis.js')
 	, dynamicResponse = require(__dirname+'/../lib/misc/dynamic.js')
 	, escapeRegExp = require(__dirname+'/../lib/input/escaperegexp.js')
-	, db = Mongo.db.collection('boards');
+	, db = Mongo.db.collection('boards')
+	, config = require(__dirname+'/../lib/misc/config.js');
 
 module.exports = {
 
@@ -308,6 +309,47 @@ module.exports = {
 				'tags': 1,
 			}
 		}).toArray();
+	},
+	
+	getAbandoned: (action=0) => {
+		const filter = {
+			'webring': false,
+			'owner': null,
+		};
+		if (action === 1) {
+			//if just locking, only match unlocked boards
+			filter['settings.lockMode'] = { '$lt': 2 };
+		} else if (action === 2) {
+			//if locking+unlisting, match ones that satisfy any of the conditions
+			filter['$or'] = [
+				{ 'settings.unlistedWebring': false },
+				{ 'settings.unlistedLocal': false },
+				{ 'settings.lockMode': { '$lt': 2 } },
+			];
+		}
+		//else we return boards purely based on owner: null because they are going to be deleted anyway
+		return db
+			.find(filter)
+			.toArray();
+	},
+
+	unlistMany: (boards) => {
+		const update = {
+			'settings.lockMode': 2,
+		};
+		if (config.get.abandonedBoardAction === 2) {
+			update['settings.unlistedLocal'] = true;
+			update['settings.unlistedWebring'] = true;
+		}
+		cache.srem('boards:listed', boards);
+		cache.del(boards.map(b => `board:${b}`));
+		return db.updateMany({
+			'_id': {
+				'$in': boards,
+			},
+		}, {
+			'$set': update,
+		});
 	},
 
 	count: (filter, showSensitive=false, webringSites=false) => {

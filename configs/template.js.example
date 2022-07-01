@@ -175,6 +175,14 @@ module.exports = {
 	//how many of the most recent newsposts to show on the homepage
 	maxRecentNews: 5,
 
+	//time for an account to be considered inactive
+	inactiveAccountTime: 7889400000,
+	//action for inactive accounts: nothing, forfeit staff positions, delete account
+	inactiveAccountAction: 0,
+
+	//action for handling abandoned boards (no board owner): nothing, lock, lock + unlist, delete board
+	abandonedBoardAction: 0,
+
 	/* filter filenames on posts and banners
 		false=no filtering
 		true=allow only A-Za-z0-9_-
