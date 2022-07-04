@@ -1,3 +1,6 @@
+### 0.7.3
+  - Bugfix some captcha generations causing server error due non-integer argument to randomRange.
+
 ### 0.7.2
   - Add playlist generating bookmarklet script to README
   - Bugfix some captcha generations causing server error due to bad random number range.
