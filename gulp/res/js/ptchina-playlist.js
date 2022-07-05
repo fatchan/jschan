@@ -55,12 +55,10 @@ async function threadToPlaylist(board, postId) {
 		const playlist = await createPlaylist(files);
 		if (playlist.split('\n').length > 1) {
 			downloadPlaylist(`${thread.board}-${thread.postId}.m3u`, playlist);
-		}
-		else {
+		} else {
 			console.log('No video/audio files in this thread.');
 		}
-	}
-	catch (error) {
+	} catch (error) {
 		console.log(error);
 	}
 }
