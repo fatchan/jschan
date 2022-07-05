@@ -1,7 +1,8 @@
 ### 0.8.0
-  - Add unofficial Typescript SDK + typings for jschan api to README, (thanks to Michell/ussaohelcim).
   - Add a new option for automatically forfeiting board staff position and/or deleting inactive accounts with customisable time.
   - Add a new option to automatically lock, lock+unlist, or delete boards that have no board owner.
+  - Add unofficial Typescript SDK + typings for jschan api to README, (thanks to Michell/ussaohelcim).
+  - Add "playlist" button in OP dropdown to download thread audio/video as m3u playlist (thanks to Michell/ussaohelcim).
 
 ### 0.7.3
   - Bugfix some captcha generations causing server error due non-integer argument to randomRange.
