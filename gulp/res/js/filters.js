@@ -273,12 +273,12 @@ const postMenuChange = function() {
 		}
 		case 'playlist':{
 			console.log('creating playlist...');
-			window.dispatchEvent(
-				(new CustomEvent('createPlaylist',{detail:{
+			window.dispatchEvent(new CustomEvent('createPlaylist', {
+				detail:{
 					board:postDataset.board,
 					postId:postDataset.postId
-				}}))
-			);
+				}
+			}));
 			break;
 		}
 	}
