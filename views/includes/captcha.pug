@@ -11,6 +11,7 @@ case captchaOptions.type
 		.jsonly.captcha(style='display:none;')
 		input.captchafield(type='text' name='captcha' autocomplete='off' placeholder='Captcha text' pattern='.{6}' required title='6 characters')
 	when 'grid'
+	when 'grid2'
 		span.text-center #{captchaOptions.grid.question}
 		.catalog
 			noscript.no-m-p

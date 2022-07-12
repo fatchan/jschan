@@ -164,14 +164,14 @@ block content
 						select(name='captcha_options_type')
 							option(value='text', selected=settings.captchaOptions.type === 'text') Text
 							option(value='grid', selected=settings.captchaOptions.type === 'grid') Grid v1
-							option(value='grid', selected=settings.captchaOptions.type === 'grid2' disabled=true) Grid v2 (Coming soon)
+							option(value='grid2', selected=settings.captchaOptions.type === 'grid2') Grid v2
 							option(value='google', selected=settings.captchaOptions.type === 'google') Google
 							option(value='hcaptcha', selected=settings.captchaOptions.type === 'hcaptcha') Hcaptcha
 					.row
 						.label Generate Limit
 						input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
 					.row
-						h4.mv-5 Grid v1 Captcha Options
+						h4.mv-5 Grid Captcha Options
 					.row
 						.label Image Size
 						input(type='number' name='captcha_options_grid_image_size' value=settings.captchaOptions.grid.imageSize)

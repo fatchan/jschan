@@ -154,6 +154,9 @@ async function ips() {
 async function wipe() {
 	const db = Mongo.db;
 
+	const defaultConfig = require(__dirname+'/configs/template.js.example');
+	await Mongo.setConfig(defaultConfig);
+		
 	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
 		'modlog','news', 'posts', 'poststats', 'ratelimit', 'bypass', 'roles'];
 	for (const name of collectionNames) {
@@ -283,17 +286,28 @@ async function wipe() {
 async function css() {
 	try {
 		//a little more configurable
-		let bypassHeight = (config.get.captchaOptions.type === 'google' || config.get.captchaOptions.type === 'hcaptcha')
-			? 500
-			: config.get.captchaOptions.type === 'grid'
-				? 330
-				: 235;
-		let captchaHeight = config.get.captchaOptions.type === 'text' ? 80
-			: config.get.captchaOptions.type === 'grid' ? config.get.captchaOptions.grid.imageSize+30
-				: 200; //google/hcaptcha doesnt need this set
-		let captchaWidth = config.get.captchaOptions.type === 'text' ? 210
-			: config.get.captchaOptions.type === 'grid' ? config.get.captchaOptions.grid.imageSize+30
-				: 200; //google/hcaptcha doesnt need this set
+		let bypassHeight
+			, captchaHeight
+			, captchaWidth;
+		switch (config.get.captchaOptions.type) {
+			case 'google':
+			case 'hcaptcha':
+				bypassHeight = 500;
+				captchaHeight = 200;
+				captchaWidth = 200;
+				break;
+			case 'grid':
+			case 'grid2':
+				bypassHeight = 330;
+				captchaHeight = config.get.captchaOptions.grid.imageSize+30;
+				captchaWidth = config.get.captchaOptions.grid.imageSize+30;
+				break;
+			case 'text':
+				bypassHeight = 235;
+				captchaHeight = 80;
+				captchaWidth = 210;
+				break;
+		}
 		const cssLocals = `:root {
     --attachment-img: url('/file/attachment.png');
     --spoiler-img: url('/file/spoiler.png');

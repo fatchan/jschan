@@ -79,7 +79,7 @@ module.exports = {
 			{ result: lengthBody(req.body.ip_header, 0, 100), expected: false, error: 'IP header length must not exceed 100 characters' },
 			{ result: lengthBody(req.body.meta_site_name, 0, 100), expected: false, error: 'Meta site name must not exceed 100 characters' },
 			{ result: lengthBody(req.body.meta_url, 0, 100), expected: false, error: 'Meta url must not exceed 100 characters' },
-			{ result: inArrayBody(req.body.captcha_options_type, ['grid', 'text', 'google', 'hcaptcha']), expected: true, error: 'Invalid captcha options type' },
+			{ result: inArrayBody(req.body.captcha_options_type, ['grid', 'grid2', 'text', 'google', 'hcaptcha']), expected: true, error: 'Invalid captcha options type' },
 			{ result: numberBody(req.body.captcha_options_generate_limit, 1), expected: true, error: 'Captcha options generate limit must be a number > 0' },
 			{ result: numberBody(req.body.captcha_options_grid_size, 2, 6), expected: true, error: 'Captcha options grid size must be a number from 2-6' },
 			{ result: numberBody(req.body.captcha_options_grid_image_size, 50, 500), expected: true, error: 'Captcha options grid image size must be a number from 50-500' },

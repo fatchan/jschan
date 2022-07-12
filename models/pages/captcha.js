@@ -7,7 +7,7 @@ const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 module.exports = async (req, res, next) => {
 
 	const { secureCookies, rateLimitCost, captchaOptions } = config.get;
-	if (!['grid', 'text'].includes(captchaOptions.type)) {
+	if (!['text', 'grid', 'grid2'].includes(captchaOptions.type)) {
 		return next(); //only grid and text captcha continue
 	}
 
