@@ -1,7 +1,9 @@
 'use strict';
 
+const timeUtils = require(__dirname+'/../lib/converter/timeutils.js');
+
 module.exports = async(db, redis) => {
-	console.log('add more captcha options');
+	console.log('add more captcha options and add inactive account and board auto handling');
 	await db.collection('globalsettings').updateOne({ _id: 'globalsettings' }, {
 		'$set': {
 			'captchaOptions.text': {
@@ -16,6 +18,9 @@ module.exports = async(db, redis) => {
 			'captchaOptions.grid.question': 'Select the solid/filled icons',
 			'captchaOptions.grid.noise': 0,
 			'captchaOptions.grid.edge': 25,
+			'inactiveAccountTime': timeUtils.MONTH * 3,
+			'inactiveAccountAction': 0, //no actions by default
+			'abandonedBoardAction': 0,
 		},
 	});
 	console.log('Clearing globalsettings cache');

@@ -1,3 +1,17 @@
+### 0.8.0
+  - Add a new option for automatically forfeiting board staff position and/or deleting inactive accounts with customisable time.
+  - Add a new option to automatically lock, lock+unlist, or delete boards that have no board owner.
+  - Add unofficial Typescript SDK + typings for jschan api to README, (thanks to Michell/ussaohelcim).
+  - Add "playlist" button in OP dropdown to download thread audio/video as m3u playlist (thanks to Michell/ussaohelcim).
+
+### 0.7.3
+  - Bugfix some captcha generations causing server error due non-integer argument to randomRange.
+
+### 0.7.2
+  - Add playlist generating bookmarklet script to README
+  - Bugfix some captcha generations causing server error due to bad random number range.
+  - Fix UTF8-filenames not being decoded corectly (busboy made this not the default in a recent update).
+
 ### 0.7.1
   - Show sticky level on hover (title property) of pin icon.
   - Reduce frontend script size by ~10KB. More improvement to come in future updates.

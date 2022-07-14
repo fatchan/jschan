@@ -156,7 +156,7 @@ async function wipe() {
 
 	const defaultConfig = require(__dirname+'/configs/template.js.example');
 	await Mongo.setConfig(defaultConfig);
-		
+
 	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
 		'modlog','news', 'posts', 'poststats', 'ratelimit', 'bypass', 'roles'];
 	for (const name of collectionNames) {

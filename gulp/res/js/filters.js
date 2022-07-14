@@ -271,6 +271,16 @@ const postMenuChange = function() {
 			threadWatcher.add(postDataset.board, postDataset.postId, { subject: watcherSubject, unread: 0, updatedDate: new Date() });
 			return;
 		}
+		case 'playlist':{
+			console.log('creating playlist...');
+			window.dispatchEvent(new CustomEvent('createPlaylist', {
+				detail:{
+					board:postDataset.board,
+					postId:postDataset.postId
+				}
+			}));
+			break;
+		}
 	}
 	toggleFilter(filterType, filterData, hiding);
 };

@@ -154,6 +154,22 @@ block content
 					.row
 						.label Max Homepage News Entries
 						input(type='number', name='max_recent_news', value=settings.maxRecentNews)
+					.row
+						.label Inactive Account Time
+						input(type='text', name='inactive_account_time',  placeholder='e.g. 1w', value=settings.inactiveAccountTime)
+					.row
+						.label Inactive Account Action
+						select(name='inactive_account_action')
+							option(value='0', selected=settings.inactiveAccountTime === 0) Do nothing
+							option(value='1', selected=settings.inactiveAccountTime === 1) Forfeit staff positions
+							option(value='2', selected=settings.inactiveAccountTime === 2) Delete Account
+					.row
+						.label Abandoned Board Action
+						select(name='abandoned_board_action')
+							option(value='0', selected=settings.abandonedBoardAction === 0) Do nothing
+							option(value='1', selected=settings.abandonedBoardAction === 1) Lock board
+							option(value='2', selected=settings.abandonedBoardAction === 2) Lock+unlist board
+							option(value='3', selected=settings.abandonedBoardAction === 3) Delete board
 
 				.col.mr-5
 
