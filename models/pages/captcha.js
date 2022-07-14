@@ -2,6 +2,7 @@
 
 const { Captchas, Ratelimits } = require(__dirname+'/../../db/')
 	, config = require(__dirname+'/../../lib/misc/config.js')
+	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, production = process.env.NODE_ENV === 'production';
 
 module.exports = async (req, res, next) => {
@@ -33,7 +34,17 @@ module.exports = async (req, res, next) => {
 			captchaId = randomCaptcha._id;
 			maxAge = Math.abs((randomCaptcha.expireAt.getTime()+maxAge) - Date.now()); //abs in case mongo hasn't pruned, and will not be too big since it can't be too far away from pruning anyway
 		} else {
-			({ captchaId } = await generateCaptcha());
+			const { captcha, solution } = await generateCaptcha(captchaOptions);
+			captchaId = await Captchas.insertOne(solution).then(r => r.insertedId);
+			//captcha.write doesn't like to be util.promisify'd
+			await (new Promise((resolve, reject) => {
+				captcha.write(`${uploadDirectory}/captcha/${captchaId}.jpg`, (err) => {
+					if (err) {
+						return reject(err);
+					}
+					resolve();
+				});
+			}));
 		}
 	} catch (err) {
 		return next(err);
