@@ -8,7 +8,7 @@ module.exports = async(db, redis) => {
 		'$set': {
 			'captchaOptions.text': {
 				'font': 'default',
-				'line': false,
+				'line': true,
 				'wave': 0,
 				'paint': 2,
 				'noise': 0,
