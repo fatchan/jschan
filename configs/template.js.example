@@ -34,10 +34,22 @@ module.exports = {
 	captchaOptions: {
 		type: 'text',
 		generateLimit: 250,
+		text: {
+			font: 'default',
+			line: true,
+			wave: 0,
+			paint: 2,
+			noise: 0,
+		},
 		grid: {
+			falses: ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧'],
+			trues: ['●','■','♞','♦','▼','▲','♜','✦','♚','♞','♛','♝','♟','♣'],
+			question: 'Select the solid/filled icons',
 			size: 4,
 			imageSize: 120,
 			iconYOffset: 15,
+			edge: 25,
+			noise: 0,
 		},
 		numDistorts: {
 			min: 2,

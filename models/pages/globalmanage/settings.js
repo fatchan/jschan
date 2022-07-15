@@ -1,6 +1,7 @@
 'use strict';
 
 const config = require(__dirname+'/../../../lib/misc/config.js')
+	, { fontList } = require(__dirname+'/../../../lib/misc/fonts.js')
 	, { themes, codeThemes } = require(__dirname+'/../../../lib/misc/themes.js')
 	, { countryNamesMap, countryCodes } = require(__dirname+'/../../../lib/misc/countries.js');
 
@@ -16,6 +17,7 @@ module.exports = async (req, res) => {
 			countryCodes,
 			themes,
 			codeThemes,
+			fontList,
 		});
 
 };

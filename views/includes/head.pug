@@ -18,7 +18,7 @@ meta(property='og:site_name', value=meta.siteName)
 meta(property='og:url', content=meta.url)
 
 //- main stylesheet
-link(rel='stylesheet' href=`/css/style.css?v=${commit}&ct=${captchaType}`)
+link(rel='stylesheet' href=`/css/style.css?v=${commit}&ct=${captchaOptions.type}`)
 
 //- theme stylesheets
 - const theme = isBoard ? board.settings.theme : defaultTheme;

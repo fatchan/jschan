@@ -26,6 +26,7 @@ block content
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/global/settings`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
+			input.row(type='submit', value='save settings')
 			.row.wrap.sb
 				.col.mr-5
 
@@ -178,22 +179,67 @@ block content
 						.label Type
 						select(name='captcha_options_type')
 							option(value='text', selected=settings.captchaOptions.type === 'text') Text
-							option(value='grid', selected=settings.captchaOptions.type === 'grid') Grid
+							option(value='grid', selected=settings.captchaOptions.type === 'grid') Grid v1
+							option(value='grid2', selected=settings.captchaOptions.type === 'grid2') Grid v2
 							option(value='google', selected=settings.captchaOptions.type === 'google') Google
 							option(value='hcaptcha', selected=settings.captchaOptions.type === 'hcaptcha') Hcaptcha
 					.row
-						.label Grid Image Size
+						.label Generate Limit
+						input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
+					.row
+						h4.mv-5 Grid Captcha Options
+					.row
+						.label Image Size
 						input(type='number' name='captcha_options_grid_image_size' value=settings.captchaOptions.grid.imageSize)
 					.row
 						.label Grid Size
 						input(type='number' name='captcha_options_grid_size' value=settings.captchaOptions.grid.size)
 					.row
-						.label Grid Icon Offset
+						.label Icon Offset
 						input(type='number' name='captcha_options_grid_icon_y_offset' value=settings.captchaOptions.grid.iconYOffset)
-
 					.row
-						.label Generate Limit
-						input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
+						.label True Characters
+						textarea(name='captcha_options_grid_trues' placeholder='Newline separated') #{settings.captchaOptions.grid.trues.join('\n')}
+					.row
+						.label False Characters
+						textarea(name='captcha_options_grid_falses' placeholder='Newline separated') #{settings.captchaOptions.grid.falses.join('\n')}
+					.row
+						.label Question Text
+						input(type='text' name='captcha_options_grid_question' value=settings.captchaOptions.grid.question)
+					.row
+						.label Edge Effect Strength
+						label.postform-style.ph-5
+							input(type='range' name='captcha_options_grid_edge' min='0' max='50' value=settings.captchaOptions.grid.edge)
+					.row
+						.label Noise Effect Strength
+						label.postform-style.ph-5
+							input(type='range' name='captcha_options_grid_noise' min='0' max='10' value=settings.captchaOptions.grid.noise)
+					.row
+						h4.mv-5 Text Captcha Options
+					.row
+						.label Font
+						select(name='captcha_options_text_font')
+							option(value='default' selected=(settings.captchaOptions.text.font === 'default')) Default
+							each font in fontList
+								option(value=font.path selected=(settings.captchaOptions.text.font === font.path)) #{font.name}
+					.row
+						.label Strikethrough Effect
+						label.postform-style.ph-5
+							input(type='checkbox', name='captcha_options_text_line', value='true' checked=settings.captchaOptions.text.line)
+					.row
+						.label Wave Effect Strength
+						label.postform-style.ph-5
+							input(type='range' name='captcha_options_text_wave' min='0' max='10' value=settings.captchaOptions.text.wave)
+					.row
+						.label Paint Effect Strength
+						label.postform-style.ph-5
+							input(type='range' name='captcha_options_text_paint' min='0' max='10' value=settings.captchaOptions.text.paint)
+					.row
+						.label Noise Effect Strength
+						label.postform-style.ph-5
+							input(type='range' name='captcha_options_text_noise' min='0' max='10' value=settings.captchaOptions.text.noise)
+					.row
+						h4.mv-5 Captcha Distortion
 					.row
 						.label Minimum Distortions
 						input(type='number' name='captcha_options_num_distorts_min' value=settings.captchaOptions.numDistorts.min)

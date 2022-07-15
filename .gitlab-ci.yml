@@ -25,6 +25,8 @@ unit-tests:
   stage: test
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  before_script:
+    - apt-get update -y && apt-get install -y fonts-urw-base35 gsfonts
   script:
     - 'npm install'
     - 'npm install jest -g'

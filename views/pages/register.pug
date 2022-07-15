@@ -16,7 +16,7 @@ block content
 			.row
 				.label Confirm Password
 				input(type='password', name='passwordconfirm', maxlength='100' required)
-			if captchaType === 'text'
+			if captchaOptions.type === 'text'
 				include ../includes/captchasidelabel.pug
 			else
 				include ../includes/captchafieldrow.pug
