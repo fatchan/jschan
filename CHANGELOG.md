@@ -1,4 +1,9 @@
 ### 0.8.0
+  - Captcha improvements
+    - New captcha image effects, and customisation for their value/strength.
+    - Customisable font for text captcha.
+    - Improved grid captcha, the character sets and question are now customisable.
+    - Added new captcha type "grid v2" with a different challenge involving pointing arrows. Also customisable like grid v1.
   - Add a new option for automatically forfeiting board staff position and/or deleting inactive accounts with customisable time.
   - Add a new option to automatically lock, lock+unlist, or delete boards that have no board owner.
   - Add unofficial Typescript SDK + typings for jschan api to README, (thanks to Michell/ussaohelcim).
