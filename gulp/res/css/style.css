@@ -1331,6 +1331,9 @@ iframe.bypass {
 	margin-right: 0;
 	margin-left: 1px;
 }
+.box-wrap .label {
+	flex: 0 1 175px;
+}
 
 hr {
 	border-top: 1px solid var(--hr);
@@ -1484,14 +1487,13 @@ row.wrap.sb .col {
 
 .tabs {
 	padding: 0;
-	margin: 0;
+	margin: 0 0 -1px 0;
 	list-style: none;
 }
 
 .box-wrap .col {
 	background: var(--background-rest);
 	padding: 10px;
-	margin-top: -1px;
 }
 
 .box-wrap, .tabs li a {
@@ -1561,7 +1563,9 @@ row.wrap.sb .col {
 		max-width: 32px;
 		max-height: 32px;
 	}
-
+	.box-wrap .label {
+		flex: unset;
+	}
 	.postmenu {
 		border-left: .5em solid transparent;
 		border-right: .5em solid transparent;
