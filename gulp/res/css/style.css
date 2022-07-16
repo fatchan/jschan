@@ -1505,7 +1505,7 @@ row.wrap.sb .col {
 }
 
 .tab {
-	scroll-margin-top: 100vh;
+	scroll-margin-top: 100px;
 }
 
 #tab-1:target .tab-1,
@@ -1565,6 +1565,14 @@ row.wrap.sb .col {
 	}
 	.box-wrap .label {
 		flex: unset;
+	}
+	.tabs li a {
+		padding: 8px 15px;
+		margin-top: -1px;
+		border: 1px solid var(--post-outline-color)!important;
+	}
+	select[name="countries"] {
+		max-width: 220px;
 	}
 	.postmenu {
 		border-left: .5em solid transparent;
