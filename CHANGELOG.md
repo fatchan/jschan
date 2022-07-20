@@ -1,4 +1,5 @@
 ### 0.8.0
+  - Settings pages are now more organised and use tabs, and still works without javascript. 
   - Captcha improvements
     - New captcha image effects, and customisation for their value/strength.
     - Customisable font for text captcha.
