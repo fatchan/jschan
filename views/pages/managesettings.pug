@@ -39,11 +39,11 @@ block content
 		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
 			.mv-10
-				.tab#tab-1
-					.tab#tab-2
-						.tab#tab-3
-							.tab#tab-4
-								.tab#tab-5
+				.sm#tab-1
+					.sm#tab-2
+						.sm#tab-3
+							.sm#tab-4
+								.sm#tab-5
 									.tabbed-area
 										ul.tabs.group
 											li
@@ -57,7 +57,7 @@ block content
 											li
 												a(href='#tab-5') Antispam
 										.box-wrap
-											.tab-1
+											.tab.tab-1
 												.col
 													.row
 														.label Board name
@@ -122,7 +122,7 @@ block content
 														label.postform-style.ph-5
 															input(type='checkbox', name='unlisted_webring', value='true' checked=board.settings.unlistedWebring)
 
-											.tab-2
+											.tab.tab-2
 												.col
 													.row
 														.label Anon Name
@@ -176,7 +176,7 @@ block content
 														.label Max Reply Message Length
 														input(type='number' name='max_reply_message_length' value=board.settings.maxReplyMessageLength min=0 max=globalLimits.fieldLength.message)
 
-											.tab-3
+											.tab.tab-3
 												.col
 													.row
 														.label Max Files
@@ -210,7 +210,7 @@ block content
 														label.postform-style.ph-5
 															input(type='checkbox', name='user_post_unlink', value='true' checked=board.settings.userPostUnlink)
 
-											.tab-4
+											.tab.tab-4
 												.col
 													.row
 														.label Thread Limit
@@ -240,7 +240,7 @@ block content
 														.label OP Thread Age Delete Protection
 														input(type='text' name='delete_protection_age' placeholder='e.g. 1w' value=board.settings.deleteProtectionAge)
 
-											.tab-5
+											.tab.tab-5
 												.col
 													.row
 														a.label(href='/faq.html#antispam') Antispam FAQ
