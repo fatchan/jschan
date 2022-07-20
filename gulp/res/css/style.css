@@ -1500,11 +1500,18 @@ row.wrap.sb .col {
 	border: 1px solid var(--post-outline-color);
 }
 
-.box-wrap > div {
-	display: none;
+/* Default selected tab 1 */
+.tab {
+	display:none;
+}
+.tab-1 {
+	display: flex;
+}
+:target .tab-1 {
+	display:none;
 }
 
-.tab {
+.sm {
 	scroll-margin-top: 100px;
 }
 

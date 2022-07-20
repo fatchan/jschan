@@ -27,16 +27,16 @@ block content
 		form.form-post(action=`/forms/global/settings`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.mv-10
-				.tab#tab-1
-					.tab#tab-2
-						.tab#tab-3
-							.tab#tab-4
-								.tab#tab-5
-									.tab#tab-6
-										.tab#tab-7
-											.tab#tab-8
-												.tab#tab-9
-													.tab#tab-10
+				.sm#tab-1
+					.sm#tab-2
+						.sm#tab-3
+							.sm#tab-4
+								.sm#tab-5
+									.sm#tab-6
+										.sm#tab-7
+											.sm#tab-8
+												.sm#tab-9
+													.sm#tab-10
 														.tabbed-area
 															ul.tabs.group
 																li
@@ -60,7 +60,7 @@ block content
 																li
 																	a(href='#tab-10') Board Defaults
 															.box-wrap
-																.tab-1
+																.tab.tab-1
 																	.col
 																		.row
 																			.label Global Announcement
@@ -141,7 +141,7 @@ block content
 																			.label Prune Modlogs Days
 																			input(type='number', name='prune_modlogs' value=settings.pruneModlogs)
 
-																.tab-2
+																.tab.tab-2
 																	.col
 																		.row
 																			.label Referer Check
@@ -162,7 +162,7 @@ block content
 																			.label Prune IPs Days
 																			input(type='number', name='prune_ips' value=settings.pruneIps)
 
-																.tab-3
+																.tab.tab-3
 																	.col
 																		.row
 																			.label Default Ban Duration
@@ -312,7 +312,7 @@ block content
 																			.label Multi Input Form Staff
 																			input(type='number', name='global_limits_multi_input_posts_staff' value=settings.globalLimits.multiInputs.posts.staff)
 
-																.tab-4
+																.tab.tab-4
 																	.col
 																		.row
 																			.label Type
@@ -389,7 +389,7 @@ block content
 																			.label Distortion Intensity
 																			input(type='number' name='captcha_options_distortion' value=settings.captchaOptions.distortion)
 
-																.tab-5
+																.tab.tab-5
 																	.col
 																		.row
 																			.label Block Bypass
@@ -458,7 +458,7 @@ block content
 																			.label Edit Post
 																			input(type='number' name='rate_limit_cost_edit_post' value=settings.rateLimitCost.editPost)
 
-																.tab-6
+																.tab.tab-6
 																	.col
 																		.row
 																			.label Allowed Themes
@@ -503,7 +503,7 @@ block content
 																			.label Custom CSS Max Length
 																			input(type='number' name='global_limits_custom_css_max' value=settings.globalLimits.customCss.max)
 
-																.tab-7
+																.tab.tab-7
 																	.col
 																		.row
 																			.label Enable
@@ -526,7 +526,7 @@ block content
 																			.label Blacklist
 																			textarea(name='webring_blacklist' placeholder='Newline separated') #{settings.blacklist.join('\n')}
 
-																.tab-8
+																.tab.tab-8
 																	.col
 																		.row
 																			.label Animated .gif Thumbnails
@@ -561,7 +561,7 @@ block content
 																			.label Space File Name Replacement
 																			input(type='text', name='space_file_name_replacement', value=settings.spaceFileNameReplacement)
 
-																.tab-9
+																.tab.tab-9
 																	.col
 																		.row
 																			.label Embeds Enabled
@@ -658,7 +658,7 @@ block content
 																			.label Tegaki Height
 																			input(type='number', name='frontend_script_default_tegaki_height', value=settings.frontendScriptDefault.tegakiHeight)
 
-																.tab-10
+																.tab.tab-10
 																	.col
 																		.row
 																			.label SFW
