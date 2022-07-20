@@ -20,6 +20,7 @@ module.exports = async (req, res) => {
 		updatingPermissions.set(Permissions.BYPASS_SPAMCHECK, (req.body.BYPASS_SPAMCHECK != null));
 		updatingPermissions.set(Permissions.BYPASS_RATELIMITS, (req.body.BYPASS_RATELIMITS != null));
 		updatingPermissions.set(Permissions.BYPASS_FILTERS, (req.body.BYPASS_FILTERS != null));
+		updatingPermissions.set(Permissions.BYPASS_CAPTCHA, (req.body.BYPASS_CAPTCHA != null));
 		updatingPermissions.set(Permissions.MANAGE_GLOBAL_GENERAL, (req.body.MANAGE_GLOBAL_GENERAL != null));
 		updatingPermissions.set(Permissions.MANAGE_GLOBAL_BANS, (req.body.MANAGE_GLOBAL_BANS != null));
 		updatingPermissions.set(Permissions.MANAGE_GLOBAL_LOGS, (req.body.MANAGE_GLOBAL_LOGS != null));
