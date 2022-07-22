@@ -20,7 +20,7 @@ block content
 				.row
 					.label New owner username
 					input(type='text' name='username' placeholder=board.owner required)
-				input(type='submit', value='submit')
+				input(type='submit', value='Submit')
 		hr(size=1)
 		h4.no-m-p Delete board:
 		.form-wrapper.flexleft.mt-10
@@ -33,7 +33,7 @@ block content
 					.label I'm sure
 					label.postform-style.ph-5
 						input(type='checkbox', name='confirm', value='true' required)
-				input(type='submit', value='submit')
+				input(type='submit', value='Submit')
 	hr(size=1)
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
@@ -318,4 +318,4 @@ block content
 														.label Filter Auto Ban Duration
 														input(type='text' name='ban_duration' placeholder='e.g. 1w' value=board.settings.filterBanDuration)
 
-			input.row(type='submit', value='save settings')
+			input.row(type='submit', value='Save settings')
