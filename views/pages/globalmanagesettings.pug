@@ -410,6 +410,8 @@ block content
 																			.label Expire After Time
 																			input(type='text' name='block_bypass_expire_after_time' placeholder='e.g. 1d' value=settings.blockBypass.expireAfterTime)
 																		.row
+																			h4.mv-5 Filters
+																		.row
 																			.label Filters
 																			textarea(name='filters' placeholder='Newline separated') #{settings.filters.join('\n')}
 																		.row
@@ -430,6 +432,8 @@ block content
 																			.label Filter Auto Ban Duration
 																			input(type='text' name='ban_duration' placeholder='e.g. 1w' value=settings.filterBanDuration)
 																		.row
+																			h4.mv-5 Flood Protection
+																		.row
 																			.label Same Content Same IP/ID
 																			input(type='number' name='flood_timers_same_content_same_ip' value=settings.floodTimers.sameContentSameIp)
 																		.row
@@ -438,6 +442,8 @@ block content
 																		.row
 																			.label Any Content Same IP/ID
 																			input(type='number' name='flood_timers_any_content_same_ip' value=settings.floodTimers.anyContentSameIp)
+																		.row
+																			h4.mv-5 DNSBL
 																		.row
 																			.label DNSBL Enabled
 																			label.postform-style.ph-5
@@ -448,6 +454,8 @@ block content
 																		.row
 																			.label Cache Time
 																			input(type='text' name='dnsbl_cache_time' placeholder='e.g. 1h' value=settings.dnsbl.cacheTime)
+																		.row
+																			h4.mv-5 Ratelimits
 																		.row
 																			.label Generate Captcha
 																			input(type='number' name='rate_limit_cost_captcha' value=settings.rateLimitCost.captcha)
