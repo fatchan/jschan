@@ -9,27 +9,30 @@ module.exports = {
 	db,
 
 	checkBypass: (id, anonymizer=false) => {
-		const { blockBypass } = config.get;
 		return db.findOneAndUpdate({
 			'_id': id,
 			'anonymizer': anonymizer,
 			'uses': {
-				'$lte': blockBypass.expireAfterUses
+				'$gt': 0
 			}
 		}, {
 			'$inc': {
-				'uses': 1,
+				'uses': -1,
 			}
 		}).then(r => r.value);
 	},
 
-	getBypass: (anonymizer=false) => {
+	getBypass: (anonymizer=false, id=null, uses=0) => {
 		const { blockBypass } = config.get;
-		return db.insertOne({
-			'uses': 0,
+		const newBypass = {
+			'uses': uses,
 			'anonymizer': anonymizer,
 			'expireAt': new Date(Date.now() + blockBypass.expireAfterTime)
-		});
+		};
+		if (anonymizer === true && id !== null) {
+			newBypass._id = Mongo.ObjectId(id);
+		}
+		return db.insertOne(newBypass);		
 	},
 
 	deleteAll: () => {
