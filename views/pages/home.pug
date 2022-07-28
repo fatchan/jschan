@@ -35,7 +35,7 @@ block content
 				each post, i in hotThreads
 					tr
 						td.text-center
-							span.help(title=`Hot Thread`) 🔥
+							span.help(title=`Hot Thread (${post.score.toFixed(1)})`) 🔥
 							|  #{post.replyposts}
 						td 
 							- const threadLink = `/${post.board}/thread/${post.postId}.html#${post.postId}`;
