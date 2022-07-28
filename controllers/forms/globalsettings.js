@@ -12,7 +12,7 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 module.exports = {
 
 	paramConverter: paramConverter({
-		timeFields: ['inactive_account_time', 'ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
+		timeFields: ['hot_threads_max_age', 'inactive_account_time', 'ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
 		trimFields: ['captcha_options_grid_question', 'captcha_options_grid_trues', 'captcha_options_grid_falses', 'captcha_options_text_font', 'allowed_hosts', 'dnsbl_blacklists', 'other_mime_types',
 			'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links'],
 		numberFields: ['inactive_account_action', 'abandoned_board_action', 'filter_mode', 'auth_level', 'captcha_options_text_wave', 'captcha_options_text_paint', 'captcha_options_text_noise',
@@ -108,6 +108,7 @@ module.exports = {
 			{ result: numberBody(req.body.rate_limit_cost_edit_post, 1, 100), expected: true, error: 'Rate limit cost edit post must be a number from 1-100' },
 			{ result: numberBody(req.body.hot_threads_limit), expected: true, error: 'Invalid hot threads limit' },
 			{ result: numberBody(req.body.hot_threads_threshold), expected: true, error: 'Invalid hot threads threshold' },
+			{ result: numberBody(req.body.hot_threads_max_age), expected: true, error: 'Invalid hot threads max age' },
 			{ result: numberBody(req.body.overboard_limit), expected: true, error: 'Invalid overboard limit' },
 			{ result: numberBody(req.body.overboard_catalog_limit), expected: true, error: 'Invalid overboard catalog limit' },
 			{ result: numberBody(req.body.lock_wait), expected: true, error: 'Invalid lock wait' },

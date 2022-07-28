@@ -9,6 +9,8 @@
   - Anonymizers dummy bypass cookies given while blockbypass is disabled are no longer valid once blockbypass is enabled.
   - Add a new option for automatically forfeiting board staff position and/or deleting inactive accounts with customisable time.
   - Add a new option to automatically lock, lock+unlist, or delete boards that have no board owner.
+  - Homepage hot threads have a new option for maximum thread age, and are no longer bound to a static 7 days.
+  - Homepage hot threads score formula is now `score=1-(current thread age/max thread age)` to better represent more recently active threads, rather than simply sorting by reply count.
   - Add unofficial Typescript SDK + typings for jschan api to README, (thanks to Michell/ussaohelcim).
   - Add "playlist" button in OP dropdown to download thread audio/video as m3u playlist (thanks to Michell/ussaohelcim).
 

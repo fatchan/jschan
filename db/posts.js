@@ -2,7 +2,7 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, { isIP } = require('net')
-	, { MONTH, DAY } = require(__dirname+'/../lib/converter/timeutils.js')
+	, { DAY } = require(__dirname+'/../lib/converter/timeutils.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, Permissions = require(__dirname+'/../lib/permission/permissions.js')
@@ -710,7 +710,7 @@ module.exports = {
 	},
 
 	hotThreads: async () => {
-		const { hotThreadsLimit, hotThreadsThreshold } = config.get;
+		const { hotThreadsLimit, hotThreadsThreshold, hotThreadsMaxAge } = config.get;
 		if (hotThreadsLimit === 0){ //0 limit = no limit in mongodb
 			return [];
 		}
@@ -721,7 +721,7 @@ module.exports = {
 			},
 			'thread': null,
 			'date': { //created in last month
-				'$gte': new Date(Date.now() - MONTH)
+				'$gte': new Date(Date.now() - hotThreadsMaxAge)
 			},
 			'bumped': { //bumped in last 7 days
 				'$gte': new Date(Date.now() - (DAY * 7))
@@ -730,6 +730,9 @@ module.exports = {
 				'$gte': hotThreadsThreshold,
 			}
 		}).toArray();
+		if (potentialHotThreads.length === 0) {
+			return [];
+		}
 		const hotThreadReplyOrs = potentialHotThreads
 			.map(t => ({ board: t.board, thread: t.postId }));
 		const hotThreadScores = await db.aggregate([
@@ -763,7 +766,7 @@ module.exports = {
 			.reduce((acc, t) => {
 				//(1 - (thread age / age limit)) = bias multiplier
 				const threadAge = Date.now() - t.u;
-				acc[`${t.board}-${t.postId}`] = Math.max(0, 1 - (threadAge / MONTH)); //(0,1)
+				acc[`${t.board}-${t.postId}`] = Math.max(0, 1 - (threadAge / hotThreadsMaxAge)); //(0,1)
 				return acc;
 			}, {});
 		const hotThreadScoreMap = hotThreadScores.reduce((acc, ht) => {

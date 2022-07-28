@@ -107,8 +107,11 @@ block content
 																			.label Hot Threads Limit
 																			input(type='number' name='hot_threads_limit' value=settings.hotThreadsLimit)
 																		.row
-																			.label Hot Threads Threshold
+																			.label Hot Threads Reply Threshold
 																			input(type='number' name='hot_threads_threshold' value=settings.hotThreadsThreshold)
+																		.row
+																			.label Hot Threads Max Age
+																			input(type='text' name='hot_threads_max_age' placeholder='e.g. 1mo' value=settings.hotThreadsMaxAge)
 																		.row
 																			.label Overboard Index Thread Limit
 																			input(type='number' name='overboard_limit' value=settings.overboardLimit)

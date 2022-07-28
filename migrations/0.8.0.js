@@ -21,6 +21,7 @@ module.exports = async(db, redis) => {
 			'inactiveAccountTime': timeUtils.MONTH * 3,
 			'inactiveAccountAction': 0, //no actions by default
 			'abandonedBoardAction': 0,
+			'hotThreadsMaxAge': timeUtils.MONTH,
 		},
 	});
 	console.log('Clearing globalsettings cache');

@@ -127,6 +127,7 @@ module.exports = async (req, res) => {
 		overboardCatalogLimit: numberSetting(req.body.overboard_catalog_limit, oldSettings.overboardCatalogLimit),
 		hotThreadsLimit: numberSetting(req.body.hot_threads_limit, oldSettings.hotThreadsLimit),
 		hotThreadsThreshold: numberSetting(req.body.hot_threads_threshold, oldSettings.hotThreadsThreshold),
+		hotThreadsMaxAge: numberSetting(req.body.hot_threads_max_age, oldSettings.hotThreadsMaxAge),
 		allowCustomOverboard: booleanSetting(req.body.allow_custom_overboard, oldSettings.allowCustomOverboard),
 		archiveLinksURL: trimSetting(req.body.archive_links, oldSettings.archiveLinksURL),
 		reverseImageLinksURL: trimSetting(req.body.reverse_links, oldSettings.reverseImageLinksURL),
