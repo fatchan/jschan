@@ -775,7 +775,7 @@ module.exports = {
 			return ht;
 		}).sort((a, b) => {
 			return b.score - a.score;
-		});
+		}).slice(0, hotThreadsLimit);
 		return hotThreadsWithScore;
 	},
 
