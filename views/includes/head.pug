@@ -32,10 +32,10 @@ if isBoard && board.settings.customCss
 include ../../gulp/res/icons/html_code.html
 
 //- main script
-script(src=`/js/all.js?v=${commit}&ct=${captchaType}`)
+script(src=`/js/all.js?v=${commit}&ct=${captchaOptions.type}`)
 
 //- additional scripts included only if hcaptcha or recaptcha is used
-if captchaType === 'google'
+if captchaOptions.type === 'google'
 	script(src='https://www.google.com/recaptcha/api.js' async defer)
-if captchaType === 'hcaptcha'
+if captchaOptions.type === 'hcaptcha'
 	script(src='https://hcaptcha.com/1/api.js' async defer)
