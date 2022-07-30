@@ -133,7 +133,6 @@ module.exports = () => describe('Test post modactions', () => {
 		expect(response.ok).toBe(true);
 	});
 
-
 	test('lower reply limit',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
