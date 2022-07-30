@@ -133,6 +133,7 @@ module.exports = () => describe('Test post modactions', () => {
 		expect(response.ok).toBe(true);
 	});
 
+
 	test('lower reply limit',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
@@ -434,7 +435,7 @@ int main() {...}
 	});
 
 	test('ban reporter for local report',  async () => {
-		const reportsPage = await fetch('http://dev-jschan/test/manage/reports.html', {
+		const reportsPage = await fetch('http://localhost/test/manage/reports.html', {
 			headers: {
 				'cookie': sessionCookie,
 			},
@@ -477,7 +478,7 @@ int main() {...}
 	});
 
 	test('ban reporter for global report',  async () => {
-		const reportsPage = await fetch('http://dev-jschan/globalmanage/reports.html', {
+		const reportsPage = await fetch('http://localhost/globalmanage/reports.html', {
 			headers: {
 				'cookie': sessionCookie,
 			},
