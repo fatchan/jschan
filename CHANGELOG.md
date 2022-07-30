@@ -13,6 +13,7 @@
   - Homepage hot threads score formula is now `score=replies in last 7 days*(1-(current thread age/max thread age))` to better represent more recently active threads, rather than simply sorting by reply count.
   - Add unofficial Typescript SDK + typings for jschan api to README, (thanks to Michell/ussaohelcim).
   - Add "playlist" button in OP dropdown to download thread audio/video as m3u playlist (thanks to Michell/ussaohelcim).
+  - Switch youtube embeds to use youtube-nocookie domain.
 
 ### 0.7.3
   - Bugfix some captcha generations causing server error due non-integer argument to randomRange.
