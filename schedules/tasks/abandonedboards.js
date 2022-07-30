@@ -38,7 +38,7 @@ module.exports = {
 	},
 
 	interval: timeUtils.DAY,
-	immediate: false,
+	immediate: true,
 	condition: 'abandonedBoardAction'
 
 };
