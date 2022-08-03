@@ -26,7 +26,6 @@
 $ sudo apt-get update
 $ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx
 ```
-NOTE: If you plan to use animated .gif thumbnails, ffmpeg >=4.3.1 is recommended as there are known issues with older ffmpeg versions producing buggy thumbnails. You can [compile ffmpeg from source](https://trac.ffmpeg.org/wiki/CompilationGuide) to get a newer version.
 
 **3. Install MongoDB**
 
@@ -43,7 +42,6 @@ For easy installation, use [node version manager](https://github.com/nvm-sh/nvm)
 Install nvm then run the following commands to get the LTS version of nodejs.
 ```bash
 $ nvm install --lts
-$ nvm use --lts
 ```
 
 In future, to install newer LTS node version, latest npm, and reinstall global packages:
