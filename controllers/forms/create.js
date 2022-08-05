@@ -41,8 +41,6 @@ module.exports = {
 			return next(err);
 		}
 
-		return res.redirect(`/${req.body.uri}/index.html`);
-
 	}
 
 };

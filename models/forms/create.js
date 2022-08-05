@@ -73,4 +73,6 @@ module.exports = async (req, res) => {
 		ensureDir(`${uploadDirectory}/asset/${uri}`),
 	]);
 
+	return res.redirect(`/${req.body.uri}/index.html`);
+
 };

@@ -85,12 +85,11 @@ const config = require(__dirname+'/lib/misc/config.js')
 		app.locals.commit = commit;
 		app.locals.version = version;
 		app.locals.meta = meta;
-		app.locals.captchaType = captchaOptions.type;
 		app.locals.postFilesSize = formatSize(globalLimits.postFilesSize.max);
 		app.locals.googleRecaptchaSiteKey = google.siteKey;
 		app.locals.hcaptchaSiteKey = hcaptcha.siteKey;
-		app.locals.captchaGridSize = captchaOptions.grid.size;
 		app.locals.globalAnnouncement = globalAnnouncement;
+		app.locals.captchaOptions = captchaOptions;
 	};
 	loadAppLocals();
 	redis.addCallback('config', loadAppLocals);

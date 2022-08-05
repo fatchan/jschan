@@ -13,7 +13,7 @@ if (!isCatalog) { //dont show embed buttons in catalog
 						const searchParams = urlObject.searchParams;
 						const videoId = searchParams.get('v') || (urlObject.hostname === 'youtu.be' ? urlObject.pathname.substring(1) : null);
 						if (videoId && videoId.length === 11) {
-							return `<iframe class="embed-video" src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" style="display:block;" allowfullscreen></iframe>`;
+							return `<iframe class="embed-video" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" style="display:block;" allowfullscreen></iframe>`;
 						}
 					} catch (e) { /*invalid url*/ }
 					return null;

@@ -4,8 +4,7 @@ const express  = require('express')
 	, router = express.Router({ caseSensitive: true })
 	, Boards = require(__dirname+'/../db/boards.js')
 //middlewares
-	, torPreBypassCheck = require(__dirname+'/../lib/middleware/captcha/torprebypass.js')
-	, geoAndTor = require(__dirname+'/../lib/middleware/ip/geoip.js')
+	, geoIp = require(__dirname+'/../lib/middleware/ip/geoip.js')
 	, processIp = require(__dirname+'/../lib/middleware/ip/processip.js')
 	, calcPerms = require(__dirname+'/../lib/middleware/permission/calcpermsmiddleware.js')
 	, Permissions = require(__dirname+'/../lib/permission/permissions.js')
@@ -32,29 +31,29 @@ const express  = require('express')
 		editRoleController, newCaptchaForm, blockBypassForm, logoutForm, deleteSessionsController } = require(__dirname+'/forms/index.js');
 
 //make new post
-router.post('/board/:board/post', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, fileMiddlewares.posts,
+router.post('/board/:board/post', geoIp, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, fileMiddlewares.posts,
 	makePostController.paramConverter, verifyCaptcha, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, makePostController.controller);
-router.post('/board/:board/modpost', geoAndTor, fileMiddlewares.postsEarly, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn,
+router.post('/board/:board/modpost', geoIp, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), fileMiddlewares.posts, makePostController.paramConverter, csrf, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, makePostController.controller); //mod post has token instead of captcha
 
 //post actions
-router.post('/board/:board/actions', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, actionController.paramConverter, verifyCaptcha, actionController.controller); //public, with captcha
-router.post('/board/:board/modactions', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn,
+router.post('/board/:board/actions', geoIp, processIp, useSession, sessionRefresh, Boards.exists, calcPerms, banCheck, actionController.paramConverter, verifyCaptcha, actionController.controller); //public, with captcha
+router.post('/board/:board/modactions', geoIp, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, banCheck, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), actionController.paramConverter, actionController.controller); //board manage page
 
-router.post('/global/actions', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+router.post('/global/actions', geoIp, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_GENERAL), globalActionController.paramConverter, globalActionController.controller); //global manage page
 
 //appeal ban
-router.post('/appeal', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, appealController.paramConverter, verifyCaptcha, appealController.controller);
+router.post('/appeal', geoIp, processIp, useSession, sessionRefresh, appealController.paramConverter, verifyCaptcha, appealController.controller);
 //edit post
-router.post('/editpost', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, editPostController.paramConverter, Boards.bodyExists, calcPerms,
+router.post('/editpost', geoIp, processIp, useSession, sessionRefresh, csrf, editPostController.paramConverter, Boards.bodyExists, calcPerms,
 	hasPerms.any(Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_BOARD_GENERAL), editPostController.controller);
 
 //board management forms
 router.post('/board/:board/transfer', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn,
 	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), transferController.paramConverter, transferController.controller);
-router.post('/board/:board/settings', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn,
+router.post('/board/:board/settings', geoIp, processIp, useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), boardSettingsController.paramConverter, boardSettingsController.controller);
 router.post('/board/:board/editbans', useSession, sessionRefresh, csrf, Boards.exists, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_BANS), editBansController.paramConverter, editBansController.controller); //edit bans
@@ -108,13 +107,13 @@ router.post('/global/settings', useSession, sessionRefresh, csrf, calcPerms, isL
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), globalSettingsController.paramConverter, globalSettingsController.controller); //global settings
 
 //create board
-router.post('/create', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, isLoggedIn, verifyCaptcha, calcPerms, createBoardController.paramConverter, createBoardController.controller);
+router.post('/create', geoIp, processIp, useSession, sessionRefresh, isLoggedIn, calcPerms, verifyCaptcha, createBoardController.paramConverter, createBoardController.controller);
 
 //accounts
 router.post('/login', useSession, loginController.paramConverter, loginController.controller);
 router.post('/logout', useSession, logoutForm);
-router.post('/register', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, calcPerms, registerController.paramConverter, registerController.controller);
-router.post('/changepassword', geoAndTor, torPreBypassCheck, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController.paramConverter, changePasswordController.controller);
+router.post('/register', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, registerController.paramConverter, registerController.controller);
+router.post('/changepassword', geoIp, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController.paramConverter, changePasswordController.controller);
 router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, resignController.paramConverter, resignController.controller);
 router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteAccountController.controller);
 router.post('/deletesessions', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteSessionsController.paramConverter, deleteSessionsController.controller);
@@ -122,7 +121,7 @@ router.post('/deletesessions', useSession, sessionRefresh, csrf, calcPerms, isLo
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptchaForm);
 //solve captcha for block bypass
-router.post('/blockbypass', geoAndTor, processIp, verifyCaptcha, blockBypassForm);
+router.post('/blockbypass', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, blockBypassForm);
 
 module.exports = router;
 

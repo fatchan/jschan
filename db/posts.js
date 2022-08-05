@@ -713,28 +713,76 @@ module.exports = {
 	},
 
 	hotThreads: async () => {
-		const { hotThreadsLimit, hotThreadsThreshold } = config.get;
+		const { hotThreadsLimit, hotThreadsThreshold, hotThreadsMaxAge } = config.get;
 		if (hotThreadsLimit === 0){ //0 limit = no limit in mongodb
 			return [];
 		}
 		const listedBoards = await Boards.getLocalListed();
-		return db.find({
+		const potentialHotThreads = await db.find({
 			'board': {
 				'$in': listedBoards
 			},
 			'thread': null,
-			'date': {
-				//created in last 7 days
-				'$gte': new Date(Date.now() - (7 * DAY))
+			'date': { //created in last month
+				'$gte': new Date(Date.now() - hotThreadsMaxAge)
+			},
+			'bumped': { //bumped in last 7 days
+				'$gte': new Date(Date.now() - (DAY * 7))
 			},
 			'replyposts': {
 				'$gte': hotThreadsThreshold,
 			}
-		}).sort({
-			'replyposts': -1
-		})
-			.limit(hotThreadsLimit)
-			.toArray();
+		}).toArray();
+		if (potentialHotThreads.length === 0) {
+			return [];
+		}
+		const hotThreadReplyOrs = potentialHotThreads
+			.map(t => ({ board: t.board, thread: t.postId }));
+		const hotThreadScores = await db.aggregate([
+			{
+				'$match': {
+					'$and': [
+						{
+							'$or': hotThreadReplyOrs
+						},
+						{
+							'date': {
+								'$gte': new Date(Date.now() - (DAY * 7))
+							}
+						},
+					],
+				},
+			}, {
+				'$group': {
+					'_id': {
+						'board': '$board',
+						'thread': '$thread',
+					},
+					'score': {
+						'$sum': 1,
+					},
+				},
+			},
+		]).toArray();
+		//Welcome to improve into a pipeline if possible, but reducing to these maps isnt thaaat bad
+		const hotThreadBiasMap = potentialHotThreads
+			.reduce((acc, t) => {
+				//(1 - (thread age / age limit)) = bias multiplier
+				const threadAge = Date.now() - t.u;
+				acc[`${t.board}-${t.postId}`] = Math.max(0, 1 - (threadAge / hotThreadsMaxAge)); //(0,1)
+				return acc;
+			}, {});
+		const hotThreadScoreMap = hotThreadScores.reduce((acc, ht) => {
+			acc[`${ht._id.board}-${ht._id.thread}`] = ht.score * hotThreadBiasMap[`${ht._id.board}-${ht._id.thread}`];
+			return acc;
+		}, {});
+		const hotThreadsWithScore = potentialHotThreads.map(ht => {
+			ht.score = hotThreadScoreMap[`${ht.board}-${ht.postId}`];
+			return ht;
+		}).sort((a, b) => {
+			return b.score - a.score;
+		}).slice(0, hotThreadsLimit);
+		return hotThreadsWithScore;
 	},
 
 	deleteMany: (ids) => {

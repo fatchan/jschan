@@ -34,10 +34,22 @@ module.exports = {
 	captchaOptions: {
 		type: 'text',
 		generateLimit: 250,
+		text: {
+			font: 'default',
+			line: true,
+			wave: 0,
+			paint: 2,
+			noise: 0,
+		},
 		grid: {
+			falses: ['○','□','♘','♢','▽','△','♖','✧','♔','♘','♕','♗','♙','♧'],
+			trues: ['●','■','♞','♦','▼','▲','♜','✦','♚','♞','♛','♝','♟','♣'],
+			question: 'Select the solid/filled icons',
 			size: 4,
 			imageSize: 120,
 			iconYOffset: 15,
+			edge: 25,
+			noise: 0,
 		},
 		numDistorts: {
 			min: 2,
@@ -99,6 +111,8 @@ module.exports = {
 	hotThreadsLimit: 5,
 	//how many replies the thread needs to be "hot"
 	hotThreadsThreshold: 10,
+	//max age of a hot thread, with a reducing score multiplier from 0-1 bias towards this date
+	hotThreadsMaxAge: 2629800000,
 
 	//default url format/links for archive and reverse image search links, %s will be replaced by the url
 	archiveLinksURL: 'https://archive.today/?run=1&url=%s',
@@ -174,6 +188,14 @@ module.exports = {
 
 	//how many of the most recent newsposts to show on the homepage
 	maxRecentNews: 5,
+
+	//time for an account to be considered inactive
+	inactiveAccountTime: 7889400000,
+	//action for inactive accounts: nothing, forfeit staff positions, delete account
+	inactiveAccountAction: 0,
+
+	//action for handling abandoned boards (no board owner): nothing, lock, lock + unlist, delete board
+	abandonedBoardAction: 0,
 
 	/* filter filenames on posts and banners
 		false=no filtering

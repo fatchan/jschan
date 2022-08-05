@@ -1340,6 +1340,9 @@ iframe.bypass {
 	margin-right: 0;
 	margin-left: 1px;
 }
+.box-wrap .label {
+	flex: 0 1 175px;
+}
 
 hr {
 	border-top: 1px solid var(--hr);
@@ -1465,6 +1468,89 @@ row.wrap.sb .col {
 	white-space: nowrap;
 }
 
+.tabs.group:after {
+	display: block;
+	content: " ";
+	clear: both;
+}
+
+.tabs li {
+	display: inline;
+}
+
+.tabs li a {
+	color: var(--font-color);
+	float: left;
+	display: block;
+	padding: 4px 10px;
+	margin-left: -1px;
+	position: relative;
+	left: 1px;
+	background: var(--post-color);
+	text-decoration: none;
+}
+
+.tabs li:last-of-type {
+	margin-right: 1px;
+}
+
+.tabs {
+	padding: 0;
+	margin: 0 0 -1px 0;
+	list-style: none;
+}
+
+.box-wrap .col {
+	background: var(--background-rest);
+	padding: 10px;
+}
+
+.box-wrap, .tabs li a {
+	border: 1px solid var(--post-outline-color);
+}
+
+/* Default selected tab 1 */
+.tab {
+	display:none;
+}
+.tab-1 {
+	display: flex;
+}
+:target .tab-1 {
+	display:none;
+}
+
+.sm {
+	scroll-margin-top: 100px;
+}
+
+#tab-1:target .tab-1,
+#tab-2:target .tab-2,
+#tab-3:target .tab-3,
+#tab-4:target .tab-4,
+#tab-5:target .tab-5,
+#tab-6:target .tab-6,
+#tab-7:target .tab-7,
+#tab-8:target .tab-8,
+#tab-9:target .tab-9,
+#tab-10:target .tab-10 { 
+	display: flex;
+}
+
+#tab-1:target a[href="#tab-1"],
+#tab-2:target a[href="#tab-2"],
+#tab-3:target a[href="#tab-3"],
+#tab-4:target a[href="#tab-4"],
+#tab-5:target a[href="#tab-5"],
+#tab-6:target a[href="#tab-6"],
+#tab-7:target a[href="#tab-7"],
+#tab-8:target a[href="#tab-8"],
+#tab-9:target a[href="#tab-9"],
+#tab-10:target a[href="#tab-10"] {
+	border-bottom: 1px solid var(--background-rest);
+	background: var(--background-rest);
+}
+
 @media only screen and (max-height: 400px) {
 	.modal {
 		top: 5px;
@@ -1493,7 +1579,17 @@ row.wrap.sb .col {
 		max-width: 32px;
 		max-height: 32px;
 	}
-
+	.box-wrap .label {
+		flex: unset;
+	}
+	.tabs li a {
+		padding: 8px 15px;
+		margin-top: -1px;
+		border: 1px solid var(--post-outline-color)!important;
+	}
+	select[name="countries"] {
+		max-width: 220px;
+	}
 	.postmenu {
 		border-left: .5em solid transparent;
 		border-right: .5em solid transparent;

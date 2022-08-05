@@ -1,3 +1,20 @@
+### 0.8.0
+  - Settings pages are now more organised and use tabs, and still works without javascript. 
+  - Captcha improvements
+    - New captcha image effects, and customisation for their value/strength.
+    - Customisable font for text captcha.
+    - Improved grid captcha, the character sets and question are now customisable.
+    - Added new captcha type "grid v2" with a different challenge involving pointing arrows. Also customisable like grid v1.
+  - Added a new account level permission to bypass captchas including blockbypass.
+  - Anonymizers dummy bypass cookies given while blockbypass is disabled are no longer valid once blockbypass is enabled.
+  - Add a new option for automatically forfeiting board staff position and/or deleting inactive accounts with customisable time.
+  - Add a new option to automatically lock, lock+unlist, or delete boards that have no board owner.
+  - Homepage hot threads have a new option for maximum thread age, and are no longer bound to a static 7 days.
+  - Homepage hot threads score formula is now `score=replies in last 7 days*(1-(current thread age/max thread age))` to better represent more recently active threads, rather than simply sorting by reply count.
+  - Add unofficial Typescript SDK + typings for jschan api to README, (thanks to Michell/ussaohelcim).
+  - Add "playlist" button in OP dropdown to download thread audio/video as m3u playlist (thanks to Michell/ussaohelcim).
+  - Switch youtube embeds to use youtube-nocookie domain.
+
 ### 0.7.3
   - Bugfix some captcha generations causing server error due non-integer argument to randomRange.
 

@@ -6,7 +6,7 @@ const express  = require('express')
 	, Posts = require(__dirname+'/../db/posts.js')
 	//middlewares
 	, processIp = require(__dirname+'/../lib/middleware/ip/processip.js')
-	, geoAndTor = require(__dirname+'/../lib/middleware/ip/geoip.js')
+	, geoIp = require(__dirname+'/../lib/middleware/ip/geoip.js')
 	, calcPerms = require(__dirname+'/../lib/middleware/permission/calcpermsmiddleware.js')
 	, Permissions = require(__dirname+'/../lib/permission/permissions.js')
 	, hasPerms = require(__dirname+'/../lib/middleware/permission/haspermsmiddleware.js')
@@ -111,7 +111,7 @@ router.get('/globalmanage/editrole/:roleid([a-f0-9]{24}).html', useSession, sess
 //TODO: edit post edit page form, like editnews/editaccount/editrole endpoint
 
 //captcha
-router.get('/captcha', geoAndTor, processIp, captcha); //get captcha image and cookie
+router.get('/captcha', geoIp, processIp, captcha); //get captcha image and cookie
 router.get('/captcha.html', captchaPage); //iframed for noscript users
 router.get('/bypass.html', blockBypass); //block bypass page
 router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page

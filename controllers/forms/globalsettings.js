@@ -4,6 +4,7 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, themeHelper = require(__dirname+'/../../lib/misc/themes.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
+	, { fontPaths } = require(__dirname+'/../../lib/misc/fonts.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody } = require(__dirname+'/../../lib/input/schema.js');
@@ -11,12 +12,13 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 module.exports = {
 
 	paramConverter: paramConverter({
-		timeFields: ['ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
-		trimFields: ['allowed_hosts', 'dnsbl_blacklists', 'other_mime_types', 'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links'],
-		numberFields: ['filter_mode', 'auth_level',
-			'captcha_options_generate_limit', 'captcha_options_grid_size',  'captcha_options_grid_image_size', 'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max',
-			'captcha_options_distortion', 'captcha_options_grid_icon_y_offset', 'flood_timers_same_content_same_ip', 'flood_timers_same_content_any_ip', 'flood_timers_any_content_same_ip',
-			'block_bypass_expire_after_uses', 'rate_limit_cost_captcha', 'rate_limit_cost_board_settings', 'rate_limit_cost_edit_post',
+		timeFields: ['hot_threads_max_age', 'inactive_account_time', 'ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
+		trimFields: ['captcha_options_grid_question', 'captcha_options_grid_trues', 'captcha_options_grid_falses', 'captcha_options_text_font', 'allowed_hosts', 'dnsbl_blacklists', 'other_mime_types',
+			'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links'],
+		numberFields: ['inactive_account_action', 'abandoned_board_action', 'filter_mode', 'auth_level', 'captcha_options_text_wave', 'captcha_options_text_paint', 'captcha_options_text_noise',
+			'captcha_options_grid_noise', 'captcha_options_grid_edge', 'captcha_options_generate_limit', 'captcha_options_grid_size',  'captcha_options_grid_image_size',
+			'captcha_options_num_distorts_min', 'captcha_options_num_distorts_max', 'captcha_options_distortion', 'captcha_options_grid_icon_y_offset', 'flood_timers_same_content_same_ip', 'flood_timers_same_content_any_ip',
+			'flood_timers_any_content_same_ip', 'block_bypass_expire_after_uses', 'rate_limit_cost_captcha', 'rate_limit_cost_board_settings', 'rate_limit_cost_edit_post',
 			'overboard_limit', 'hot_threads_limit', 'hot_threads_threshold', 'overboard_catalog_limit', 'lock_wait', 'prune_modlogs', 'prune_ips', 'thumb_size', 'video_thumb_percentage', 'quote_limit', 'preview_replies',
 			'sticky_preview_replies', 'early_404_fraction', 'early_404_replies', 'max_recent_news', 'highlight_options_threshold', 'global_limits_thread_limit_min',
 			'global_limits_thread_limit_max', 'global_limits_reply_limit_min', 'global_limits_reply_limit_max', 'global_limits_bump_limit_min', 'global_limits_bump_limit_max',
@@ -57,7 +59,7 @@ module.exports = {
 			}, expected: false, error: 'Extra mime types must be like type/subtype' },
 			{ result: () => {
 				if (req.body.archive_links) {
-					/* eslint-disable no-useless-escape */						
+					/* eslint-disable no-useless-escape */
 					return /https?\:\/\/[^\s<>\[\]{}|\\^]+%s[^\s<>\[\]{}|\\^]*/i.test(req.body.archive_links);
 				}
 				return false;
@@ -68,6 +70,9 @@ module.exports = {
 				}
 				return false;
 			}, expected: true, error: 'Invalid reverse image search links URL format, must be a link containing %s where the url param belongs.' },
+			{ result: numberBody(req.body.inactive_account_time), expected: true, error: 'Invalid inactive account time' },
+			{ result: numberBody(req.body.inactive_account_action, 0, 2), expected: true, error: 'Inactive account action must be a number from 0-2' },
+			{ result: numberBody(req.body.abandoned_board_action, 0, 3), expected: true, error: 'Abandoned board action must be a number from 0-3' },
 			{ result: lengthBody(req.body.global_announcement, 0, 10000), expected: false, error: 'Global announcement must not exceed 10000 characters' },
 			{ result: lengthBody(req.body.filters, 0, 50000), expected: false, error: 'Filter text cannot exceed 50000 characters' },
 			{ result: numberBody(req.body.filter_mode, 0, 2), expected: true, error: 'Filter mode must be a number from 0-2' },
@@ -77,7 +82,7 @@ module.exports = {
 			{ result: lengthBody(req.body.ip_header, 0, 100), expected: false, error: 'IP header length must not exceed 100 characters' },
 			{ result: lengthBody(req.body.meta_site_name, 0, 100), expected: false, error: 'Meta site name must not exceed 100 characters' },
 			{ result: lengthBody(req.body.meta_url, 0, 100), expected: false, error: 'Meta url must not exceed 100 characters' },
-			{ result: inArrayBody(req.body.captcha_options_type, ['grid', 'text', 'google', 'hcaptcha']), expected: true, error: 'Invalid captcha options type' },
+			{ result: inArrayBody(req.body.captcha_options_type, ['grid', 'grid2', 'text', 'google', 'hcaptcha']), expected: true, error: 'Invalid captcha options type' },
 			{ result: numberBody(req.body.captcha_options_generate_limit, 1), expected: true, error: 'Captcha options generate limit must be a number > 0' },
 			{ result: numberBody(req.body.captcha_options_grid_size, 2, 6), expected: true, error: 'Captcha options grid size must be a number from 2-6' },
 			{ result: numberBody(req.body.captcha_options_grid_image_size, 50, 500), expected: true, error: 'Captcha options grid image size must be a number from 50-500' },
@@ -86,6 +91,12 @@ module.exports = {
 			{ result: numberBody(req.body.captcha_options_num_distorts_max, 0, 10), expected: true, error: 'Captcha options max distorts must be a number from 0-10' },
 			{ result: minmaxBody(req.body.captcha_options_num_distorts_min, req.body.captcha_options_num_distorts_max), expected: true, error: 'Captcha options distorts min must be less than max' },
 			{ result: numberBody(req.body.captcha_options_distortion, 0, 50), expected: true, error: 'Captcha options distortion must be a number from 0-50' },
+			{ result: inArrayBody(req.body.captcha_options_text_font, fontPaths), expected: true, error: 'Invalid captcha options text font' },
+			{ result: numberBody(req.body.captcha_options_text_wave, 0, 10), expected: true, error: 'Captcha options text wave effect strength must be a number form 0-10' },
+			{ result: numberBody(req.body.captcha_options_text_paint, 0, 10), expected: true, error: 'Captcha options text paint effect strength must be a number from 0-10' },
+			{ result: numberBody(req.body.captcha_options_text_noise, 0, 10), expected: true, error: 'Captcha options text noise effect strength must be a number from 0-10' },
+			{ result: numberBody(req.body.captcha_options_grid_noise, 0, 10), expected: true, error: 'Captcha options grid noise effect strength must be a number from 0-10' },
+			{ result: numberBody(req.body.captcha_options_grid_edge, 0, 50), expected: true, error: 'Captcha options grid edge effect strength must be a number from 0-50' },
 			{ result: numberBody(req.body.dnsbl_cache_time), expected: true, error: 'Invalid dnsbl cache time' },
 			{ result: numberBody(req.body.flood_timers_same_content_same_ip), expected: true, error: 'Invalid flood time same content same ip' },
 			{ result: numberBody(req.body.flood_timers_same_content_any_ip), expected: true, error: 'Invalid flood time same contenet any ip' },
@@ -97,6 +108,7 @@ module.exports = {
 			{ result: numberBody(req.body.rate_limit_cost_edit_post, 1, 100), expected: true, error: 'Rate limit cost edit post must be a number from 1-100' },
 			{ result: numberBody(req.body.hot_threads_limit), expected: true, error: 'Invalid hot threads limit' },
 			{ result: numberBody(req.body.hot_threads_threshold), expected: true, error: 'Invalid hot threads threshold' },
+			{ result: numberBody(req.body.hot_threads_max_age), expected: true, error: 'Invalid hot threads max age' },
 			{ result: numberBody(req.body.overboard_limit), expected: true, error: 'Invalid overboard limit' },
 			{ result: numberBody(req.body.overboard_catalog_limit), expected: true, error: 'Invalid overboard catalog limit' },
 			{ result: numberBody(req.body.lock_wait), expected: true, error: 'Invalid lock wait' },

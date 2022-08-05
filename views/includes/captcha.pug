@@ -1,4 +1,4 @@
-case captchaType
+case captchaOptions.type
 	when 'google'
 		div(class='g-recaptcha' data-sitekey=`${googleRecaptchaSiteKey}` data-theme='dark' data-size='compact' data-callback='recaptchaCallback')
 		noscript Please enable JavaScript to solve the captcha.
@@ -11,14 +11,14 @@ case captchaType
 		.jsonly.captcha(style='display:none;')
 		input.captchafield(type='text' name='captcha' autocomplete='off' placeholder='Captcha text' pattern='.{6}' required title='6 characters')
 	when 'grid'
-		unless minimal
-			a.text-center(href='/faq.html#captcha') Instructions
+	when 'grid2'
+		span.text-center #{captchaOptions.grid.question}
 		.catalog
 			noscript.no-m-p
 				iframe.captcha(src='/captcha.html' width='150' height='150' scrolling='no' loading='lazy')
 			.jsonly.captcha(style='display:none')
 			.captchafield.noselect
-				- for(let i = 0; i < captchaGridSize**2; i++) {
+				- for(let i = 0; i < captchaOptions.grid.size**2; i++) {
 				label.captchachecklabel
 					input(type='checkbox' name='captcha' value=i)
 					span.captchacheckbox

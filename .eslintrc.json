@@ -28,6 +28,11 @@
         "ecmaVersion": "latest"
     },
     "rules": {
+    	"brace-style": [
+    		"error",
+    		"1tbs",
+    		{ "allowSingleLine": true }
+    	],
         "indent": [
             "error",
             "tab",

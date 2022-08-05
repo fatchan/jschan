@@ -20,7 +20,7 @@ block content
 			.row
 				.label Message
 				textarea(name='message' rows='10' placeholder='Supports post styling' required)
-			input(type='submit', value='submit')
+			input(type='submit', value='Submit')
 	if news.length > 0
 		hr(size=1)
 		h4.no-m-p Manage News:
@@ -31,4 +31,4 @@ block content
 					+newspost(post, true)
 				if news.length === 1
 					.anchor
-				input(type='submit', value='delete')
+				input(type='submit', value='Delete')

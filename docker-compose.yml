@@ -28,7 +28,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/jschan/Dockerfile
-      network: jschan_default
+      network: default
     environment:
       - NODE_ENV=development
       - JSCHAN_IP=0.0.0.0
@@ -54,7 +54,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/jschan/Dockerfile-reset
-      network: jschan_default
+      network: default
     environment:
       - MONGO_USERNAME=jschan
       - MONGO_PASSWORD=changeme
