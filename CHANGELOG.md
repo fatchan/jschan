@@ -1,3 +1,7 @@
+### 0.8.1
+  - Fix incorrectly displaying inactive accounts action settings in global settings.
+  - Fix captcha gridv2 not appearing in board captcha slot with js enabled.
+
 ### 0.8.0
   - Settings pages are now more organised and use tabs, and still works without javascript. 
   - Captcha improvements
