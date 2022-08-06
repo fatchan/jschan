@@ -41,11 +41,11 @@ class CaptchaController {
 		if (captcha.closest('form').dataset.captchaPreload == 'true') {
 			return this.loadCaptcha(captcha);
 		}
-		if (captchaType === 'grid') {
+		if (captchaType === 'grid' || captchaType === 'grid2') {
 			let hoverListener = captcha.closest('details') || captcha;
 			//captcha.parentElement.previousSibling.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling.previousSibling :  captcha.parentElement;
 			hoverListener.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
-		} else {
+		} else { //captchaType === 'text'
 			captcha.placeholder = 'focus to load captcha';
 			captcha.addEventListener('focus', () => this.loadCaptcha(captcha), { once: true });
 		}
