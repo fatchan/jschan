@@ -78,6 +78,13 @@ window.addEventListener('DOMContentLoaded', () => {
 		};
 
 		const expand = function(e) {
+			if(this.dataset.type === 'tegaki'){
+				e.preventDefault();
+				window.dispatchEvent(
+					(new CustomEvent('showTegakiReplay',{detail:this.firstChild.href}))
+				);
+				return;
+			}
 			if (e.target.nodeName === 'VIDEO' || e.target.nodeName === 'AUDIO') {
 				e.stopPropagation();
 				return;

@@ -161,14 +161,24 @@ class postFormHandler {
 	}
 
 	doTegaki() {
+		let savereplay = document.querySelector('#recordTegaki').checked;
 		Tegaki.open({
+			saveReplay : savereplay,
 			onCancel: () => {},
 			onDone: () => {
+				if(savereplay){
+					let blob = Tegaki.replayRecorder.toBlob();
+					this.addFile(new File([blob], 'tegaki-replay.tgkr', { type: 'tegaki/replay' }));
+				}
+
 				Tegaki.flatten().toBlob(b => {
 					this.addFile(new File([b], 'tegaki.png', { type: 'image/png' }));
-					this.updateFilesText();
-					Tegaki.resetLayers();
 				}, 'image/png');
+				
+				this.updateFilesText();
+				Tegaki.resetLayers();
+
+				Tegaki.destroy();
 			},
 			width: tegakiWidth,
 			height: tegakiHeight,
@@ -624,4 +634,15 @@ window.addEventListener('settingsReady', () => {
 	tegakiHeightSetting.value = tegakiHeight;
 	tegakiHeightSetting.addEventListener('change', changeTegakiHeightSetting, false);
 
+});
+
+function showTegakiReplay(url){
+	Tegaki.open({
+		replayMode: true,
+		replayURL: url 
+	});
+}
+
+window.addEventListener('showTegakiReplay',(e)=>{
+	showTegakiReplay(e.detail);
 });
