@@ -408,6 +408,7 @@ async function custompages() {
 	const formatSize = require(__dirname+'/lib/converter/formatsize.js');
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
+		`${paths.pug.src}/pages/403.pug`,
 		`${paths.pug.src}/pages/404.pug`,
 		`${paths.pug.src}/pages/500.pug`,
 		`${paths.pug.src}/pages/502.pug`,
