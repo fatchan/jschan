@@ -444,10 +444,18 @@ async function scripts() {
 	try {
 
 		// compile some locals/variables needed from configs in fe scripts
+		const captchaOptions = config.get.captchaOptions;
+		//smaller set of captchaoptions needed for some frontend scripts to build includes
+		const reducedCaptchaOptions = {
+			grid: {
+				size: captchaOptions.grid.size,
+				question: captchaOptions.grid.question,
+			},
+			type: captchaOptions.type,
+		};
 		const locals = `const themes = ['${themes.join('\', \'')}'];
 const codeThemes = ['${codeThemes.join('\', \'')}'];
-const captchaType = '${config.get.captchaOptions.type}';
-const captchaGridSize = ${config.get.captchaOptions.grid.size};
+const captchaOptions = ${JSON.stringify(reducedCaptchaOptions)};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
