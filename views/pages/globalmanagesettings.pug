@@ -194,9 +194,9 @@ block content
 																		.row
 																			.label Inactive Account Action
 																			select(name='inactive_account_action')
-																				option(value='0', selected=settings.inactiveAccountTime === 0) Do nothing
-																				option(value='1', selected=settings.inactiveAccountTime === 1) Forfeit staff positions
-																				option(value='2', selected=settings.inactiveAccountTime === 2) Delete Account
+																				option(value='0', selected=settings.inactiveAccountAction === 0) Do nothing
+																				option(value='1', selected=settings.inactiveAccountAction === 1) Forfeit staff positions
+																				option(value='2', selected=settings.inactiveAccountAction === 2) Delete Account
 																		.row
 																			.label Abandoned Board Action
 																			select(name='abandoned_board_action')

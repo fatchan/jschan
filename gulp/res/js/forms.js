@@ -338,11 +338,9 @@ class postFormHandler {
 								const modalBanned = document.getElementById('modalbanned');
 								const modalBanForm = modalBanned.querySelector('form');
 								const modalAppealHandler = new postFormHandler(modalBanForm);
-								for (let modalFormElement of modalAppealHandler.form.elements) {
+								for (let modalFormElement of modalBanForm.querySelectorAll('input[name="checkedbans"]')) {
 									//for ease of appeal, pre-check all the bans in this case.
-									if (modalFormElement.type === 'checkbox') {
-										modalFormElement.checked = true;
-									}
+									modalFormElement.checked = true;
 								}
 								const appealCaptcha = modalAppealHandler.captchaField;
 								if (appealCaptcha) {

@@ -1,4 +1,4 @@
-/* globals captchaType captchaGridSize captchaformsection */
+/* globals captchaOptions captchaformsection */
 const captchaCookieRegex = /captchaid=(.[^;]*)/ig;
 class CaptchaController {
 
@@ -41,11 +41,11 @@ class CaptchaController {
 		if (captcha.closest('form').dataset.captchaPreload == 'true') {
 			return this.loadCaptcha(captcha);
 		}
-		if (captchaType === 'grid') {
+		if (captchaOptions.type === 'grid' || captchaOptions.type === 'grid2') {
 			let hoverListener = captcha.closest('details') || captcha;
 			//captcha.parentElement.previousSibling.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling.previousSibling :  captcha.parentElement;
 			hoverListener.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
-		} else {
+		} else { //captchaOptions.type === 'text'
 			captcha.placeholder = 'focus to load captcha';
 			captcha.addEventListener('focus', () => this.loadCaptcha(captcha), { once: true });
 		}
@@ -95,7 +95,7 @@ class CaptchaController {
 
 	addMissingCaptcha() {
 		const postSubmitButton = document.getElementById('submitpost');
-		const captchaFormSectionHtml = captchaformsection({ captchaGridSize });
+		const captchaFormSectionHtml = captchaformsection({ captchaOptions });
 		postSubmitButton.insertAdjacentHTML('beforebegin', captchaFormSectionHtml);
 		const captchaFormSection = postSubmitButton.previousSibling;
 		const captchaField = captchaFormSection.querySelector('.captchafield');
@@ -116,12 +116,12 @@ class CaptchaController {
 		refreshDiv.classList.add('captcharefresh', 'noselect');
 		refreshDiv.addEventListener('click', (e) => this.refreshCaptchas(e), true);
 		refreshDiv.textContent = '↻';
-		if (captchaType === 'text') {
+		if (captchaOptions.type === 'text') {
 			field.placeholder = 'loading';
 		}
 		captchaImg.src = imgSrc;
 		captchaImg.onload = () => {
-			if (captchaType === 'text') {
+			if (captchaOptions.type === 'text') {
 				field.placeholder = 'Captcha text';
 			}
 			captchaDiv.appendChild(captchaImg);
