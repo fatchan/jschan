@@ -1,3 +1,7 @@
+### 0.8.2
+  - Migrate to new socket.io redis adapter package.
+  - Fix issue with pre checking boxes in ban modal conflicting with grid captcha.
+
 ### 0.8.1
   - Fix incorrectly displaying inactive accounts action settings in global settings.
   - Fix captcha gridv2 not appearing in board captcha slot with js enabled.
