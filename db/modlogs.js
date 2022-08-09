@@ -11,7 +11,7 @@ module.exports = {
 		return db.aggregate([
 			{
 				'$match': {
-					'board': board._id
+					'board': board
 				}
 			},
 			{
