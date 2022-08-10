@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
 			animatedImage: true,
 			video: false,
 			audio: false,
-			other: false
+			other: true
 		})) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
