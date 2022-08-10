@@ -15,6 +15,7 @@ block content
 				.label Password
 				input(type='password', name='password', maxlength='100' required)
 			input(type='submit', value='Submit')
-		p: a(href='/register.html') Register
+		if permissions.get(Permissions.CREATE_ACCOUNT)
+			p: a(href='/register.html') Register
 		p: a(href='/changepassword.html') Change Password
 
