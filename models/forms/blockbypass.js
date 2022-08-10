@@ -8,8 +8,9 @@ const { Bypass } = require(__dirname+'/../../db/')
 module.exports = async (req, res) => {
 
 	const { secureCookies, blockBypass } = config.get;
-	const bypass = await Bypass.getBypass(res.locals.anonymizer, res.locals.pseudoIp, blockBypass.expireAfterUses);
-	const bypassId = bypass.insertedId;
+	const existingBypassId = req.signedCookies.bypassid || res.locals.pseudoIp;
+	const bypass = await Bypass.getBypass(res.locals.anonymizer, existingBypassId, blockBypass.expireAfterUses);
+	const bypassId = bypass.insertedId || existingBypassId; // if upserted, insertedId will be null, and will be the existingId
 	res.locals.blockBypass = true;
 
 	res.cookie('bypassid', bypassId.toString(), {
