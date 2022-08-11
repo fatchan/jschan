@@ -400,6 +400,7 @@ module.exports = {
 		forceThreadFile: false,
 		forceThreadSubject: false,
 		disableReplySubject: false,
+		hideBanners: false,
 		minThreadMessageLength: 0,
 		minReplyMessageLength: 0,
 		maxThreadMessageLength: 20000,

@@ -306,6 +306,7 @@ module.exports = async (req, res) => {
 			forceThreadFile: booleanSetting(req.body.board_defaults_force_thread_file, oldSettings.boardDefaults.forceThreadFile),
 			forceThreadSubject: booleanSetting(req.body.board_defaults_force_thread_subject, oldSettings.boardDefaults.forceThreadSubject),
 			disableReplySubject: booleanSetting(req.body.board_defaults_disable_reply_subject, oldSettings.boardDefaults.disableReplySubject),
+			hideBanners: booleanSetting(req.body.board_defaults_hide_banners, oldSettings.boardDefaults.hideBanners),
 			minThreadMessageLength: numberSetting(req.body.board_defaults_min_thread_message_length, oldSettings.boardDefaults.minThreadMessageLength),
 			minReplyMessageLength: numberSetting(req.body.board_defaults_min_reply_message_length, oldSettings.boardDefaults.minReplyMessageLength),
 			maxThreadMessageLength: numberSetting(req.body.board_defaults_max_thread_message_length, oldSettings.boardDefaults.maxThreadMessageLength),
