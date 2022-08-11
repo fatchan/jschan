@@ -120,7 +120,7 @@ router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
 router.get('/account.html', useSession, sessionRefresh, isLoggedIn, calcPerms, csrf, account); //page showing boards you are mod/owner of, links to password rese, logout, etc
 router.get('/mypermissions.html', useSession, sessionRefresh, isLoggedIn, calcPerms, myPermissions);
 router.get('/sessions.html', useSession, sessionRefresh, isLoggedIn, calcPerms, csrf, sessions);
-router.get('/login.html', useSession, sessionRefresh, calcPerms, login);
+router.get('/login.html', login);
 router.get('/register.html', register);
 router.get('/changepassword.html', changePassword);
 router.get('/create.html', useSession, sessionRefresh, isLoggedIn, create); //create new board
