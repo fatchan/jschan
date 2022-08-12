@@ -168,3 +168,13 @@ input[type=submit], input[type=submit], label[for=file] {
 	color: black;
 	border-left-color: #ddd;
 }
+.box-wrap, .tabs li a {
+	border: 2px solid var(--post-outline-color);
+	background: var(--post-color)!important;
+}
+.box-wrap .col {
+	background: var(--post-color)!important;
+}
+#tab-10:target a[href="#tab-10"], #tab-1:target a[href="#tab-1"], #tab-2:target a[href="#tab-2"], #tab-3:target a[href="#tab-3"], #tab-4:target a[href="#tab-4"], #tab-5:target a[href="#tab-5"], #tab-6:target a[href="#tab-6"], #tab-7:target a[href="#tab-7"], #tab-8:target a[href="#tab-8"], #tab-9:target a[href="#tab-9"] {
+  border: 2px inset var(--post-color);
+}
