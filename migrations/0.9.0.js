@@ -5,6 +5,7 @@ module.exports = async(db, redis) => {
 	await db.collection('globalsettings').updateOne({ _id: 'globalsettings' }, {
 		'$set': {
 			'boardDefaults.hideBanners': false,
+			'overboardReverseLinks': true,
 		},
 	});
 	await db.collection('boards').updateMany({

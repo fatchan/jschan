@@ -106,6 +106,8 @@ module.exports = {
 	overboardCatalogLimit: 100,
 	//allow custom overboard (user pick what boards to show)
 	allowCustomOverboard: true,
+	//whether to show reverse links on overboard
+	overboardReverseLinks: true,
 
 	//how many hot threads show on homepage. 0 disabled
 	hotThreadsLimit: 5,

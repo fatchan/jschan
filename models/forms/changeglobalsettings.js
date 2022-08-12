@@ -125,6 +125,7 @@ module.exports = async (req, res) => {
 		abandonedBoardAction: numberSetting(req.body.abandoned_board_action, oldSettings.abandonedBoardAction),
 		overboardLimit: numberSetting(req.body.overboard_limit, oldSettings.overboardLimit),
 		overboardCatalogLimit: numberSetting(req.body.overboard_catalog_limit, oldSettings.overboardCatalogLimit),
+		overboardReverseLinks: booleanSetting(req.body.overboard_reverse_links, oldSettings.overboardReverseLinks),
 		hotThreadsLimit: numberSetting(req.body.hot_threads_limit, oldSettings.hotThreadsLimit),
 		hotThreadsThreshold: numberSetting(req.body.hot_threads_threshold, oldSettings.hotThreadsThreshold),
 		hotThreadsMaxAge: numberSetting(req.body.hot_threads_max_age, oldSettings.hotThreadsMaxAge),

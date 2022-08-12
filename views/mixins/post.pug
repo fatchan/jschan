@@ -106,7 +106,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 									if file.durationString
 										| , #{file.durationString}
 									| )
-								if type === 'image' && ((board && board.settings.reverseImageSearchLinks === true) || overboard || manage || globalmanage)
+								if type === 'image' && ((board && board.settings.reverseImageSearchLinks === true) || (overboard && overboardReverseLinks === true) || manage || globalmanage)
 									|  
 									span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title='Reverse Image Search' target='_blank') Reverse
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
