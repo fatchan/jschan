@@ -1,7 +1,8 @@
 mixin boardheader(pagename)
 	.board-header
-		img.board-banner(src=`/randombanner?board=${board._id}` loading='lazy')
-		br
+		if board.settings != null && board.settings.hideBanners === false
+			img.board-banner(src=`/randombanner?board=${board._id}` loading='lazy')
+			br
 		if pagename
 			h1.board-title #{pagename}(#[a.no-decoration(href=`/${board._id}/index.html`) /#{board._id}/])
 		else
