@@ -18,7 +18,10 @@ module.exports = async (req, res) => {
 	}
 
 	await Promise.all(req.body.checkedcustompages.map(page => {
-		remove(`${uploadDirectory}/html/${req.params.board}/custompage/${page}.html`);
+		return Promise.all([
+			remove(`${uploadDirectory}/html/${req.params.board}/custompage/${page}.html`),
+			remove(`${uploadDirectory}/json/${req.params.board}/custompage/${page}.json`),
+		]);
 	}));
 
 	return dynamicResponse(req, res, 200, 'message', {

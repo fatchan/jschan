@@ -211,6 +211,14 @@ module.exports = async (req, res) => {
 		});
 	}
 
+	//updates board/settings.json
+	buildQueue.push({
+		'task': 'buildBoardSettings',
+		'options': {
+			'board': res.locals.board,
+		}
+	});
+
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {
 		await Promise.all(promises);

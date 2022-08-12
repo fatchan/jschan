@@ -362,7 +362,10 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	debugLogs && console.log('global settings changed');
+	//updates /settings.json
+	buildQueue.push({
+		'task': 'buildGlobalSettings',
+	});
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
