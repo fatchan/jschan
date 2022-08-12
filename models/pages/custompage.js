@@ -4,17 +4,21 @@ const { buildCustomPage } = require(__dirname+'/../../lib/build/tasks.js');
 
 module.exports = async (req, res, next) => {
 
-	let html;
+	let html, json;
 	try {
-		html = await buildCustomPage({ ...req.params, board: res.locals.board });
+		({ html, json } = await buildCustomPage({ ...req.params, board: res.locals.board }));
 	} catch (err) {
 		return next(err);
 	}
 
 	if (!html) {
-		return res.status(404).render('404');
+		return next();
 	}
 
-	return res.send(html);
+	if (req.path.endsWith('.json')) {
+		return res.json(json);
+	} else {
+		return res.send(html);
+	}
 
 };

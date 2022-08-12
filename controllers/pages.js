@@ -47,10 +47,10 @@ router.get('/catalog.(html|json)', overboardCatalog); //overboard catalog view
 router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, board); //index
 router.get('/:board/thread/:id([1-9][0-9]{0,}).(html|json)', Boards.exists, threadParamConverter, Posts.exists, thread); //thread view
 router.get('/:board/catalog.(html|json)', Boards.exists, catalog); //catalog
-router.get('/:board/logs.html', Boards.exists, modloglist);//modlog list
-router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).html', Boards.exists, logParamConverter, modlog); //daily log
-router.get('/:board/custompage/:page.html', Boards.exists, customPage); //board custom page
-router.get('/:board/banners.html', Boards.exists, banners); //banners
+router.get('/:board/logs.(html|json)', Boards.exists, modloglist);//modlog list
+router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).(html|json)', Boards.exists, logParamConverter, modlog); //daily log
+router.get('/:board/custompage/:page.(html|json)', Boards.exists, customPage); //board custom page
+router.get('/:board/banners.(html|json)', Boards.exists, banners); //banners
 router.get('/randombanner', randombanner); //random banner
 
 //board manage pages

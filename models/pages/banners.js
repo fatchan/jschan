@@ -4,13 +4,17 @@ const { buildBanners } = require(__dirname+'/../../lib/build/tasks.js');
 
 module.exports = async (req, res, next) => {
 
-	let html;
+	let html, json;
 	try {
-		html = await buildBanners({ board: res.locals.board });
+		({ html, json } = await buildBanners({ board: res.locals.board }));
 	} catch (err) {
 		return next(err);
 	}
 
-	return res.send(html);
+	if (req.path.endsWith('.json')) {
+		return res.json(json);
+	} else {
+		return res.send(html);
+	}
 
 };
