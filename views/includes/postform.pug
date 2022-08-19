@@ -47,9 +47,6 @@ section.form-wrapper.flex-center
 					span File#{maxFiles > 1 ? 's' : ''}
 						if fileRequired
 							span.required *
-						if board.settings.enableTegaki && board.settings.allowedFileTypes.image === true
-							|  
-							span.dummy-link.tegaki-button.jsonly 🖌️
 					|
 					| 
 					if maxFiles > 1
@@ -64,6 +61,13 @@ section.form-wrapper.flex-center
 						label.postform-style.ph-5.ml-1.fh
 							input(type='checkbox', name='spoiler_all', value='true')
 							| Spoiler
+			if board.settings.enableTegaki && board.settings.allowedFileTypes.image === true
+				section.row.jsonly
+					.label Tegaki 
+					section.row
+						p Replay?
+						input(id='recordTegaki' type='checkbox', name='tegaki recorder')
+						input.dummy-link.tegaki-button(type='button', value='Draw')
 		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink || modview
 			section.row
 				.label Password
