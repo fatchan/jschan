@@ -161,6 +161,7 @@ module.exports = {
 	otherMimeTypes: [
 		'text/plain',
 		'application/pdf',
+		'tegaki/replay',
 	],
 
 	//check the real mime type of uploaded files

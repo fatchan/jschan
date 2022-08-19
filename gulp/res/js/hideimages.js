@@ -22,7 +22,7 @@ const toggleHandler = (e) => {
 	toggleSource(thumbSource, !hidden);
 };
 
-document.querySelectorAll('.hide-image').forEach(el => {
+Array.from(document.getElementsByClassName('hide-image')).forEach(el => {
 	el.addEventListener('click', toggleHandler, false);
 });
 

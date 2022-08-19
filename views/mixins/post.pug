@@ -85,6 +85,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 			if post.files.length > 0
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))
 					each file, fileindex in post.files
+						if file.mimetype === 'tegaki/replay'
+							- continue; //Dont show tegaki replays alone
 						.post-file
 							- const type = file.mimetype.split('/')[0]
 							span.post-file-info
@@ -106,9 +108,15 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 									if file.durationString
 										| , #{file.durationString}
 									| )
-								if type === 'image' && ((board && board.settings.reverseImageSearchLinks === true) || (overboard && overboardReverseLinks === true) || manage || globalmanage)
-									|  
-									span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title='Reverse Image Search' target='_blank') Reverse
+								if type === 'image'
+									if (board && board.settings.reverseImageSearchLinks === true) || (overboard && overboardReverseLinks === true) || manage || globalmanage
+										|  
+										span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title='Reverse Image Search' target='_blank') Reverse
+									if file.originalFilename.endsWith('-tegaki.png')
+										- const matchingReplayFile = post.files.find(f => f.originalFilename.slice(0, -4) === file.originalFilename.slice(0,-3)); //sigh...
+										if matchingReplayFile != null
+											|  
+											span: a.dummy-link.replay-tegaki.noselect(href=`/file/${matchingReplayFile.filename}` download=matchingReplayFile.originalFilename) Replay
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/file/${file.filename}`)
 									if post.spoiler || file.spoiler
@@ -121,7 +129,6 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 										div.audioimg.file-thumb
 									else
 										img.file-thumb(src=`/file/${file.filename}` height=file.geometry.height width=file.geometry.width loading='lazy')
-								
 			- if (post.message && modview) { post.message = post.message.replace(new RegExp(`<a class="quote" href="/${post.board}/`, 'g'), `<a class="quote" href="/${post.board}/manage/`); } //its either this, a subdomain, or nothing.
 			- let truncatedMessage = post.message;
 			if post.message

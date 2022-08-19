@@ -98,7 +98,8 @@ class postFormHandler {
 		this.form = form;
 		this.resetOnSubmit = this.form.dataset.resetOnSubmit == 'true';
 		this.enctype = this.form.getAttribute('enctype');
-		this.messageBox = form.querySelector('#message');
+		this.messageBox = this.form.querySelector('#message');
+		this.recordTegaki = this.form.elements.tegakireplay;
 		this.minimal = this.form.elements.minimal;
 		this.files = [];
 		this.submit = form.querySelector('input[type="submit"]');
@@ -161,33 +162,32 @@ class postFormHandler {
 	}
 
 	doTegaki() {
-		let savereplay = this.form.querySelector('#recordTegaki').checked;
-
+		const saveReplay = this.recordTegaki.checked;
 		Tegaki.open({
-			saveReplay : savereplay,
+			saveReplay,
 			onCancel: () => {},
 			onDone: () => {
-				let timestamp = (new Date()).getTime();
-
-				if(savereplay){
-					let blob = Tegaki.replayRecorder.toBlob();
-					this.addFile(new File([blob], `${timestamp}-replay.tgkr`, { type: 'tegaki/replay' }));
+				const now = Date.now();
+				//add replay file if box was checked
+				if (saveReplay) {
+					const blob = Tegaki.replayRecorder.toBlob();
+					this.addFile(new File([blob], `${now}-tegaki.tgkr`, { type: 'tegaki/replay' }));
 				}
-
+				//add tegaki image
 				Tegaki.flatten().toBlob(b => {
-					this.addFile(new File([b], `${timestamp}-tegaki.png`, { type: 'image/png' }));
+					this.addFile(new File([b], `${now}-tegaki.png`, { type: 'image/png' }));
 				}, 'image/png');
-				
+				//update file list
 				this.updateFilesText();
+				//reset tegaki state
 				Tegaki.resetLayers();
-
 				Tegaki.destroy();
 			},
 			width: tegakiWidth,
 			height: tegakiHeight,
 		});
 		Tegaki.resetLayers();
-		Tegaki.setColorPalette(2);
+		Tegaki.setColorPalette(2); //picks a better default color palette
 	}
 
 	updateFlagField() {
@@ -635,15 +635,4 @@ window.addEventListener('settingsReady', () => {
 	tegakiHeightSetting.value = tegakiHeight;
 	tegakiHeightSetting.addEventListener('change', changeTegakiHeightSetting, false);
 
-});
-
-function showTegakiReplay(url){
-	Tegaki.open({
-		replayMode: true,
-		replayURL: url 
-	});
-}
-
-window.addEventListener('showTegakiReplay',(e)=>{
-	showTegakiReplay(e.detail);
 });
