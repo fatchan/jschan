@@ -5,6 +5,10 @@ function showTegakiReplay(e){
 		replayMode: true,
 		replayURL: e.target.href,
 	});
+	/* set color palette to same as what the replay should start at (not a recorded event because we 
+		set it programmatically when calling tegaki.open for drawing). It looks like the replay uses colors
+		from the wrong palette otherwise. */
+	Tegaki.setColorPalette(2);
 }
 
 function addReplayListeners(elem) {
