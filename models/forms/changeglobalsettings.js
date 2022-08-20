@@ -1,7 +1,6 @@
 'use strict';
 
 const { Boards } = require(__dirname+'/../../db/')
-	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
