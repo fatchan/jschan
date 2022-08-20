@@ -15,9 +15,12 @@
 
 **1. Setup server with some basics**
 
-- Separate, non-root user to run the application
-- Basic security like ssh root login disabled, key login only, firewall (ufw works) deny all incoming on ports besides http/s and ssh.
-- Set the timezone to UTC
+- Separate, unpriveliged user to run the application.
+- Basic security:
+  - Sshd root login disabled, key login only, listen only on desired interface.
+  - Firewall (ufw works) to deny all incoming on ports besides http/s and sshd.
+  - Setup unattended-upgrades for security patches.
+- Set the timezone to UTC.
 - Clone the repo somewhere. The homedir for the user you setup or /var/www should work.
 
 **2. Install dependencies.**
@@ -29,11 +32,11 @@ $ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick python-certbot-ng
 
 **3. Install MongoDB**
 
-[MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian) & [enable authentication](https://medium.com/mongoaudit/how-to-enable-authentication-on-mongodb-b9e8a924efac)
+[MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian) & [enable authentication](https://www.mongodb.com/features/mongodb-authentication)
 
 **4. Install Redis**
 
-[Redis Installation](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-debian-9)
+[Redis Installation](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-debian-10)
 
 **5. Install Node.js**
 
@@ -42,11 +45,6 @@ For easy installation, use [node version manager](https://github.com/nvm-sh/nvm)
 Install nvm then run the following commands to get the LTS version of nodejs.
 ```bash
 $ nvm install --lts
-```
-
-In future, to install newer LTS node version, latest npm, and reinstall global packages:
-```bash
-$ nvm install --lts --reinstall-packages-from=$(node --version) --latest-npm
 ```
 
 You may install Node.js yourself without nvm if you prefer.
@@ -119,6 +117,10 @@ To enable the proxy, tick "Use Socks Proxy" in global management settings and se
 ```bash
 #first, stop the jschan backend
 $ pm2 stop ecosystem.config.js
+
+#update node.js to the latest LTS node version, latest npm, and reinstall global packages:
+#NOTE: Only works if you installed node.js "nvm" as per the recommendation in the installation instructions.
+$ nvm install --lts --reinstall-packages-from=$(node --version) --latest-npm
 
 #pull the latest changes
 $ git pull
