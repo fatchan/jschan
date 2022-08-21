@@ -3,6 +3,7 @@
   - Add global option to remove reverse image search links from the overboard.
   - Tegaki now supports replay upload and playback.
   - Completing /bypass.html form will now renew your existing bypass if you had one.
+  - Replaced "no subject" with #postId in several places.
   - New public API endpoints
     - Public board logs.
     - Board banners (previously undocumented).
