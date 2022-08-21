@@ -119,7 +119,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 											span: a.dummy-link.replay-tegaki.noselect(href=`/file/${matchingReplayFile.filename}` download=matchingReplayFile.originalFilename) Replay
 								if file.mimetype === 'tegaki/replay'
 									|  
-									span: a.dummy-link.replay-tegaki.noselect(href=`/file/${file.filename}` download=file.originalFilename) Replay
+									span.jsonly: a.dummy-link.replay-tegaki.noselect(href=`/file/${file.filename}` download=file.originalFilename) Replay
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/file/${file.filename}`)
 									if post.spoiler || file.spoiler
