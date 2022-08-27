@@ -1,7 +1,6 @@
 'use strict';
 
 const { Boards } = require(__dirname+'/../../db/')
-	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
@@ -125,6 +124,7 @@ module.exports = async (req, res) => {
 		abandonedBoardAction: numberSetting(req.body.abandoned_board_action, oldSettings.abandonedBoardAction),
 		overboardLimit: numberSetting(req.body.overboard_limit, oldSettings.overboardLimit),
 		overboardCatalogLimit: numberSetting(req.body.overboard_catalog_limit, oldSettings.overboardCatalogLimit),
+		overboardReverseLinks: booleanSetting(req.body.overboard_reverse_links, oldSettings.overboardReverseLinks),
 		hotThreadsLimit: numberSetting(req.body.hot_threads_limit, oldSettings.hotThreadsLimit),
 		hotThreadsThreshold: numberSetting(req.body.hot_threads_threshold, oldSettings.hotThreadsThreshold),
 		hotThreadsMaxAge: numberSetting(req.body.hot_threads_max_age, oldSettings.hotThreadsMaxAge),
@@ -306,6 +306,7 @@ module.exports = async (req, res) => {
 			forceThreadFile: booleanSetting(req.body.board_defaults_force_thread_file, oldSettings.boardDefaults.forceThreadFile),
 			forceThreadSubject: booleanSetting(req.body.board_defaults_force_thread_subject, oldSettings.boardDefaults.forceThreadSubject),
 			disableReplySubject: booleanSetting(req.body.board_defaults_disable_reply_subject, oldSettings.boardDefaults.disableReplySubject),
+			hideBanners: booleanSetting(req.body.board_defaults_hide_banners, oldSettings.boardDefaults.hideBanners),
 			minThreadMessageLength: numberSetting(req.body.board_defaults_min_thread_message_length, oldSettings.boardDefaults.minThreadMessageLength),
 			minReplyMessageLength: numberSetting(req.body.board_defaults_min_reply_message_length, oldSettings.boardDefaults.minReplyMessageLength),
 			maxThreadMessageLength: numberSetting(req.body.board_defaults_max_thread_message_length, oldSettings.boardDefaults.maxThreadMessageLength),
@@ -362,7 +363,10 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	debugLogs && console.log('global settings changed');
+	//updates /settings.json
+	buildQueue.push({
+		'task': 'buildGlobalSettings',
+	});
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',

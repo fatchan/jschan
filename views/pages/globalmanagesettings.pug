@@ -119,6 +119,10 @@ block content
 																			.label Overboard Catalog Thread Limit
 																			input(type='number' name='overboard_catalog_limit' value=settings.overboardCatalogLimit)
 																		.row
+																			.label Overboard Reverse Image Search
+																			label.postform-style.ph-5
+																				input(type='checkbox', name='overboard_reverse_links' value='true' checked=settings.overboardReverseLinks)
+																		.row
 																			.label Allow Custom Overboard
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='allow_custom_overboard' value='true' checked=settings.allowCustomOverboard)
@@ -820,6 +824,10 @@ block content
 																			.label Disable Reply Subject
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_disable_reply_subject', value='true' checked=settings.boardDefaults.disableReplySubject)
+																		.row
+																			.label Hide Banners
+																			label.postform-style.ph-5
+																				input(type='checkbox', name='board_defaults_hide_banners', value='true' checked=settings.boardDefaults.hideBanners)
 																		.row
 																			.label Min Thread Message Length
 																			input(type='number' name='board_defaults_min_thread_message_length' value=settings.boardDefaults.minThreadMessageLength)

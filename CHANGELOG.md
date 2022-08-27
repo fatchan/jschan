@@ -1,3 +1,17 @@
+### 0.9.0
+  - Add board option to hide banners from header and link in board nav bar.
+  - Add global option to remove reverse image search links from the overboard.
+  - Tegaki now supports replay upload and playback.
+  - Completing /bypass.html form will now renew your existing bypass if you had one.
+  - Replaced "no subject" with #postId in several places.
+  - New public API endpoints
+    - Public board logs.
+    - Board banners (previously undocumented).
+    - Board custompages.
+    - Select board settings and global settings (ones that are useful/necessary for 3rd party app integration).
+  - Bugfix log pruning not removing old logs from mod view logs page (public log pages were unaffected and hid the old logs).
+  - Bugfix deleting board assets/banners returning the wrong number in the success message.
+
 ### 0.8.2
   - Migrate to new socket.io redis adapter package.
   - Fix issue with pre checking boxes in ban modal conflicting with grid captcha.

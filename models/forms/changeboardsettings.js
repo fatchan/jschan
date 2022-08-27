@@ -27,7 +27,10 @@ const { Boards, Posts } = require(__dirname+'/../../db/')
 		'codetheme': ['board', 'threads', 'catalog', 'other'],
 		'announcement.raw': ['board', 'threads', 'catalog', 'other'],
 		'customCss': ['board', 'threads', 'catalog', 'other'],
+		'allowedFileTypes.other': ['board', 'threads', 'catalog'],
+		'allowedFileTypes.image': ['board', 'threads', 'catalog'],
 		'enableTegaki': ['board', 'threads', 'catalog'],
+		'hideBanners': ['board', 'threads', 'catalog'],
 	});
 
 module.exports = async (req, res) => {
@@ -79,6 +82,7 @@ module.exports = async (req, res) => {
 		'forceReplyFile': booleanSetting(req.body.force_reply_file),
 		'forceThreadSubject': booleanSetting(req.body.force_thread_subject),
 		'disableReplySubject': booleanSetting(req.body.disable_reply_subject),
+		'hideBanners': booleanSetting(req.body.hide_banners),
 		'captchaMode': numberSetting(req.body.captcha_mode, oldSettings.captchaMode),
 		'tphTrigger': numberSetting(req.body.tph_trigger, oldSettings.tphTrigger),
 		'tphTriggerAction': numberSetting(req.body.tph_trigger_action, oldSettings.tphTriggerAction),
@@ -210,6 +214,14 @@ module.exports = async (req, res) => {
 			}
 		});
 	}
+
+	//updates board/settings.json
+	buildQueue.push({
+		'task': 'buildBoardSettings',
+		'options': {
+			'board': res.locals.board,
+		}
+	});
 
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {

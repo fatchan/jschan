@@ -6,7 +6,7 @@ const { Posts, Boards } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res, next) => {
 
-	const { overboardLimit, allowCustomOverboard } = config.get;
+	const { overboardLimit, allowCustomOverboard, overboardReverseLinks } = config.get;
 
 	let selectedBoards = []
 		, addBoards = []
@@ -74,6 +74,7 @@ module.exports = async (req, res, next) => {
 			selectedBoards,
 			cacheQueryString,
 			allowCustomOverboard,
+			overboardReverseLinks,
 		});
 	}
 

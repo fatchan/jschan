@@ -21,12 +21,12 @@
 .tegaki-bucket:before { content: '🪣'; } /* '' */
 .tegaki-pause:before { content: '⏸️'; } /* '' */
 .tegaki-blur:before { content: '👆'; } /* '' */
-.tegaki-to-start:before { content: '\e80c'; } /* '' */
+.tegaki-to-start:before { content: '⏮'; } /* '' */
 .tegaki-watercolor:before { content: '\e80d'; } /* '' */
 .tegaki-tone:before { content: '🕶️'; } /* '' */
 .tegaki-airbrush:before { content: '💨'; } /* '' */
-.tegaki-fast-fw:before { content: '\e810'; } /* '' */
-.tegaki-fast-bw:before { content: '\e811'; } /* '' */
+.tegaki-fast-fw:before { content: '⏩'; } /* '' */
+.tegaki-fast-bw:before { content: '⏪'; } /* '' */
 .tegaki-left-open:before { content: '⬅️'; } /* '' */
 .tegaki-right-open:before { content: '➡️'; } /* '' */
 .tegaki-eraser:before { content: '✏️'; transform: rotate(180deg); } /* '' */
@@ -355,6 +355,12 @@
 
 #tegaki-finish-btn {
   font-weight: bold;
+}
+
+#tegaki-cursor-layer {
+  position: absolute;
+  mix-blend-mode: difference;
+  touch-action: none;
 }
 
 /* generic ui */

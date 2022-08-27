@@ -13,22 +13,26 @@ module.exports = async (req, res, next) => {
 	const { year, month, day } = res.locals.date;
 	const endDate = new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
 
-	let html;
+	let html, json;
 	try {
 		const logs = await Modlogs.findBetweenDate(res.locals.board, startDate, endDate);
 		if (!logs || logs.length === 0) {
 			return next();
 		}
-		html = await buildModLog({
+		({ html, json } = await buildModLog({
 			board: res.locals.board,
 			startDate,
 			endDate,
 			logs
-		});
+		}));
 	} catch (err) {
 		return next(err);
 	}
 
-	return res.send(html);
+	if (req.path.endsWith('.json')) {
+		return res.json(json);
+	} else {
+		return res.send(html);
+	}
 
 };

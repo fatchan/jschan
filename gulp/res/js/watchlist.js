@@ -64,7 +64,7 @@ class ThreadWatcher {
 		if (json && json.replies) {
 			const newData = {
 				...data,
-				subject: (json.subject || json.nomarkup || 'No subject').substring(0, 25),
+				subject: (json.subject || json.nomarkup || `#${json.postId}`).substring(0, 25),
 			};
 			const updatedDate = new Date(data.updatedDate);
 			const newPosts = json.replies.filter(r => new Date(r.date) > updatedDate);

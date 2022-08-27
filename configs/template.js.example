@@ -106,6 +106,8 @@ module.exports = {
 	overboardCatalogLimit: 100,
 	//allow custom overboard (user pick what boards to show)
 	allowCustomOverboard: true,
+	//whether to show reverse links on overboard
+	overboardReverseLinks: true,
 
 	//how many hot threads show on homepage. 0 disabled
 	hotThreadsLimit: 5,
@@ -159,6 +161,7 @@ module.exports = {
 	otherMimeTypes: [
 		'text/plain',
 		'application/pdf',
+		'tegaki/replay',
 	],
 
 	//check the real mime type of uploaded files
@@ -400,6 +403,7 @@ module.exports = {
 		forceThreadFile: false,
 		forceThreadSubject: false,
 		disableReplySubject: false,
+		hideBanners: false,
 		minThreadMessageLength: 0,
 		minReplyMessageLength: 0,
 		maxThreadMessageLength: 20000,

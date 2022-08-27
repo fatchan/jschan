@@ -13,6 +13,8 @@ module.exports = {
 	board: require(__dirname+'/board.js'),
 	catalog: require(__dirname+'/catalog.js'),
 	banners: require(__dirname+'/banners.js'),
+	boardSettings: require(__dirname+'/boardsettings.js'),
+	globalSettings: require(__dirname+'/globalsettings.js'),
 	customPage: require(__dirname+'/custompage.js'),
 	csrfPage: require(__dirname+'/csrf.js'),
 	randombanner: require(__dirname+'/randombanner.js'),

@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
 	}));
 
 	//remove from db
-	const amount = await Boards.removeBanners(req.params.board, req.body.checkedbanners).then(result => result.deletedCount);
+	const amount = await Boards.removeBanners(req.params.board, req.body.checkedbanners).then(result => result.modifiedCount);
 
 	//update res locals banners in memory
 	res.locals.board.banners = res.locals.board.banners.filter(banner => {

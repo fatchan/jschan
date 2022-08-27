@@ -93,7 +93,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		insertPoint.insertAdjacentHTML(options.insertPosition || 'beforeend', postHtml);
 		if (isRecent) {
 			//cap the recent pages to 20 posts so they dont grow to infinity
-			Array.from(document.querySelectorAll('.thread'))
+			Array.from(document.getElementsByClassName('thread'))
 				.slice(20)
 				.forEach(el => {
 					el.previousSibling.remove();

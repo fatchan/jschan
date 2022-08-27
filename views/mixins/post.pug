@@ -85,6 +85,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 			if post.files.length > 0
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))
 					each file, fileindex in post.files
+						if file.mimetype === 'tegaki/replay' && post.files.some(f => f.originalFilename.slice(0, -3) === file.originalFilename.slice(0,-4))
+							- continue; //Skip showing tegaki replay alone if is includes the image
 						.post-file
 							- const type = file.mimetype.split('/')[0]
 							span.post-file-info
@@ -106,9 +108,18 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 									if file.durationString
 										| , #{file.durationString}
 									| )
-								if type === 'image' && ((board && board.settings.reverseImageSearchLinks === true) || overboard || manage || globalmanage)
+								if type === 'image'
+									if (board && board.settings.reverseImageSearchLinks === true) || (overboard && overboardReverseLinks === true) || manage || globalmanage
+										|  
+										span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title='Reverse Image Search' target='_blank') Reverse
+									if file.originalFilename.endsWith('-tegaki.png')
+										- const matchingReplayFile = post.files.find(f => f.originalFilename.slice(0, -4) === file.originalFilename.slice(0,-3));
+										if matchingReplayFile !== undefined
+											|  
+											span: a.dummy-link.replay-tegaki.noselect(href=`/file/${matchingReplayFile.filename}` download=matchingReplayFile.originalFilename) Replay
+								if file.mimetype === 'tegaki/replay'
 									|  
-									span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title='Reverse Image Search' target='_blank') Reverse
+									span.jsonly: a.dummy-link.replay-tegaki.noselect(href=`/file/${file.filename}` download=file.originalFilename) Replay
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/file/${file.filename}`)
 									if post.spoiler || file.spoiler

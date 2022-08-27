@@ -1,23 +1,25 @@
 # jschan
+
 Anonymous imageboard software.
 
 Demo/test instance: [Clearnet](https://fatchan.org), [Tor hidden service](http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/), [Lokinet SNApp](http://fatchan.loki/)
 
 API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/) - Gitgud pages link: http://fatchan.gitgud.site/jschan-docs/#introduction
 
-Join the IRC: [irc.fatpeople.lol](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc.fatpeople.lol/#general)
+Join the IRC: [open in client](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc.fatpeople.lol/#general)
 
 ## Features
-- [x] User created boards ala infinity
+- [x] User created boards ala [infinity](https://github.com/ctrlcctrlv/infinity)
 - [x] Multiple files per post
-- [x] Antispam & multiple captcha options
+- [x] Antispam/Anti-flood & DNSBL
+- [x] 3 customisable inbuilt captchas + 2 third party captchas (hcaptcha & recaptcha)
 - [x] [API documentation](http://fatchan.gitgud.site/jschan-docs/)
 - [x] Built-in webring (compatible w/ [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
+- [x] [Tegaki](https://github.com/desuwa/tegaki) applet with drawing and replays
 - [x] Manage everything from the web panel
 - [x] Detailed accounts permissions system
-- [x] Works properly with anonymizer networks
-- [x] Looks good on all screen sizes
-- [x] Lots of themes, and auto light/dark theme
+- [x] Works properly with anonymizer networks (Tor, Lokinet, etc)
+- [x] Beautiful bundled frontend with lots of themes and options, see below:
 
 ![screenshots](collage.gif "screenshots")
 
@@ -34,7 +36,7 @@ See [CHANGELOG.md](CHANGELOG.md) for changes between versions.
 Interested in contributing to jschan development? See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## Related Projects
-Here are some other projects related to jschan that you might find useful. Unless explicitly specified here, they are not officially endorsed or otherwise guaranteed to work or be safe and should be used at your own risk.
+Here are some other projects related to jschan that you might find useful. **These are not official or otherwise guaranteed to work or be safe and should be used at your own risk.**
  - [myumyu/globalafk](https://gitgud.io/myumyu/globalafk/) - "A simple python script that sends ugly notifications when something happens on a jschan imageboard that you moderate."
  - [ussaohelcim/jschan-api-sdk](https://github.com/ussaohelcim/jschan-api-sdk) - JavaScript/TypeScript SDK for jschan.
  - [ussaohelcim/jschan-api-types](https://github.com/ussaohelcim/jschan-api-types) - TypeScript typings for jschan API.

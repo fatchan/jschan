@@ -29,10 +29,15 @@ module.exports = {
 			'anonymizer': anonymizer,
 			'expireAt': new Date(Date.now() + blockBypass.expireAfterTime)
 		};
-		if (anonymizer === true && id !== null) {
+		if (id !== null) {
 			newBypass._id = Mongo.ObjectId(id);
+			return db.replaceOne({
+				_id: newBypass._id
+			}, newBypass, {
+				upsert: true,
+			});
 		}
-		return db.insertOne(newBypass);		
+		return db.insertOne(newBypass);
 	},
 
 	deleteAll: () => {

@@ -11,7 +11,7 @@ module.exports = {
 		return db.aggregate([
 			{
 				'$match': {
-					'board': board._id
+					'board': board
 				}
 			},
 			{
@@ -79,6 +79,10 @@ module.exports = {
 				'$lte': endDate
 			},
 			'board': board._id
+		}, {
+			projection: {
+				'ip': 0,
+			}
 		}).sort({
 			'_id': -1
 		}).toArray();
