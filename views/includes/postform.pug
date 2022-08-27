@@ -65,9 +65,10 @@ section.form-wrapper.flex-center
 				section.row.jsonly
 					.label Tegaki 
 					input.dummy-link.tegaki-button(type='button', value='Draw')
-					label.noselect.postform-style.ph-5.ml-1.fh
-						input(type='checkbox' name='tegakireplay')
-						| Replayable?
+					if board.settings.allowedFileTypes.other === true
+						label.noselect.postform-style.ph-5.ml-1.fh
+							input(type='checkbox' name='tegakireplay')
+							| Replayable?
 		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink || modview
 			section.row
 				.label Password

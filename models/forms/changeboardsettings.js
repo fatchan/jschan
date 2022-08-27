@@ -27,6 +27,8 @@ const { Boards, Posts } = require(__dirname+'/../../db/')
 		'codetheme': ['board', 'threads', 'catalog', 'other'],
 		'announcement.raw': ['board', 'threads', 'catalog', 'other'],
 		'customCss': ['board', 'threads', 'catalog', 'other'],
+		'allowedFileTypes.other': ['board', 'threads', 'catalog'],
+		'allowedFileTypes.image': ['board', 'threads', 'catalog'],
 		'enableTegaki': ['board', 'threads', 'catalog'],
 		'hideBanners': ['board', 'threads', 'catalog'],
 	});
