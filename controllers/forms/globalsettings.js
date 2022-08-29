@@ -13,7 +13,7 @@ module.exports = {
 
 	paramConverter: paramConverter({
 		timeFields: ['hot_threads_max_age', 'inactive_account_time', 'ban_duration', 'board_defaults_filter_ban_duration', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
-		trimFields: ['captcha_options_grid_question', 'captcha_options_grid_trues', 'captcha_options_grid_falses', 'captcha_options_text_font', 'allowed_hosts', 'dnsbl_blacklists', 'other_mime_types',
+		trimFields: ['captcha_options_grid_question', 'captcha_options_grid_trues', 'captcha_options_grid_falses', 'captcha_options_font', 'allowed_hosts', 'dnsbl_blacklists', 'other_mime_types',
 			'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'reverse_links'],
 		numberFields: ['inactive_account_action', 'abandoned_board_action', 'filter_mode', 'auth_level', 'captcha_options_text_wave', 'captcha_options_text_paint', 'captcha_options_text_noise',
 			'captcha_options_grid_noise', 'captcha_options_grid_edge', 'captcha_options_generate_limit', 'captcha_options_grid_size',  'captcha_options_grid_image_size',
@@ -91,7 +91,7 @@ module.exports = {
 			{ result: numberBody(req.body.captcha_options_num_distorts_max, 0, 10), expected: true, error: 'Captcha options max distorts must be a number from 0-10' },
 			{ result: minmaxBody(req.body.captcha_options_num_distorts_min, req.body.captcha_options_num_distorts_max), expected: true, error: 'Captcha options distorts min must be less than max' },
 			{ result: numberBody(req.body.captcha_options_distortion, 0, 50), expected: true, error: 'Captcha options distortion must be a number from 0-50' },
-			{ result: inArrayBody(req.body.captcha_options_text_font, fontPaths), expected: true, error: 'Invalid captcha options text font' },
+			{ result: inArrayBody(req.body.captcha_options_font, fontPaths), expected: true, error: 'Invalid captcha options font' },
 			{ result: numberBody(req.body.captcha_options_text_wave, 0, 10), expected: true, error: 'Captcha options text wave effect strength must be a number form 0-10' },
 			{ result: numberBody(req.body.captcha_options_text_paint, 0, 10), expected: true, error: 'Captcha options text paint effect strength must be a number from 0-10' },
 			{ result: numberBody(req.body.captcha_options_text_noise, 0, 10), expected: true, error: 'Captcha options text noise effect strength must be a number from 0-10' },

@@ -333,13 +333,13 @@ block content
 																			.label Generate Limit
 																			input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
 																		.row
-																			h4.mv-5 Text Captcha Options
-																		.row
 																			.label Font
-																			select(name='captcha_options_text_font')
-																				option(value='default' selected=(settings.captchaOptions.text.font === 'default')) Default
+																			select(name='captcha_options_font')
+																				option(value='default' selected=(settings.captchaOptions.font === 'default')) Default
 																				each font in fontList
-																					option(value=font.path selected=(settings.captchaOptions.text.font === font.path)) #{font.name}
+																						option(value=font.path selected=(settings.captchaOptions.font === font.path)) #{font.name}
+																		.row
+																			h4.mv-5 Text Captcha Options
 																		.row
 																			.label Strikethrough Effect
 																			label.postform-style.ph-5
