@@ -1,3 +1,7 @@
+### 0.10.0
+  - Allow customisable font for grid captcha.
+  - Default grid captcha to a common system font instead of bundling an enormous 24MB font file.
+
 ### 0.9.0
   - Add board option to hide banners from header and link in board nav bar.
   - Add global option to remove reverse image search links from the overboard.

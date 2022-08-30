@@ -68,6 +68,7 @@ module.exports = async (req, res) => {
 		captchaOptions: {
 			type: trimSetting(req.body.captcha_options_type, oldSettings.captchaOptions.type),
 			generateLimit: numberSetting(req.body.captcha_options_generate_limit, oldSettings.captchaOptions.generateLimit),
+			font: trimSetting(req.body.captcha_options_font, oldSettings.captchaOptions.font),
 			grid: {
 				size: numberSetting(req.body.captcha_options_grid_size, oldSettings.captchaOptions.grid.size),
 				imageSize: numberSetting(req.body.captcha_options_grid_image_size, oldSettings.captchaOptions.grid.imageSize),
@@ -79,7 +80,6 @@ module.exports = async (req, res) => {
 				noise: numberSetting(req.body.captcha_options_grid_noise, oldSettings.captchaOptions.grid.noise),
 			},
 			text: {
-				font: trimSetting(req.body.captcha_options_text_font, oldSettings.captchaOptions.text.font),
 				line: booleanSetting(req.body.captcha_options_text_line, oldSettings.captchaOptions.text.line),
 				wave: numberSetting(req.body.captcha_options_text_wave, oldSettings.captchaOptions.text.wave),
 				paint: numberSetting(req.body.captcha_options_text_paint, oldSettings.captchaOptions.text.paint),
