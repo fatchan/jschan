@@ -162,7 +162,7 @@ class postFormHandler {
 	}
 
 	doTegaki() {
-		const saveReplay = this.recordTegaki.checked;
+		const saveReplay = this.recordTegaki && this.recordTegaki.checked;
 		Tegaki.open({
 			saveReplay,
 			onCancel: () => {},
@@ -171,11 +171,11 @@ class postFormHandler {
 				//add replay file if box was checked
 				if (saveReplay) {
 					const blob = Tegaki.replayRecorder.toBlob();
-					this.addFile(new File([blob], `${now}-tegaki.tgkr`, { type: 'tegaki/replay' }));
+					this.addFile(new File([blob], `${now}-tegaki.tgkr`, { type: 'tegaki/replay' }), { stripFilenames: false });
 				}
 				//add tegaki image
 				Tegaki.flatten().toBlob(b => {
-					this.addFile(new File([b], `${now}-tegaki.png`, { type: 'image/png' }));
+					this.addFile(new File([b], `${now}-tegaki.png`, { type: 'image/png' }), { stripFilenames: false });
 				}, 'image/png');
 				//update file list
 				this.updateFilesText();
@@ -444,12 +444,12 @@ class postFormHandler {
 		this.updateFilesText();
 	}
 
-	async addFile(file) {
+	async addFile(file, fileOptions = {}) {
 		if (this.fileRequired) { //prevent drag+drop issues by removing required
 			this.fileInput.removeAttribute('required');
 		}
 		this.files.push(file);
-		console.log('got file', file.name, );
+		console.log('got file', file.name);
 		let fileHash;
 		if (window.crypto.subtle) {
 			let fileBuffer;
@@ -477,6 +477,7 @@ class postFormHandler {
 			stripFilenames: this.fileUploadList.dataset.stripFilenames === 'true',
 			name: file.name,
 			hash: fileHash,
+			...fileOptions,
 		};
 		switch (file.type.split('/')[0]) {
 			case 'image':
