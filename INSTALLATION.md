@@ -27,7 +27,7 @@
 
 ```bash
 $ sudo apt-get update
-$ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx
+$ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx fonts-dejavu
 ```
 
 **3. Install MongoDB**

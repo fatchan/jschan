@@ -34,8 +34,8 @@ module.exports = {
 	captchaOptions: {
 		type: 'text',
 		generateLimit: 250,
+		font: 'default',
 		text: {
-			font: 'default',
 			line: true,
 			wave: 0,
 			paint: 2,
