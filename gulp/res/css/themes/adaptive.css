@@ -120,4 +120,7 @@ tr:nth-child(2n+1) {
 	#float .post-container, #livetext, #threadstats, .navbar, .catalog-tile, .pages, .post-container, .stickynav, .collapse, .bottom-reply {
 		border-color: var(--post-outline-color);
 	}
+	.box-wrap, .tabs li a {
+		border: 1px solid var(--post-outline-color);
+	}	
 }
