@@ -1,3 +1,6 @@
+### 0.9.2
+  - Bugfix an issue with bypasses/captcha related to difference between renewing vs getting new bypass.
+
 ### 0.9.1
   - Allow customisable font for grid captcha.
   - Default grid captcha to a common system font instead of bundling an enormous 24MB font file.
