@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 	const { secureCookies, blockBypass } = config.get;
 	const existingBypassId = req.signedCookies.bypassid || res.locals.pseudoIp;
 	const bypass = await Bypass.getBypass(res.locals.anonymizer, existingBypassId, blockBypass.expireAfterUses);
-	const bypassId = bypass.insertedId || existingBypassId; // if upserted, insertedId will be null, and will be the existingId
+	const bypassId = bypass.upsertedId || bypass.insertedId || existingBypassId;
 	res.locals.blockBypass = true;
 
 	res.cookie('bypassid', bypassId.toString(), {
