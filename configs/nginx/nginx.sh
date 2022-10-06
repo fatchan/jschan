@@ -12,14 +12,14 @@ SITES_AVAILABLE_NAME=${CLEARNET_DOMAIN:-jschan} #not sure on a good default, use
 read -p "Enter tor .onion address (blank=no .onion address): " ONION_DOMAIN
 read -p "Enter lokinet .loki address (blank=no .loki address): " LOKI_DOMAIN
 read -p "Would you like to add a www. subdomain? (y/n): " ADD_WWW_SUBDOMAIN
-if [[ "$CLEARNET_DOMAIN" != "" ]]; then
-	read -p "Run certbot standalone and automatically configure a certificate for https on clearnet? (y/n): " CERTBOT
-	if [[ "$CERTBOT" == "n" ]]; then
+if [ "$CLEARNET_DOMAIN" != "" ]; then
+	read -p "Run certbot and automatically configure a certificate for https on clearnet? (y/n): " CERTBOT
+	if [ "$CERTBOT" == "n" ]; then
 		read -p "Generate a self-signed certificate instead? (y/n): " SELFSIGNED
 	fi
-	if [[ "$SELFSIGNED" == "n" ]]; then
-		read -p "Warning: no https certificate chosen for clearnet. Continue without https? (y/n): " NOCERTIFICATE
-		[[ "$NOCERTIFICATE" == "n" ]] && echo "Exiting..." && exit;
+	if [ "$SELFSIGNED" == "n" ]; then
+		read -p "Warning: no https certificate chosen for clearnet. Continue without https? (y/n): " NOHTTPS
+		[[ "$NOHTTPS" == "n" ]] && echo "Exiting..." && exit;
 	fi
 fi
 read -p "Should robots.txt disallow compliant crawlers? (y/n): " ROBOTS_TXT_DISALLOW
@@ -36,7 +36,7 @@ clearnet domain: $CLEARNET_DOMAIN
 www subdomains: $ADD_WWW_SUBDOMAIN
 certbot https cert: $CERTBOT
 self-signed https cert: $SELFSIGNED
-no https cert: $NOCERTIFICATE
+no https cert: $NOHTTPS
 robots.txt disallow all: $ROBOTS_TXT_DISALLOW
 google captcha: $GOOGLE_CAPTCHA
 hcaptcha: $H_CAPTCHA
@@ -79,31 +79,36 @@ if [ "$CLEARNET_DOMAIN" != "" ]; then
 	HTTPS_MIDSECTION=""
 	HTTPS_CERT_SECTION=""
 	if [ "$CERTBOT" == "y" ]; then
-		#run certbot for certificate
-		if [ "$ADD_WWW_SUBDOMAIN" == "y" ]; then
-			echo "Running certbot to get SSL cert for $CLEARNET_DOMAIN and www.$CLEARNET_COMAIN..."
-			sudo certbot certonly --standalone -d $CLEARNET_DOMAIN -d www.$CLEARNET_DOMAIN
-		else
-			echo "Running certbot to get SSL cert for $CLEARNET_DOMAIN..."
-			sudo certbot certonly --standalone -d $CLEARNET_DOMAIN
-		fi
 		HTTPS_CERT_SECTION="
 	ssl_certificate /etc/letsencrypt/live/$CLEARNET_DOMAIN/fullchain.pem;
 	ssl_certificate_key /etc/letsencrypt/live/$CLEARNET_DOMAIN/privkey.pem;
 	include /etc/letsencrypt/options-ssl-nginx.conf;
 	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-	"		
-	elif [[ "$SELFSIGNED" == "y" ]]; then
-		read -p "Warning: no https certificate chosen for clearnet. Continue without any https? (y/n): " NOCERTIFICATE
-		if [[ "$NOCERTIFICATE" == "n" ]]; then
-			echo "Exiting..."
-			exit;
-		else
+	"
+	elif [ "$SELFSIGNED" == "y" ]; then
+		echo "Generating self-signed SSL cert..."
+		mkdir /etc/ssl/private/
+		mkdir /etc/ssl/certs/
+		sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
+		echo "Generating dh group. This may take a while..."
+		sudo openssl dhparam -out /etc/nginx/dhparam.pem 4096
+		cat > /etc/nginx/snippets/ssl-params.conf <<EOF
+ssl_session_cache shared:le_nginx_SSL:10m;
+ssl_session_timeout 1440m;
+ssl_session_tickets off;
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_prefer_server_ciphers on;
+ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA";
+EOF
 
-		fi
+		HTTPS_CERT_SECTION="
+	ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+	ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+	ssl_dhparam /etc/nginx/dhparam.pem;
+	include /etc/nginx/snippets/ssl-params.conf;
+	"
 	fi
 
-	if [ "$CERTBOT" == "y" ]
 			HTTPS_MIDSECTION="
 	listen [::]:443 ssl ipv6only=on;
 	listen 443 ssl;
@@ -124,7 +129,7 @@ server {
 	return 444;
 			"
 
-	#onion_location rediret header
+	#onion_location redirect header
 	ONION_LOCATION=""
 	if [ "$ONION_DOMAIN" != "" ]; then
 		ONION_LOCATION="add_header onion-location 'http://$ONION_DOMAIN\$request_uri';"
@@ -145,7 +150,7 @@ server {
 	include /etc/nginx/snippets/jschan_common_routes.conf;
 
 $HTTPS_MIDSECTION
-	
+
 	listen 80;
 	listen [::]:80;
 }"
@@ -218,6 +223,22 @@ echo "Writing main jschan vhost config..."
 printf "$JSCHAN_CONFIG" > /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
 sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
 
+if [ "$CERTBOT" == "y" ]; then
+	#run certbot for certificate
+	if [ "$ADD_WWW_SUBDOMAIN" == "y" ]; then
+		echo "Running certbot to setup SSL cert for $CLEARNET_DOMAIN and www.$CLEARNET_COMAIN..."
+		sudo certbot certonly --nginx -d $CLEARNET_DOMAIN -d www.$CLEARNET_DOMAIN
+	else
+		echo "Running certbot to setup SSL cert for $CLEARNET_DOMAIN..."
+		sudo certbot certonly --nginx -d $CLEARNET_DOMAIN
+	fi
+fi
+
+if [ "$NOHTTPS" == "Y" ]; then
+	echo "Adjusting config snippets to support NOHTTPS mode..."
+	sudo sed -i "s/Forwarded-Proto https/Forwarded-Proto http/g" /etc/nginx/snippets/jschan_clearnet_routes.conf
+fi
+
 if [ "$GOOGLE_CAPTCHA" == "y" ]; then
 	echo "Allowing recaptcha in CSP..."
 	#add google captcha CSP exceptions
@@ -251,8 +272,8 @@ if [ "$GEOIP" == "y" ]; then
 	chown www-data:www-data /usr/share/GeoIP/GeoIP.dat
 
 	#add goeip_country to /etc/nginx/nginx.conf, only if not already exists
-	grep -qF "geoip_country /usr/share/GeoIP/GeoIP.dat;" /etc/nginx/nginx.conf
-	if [ $? -eq 0 ]; then
+	grep -qF "geoip_country" /etc/nginx/nginx.conf
+	if [ $? -eq 1 ]; then
 		sudo sed -i '/http {/a \
 geoip_country /usr/share/GeoIP/GeoIP.dat;' /etc/nginx/nginx.conf
 	fi
