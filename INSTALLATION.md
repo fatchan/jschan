@@ -40,7 +40,7 @@ sudo apt install curl wget nginx ffmpeg imagemagick graphicsmagick python-certbo
 
 **5. Install Node.js**
 
-For easy installation, use [node version manager](https://github.com/nvm-sh/nvm) "nvm".
+For easy installation, use [node version manager](https://github.com/nvm-sh/nvm#installing-and-updating) "nvm".
 
 Install nvm then run the following commands to get the LTS version of nodejs.
 ```bash
