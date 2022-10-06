@@ -72,7 +72,20 @@ echo "deb https://deb.oxen.io $(lsb_release -sc) main" | sudo tee /etc/apt/sourc
 sudo apt update -y
 sudo apt install lokinet -y
 sudo systemctl enable --now lokinet
-nslookup localhost.loki # Your loki address is the "canonical name".
+sudo sh -c "cat > /etc/tor/torrc" <<'EOF'
+[router]
+[network]
+keyfile=/var/lib/lokinet/snappkey.private
+[paths]
+[dns]
+[bind]
+[api]
+[bootstrap]
+[logging]
+EOF
+
+sudo systemctl restart lokinet
+nslookup -type=cname localhost.loki # Your loki address is the "canonical name".
 ```
 
 For Lokinet, make sure to firewall all ports except 80 on `lokitun0` interface. If you use `ufw` for example, you could do:
