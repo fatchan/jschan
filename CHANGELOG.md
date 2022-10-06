@@ -1,3 +1,6 @@
+### 0.9.3
+  - Vastly improve installation instructions & automated nginx configuration.
+
 ### 0.9.2
   - Bugfix an issue with bypasses/captcha related to difference between renewing vs getting new bypass.
 
