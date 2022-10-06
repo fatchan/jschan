@@ -51,7 +51,7 @@ You may install Node.js yourself without nvm if you prefer.
 
 **6. (Optional) If you want a .onion address (Tor) and/or .loki address (Lokinet)**
 
-##### Install Tor, setup a hidden service, and output your .onion address:
+Install Tor, setup a hidden service, and output your .onion address:
 ```bash
 sudo apt install tor -y
 sudo systemctl enable --now tor
@@ -65,7 +65,7 @@ sudo systemctl restart tor
 sudo cat /var/lib/tor/jschan/hostname
 ```
 
-##### Install Lokinet, setup a SNApp, and find your .loki address:
+Install Lokinet, setup a SNApp, and find your .loki address:
 ```bash
 sudo curl -so /etc/apt/trusted.gpg.d/oxen.gpg https://deb.oxen.io/pub.gpg
 echo "deb https://deb.oxen.io $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/oxen.list
@@ -80,6 +80,8 @@ For Lokinet, make sure to firewall all ports except 80 on `lokitun0` interface. 
 sudo ufw deny in on lokitun0 to any
 sudo ufw allow in on lokitun0 to any port 80 proto tcp
 ```
+
+Note down the .loki and .onion address for the next step.
 
 **7. Setup nginx**
 
