@@ -49,10 +49,23 @@ geoip: $GEOIP
 if [[ -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME ]]; then
 	read -p "/etc/nginx/sites-available/$SITES_AVAILABLE_NAME already exists. Continue and overwrite existing configuration? (y/n)" OVERWRITE
 	[[ "$OVERWRITE" == "n" ]] && echo "Exiting..." && exit;
+	rm /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
+	rm /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
 fi
 
 echo "Stopping nginx..."
 sudo systemctl stop nginx
+
+if [ "$CERTBOT" == "y" ]; then
+	#run certbot for certificate
+	if [ "$ADD_WWW_SUBDOMAIN" == "y" ]; then
+		echo "Running certbot to setup SSL cert for $CLEARNET_DOMAIN and www.$CLEARNET_COMAIN..."
+		sudo certbot certonly --nginx -d $CLEARNET_DOMAIN -d www.$CLEARNET_DOMAIN
+	else
+		echo "Running certbot to setup SSL cert for $CLEARNET_DOMAIN..."
+		sudo certbot certonly --nginx -d $CLEARNET_DOMAIN
+	fi
+fi
 
 echo "Copying snippets to nginx folder & replacing paths..."
 #copy the snippets and replace install path, they aren't templated
@@ -222,17 +235,6 @@ fi
 echo "Writing main jschan vhost config..."
 printf "$JSCHAN_CONFIG" > /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
 sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
-
-if [ "$CERTBOT" == "y" ]; then
-	#run certbot for certificate
-	if [ "$ADD_WWW_SUBDOMAIN" == "y" ]; then
-		echo "Running certbot to setup SSL cert for $CLEARNET_DOMAIN and www.$CLEARNET_COMAIN..."
-		sudo certbot certonly --nginx -d $CLEARNET_DOMAIN -d www.$CLEARNET_DOMAIN
-	else
-		echo "Running certbot to setup SSL cert for $CLEARNET_DOMAIN..."
-		sudo certbot certonly --nginx -d $CLEARNET_DOMAIN
-	fi
-fi
 
 if [ "$NOHTTPS" == "Y" ]; then
 	echo "Adjusting config snippets to support NOHTTPS mode..."
