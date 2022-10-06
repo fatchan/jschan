@@ -27,27 +27,80 @@
 
 ```bash
 sudo apt update -y
-sudo apt install curl wget nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx fonts-dejavu -y
+sudo apt install curl wget gnupg nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx fonts-dejavu -y
 ```
 
 **3. Install MongoDB**
 
-[MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian) & [enable authentication](https://www.mongodb.com/features/mongodb-authentication)
+[MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian):
+```bash
+#NOTE: this installs mongodb 4.4 for compatibility reasons.
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+echo "deb http://repo.mongodb.org/apt/debian $(lsb_release -sc)/mongodb-org/4.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+sudo apt update -y
+sudo apt install -y mongodb-org
+sudo systemctl enable --now mongod
+```
+
+[Enable authentication](https://www.mongodb.com/features/mongodb-authentication):
+```bash
+#NOTE: change "CHANGE-ME-YOUR-SECURE-MONGODB-PASSWORD" to something secure.
+mongosh admin --eval "db.getSiblingDB('jschan').createUser({user: 'jschan', pwd: 'CHANGE-ME-YOUR-SECURE-MONGODB-PASSWORD', roles: [{role:'readWrite', db:'jschan'}]})"
+sudo sh -c "cat > /etc/mongod.conf" <<'EOF'
+storage:
+  dbPath: /var/lib/mongodb
+  journal:
+    enabled: true
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+net:
+  port: 27017
+  bindIp: 127.0.0.1
+processManagement:
+  timeZoneInfo: /usr/share/zoneinfo
+security:
+  authorization: "enabled"
+EOF
+
+sudo systemctl restart mongod
+#NOTE: to access to DB directly in future:
+#mongosh "mongodb://jschan:CHANGE-ME-YOUR-SECURE-MONGODB-PASSWORD@localhost:27017/jschan"
+```
 
 **4. Install Redis**
 
-[Redis Installation](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-debian-10)
+[Redis Installation](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-debian-10):
+```bash
+sudo apt update -y
+sudo apt install redis-server -y
+sed -i 's/supervised no/supervised systemd/' /etc/redis/redis.conf
+sudo systemctl enable --now redis-server
+```
+
+Enable authentication:
+```
+echo "requirepass CHANGE-ME-YOUR-SECURE-REDIS-PASSWORD" | sudo tee -a /etc/redis/redis.conf
+sudo systemctl restart redis-server
+```
 
 **5. Install Node.js**
 
-For easy installation, use [node version manager](https://github.com/nvm-sh/nvm#installing-and-updating) "nvm".
+For easy installation, use [node version manager](https://github.com/nvm-sh/nvm#installing-and-updating) "nvm":
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+```
 
-Install nvm then run the following commands to get the LTS version of nodejs.
+Then run the following command to get the LTS version of nodejs.
 ```bash
 nvm install --lts
 ```
 
-You may install Node.js yourself without nvm if you prefer.
+Installing Node.js yourself without nvm is possible, but unsupported by this guide.
 
 **6. (Optional) If you want a .onion address (Tor) and/or .loki address (Lokinet)**
 
@@ -72,7 +125,7 @@ echo "deb https://deb.oxen.io $(lsb_release -sc) main" | sudo tee /etc/apt/sourc
 sudo apt update -y
 sudo apt install lokinet -y
 sudo systemctl enable --now lokinet
-sudo sh -c "cat > /etc/tor/torrc" <<'EOF'
+sudo sh -c "cat > /var/lib/lokinet/lokinet.ini" <<'EOF'
 [router]
 [network]
 keyfile=/var/lib/lokinet/snappkey.private
@@ -98,7 +151,10 @@ Note down the .loki and .onion address for the next step.
 
 **7. Setup nginx**
 
-For standard installations, run `configs/nginx/nginx.sh` as root. This will prompt you for installation directory, domains, onion/lokinet, enable geoip, install a letsencrypt certificate with certbot and more.
+For standard installations, run `configs/nginx/nginx.sh`. This will prompt you for installation directory, domains, onion/lokinet, enable geoip, install a letsencrypt certificate with certbot and more:
+```bash
+sudo bash configs/nginx/nginx.sh
+```
 
 For non-standard installations like using a CDN, see [configs/nginx/README.md](configs/nginx/README.md) and DIY.
 
@@ -131,16 +187,16 @@ npm run-script setup
 gulp reset
 ```
 
-7. Make pm2 a system service and load on system startup. NOTE: This will also output some additional commands you need to run to complete the process. Read the command output carefully.
+7. Make pm2 a system service and load on system startup. **NOTE: This will also output some additional commands you need to run to complete the process. Read the command output carefully.**
 ```
 pm2 startup
-pm2 save
 ```
 
-8. Start all the backend processes
+8. Start all the backend processes.
 ```bash
 npm run-script start
 gulp
+pm2 save
 ```
 
 Some commands you may need to use in future/find helpful:
