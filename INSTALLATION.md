@@ -208,7 +208,7 @@ Some commands you may need to use in future/find helpful:
 
 More information and commands for customisation or advanced use is in the ADVANCED section.
 
-**9. (Optionall) if you plan to use the webring and want to make requests with a proxy to mask your origin server IP**
+**9. (Optional) if you plan to use the webring and want to make requests with a proxy to mask your origin server IP**
 
 EITHER:
 
