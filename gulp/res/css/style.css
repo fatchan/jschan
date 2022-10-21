@@ -1502,7 +1502,9 @@ row.wrap.sb .col {
 
 /* Default selected tab 1 */
 .tab {
-	display:none;
+	display: none;
+	margin: 1px;
+	padding: 1px;
 }
 .tab-1 {
 	display: flex;
