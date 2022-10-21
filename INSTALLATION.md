@@ -26,81 +26,189 @@
 **2. Install dependencies.**
 
 ```bash
-$ sudo apt-get update
-$ sudo apt-get install nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx fonts-dejavu
+sudo apt update -y
+sudo apt install curl wget gnupg nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx fonts-dejavu -y
 ```
 
 **3. Install MongoDB**
 
-[MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian) & [enable authentication](https://www.mongodb.com/features/mongodb-authentication)
+[MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian):
+```bash
+#NOTE: this installs mongodb 4.4 for compatibility reasons.
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+echo "deb http://repo.mongodb.org/apt/debian $(lsb_release -sc)/mongodb-org/4.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+sudo apt update -y
+sudo apt install -y mongodb-org
+sudo systemctl enable --now mongod
+```
+
+[Enable authentication](https://www.mongodb.com/features/mongodb-authentication):
+```bash
+#NOTE: change "CHANGE-ME-YOUR-SECURE-MONGODB-PASSWORD" to something secure.
+mongosh admin --eval "db.getSiblingDB('jschan').createUser({user: 'jschan', pwd: 'CHANGE-ME-YOUR-SECURE-MONGODB-PASSWORD', roles: [{role:'readWrite', db:'jschan'}]})"
+sudo sh -c "cat > /etc/mongod.conf" <<'EOF'
+storage:
+  dbPath: /var/lib/mongodb
+  journal:
+    enabled: true
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+net:
+  port: 27017
+  bindIp: 127.0.0.1
+processManagement:
+  timeZoneInfo: /usr/share/zoneinfo
+security:
+  authorization: "enabled"
+EOF
+
+sudo systemctl restart mongod
+#NOTE: to access to DB directly in future:
+#mongosh "mongodb://jschan:CHANGE-ME-YOUR-SECURE-MONGODB-PASSWORD@localhost:27017/jschan"
+```
 
 **4. Install Redis**
 
-[Redis Installation](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-debian-10)
+[Redis Installation](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-debian-10):
+```bash
+sudo apt update -y
+sudo apt install redis-server -y
+sed -i 's/supervised no/supervised systemd/' /etc/redis/redis.conf
+sudo systemctl enable --now redis-server
+```
+
+Enable authentication:
+```
+echo "requirepass CHANGE-ME-YOUR-SECURE-REDIS-PASSWORD" | sudo tee -a /etc/redis/redis.conf
+sudo systemctl restart redis-server
+```
 
 **5. Install Node.js**
 
-For easy installation, use [node version manager](https://github.com/nvm-sh/nvm) "nvm".
-
-Install nvm then run the following commands to get the LTS version of nodejs.
+For easy installation, use [node version manager](https://github.com/nvm-sh/nvm#installing-and-updating) "nvm":
 ```bash
-$ nvm install --lts
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 ```
 
-You may install Node.js yourself without nvm if you prefer.
+Then run the following command to get the LTS version of nodejs.
+```bash
+nvm install --lts
+```
 
-**6. Configure nginx**
+Installing Node.js yourself without nvm is possible, but unsupported by this guide.
 
-For standard installations, run `configs/nginx/nginx.sh` as root. This will prompt you for installation directory, domains, onion/lokinet, enable geoip, install a letsencrypt certificate with certbot and more.
+**6. (Optional) If you want a .onion address (Tor) and/or .loki address (Lokinet)**
+
+Install Tor, setup a hidden service, and output your .onion address:
+```bash
+sudo apt install tor -y
+sudo systemctl enable --now tor
+sudo sh -c "cat > /etc/tor/torrc" <<'EOF'
+HiddenServiceDir /var/lib/tor/jschan/
+HiddenServiceVersion 3
+HiddenServicePort 80 unix:/var/run/nginx-tor.sock
+EOF
+
+sudo systemctl restart tor
+sudo cat /var/lib/tor/jschan/hostname
+```
+
+Install Lokinet, setup a SNApp, and find your .loki address:
+```bash
+sudo curl -so /etc/apt/trusted.gpg.d/oxen.gpg https://deb.oxen.io/pub.gpg
+echo "deb https://deb.oxen.io $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/oxen.list
+sudo apt update -y
+sudo apt install lokinet -y
+sudo systemctl enable --now lokinet
+sudo sh -c "cat > /var/lib/lokinet/lokinet.ini" <<'EOF'
+[router]
+[network]
+keyfile=/var/lib/lokinet/snappkey.private
+[paths]
+[dns]
+[bind]
+[api]
+[bootstrap]
+[logging]
+EOF
+
+sudo systemctl restart lokinet
+nslookup -type=cname localhost.loki # Your loki address is the "canonical name".
+```
+
+For Lokinet, make sure to firewall all ports except 80 on `lokitun0` interface. If you use `ufw` for example, you could do:
+```bash
+sudo ufw deny in on lokitun0 to any
+sudo ufw allow in on lokitun0 to any port 80 proto tcp
+```
+
+Note down the .loki and .onion address for the next step.
+
+**7. Setup nginx**
+
+For standard installations, run `configs/nginx/nginx.sh`. This will prompt you for installation directory, domains, onion/lokinet, enable geoip, install a letsencrypt certificate with certbot and more:
+```bash
+sudo bash configs/nginx/nginx.sh
+```
 
 For non-standard installations like using a CDN, see [configs/nginx/README.md](configs/nginx/README.md) and DIY.
 
-**7. Get the backend setup & running**
+**8. Get the backend setup & running**
 
+1. Copy the example secrets file and edit it with your mongodb+redis credentials, cookie secrets, etc:
 ```bash
-# copy example secrets file and edit it to fill out the details
-$ cp configs/secrets.js.example configs/secrets.js && editor configs/secrets.js
-
-# edit rules and faq pages if desired:
-$ editor views/custompages/faq.pug views/custompages/rules.pug
-# you can also add more .pug files in that folder with the same general format to create other custom pages
-
-# install nodejs packages
-$ npm install
-
-# replace the master file for your favicon in gulp/res/icons/master.png
-
-# run the setup script. installs pm2 process manager and gulp build system and runs some gulp tasks.
-$ npm run-script setup
-
-# run gulp reset to setup the database and folder structure and create the admin account. **Default admin account details with random password will be printed to the command line.**
-$ gulp reset
-# NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything.
-
-# make jschan pm2 a service and load on system startup. this will output some additional commands you need to run to complete the process if you were smart and didnt do everything as "root" user.
-$ pm2 startup
-
-# save the process list so jschan is started with pm2
-$ pm2 save
-
-# start all the backend processes
-$ npm run-script start
-$ gulp
-
-# some commands you may need to use in future/find helpful
-$ pm2 list #list running pm2 processes
-$ pm2 logs #see logs
-$ pm2 reload ecosystem.config.js #reload all backend processes
-
-# gulp is used for various jobs like minifying and compiling scripts
-# the build-worker process may also run some of these for certain operations e.g. editing global settings in the web panel
-$ gulp --tasks #list available gulp tasks
-$ gulp migrate #check for and run db migrations
-$ gulp password #reset the admin account password if you forgot it
-$ gulp #run default gulp task
+cp configs/secrets.js.example configs/secrets.js && editor configs/secrets.js
 ```
 
-**8. Optionally, if you plan to use the webring and want to make requests with a proxy to mask your origin server IP:**
+2. Edit the rules and FAQ page if desired:
+```bash
+editor views/custompages/faq.pug views/custompages/rules.pug
+```
+
+3. Install nodejs dependencies:
+```bash
+npm install
+```
+
+4. Replace `gulp/res/icons/master.png` with your desired favicon image.
+
+5. Run the setup script. This will install `pm2` (nodejs process manager) and `gulp` (task system) and runs some gulp tasks.
+```bash
+npm run-script setup
+```
+
+6. Run gulp reset to initialize the database and folder structure, and create the admin account. **Default admin account with random password will be printed to the command line.** NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything.
+```bash
+gulp reset
+```
+
+7. Make pm2 a system service and load on system startup. **NOTE: This will also output some additional commands you need to run to complete the process. Read the command output carefully.**
+```
+pm2 startup
+```
+
+8. Start all the backend processes.
+```bash
+npm run-script start
+gulp
+pm2 save
+```
+
+Some commands you may need to use in future/find helpful:
+- `pm2 list` - Lists running pm2 processes.
+- `pm2 logs` - Start tailing logs.
+- `pm2 reload ecosystem.config.js` - Reload all backend processes.
+- `gulp password` - Reset the admin account password if you forgot it.
+- `gulp` - Run the default gulp task.
+
+More information and commands for customisation or advanced use is in the ADVANCED section.
+
+**9. (Optional) if you plan to use the webring and want to make requests with a proxy to mask your origin server IP**
 
 EITHER:
 
@@ -112,44 +220,64 @@ Either of the first two options will allow you to follow .onions in your webring
 
 To enable the proxy, tick "Use Socks Proxy" in global management settings and set the appropriate proxy address, e.g. `socks5h://127.0.0.1:9050`, then save settings.
 
+**10. All done!**
+
 ## Updating
 
+0. `cd` to your jschan installation folder.
+
+1. Stop the running backend:
 ```bash
-#first, stop the jschan backend
-$ pm2 stop ecosystem.config.js
+pm2 stop ecosystem.config.js
+```
 
-#update node.js to the latest LTS node version, latest npm, and reinstall global packages:
-#NOTE: Only works if you installed node.js "nvm" as per the recommendation in the installation instructions.
-$ nvm install --lts --reinstall-packages-from=$(node --version) --latest-npm
+2. (Optional) Update node.js to the latest LTS node version, latest npm, and reinstall global packages. NOTE: Only works if you installed node.js "nvm" as per the recommendation in the installation instructions.
+```bash
+nvm install --lts --reinstall-packages-from=$(node --version) --latest-npm
+```
 
-#pull the latest changes
-$ git pull
+3. Pull the latest changes from git:
+```bash
+git pull
+```
 
-#install dependencies again in case any have updated or changed
-$ npm install
+4. Install nodejs dependencies again in case any have updated or changed
+```bash
+npm install
+```
 
-#check if anything nginx related changed between the old and new verison, e.g.
-$ git diff v0.1.5 v0.1.6 configs/nginx
-#If you use a completely standard jschan nginx, run configs/nginx/nginx.sh again.
-#Otherwise, update your nginx config with the necessary changes.
+5. Check if the nginx config needs updating, comparing the version you updated from with the current version:
+```bash
+git diff v0.9.2 v0.8.0 configs/nginx
+```
+If the output was blank, goto step 6.
 
-#run the gulp migrate task. this will update things such as your database schema.
-$ gulp migrate
-#run the default gulp task to update, scripts, css, icons, images and delete old html
-$ gulp
+If the output showed changes and you used `configs/nginx/nginx.sh` to setup nginx, run it again to reconfigure nginx and overwrite your old configuration.
 
-#start the backend again
-$ pm2 restart ecosystem.config.js --env production
+If you have a non-standard nginx config, update your nginx config yourself.
 
-#if something breaks, check and read the logs, they will help figure out what went wrong
-$ pm2 logs
+6. Run the gulp migrate task. This will run "migrations" such as updating the database schema or file structure:
+```bash
+gulp migrate && gulp
+```
+
+7. Start the backend:
+```bash
+pm2 restart ecosystem.config.js --env production
+```
+
+At this point, your installation is updated. If something is broken, check and read the logs, they will help figure out what went wrong:
+```bash
+pm2 logs
 ```
 
 ## Help! Something didn't work!!!1!!1
 
 If you are sure you did everything correctly and you still can't get it working, you can ask for help in the IRC (linked in [README](README.md)).
 
-Be polite, ask [smart questions](http://www.catb.org/~esr/faqs/smart-questions.html), and keep in mind nobody is obliged to help you. 
+Be polite, be patient, ask [smart questions](http://www.catb.org/~esr/faqs/smart-questions.html), and keep in mind nobody is obliged to help you.
+
+Paid support is available at a rate of $50USD/hr, payable in cryptocurrency (BTC/XMR) only. Email the address on my [Gitgud profile](https://gitgud.io/fatchan) to inquire.
 
 ## Advanced
 
