@@ -120,20 +120,20 @@ module.exports = async (req, res) => {
 
 		//compare to global filters
 		if (globalFilters && globalFilters.length > 0 && globalFilterMode > 0) {
-			hitGlobalFilter = globalFilters.some(filter => { return strictCombinedString.includes(filter.toLowerCase()); });
+			hitGlobalFilter = globalFilters.find(filter => { return strictCombinedString.includes(filter.toLowerCase()); });
 		}
 
 		//compare to board filters
 		if (!hitGlobalFilter && !res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL)
 			&& filterMode > 0 && filters && filters.length > 0) {
 			const localFilterContents = res.locals.board.settings.strictFiltering === true ? strictCombinedString : combinedString;
-			hitLocalFilter = filters.some(filter => { return localFilterContents.includes(filter.toLowerCase()); });
+			hitLocalFilter = filters.find(filter => { return localFilterContents.includes(filter.toLowerCase()); });
 		}
 
 		//block post/apply bans if an active filter matched
 		if (hitGlobalFilter || hitLocalFilter) {
 			await deleteTempFiles(req).catch(console.error);
-			return filterActions(req, res, hitGlobalFilter, filterMode, globalFilterMode,
+			return filterActions(req, res, hitGlobalFilter, hitLocalFilter, filterMode, globalFilterMode,
 				filterBanDuration, globalFilterBanDuration, filterBanAppealable, redirect);
 		}
 
