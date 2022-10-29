@@ -47,3 +47,8 @@ mixin ban(ban, banpage)
 				| No appeal submitted
 			else 
 				| -
+		td
+			if ban.note
+				| #{ban.note}
+			else
+				| -

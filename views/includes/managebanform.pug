@@ -25,7 +25,12 @@ else
 		.row
 			.label Edit Duration
 			label.postform-style.ph-5.mr-1
-				input(type='radio' name='option' value='edit')
+				input(type='radio' name='option' value='edit_duration')
 			input(type='text' name='ban_duration' placeholder='Ban duration e.g. 7d' autocomplete='off')
+		.row
+			.label Edit Note
+			label.postform-style.ph-5.mr-1
+				input(type='radio' name='option' value='edit_note')
+			input(type='text' name='ban_note')
 	input(type='submit' value='Submit')
 
