@@ -59,6 +59,7 @@ module.exports = async (req, res) => {
 				allowAppeal,
 				'appeal': null,
 				'showUser': !req.body.hide_name,
+				'note': null,
 				'seen': false,
 			});
 		}
