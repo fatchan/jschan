@@ -1,6 +1,7 @@
 ### 0.9.4
   - Ability to add internal notes to bans. These are only seen by staff and not shown to the banned user.
   - Wordfilter auto bans will set an internal note with which wordfilter was triggered.
+  - Fix zooming in on tabbed settings pages breaking when zoomed in on some browsers.
   - Npm audit fix.
 
 ### 0.9.3
