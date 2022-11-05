@@ -152,6 +152,19 @@ module.exports = {
 		});
 	},
 
+	editNote: (board, ids, newNote) => {
+		return db.updateMany({
+			'board': board,
+			'_id': {
+				'$in': ids
+			},
+		}, {
+			'$set': {
+				'note': newNote,
+			}
+		});
+	},
+
 	removeMany: (board, ids) => {
 		return db.deleteMany({
 			'board': board,

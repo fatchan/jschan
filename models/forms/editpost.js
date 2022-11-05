@@ -34,10 +34,10 @@ todo: handle some more situations
 		if (filters.length > 0 && filterMode > 0) {
 			let hitGlobalFilter = false;
 			const { strictCombinedString } = getFilterStrings(req, res, strictFiltering);
-			hitGlobalFilter = filters.some(filter => { return strictCombinedString.includes(filter.toLowerCase()); });
+			hitGlobalFilter = filters.find(filter => { return strictCombinedString.includes(filter.toLowerCase()); });
 			//block/ban edit
 			if (hitGlobalFilter) {
-				return filterActions(req, res, hitGlobalFilter, 0, filterMode,
+				return filterActions(req, res, hitGlobalFilter, null, 0, filterMode,
 					0, filterBanDuration, filterBanAppealable, null);
 			}
 		}
