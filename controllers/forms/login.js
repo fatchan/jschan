@@ -8,7 +8,7 @@ const loginAccount = require(__dirname+'/../../models/forms/login.js')
 module.exports = {
 
 	paramConverter: paramConverter({
-		trimFields: ['username', 'password'],
+		trimFields: ['username', 'password', 'twofactor'],
 	}),
 
 	controller: async (req, res, next) => {
@@ -18,6 +18,7 @@ module.exports = {
 			{ result: existsBody(req.body.password), expected: true, error: 'Missing password' },
 			{ result: lengthBody(req.body.username, 0, 50), expected: false, error: 'Username must be 1-50 characters' },
 			{ result: lengthBody(req.body.password, 0, 100), expected: false, error: 'Password must be 1-100 characters' },
+			{ result: lengthBody(req.body.twofactor, 0, 6), expected: false, error: 'Invalid 2FA code' },
 		]);
 
 		if (errors.length > 0) {

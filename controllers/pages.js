@@ -21,7 +21,7 @@ const express  = require('express')
 		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages, manageStaff, editStaff } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards, editNews, editAccount, editRole,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs, globalManageRoles } = require(__dirname+'/../models/pages/globalmanage/')
-	, { changePassword, blockBypass, home, register, login, create, myPermissions, sessions,
+	, { changePassword, blockBypass, home, register, login, create, myPermissions, sessions, setupTwoFactor,
 		board, catalog, banners, boardSettings, globalSettings, randombanner, news, captchaPage, overboard, overboardCatalog,
 		captcha, thread, modlog, modloglist, account, boardlist, customPage, csrfPage } = require(__dirname+'/../models/pages/')
 	, threadParamConverter = paramConverter({ processThreadIdParam: true })
@@ -121,6 +121,7 @@ router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
 //accounts
 router.get('/account.html', useSession, sessionRefresh, isLoggedIn, calcPerms, csrf, account); //page showing boards you are mod/owner of, links to password rese, logout, etc
 router.get('/mypermissions.html', useSession, sessionRefresh, isLoggedIn, calcPerms, myPermissions);
+router.get('/twofactor.html', useSession, sessionRefresh, isLoggedIn, calcPerms, csrf, setupTwoFactor);
 router.get('/sessions.html', useSession, sessionRefresh, isLoggedIn, calcPerms, csrf, sessions);
 router.get('/login.html', login);
 router.get('/register.html', register);

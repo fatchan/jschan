@@ -3,6 +3,7 @@
 const bcrypt = require('bcrypt')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, redis = require(__dirname+'/../../lib/redis/redis.js')
+	, speakeasy = require('speakeasy')
 	, { Accounts } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res) => {
@@ -18,7 +19,7 @@ module.exports = async (req, res) => {
 	if (!account) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Incorrect username or password',
+			'message': 'Incorrect account credentials',
 			'redirect': '/changepassword.html'
 		});
 	}
@@ -30,9 +31,25 @@ module.exports = async (req, res) => {
 	if (passwordMatch === false) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Incorrect username or password',
+			'message': 'Incorrect account credentials',
 			'redirect': '/changepassword.html'
 		});
+	}
+
+	if (account.twofactor) {
+		const verified = speakeasy.totp.verify({
+			secret: account.twofactor,
+			encoding: 'base32',
+			token: req.body.twofactor,
+			window: 6
+		});
+		if (verified === false) {
+			return dynamicResponse(req, res, 403, 'message', {
+				'title': 'Forbidden',
+				'message': 'Incorrect account credentials',
+				'redirect': '/changepassword.html'
+			});
+		}
 	}
 
 	//change the password

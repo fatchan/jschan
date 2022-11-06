@@ -1,7 +1,7 @@
 {
   "name": "jschan",
-  "version": "0.9.4",
-  "migrateVersion": "0.9.1",
+  "version": "0.10.0",
+  "migrateVersion": "0.10.0",
   "description": "",
   "main": "server.js",
   "dependencies": {
@@ -44,12 +44,14 @@
     "pm2": "^5.2.0",
     "pug": "^3.0.2",
     "pug-runtime": "^3.0.1",
+    "qrcode": "^1.5.1",
     "redlock": "^4.2.0",
     "sanitize-html": "^2.7.0",
     "saslprep": "^1.0.3",
     "semver": "^7.3.7",
     "socket.io": "^4.5.0",
     "socks-proxy-agent": "^6.2.0",
+    "speakeasy": "^2.0.0",
     "uid-safe": "^2.1.5",
     "unix-crypt-td-js": "^1.1.4"
   },

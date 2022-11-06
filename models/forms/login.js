@@ -2,7 +2,8 @@
 
 const bcrypt = require('bcrypt')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, { Accounts } = require(__dirname+'/../../db/');
+	, { Accounts } = require(__dirname+'/../../db/')
+	, speakeasy = require('speakeasy');
 
 module.exports = async (req, res) => {
 
@@ -22,7 +23,7 @@ module.exports = async (req, res) => {
 	if (!account) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': 'Incorrect username or password',
+			'message': 'Incorrect login credentials',
 			'redirect': failRedirect
 		});
 	}
@@ -31,21 +32,35 @@ module.exports = async (req, res) => {
 	const passwordMatch = await bcrypt.compare(password, account.passwordHash);
 
 	//if hashes matched
-	if (passwordMatch === true) {
-
-		// add the account to the session and authenticate if password was correct
-		req.session.user = account._id;
-
-		//successful login
-		await Accounts.updateLastActiveDate(username);
-		return res.redirect(goto);
-
+	if (passwordMatch === false) {
+		return dynamicResponse(req, res, 403, 'message', {
+			'title': 'Forbidden',
+			'message': 'Incorrect login credentials',
+			'redirect': failRedirect
+		});
 	}
 
-	return dynamicResponse(req, res, 403, 'message', {
-		'title': 'Forbidden',
-		'message': 'Incorrect username or password',
-		'redirect': failRedirect
-	});
+	if (account.twofactor) {
+		const verified = speakeasy.totp.verify({
+			secret: account.twofactor,
+			encoding: 'base32',
+			token: req.body.twofactor,
+			window: 6
+		});
+		if (verified === false) {
+			return dynamicResponse(req, res, 403, 'message', {
+				'title': 'Forbidden',
+				'message': 'Incorrect login credentials', //better to not tell them, i think
+				'redirect': failRedirect
+			});
+		}
+	}
+
+	// add the account to the session and authenticate if password was correct
+	req.session.user = account._id;
+
+	//successful login
+	await Accounts.updateLastActiveDate(username);
+	return res.redirect(goto);
 
 };

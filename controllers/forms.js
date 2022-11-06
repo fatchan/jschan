@@ -21,7 +21,7 @@ const express  = require('express')
 	, blockBypass = require(__dirname+'/../lib/middleware/captcha/blockbypass.js')
 	, fileMiddlewares = require(__dirname+'/../lib/middleware/file/filemiddlewares.js')
 //controllers
-	, { deleteBoardController, editBansController, appealController, globalActionController,
+	, { deleteBoardController, editBansController, appealController, globalActionController, twofactorController,
 		actionController, addCustomPageController, deleteCustomPageController, addNewsController,
 		editNewsController, deleteNewsController, uploadBannersController, deleteBannersController, addFlagsController,
 		deleteFlagsController, boardSettingsController, transferController, addAssetsController, deleteAssetsController,
@@ -111,6 +111,7 @@ router.post('/create', geoIp, processIp, useSession, sessionRefresh, isLoggedIn,
 
 //accounts
 router.post('/login', useSession, loginController.paramConverter, loginController.controller);
+router.post('/twofactor', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, twofactorController.paramConverter, twofactorController.controller);
 router.post('/logout', useSession, logoutForm);
 router.post('/register', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, registerController.paramConverter, registerController.controller);
 router.post('/changepassword', geoIp, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController.paramConverter, changePasswordController.controller);
