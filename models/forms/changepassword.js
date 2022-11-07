@@ -3,7 +3,7 @@
 const bcrypt = require('bcrypt')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, redis = require(__dirname+'/../../lib/redis/redis.js')
-	, speakeasy = require('speakeasy')
+	, OTPAuth = require('otpauth')
 	, { Accounts } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res) => {
@@ -37,13 +37,16 @@ module.exports = async (req, res) => {
 	}
 
 	if (account.twofactor) {
-		const verified = speakeasy.totp.verify({
+		const totp = new OTPAuth.TOTP({
 			secret: account.twofactor,
-			encoding: 'base32',
-			token: req.body.twofactor,
-			window: 6
+			algorithm: 'SHA256',
 		});
-		if (verified === false) {
+		const delta = await totp.validate({
+			token: req.body.twofactor,
+			algorithm: 'SHA256',
+			window: 1,
+		});
+		if (delta === null) {
 			return dynamicResponse(req, res, 403, 'message', {
 				'title': 'Forbidden',
 				'message': 'Incorrect account credentials',

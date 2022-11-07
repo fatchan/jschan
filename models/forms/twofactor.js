@@ -3,7 +3,7 @@
 const redis = require(__dirname+'/../../lib/redis/redis.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { Accounts } = require(__dirname+'/../../db/')
-	, speakeasy = require('speakeasy');
+	, OTPAuth = require('otpauth');
 
 module.exports = async (req, res) => {
 
@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
 
 	// Get the temporary secret from redis and check it exists
 	const tempSecret = await redis.get(`twofactor:${username}`);
-	if (!tempSecret) {
+	if (!tempSecret || !username) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': '2FA QR code expired, try again',
@@ -19,15 +19,19 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	// bcrypt compare input to saved hash
-	const verified = await speakeasy.totp.verify({
+	// Validate totp
+	const totp = new OTPAuth.TOTP({
 		secret: tempSecret,
-		encoding: 'base32',
+		algorithm: 'SHA256',
+	});
+	const delta = await totp.validate({
 		token: req.body.twofactor,
+		algorithm: 'SHA256',
+		window: 1,
 	});
 
-	//if hashes matched
-	if (verified === false) {
+	// Check if code was valid
+	if (delta === null) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
 			'message': 'Incorrect 2FA code',

@@ -3,7 +3,8 @@
 const redis = require(__dirname+'/../../lib/redis/redis.js')
 	, { Ratelimits } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, speakeasy = require('speakeasy')
+	, config = require(__dirname+'/../../lib/misc/config.js')
+	, OTPAuth = require('otpauth')
 	, QRCode = require('qrcode');
 
 module.exports = async (req, res, next) => {
@@ -16,19 +17,27 @@ module.exports = async (req, res, next) => {
 	// Ratelimit QR code generation
 	const username = res.locals.user.username;
 	const ratelimit = await Ratelimits.incrmentQuota(username, '2fa', 50);
-	if (false && ratelimit > 100) {
+	if (ratelimit > 100) {
 		return dynamicResponse(req, res, 429, 'message', {
 			'title': 'Ratelimited',
 			'message': 'Please wait before generating another 2FA QR code.',
 		});
 	}
 
+	const { meta } = config.get;
+
 	let qrCodeText = '';
 	try {
-		const secret = speakeasy.generateSecret();
+		const totp = new OTPAuth.TOTP({
+			issuer: meta.url || 'jschan',
+			label: meta.siteName || 'jschan',
+			algorithm: 'SHA256',
+		});
+		const secret = totp.secret;
 		const secretBase32 = secret.base32;
 		await redis.set(`twofactor:${username}`, secretBase32, 300); //store validation secret temporarily in redis
-		qrCodeText = await QRCode.toString(secret.otpauth_url, { type: 'utf8' });
+		const qrCodeURL = totp.toString();
+		qrCodeText = await QRCode.toString(qrCodeURL, { type: 'utf8' });
 	} catch (err) {
 		return next(err);
 	}

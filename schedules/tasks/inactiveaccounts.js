@@ -72,11 +72,15 @@ module.exports = {
 		if (config.get.inactiveAccountAction === 2) {
 			debugLogs && console.log(`Deleting ${inactiveAccounts.length} inactive accounts`);
 			const inactiveUsernames = inactiveAccounts.map(acc => acc._id);
-			accountsPromise = Accounts.deleteMany(inactiveUsernames);
+			if (inactiveUsernames.length > 0) {
+				accountsPromise = Accounts.deleteMany(inactiveUsernames);
+			}
 		} else{
 			debugLogs && console.log(`Removing staff positions from ${inactiveWithBoards.length} inactive accounts`);
 			const inactiveUsernames = inactiveWithBoards.map(acc => acc._id);
-			accountsPromise = Accounts.clearStaffAndOwnedBoards(inactiveUsernames);
+			if (inactiveUsernames.length > 0) {
+				accountsPromise = Accounts.clearStaffAndOwnedBoards(inactiveUsernames);
+			}
 		}
 		
 		//execute promises
