@@ -3,7 +3,7 @@
 const redis = require(__dirname+'/../../lib/redis/redis.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { Accounts } = require(__dirname+'/../../db/')
-	, OTPAuth = require('otpauth');
+	, doTwoFactor = require(__dirname+'/../../lib/misc/dotwofactor.js');
 
 module.exports = async (req, res) => {
 
@@ -20,15 +20,7 @@ module.exports = async (req, res) => {
 	}
 
 	// Validate totp
-	const totp = new OTPAuth.TOTP({
-		secret: tempSecret,
-		algorithm: 'SHA256',
-	});
-	const delta = await totp.validate({
-		token: req.body.twofactor,
-		algorithm: 'SHA256',
-		window: 1,
-	});
+	const { delta } = doTwoFactor(tempSecret, req.body.twofactor);
 
 	// Check if code was valid
 	if (delta === null) {

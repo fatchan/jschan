@@ -3,7 +3,7 @@
 const bcrypt = require('bcrypt')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, redis = require(__dirname+'/../../lib/redis/redis.js')
-	, OTPAuth = require('otpauth')
+	, doTwoFactor = require(__dirname+'/../../lib/misc/dotwofactor.js')
 	, { Accounts } = require(__dirname+'/../../db/');
 
 module.exports = async (req, res) => {
@@ -37,15 +37,7 @@ module.exports = async (req, res) => {
 	}
 
 	if (account.twofactor) {
-		const totp = new OTPAuth.TOTP({
-			secret: account.twofactor,
-			algorithm: 'SHA256',
-		});
-		const delta = await totp.validate({
-			token: req.body.twofactor,
-			algorithm: 'SHA256',
-			window: 1,
-		});
+		const { delta } = doTwoFactor(account.twofactor, req.body.twofactor);
 		if (delta === null) {
 			return dynamicResponse(req, res, 403, 'message', {
 				'title': 'Forbidden',
