@@ -26,7 +26,8 @@ module.exports = async (req, res, next) => {
 
 	const { meta } = config.get;
 
-	let qrCodeText = '';
+	let qrCodeText = ''
+		, secretBase32 = '';
 	try {
 		const totp = new OTPAuth.TOTP({
 			issuer: meta.url || 'jschan',
@@ -34,7 +35,7 @@ module.exports = async (req, res, next) => {
 			algorithm: 'SHA256',
 		});
 		const secret = totp.secret;
-		const secretBase32 = secret.base32;
+		secretBase32 = secret.base32;
 		await redis.set(`twofactor:${username}`, secretBase32, 300); //store validation secret temporarily in redis
 		const qrCodeURL = totp.toString();
 		qrCodeText = await QRCode.toString(qrCodeURL, { type: 'utf8' });
@@ -43,10 +44,11 @@ module.exports = async (req, res, next) => {
 	}
 
 	res
-		.set('Cache-Control', 'private, max-age=5')
+		.set('Cache-Control', 'no-cache')
 		.render('twofactor', {
 			csrf: req.csrfToken(),
-			qrCodeText, 
+			qrCodeText,
+			secretBase32,
 		});
 
 };
