@@ -14,7 +14,7 @@ module.exports = {
 	controller: async (req, res, next) => {
 
 		const errors = await checkSchema([
-			{ result: existsBody(res.locals.user.twofactor), expected: false, error: 'You already have 2FA setup' },
+			{ result: res.locals.user.twofactor === false, expected: true, error: 'You already have 2FA setup' },
 			{ result: existsBody(req.body.twofactor), expected: true, error: 'Missing 2FA code' },
 			{ result: lengthBody(req.body.twofactor, 6, 6), expected: false, error: '2FA code must be 6 characters' },
 		]);

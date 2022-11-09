@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
 	}
 
 	if (account.twofactor) {
-		const { delta } = doTwoFactor(account.twofactor, req.body.twofactor);
+		const { delta } = await doTwoFactor(username, account.twofactor, req.body.twofactor);
 		if (delta === null) {
 			return dynamicResponse(req, res, 403, 'message', {
 				'title': 'Forbidden',

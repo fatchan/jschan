@@ -36,7 +36,7 @@ module.exports = async (req, res, next) => {
 		});
 		const secret = totp.secret;
 		secretBase32 = secret.base32;
-		await redis.set(`twofactor:${username}`, secretBase32, 300); //store validation secret temporarily in redis
+		await redis.set(`twofactor_tempsecret:${username}`, secretBase32, 300); //store validation secret temporarily in redis
 		const qrCodeURL = totp.toString();
 		qrCodeText = await QRCode.toString(qrCodeURL, { type: 'utf8' });
 	} catch (err) {

@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 	const username = res.locals.user.username.toLowerCase();
 
 	// Get the temporary secret from redis and check it exists
-	const tempSecret = await redis.get(`twofactor:${username}`);
+	const tempSecret = await redis.get(`twofactor_tempsecret:${username}`);
 	if (!tempSecret || !username) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
 	}
 
 	// Validate totp
-	const { delta } = doTwoFactor(tempSecret, req.body.twofactor);
+	const { delta } = await doTwoFactor(username, tempSecret, req.body.twofactor);
 
 	// Check if code was valid
 	if (delta === null) {
@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
 			'redirect': '/twofactor.html',
 		});
 	}
-	redis.del(`twofactor:${username}`);
+	redis.del(`twofactor_tempsecret:${username}`);
 	
 	// Successfully enabled 2FA
 	await Accounts.updateTwofactor(username, tempSecret);
