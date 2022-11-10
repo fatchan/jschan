@@ -1,7 +1,7 @@
 {
   "name": "jschan",
-  "version": "0.9.4",
-  "migrateVersion": "0.9.1",
+  "version": "0.10.0",
+  "migrateVersion": "0.10.0",
   "description": "",
   "main": "server.js",
   "dependencies": {
@@ -40,10 +40,12 @@
     "ip6addr": "^0.2.5",
     "mongodb": "^4.6.0",
     "node-fetch": "^2.6.7",
+    "otpauth": "^9.0.1",
     "path": "^0.12.7",
     "pm2": "^5.2.0",
     "pug": "^3.0.2",
     "pug-runtime": "^3.0.1",
+    "qrcode": "^1.5.1",
     "redlock": "^4.2.0",
     "sanitize-html": "^2.7.0",
     "saslprep": "^1.0.3",
