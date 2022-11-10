@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
 	}
 
 	// Validate totp
-	const { delta } = await doTwoFactor(username, tempSecret, req.body.twofactor);
+	const delta = await doTwoFactor(username, tempSecret, req.body.twofactor);
 
 	// Check if code was valid
 	if (delta === null) {
