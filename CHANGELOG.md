@@ -1,3 +1,6 @@
+### 0.10.2
+  - Bugfix to 2fa, code-reuse prevention was blocking all codes rather than only a recently used correct code.
+
 ### 0.10.1
   - Minor nginx configuration change for twofactor.html.
 
