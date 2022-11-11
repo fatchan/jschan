@@ -6,6 +6,7 @@ module.exports = {
 	register: require(__dirname+'/register.js'),
 	account: require(__dirname+'/account.js'),
 	sessions: require(__dirname+'/sessions.js'),
+	setupTwoFactor: require(__dirname+'/twofactor.js'),
 	myPermissions: require(__dirname+'/mypermissions.js'),
 	home: require(__dirname+'/home.js'),
 	login: require(__dirname+'/login.js'),

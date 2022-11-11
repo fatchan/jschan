@@ -46,7 +46,8 @@ module.exports = {
 			passwordHash,
 			'permissions': Mongo.Binary(permissions.array),
 			'ownedBoards': [],
-			'staffBoards': []
+			'staffBoards': [],
+			'twofactor': null,
 		});
 		cache.del(`users:${username}`);
 		return res;
@@ -95,6 +96,16 @@ module.exports = {
 		}, {
 			'$set': {
 				lastActiveDate: new Date()
+			}
+		});
+	},
+
+	updateTwofactor: (username, secret) => {
+		return db.updateOne({
+			'_id': username
+		}, {
+			'$set': {
+				'twofactor': secret
 			}
 		});
 	},
