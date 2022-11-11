@@ -8,7 +8,7 @@ const changePassword = require(__dirname+'/../../models/forms/changepassword.js'
 module.exports = {
 
 	paramConverter: paramConverter({
-		trimFields: ['username', 'password', 'newpassword', 'newpasswordconfirm'],
+		trimFields: ['username', 'password', 'twofactor', 'newpassword', 'newpasswordconfirm'],
 	}),
 
 	controller: async (req, res, next) => {
@@ -23,6 +23,7 @@ module.exports = {
 			{ result: existsBody(req.body.newpasswordconfirm), expected: true, error: 'Missing new password confirmation' },
 			{ result: lengthBody(req.body.newpasswordconfirm, 0, 100), expected: false, error: 'New password confirmation must be 100 characters or less' },
 			{ result: (req.body.newpassword === req.body.newpasswordconfirm), expected: true, error: 'New password and password confirmation must match' },
+			{ result: lengthBody(req.body.twofactor, 0, 6), expected: false, error: 'Invalid 2FA code' },
 		]);
 
 		if (errors.length > 0) {

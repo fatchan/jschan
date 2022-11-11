@@ -93,6 +93,7 @@ module.exports = () => describe('login and create test board', () => {
 			hot_threads_limit: '5',
 			hot_threads_threshold: '10',
 			hot_threads_max_age: '2629800000',
+			captcha_options_font: 'default',
 			captcha_options_type: 'text',
 			captcha_options_generate_limit: '250',
 			captcha_options_text_font: 'default',
