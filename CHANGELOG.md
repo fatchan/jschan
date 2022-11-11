@@ -1,3 +1,6 @@
+### 0.10.1
+  - Minor nginx configuration change for twofactor.html.
+
 ### 0.10.0
   - Add account two factor authenticaiton (TOTP).
   - Update dependencies.
