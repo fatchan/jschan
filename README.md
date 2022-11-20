@@ -2,7 +2,7 @@
 
 Anonymous imageboard software.
 
-Demo/test instance: [Clearnet](https://fatchan.org), [Tor hidden service](http://cimixezweeq64g42vl6tyhk4becxhi4ldwqq6w43u53qhwsd3s4c3lyd.onion/), [Lokinet SNApp](http://fatchan.loki/)
+Live instance: https://94chan.org
 
 API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/) - Gitgud pages link: http://fatchan.gitgud.site/jschan-docs/#introduction
 
@@ -38,9 +38,10 @@ Interested in contributing to jschan development? See [CONTRIBUTING.md](CONTRIBU
 
 ## Related Projects
 Here are some other projects related to jschan that you might find useful. **These are not official or otherwise guaranteed to work or be safe and should be used at your own risk.**
- - [myumyu/globalafk](https://gitgud.io/myumyu/globalafk/) - "A simple python script that sends ugly notifications when something happens on a jschan imageboard that you moderate."
+ - [fatchan/jschan-api-go](https://gitgud.io/fatchan/jschan-api-go) - WIP Golang API Client for jschan.
  - [ussaohelcim/jschan-api-sdk](https://github.com/ussaohelcim/jschan-api-sdk) - JavaScript/TypeScript SDK for jschan.
  - [ussaohelcim/jschan-api-types](https://github.com/ussaohelcim/jschan-api-types) - TypeScript typings for jschan API.
+ - [myumyu/globalafk](https://gitgud.io/myumyu/globalafk/) - "A simple python script that sends ugly notifications when something happens on a jschan imageboard that you moderate."
 
 ## For generous people
 
