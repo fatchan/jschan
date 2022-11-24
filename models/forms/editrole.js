@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
 	rolePermissions.set(Permissions.BYPASS_SPAMCHECK, (req.body.BYPASS_SPAMCHECK != null));
 	rolePermissions.set(Permissions.BYPASS_RATELIMITS, (req.body.BYPASS_RATELIMITS != null));
 	rolePermissions.set(Permissions.BYPASS_FILTERS, (req.body.BYPASS_FILTERS != null));
+	rolePermissions.set(Permissions.BYPASS_CAPTCHA, (req.body.BYPASS_CAPTCHA != null));	
 	rolePermissions.set(Permissions.MANAGE_GLOBAL_GENERAL, (req.body.MANAGE_GLOBAL_GENERAL != null));
 	rolePermissions.set(Permissions.MANAGE_GLOBAL_BANS, (req.body.MANAGE_GLOBAL_BANS != null));
 	rolePermissions.set(Permissions.MANAGE_GLOBAL_LOGS, (req.body.MANAGE_GLOBAL_LOGS != null));
