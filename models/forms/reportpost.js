@@ -10,7 +10,8 @@ module.exports = (req, res) => {
 		'date': new Date(),
 		'ip': {
 			'cloak': res.locals.ip.cloak,
-			'raw': res.locals.ip.raw
+			'raw': res.locals.ip.raw,
+			'type': res.locals.ip.type,
 		}
 	};
 

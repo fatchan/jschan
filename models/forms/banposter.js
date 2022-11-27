@@ -24,14 +24,12 @@ module.exports = async (req, res) => {
 		}, {});
 		for (let ip in ipPosts) {
 			//should we at some point filter these to not bother banning pruned ips?
-			const banType = ip.endsWith('.IP') ? 0 :
-				ip.endsWith('.BP') ? 1 :
-					2;
 			const thisIpPosts = ipPosts[ip];
 			let banRange = 0;
 			let banIp = {
 				cloak: thisIpPosts[0].ip.cloak,
 				raw: thisIpPosts[0].ip.raw,
+				type: thisIpPosts[0].ip.type,
 			};
 			if (req.body.ban_h) {
 				banRange = 2;
@@ -48,7 +46,6 @@ module.exports = async (req, res) => {
 			}
 			bans.push({
 				'range': banRange,
-				'type': banType,
 				'ip': banIp,
 				'reason': banReason,
 				'board': banBoard,
@@ -87,11 +84,7 @@ module.exports = async (req, res) => {
 			}
 			ips = ips.filter(n => n);
 			[...new Set(ips)].forEach(ip => {
-				const banType = ip.cloak.endsWith('.IP') ? 0 :
-					ip.cloak.endsWith('.BP') ? 1 :
-						2;
 				bans.push({
-					'type': banType,
 					'range': 0,
 					'ip': ip,
 					'reason': banReason,
