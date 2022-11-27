@@ -1,3 +1,11 @@
+### 0.11.0
+  - IP/ban type display and suffixes improved to make IPv4/6/Bypass/Pruned IP clearer for more informed moderation.
+  - Labelled link format markdown now supports mailto.
+  - Bugfix saveoverboard script so it works on catalog instead of only index, and improve the code to be more general and allow /catalog.html in navbar link.
+  - Bugfix BYPASS_CAPTCHA permission not able to be applied to roles.
+  - Npm audit fix.
+  - Update README with some new related projects and change demo/test instance to 94chan.
+
 ### 0.10.2
   - Bugfix to 2fa, code-reuse prevention was blocking all codes rather than only a recently used correct code.
 
