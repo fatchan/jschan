@@ -95,7 +95,7 @@ module.exports = async (req, res) => {
 		'updateOne': {
 			'filter': {
 				'postId': req.body.move_to_thread,
-				'board': req.params.board
+				'board': req.body.move_to_board || req.params.board,
 			},
 			'update': {
 				'$inc': {
@@ -106,7 +106,7 @@ module.exports = async (req, res) => {
 		}
 	});
 
-	const movedPosts = await Posts.move(postMongoIds, req.body.move_to_thread).then(result => result.modifiedCount);
+	const movedPosts = await Posts.move(postMongoIds, req.body.move_to_thread, req.body.move_to_board).then(result => result.modifiedCount);
 
 	//emit markPost moves
 	for (let i = 0; i < moveEmits.length; i++) {

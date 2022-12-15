@@ -36,8 +36,11 @@ details.toggle-label#actionform
 				label
 					input.post-check(type='checkbox', name='move' value='1')
 					| Move
-				label
-					input(type='number', name='move_to_thread', placeholder='Destination thread No.' autocomplete='off')
+				.row
+					label.mr-1
+						input(type='text', name='move_to_board', placeholder='Board' autocomplete='off')
+					label
+						input(type='number', name='move_to_thread', placeholder='Thread No.' autocomplete='off')
 			.col.mr-5
 				label
 					input.post-check(type='checkbox', name='report_ban' value='1')

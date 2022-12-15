@@ -794,25 +794,48 @@ module.exports = {
 		return db.deleteMany();
 	},
 
-	move: (ids, dest) => {
-		return db.updateMany({
-			'_id': {
-				'$in': ids
-			}
-		}, {
-			'$set': {
-				'thread': dest
-			},
-			'$unset': {
-				'replyposts': '',
-				'replyfiles': '',
-				'sticky': '',
-				'locked': '',
-				'bumplocked': '',
-				'cyclic': '',
-				'salt': ''
+	move: async (postMongoIds, destinationThread, destinationBoard=null) => {
+		let bulkWrites = []
+			, movePostsSet = { thread: destinationThread };
+		if (destinationBoard) {
+			//postIds need to be adjusted if moving to a different board
+			const lastId = await Boards.getNextId(destinationBoard, false, postMongoIds.length);
+			movePostsSet.board = destinationBoard;
+			bulkWrites = postMongoIds.map((postMongoId, index) => ({
+				'updateOne': {
+					'filter': {
+						'_id': postMongoId,
+					},
+					'update': {
+						'$set': {
+							'postId': lastId - index,
+						}
+					}
+				}
+			}));
+		}
+		bulkWrites.push({
+			'updateMany': {
+				'filter': {
+					'_id': {
+						'$in': postMongoIds,
+					}
+				},
+				'update': {
+					'$set': movePostsSet,
+					'$unset': {
+						'replyposts': '',
+						'replyfiles': '',
+						'sticky': '',
+						'locked': '',
+						'bumplocked': '',
+						'cyclic': '',
+						'salt': ''
+					}
+				}
 			}
 		});
+		return db.bulkWrite(bulkWrites);
 	},
 
 	threadExists: (board, thread) => {

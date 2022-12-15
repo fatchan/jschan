@@ -504,10 +504,10 @@ module.exports = {
 		]).toArray();
 	},
 
-	getNextId: async (board, saged) => {
+	getNextId: async (board, saged, amount=1) => {
 		const update = {
 			'$inc': {
-				'sequence_value': 1
+				'sequence_value': amount
 			},
 		};
 		if (!saged) {

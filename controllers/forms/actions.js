@@ -13,7 +13,7 @@ module.exports = {
 
 	paramConverter: paramConverter({
 		timeFields: ['ban_duration'],
-		trimFields: ['postpassword', 'report_reason', 'ban_reason', 'log_message'],
+		trimFields: ['postpassword', 'report_reason', 'ban_reason', 'log_message', 'move_to_board'],
 		allowedArrays: ['checkedreports', 'checkedposts'],
 		numberFields: ['move_to_thread', 'sticky'],
 		numberArrays: ['checkedposts'],
@@ -84,6 +84,7 @@ module.exports = {
 				'referer': (req.headers.referer || `/${res.locals.posts[0].board}/manage/thread/${res.locals.posts[0].thread || res.locals.posts[0].postId}.html`) + `#${res.locals.posts[0].postId}`,
 			});
 		} else if (req.body.move) {
+//TODO: update to fetch destination baord (if req.body.move_to_board), do a perms check for MANAGE_BOARD_GENERAL there, and update V
 			res.locals.posts = res.locals.posts.filter(p => {
 				//filter to remove any posts already in the thread (or the OP) of move destination
 				return p.postId !== req.body.move_to_thread && p.thread !== req.body.move_to_thread;

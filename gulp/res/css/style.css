@@ -529,6 +529,10 @@ table {
 	max-width: 50px;
 }
 
+input[name="move_to_board"], input[name="move_to_thread"] {
+	max-width: 80px;
+}
+
 .w900 {
 	width: 900px;
 }
