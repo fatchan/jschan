@@ -34,7 +34,7 @@ sudo apt install curl wget gnupg nginx ffmpeg imagemagick graphicsmagick python-
 
 [MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian):
 ```bash
-#NOTE: this installs mongodb 4.4 for compatibility reasons.
+#NOTE: this installs mongodb 4.4 for compatibility reasons only. Newer versions (6.x) are recommended)
 wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
 echo "deb http://repo.mongodb.org/apt/debian $(lsb_release -sc)/mongodb-org/4.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
 sudo apt update -y
@@ -66,7 +66,7 @@ EOF
 
 sudo systemctl restart mongod
 #NOTE: to access to DB directly in future:
-#mongosh "mongodb://jschan:CHANGE-ME-YOUR-SECURE-MONGODB-PASSWORD@localhost:27017/jschan"
+#mongosh "mongodb://jschan:CHANGE-ME-YOUR-SECURE-MONGODB-PASSWORD@127.0.0.1:27017/jschan"
 ```
 
 **4. Install Redis**
@@ -89,7 +89,7 @@ sudo systemctl restart redis-server
 
 For easy installation, use [node version manager](https://github.com/nvm-sh/nvm#installing-and-updating) "nvm":
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
