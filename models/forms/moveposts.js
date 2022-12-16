@@ -10,14 +10,17 @@ const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 
 module.exports = async (req, res) => {
 
-	const { threads, postIds, postMongoIds } = res.locals.posts.reduce((acc, p) => {
-		acc.postIds.push(p.postId);
-		acc.postMongoIds.push(p._id);
-		if (p.thread === null) {
-			acc.threads.push(p);
-		}
-		return acc;
-	}, { threads: [], postIds: [], postMongoIds: [] });
+	const { threads, postIds, postMongoIds } = res.locals.posts
+		.sort((a, b) => {
+			return b.date - a.date; //could do postId, doesn't really matter.
+		}).reduce((acc, p) => {
+			acc.postIds.push(p.postId);
+			acc.postMongoIds.push(p._id);
+			if (p.thread === null) {
+				acc.threads.push(p);
+			}
+			return acc;
+		}, { threads: [], postIds: [], postMongoIds: [] });
 
 	//maybe should filter these? because it will include threads from which child posts are already fetched in the action handler, unlike the deleteposts model
 	const moveEmits = res.locals.posts.reduce((acc, post) => {
@@ -83,30 +86,35 @@ module.exports = async (req, res) => {
 			});
 		}
 	}
-
+	
 	//increase file/reply count in thread we are moving the posts to
-	const { replyposts, replyfiles } = res.locals.posts.reduce((acc, p) => {
-		acc.replyposts += 1;
-		acc.replyfiles += p.files.length;
-		return acc;
-	}, { replyposts: 0, replyfiles: 0 });
+	if (res.locals.destinationThread) {
+		const { replyposts, replyfiles } = res.locals.posts.reduce((acc, p) => {
+			acc.replyposts += 1;
+			acc.replyfiles += p.files.length;
+			return acc;
+		}, { replyposts: 0, replyfiles: 0 });
 
-	bulkWrites.push({
-		'updateOne': {
-			'filter': {
-				'postId': req.body.move_to_thread,
-				'board': req.body.move_to_board || req.params.board,
-			},
-			'update': {
-				'$inc': {
-					'replyposts': replyposts,
-					'replyfiles': replyfiles,
+		bulkWrites.push({
+			'updateOne': {
+				'filter': {
+					'postId': req.body.move_to_thread,
+					'board': req.body.move_to_board || req.params.board,
+				},
+				'update': {
+					'$inc': {
+						'replyposts': replyposts,
+						'replyfiles': replyfiles,
+					}
 				}
 			}
-		}
-	});
+		});
+	}
 
-	const movedPosts = await Posts.move(postMongoIds, req.body.move_to_thread, req.body.move_to_board).then(result => result.modifiedCount);
+	const destinationBoard = res.locals.destinationBoard ? res.locals.destinationBoard._id : req.params.board;
+	const crossBoard = destinationBoard !== req.params.board;
+	const destinationThreadId = res.locals.destinationThread ? res.locals.destinationThread.postId : (crossBoard ? null : postIds[0]);
+	const movedPosts = await Posts.move(postMongoIds, crossBoard, destinationThreadId, destinationBoard).then(result => result.modifiedCount);
 
 	//emit markPost moves
 	for (let i = 0; i < moveEmits.length; i++) {

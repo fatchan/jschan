@@ -1,6 +1,6 @@
 'use strict';
 
-const { Posts } = require(__dirname+'/../../db/')
+const { Posts, Boards } = require(__dirname+'/../../db/')
 	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
@@ -44,14 +44,29 @@ module.exports = {
 			{ result: lengthBody(req.body.ban_reason, 0, globalLimits.fieldLength.ban_reason), expected: false, error: `Ban reason must be ${globalLimits.fieldLength.ban_reason} characters or less` },
 			{ result: lengthBody(req.body.log_message, 0, globalLimits.fieldLength.log_message), expected: false, error: `Modlog message must be ${globalLimits.fieldLength.log_message} characters or less` },
 			{ result: (existsBody(req.body.report || req.body.global_report) && lengthBody(req.body.report_reason, 1)), expected: false, blocking: true, error: 'Reports must have a reason' },
-			{ result: (existsBody(req.body.move) && !req.body.move_to_thread), expected: false, error: 'Must input destinaton thread number to move posts' },
+			{ result: (existsBody(req.body.move) && (!req.body.move_to_thread && !req.body.move_to_board)), expected: false, error: 'Must input destinaton thread number or board to move posts' },
 			{ result: async () => {
 				if (req.body.move && req.body.move_to_thread) {
-					res.locals.destinationThread = await Posts.threadExists(req.params.board, req.body.move_to_thread);
+					const moveBoard = req.body.move_to_board || req.params.board;
+					res.locals.destinationThread = await Posts.threadExists(moveBoard, req.body.move_to_thread);
 					return res.locals.destinationThread != null;
 				}
 				return true;
-			}, expected: true, error: 'Destination thread for move does not exist' },
+			}, expected: true, error: 'Destination for move does not exist' },
+			{ result: async () => {
+				if (!res.locals.user || !res.locals.user.username) {
+					return false;
+				}
+				if (req.body.move && req.body.move_to_board) {
+					const destinationBoard = await Boards.findOne(req.body.move_to_board);
+					if (res.locals.permissions.hasAny(Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_BOARD_GENERAL)
+						|| destinationBoard.staff[res.locals.user.username] != null) {
+						res.locals.destinationBoard = destinationBoard;
+					}
+					return res.locals.destinationBoard != null;
+				}
+				return true;
+			}, expected: true, error: 'Destination for move does not exist, or you do not have permission' },
 		], res.locals.permissions);
 
 		if (errors.length > 0) {
@@ -77,24 +92,34 @@ module.exports = {
 		}
 
 		if (req.body.edit) {
-			//edit post, only allowing one
+			//edit post only allows single post
+			//TODO: make this like editnews, a GET endpoint page
 			return res.render('editpost', {
 				'post': res.locals.posts[0],
 				'csrf': req.csrfToken(),
 				'referer': (req.headers.referer || `/${res.locals.posts[0].board}/manage/thread/${res.locals.posts[0].thread || res.locals.posts[0].postId}.html`) + `#${res.locals.posts[0].postId}`,
 			});
 		} else if (req.body.move) {
-//TODO: update to fetch destination baord (if req.body.move_to_board), do a perms check for MANAGE_BOARD_GENERAL there, and update V
-			res.locals.posts = res.locals.posts.filter(p => {
-				//filter to remove any posts already in the thread (or the OP) of move destination
-				return p.postId !== req.body.move_to_thread && p.thread !== req.body.move_to_thread;
-			});
-			if (res.locals.posts.length === 0) {
-				return dynamicResponse(req, res, 409, 'message', {
-					'title': 'Conflict',
-					'error': 'Destination thread cannot match source thread for move action',
+			if (!res.locals.destinationBoard && !res.locals.destinationThread) {
+				return dynamicResponse(req, res, 400, 'message', {
+					'title': 'Bad Request',
+					'error': 'Invalid post move destination',
 					'redirect': `/${req.params.board}/`
 				});
+			}
+			if (req.body.move_to_thread
+				&& (!req.body.move_to_board || req.body.move_to_board === req.params.board)) {
+				//If moving to thread on the same board, filter posts that are already in the destination thread
+				res.locals.posts = res.locals.posts.filter(p => {
+					return p.postId !== req.body.move_to_thread && p.thread !== req.body.move_to_thread;
+				});
+				if (res.locals.posts.length === 0) {
+					return dynamicResponse(req, res, 409, 'message', {
+						'title': 'Conflict',
+						'error': 'Invalid selected posts or destination thread',
+						'redirect': `/${req.params.board}/`
+					});
+				}
 			}
 		}
 

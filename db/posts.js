@@ -794,13 +794,16 @@ module.exports = {
 		return db.deleteMany();
 	},
 
-	move: async (postMongoIds, destinationThread, destinationBoard=null) => {
+	move: async (postMongoIds, crossBoard, destinationThreadId, destinationBoard=null) => {
 		let bulkWrites = []
-			, movePostsSet = { thread: destinationThread };
-		if (destinationBoard) {
+			, newDestinationThreadId = destinationThreadId;
+		if (crossBoard) {
 			//postIds need to be adjusted if moving to a different board
 			const lastId = await Boards.getNextId(destinationBoard, false, postMongoIds.length);
-			movePostsSet.board = destinationBoard;
+			//if moving board and no destination thread, pick the starting ID of the amount we incremented
+			if (!destinationThreadId) {
+				newDestinationThreadId = lastId - (postMongoIds.length-1);
+			}
 			bulkWrites = postMongoIds.map((postMongoId, index) => ({
 				'updateOne': {
 					'filter': {
@@ -822,7 +825,10 @@ module.exports = {
 					}
 				},
 				'update': {
-					'$set': movePostsSet,
+					'$set': {
+						'board': destinationBoard,
+						'thread': newDestinationThreadId,
+					},
 					'$unset': {
 						'replyposts': '',
 						'replyfiles': '',
@@ -835,6 +841,30 @@ module.exports = {
 				}
 			}
 		});
+		if (!destinationThreadId) {
+			//No destination thread i.e we are maing a new thread from the selected posts, make one the OP
+			bulkWrites.push({
+				'updateOne': {
+					'filter': {
+						'_id': postMongoIds[0],
+					},
+					'update': {
+						'$set': {
+							'thread': null,
+							//TODO: set these values properly
+							'replyposts': 0,
+							'replyfiles': 0,
+							'sticky': 0,
+							'locked': 0,
+							'bumplocked': 0,
+							'cyclic': 0,
+							'salt': '',
+						}
+					}
+				}
+			});
+		}
+		//console.log(JSON.stringify(bulkWrites, null, 4));
 		return db.bulkWrite(bulkWrites);
 	},
 
