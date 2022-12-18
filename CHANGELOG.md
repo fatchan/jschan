@@ -1,11 +1,13 @@
 ### 0.11.0
+  - Post moving now supports cross-board moves and turning moved posts into their own thread.
   - IP/ban type display and suffixes improved to make IPv4/6/Bypass/Pruned IP clearer for more informed moderation.
+  - Post editing is now available as a link in the post dropdown, and makes a GET for the page (like editcustompage/editnews)
   - Labelled link format markdown now supports mailto.
   - "Hide name" set by default when using public actions form.
   - Bugfix saveoverboard script so it works on catalog instead of only index, and improve the code to be more general and allow /catalog.html in navbar link.
   - Bugfix BYPASS_CAPTCHA permission not able to be applied to roles.
-  - Npm audit fix.
   - Update README with some new related projects and change demo/test instance to 94chan.
+  - Npm audit & dependencies updated.
 
 ### 0.10.2
   - Bugfix to 2fa, code-reuse prevention was blocking all codes rather than only a recently used correct code.
