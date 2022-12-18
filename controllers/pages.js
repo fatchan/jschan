@@ -18,7 +18,7 @@ const express  = require('express')
 	, setMinimal = require(__dirname+'/../lib/middleware/misc/setminimal.js')
 	//page models
 	, { manageRecent, manageReports, manageAssets, manageSettings, manageBans, editCustomPage, manageMyPermissions,
-		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages, manageStaff, editStaff } = require(__dirname+'/../models/pages/manage/')
+		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages, manageStaff, editStaff, editPost } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards, editNews, editAccount, editRole,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs, globalManageRoles } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, create, myPermissions, sessions, setupTwoFactor,
@@ -45,7 +45,7 @@ router.get('/catalog.(html|json)', overboardCatalog); //overboard catalog view
 
 //board pages
 router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, board); //index
-router.get('/:board/thread/:id([1-9][0-9]{0,}).(html|json)', Boards.exists, threadParamConverter, Posts.exists, thread); //thread view
+router.get('/:board/thread/:id([1-9][0-9]{0,}).(html|json)', Boards.exists, threadParamConverter, Posts.threadExistsMiddleware, thread); //thread view
 router.get('/:board/catalog.(html|json)', Boards.exists, catalog); //catalog
 router.get('/:board/logs.(html|json)', Boards.exists, modloglist);//modlog list
 router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).(html|json)', Boards.exists, logParamConverter, modlog); //daily log
@@ -61,7 +61,9 @@ router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn
 router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageBoard);
 router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, threadParamConverter, calcPerms,
-	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, Posts.exists, manageThread);
+	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, Posts.threadExistsMiddleware, manageThread);
+router.get('/:board/manage/editpost/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, threadParamConverter, calcPerms,
+	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, Posts.postExistsMiddleware, editPost);
 router.get('/:board/manage/reports.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageReports);
 router.get('/:board/manage/recent.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,

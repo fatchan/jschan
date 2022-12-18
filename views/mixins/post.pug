@@ -78,6 +78,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 						option(value='ftrip') Filter Tripcode
 					if !overboard && !ban
 						option(value='moderate') Moderate
+					if !ban
+						option(value='edit') Edit
 					if !post.thread
 						option(value='watch') Watch
 						option(value='playlist') Playlist

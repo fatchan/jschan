@@ -870,8 +870,8 @@ module.exports = {
 
 	threadExists: (board, thread) => {
 		return db.findOne({
-			'postId': thread,
 			'board': board,
+			'postId': thread,
 			'thread': null,
 		}, {
 			'projection': {
@@ -882,13 +882,37 @@ module.exports = {
 		});
 	},
 
-	exists: async (req, res, next) => {
+	threadExistsMiddleware: async (req, res, next) => {
 		const thread = await module.exports.threadExists(req.params.board, req.params.id);
 		if (!thread) {
 			return res.status(404).render('404');
 		}
-		res.locals.thread = thread; // can acces this in views or next route handlers
+		res.locals.thread = thread;
 		next();
-	}
+	},
+
+	postExists: (board, postId) => {
+		return db.findOne({
+			'board': board,
+			'postId': postId,
+		}, {
+			'projection': {
+				'salt': 0 ,
+				'password': 0,
+				'ip': 0,
+				'reports': 0,
+				'globalreports': 0,
+			}
+		});
+	},
+
+	postExistsMiddleware: async (req, res, next) => {
+		const post = await module.exports.postExists(req.params.board, req.params.id);
+		if (!post) {
+			return res.status(404).render('404');
+		}
+		res.locals.post = post;
+		next();
+	},
 
 };

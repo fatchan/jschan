@@ -518,7 +518,9 @@ module.exports = {
 		const increment = await db.findOneAndUpdate(
 			{
 				'_id': board
-			}, update, {
+			},
+			update,
+			{
 				'projection': {
 					'sequence_value': 1
 				}

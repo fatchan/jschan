@@ -93,12 +93,7 @@ module.exports = {
 
 		if (req.body.edit) {
 			//edit post only allows single post
-			//TODO: make this like editnews, a GET endpoint page
-			return res.render('editpost', {
-				'post': res.locals.posts[0],
-				'csrf': req.csrfToken(),
-				'referer': (req.headers.referer || `/${res.locals.posts[0].board}/manage/thread/${res.locals.posts[0].thread || res.locals.posts[0].postId}.html`) + `#${res.locals.posts[0].postId}`,
-			});
+			return res.redirect(`/${res.locals.posts[0].board}/manage/editpost/${res.locals.posts[0].thread || res.locals.posts[0].postId}.html`);
 		} else if (req.body.move) {
 			if (!res.locals.destinationBoard && !res.locals.destinationThread) {
 				return dynamicResponse(req, res, 400, 'message', {

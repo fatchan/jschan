@@ -265,6 +265,8 @@ const postMenuChange = function() {
 			break;
 		case 'moderate':
 			return moderatePost(postContainer);
+		case 'edit':
+			return window.location = `/${postDataset.board}/manage/editpost/${postDataset.postId}.html`;
 		case 'watch': {
 			const postMessage = postContainer.querySelector('.post-message');
 			const watcherSubject = (postDataset.subject || (postMessage && postMessage.textContent) || `#${postDataset.postId}`).substring(0, 25);
