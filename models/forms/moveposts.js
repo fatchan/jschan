@@ -113,12 +113,18 @@ module.exports = async (req, res) => {
 
 	const destinationBoard = res.locals.destinationBoard ? res.locals.destinationBoard._id : req.params.board;
 	const crossBoard = destinationBoard !== req.params.board;
-	const destinationThreadId = res.locals.destinationThread ? res.locals.destinationThread.postId : (crossBoard ? null : postIds[0]);
-	const movedPosts = await Posts.move(postMongoIds, crossBoard, destinationThreadId, destinationBoard).then(result => result.modifiedCount);
+	let destinationThreadId = res.locals.destinationThread ? res.locals.destinationThread.postId : (crossBoard ? null : postIds[0])
+		, movedPosts = 0;
+	({ destinationThreadId, movedPosts } = await Posts.move(postMongoIds, crossBoard, destinationThreadId, destinationBoard));
 
 	//emit markPost moves
 	for (let i = 0; i < moveEmits.length; i++) {
 		Socketio.emitRoom(moveEmits[i].room, 'markPost', { postId: moveEmits[i].postId, type: 'move', mark: 'Moved' });
+	}
+
+	//no destination thread specified (making new thread from posts), need to fetch OP as destinationThread for remarkup/salt
+	if (!res.locals.destinationThread) {
+		res.locals.destinationThread = await Posts.threadExists(destinationBoard, destinationThreadId);
 	}
 
 	//get posts that quoted moved posts so we can remarkup them
@@ -167,13 +173,6 @@ module.exports = async (req, res) => {
 			}
 		}));
 	}
-
-/*
-- post A quotes B, then A is moved to another thread: WORKS (removes backlink on B)
-- moving post A back into thread with B and backlink gets readded: WORKS
-- move post B out and backlink from A gets removed: WORKS
-- moving post B post back into thread with A and backlinks re-added: FAIL (need to come up with solution, but this is an uncommon occurence)
-*/
 
 	//bulkwrite it all
 	if (bulkWrites.length > 0) {

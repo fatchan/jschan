@@ -811,7 +811,7 @@ module.exports = {
 					},
 					'update': {
 						'$set': {
-							'postId': lastId - index,
+							'postId': newDestinationThreadId + index,
 						}
 					}
 				}
@@ -864,8 +864,9 @@ module.exports = {
 				}
 			});
 		}
-		//console.log(JSON.stringify(bulkWrites, null, 4));
-		return db.bulkWrite(bulkWrites);
+		// console.log(JSON.stringify(bulkWrites, null, 4))
+		const movedPosts = await db.bulkWrite(bulkWrites).then(result => result.modifiedCount);
+		return { movedPosts, destinationThreadId: newDestinationThreadId };
 	},
 
 	threadExists: (board, thread) => {
