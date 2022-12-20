@@ -535,7 +535,7 @@ module.exports = async (req, res, next) => {
 						'options': {
 							'board': res.locals.destinationBoard,
 							'startpage': 1,
-							'endpage': numPagesAfterActions,
+							'endpage': crossBoardMovePages,
 						}
 					});
 				}
