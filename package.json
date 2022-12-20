@@ -72,6 +72,6 @@
     "start": "pm2 start ecosystem.config.js --env production",
     "start-dev": "pm2 start ecosystem.config.js --env development"
   },
-  "author": "fatchan",
+  "author": "Thomas Lynch (fatchan) <tom@69420.me>",
   "license": "AGPL-3.0-only"
 }
