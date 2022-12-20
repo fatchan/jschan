@@ -6,6 +6,7 @@
   - "Hide name" set by default when using public actions form.
   - Bugfix saveoverboard script so it works on catalog instead of only index, and improve the code to be more general and allow /catalog.html in navbar link.
   - Bugfix BYPASS_CAPTCHA permission not able to be applied to roles.
+  - Add a small note on global account/role permission editing about the implication of setting "board management" permissions globally.
   - Update README with some new related projects and change demo/test instance to 94chan.
   - Npm audit & dependencies updated.
 
