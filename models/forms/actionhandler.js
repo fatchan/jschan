@@ -526,6 +526,19 @@ module.exports = async (req, res, next) => {
 						'endpage': numPagesAfterActions,
 					}
 				});
+				if (res.locals.destinationBoard && res.locals.destinationBoard._id !== req.params.board) {
+					//cross board move happened, rebuild the other board also
+					const crossBoardMoveName = res.locals.destinationBoard._id;
+					const crossBoardMovePages = Math.ceil((await Posts.getPages(crossBoardMoveName)) / 10);
+					buildQueue.push({
+						'task': 'buildBoardMultiple',
+						'options': {
+							'board': res.locals.destinationBoard,
+							'startpage': 1,
+							'endpage': numPagesAfterActions,
+						}
+					});
+				}
 
 			} else {
 

@@ -836,7 +836,6 @@ module.exports = {
 						'locked': '',
 						'bumplocked': '',
 						'cyclic': '',
-						'salt': ''
 					}
 				}
 			}
@@ -851,20 +850,19 @@ module.exports = {
 					'update': {
 						'$set': {
 							'thread': null,
-							//TODO: set these values properly
-							'replyposts': 0,
-							'replyfiles': 0,
-							'sticky': 0,
-							'locked': 0,
-							'bumplocked': 0,
-							'cyclic': 0,
-							'salt': '',
+							'replyposts': postMongoIds.length-1,
+							'replyfiles': 0, //TODO
+							'sticky': 0, //TODO (tbh we might just wanna set this to 0)
+							'locked': 0, //TODO
+							'bumplocked': 0, //TODO
+							'cyclic': 0, //TOOD
+							// 'salt': '',
 						}
 					}
 				}
 			});
 		}
-		// console.log(JSON.stringify(bulkWrites, null, 4))
+		// console.log(JSON.stringify(bulkWrites, null, 4));
 		const movedPosts = await db.bulkWrite(bulkWrites).then(result => result.modifiedCount);
 		return { movedPosts, destinationThreadId: newDestinationThreadId };
 	},

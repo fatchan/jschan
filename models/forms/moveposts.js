@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
 
 	const { threads, postIds, postMongoIds } = res.locals.posts
 		.sort((a, b) => {
-			return b.date - a.date; //could do postId, doesn't really matter.
+			return a.date - b.date; //could do postId, doesn't really matter.
 		}).reduce((acc, p) => {
 			acc.postIds.push(p.postId);
 			acc.postMongoIds.push(p._id);
