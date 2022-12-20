@@ -15,16 +15,7 @@ block content
 		form(action=`/forms/global/editaccount` method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			input(type='hidden' name='username' value=accountUsername)
-			for perm, index in Object.keys(jsonPermissions)
-				if jsonPermissions[perm].title && index > 0
-					hr(size=1)
-					h4.mv-5 #{jsonPermissions[perm].title}
-				.row
-					label.postform-style.ph-5
-						input(type='checkbox' name=perm value=jsonPermissions[perm].bit checked=jsonPermissions[perm].state)
-					.rlabel #{jsonPermissions[perm].label}
-					p #{jsonPermissions[perm].desc}
-			input(type='submit', value='Save')
+			include ../includes/globalpermissionsform.pug
 			hr(size=1)
 			h4.mv-5 Or, apply a role:
 			.row
