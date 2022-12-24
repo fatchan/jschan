@@ -1,0 +1,47 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+As of 24-12-2022, I have a new pgp key.
+My previous key expired, so as part of routine maintenance, I have created a new one.
+
+Here is the new key signed by the old key:
+
+- -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mDMEY6ZZmBYJKwYBBAHaRw8BAQdAkA5IztS3Dqyj4TM20nbdFX0XNw1TsDThwoMl
+83pDjKa0JVRob21hcyBMeW5jaCAoZmF0Y2hhbikgPHRvbUA2OTQyMC5tZT6IlgQT
+FggAPhYhBOwvlnjqBmFBXole+afl6LfhHuktBQJjplmYAhsDBQkDwmcABQsJCAcC
+BhUKCQgLAgQWAgMBAh4BAheAAAoJEKfl6LfhHuktV9ABAJ4w80E713udpEGpNqKQ
+vQZCs1pR9t2mKbSasrnVd/FHAQDOdR39wSci4a1RGy/m6u+dc2VmYyfBVerbFZay
+c4BsDYkBswQQAQgAHRYhBPf77gTcEIfDgLRZ4xEohKpX30CxBQJjpl6oAAoJEBEo
+hKpX30CxOkgL/jmFYgHGqLRv5g8bsAeaSvnz+ip4XLrl7N3sPVkO0POTZeno0NSV
++OyW69ujS7AjDroy3VDqCV7chXVp6qYtn4oqmqsah76mQBivDzSWBbY1yX1Zrge9
+/lSgUzU2GRKe7Oid7J30jIvA88m0rNsnal9ZzNB+wPPqp85nKsY11UCxk8o/2g5F
+9RzS8h/FDShAOGAn3PiSX8KXNNILQTtmvLv8x+jk9aaIrTC66XUfuDfkNJy6QSr9
+Jh1OBZqIk0jeMAqgRL5u+ukJ7aDEHKicdrxWF9BrDIPndyY5J3ExeUvjMJGLR3tY
+nS1wtkLR6i6FxLAUYdvBSjc0qNicl7qXHKEmjv3Ht3fLv6SaABRXMFZ/1hDotCMI
+iVTOp8haLXFoifUbaYCiBmNfmX4qiypGq3XSC399s59F8ofcZCoQlUHWmnyeCxcl
+VKwW1lwVXpjqRdEVWvX7Od9brHmSezGVDuC7knFSlw/pkMHJEukOcZsWDHH74Ej+
+YfYHBQ0FlOuFe7g4BGOmWZgSCisGAQQBl1UBBQEBB0CoH/26GfhOzFghyJRQ6wkn
+qyV7Ba0WtO+xuQtrtR1QVwMBCAeIfgQYFggAJhYhBOwvlnjqBmFBXole+afl6Lfh
+HuktBQJjplmYAhsMBQkDwmcAAAoJEKfl6LfhHuktt7ABAPDMp3zv3sxBkDGFbhgh
+FzII5K5T2YE0nWLWXeTZNju2AP4gilYyb7l7ZFHPiuzlnSUO92IcvFJvCnLkVGs/
+M8k+AA==
+=cepo
+- -----END PGP PUBLIC KEY BLOCK-----
+
+This is also visible on public keyservers e.g. https://keyserver.ubuntu.com/pks/lookup?search=tom%4069420.me&fingerprint=on&op=index
+
+Old key ID: F7FBEE04DC1087C380B459E3112884AA57DF40B1
+New key ID: EC2F9678EA0661415E895EF9A7E5E8B7E11EE92D
+Latest bitcoin block hash: 00000000000000000006851bfa907cf15763a0ab602c43e143a3bacfb18ca5a4
+
+Merry Christmas and happy new year.
+- - Tom
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQTsL5Z46gZhQV6JXvmn5ei34R7pLQUCY6ZvnAAKCRCn5ei34R7p
+Le0JAP91UcmMf7vwZEbGfz01F5aMQRjxT1SWhKcxdGFiIKGtGAEAruvl7woTTfxX
+TqWSSQsW7+OLFZmFbyI2BJF3cOAIoAk=
+=Efwi
+-----END PGP SIGNATURE-----
