@@ -21,6 +21,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 	};
 	let lastPostIds = {};
 	let liveTimeout;
+	let retrySocketTimeout;
 	const postContainers = document.getElementsByClassName('post-container');
 	for (let i = 0; i < postContainers.length; i++) {
 		const postContainer = postContainers[i];
@@ -227,6 +228,17 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 					updateLive(`Connected for live posts (${latency}ms)`, '#0de600');
 				});
 			};
+			const fallbackToPolling = () => {
+				console.log('falling back to polling');
+				socket.close();
+				supportsWebSockets = false;
+				enableLive();
+				clearTimeout(retrySocketTimeout);
+				retrySocketTimeout = setTimeout(() => {
+					supportsWebSockets = true;
+					enableLive();
+				}, 6000);
+			};
 			socket.on('connect', async () => {
 				console.log('socket connected');
 				await fetchNewPosts();
@@ -259,6 +271,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 			socket.on('connect_error', (e) => {
 				updateLive('Error connecting', 'orange');
 				console.error(e);
+				fallbackToPolling();
 			});
 			socket.on('reconnect_error', (e) => {
 				updateLive('Error reconnecting', 'orange');
@@ -267,10 +280,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 			socket.on('reconnect_failed', (e) => {
 				updateLive('Failed reconnecting', 'orange');
 				console.error(e);
-				console.log('failed to reconnnect, falling back to polling');
-				socket.close();
-				supportsWebSockets = false;
-				enableLive();
+				fallbackToPolling();
 			});
 			socket.on('newPost', newPost);
 			socket.on('markPost', markPost);
