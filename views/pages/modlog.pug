@@ -29,7 +29,7 @@ block content
 						td
 							if log.showLinks
 								for postLink in log.postLinks
-									a.quote(href=`/${board._id}/thread/${postLink.thread || postLink.postId}.html#${postLink.postId}`) &gt;&gt;#{postLink.postId}
+									a.quote(href=`/${postLink.board || board._id}/thread/${postLink.thread || postLink.postId}.html#${postLink.postId}`) &gt;&gt;#{postLink.postId}
 									|   
 							else
 								| #{log.postLinks.map(l => l.postId)}

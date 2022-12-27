@@ -46,7 +46,7 @@ block content
 								td
 									if log.showLinks
 										for postLink in log.postLinks
-											a(href=`/${board._id}/manage/thread/${postLink.thread || postLink.postId}.html#${postLink.postId}`) &gt;&gt;#{postLink.postId}
+											a(href=`/${postLink.board || board._id}/manage/thread/${postLink.thread || postLink.postId}.html#${postLink.postId}`) &gt;&gt;#{postLink.postId}
 											|   
 									else
 										| #{log.postLinks.map(l => l.postId)}
