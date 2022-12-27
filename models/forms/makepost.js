@@ -59,7 +59,8 @@ module.exports = async (req, res) => {
 		sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 		captchaMode, lockMode, allowedFileTypes, customFlags, geoFlags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
 	if (!isStaffOrGlobal
-		&& res.locals.country //permission for this or nah?
+		// && !res.locals.permissions.get(Permissions.BYPASS_FILTERS) //TODO: new permission for "bypass blocks" or something
+		&& res.locals.country
 		&& blockedCountries.includes(res.locals.country.code)) {
 		await deleteTempFiles(req).catch(console.error);
 		return dynamicResponse(req, res, 403, 'message', {

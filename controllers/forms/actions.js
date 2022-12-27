@@ -48,7 +48,7 @@ module.exports = {
 			{ result: async () => {
 				if (req.body.move && req.body.move_to_thread) {
 					const moveBoard = req.body.move_to_board || req.params.board;
-					res.locals.destinationThread = await Posts.threadExists(moveBoard, req.body.move_to_thread);
+					res.locals.destinationThread = await Posts.getPost(moveBoard, req.body.move_to_thread);
 					return res.locals.destinationThread != null;
 				}
 				return true;
@@ -57,10 +57,12 @@ module.exports = {
 				if (!res.locals.user || !res.locals.user.username) {
 					return false;
 				}
-				if (req.body.move && req.body.move_to_board) {
+				if (req.body.move && req.body.move_to_board
+					&& req.body.move_to_board !== req.params.board) {
 					const destinationBoard = await Boards.findOne(req.body.move_to_board);
-					if (res.locals.permissions.hasAny(Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_BOARD_GENERAL)
-						|| destinationBoard.staff[res.locals.user.username] != null) {
+					if (res.locals.permissions.get(Permissions.MANAGE_GLOBAL_GENERAL)
+						|| (res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL)
+							&& destinationBoard.staff[res.locals.user.username] != null)) {
 						res.locals.destinationBoard = destinationBoard;
 					}
 					return res.locals.destinationBoard != null;

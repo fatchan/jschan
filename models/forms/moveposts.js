@@ -88,7 +88,8 @@ module.exports = async (req, res) => {
 	}
 	
 	//increase file/reply count in thread we are moving the posts to
-	if (res.locals.destinationThread) {
+	if (!res.locals.destinationBoard) {
+		//recalculateThreadMetadata will handle cross board moves
 		const { replyposts, replyfiles } = res.locals.posts.reduce((acc, p) => {
 			acc.replyposts += 1;
 			acc.replyfiles += p.files.length;
@@ -98,7 +99,7 @@ module.exports = async (req, res) => {
 			'updateOne': {
 				'filter': {
 					'postId': req.body.move_to_thread,
-					'board': req.body.move_to_board || req.params.board,
+					'board': req.params.board,
 				},
 				'update': {
 					'$inc': {
@@ -123,7 +124,7 @@ module.exports = async (req, res) => {
 
 	//no destination thread specified (making new thread from posts), need to fetch OP as destinationThread for remarkup/salt
 	if (!res.locals.destinationThread) {
-		res.locals.destinationThread = await Posts.threadExists(destinationBoard, destinationThreadId);
+		res.locals.destinationThread = await Posts.getPost(destinationBoard, destinationThreadId);
 	}
 
 	//get posts that quoted moved posts so we can remarkup them

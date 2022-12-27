@@ -6,6 +6,8 @@ const Mongo = require(__dirname+'/db.js')
 	, Boards = require(__dirname+'/boards.js')
 	, Stats = require(__dirname+'/stats.js')
 	, Permissions = require(__dirname+'/../lib/permission/permissions.js')
+	, { randomBytes } = require('crypto')
+	, randomBytesAsync = require('util').promisify(randomBytes)
 	, db = Mongo.db.collection('posts')
 	, config = require(__dirname+'/../lib/misc/config.js');
 
@@ -794,7 +796,7 @@ module.exports = {
 		return db.deleteMany();
 	},
 
-	move: async (postMongoIds, crossBoard, destinationThreadId, destinationBoard=null) => {
+	move: async (postMongoIds, crossBoard, destinationThreadId, destinationBoard) => {
 		let bulkWrites = []
 			, newDestinationThreadId = destinationThreadId;
 		if (crossBoard) {
@@ -802,7 +804,7 @@ module.exports = {
 			const lastId = await Boards.getNextId(destinationBoard, false, postMongoIds.length);
 			//if moving board and no destination thread, pick the starting ID of the amount we incremented
 			if (!destinationThreadId) {
-				newDestinationThreadId = lastId - (postMongoIds.length-1);
+				newDestinationThreadId = lastId;
 			}
 			bulkWrites = postMongoIds.map((postMongoId, index) => ({
 				'updateOne': {
@@ -811,7 +813,7 @@ module.exports = {
 					},
 					'update': {
 						'$set': {
-							'postId': newDestinationThreadId + index,
+							'postId': lastId + index,
 						}
 					}
 				}
@@ -850,13 +852,13 @@ module.exports = {
 					'update': {
 						'$set': {
 							'thread': null,
-							'replyposts': postMongoIds.length-1,
-							'replyfiles': 0, //TODO
-							'sticky': 0, //TODO (tbh we might just wanna set this to 0)
-							'locked': 0, //TODO
-							'bumplocked': 0, //TODO
-							'cyclic': 0, //TOOD
-							// 'salt': '',
+							'replyposts': 0,
+							'replyfiles': 0,
+							'sticky': 0,
+							'locked': 0,
+							'bumplocked': 0,
+							'cyclic': 0,
+							'salt': (await randomBytesAsync(128)).toString('base64'),
 						}
 					}
 				}
@@ -867,22 +869,8 @@ module.exports = {
 		return { movedPosts, destinationThreadId: newDestinationThreadId };
 	},
 
-	threadExists: (board, thread) => {
-		return db.findOne({
-			'board': board,
-			'postId': thread,
-			'thread': null,
-		}, {
-			'projection': {
-				'_id': 1,
-				'postId': 1,
-				'salt': 1,
-			}
-		});
-	},
-
 	threadExistsMiddleware: async (req, res, next) => {
-		const thread = await module.exports.threadExists(req.params.board, req.params.id);
+		const thread = await module.exports.getPost(req.params.board, req.params.id);
 		if (!thread) {
 			return res.status(404).render('404');
 		}

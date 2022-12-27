@@ -198,6 +198,11 @@ module.exports = async (req, res, next) => {
 		if (action) {
 			modlogActions.push('Moved');
 			recalculateThreadMetadata = true;
+			if (res.locals.destinationBoard && res.locals.destinationThread) {
+				res.locals.posts.push(res.locals.destinationThread);
+				({ boardThreadMap, numPagesBeforeActions, affectedBoardNames } = await getAffectedBoards(res.locals.posts, deleting));
+				minimalThreadsMap = await Posts.getMinimalThreads(affectedBoardNames);
+			}
 		}
 		messages.push(message);
 
@@ -338,7 +343,8 @@ module.exports = async (req, res, next) => {
 			}
 			modlog[post.board].postLinks.push({
 				postId: post.postId,
-				thread: req.body.move ? req.body.move_to_thread : post.thread,
+				thread: res.locals.destinationThread ? res.locals.destinationThread.postId : post.thread,
+				board: res.locals.destinationBoard ? res.locals.destinationBoard._id : post.board,
 			});
 		}
 		const modlogDocuments = [];
@@ -401,9 +407,14 @@ module.exports = async (req, res, next) => {
 
 		//recalculate replies and image counts if necessary
 		if (recalculateThreadMetadata) {
-			const selectedPosts = res.locals.posts.filter(p => p.thread !== null);
+			const selectedPosts = res.locals.posts
+				.filter(p => p.thread !== null);
 			if (selectedPosts.length > 0) {
-				const replyOrs = selectedPosts.map(p => ({ board: p.board, thread: p.thread }));
+				const replyOrs = selectedPosts
+					.map(p => ({ board: p.board, thread: p.thread }));
+				if (req.body.move && res.locals.destinationBoard && res.locals.destinationThread) {
+					replyOrs.push({ board: res.locals.destinationThread.board, thread: res.locals.destinationThread.postId });
+				}
 				const threadReplyAggregates = await Posts.getThreadAggregates(replyOrs);
 				const bulkWrites = [];
 				const threads = threadsEachBoard;
@@ -460,6 +471,7 @@ module.exports = async (req, res, next) => {
 			Using the proper ordering of threads, to account for sticky, bumplocks, etc.
 		*/
 		const pageBounds = threadsEachBoard.reduce((acc, t) => {
+			if (!minimalThreadsMap[t.board]) { return acc; }
 			if (!acc[t.board]) { acc[t.board] = { first: null, last: null }; }
 			const threadIndex = minimalThreadsMap[t.board].findIndex(p => p.postId === t.postId);
 			const threadPage = Math.max(1, Math.ceil((threadIndex+1)/10));
@@ -526,19 +538,6 @@ module.exports = async (req, res, next) => {
 						'endpage': numPagesAfterActions,
 					}
 				});
-				if (res.locals.destinationBoard && res.locals.destinationBoard._id !== req.params.board) {
-					//cross board move happened, rebuild the other board also
-					const crossBoardMoveName = res.locals.destinationBoard._id;
-					const crossBoardMovePages = Math.ceil((await Posts.getPages(crossBoardMoveName)) / 10);
-					buildQueue.push({
-						'task': 'buildBoardMultiple',
-						'options': {
-							'board': res.locals.destinationBoard,
-							'startpage': 1,
-							'endpage': crossBoardMovePages,
-						}
-					});
-				}
 
 			} else {
 
