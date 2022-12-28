@@ -1,6 +1,7 @@
 extends ../layout.pug
 include ../mixins/boardheader.pug
 include ../mixins/boardnav.pug
+include ../mixins/postlink.pug
 
 block head
 	title /#{board._id}/ - Logs for #{startDate.toDateString()}
@@ -29,7 +30,7 @@ block content
 						td
 							if log.showLinks
 								for postLink in log.postLinks
-									a.quote(href=`/${postLink.board || board._id}/thread/${postLink.thread || postLink.postId}.html#${postLink.postId}`) &gt;&gt;#{postLink.postId}
+									+postlink(log, postLink, false)
 									|   
 							else
 								| #{log.postLinks.map(l => l.postId)}

@@ -3,6 +3,7 @@ include ../mixins/post.pug
 include ../mixins/ban.pug
 include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
+include ../mixins/postlink.pug
 
 block head
 	title /#{board._id}/ - Logs
@@ -46,7 +47,7 @@ block content
 								td
 									if log.showLinks
 										for postLink in log.postLinks
-											a(href=`/${postLink.board || board._id}/manage/thread/${postLink.thread || postLink.postId}.html#${postLink.postId}`) &gt;&gt;#{postLink.postId}
+											+postlink(log, postLink, true)
 											|   
 									else
 										| #{log.postLinks.map(l => l.postId)}
