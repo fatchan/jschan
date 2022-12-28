@@ -22,7 +22,7 @@ section.form-wrapper.flex-center
 				.label Name
 				input.mr-1(type='text', name='name', placeholder=board.settings.defaultName maxlength=globalLimits.fieldLength.name)
 				a.close.postform-style(href='#!') ×
-			if board.settings.sageOnlyEmail
+			if board.settings.sageOnlyEmail && !modview
 				section.row
 					.label Sage
 					label.postform-style.ph-5
