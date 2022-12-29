@@ -205,6 +205,7 @@ module.exports = () => describe('test two factor authentication', () => {
 		params.append('newpassword', process.env.TEST_ADMIN_PASSWORD);
 		params.append('newpasswordconfirm', process.env.TEST_ADMIN_PASSWORD);
 		params.append('twofactor', twofactorToken);
+		params.append('captcha', '000000');
 		const response = await fetch('http://localhost/forms/changepassword', {
 			headers: {
 				'x-using-xhr': 'true',

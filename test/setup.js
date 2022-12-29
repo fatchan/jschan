@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+process.env.NO_CAPTCHA = 1;
 
 module.exports = () => describe('login and create test board', () => {
 
@@ -43,10 +44,31 @@ module.exports = () => describe('login and create test board', () => {
 		expect([200, 404]).toContain(response.status);
 	});
 
-	test('create test board',  async () => {
+	test('create test boards',  async () => {
 		const params = new URLSearchParams();
-		params.append('uri', 'test');
-		params.append('name', 'test');
+		params.set('uri', 'test');
+		params.set('name', 'test');
+		const options = {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		};
+		const response1 = await fetch('http://localhost/forms/create', options);
+		expect([302, 409]).toContain(response1.status);
+		params.set('name', 'test2');
+		params.set('uri', 'test2');
+		const response2 = await fetch('http://localhost/forms/create', options);
+		expect([302, 409]).toContain(response2.status);
+	});
+
+	test('create another test board',  async () => {
+		const params = new URLSearchParams();
+		params.append('uri', 'test2');
+		params.append('name', 'test2');
 		const response = await fetch('http://localhost/forms/create', {
 			headers: {
 				'x-using-xhr': 'true',
@@ -258,6 +280,46 @@ module.exports = () => describe('login and create test board', () => {
 			redirect: 'manual',
 		});
 		expect(response.status).toBe(200);
+	});
+
+	test('edit default role, allow bypass captcha',  async () => {
+		const roles = await fetch('http://localhost/globalmanage/roles.json', {
+			headers: {
+				'cookie': sessionCookie,
+			}
+		}).then(res => res.json());
+		const anonRole = roles.find(r => r.name === 'ANON');
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			roleid: anonRole._id,
+			CREATE_BOARD: '2',
+			CREATE_ACCOUNT: '3',
+			BYPASS_CAPTCHA: '8',
+			USE_MARKDOWN_PINKTEXT: '35',
+			USE_MARKDOWN_GREENTEXT: '36',
+			USE_MARKDOWN_BOLD: '37',
+			USE_MARKDOWN_UNDERLINE: '38',
+			USE_MARKDOWN_STRIKETHROUGH: '39',
+			USE_MARKDOWN_TITLE: '40',
+			USE_MARKDOWN_ITALIC: '41',
+			USE_MARKDOWN_SPOILER: '42',
+			USE_MARKDOWN_MONO: '43',
+			USE_MARKDOWN_CODE: '44',
+			USE_MARKDOWN_DETECTED: '45',
+			USE_MARKDOWN_LINK: '46',
+			USE_MARKDOWN_DICE: '47',
+			USE_MARKDOWN_FORTUNE: '48'
+		});
+		const response = await fetch('http://localhost/forms/global/editrole', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect([302, 409]).toContain(response.status);
 	});
 
 });
