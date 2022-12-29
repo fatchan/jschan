@@ -102,7 +102,7 @@ router.get('/globalmanage/news.html', useSession, sessionRefresh, isLoggedIn, ca
 	hasPerms.one(Permissions.MANAGE_GLOBAL_NEWS), csrf, globalManageNews);
 router.get('/globalmanage/accounts.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), csrf, globalManageAccounts);
-router.get('/globalmanage/roles.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
+router.get('/globalmanage/roles.(html|json)', useSession, sessionRefresh, isLoggedIn, calcPerms,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), csrf, globalManageRoles);
 router.get('/globalmanage/settings.html', useSession, sessionRefresh, isLoggedIn, calcPerms,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), csrf, globalManageSettings);
