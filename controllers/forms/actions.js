@@ -54,11 +54,12 @@ module.exports = {
 				return true;
 			}, expected: true, error: 'Destination for move does not exist' },
 			{ result: async () => {
-				if (!res.locals.user || !res.locals.user.username) {
-					return false;
-				}
 				if (req.body.move && req.body.move_to_board
 					&& req.body.move_to_board !== req.params.board) {
+					if (!res.locals.user || !res.locals.user.username) {
+						return false;
+					}
+
 					const destinationBoard = await Boards.findOne(req.body.move_to_board);
 					if (res.locals.permissions.get(Permissions.MANAGE_GLOBAL_GENERAL)
 						|| (res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL)
