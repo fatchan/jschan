@@ -96,7 +96,7 @@ module.exports = {
 
 		if (req.body.edit) {
 			//edit post only allows single post
-			return res.redirect(`/${res.locals.posts[0].board}/manage/editpost/${res.locals.posts[0].thread || res.locals.posts[0].postId}.html`);
+			return res.redirect(`/${res.locals.posts[0].board}/manage/editpost/${res.locals.posts[0].postId || res.locals.posts[0].thread}.html`);
 		} else if (req.body.move) {
 			if (!res.locals.destinationBoard && !res.locals.destinationThread) {
 				return dynamicResponse(req, res, 400, 'message', {
