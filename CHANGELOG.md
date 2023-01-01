@@ -1,5 +1,5 @@
 ### 0.11.1
-  - Bugfix non logged in users not able to use actions because of an issue in (thanks @some_random_guy).
+  - Bugfix non logged in users not able to use actions because of an issue in move post logic (thanks @some_random_guy).
   - Bugfix editing posts from the actions form (not the new dropdown "Edit" button) always redirecting to OP.
 
 ### 0.11.0
