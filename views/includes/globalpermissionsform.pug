@@ -1,13 +1,13 @@
-for perm, index in Object.keys(jsonPermissions)
-	if jsonPermissions[perm].title && index > 0
+for bit, index in Object.keys(jsonPermissions)
+	if jsonPermissions[bit].title && index > 0
 		hr(size=1)
-		h4.mv-5 #{jsonPermissions[perm].title}
-		if jsonPermissions[perm].subtitle
-			p #{jsonPermissions[perm].subtitle}
+		h4.mv-5 #{jsonPermissions[bit].title}
+		if jsonPermissions[bit].subtitle
+			p #{jsonPermissions[bit].subtitle}
 	.row
-		- const hasParent = jsonPermissions[perm].parent == null || permissions.get(jsonPermissions[perm].parent);
+		- const hasParent = jsonPermissions[bit].parent == null || permissions.get(jsonPermissions[bit].parent);
 		label.postform-style.ph-5(class=(!hasParent ? 'notallowed' : null))
-			input(type='checkbox' name=perm value=jsonPermissions[perm].bit checked=jsonPermissions[perm].state disabled=!hasParent)
-		.rlabel #{jsonPermissions[perm].label}
-		p #{jsonPermissions[perm].desc}
+			input(type='checkbox' name=`permission_bit_${bit}` value=bit checked=jsonPermissions[bit].state disabled=!hasParent)
+		.rlabel #{jsonPermissions[bit].label}
+		p #{jsonPermissions[bit].desc}
 input(type='submit', value='Save')
