@@ -4,12 +4,13 @@ const { Roles, Accounts } = require(__dirname+'/../../db/')
 	, redis = require(__dirname+'/../../lib/redis/redis.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js')
-	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, Permission = require(__dirname+'/../../lib/permission/permission.js');
 
 module.exports = async (req, res) => {
 
 	let rolePermissions = new Permission(res.locals.editingRole.permissions);
+	//TODO: change to just be a loop now, and use Metadata[].bit to handle the check on l49
 	rolePermissions.set(Permissions.VIEW_RAW_IP, (req.body.VIEW_RAW_IP != null));
 	rolePermissions.set(Permissions.CREATE_BOARD, (req.body.CREATE_BOARD != null));
 	rolePermissions.set(Permissions.CREATE_ACCOUNT, (req.body.CREATE_ACCOUNT != null));

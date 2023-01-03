@@ -1,7 +1,7 @@
 'use strict';
 
 const editPost = require(__dirname+'/../../models/forms/editpost.js')
-	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { Ratelimits, Posts } = require(__dirname+'/../../db/')

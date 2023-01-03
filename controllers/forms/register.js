@@ -1,6 +1,6 @@
 'use strict';
 
-const Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+const { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, registerAccount = require(__dirname+'/../../models/forms/register.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')

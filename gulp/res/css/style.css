@@ -772,6 +772,10 @@ span.captchacheckbox {
 	cursor: help;
 }
 
+.notallowed {
+	cursor: not-allowed;
+}
+
 #float {
 	box-shadow: 0 0 3px 1px var(--darken);
 	max-width: calc(100% - 10px);

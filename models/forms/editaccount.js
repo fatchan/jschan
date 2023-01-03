@@ -2,7 +2,7 @@
 
 const { Accounts } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, Permission = require(__dirname+'/../../lib/permission/permission.js');
 
 module.exports = async (req, res) => {
@@ -13,6 +13,7 @@ module.exports = async (req, res) => {
 		updatingPermissions = new Permission(req.body.template);
 	} else {
 		updatingPermissions = new Permission(res.locals.editingAccount.permissions);
+		//TODO: change to just be a loop now, and use Metadata[].bit to handle the check on l49
 		updatingPermissions.set(Permissions.VIEW_RAW_IP, (req.body.VIEW_RAW_IP != null));
 		updatingPermissions.set(Permissions.CREATE_BOARD, (req.body.CREATE_BOARD != null));
 		updatingPermissions.set(Permissions.CREATE_ACCOUNT, (req.body.CREATE_ACCOUNT != null));

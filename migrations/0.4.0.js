@@ -3,7 +3,7 @@
 const hashIp = require(__dirname+'/../lib/misc/haship.js')
 	, { createCIDR, parse } = require('ip6addr')
 	, Permission = require(__dirname+'/../lib/permission/permission.js')
-	, Permissions = require(__dirname+'/../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../lib/permission/permissions.js')
 	, { Binary } = require('mongodb');
 
 module.exports = async(db, redis) => {
