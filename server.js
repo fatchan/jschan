@@ -17,7 +17,8 @@ const config = require(__dirname+'/lib/misc/config.js')
 	, { version } = require(__dirname+'/package.json')
 	, formatSize = require(__dirname+'/lib/converter/formatsize.js')
 	, CachePugTemplates = require('cache-pug-templates')
-	, { Permissions } = require(__dirname+'/lib/permission/permissions.js');
+	, { Permissions } = require(__dirname+'/lib/permission/permissions.js')
+	, i18n = require(__dirname+'/lib/locale/locale.js');
 
 (async () => {
 
@@ -100,6 +101,9 @@ const config = require(__dirname+'/lib/misc/config.js')
 		app.use(express.static(__dirname+'/static/html', { redirect: false }));
 		app.use(express.static(__dirname+'/static/json', { redirect: false }));
 	}
+
+	//localisation
+	app.use(i18n.init);
 
 	app.use('/forms', require(__dirname+'/controllers/forms.js'));
 	app.use('/', require(__dirname+'/controllers/pages.js'));

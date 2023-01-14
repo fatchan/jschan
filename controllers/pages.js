@@ -16,6 +16,7 @@ const express  = require('express')
 	, sessionRefresh = require(__dirname+'/../lib/middleware/permission/sessionrefresh.js')
 	, csrf = require(__dirname+'/../lib/middleware/misc/csrfmiddleware.js')
 	, setMinimal = require(__dirname+'/../lib/middleware/misc/setminimal.js')
+	, localise = require(__dirname+'/../lib/middleware/locale/locale.js')
 	//page models
 	, { manageRecent, manageReports, manageAssets, manageSettings, manageBans, editCustomPage, manageMyPermissions,
 		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages, manageStaff, editStaff, editPost } = require(__dirname+'/../models/pages/manage/')
@@ -56,7 +57,7 @@ router.get('/settings.json', globalSettings); //public global settings
 router.get('/randombanner', randombanner); //random banner
 
 //board manage pages
-router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, localise, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageCatalog);
 router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageBoard);
