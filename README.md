@@ -1,3 +1,10 @@
+# THIS PROJECT HAS MOVED TO GITGUD
+# https://gitgud.io/fatchan/jschan
+###### (backup: https://git.basedflare.com/fatchan/jschan)
+
+<details>
+<summary></summary>
+
 # jschan
 Anonymous imageboard software.
 
@@ -114,3 +121,4 @@ $ gulp #run default gulp task
 Install docker and run torproxy in a container: https://github.com/dperson/torproxy
 Edit configs/webring.json and wer proxy enabled:true
 
+</details>
