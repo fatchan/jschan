@@ -405,7 +405,8 @@ function deletehtml() {
 }
 
 async function custompages() {
-	const formatSize = require(__dirname+'/lib/converter/formatsize.js');
+	const formatSize = require(__dirname+'/lib/converter/formatsize.js')
+		, i18n = require(__dirname+'/lib/locale/locale.js');
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/404.pug`,
@@ -432,6 +433,7 @@ async function custompages() {
 				hcaptchaSiteKey: hcaptcha.siteKey,
 				globalAnnouncement: config.get.globalAnnouncement,
 				captchaOptions: config.get.captchaOptions,
+				__: i18n.__,
 				commit,
 				version,
 			}
@@ -440,7 +442,8 @@ async function custompages() {
 }
 
 async function scripts() {
-	const { themes, codeThemes } = require(__dirname+'/lib/misc/themes.js');
+	const { themes, codeThemes } = require(__dirname+'/lib/misc/themes.js')
+		, i18n = require(__dirname+'/lib/locale/locale.js');
 	try {
 
 		// compile some locals/variables needed from configs in fe scripts

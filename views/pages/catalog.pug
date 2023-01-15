@@ -9,7 +9,6 @@ block head
 	title /#{board._id}/ - Catalog
 
 block content
-	h1 locale test: #{__("test")}
 	+boardheader(modview ? 'Mod Catalog' : 'Catalog')
 	br
 	include ../includes/postform.pug
