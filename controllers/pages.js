@@ -65,7 +65,7 @@ router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, session
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, Posts.threadExistsMiddleware, manageThread);
 router.get('/:board/manage/editpost/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, threadParamConverter, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, Posts.postExistsMiddleware, editPost);
-router.get('/:board/manage/reports.(html|json)', useSession, sessionRefresh, isLoggedIn, w, setBoardLanguage, calcPerms,
+router.get('/:board/manage/reports.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageReports);
 router.get('/:board/manage/recent.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageRecent);

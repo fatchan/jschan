@@ -1,3 +1,12 @@
 {
-	"test": "teste"
+	"test": "test",
+	"Recent": "Recentes",
+	"Reports": "Denúncias",
+	"Bans": "Bans",
+	"Boards": "Tábuas",
+	"Logs": "Logs",
+	"Accounts": "Contas",
+	"Roles": "Permissões",
+	"News": "Notícias",
+	"Settings": "Settings"
 }
