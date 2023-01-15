@@ -426,6 +426,7 @@ async function custompages() {
 			captchaOptions: config.get.captchaOptions,
 			commit,
 			version,
+			language: config.get.language,
 			__: i18n.__,
 		};
 	i18n.setLocale(locals, config.get.language);
@@ -497,6 +498,7 @@ const LANG = ${JSON.stringify(i18n.getCatalog())};
 	gulp.src([
 		//put scripts in order for dependencies
 		`${paths.scripts.src}/locals.js`,
+		`${paths.scripts.src}/i18n.js`,
 		`${paths.scripts.src}/localstorage.js`,
 //		`${paths.scripts.src}/pugruntime.js`,
 		`${paths.scripts.src}/modal.js`,

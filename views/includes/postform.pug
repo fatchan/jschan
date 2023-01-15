@@ -19,7 +19,7 @@ section.form-wrapper.flex-center
 			include ./subjectfield.pug
 		else
 			section.row
-				.label Name
+				.label #{__("Name")}
 				input.mr-1(type='text', name='name', placeholder=board.settings.defaultName maxlength=globalLimits.fieldLength.name)
 				a.close.postform-style(href='#!') ×
 			if board.settings.sageOnlyEmail && !modview

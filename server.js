@@ -91,6 +91,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 		app.locals.hcaptchaSiteKey = hcaptcha.siteKey;
 		app.locals.globalAnnouncement = globalAnnouncement;
 		app.locals.captchaOptions = captchaOptions;
+		app.locals.language = language
 		app.locals.__ = i18n.__;
 		i18n.setLocale(app.locals, language);
 	};
