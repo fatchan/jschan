@@ -104,7 +104,9 @@ const config = require(__dirname+'/lib/misc/config.js')
 	}
 
 	//localisation
+	const { setGlobalLanguage } = require(__dirname+'/lib/middleware/locale/locale.js');
 	app.use(i18n.init);
+	app.use(setGlobalLanguage);
 
 	app.use('/forms', require(__dirname+'/controllers/forms.js'));
 	app.use('/', require(__dirname+'/controllers/pages.js'));
