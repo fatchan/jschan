@@ -406,7 +406,29 @@ function deletehtml() {
 
 async function custompages() {
 	const formatSize = require(__dirname+'/lib/converter/formatsize.js')
-		, i18n = require(__dirname+'/lib/locale/locale.js');
+		, i18n = require(__dirname+'/lib/locale/locale.js')
+		, locals = {
+			Permissions,
+			early404Fraction: config.get.early404Fraction,
+			early404Replies: config.get.early404Replies,
+			meta: config.get.meta,
+			archiveLinksURL: config.get.archiveLinksURL,
+			reverseImageLinksURL: config.get.reverseImageLinksURL,
+			enableWebring: config.get.enableWebring,
+			globalLimits: config.get.globalLimits,
+			codeLanguages: config.get.highlightOptions.languageSubset,
+			defaultTheme: config.get.boardDefaults.theme,
+			defaultCodeTheme: config.get.boardDefaults.codeTheme,
+			postFilesSize: formatSize(config.get.globalLimits.postFilesSize.max),
+			googleRecaptchaSiteKey: google.siteKey,
+			hcaptchaSiteKey: hcaptcha.siteKey,
+			globalAnnouncement: config.get.globalAnnouncement,
+			captchaOptions: config.get.captchaOptions,
+			commit,
+			version,
+			__: i18n.__,
+		};
+	i18n.setLocale(locals, config.get.language);
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/404.pug`,
@@ -415,29 +437,7 @@ async function custompages() {
 		`${paths.pug.src}/pages/503.pug`,
 		`${paths.pug.src}/pages/504.pug`
 	])
-		.pipe(gulppug({
-			locals: {
-				Permissions,
-				early404Fraction: config.get.early404Fraction,
-				early404Replies: config.get.early404Replies,
-				meta: config.get.meta,
-				archiveLinksURL: config.get.archiveLinksURL,
-				reverseImageLinksURL: config.get.reverseImageLinksURL,
-				enableWebring: config.get.enableWebring,
-				globalLimits: config.get.globalLimits,
-				codeLanguages: config.get.highlightOptions.languageSubset,
-				defaultTheme: config.get.boardDefaults.theme,
-				defaultCodeTheme: config.get.boardDefaults.codeTheme,
-				postFilesSize: formatSize(config.get.globalLimits.postFilesSize.max),
-				googleRecaptchaSiteKey: google.siteKey,
-				hcaptchaSiteKey: hcaptcha.siteKey,
-				globalAnnouncement: config.get.globalAnnouncement,
-				captchaOptions: config.get.captchaOptions,
-				__: i18n.__,
-				commit,
-				version,
-			}
-		}))
+		.pipe(gulppug({ locals }))
 		.pipe(gulp.dest(paths.pug.dest));
 }
 
@@ -462,6 +462,7 @@ const captchaOptions = ${JSON.stringify(reducedCaptchaOptions)};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
+const LANG = ${JSON.stringify(i18n.getCatalog())};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 

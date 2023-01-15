@@ -1,5 +1,4 @@
 {
-	"test": "test",
 	"Recent": "Recentes",
 	"Reports": "Denúncias",
 	"Bans": "Bans",
@@ -8,5 +7,5 @@
 	"Accounts": "Contas",
 	"Roles": "Permissões",
 	"News": "Notícias",
-	"Settings": "Settings"
+	"Settings": "Opções"
 }

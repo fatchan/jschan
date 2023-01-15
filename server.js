@@ -70,7 +70,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 	app.set('views', views);
 
 	const loadAppLocals = () => {
-		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions, archiveLinksURL,
+		const { language, cacheTemplates, boardDefaults, globalLimits, captchaOptions, archiveLinksURL,
 			reverseImageLinksURL, meta, enableWebring, globalAnnouncement } = config.get;
 		//cache loaded templates
 		app.cache = {};
@@ -92,6 +92,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 		app.locals.globalAnnouncement = globalAnnouncement;
 		app.locals.captchaOptions = captchaOptions;
 		app.locals.__ = i18n.__;
+		i18n.setLocale(app.locals, language);
 	};
 	loadAppLocals();
 	redis.addCallback('config', loadAppLocals);
