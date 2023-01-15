@@ -7,6 +7,7 @@ const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardse
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
+	, i18n = require(__dirname+'/../../lib/locale/locale.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody, arrayInBody } = require(__dirname+'/../../lib/input/schema.js');
 
@@ -14,7 +15,7 @@ module.exports = {
 
 	paramConverter: paramConverter({
 		timeFields: ['ban_duration', 'delete_protection_age'],
-		trimFields: ['filters', 'moderators', 'tags', 'announcement', 'description', 'name', 'custom_css'],
+		trimFields: ['filters', 'moderators', 'tags', 'announcement', 'description', 'name', 'custom_css', 'language'],
 		allowedArrays: ['countries'],
 		numberFields: ['lock_reset', 'captcha_reset', 'filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode', 'tph_trigger', 'pph_trigger', 'pph_trigger_action',
 			'tph_trigger_action', 'bump_limit', 'reply_limit', 'max_files', 'thread_limit', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length',
@@ -71,6 +72,7 @@ module.exports = {
 			{ result: numberBody(req.body.ban_duration, 0), expected: true, error: 'Invalid filter auto ban duration' },
 			{ result: numberBody(req.body.delete_protection_age, 0), expected: true, error: 'Invalid OP thread age delete protection' },
 			{ result: numberBody(req.body.delete_protection_count, 0), expected: true, error: 'Invalid OP thread reply count delete protection' },
+			{ result: inArrayBody(req.body.language, i18n.getLocales()), expected: true, error: 'Invalid language' },
 			{ result: inArrayBody(req.body.theme, themes), expected: true, error: 'Invalid theme' },
 			{ result: inArrayBody(req.body.code_theme, codeThemes), expected: true, error: 'Invalid code theme' },
 		], res.locals.permissions);

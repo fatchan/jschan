@@ -72,6 +72,11 @@ block content
 														.label Announcement
 														textarea(name='announcement' placeholder='Supports post styling') #{board.settings.announcement.raw}
 													.row
+														.label Language
+														select(name='language')
+															each language in languages
+																option(value=language selected=settings.language === lang) #{language}
+													.row
 														.label Theme
 														select(name='theme')
 															each theme in themes

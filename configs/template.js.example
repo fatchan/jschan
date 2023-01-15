@@ -24,6 +24,8 @@ module.exports = {
 		url: ''
 	},
 
+	language: 'en',
+
 	filters: [],
 	strictFiltering: false,
 	filterMode: 0,

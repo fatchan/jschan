@@ -78,6 +78,11 @@ block content
 																			.label Meta URL
 																			input(type='text' name='meta_url' value=settings.meta.url)
 																		.row
+																			.label Language
+																			select(name='language')
+																				each language in languages
+																					option(value=language selected=settings.language === lang) #{language}
+																		.row
 																			.label Disable Anonymizer File Posting
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='disable_anonymizer_file_posting', value='true' checked=settings.disableAnonymizerFilePosting)
