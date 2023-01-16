@@ -5,6 +5,10 @@ meta(name='viewport' content='width=device-width initial-scale=1')
 noscript
 	style .jsonly { display: none!important; } .user-id { cursor: auto!important; }
 
+
+//- whether this page is rendered for a board
+- const isBoard = board != null;
+
 //- general meta and opengraph meta tags
 if isBoard
 	if board.settings.description
@@ -29,7 +33,8 @@ if isBoard && board.settings.customCss
 include ../../gulp/res/icons/html_code.html
 
 //- language pack
-//- TODO?
+- const languageScript = isBoard ? board.settings.language : language;
+script(src=`/js/lang/${languageScript}.js?v=${commit}`)
 
 //- main script
 script(src=`/js/all.js?v=${commit}&ct=${captchaOptions.type}`)

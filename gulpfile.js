@@ -426,10 +426,10 @@ async function custompages() {
 			captchaOptions: config.get.captchaOptions,
 			commit,
 			version,
-			language: config.get.language,
-			__: i18n.__,
+			globalLanguage: config.get.language,
 		};
-	i18n.setLocale(locals, config.get.language);
+	i18n.init(locals);
+	locals.setLocale(config.get.language);
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/404.pug`,
@@ -463,9 +463,16 @@ const captchaOptions = ${JSON.stringify(reducedCaptchaOptions)};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
-const LANG = ${JSON.stringify(i18n.getCatalog())};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
+
+		fs.mkdirSync(`${paths.scripts.dest}lang/`);
+		Object.entries(i18n.getCatalog())
+			.forEach(entry => {
+				const [lang, dict] = entry;
+				const langScript = `const LANG = ${JSON.stringify(dict)};`;
+				fs.writeFileSync(`${paths.scripts.dest}lang/${lang}.js`, langScript);
+			});
 
 //		const pugRuntimeFuncs = pugRuntime(['classes', 'style', 'attr', 'escape']);
 //		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);

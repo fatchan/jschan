@@ -1,8 +1,6 @@
 doctype html
 html
-	//- whether this page is rendered for a board
-	- const isBoard = board != null;
-	head(data-lang=(isBoard ? board.settings.language : language))
+	head
 		include includes/head.pug
 		block head
 	body#top
