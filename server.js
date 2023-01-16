@@ -93,7 +93,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 		app.locals.captchaOptions = captchaOptions;
 		app.locals.globalLanguage = language;
 		i18n.init(app.locals);
-		app.locals.setLocale(language);
+		app.locals.setLocale(app.locals, language);
 	};
 	loadAppLocals();
 	redis.addCallback('config', loadAppLocals);

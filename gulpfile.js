@@ -429,7 +429,7 @@ async function custompages() {
 			globalLanguage: config.get.language,
 		};
 	i18n.init(locals);
-	locals.setLocale(config.get.language);
+	locals.setLocale(locals, config.get.language);
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/404.pug`,
