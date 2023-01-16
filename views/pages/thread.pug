@@ -56,7 +56,7 @@ block content
 		if thread.replyposts >= board.settings.replyLimit && !thread.cyclic && !modview
 			p.title.text-center ⊖ Thread has reached reply limit.
 		else
-			a.bottom-reply.no-decoration.post-button(href='#postform') [New Reply]
+			a.bottom-reply.no-decoration.post-button(href='#postform') [#{__('New Reply')}]
 		hr(size=1)
 		.wrapbar
 			if modview

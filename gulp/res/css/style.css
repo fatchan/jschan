@@ -208,7 +208,7 @@ pre {
 	cursor: pointer;
 }
 #settings::after {
-	content: "Settings";
+	content: attr(data-label);
 }
 .expand-omitted {
 	background-color: var(--post-color);
@@ -1112,7 +1112,7 @@ input:invalid, textarea:invalid {
 
 .you:after {
 	margin-left: 3px;
-	content: '(You)';
+	content: '(' attr(data-label) ')';
 	font-weight: lighter;
 	font-style: italic;
 }

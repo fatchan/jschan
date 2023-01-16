@@ -1,14 +1,14 @@
 mixin boardnav(selected, showIndex, upLevel)
 	if showIndex
 		|  
-		a(href=`${upLevel ? '../' : ''}index.html` class=(selected === 'index' ? 'bold' : '')) [Index]
+		a(href=`${upLevel ? '../' : ''}index.html` class=(selected === 'index' ? 'bold' : '')) [#{__('Index')}]
 	|  
-	a(href=`${upLevel ? '../' : ''}catalog.html` class=(selected === 'catalog' ? 'bold' : '')) [Catalog]
+	a(href=`${upLevel ? '../' : ''}catalog.html` class=(selected === 'catalog' ? 'bold' : '')) [#{__('Catalog')}]
 	if board.settings != null && board.settings.hideBanners === false
 		|  
-		a(href=`${upLevel ? '../' : ''}banners.html` class=(selected === 'banners' ? 'bold' : '')) [Banners]
+		a(href=`${upLevel ? '../' : ''}banners.html` class=(selected === 'banners' ? 'bold' : '')) [#{__('Banners')}]
 	|  
-	a(href=`${upLevel ? '../' : ''}logs.html` class=(selected === 'logs' ? 'bold' : '')) [Logs]
+	a(href=`${upLevel ? '../' : ''}logs.html` class=(selected === 'logs' ? 'bold' : '')) [#{__('Logs')}]
 	if thread != null && board.settings != null && board.settings.archiveLinks === true
 		|  
-		a(href=`${archiveLinksURL.replace('%s', encodeURIComponent(meta.url+'/'+thread.board+'/thread/'+thread.postId+'.html'))}` rel='nofollow' referrerpolicy='same-origin' target='_blank') [Archive]
+		a(href=`${archiveLinksURL.replace('%s', encodeURIComponent(meta.url+'/'+thread.board+'/thread/'+thread.postId+'.html'))}` rel='nofollow' referrerpolicy='same-origin' target='_blank') [#{__('Archive')}]

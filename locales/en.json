@@ -7,6 +7,17 @@
 	"Accounts": "Accounts",
 	"Roles": "Roles",
 	"News": "News",
+	"Home": "Home",
+	"Overboard": "Overboard",
+	"Account": "Account",
+	"Manage": "Manage",
+	"Catalog": "Catalog",
+	"Banners": "Banners",
+	"Archive": "Archive",
 	"Settings": "Settings",
-	"Name": "Name"
+	"New Thread": "New Thread",
+	"New Reply": "New Reply",
+	"Name": "Name",
+	"You": "You",
+	"Index": "Index"
 }
