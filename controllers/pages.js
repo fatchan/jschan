@@ -16,7 +16,7 @@ const express  = require('express')
 	, sessionRefresh = require(__dirname+'/../lib/middleware/permission/sessionrefresh.js')
 	, csrf = require(__dirname+'/../lib/middleware/misc/csrfmiddleware.js')
 	, setMinimal = require(__dirname+'/../lib/middleware/misc/setminimal.js')
-	, { setBoardLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
+	, { setBoardLanguage, setQueryLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
 	//page models
 	, { manageRecent, manageReports, manageAssets, manageSettings, manageBans, editCustomPage, manageMyPermissions,
 		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages, manageStaff, editStaff, editPost } = require(__dirname+'/../models/pages/manage/')
@@ -119,7 +119,7 @@ router.get('/globalmanage/editrole/:roleid([a-f0-9]{24}).html', useSession, sess
 router.get('/captcha', geoIp, processIp, captcha); //get captcha image and cookie
 router.get('/captcha.html', captchaPage); //iframed for noscript users
 router.get('/bypass.html', blockBypass); //block bypass page
-router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
+router.get('/bypass_minimal.html', setMinimal, setQueryLanguage, blockBypass); //block bypass page
 
 //accounts
 router.get('/account.html', useSession, sessionRefresh, isLoggedIn, calcPerms, csrf, account); //page showing boards you are mod/owner of, links to password rese, logout, etc
