@@ -21,5 +21,8 @@
 	"You": "You",
 	"Index": "Index",
 	"Submit": "Submit",
-	"Block Bypass": "Block Bypass"
+	"Block Bypass": "Block Bypass",
+	"Your upload was too large": "Your upload was too large",
+	"Payload Too Large": "Payload Too Large",
+	"Posts must include a message or file": "Posts must include a message or file"
 }

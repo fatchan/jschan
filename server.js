@@ -144,7 +144,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 					errMessage = 'Client aborted request';
 					break;
 				case 'entity.too.large':
-					errMessage = 'Your upload was too large';
+					errMessage = res.locals.__('Your upload was too large');
 					break;
 				default:
 					break;

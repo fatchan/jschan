@@ -26,7 +26,7 @@ module.exports = {
 			//maybe add more duplicates here?
 
 		const errors = await checkSchema([
-			{ result: (lengthBody(req.body.message, 1) && res.locals.numFiles === 0), expected: false, error: 'Posts must include a message or file' },
+			{ result: (lengthBody(req.body.message, 1) && res.locals.numFiles === 0), expected: false, error: res.locals.__('Posts must include a message or file') },
 			{ result: (res.locals.anonymizer && (disableAnonymizerFilePosting || res.locals.board.settings.disableAnonymizerFilePosting)
 				&& res.locals.numFiles > 0), expected: false, error: `Posting files through anonymizers has been disabled ${disableAnonymizerFilePosting ? 'globally' : 'on this board'}` },
 			{ result: res.locals.numFiles > res.locals.board.settings.maxFiles, blocking: true, expected: false, error: `Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is ${res.locals.board.settings.maxFiles}` },
