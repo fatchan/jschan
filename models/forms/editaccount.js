@@ -13,9 +13,8 @@ module.exports = async (req, res) => {
 	} else {
 		updatingPermissions = new Permission(res.locals.editingAccount.permissions);
 		updatingPermissions.handleBody(req.body, res.locals.permissions);
-		updatingPermissions.applyInheritance();
 	}
-	updatingPermissions.applyInheritance();
+	// updatingPermissions.applyInheritance();
 
 	const updated = await Accounts.setAccountPermissions(req.body.username, updatingPermissions).then(r => r.matchedCount);
 
