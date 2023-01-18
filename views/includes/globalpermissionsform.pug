@@ -6,7 +6,8 @@ for bit, index in Object.keys(jsonPermissions)
 			p #{jsonPermissions[bit].subtitle}
 	.row
 		- const hasParent = jsonPermissions[bit].parent == null || permissions.get(jsonPermissions[bit].parent);
-		label.postform-style.ph-5(class=(!hasParent ? 'notallowed' : null) title=(!hasParent ? `Requires permission "${jsonPermissions[bit].label}"` : null))
+		- const parentLabel = !hasParent ? jsonPermissions[jsonPermissions[bit].parent].label : '';
+		label.postform-style.ph-5(class=(!hasParent ? 'notallowed' : null) title=(!hasParent ? `Requires permission "${parentLabel}"` : null))
 			input(type='checkbox' name=`permission_bit_${bit}` value=bit checked=jsonPermissions[bit].state disabled=!hasParent)
 		.rlabel #{jsonPermissions[bit].label}
 		p #{jsonPermissions[bit].desc}
