@@ -8,11 +8,15 @@ const pluralMap = {
 
 //simple translation
 const __ = (key) => {
-	return LANG[key];
+	return LANG[key] || key;
 };
 
 //plurals+replace %s with count
 const __n = (key, count) => {
 	const pluralKey = pluralMap[count] || 'other';
-	return LANG[key][pluralKey].replace('%s', count);
+	const translationObj = LANG[key];
+	if (!translationObj) {
+		return key;
+	}
+	return translationObj[pluralKey].replace('%s', count);
 };
