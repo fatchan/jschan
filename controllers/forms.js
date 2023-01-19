@@ -20,7 +20,7 @@ const express  = require('express')
 	, dnsblCheck = require(__dirname+'/../lib/middleware/ip/dnsbl.js')
 	, blockBypass = require(__dirname+'/../lib/middleware/captcha/blockbypass.js')
 	, fileMiddlewares = require(__dirname+'/../lib/middleware/file/filemiddlewares.js')
-	, { setBoardLanguage, setQueryLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
+	, { setBoardLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
 //controllers
 	, { deleteBoardController, editBansController, appealController, globalActionController, twofactorController,
 		actionController, addCustomPageController, deleteCustomPageController, addNewsController,
