@@ -44,13 +44,13 @@ section.form-wrapper.flex-center
 			- const maxFiles = board.settings.maxFiles;
 			section.row
 				.label
-					span #{__(`File${maxFiles > 1 ? 's' : ''}`)}
+					span #{__n('Files', maxFiles)}
 						if fileRequired
 							span.required *
 					|
 					| 
 					if maxFiles > 1
-						small #{__('Max')} #{maxFiles}
+						small #{__n('Max %s files', maxFiles)}
 					small #{postFilesSize} #{__('total')}
 				span.col
 					+filelabel('file', maxFiles)

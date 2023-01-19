@@ -21,13 +21,24 @@
 	"Email": "Opção",
 	"Subject": "Assunto",
 	"Message": "Mensagem",
-	"Files": "Ficheiros",
-	"Files": "Ficheiro",
-	"Max": "Máx",
+	"Files": {
+		"one": "Ficheiro",
+		"other": "Ficheiros"
+	},
+	"Max %s files": {
+		"one": "Máx %s",
+		"other": "Máx %s"
+	},
 	"total": "total",
 	"Password": "Password",
-	"Select/Drop/Paste file": "Seleciona/Arrasta/Cola ficheiro",
-	"Select/Drop/Paste files": "Seleciona/Arrasta/Cola ficheiros",
+	"Select/Drop/Paste files": {
+		"one": "Seleciona/Arrasta/Cola ficheiro",
+		"other": "Seleciona/Arrasta/Cola ficheiros"
+	},
+	"%s files selected": {
+		"one": "%s ficheiro selecionado",
+		"other": "%s ficheiros selecionados"
+	},
 	"Tegaki": "Tegaki",
 	"Replayable?": "Replay?",
 	"Draw": "Desenhar",

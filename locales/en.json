@@ -21,13 +21,24 @@
 	"Email": "Email",
 	"Subject": "Subject",
 	"Message": "Message",
-	"Files": "Files",
-	"File": "File",
-	"Max": "Max",
+	"Files": {
+		"one": "File",
+		"other": "Files"
+	},
+	"Max %s files": {
+		"one": "Max %s file",
+		"other": "Max %s files"
+	},
 	"total": "total",
 	"Password": "Password",
-	"Select/Drop/Paste file": "Select/Drop/Paste file",
-	"Select/Drop/Paste files": "Select/Drop/Paste files",
+	"Select/Drop/Paste files": {
+		"one": "Select/Drop/Paste file",
+		"other": "Select/Drop/Paste files"
+	},
+	"%s files selected": {
+		"one": "%s file selected",
+		"other": "%s files selected"
+	},
 	"Tegaki": "Tegaki",
 	"Replayable?": "Replayable?",
 	"Draw": "Draw",
