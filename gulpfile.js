@@ -466,7 +466,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 
-		del([ 'static/js/lang/' ]),
+		await del([ 'static/js/lang/' ]);
 		fs.mkdirSync(`${paths.scripts.dest}lang/`);
 		Object.entries(i18n.getCatalog())
 			.forEach(entry => {
