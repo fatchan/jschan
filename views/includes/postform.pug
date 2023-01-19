@@ -24,17 +24,17 @@ section.form-wrapper.flex-center
 				a.close.postform-style(href='#!') ×
 			if board.settings.sageOnlyEmail && !modview
 				section.row
-					.label Sage
+					.label #{__('Sage')}
 					label.postform-style.ph-5
 						input(type='checkbox', name='email', value='sage')
 			else
 				section.row
-					.label Email
+					.label #{__('Email')}
 					input(type='text', name='email', autocomplete='off' maxlength=globalLimits.fieldLength.email)
 			include ./subjectfield.pug
 		section.row
 			.label
-				span Message
+				span #{__('Message')}
 					if messageRequired
 						span.required *
 			- const minLength = (isThread ? board.settings.minReplyMessageLength : board.settings.minThreadMessageLength) || 0;
@@ -44,14 +44,14 @@ section.form-wrapper.flex-center
 			- const maxFiles = board.settings.maxFiles;
 			section.row
 				.label
-					span File#{maxFiles > 1 ? 's' : ''}
+					span #{__(`File${maxFiles > 1 ? 's' : ''}`)}
 						if fileRequired
 							span.required *
 					|
 					| 
 					if maxFiles > 1
-						small Max #{maxFiles} files
-					small #{postFilesSize} total
+						small #{__('Max')} #{maxFiles}
+					small #{postFilesSize} #{__('total')}
 				span.col
 					+filelabel('file', maxFiles)
 					input#file(type='file', name='file' multiple required=fileRequired )
@@ -63,12 +63,12 @@ section.form-wrapper.flex-center
 							| Spoiler
 			if board.settings.enableTegaki && board.settings.allowedFileTypes.image === true
 				section.row.jsonly
-					.label Tegaki 
-					input.dummy-link.tegaki-button(type='button', value='Draw')
+					.label #{__('Tegaki')} 
+					input.dummy-link.tegaki-button(type='button', value=__('Draw'))
 					if board.settings.allowedFileTypes.other === true
 						label.noselect.postform-style.ph-5.ml-1.fh
 							input(type='checkbox' name='tegakireplay')
-							| Replayable?
+							| #{__('Replayable?')}
 		if board.settings.userPostSpoiler || board.settings.userPostDelete || board.settings.userPostUnlink || modview
 			section.row
 				.label Password
@@ -77,9 +77,9 @@ section.form-wrapper.flex-center
 			- const boardFlags = Object.entries(board.flags)
 			if boardFlags.length > 0
 				section.row
-					.label Flag
+					.label #{__('Flag')}
 					select#customflag(name='customflag')
-						option(value='') #{board.settings.geoFlags === true ? 'Geographic Flag' : 'None'}
+						option(value='') #{board.settings.geoFlags === true ? __('Geographic Flag') : __('None')}
 						each flag in boardFlags
 							option(value=flag[0] data-src=`/flag/${board._id}/${flag[1]}`) #{flag[0]}
 					img.jsonly#selected-flag

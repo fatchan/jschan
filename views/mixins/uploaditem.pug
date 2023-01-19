@@ -9,8 +9,8 @@ mixin uploaditem(item)
 				if item.spoilers
 					label
 						input(type='checkbox', name='spoiler', value=item.hash)
-						| Spoiler
+						| #{__('Spoiler')}
 				if item.stripFilenames
 					label
 						input(type='checkbox', name='strip_filename', value=item.hash)
-						| Strip Filename
+						| #{__('Strip Filename')}
