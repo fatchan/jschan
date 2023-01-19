@@ -3,7 +3,8 @@
 const uploadBanners = require(__dirname+'/../../models/forms/uploadbanners.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
-	, config = require(__dirname+'/../../lib/misc/config.js');
+	, config = require(__dirname+'/../../lib/misc/config.js')
+	, { checkSchema, numberBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -12,15 +13,12 @@ module.exports = {
 	controller: async (req, res, next) => {
 
 		const { globalLimits } = config.get;
-		const errors = [];
 
-		if (res.locals.numFiles === 0) {
-			errors.push('Must provide a file');
-		} else if (res.locals.numFiles > globalLimits.bannerFiles.max) {
-			errors.push(`Exceeded max banner uploads in one request of ${globalLimits.bannerFiles.max}`);
-		} else if (res.locals.board.banners.length+res.locals.numFiles > globalLimits.bannerFiles.total) {
-			errors.push(`Total number of banners would exceed global limit of ${globalLimits.bannerFiles.total}`);
-		}
+		const errors = await checkSchema([
+			{ result: res.locals.numFiles === 0, expected: false, blocking: true, error: 'Must provide a file' },
+			{ result: numberBody(res.locals.numFiles, 0, globalLimits.bannerFiles.max), expected: true, error: `Exceeded max banner uploads in one request of ${globalLimits.bannerFiles.max}` },
+			{ result: numberBody(res.locals.board.banners.length+res.locals.numFiles, 0, globalLimits.bannerFiles.max), expected: true, error: `Total number of banners would exceed global limit of ${globalLimits.bannerFiles.total}` },
+		]);
 
 		if (errors.length > 0) {
 			await deleteTempFiles(req).catch(console.error);
