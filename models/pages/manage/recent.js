@@ -3,7 +3,7 @@
 const { Posts } = require(__dirname+'/../../../db/')
 	, config = require(__dirname+'/../../../lib/misc/config.js')
 	, decodeQueryIP = require(__dirname+'/../../../lib/input/decodequeryip.js')
-	, Permissions = require(__dirname+'/../../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../../lib/permission/permissions.js')
 	, pageQueryConverter = require(__dirname+'/../../../lib/input/pagequeryconverter.js')
 	, limit = 20;
 

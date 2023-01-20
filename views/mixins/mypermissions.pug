@@ -1,10 +1,13 @@
-mixin mypermissions(jsonPermissions, keys)
-	for perm, index in keys
-		if jsonPermissions[perm].title && index > 0
+mixin mypermissions(jsonPermissions, boardOnly=false)
+	- const permissionKeys = boardOnly ? Object.keys(jsonPermissions).filter(p => manageBoardBits.includes(parseInt(p))) : Object.keys(jsonPermissions)
+	for bit, index in permissionKeys
+		if jsonPermissions[bit].title && index > 0
 			hr(size=1)
-			h4.mv-5 #{jsonPermissions[perm].title}
+			h4.mv-5 #{jsonPermissions[bit].title}
+			if jsonPermissions[bit].subtitle
+				p #{jsonPermissions[bit].subtitle}
 		.row
-			label.postform-style.ph-5
-				input(type='checkbox' checked=jsonPermissions[perm].state disabled)
-			.rlabel #{jsonPermissions[perm].label}
-			p #{jsonPermissions[perm].desc}
+			label.postform-style.ph-5.notallowed
+				input(type='checkbox' name=`permission_bit_${bit}` value=bit checked=jsonPermissions[bit].state disabled=true)
+			.rlabel #{jsonPermissions[bit].label}
+			p #{jsonPermissions[bit].desc}

@@ -3,7 +3,7 @@
 const config = require(__dirname+'/lib/misc/config.js')
 	, { Binary } = require('mongodb')
 	, Permission = require(__dirname+'/lib/permission/permission.js')
-	, Permissions = require(__dirname+'/lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/lib/permission/permissions.js')
 	, { hcaptcha, google } = require(__dirname+'/configs/secrets.js')
 	, gulp = require('gulp')
 //	, pugRuntime = require('pug-runtime/build')
@@ -143,6 +143,9 @@ async function password() {
 	const { Accounts } = require(__dirname+'/db/');
 	const randomPassword = randomBytes(20).toString('base64');
 	await Accounts.changePassword('admin', randomPassword);
+	const ROOT = new Permission();
+	ROOT.setAll(Permission.allPermissions);
+	await Accounts.setAccountPermissions('admin', ROOT);
 	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 }
 

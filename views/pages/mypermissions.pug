@@ -27,4 +27,4 @@ block content
 			|  
 			a(href=`/globalmanage/editaccount/${user.username}.html`) [Edit]
 	- const jsonPermissions = permissions.toJSON();
-	+mypermissions(jsonPermissions, Object.keys(jsonPermissions))
+	+mypermissions(jsonPermissions)

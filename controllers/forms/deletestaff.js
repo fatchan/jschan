@@ -3,7 +3,7 @@
 const deleteStaff = require(__dirname+'/../../models/forms/deletestaff.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {

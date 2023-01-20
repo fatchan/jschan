@@ -1,3 +1,11 @@
+### 0.11.2
+  - Convert the assets page form handling to the newer checkSchema code.
+  - Don't show the "Edit" option in the post dropdowns for public pages.
+  - No longer apply permissions inheritance after editing to prevent confusion.
+  - Improve duplicate checking when editing roles to only explicitly match updated roles rather than applying inheritance first.
+  - Bugfix "my permission" page not displaying correctly and board staff permission editing not applying.
+  - Improve required parent permission display to show "requires X" in the tooltip of disabled checkboxes.
+
 ### 0.11.1
   - Bugfix non logged in users not able to use actions because of an issue in move post logic (thanks @some_random_guy).
   - Bugfix editing posts from the actions form (not the new dropdown "Edit" button) always redirecting to OP.

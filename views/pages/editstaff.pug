@@ -21,14 +21,17 @@ block content
 			input(type='hidden' name='_csrf' value=csrf)
 			input(type='hidden' name='username' value=staffUsername)
 			//-for perm in Object.keys(jsonPermissions)
-			for perm, index in Object.keys(jsonPermissions).filter(p => p.startsWith('MANAGE_BOARD_'))
-				if jsonPermissions[perm].title && index > 0
+			for bit, index in Object.keys(jsonPermissions).filter(p => manageBoardBits.includes(parseInt(p)))
+				if jsonPermissions[bit].title && index > 0
 					hr(size=1)
-					h4.mv-5 #{jsonPermissions[perm].title}
+					h4.mv-5 #{jsonPermissions[bit].title}
+					if jsonPermissions[bit].subtitle
+						p #{jsonPermissions[bit].subtitle}
 				.row
-					label.postform-style.ph-5
-						- const checkDisabled = !perm.startsWith('MANAGE_BOARD_') || perm === 'MANAGE_BOARD_GENERAL' || (!permissions.get(Permissions.MANAGE_BOARD_OWNER) && (perm==='MANAGE_BOARD_OWNER' || perm==='MANAGE_BOARD_STAFF'));
-						input(type='checkbox' name=perm value=1 checked=jsonPermissions[perm].state disabled=checkDisabled)
-					.rlabel #{jsonPermissions[perm].label}
-					p #{jsonPermissions[perm].desc}
+					- const parentAllowed = jsonPermissions[bit].parent == null || permissions.get(jsonPermissions[bit].parent);
+					- const parentLabel = !parentAllowed ? jsonPermissions[jsonPermissions[bit].parent].label : '';
+					label.postform-style.ph-5(class=(!hasParent ? 'notallowed' : null) title=(!parentAllowed ? `Requires permission "${parentLabel}"` : null))
+						input(type='checkbox' name=`permission_bit_${bit}` value=bit checked=jsonPermissions[bit].state disabled=(!parentAllowed || jsonPermissions[bit].block))
+					.rlabel #{jsonPermissions[bit].label}
+					p #{jsonPermissions[bit].desc}
 			input(type='submit', value='Save')

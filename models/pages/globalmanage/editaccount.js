@@ -24,6 +24,7 @@ module.exports = async (req, res, next) => {
 			accountUsername: req.params.accountusername,
 			accountPermissions,
 			roles: roleManager.roles,
+			permissions: res.locals.permissions,
 		});
 
 };

@@ -1,7 +1,7 @@
 'use strict';
 
 const { Posts, Boards } = require(__dirname+'/../../db/')
-	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, Permission = require(__dirname+'/../../lib/permission/permission.js');
 
 module.exports = async (req, res, next) => {

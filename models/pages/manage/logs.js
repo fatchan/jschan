@@ -2,7 +2,7 @@
 
 const { Modlogs } = require(__dirname+'/../../../db/')
 	, pageQueryConverter = require(__dirname+'/../../../lib/input/pagequeryconverter.js')
-	, Permissions = require(__dirname+'/../../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../../lib/permission/permissions.js')
 //	, decodeQueryIP = require(__dirname+'/../../../lib/input/decodequeryip.js')
 	, limit = 50;
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
-	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, { themes, codeThemes } = require(__dirname+'/../../lib/misc/themes.js')
 	, { Ratelimits } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')

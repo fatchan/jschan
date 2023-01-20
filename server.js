@@ -17,7 +17,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 	, { version } = require(__dirname+'/package.json')
 	, formatSize = require(__dirname+'/lib/converter/formatsize.js')
 	, CachePugTemplates = require('cache-pug-templates')
-	, Permissions = require(__dirname+'/lib/permission/permissions.js');
+	, { Permissions } = require(__dirname+'/lib/permission/permissions.js');
 
 (async () => {
 

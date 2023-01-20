@@ -1,7 +1,7 @@
 'use strict';
 
 const createBoard = require(__dirname+'/../../models/forms/create.js')
-	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')

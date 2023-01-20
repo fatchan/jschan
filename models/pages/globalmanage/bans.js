@@ -1,7 +1,7 @@
 'use strict';
 
 const { Bans } = require(__dirname+'/../../../db/')
-	, Permissions = require(__dirname+'/../../../lib/permission/permissions.js');
+	, { Permissions } = require(__dirname+'/../../../lib/permission/permissions.js');
 
 module.exports = async (req, res, next) => {
 

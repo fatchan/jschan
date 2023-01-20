@@ -1,7 +1,7 @@
 'use strict';
 
 const { Posts, Boards } = require(__dirname+'/../../db/')
-	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, actionHandler = require(__dirname+'/../../models/forms/actionhandler.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')

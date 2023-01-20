@@ -5,7 +5,7 @@ const Mongo = require(__dirname+'/db.js')
 	, bcrypt = require('bcrypt')
 	, cache = require(__dirname+'/../lib/redis/redis.js')
 	, { MONTH } = require(__dirname+'/../lib/converter/timeutils.js')
-	, Permissions = require(__dirname+'/../lib/permission/permissions.js');
+	, { Permissions } = require(__dirname+'/../lib/permission/permissions.js');
 
 module.exports = {
 

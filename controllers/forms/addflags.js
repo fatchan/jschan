@@ -3,7 +3,8 @@
 const addFlags = require(__dirname+'/../../models/forms/addflags.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
-	, config = require(__dirname+'/../../lib/misc/config.js');
+	, config = require(__dirname+'/../../lib/misc/config.js')
+	, { checkSchema, numberBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -12,15 +13,12 @@ module.exports = {
 	controller: async (req, res, next) => {
 
 		const { globalLimits } = config.get;
-		const errors = [];
 
-		if (res.locals.numFiles === 0) {
-			errors.push('Must provide a file');
-		} else if (res.locals.numFiles > globalLimits.flagFiles.max) {
-			errors.push(`Exceeded max flag uploads in one request of ${globalLimits.flagFiles.max}`);
-		} else if (res.locals.board.flags.length+res.locals.numFiles > globalLimits.flagFiles.total) {
-			errors.push(`Total number of flags would exceed global limit of ${globalLimits.flagFiles.total}`);
-		}
+		const errors = await checkSchema([
+			{ result: res.locals.numFiles === 0, expected: false, blocking: true, error: 'Must provide a file' },
+			{ result: numberBody(res.locals.numFiles, 0, globalLimits.flagFiles.max), expected: true, error: `Exceeded max flag uploads in one request of ${globalLimits.flagFiles.max}` },
+			{ result: numberBody(Object.keys(res.locals.board.flags).length+res.locals.numFiles, 0, globalLimits.flagFiles.max), expected: true, error: `Total number of flags would exceed global limit of ${globalLimits.flagFiles.total}` },
+		]);
 
 		if (errors.length > 0) {
 			await deleteTempFiles(req).catch(console.error);
