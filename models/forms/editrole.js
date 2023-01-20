@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 
 	let rolePermissions = new Permission(res.locals.editingRole.permissions);
 	rolePermissions.handleBody(req.body, res.locals.permissions);
-	rolePermissions.applyInheritance();
+	// rolePermissions.applyInheritance();
 
 	const existingRoleName = roleManager.roleNameMap[rolePermissions.base64];
 	if (existingRoleName) {
