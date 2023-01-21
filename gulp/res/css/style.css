@@ -1639,7 +1639,7 @@ row.wrap.sb .col {
 		content:attr(title);
 	}
 	.user-id[title]:hover:after {
-		content:"Double tap to highlight" attr(data-count);
+		content: attr(title-mobile);
 	}
 	[title]:hover:before {
 		content: '';

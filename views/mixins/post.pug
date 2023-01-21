@@ -93,7 +93,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 							- const type = file.mimetype.split('/')[0]
 							span.post-file-info
 								span
-									a.filename(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? 'Spoiler File' : file.originalFilename}
+									a.filename(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? __('Spoiler File') : file.originalFilename}
 								br
 								if globalmanage && file.phash != null
 									span #{file.phash}
@@ -101,7 +101,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								if !file.attachment && !(post.spoiler || file.spoiler)
 									span.jsonly
 										b [
-										a.dummy-link.hide-image.noselect(data-src=`/file/${file.hasThumb ? 'thumb/'+file.hash+file.thumbextension : file.filename}`) Hide
+										a.dummy-link.hide-image.noselect(data-src=`/file/${file.hasThumb ? 'thumb/'+file.hash+file.thumbextension : file.filename}`) #{__('Hide')}
 										b ]
 								span 
 									|  (#{file.sizeString}
@@ -113,7 +113,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								if type === 'image'
 									if (board && board.settings.reverseImageSearchLinks === true) || (overboard && overboardReverseLinks === true) || manage || globalmanage
 										|  
-										span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title='Reverse Image Search' target='_blank') Reverse
+										span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title=__('Reverse Image Search') target='_blank') #{__('Reverse')}
 									if file.originalFilename.endsWith('-tegaki.png')
 										- const matchingReplayFile = post.files.find(f => f.originalFilename.slice(0, -4) === file.originalFilename.slice(0,-3));
 										if matchingReplayFile !== undefined

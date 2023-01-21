@@ -16,7 +16,8 @@ window.addEventListener('DOMContentLoaded', () => {
 			if (updateId && updateId !== idString) { continue; }
 			const count = idMap.get(idString);
 			idElems[i].setAttribute('data-count', ` (${count})`);
-			idElems[i].setAttribute('title', `Double click to highlight (${count})`);
+			idElems[i].setAttribute('title', __n('Double click to highlight (%s)', count));
+			idElems[i].setAttribute('title-mobile', __n('Double tap to highlight (%s)', count));
 		}
 	};
 

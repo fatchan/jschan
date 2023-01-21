@@ -80,6 +80,12 @@
 	"Catalog": "Catalog",
 	"Creation Date": "Creation Date",
 	"Draw": "Draw",
+	"Double click to highlight (%s)": {
+		"other": "Double click to highlight (%s)"
+	},
+	"Double tap to highlight (%s)": {
+		"other": "Double tap to highlight (%s)"
+	},
 	"Edit": "Edit",
 	"Email": "Email",
 	"Files": {
@@ -128,6 +134,8 @@
 	"Reply Count": "Reply Count",
 	"Reports": "Reports",
 	"Roles": "Roles",
+	"Reverse": "Reverse",
+	"Reverse Image Search": "Reverse Image Search",
 	"Select/Drop/Paste files": {
 		"one": "Select/Drop/Paste file",
 		"other": "Select/Drop/Paste files"
@@ -137,6 +145,7 @@
 	"Show Post Actions": "Show Post Actions",
 	"Sort By": "Sort By",
 	"Spoiler": "Spoiler",
+	"Spoiler File": "Spoiler File",
 	"Strip Filename": "Strip Filename",
 	"Subject": "Subject",
 	"Submit": "Submit",

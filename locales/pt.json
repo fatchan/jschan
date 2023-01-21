@@ -80,6 +80,12 @@
 	"Catalog": "Catálogo",
 	"Creation Date": "Criação",
 	"Draw": "Desenhar",
+	"Double click to highlight (%s)": {
+		"other": "Carrega duas vezes para ver (%s)"
+	},
+	"Double tap to highlight (%s)": {
+		"other": "Carrega duas vezes para mostrar todos (%s)"
+	},
 	"Edit": "Editar",
 	"Email": "Opção",
 	"Files": {
@@ -128,6 +134,8 @@
 	"Reply Count": "Respostas",
 	"Reports": "Denúncias",
 	"Roles": "Permissões",
+	"Reverse": "Reversa",
+	"Reverse Image Search": "Procura reversa de imagem",
 	"Select/Drop/Paste files": {
 		"one": "Seleciona/Arrasta/Cola ficheiro",
 		"other": "Seleciona/Arrasta/Cola ficheiros"
@@ -137,6 +145,7 @@
 	"Show Post Actions": "Denunciar/Moderar",
 	"Sort By": "Ordenar",
 	"Spoiler": "Spoiler",
+	"Spoiler File": "Spoiler Ficheiro",
 	"Strip Filename": "Limpar Nome",
 	"Subject": "Assunto",
 	"Submit": "Enviar",
