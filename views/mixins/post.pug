@@ -67,22 +67,22 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					|  
 					span.noselect: a(href=`${postURL}`) [Open]
 				select.jsonly.postmenu
-					option(value='single') Hide
+					option(value='single') #{__('Hide')}
 					if post.userId
-						option(value='fid') Filter ID
+						option(value='fid') #{__('Filter ID')}
 					if post.name
-						option(value='fname') Filter Name
+						option(value='fname') #{__('Filter Name')}
 					if post.subject
-						option(value='fsub') Filter Subject
+						option(value='fsub') #{__('Filter Subject')}
 					if post.tripcode
-						option(value='ftrip') Filter Tripcode
+						option(value='ftrip') #{__('Filter Tripcode')}
 					if !overboard && !ban
-						option(value='moderate') Moderate
+						option(value='moderate') #{__('Moderate')}
 					if !ban && (modview || manage || globalmanage)
-						option(value='edit') Edit
+						option(value='edit') #{__('Edit')}
 					if !post.thread
-						option(value='watch') Watch
-						option(value='playlist') Playlist
+						option(value='watch') #{__('Watch')}
+						option(value='playlist') #{__('Playlist')}
 		.post-data
 			if post.files.length > 0
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))

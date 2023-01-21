@@ -25,6 +25,39 @@
 		"one": "Ficheiro",
 		"other": "Ficheiros"
 	},
+	"Replies": {
+		"one": "Reposta",
+		"other": "Repostas"
+	},
+	"Captcha text": "Código captcha",
+	"Please enable JavaScript to solve the captcha.": "Necessita JavaScript.",
+	"%s characters": {
+		"one": "%s caracter",
+		"other": "%s caracteres"
+	},
+	"No video/audio files in this thread.": "No video/audio files in this thread.",
+	"focus to load captcha": "Seleciona para carregar captcha",
+	"loading": "loading",
+	"Page": "Página",
+	"Hide": "Esconder",
+	"Filter Name": "Filtrar Nome",
+	"Filter Subject": "Filtrar Assunto",
+	"Filter ID": "Filtrar ID",
+	"Filter Tripcode": "Filtrar Tripcode",
+	"Moderate": "Filtrar Nome",
+	"Edit": "Editar",
+	"Watch": "+Favorito",
+	"Thread Watcher": "Favoritos",
+	"Playlist": "Playlist",
+	"Filter": "Filtrar",
+	"Sort By": "Ordenar",
+	"Bump Order": "Bump",
+	"Creation Date": "Criação",
+	"Reply Count": "Respostas",
+	"No posts.": "No Posts.",
+	"Show Post Actions": "Denunciar/Moderar",
+	"Actions": "Ações",
+	"Submit": "Enviar",
 	"Max %s files": {
 		"one": "Máx %s",
 		"other": "Máx %s"

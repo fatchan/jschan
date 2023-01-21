@@ -1,7 +1,7 @@
 details.toggle-label#actionform
-	summary.collapse#action-menu Show Post Actions
+	summary.collapse#action-menu #{__('Show Post Actions')}
 	.actions 
-		h4.no-m-p Actions:
+		h4.no-m-p #{__('Actions')}:
 		label
 			input.post-check(type='checkbox', name='delete' value='1')
 			| Delete Posts
@@ -50,4 +50,4 @@ details.toggle-label#actionform
 			input(type='text', name='ban_duration', placeholder='Ban duration e.g. 7d' autocomplete='off')
 		label
 			input(type='text', name='log_message', placeholder='Modlog message' autocomplete='off')
-	input(type='submit', value='Submit')
+	input(type='submit', value=__('Submit'))

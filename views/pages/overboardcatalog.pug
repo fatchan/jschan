@@ -20,12 +20,12 @@ block content
 	include ../includes/stickynav.pug
 	.wrapbar
 		.pages.jsonly
-			input#catalogfilter(type='text' placeholder='Filter')
+			input#catalogfilter(type='text' placeholder=__('Filter'))
 			select.ml-5.right#catalogsort
-				option(value="" disabled selected hidden) Sort by
-				option(value="bump") Bump order
-				option(value="date") Creation date
-				option(value="replies") Reply count
+				option(value="" disabled selected hidden) #{__('Sort By')}
+				option(value="bump") #{__('Bump Order')}
+				option(value="date") #{__('Creation Date')}
+				option(value="replies") #{__('Reply Count')}
 	hr(size=1)
 	if threads.length === 0
 		p No posts.

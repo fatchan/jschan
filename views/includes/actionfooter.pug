@@ -1,8 +1,8 @@
 details.toggle-label#actionform
-	summary.collapse#action-menu Show Post Actions
+	summary.collapse#action-menu #{__('Show Post Actions')}
 	.actions
 		input(type='hidden' name='hide_name' value='1')
-		h4.no-m-p Actions:
+		h4.no-m-p #{__('Actions')}:
 		if board.settings.userPostDelete
 			label
 				input.post-check(type='checkbox', name='delete' value='1')
@@ -29,4 +29,4 @@ details.toggle-label#actionform
 	.actions
 		h4.no-m-p Captcha:
 		include ./captcha.pug
-	input(type='submit', value='Submit')
+	input(type='submit', value=__('Submit'))

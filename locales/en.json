@@ -25,6 +25,39 @@
 		"one": "File",
 		"other": "Files"
 	},
+	"Replies": {
+		"one": "Reply",
+		"other": "Replies"
+	},
+	"Thread Watcher": "Thread Watcher",
+	"Captcha text": "Captcha text",
+	"Please enable JavaScript to solve the captcha.": "Please enable JavaScript to solve the captcha.",
+	"%s characters": {
+		"one": "%s character",
+		"other": "%s characters"
+	},
+	"No video/audio files in this thread.": "No video/audio files in this thread.",
+	"focus to load captcha": "focus to load captcha",
+	"loading": "loading",
+	"Page": "Page",
+	"Hide": "Hide",
+	"Filter Name": "Filter Name",
+	"Filter Subject": "Filter Subject",
+	"Filter ID": "Filter ID",
+	"Filter Tripcode": "Filter Tripcode",
+	"Moderate": "Moderate",
+	"Edit": "Edit",
+	"Watch": "Watch",
+	"Playlist": "Playlist",
+	"Filter": "Filter",
+	"Sort By": "Sort By",
+	"Bump Order": "Bump Order",
+	"Creation Date": "Creation Date",
+	"Reply Count": "Reply Count",
+	"No posts.": "Sem publicações.",
+	"Show Post Actions": "Show Post Actions",
+	"Actions": "Actions",
+	"Submit": "Submit",
 	"Max %s files": {
 		"one": "Max %s file",
 		"other": "Max %s files"

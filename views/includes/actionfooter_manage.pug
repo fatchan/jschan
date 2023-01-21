@@ -1,7 +1,7 @@
 details.toggle-label#actionform
-	summary.collapse#action-menu Show Post Actions
+	summary.collapse#action-menu #{__('Show Post Actions')}
 	.actions 
-		h4.no-m-p Actions:
+		h4.no-m-p #{__('Actions')}:
 		.row.wrap
 			.col.mr-5
 				label
@@ -87,4 +87,4 @@ details.toggle-label#actionform
 				label
 					input.post-check(type='checkbox', name='cyclic' value='1')
 					| Toggle Cycle
-	input(type='submit', value='Submit')
+	input(type='submit', value=__('Submit'))
