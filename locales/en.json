@@ -1,152 +1,151 @@
 {
-	"Recent": "Recent",
-	"Reports": "Reports",
-	"Bans": "Bans",
-	"Boards": "Boards",
-	"Logs": "Logs",
-	"Accounts": "Accounts",
-	"Roles": "Roles",
-	"News": "News",
-	"Home": "Home",
-	"Overboard": "Overboard",
-	"Account": "Account",
-	"Manage": "Manage",
-	"Catalog": "Catalog",
-	"Banners": "Banners",
-	"Archive": "Archive",
-	"Settings": "Settings",
-	"New Thread": "New Thread",
-	"New Reply": "New Reply",
-	"Name": "Name",
-	"Email": "Email",
-	"Subject": "Subject",
-	"Message": "Message",
-	"Files": {
-		"one": "File",
-		"other": "Files"
-	},
-	"Replies": {
-		"one": "Reply",
-		"other": "Replies"
-	},
-	"%s replies": {
-		"one": "%s reply",
-		"other": "%s replies"
-	},
-	"%s files": {
-		"one": "%s file",
-		"other": "%s files"
-	},
 	"%s UIDs": {
 		"one": "%s UID",
 		"other": "%s UIDs"
 	},
-	"Captcha text": "Captcha text",
-	"Please enable JavaScript to solve the captcha.": "Please enable JavaScript to solve the captcha.",
 	"%s characters": {
 		"one": "%s character",
 		"other": "%s characters"
-	},
-	"Now": "Now",
-	"%s minute ago": {
-		"one": "%s minute ago",
-		"other": "%s minutes ago"
-	},
-	"%s hour ago": {
-		"one": "%s hour ago",
-		"other": "%s hours ago"
 	},
 	"%s day ago": {
 		"one": "%s day ago",
 		"other": "%s days ago"
 	},
-	"%s week ago": {
-		"one": "%s week ago",
-		"other": "%s weeks ago"
-	},
-	"%s month ago": {
-		"one": "%s month ago",
-		"other": "%s months ago"
-	},
-	"%s year ago": {
-		"one": "%s year ago",
-		"other": "%s years ago"
-	},
-	"%s minute from now": {
-		"one": "%s minute from now",
-		"other": "%s minutes from now"
-	},
-	"%s hour from now": {
-		"one": "%s hour from now",
-		"other": "%s hours from now"
-	},
 	"%s day from now": {
 		"one": "%s day from now",
 		"other": "%s days from now"
 	},
-	"%s week from now": {
-		"one": "%s week from now",
-		"other": "%s weeks from now"
-	},
-	"%s month from now": {
-		"one": "%s month from now",
-		"other": "%s months from now"
-	},
-	"%s year from now": {
-		"one": "%s year from now",
-		"other": "%s years from now"
-	},
-	"No video/audio files in this thread.": "No video/audio files in this thread.",
-	"focus to load captcha": "focus to load captcha",
-	"loading": "loading",
-	"Page": "Page",
-	"Hide": "Hide",
-	"Show": "Show",
-	"Filter Name": "Filter Name",
-	"Filter Subject": "Filter Subject",
-	"Filter ID": "Filter ID",
-	"Filter Tripcode": "Filter Tripcode",
-	"Moderate": "Moderate",
-	"Edit": "Edit",
-	"Watch": "Watch",
-	"Thread Watcher": "Thread Watcher",
-	"Playlist": "Playlist",
-	"Filter": "Filter",
-	"Sort By": "Sort By",
-	"Bump Order": "Bump Order",
-	"Creation Date": "Creation Date",
-	"Reply Count": "Reply Count",
-	"No posts.": "Sem publicações.",
-	"Show Post Actions": "Show Post Actions",
-	"Actions": "Actions",
-	"Submit": "Submit",
-	"Max %s files": {
-		"one": "Max %s file",
-		"other": "Max %s files"
-	},
-	"total": "total",
-	"Password": "Password",
-	"Select/Drop/Paste files": {
-		"one": "Select/Drop/Paste file",
-		"other": "Select/Drop/Paste files"
+	"%s files": {
+		"one": "%s file",
+		"other": "%s files"
 	},
 	"%s files selected": {
 		"one": "%s file selected",
 		"other": "%s files selected"
 	},
-	"Tegaki": "Tegaki",
-	"Replayable?": "Replayable?",
+	"%s hour ago": {
+		"one": "%s hour ago",
+		"other": "%s hours ago"
+	},
+	"%s hour from now": {
+		"one": "%s hour from now",
+		"other": "%s hours from now"
+	},
+	"%s minute ago": {
+		"one": "%s minute ago",
+		"other": "%s minutes ago"
+	},
+	"%s minute from now": {
+		"one": "%s minute from now",
+		"other": "%s minutes from now"
+	},
+	"%s month ago": {
+		"one": "%s month ago",
+		"other": "%s months ago"
+	},
+	"%s month from now": {
+		"one": "%s month from now",
+		"other": "%s months from now"
+	},
+	"%s replies": {
+		"one": "%s reply",
+		"other": "%s replies"
+	},
+	"%s week ago": {
+		"one": "%s week ago",
+		"other": "%s weeks ago"
+	},
+	"%s week from now": {
+		"one": "%s week from now",
+		"other": "%s weeks from now"
+	},
+	"%s year ago": {
+		"one": "%s year ago",
+		"other": "%s years ago"
+	},
+	"%s year from now": {
+		"one": "%s year from now",
+		"other": "%s years from now"
+	},
+	"Account": "Account",
+	"Accounts": "Accounts",
+	"Actions": "Actions",
+	"Archive": "Archive",
+	"Banners": "Banners",
+	"Bans": "Bans",
+	"Block Bypass": "Block Bypass",
+	"Boards": "Boards",
+	"Bump Order": "Bump Order",
+	"Captcha text": "Captcha text",
+	"Catalog": "Catalog",
+	"Creation Date": "Creation Date",
 	"Draw": "Draw",
+	"Edit": "Edit",
+	"Email": "Email",
+	"Files": {
+		"one": "File",
+		"other": "Files"
+	},
+	"Filter": "Filter",
+	"Filter ID": "Filter ID",
+	"Filter Name": "Filter Name",
+	"Filter Subject": "Filter Subject",
+	"Filter Tripcode": "Filter Tripcode",
 	"Flag": "Flag",
+	"Geographic Flag": "Geographic Flag",
+	"Hide": "Hide",
+	"Home": "Home",
+	"Index": "Index",
+	"Logs": "Logs",
+	"Manage": "Manage",
+	"Max %s files": {
+		"one": "Max %s file",
+		"other": "Max %s files"
+	},
+	"Message": "Message",
+	"Moderate": "Moderate",
+	"Name": "Name",
+	"New Reply": "New Reply",
+	"New Thread": "New Thread",
+	"News": "News",
+	"No posts.": "Sem publicações.",
+	"No video/audio files in this thread.": "No video/audio files in this thread.",
+	"None": "None",
+	"Now": "Now",
+	"Overboard": "Overboard",
+	"Page": "Page",
+	"Password": "Password",
+	"Payload Too Large": "Payload Too Large",
+	"Playlist": "Playlist",
+	"Please enable JavaScript to solve the captcha.": "Please enable JavaScript to solve the captcha.",
+	"Posts must include a message or file": "Posts must include a message or file",
+	"Recent": "Recent",
+	"Replayable?": "Replayable?",
+	"Replies": {
+		"one": "Reply",
+		"other": "Replies"
+	},
+	"Reply Count": "Reply Count",
+	"Reports": "Reports",
+	"Roles": "Roles",
+	"Select/Drop/Paste files": {
+		"one": "Select/Drop/Paste file",
+		"other": "Select/Drop/Paste files"
+	},
+	"Settings": "Settings",
+	"Show": "Show",
+	"Show Post Actions": "Show Post Actions",
+	"Sort By": "Sort By",
 	"Spoiler": "Spoiler",
 	"Strip Filename": "Strip Filename",
-	"Geographic Flag": "Geographic Flag",
-	"None": "None",
-	"You": "You",
-	"Index": "Index",
+	"Subject": "Subject",
 	"Submit": "Submit",
-	"Block Bypass": "Block Bypass",
+	"Tegaki": "Tegaki",
+	"Thread Watcher": "Thread Watcher",
+	"Watch": "Watch",
+	"You": "You",
 	"Your upload was too large": "Your upload was too large",
-	"Payload Too Large": "Payload Too Large",
-	"Posts must include a message or file": "Posts must include a message or file"
+	"focus to load captcha": "focus to load captcha",
+	"loading": "loading",
+	"total": "total"
 }
