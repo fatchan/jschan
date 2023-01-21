@@ -29,12 +29,60 @@
 		"one": "Reply",
 		"other": "Replies"
 	},
-	"Thread Watcher": "Thread Watcher",
 	"Captcha text": "Captcha text",
 	"Please enable JavaScript to solve the captcha.": "Please enable JavaScript to solve the captcha.",
 	"%s characters": {
 		"one": "%s character",
 		"other": "%s characters"
+	},
+	"Now": "Now",
+	"%s minute ago": {
+		"one": "%s minute ago",
+		"other": "%s minutes ago"
+	},
+	"%s hour ago": {
+		"one": "%s hour ago",
+		"other": "%s hours ago"
+	},
+	"%s day ago": {
+		"one": "%s day ago",
+		"other": "%s days ago"
+	},
+	"%s week ago": {
+		"one": "%s week ago",
+		"other": "%s weeks ago"
+	},
+	"%s month ago": {
+		"one": "%s month ago",
+		"other": "%s months ago"
+	},
+	"%s year ago": {
+		"one": "%s year ago",
+		"other": "%s years ago"
+	},
+	"%s minute from now": {
+		"one": "%s minute from now",
+		"other": "%s minutes from now"
+	},
+	"%s hour from now": {
+		"one": "%s hour from now",
+		"other": "%s hours from now"
+	},
+	"%s day from now": {
+		"one": "%s day from now",
+		"other": "%s days from now"
+	},
+	"%s week from now": {
+		"one": "%s week from now",
+		"other": "%s weeks from now"
+	},
+	"%s month from now": {
+		"one": "%s month from now",
+		"other": "%s months from now"
+	},
+	"%s year from now": {
+		"one": "%s year from now",
+		"other": "%s years from now"
 	},
 	"No video/audio files in this thread.": "No video/audio files in this thread.",
 	"focus to load captcha": "focus to load captcha",
@@ -48,6 +96,7 @@
 	"Moderate": "Moderate",
 	"Edit": "Edit",
 	"Watch": "Watch",
+	"Thread Watcher": "Thread Watcher",
 	"Playlist": "Playlist",
 	"Filter": "Filter",
 	"Sort By": "Sort By",

@@ -51,7 +51,7 @@ module.exports = async (req, res, next) => {
 			if (localBoards[i].lastPostTimestamp) {
 				const lastPostDate = new Date(localBoards[i].lastPostTimestamp);
 				localBoards[i].lastPostTimestamp = {
-					text: relativeString(now, lastPostDate),
+					text: relativeString(now, lastPostDate, res.locals),
 					color: relativeColor(now, lastPostDate)
 				};
 			}
