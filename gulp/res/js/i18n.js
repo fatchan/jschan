@@ -18,5 +18,6 @@ const __n = (key, count) => {
 	if (!translationObj) {
 		return key;
 	}
-	return translationObj[pluralKey].replace('%s', count);
+	const translationPlural = translationObj[pluralKey] || translationObj['other'];
+	return translationPlural.replace('%s', count);
 };
