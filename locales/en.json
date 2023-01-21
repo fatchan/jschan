@@ -29,6 +29,18 @@
 		"one": "Reply",
 		"other": "Replies"
 	},
+	"%s replies": {
+		"one": "%s reply",
+		"other": "%s replies"
+	},
+	"%s files": {
+		"one": "%s file",
+		"other": "%s files"
+	},
+	"%s UIDs": {
+		"one": "%s UID",
+		"other": "%s UIDs"
+	},
 	"Captcha text": "Captcha text",
 	"Please enable JavaScript to solve the captcha.": "Please enable JavaScript to solve the captcha.",
 	"%s characters": {

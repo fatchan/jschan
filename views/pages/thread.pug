@@ -65,12 +65,12 @@ block content
 				.pages
 					+boardnav(null, true, true)
 			#threadstats 
-				span #{thread.replyposts} repl#{thread.replyposts === 1 ? 'y' : 'ies'}
+				span #{__n('%s replies', thread.replyposts)}
 				|  |  
-				span #{thread.replyfiles + thread.files.length} file#{thread.replyfiles + thread.files.length === 1 ? '' : 's'}
+				span #{__n('%s files', thread.replyfiles + thread.files.length)}
 				if board.settings.ids
 					|  |   
-					span #{uids.size} UID#{uids.size === 1 ? '' : 's'}
+					span #{__n('%s UIDs', uids.size)}
 		.jsonly#livetext
 			.dot#livecolor
 			|  Connecting... 

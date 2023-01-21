@@ -29,6 +29,18 @@
 		"one": "Reposta",
 		"other": "Repostas"
 	},
+	"%s replies": {
+		"one": "%s reposta",
+		"other": "%s respostas"
+	},
+	"%s files": {
+		"one": "%s ficheiro",
+		"other": "%s ficheiros"
+	},
+	"%s UIDs": {
+		"one": "%s UID",
+		"other": "%s UIDs"
+	},
 	"Captcha text": "Código captcha",
 	"Please enable JavaScript to solve the captcha.": "Necessita JavaScript.",
 	"%s characters": {
