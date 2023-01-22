@@ -2,42 +2,42 @@ extends ../layout.pug
 include ../mixins/boardtable.pug
 
 block head
-	title Board List
+	title #{__('Board List')}
 
 block content
-	h1.board-title Board List
+	h1.board-title #{__('Board List')}
 	.flexcenter.mv-10
 		form.form-post(action='/boards.html' method='GET')
 			input(type='hidden' value=page)
 			.row.wrap.sb
 				div(class=`col${enableWebring ? ' mr-5' : ''}`)
 					.row
-						.label Search
+						.label #{__('Search')}
 						input(type='text' name='search' value=search placeholder='Uri or tags')
 					.row
-						.label Sort
+						.label #{__('Sort')}
 						select(name='sort')
-							option(value='popularity') Popularity
-							option(value='activity' selected=query.sort === 'activity') Latest Activity
+							option(value='popularity') #{__('Popularity')}
+							option(value='activity' selected=query.sort === 'activity') #{__('Latest Activity')}
 					.row
-						.label Order
+						.label #{__('Order')}
 						select(name='direction')
-							option(value='desc') Descending
-							option(value='asc' selected=query.direction === 'asc') Ascending
+							option(value='desc') #{__('Descending')}
+							option(value='asc' selected=query.direction === 'asc') #{__('Ascending')}
 					if enableWebring
 						.row
-							.label Local First
+							.label #{__('Local First')}
 							label.postform-style.ph-5
 								input(type='checkbox', name='local_first', value='true' checked=localFirst)
 				if enableWebring
 					.col
 						.row
-							.label Sites
+							.label #{__('Sites')}
 							select(name='sites' size='5' multiple)
-								optgroup(label='Shown')
+								optgroup(label=__('Shown'))
 									each site in shown
 										option(value=site selected=true) #{site}
-								optgroup(label='Not Shown')
+								optgroup(label=__('Not Shown'))
 									each site in notShown
 										option(value=site) #{site}
 			input(type='submit', value='Filter')
@@ -49,10 +49,10 @@ block content
 					td 
 						span.left
 							if board.webring === true
-								span.help(title='Webring') &#x1F517;
+								span.help(title=__('Webring')) &#x1F517;
 								|  
 							if board.settings.sfw === true
-								span.help(title='SFW') &#x1F4BC;
+								span.help(title=__('SFW')) &#x1F4BC;
 								|  
 						a(href=path) #{board.webring ? board.siteName : ''} /#{board.webring ? board.uri : board._id}/ - #{board.settings.name}
 					td #{board.settings.description || '-'}

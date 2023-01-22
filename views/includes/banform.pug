@@ -4,14 +4,14 @@ form.form-post(action=`/forms/appeal`, enctype='application/x-www-form-urlencode
 			+ban(ban, true)
 	- const allowAppeal = bans.filter(ban => ban.allowAppeal === true && !ban.appeal).length > 0;
 	if allowAppeal === true
-		h4.no-m-p Appeal:
+		h4.no-m-p #{__('Appeal')}:
 			.form-wrapper.flexleft.mt-10
 				input(type='hidden' name='_csrf' value=csrf)
 				.row
-					.label Message
+					.label #{__('Message')}
 					textarea(rows='5' name='message' required)
 				if captchaOptions.type === 'text'
 					include ./captchasidelabel.pug
 				else
 					include ./captchafieldrow.pug
-				input(type='submit', value='Submit')
+				input(type='submit', value=__('Submit'))
