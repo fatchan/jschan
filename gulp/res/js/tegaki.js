@@ -1,6 +1,4 @@
-/*! tegaki.js, MIT License */'use strict';
-
-var TegakiStrings = {
+/*! tegaki.js, MIT License */'use strict';var TegakiStrings = {
   // Messages
   badDimensions: __('Invalid dimensions.'),
   promptWidth: __('Canvas width in pixels'),
@@ -70,6 +68,7 @@ var TegakiStrings = {
   errorLoadReplay: __('Could not load the replay: '),
   loadingReplay: __('Loading replay…'),
 };
+
 class TegakiTool {
   constructor() {
     this.id = 0;
