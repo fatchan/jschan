@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
 			themes,
 			codeThemes,
 			fontList,
-			languages: i18n.getLocales(),			
+			languages: i18n.getLocales(),
 		});
 
 };
