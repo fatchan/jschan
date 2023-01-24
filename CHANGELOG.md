@@ -1,3 +1,22 @@
+### 1.0.0
+Version 1.0.0 is here. jschan is mature enough and there's no need to go to version 0.999, but this does not mean it is perfect or complete!
+I want to keep improving jschan and there are plenty of features and internal improvements planned for versions 2, 3, and beyond.
+Thank you so much to all the jschan site admins, users & contributors for your help along the way. Your contributions have been invaluable to making this software great.
+Special shoutout to l29utp0 & loynet (ptchan.org), Homicide (94chan.org) and some_random_guy (trashchan.xyz).
+
+-Tom
+
+Now, back to the program. Here are the changes for 1.0.0, with one especially notable feature:
+  - Multiple language support. jschan now supports language packs. There is a global and board-level language setting which completely translates the interface to another language. No javascript required.
+    - An effort has been made to translate everything, but given there is almost 4 years of code, some things may have slipped through the cracks. If something isn't translated, please report it on gitgud.
+	- 1.0.0 includes two language packs: English and Portugese. Contributions for new language packs or improvements to existing ones are very welcome!
+	- Huge credit to the ptchan.org admins for providing the Portugese translation.
+  - Improve the css and markup to only show the appropriate wording e.g "tap" or "click" in tooltips depending if you are on mobile/desktop.
+  - Notify the user when making a playlist from a thread if there were no files, rather than just silently logging.
+  - Improve the installation process to fix a potential issue with the database connection settings.
+  - Customflags will now show correctly when editing a post on a board with custom flags enabled.
+  - More minor bugfixes to permissions pages displays.
+
 ### 0.11.2
   - Convert the assets page form handling to the newer checkSchema code.
   - Don't show the "Edit" option in the post dropdowns for public pages.
