@@ -2,14 +2,14 @@ extends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Edit Account
+	title #{__('Edit Account')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('accounts', true)
 	hr(size=1)
-	h4.mv-5 Edit account permissions for "#{accountUsername}"
+	h4.mv-5 Edit account permissions for: "#{accountUsername}"
 	- const jsonPermissions = accountPermissions.toJSON();
 	.form-wrapper.flexleft
 		form(action=`/forms/global/editaccount` method='POST')
@@ -17,15 +17,15 @@ block content
 			input(type='hidden' name='username' value=accountUsername)
 			include ../includes/globalpermissionsform.pug
 			hr(size=1)
-			h4.mv-5 Or, apply a role:
+			h4.mv-5 #{__('Or, apply a role')}:
 			.row
 				.label Role
 				select(name='template')
-					option(disabled selected) None
-					//-limiting which ones atm
-					option(value=roles.ANON.base64) Regular User
-					option(value=roles.BOARD_STAFF.base64) Global Board Staff
-					option(value=roles.BOARD_OWNER.base64) Global Board Owner
-					option(value=roles.GLOBAL_STAFF.base64) Global Staff
-					option(value=roles.ADMIN.base64) Admin
-			input(type='submit', value='Apply')
+					option(disabled selected) #{__('None')}
+					//- limiting which ones atm
+					option(value=roles.ANON.base64) #{__('Regular User')}
+					option(value=roles.BOARD_STAFF.base64) #{__('Global Board Staff')}
+					option(value=roles.BOARD_OWNER.base64) #{__('Global Board Owner')}
+					option(value=roles.GLOBAL_STAFF.base64) #{__('Global Staff')}
+					option(value=roles.ADMIN.base64) #{__('Admin')}
+			input(type='submit', value=__('Apply'))
