@@ -9,7 +9,7 @@ block content
 	br
 	+globalmanagenav('news', true)
 	hr(size=1)
-	h4.no-m-p Edit newspost:
+	h4.no-m-p #{__('Edit Newspost')}:
 	include ../includes/stickynav.pug
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/global/editnews' method='POST')

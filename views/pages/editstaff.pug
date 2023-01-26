@@ -3,10 +3,10 @@ include ../mixins/boardheader.pug
 include ../mixins/managenav.pug
 
 block head
-	title /#{board._id}/ - Edit Staff Permissions
+	title /#{board._id}/ - #{__('Edit Staff Permissions')}
 
 block content
-	+boardheader('Edit Staff Permissions')
+	+boardheader(__('Edit Staff Permissions'))
 	br
 	+managenav('staff', true)
 	hr(size=1)
@@ -14,7 +14,7 @@ block content
 		|
 		if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
 			|  
-			a(href=`/globalmanage/editaccount/${staffUsername}.html`) [Edit Account Permissions]
+			a(href=`/globalmanage/editaccount/${staffUsername}.html`) [__('Edit Account Permissions')]
 	- const jsonPermissions = staffPermissions.toJSON();
 	.form-wrapper.flexleft
 		form(action=`/forms/board/${board._id}/editstaff` method='POST')
