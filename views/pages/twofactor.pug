@@ -1,26 +1,26 @@
 extends ../layout.pug
 
 block head
-	title Setup 2FA
+	title #{__('Two Factor Authentication Setup')}
 
 block content
 	.board-header
-		h1.board-title Two Factor Authentication Setup
+		h1.board-title #{__('Two Factor Authentication Setup')}
 	.form-wrapper.flex-center.mv-10
 		form.form-post.nogrow(action=`/forms/twofactor` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
 			
-			h4.mv-5 Scan the QR Code in an authenticator app, and submit the code:
+			h4.mv-5 #{__('Scan the QR Code in an authenticator app, and submit the code')}:
 			.row
 				span.code.hljs.twofactor.noselect #{qrCodeText}
 			.row
-				h4.no-m-p No camera? Use this secret in your authenticator app instead:
+				h4.no-m-p #{__('No camera? Use this secret in your authenticator app instead')}:
 			.row
 				span.code #{secretBase32}
 			.row
-				h4.mv-5.ban Enabling 2FA will invalidate all your existing sessions and you will have to login again.
+				h4.mv-5.ban #{__('Enabling 2FA will invalidate all your existing sessions and you will have to login again.')}
 			.row
-				.label 2FA Code
-				input(type='number' name='twofactor' placeholder='6 digits')
+				.label #{__('2FA Code')}
+				input(type='number' name='twofactor' placeholder=__('6 digits'))
 			.row
-				input(type='submit', value='Submit')
+				input(type='submit', value=__('Submit'))

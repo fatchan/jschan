@@ -69,6 +69,7 @@
 		"other": "%s years from now"
 	},
 	"2FA Code": "2FA Code",
+	"6 digits": "6 digits",
 	"a-zA-Z0-9-_ only": "a-zA-Z0-9-_ only",
 	"Account": "Account",
 	"Accounts": "Accounts",
@@ -185,6 +186,7 @@
 	"Edit Role \"Regular User\"": "Edit Role \"Regular User\"",
 	"Edit Role \"Root\"": "Edit Role \"Root\"",
 	"Email": "Email",
+	"Enabling 2FA will invalidate all your existing sessions and you will have to login again.": "Enabling 2FA will invalidate all your existing sessions and you will have to login again.",
 	"Eraser": "Eraser",
 	"Europe": "Tor Exit Node",
 	"Existing Password": "Existing Password",
@@ -285,6 +287,7 @@
 	"No active layer.": "No active layer.",
 	"No appeal submitted": "No appeal submitted",
 	"No bans.": "No bans.",
+	"No camera? Use this secret in your authenticator app instead": "No camera? Use this secret in your authenticator app instead",
 	"No Filters": "No Filters",
 	"No posts.": "No posts.",
 	"No results.": "No results.",
@@ -357,6 +360,7 @@
 	"rules": "rules",
 	"Save": "Save",
 	"Save As": "Save As",
+	"Scan the QR Code in an authenticator app, and submit the code": "Scan the QR Code in an authenticator app, and submit the code",
 	"Search": "Search",
 	"Seen?": "Visto?",
 	"Select/Drop/Paste files": {
@@ -364,6 +368,7 @@
 		"other": "Select/Drop/Paste files"
 	},
 	"Settings": "Settings",
+	"Setup 2FA": "Setup 2FA",
 	"Setup 2FA (TOTP)": "Setup 2FA (TOTP)",
 	"SFW": "SFW",
 	"Show": "Show",
@@ -401,6 +406,7 @@
 	"Tone": "Tone",
 	"Tor Hidden Service": "Tor Hidden Service",
 	"total": "total",
+	"Two Factor Authentication Setup": "Two Factor Authentication Setup",
 	"Type": "Type",
 	"Unban": "Unban",
 	"Undo": "Undo",
