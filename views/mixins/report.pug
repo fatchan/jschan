@@ -7,4 +7,4 @@ mixin report(r, manage=false)
 		|  
 		- const reportDate = new Date(r.date);
 		time.reltime(datetime=reportDate.toISOString()) #{reportDate.toLocaleString(undefined, { hourCycle:'h23' })}
-		|  | Reason: #{r.reason}
+		|  | #{__('Reason')}: #{r.reason}

@@ -21,6 +21,7 @@ const { createHash, randomBytes } = require('crypto')
 	, audioThumbnail = require(__dirname+'/../../lib/file/audio/audiothumbnail.js')
 	, ffprobe = require(__dirname+'/../../lib/file/ffprobe.js')
 	, formatSize = require(__dirname+'/../../lib/converter/formatsize.js')
+	, { getCountryName } = require(__dirname+'/../../lib/misc/countries.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
 	, fixGifs = require(__dirname+'/../../lib/file/image/fixgifs.js')
 	, timeUtils = require(__dirname+'/../../lib/converter/timeutils.js')
@@ -65,7 +66,7 @@ module.exports = async (req, res) => {
 		await deleteTempFiles(req).catch(console.error);
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': 'Forbidden',
-			'message': `Your country "${res.locals.country.name}" is not allowed to post on this board`,
+			'message': `Your country "${getCountryName(res.locals.country.code, res.locals.locale)}" is not allowed to post on this board`,
 			'redirect': redirect
 		});
 	}
@@ -372,7 +373,10 @@ module.exports = async (req, res) => {
 	}
 	let country = null;
 	if (geoFlags === true) {
-		country = res.locals.country;
+		country = {
+			code: res.locals.country.code,
+			name: getCountryName(res.locals.country.code, res.locals.locale),
+		};
 	}
 	if (customFlags === true) {
 		if (req.body.customflag && res.locals.board.flags[req.body.customflag] != null) {

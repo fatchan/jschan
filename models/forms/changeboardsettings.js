@@ -10,10 +10,9 @@ const { Boards, Posts } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
-	, { countryCodes } = require(__dirname+'/../../lib/misc/countries.js')
+	, { countryCodesSet } = require(__dirname+'/../../lib/misc/countries.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../lib/input/setting.js')
 	, { compareSettings } = require(__dirname+'/../../lib/input/settingsdiff.js')
-	, validCountryCodes = new Set(countryCodes)
 	, settingChangeEntries = Object.entries({
 		'userPostDelete': ['board', 'catalog', 'threads'],
 		'userPostSpoiler': ['board', 'catalog', 'threads'],
@@ -52,8 +51,8 @@ module.exports = async (req, res) => {
 
 	if (req.body.countries) {
 		req.body.countries = [...new Set(req.body.countries)] //prevents submitting multiple of same code, not like it matters, but meh
-			.filter(code => validCountryCodes.has(code))
-			.slice(0,countryCodes.length);
+			.filter(code => countryCodesSet.has(code))
+			.slice(0, countryCodesSet.size);
 	}
 
 	const newSettings = {

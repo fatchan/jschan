@@ -2,7 +2,7 @@
 
 const { themes, codeThemes } = require(__dirname+'/../../../lib/misc/themes.js')
 	, i18n = require(__dirname+'/../../../lib/locale/locale.js')
-	, { countryNamesMap, countryCodes } = require(__dirname+'/../../../lib/misc/countries.js');
+	, { getCountryNames, countryCodes } = require(__dirname+'/../../../lib/misc/countries.js');
 
 module.exports = async (req, res) => {
 
@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
 		.render('managesettings', {
 			csrf: req.csrfToken(),
 			permissions: res.locals.permissions,
-			countryNamesMap,
+			countryNamesMap: getCountryNames(res.locals.locale, { select: 'official' }),
 			countryCodes,
 			themes,
 			codeThemes,

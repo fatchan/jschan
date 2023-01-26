@@ -21,7 +21,7 @@ mixin catalogtile(post, index, overboard=false)
 		.post-info
 			if overboard
 				div
-					| Thread from 
+					| #{__('Thread from')} 
 					a.no-decoration.post-subject(href=`/${post.board}/`) /#{post.board}/
 			else
 				input.left.post-check(type='checkbox', name='checkedposts' value=post.postId)
