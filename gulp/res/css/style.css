@@ -144,9 +144,10 @@ pre {
 .twofactor { /* importants to try and prevent themes overriding */
 	background: white!important;
 	color: black!important;
-	line-height: 1.2em!important;
+	line-height: 1.15em!important;
 	font-family: monospace!important;
 	margin: 10px auto!important;
+	letter-spacing: -0.2px!important;
 }
 .edit {
 	background: transparent!important;
