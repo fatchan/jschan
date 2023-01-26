@@ -98,7 +98,7 @@
 		"one": "Add Banner (Max %s)",
 		"other": "Add Banners (Max %s)"
 	},
-	"Add Boards": "Add Boards",
+	"Add Boards": "Adicionar Tábuas",
 	"Add Flag (Max %s)": {
 		"one": "Add Flag (Max %s)",
 		"other": "Add Flags (Max %s)"
@@ -165,7 +165,7 @@
 	"Close": "Fechar",
 	"Code Block": "Code Block",
 	"Color": "Cor",
-	"comma separated": "comma separated",
+	"comma separated": "separado por vírgula",
 	"Confirm New Password": "Confirm New Password",
 	"Could not load the image.": "Não foi possível carregar a imagem.",
 	"Could not load the replay: ": "Não foi possível carregar a repetição: ",
@@ -178,7 +178,7 @@
 	"Custom": "Custom",
 	"Custom Pages": "Páginas",
 	"Customisation": "Customisation",
-	"Customise": "Customise",
+	"Customise": "Personalizar",
 	"Cyclic": "Cyclic",
 	"Delete": "Apagar",
 	"Delete Files": "Apagar Ficheiros",
@@ -274,7 +274,7 @@
 	"I'm sure": "Tenho a certeza",
 	"ID": "ID",
 	"if enabled": "opcional, se ativo",
-	"Include Default Boards": "Include Default Boards",
+	"Include Default Boards": "Incluir tábuas default",
 	"Index": "Index",
 	"Inline Monospace": "Inline Monospace",
 	"Internal server error": "Erro interno do servidor",
@@ -390,7 +390,7 @@
 	"Register": "Registar",
 	"Register an account": "Registar conta",
 	"Regular User": "Regular User",
-	"Remove Boards": "Remove Boards",
+	"Remove Boards": "Remover Tábuas",
 	"Replayable?": "Replay?",
 	"Replies": {
 		"one": "Reposta",
