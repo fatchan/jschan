@@ -3,27 +3,27 @@ include ../mixins/newspost.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title News
+	title #{__('News')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('news')
 	hr(size=1)
-	h4.no-m-p Add News:
+	h4.no-m-p #{__('Add News')}:
 	.form-wrapper.flexleft
 		form.form-post(action=`/forms/global/addnews`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
-				.label Title
+				.label #{__('Title')}
 				input(type='text' name='title' required)
 			.row
-				.label Message
-				textarea(name='message' rows='10' placeholder='Supports post styling' required)
-			input(type='submit', value='Submit')
+				.label #{__('Message')}
+				textarea(name='message' rows='10' placeholder=__('Supports post styling') required)
+			input(type='submit', value=__('Submit'))
 	if news.length > 0
 		hr(size=1)
-		h4.no-m-p Manage News:
+		h4.no-m-p #{__('Manage News')}:
 		.form-wrapper.flexleft
 			form.form-post(action=`/forms/global/deletenews`, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
@@ -31,4 +31,4 @@ block content
 					+newspost(post, true)
 				if news.length === 1
 					.anchor
-				input(type='submit', value='Delete')
+				input(type='submit', value=__('Delete'))

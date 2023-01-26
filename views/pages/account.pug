@@ -5,7 +5,7 @@ block head
 
 block content
 	.board-header
-		h1.board-title #{__('Welcome')}, #{user.username}
+		h1.board-title #{__(`Welcome %s`, user.username)}
 	br
 	hr(size=1)
 	h4.no-m-p #{__('General')}:

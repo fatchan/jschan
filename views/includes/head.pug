@@ -33,7 +33,7 @@ if isBoard && board.settings.customCss
 include ../../gulp/res/icons/html_code.html
 
 //- language pack
-- const languageScript = isBoard ? board.settings.language : language;
+- const languageScript = isBoard ? board.settings.language : globalLanguage;
 script(src=`/js/lang/${languageScript}.js?v=${commit}`)
 
 //- main script

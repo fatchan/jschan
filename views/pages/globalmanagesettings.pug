@@ -2,10 +2,10 @@ extends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Settings
+	title #{__('Settings')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('settings')
 	hr(size=1)
@@ -14,13 +14,13 @@ block content
 		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
-				.label Board URI
+				.label #{__('Board URI')}
 				input(type='text' name='uri' required)
 			.row
-				.label I'm sure
+				.label #{__("I'm sure")}
 				label.postform-style.ph-5
 					input(type='checkbox', name='confirm', value='true' required)
-			input(type='submit', value='Submit')
+			input(type='submit', value=__('Submit'))
 	hr(size=1)
 	h4.no-m-p Settings:
 	.form-wrapper.flexleft

@@ -1,4 +1,4 @@
-/* globals isRecent isGlobalRecent isThread post extraLocals isModView io setLocalStorage */
+/* globals __ isRecent isGlobalRecent isThread post extraLocals isModView io setLocalStorage */
 let liveEnabled = localStorage.getItem('live') == 'true';
 let scrollEnabled = localStorage.getItem('scroll') == 'true';
 let socket;
@@ -159,7 +159,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 	jsonPath = jsonParts.join('/');
 	const fetchNewPosts = async () => {
 		console.log('fetching posts from api');
-		updateLive('Fetching posts...', 'yellow');
+		updateLive(__('Fetching posts...'), 'yellow');
 		let json;
 		let newPosts = [];
 		try {
@@ -178,7 +178,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 				}
 			}
 		}
-		updateLive('Updated', 'green');
+		updateLive(__('Updated'), 'green');
 		return newPosts.length;
 	};
 
@@ -225,7 +225,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 				const pingStart = Date.now();
 				socket.volatile.emit('ping', () => {
 					const latency = Date.now() - pingStart;
-					updateLive(`Connected for live posts (${latency}ms)`, '#0de600');
+					updateLive(__('Connected for live posts (%sms)', latency), '#0de600');
 				});
 			};
 			const fallbackToPolling = () => {
@@ -249,36 +249,36 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 			socket.on('message', (message) => {
 				console.log(message, room);
 				if (message === 'joined') {
-					updateLive('Connected for live posts', '#0de600');
+					updateLive(__('Connected for live posts'), '#0de600');
 					socketPing();
 				}
 			});
 			socket.on('reconnect_attempt', () => {
-				updateLive('Attempting to reconnect...', 'yellow');
+				updateLive(__('Attempting to reconnect...'), 'yellow');
 			});
 			socket.on('disconnect', () => {
 				console.log('lost connection to room');
-				updateLive('Disconnected', 'red');
+				updateLive(__('Disconnected'), 'red');
 			});
 			socket.on('reconnect', () => {
 				console.log('reconnected to room');
 				fetchNewPosts();
 			});
 			socket.on('error', (e) => {
-				updateLive('Socket error', 'orange');
+				updateLive(__('Socket error'), 'orange');
 				console.error(e);
 			});
 			socket.on('connect_error', (e) => {
-				updateLive('Error connecting', 'orange');
+				updateLive(__('Error connecting'), 'orange');
 				console.error(e);
 				fallbackToPolling();
 			});
 			socket.on('reconnect_error', (e) => {
-				updateLive('Error reconnecting', 'orange');
+				updateLive(__('Error reconnecting'), 'orange');
 				console.error(e);
 			});
 			socket.on('reconnect_failed', (e) => {
-				updateLive('Failed reconnecting', 'orange');
+				updateLive(__('Failed reconnecting'), 'orange');
 				console.error(e);
 				fallbackToPolling();
 			});
@@ -298,7 +298,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		if (socket && supportsWebSockets) {
 			socket.disconnect();
 		}
-		updateLive('Live posts off', 'darkgray');
+		updateLive(__('Live posts off'), 'darkgray');
 	};
 
 	const liveSetting = document.getElementById('live-setting');

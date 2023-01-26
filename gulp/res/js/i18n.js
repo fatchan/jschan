@@ -7,11 +7,12 @@ const pluralMap = {
 };
 
 //simple translation
-const __ = (key) => {
-	return LANG[key] || key;
+const __ = (key, replacement=null) => {
+	const translation = LANG[key] || key;
+	return replacement !== null ? translation.replace('%s', replacement) : translation;
 };
 
-//plurals+replace %s with count
+//pluralisation
 const __n = (key, count) => {
 	const pluralKey = pluralMap[count] || 'other';
 	const translationObj = LANG[key];
