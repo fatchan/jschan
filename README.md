@@ -9,6 +9,7 @@ API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/)
 Join the IRC: [open in client](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc.fatpeople.lol/#general)
 
 ## Features
+- [x] Multiple language support (currently English & Portuguese)
 - [x] User created boards ala [infinity](https://github.com/ctrlcctrlv/infinity)
 - [x] Multiple files per post
 - [x] Antispam/Anti-flood & DNSBL
