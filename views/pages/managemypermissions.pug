@@ -4,17 +4,17 @@ include ../mixins/boardheader.pug
 include ../mixins/mypermissions.pug
 
 block head
-	title /#{board._id}/ - My Permissions
+	title /#{board._id}/ - #{__('My Permissions')}
 
 block content
-	+boardheader('My Permissions')
+	+boardheader(__('My Permissions'))
 	br
 	+managenav('staff')
 	hr(size=1)
-	h4.mv-5 Board-specific permissions
+	h4.mv-5 #{__('Board-specific permissions')}
 		|
 		if permissions.get(Permissions.MANAGE_BOARD_STAFF) && user.staffBoards.includes(board._id)
 			|  
-			a(href=`/${board._id}/manage/editstaff/${user.username}.html`) [Edit]
+			a(href=`/${board._id}/manage/editstaff/${user.username}.html`) [#{__('Edit')}]
 	- const jsonPermissions = permissions.toJSON();
 	+mypermissions(jsonPermissions, true)

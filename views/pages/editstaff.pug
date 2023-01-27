@@ -10,11 +10,11 @@ block content
 	br
 	+managenav('staff', true)
 	hr(size=1)
-	h4.mv-5 Edit board permissions for "#{staffUsername}"
+	h4.mv-5 #{__('Edit board permissions for "%s"', staffUsername)}
 		|
 		if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
 			|  
-			a(href=`/globalmanage/editaccount/${staffUsername}.html`) [__('Edit Account Permissions')]
+			a(href=`/globalmanage/editaccount/${staffUsername}.html`) [#{__('Edit Account Permissions')}]
 	- const jsonPermissions = staffPermissions.toJSON();
 	.form-wrapper.flexleft
 		form(action=`/forms/board/${board._id}/editstaff` method='POST')

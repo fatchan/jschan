@@ -4,10 +4,10 @@ include ../mixins/boardheader.pug
 include ../mixins/fileform.pug
 
 block head
-	title /#{board._id}/ - Assets
+	title /#{board._id}/ - #{__('Assets')}
 
 block content
-	+boardheader('Assets')
+	+boardheader(__('Assets'))
 	br
 	+managenav('assets')
 	hr(size=1)
@@ -15,16 +15,16 @@ block content
 		`/forms/board/${board._id}/addbanners`, `/forms/board/${board._id}/deletebanners`,
 		'checkedbanners', board.banners, board.banners, `/banner/${board._id}`,
 		'asset-banner', false, false,
-		'Images randomly chosen and displayed at the top of most pages on the board')
+		__('Images randomly chosen and displayed at the top of most pages on the board'))
 	hr(size=1)
 	+fileform('flag', globalLimits.flagFiles.max, globalLimits.flagFiles.total,
 		`/forms/board/${board._id}/addflags`, `/forms/board/${board._id}/deleteflags`,
 		'checkedflags', Object.values(board.flags), Object.keys(board.flags),
 		`/flag/${board._id}`, 'asset-flag', true, false,
-		'Flags that can be applied to posts if custom flags are enabled in board settings')
+		__('Flags that can be applied to posts if custom flags are enabled in board settings'))
 	hr(size=1)
 	+fileform('asset', globalLimits.assetFiles.max, globalLimits.assetFiles.total,
 		`/forms/board/${board._id}/addassets`, `/forms/board/${board._id}/deleteassets`,
 		'checkedassets', board.assets, board.assets,
 		`/asset/${board._id}`, 'asset-generic', false, true,
-		'Arbitrary assets that can be used for other purposes e.g. custom CSS')
+		__('Arbitrary assets that can be used for other purposes e.g. custom CSS'))
