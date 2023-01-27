@@ -271,7 +271,7 @@
 	"Filter Tripcode": "Filtrar Tripcode",
 	"Finish": "Terminar",
 	"Flag": {
-		"one": "Flag",
+		"one": "Especial",
 		"other": "Flags"
 	},
 	"Flags that can be applied to posts if custom flags are enabled in board settings": "O especial pode ser mostrado na publicação se custom flags estiver ativado nas opções da tábua",
