@@ -30,7 +30,7 @@ mixin ban(ban, banpage)
 					each p in ban.posts
 						+post(p, false, false, false, true)
 			else
-				#{__('Posts not shown')}
+				| #{__('Posts not shown')}
 		td
 			if ban.seen
 				| &#10003;
