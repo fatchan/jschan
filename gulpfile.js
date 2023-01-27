@@ -471,10 +471,15 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 
 		await del([ 'static/js/lang/' ]);
 		fs.mkdirSync(`${paths.scripts.dest}lang/`);
+		const feStrings = require(__dirname+'/tools/festrings.json');
 		Object.entries(i18n.getCatalog())
 			.forEach(entry => {
 				const [lang, dict] = entry;
-				const langScript = `const LANG = ${JSON.stringify(dict)};`;
+				const minimalDict = feStrings.reduce((acc, key) => {
+					acc[key] = dict[key];
+					return acc;
+				}, {});
+				const langScript = `const LANG = ${JSON.stringify(minimalDict)};`;
 				fs.writeFileSync(`${paths.scripts.dest}lang/${lang}.js`, langScript);
 			});
 
