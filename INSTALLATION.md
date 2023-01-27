@@ -27,16 +27,15 @@
 
 ```bash
 sudo apt update -y
-sudo apt install curl wget gnupg nginx ffmpeg imagemagick graphicsmagick python-certbot-nginx fonts-dejavu -y
+sudo apt install curl wget gnupg nginx ffmpeg imagemagick graphicsmagick python3-certbot-nginx fonts-dejavu -y
 ```
 
 **3. Install MongoDB**
 
 [MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian):
 ```bash
-#NOTE: this installs mongodb 4.4 for compatibility reasons only. Newer versions (6.x) are recommended)
-wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
-echo "deb http://repo.mongodb.org/apt/debian $(lsb_release -sc)/mongodb-org/4.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+echo "deb http://repo.mongodb.org/apt/debian $(lsb_release -sc)/mongodb-org/6.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
 sudo apt update -y
 sudo apt install -y mongodb-org
 sudo systemctl enable --now mongod

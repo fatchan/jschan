@@ -122,6 +122,7 @@ EOF
 	"
 	fi
 
+	if [ "$NOHTTPS" != "y" ]; then
 			HTTPS_MIDSECTION="
 	listen [::]:443 ssl ipv6only=on;
 	listen 443 ssl;
@@ -140,7 +141,8 @@ server {
 
 	server_name $CLEARNET_SERVER_NAME;
 	return 444;
-			"
+"
+	fi
 
 	#onion_location redirect header
 	ONION_LOCATION=""
@@ -236,7 +238,7 @@ echo "Writing main jschan vhost config..."
 printf "$JSCHAN_CONFIG" > /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
 sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
 
-if [ "$NOHTTPS" == "Y" ]; then
+if [ "$NOHTTPS" == "y" ]; then
 	echo "Adjusting config snippets to support NOHTTPS mode..."
 	sudo sed -i "s/Forwarded-Proto https/Forwarded-Proto http/g" /etc/nginx/snippets/jschan_clearnet_routes.conf
 fi
