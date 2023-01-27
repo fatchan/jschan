@@ -117,8 +117,8 @@
 	"Are you sure? Your work will be lost.": "Tens a certeza? O teu trabalho será perdido.",
 	"Ascending": "Ascendente",
 	"Asset": {
-		"one": "Asset %s",
-		"other": "Assets %s"
+		"one": "Asset",
+		"other": "Assets"
 	},
 	"Attempting to reconnect...": "A ligar...",
 	"Ban duration e.g. 7d": "Duração do ban e.g. 7d",
@@ -246,8 +246,8 @@
 	"Filter Tripcode": "Filtrar Tripcode",
 	"Finish": "Terminar",
 	"Flag": {
-		"one": "Flag %s",
-		"other": "Flags %s"
+		"one": "Flag",
+		"other": "Flags"
 	},
 	"Flow": "Fluidez",
 	"focus to load captcha": "Seleciona para carregar captcha",

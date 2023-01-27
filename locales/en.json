@@ -102,8 +102,8 @@
 	"Are you sure? Your work will be lost.": "Are you sure? Your work will be lost.",
 	"Ascending": "Ascending",
 	"Asset": {
-		"one": "Asset %s",
-		"other": "Assets %s"
+		"one": "Asset",
+		"other": "Assets"
 	},
 	"Attempting to reconnect...": "Attempting to reconnect...",
 	"Ban duration e.g. 7d": "Ban duration e.g. 7d",
@@ -211,8 +211,8 @@
 	"Filter Tripcode": "Filter Tripcode",
 	"Finish": "Finish",
 	"Flag": {
-		"one": "Flag %s",
-		"other": "Flags %s"
+		"one": "Flag",
+		"other": "Flags"
 	},
 	"Flow": "Flow",
 	"focus to load captcha": "focus to load captcha",
