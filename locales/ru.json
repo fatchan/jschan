@@ -1,5 +1,8 @@
 {
 	".html name": ".html name",
+	".html name must be 50 characters or less": ".html-имя должно содержать не более 50 символов",
+	".html name must be unique": ".html-имя должно быть уникальным",
+	".html name must contain a-z 0-9 _ - only": ".html-имя должно содержать только a-z 0-9 _ -",
 	"(You)": "(Вы)",
 	"(You)s": "(Вы) s",
 	"%s characters": {
@@ -104,18 +107,18 @@
 	"Active Sessions": "Активные сеансы.",
 	"Add": "Добавить",
 	"Add Asset (Max %s)": {
-		"one": "Добавить активы (макс. %с)",
-		"other": "Добавить активы (макс. %с)"
+		"one": "Добавить активы (макс. %s)",
+		"other": "Добавить активы (макс. %s)"
 	},
 	"Add Banner (Max %s)": {
-		"one": "Добавить баннер (макс. %с)",
-		"other": "Добавить баннеры (макс. %с)"
+		"one": "Добавить баннер (макс. %s)",
+		"other": "Добавить баннеры (макс. %s)"
 	},
 	"Add Boards": "Добавить доски объявлений",
 	"Add Custom Page": "Добавить пользовательскую страницу",
 	"Add Flag (Max %s)": {
-		"one": "Добавить флаг (макс. %с)",
-		"other": "Добавить флаги (макс. %с)"
+		"one": "Добавить флаг (макс. %s)",
+		"other": "Добавить флаги (макс. %s)"
 	},
 	"Add layer": "Добавить слой",
 	"Add News": "Добавить новости",
@@ -193,6 +196,7 @@
 	"Bypass the basic anti-flood spamcheck for too frequent similar posting.": "Обойти базовую проверку на спам против флуда при слишком частых похожих публикациях.",
 	"Bypasses": "Обходит",
 	"Cache": "Кэш",
+	"Can only create %s pages per board": "Может создавать только %s страниц на доску",
 	"Canvas height in pixels": "Высота холста в пикселях",
 	"Canvas width in pixels": "Ширина холста в пикселях",
 	"Captcha config error": "Ошибка конфигурации Captcha",
@@ -286,6 +290,8 @@
 	"Error reconnecting": "Ошибка повторного подключения",
 	"Europe": "Узел выхода из Tor",
 	"Events": "События",
+	"Exceeded max asset uploads in one request of %s": "Превышено максимальное количество загрузок активов за один запрос в %s",
+	"Exceeded max flag uploads in one request of %s": "Превышено максимальное количество загрузок файлов за один запрос на %s",
 	"Existing Password": "Существующий пароль",
 	"Expires": "Истекает",
 	"Expiry": "Истечение срока действия",
@@ -418,8 +424,13 @@
 	"Merge layers": "Объединить слои",
 	"Merge selected layers?": "Объединить выбранные слои?",
 	"Message": "Сообщение",
+	"Message must be %s characters or less": "Сообщение должно содержать не более символов %s",
 	"Mime type mismatch for file \"%s\"": "Несоответствие типа Mime для файла \"%s\"",
+	"Missing .html name": "Отсутствует имя .html",
 	"Missing file extensions": "Отсутствующие расширения файлов",
+	"Missing message": "Пропущенное сообщение",
+	"Missing staff username": "Отсутствующее имя пользователя сотрудника",
+	"Missing title": "Отсутствующий заголовок",
 	"Mod Catalog": "Каталог модов",
 	"Mod Index": "Индекс модов",
 	"Mod View": "Вид модов",
@@ -428,6 +439,7 @@
 	"Move": "Переместить",
 	"Move down": "Переместить вниз",
 	"Move up": "Переместить вверх",
+	"Must provide a file": "Необходимо предоставить файл",
 	"My permissions": "Мои разрешения",
 	"My Permissions": "Мои разрешения.",
 	"Name": "Имя",
@@ -601,6 +613,7 @@
 	"Thread Watcher": "Наблюдатель за нитью.",
 	"Tip": "Наконечник",
 	"Title": "Заголовок",
+	"Title must be 50 characters or less": "Заголовок должен содержать не более 50 символов",
 	"Toggle Bumplock": "Переключить блокировку",
 	"Toggle Cycle": "Переключить цикл",
 	"Toggle Lock": "Переключить блокировку.",
@@ -609,6 +622,7 @@
 	"Too many files": "Слишком много файлов",
 	"Tor Hidden Service": "Скрытая служба Tor",
 	"total": "всего",
+	"Total number of flags would exceed global limit of %s": "Общее количество флагов превысило бы глобальный предел в %s",
 	"Two Factor Authentication Setup": "Двухфакторная Настройка аутентификации",
 	"Type": "Тип",
 	"Unban": "Отменить запрет",
@@ -648,8 +662,12 @@
 	"Use strikethrough": "Использовать зачеркивание",
 	"Use titles": "Использовать заголовки",
 	"Use underline": "Использовать подчеркивание",
+	"User does not exist": "Пользователь не существует",
+	"User is already board owner": "Пользователь уже является владельцем доски",
+	"User is already staff": "Пользователь уже является сотрудником",
 	"USER WAS BANNED FOR THIS POST": "ПОЛЬЗОВАТЕЛЬ БЫЛ ЗАБАНЕН ЗА ЭТОТ ПОСТ",
 	"Username": "Имя пользователя",
+	"Username must be 50 characters or less": "Имя пользователя должно содержать не более 50 символов",
 	"Users": "Пользователи",
 	"Value": "Значение",
 	"Video/Audio volume": "Громкость видео / аудио",

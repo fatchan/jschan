@@ -13,6 +13,7 @@ const { remove, pathExists } = require('fs-extra')
 
 module.exports = async (req, res) => {
 
+	const { __, __n } = res.locals;
 	const { globalLimits, checkRealMimeTypes } = config.get;
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
@@ -27,8 +28,8 @@ module.exports = async (req, res) => {
 		})) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': res.locals.__('Bad request'),
-				'message': res.locals.__('Invalid file type for %s. Mimetype %s not allowed.', req.files.file[i].name, req.files.file[i].mimetype),
+				'title': __('Bad request'),
+				'message': __('Invalid file type for %s. Mimetype %s not allowed.', req.files.file[i].name, req.files.file[i].mimetype),
 				'redirect': redirect
 			});
 		}
@@ -38,8 +39,8 @@ module.exports = async (req, res) => {
 			if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
 				deleteTempFiles(req).catch(console.error);
 				return dynamicResponse(req, res, 400, 'message', {
-					'title': res.locals.__('Bad request'),
-					'message': res.locals.__('Mime type mismatch for file "%s"', req.files.file[i].name),
+					'title': __('Bad request'),
+					'message': __('Mime type mismatch for file "%s"', req.files.file[i].name),
 					'redirect': redirect
 				});
 			}
@@ -57,8 +58,8 @@ module.exports = async (req, res) => {
 				&& (geometry.width/geometry.height !== 3))) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': res.locals.__('Bad request'),
-				'message': res.locals.__(`Invalid file "%s". Max banner dimensions are %sx%s${globalLimits.bannerFiles.forceAspectRatio === true ? ' and must be a 3:1 aspect ratio' : '' }.`, req.files.file[i].name, globalLimits.bannerFiles.width, globalLimits.bannerFiles.height),
+				'title': __('Bad request'),
+				'message': __(`Invalid file "%s". Max banner dimensions are %sx%s${globalLimits.bannerFiles.forceAspectRatio === true ? ' and must be a 3:1 aspect ratio' : '' }.`, req.files.file[i].name, globalLimits.bannerFiles.width, globalLimits.bannerFiles.height),
 				'redirect': redirect
 			});
 		}
@@ -93,8 +94,8 @@ module.exports = async (req, res) => {
 	// no new banners
 	if (filenames.length === 0) {
 		return dynamicResponse(req, res, 400, 'message', {
-			'title': res.locals.__('Bad request'),
-			'message': res.locals.__n('Banner already exist', res.locals.numFiles),
+			'title': __('Bad request'),
+			'message': __n('Banner already exist', res.locals.numFiles),
 			'redirect': redirect
 		});
 	}
@@ -116,8 +117,8 @@ module.exports = async (req, res) => {
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': res.locals.__('Success'),
-		'message': res.locals.__n('Uploaded %s new banners.', filenames.length),
+		'title': __('Success'),
+		'message': __n('Uploaded %s new banners.', filenames.length),
 		'redirect': redirect
 	});
 
