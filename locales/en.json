@@ -1,6 +1,5 @@
 {
 	".html name": ".html name",
-	"'Malformed IP": "'Malformed IP",
 	"(You)": "(You)",
 	"(You)s": "(You)s",
 	"%s characters": {
@@ -121,6 +120,13 @@
 	"Add layer": "Add layer",
 	"Add News": "Add News",
 	"Add Staff": "Add Staff",
+	"Added %s bans": {
+		"one": "Added %s ban",
+		"other": "Added %s bans"
+	},
+	"Added custom page": "Added custom page",
+	"Added newspost": "Added newspost",
+	"Added staff": "Added staff",
 	"Admin": "Admin",
 	"Airbrush": "Airbrush",
 	"alphanumeric only": "alphanumeric only",
@@ -136,6 +142,10 @@
 	"Asset": {
 		"one": "Asset",
 		"other": "Assets"
+	},
+	"Asset already exist": {
+		"one": "Asset already exists",
+		"other": "Assets already exist"
 	},
 	"Assets": "Assets",
 	"Attempting to reconnect...": "Attempting to reconnect...",
@@ -200,6 +210,7 @@
 	"Code theme": "Code theme",
 	"Color": "Color",
 	"comma separated": "comma separated",
+	"Completed block bypass, you may go back and make your post.": "Completed block bypass, you may go back and make your post.",
 	"Confirm New Password": "Confirm New Password",
 	"Confirm Password": "Confirm Password",
 	"Connected for live posts": "Connected for live posts",
@@ -352,6 +363,9 @@
 	"Inline Monospace": "Inline Monospace",
 	"Internal server error": "Internal server error",
 	"Invalid dimensions.": "Invalid dimensions.",
+	"Invalid file \"%s\". Max banner dimensions are %sx%s and must be a 3:1 aspect ratio.": "Invalid file \"%s\". Max banner dimensions are %sx%s and must be a 3:1 aspect ratio.",
+	"Invalid file \"%s\". Max banner dimensions are %sx%s.": "Invalid file \"%s\". Max banner dimensions are %sx%s.",
+	"Invalid file type for %s. Mimetype %s not allowed.": "Invalid file type for %s. Mimetype %s not allowed.",
 	"Invalid or missing \"Referer\" header. Are you posting from the correct URL?": "Invalid or missing \"Referer\" header. Are you posting from the correct URL?",
 	"IP": "IP",
 	"IP/Hash": "IP/Hash",
@@ -386,6 +400,7 @@
 	"Loop audio/video": "Loop audio/video",
 	"Make links clickable": "Make links clickable",
 	"Malformed input": "Malformed input",
+	"Malformed IP": "'Malformed IP",
 	"Manage": "Manage",
 	"Manage Custom Pages": "Manage Custom Pages",
 	"Manage News": "Manage News",
@@ -403,6 +418,7 @@
 	"Merge layers": "Merge layers",
 	"Merge selected layers?": "Merge selected layers?",
 	"Message": "Message",
+	"Mime type mismatch for file \"%s\"": "Mime type mismatch for file \"%s\"",
 	"Missing file extensions": "Missing file extensions",
 	"Mod Catalog": "Mod Catalog",
 	"Mod Index": "Mod Index",
@@ -433,6 +449,7 @@
 	"No news.": "No news.",
 	"No Permission": "No Permission",
 	"No posts.": "No posts.",
+	"No reason specified": "No reason specified",
 	"No reports.": "No reports.",
 	"No results.": "No results.",
 	"No video/audio files in this thread.": "No video/audio files in this thread.",
@@ -604,6 +621,18 @@
 	"Update": "Update",
 	"Updated": "Updated",
 	"Upgrade Ban": "Upgrade Ban",
+	"Uploaded %s new assets.": {
+		"one": "Uploaded %s new asset.",
+		"other": "Uploaded %s new assets."
+	},
+	"Uploaded %s new banners.": {
+		"one": "Uploaded %s new banner.",
+		"other": "Uploaded %s new banners."
+	},
+	"Uploaded %s new flags.": {
+		"one": "Uploaded %s new flag.",
+		"other": "Uploaded %s new flags."
+	},
 	"URI e.g. /uri/": "URI e.g. /uri/",
 	"URI or tags": "URI or tags",
 	"Use bold": "Use bold",

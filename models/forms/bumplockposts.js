@@ -10,7 +10,7 @@ module.exports = (posts) => {
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'No thread(s) to bumplock',
+			message: 'No threads to bumplock',
 		};
 	}
 

@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
 	return dynamicResponse(req, res, 200, 'message', {
 		'minimal': req.body.minimal,
 		'title': res.locals.__('Success'),
-		'message': 'Completed block bypass, you may go back and make your post.',
+		'message': res.locals.__('Completed block bypass, you may go back and make your post.'),
 	});
 
 };

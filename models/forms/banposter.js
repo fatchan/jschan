@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
 	const { defaultBanDuration } = config.get;
 	const banDate = new Date();
 	const banExpiry = new Date(banDate.getTime() + (req.body.ban_duration || defaultBanDuration)); //uses config default if missing or malformed
-	const banReason = req.body.ban_reason || req.body.log_message || 'No reason specified';
+	const banReason = req.body.ban_reason || req.body.log_message || res.locals.__('No reason specified');
 	const allowAppeal = (req.body.no_appeal || req.body.ban_q || req.body.ban_h) ? false : true; //dont allow appeals for range bans
 
 	const bans = [];
@@ -105,7 +105,7 @@ module.exports = async (req, res) => {
 	const numBans = await Bans.insertMany(bans).then(result => result.insertedCount);
 
 	const query = {
-		message: `Added ${numBans} bans`,
+		message: res.locals.__n('Added %s bans', numBans),
 	};
 
 	if ((req.body.ban || req.body.global_ban ) && req.body.ban_reason) {

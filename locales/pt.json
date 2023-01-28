@@ -1,6 +1,5 @@
 {
 	".html name": ".html nome",
-	"'Malformed IP": "'Malformed IP",
 	"(You)": "(You)",
 	"(You)s": "(You)s",
 	"%s characters": {
@@ -121,6 +120,13 @@
 	"Add layer": "Adicionar camada",
 	"Add News": "Add News",
 	"Add Staff": "Adicionar Staff",
+	"Added %s bans": {
+		"one": "Added %s ban",
+		"other": "Added %s bans"
+	},
+	"Added custom page": "Added custom page",
+	"Added newspost": "Added newspost",
+	"Added staff": "Added staff",
 	"Admin": "Admin",
 	"Airbrush": "Aerógrafo",
 	"alphanumeric only": "Alfanumérico apenas",
@@ -136,6 +142,10 @@
 	"Asset": {
 		"one": "Asset",
 		"other": "Assets"
+	},
+	"Asset already exist": {
+		"one": "Asset already exists",
+		"other": "Assets already exist"
 	},
 	"Assets": "Assets",
 	"Attempting to reconnect...": "A ligar...",
@@ -200,6 +210,7 @@
 	"Code theme": "Tema código",
 	"Color": "Cor",
 	"comma separated": "separado por vírgula",
+	"Completed block bypass, you may go back and make your post.": "Completed block bypass, you may go back and make your post.",
 	"Confirm New Password": "Confirm New Password",
 	"Confirm Password": "Confirmar Password",
 	"Connected for live posts": "Ligado",
@@ -352,6 +363,9 @@
 	"Inline Monospace": "Inline Monospace",
 	"Internal server error": "Erro interno do servidor",
 	"Invalid dimensions.": "Dimensões invalidas.",
+	"Invalid file \"%s\". Max banner dimensions are %sx%s and must be a 3:1 aspect ratio.": "Invalid file \"%s\". Max banner dimensions are %sx%s and must be a 3:1 aspect ratio.",
+	"Invalid file \"%s\". Max banner dimensions are %sx%s.": "Invalid file \"%s\". Max banner dimensions are %sx%s.",
+	"Invalid file type for %s. Mimetype %s not allowed.": "Invalid file type for %s. Mimetype %s not allowed.",
 	"Invalid or missing \"Referer\" header. Are you posting from the correct URL?": "Invalid or missing \"Referer\" header. Are you posting from the correct URL?",
 	"IP": "IP",
 	"IP/Hash": "IP/Hash",
@@ -386,6 +400,7 @@
 	"Loop audio/video": "Loop áudio/vídeo",
 	"Make links clickable": "Make links clickable",
 	"Malformed input": "Malformed input",
+	"Malformed IP": "'Malformed IP",
 	"Manage": "Gerir",
 	"Manage Custom Pages": "Gerir Páginas",
 	"Manage News": "Manage News",
@@ -403,6 +418,7 @@
 	"Merge layers": "Fundir camadas",
 	"Merge selected layers?": "Fundir camadas selecionadas?",
 	"Message": "Mensagem",
+	"Mime type mismatch for file \"%s\"": "Mime type mismatch for file \"%s\"",
 	"Missing file extensions": "Missing file extensions",
 	"Mod Catalog": "Mod Catálogo",
 	"Mod Index": "Mod Index",
@@ -433,6 +449,7 @@
 	"No news.": "Sem notícias.",
 	"No Permission": "No Permission",
 	"No posts.": "Sem publicações.",
+	"No reason specified": "No reason specified",
 	"No reports.": "Sem denúncias.",
 	"No results.": "No results.",
 	"No video/audio files in this thread.": "No video/audio files in this thread.",
@@ -604,6 +621,18 @@
 	"Update": "Atualizar",
 	"Updated": "Atualizado",
 	"Upgrade Ban": "Alterar Range",
+	"Uploaded %s new assets.": {
+		"one": "Uploaded %s new asset.",
+		"other": "Uploaded %s new assets."
+	},
+	"Uploaded %s new banners.": {
+		"one": "Uploaded %s new banner.",
+		"other": "Uploaded %s new banners."
+	},
+	"Uploaded %s new flags.": {
+		"one": "Uploaded %s new flag.",
+		"other": "Uploaded %s new flags."
+	},
 	"URI e.g. /uri/": "URI e.g. /uri/",
 	"URI or tags": "URI or tags",
 	"Use bold": "Use bold",

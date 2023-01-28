@@ -1,6 +1,5 @@
 {
 	".html name": ".html name",
-	"'Malformed IP": "'Неправильный IP",
 	"(You)": "(Вы)",
 	"(You)s": "(Вы) s",
 	"%s characters": {
@@ -121,6 +120,13 @@
 	"Add layer": "Добавить слой",
 	"Add News": "Добавить новости",
 	"Add Staff": "Добавить персонал",
+	"Added %s bans": {
+		"one": "Добавлен %s бан",
+		"other": "Добавлено %s запретов"
+	},
+	"Added custom page": "Добавлена пользовательская страница",
+	"Added newspost": "Добавлена публикация новостей",
+	"Added staff": "Добавленный персонал",
 	"Admin": "Администратор",
 	"Airbrush": "Аэрография",
 	"alphanumeric only": "только буквенно-цифровой",
@@ -136,6 +142,10 @@
 	"Asset": {
 		"one": "Актив",
 		"other": "Активы"
+	},
+	"Asset already exist": {
+		"one": "Актив уже существует",
+		"other": "Активы уже существуют"
 	},
 	"Assets": "Активы",
 	"Attempting to reconnect...": "Попытка повторного подключения ...",
@@ -200,6 +210,7 @@
 	"Code theme": "Тема кода",
 	"Color": "Цвет",
 	"comma separated": "через запятую",
+	"Completed block bypass, you may go back and make your post.": "Завершив обход блока, вы можете вернуться и сделать свой пост.",
 	"Confirm New Password": "Подтвердить новый пароль",
 	"Confirm Password": "Подтвердить пароль",
 	"Connected for live posts": "Подключено для живые сообщения",
@@ -352,6 +363,9 @@
 	"Inline Monospace": "Встроенное моноширинное пространство",
 	"Internal server error": "Внутренняя ошибка сервера",
 	"Invalid dimensions.": "Недопустимые измерения",
+	"Invalid file \"%s\". Max banner dimensions are %sx%s and must be a 3:1 aspect ratio.": "Недопустимый файл \"%s\". Максимальные размеры баннера составляют %sx%s и должны иметь соотношение сторон 3:1.",
+	"Invalid file \"%s\". Max banner dimensions are %sx%s.": "Недопустимый файл \"%s\". Максимальные размеры баннера составляют %sx%s.",
+	"Invalid file type for %s. Mimetype %s not allowed.": "Недопустимый тип файла для %s. Mimetype %s не разрешен.",
 	"Invalid or missing \"Referer\" header. Are you posting from the correct URL?": "Недопустимый или отсутствующий заголовок \"Refererer\". Вы отправляете сообщения с правильного URL-адреса?",
 	"IP": "IP",
 	"IP/Hash": "IP / Hash",
@@ -386,6 +400,7 @@
 	"Loop audio/video": "Цикл аудио / видео",
 	"Make links clickable": "Сделать ссылки интерактивными",
 	"Malformed input": "Неправильный ввод",
+	"Malformed IP": "'Неправильный IP",
 	"Manage": "Управление",
 	"Manage Custom Pages": "Управление пользовательскими страницами",
 	"Manage News": "Управление новостями",
@@ -403,6 +418,7 @@
 	"Merge layers": "Объединить слои",
 	"Merge selected layers?": "Объединить выбранные слои?",
 	"Message": "Сообщение",
+	"Mime type mismatch for file \"%s\"": "Несоответствие типа Mime для файла \"%s\"",
 	"Missing file extensions": "Отсутствующие расширения файлов",
 	"Mod Catalog": "Каталог модов",
 	"Mod Index": "Индекс модов",
@@ -433,6 +449,7 @@
 	"No news.": "Нет новостей",
 	"No Permission": "Нет разрешения",
 	"No posts.": "Нет сообщений.",
+	"No reason specified": "Причина не указана",
 	"No reports.": "Нет отчетов.",
 	"No results.": "Нет результатов.",
 	"No video/audio files in this thread.": "Нет видео / аудио файлов в этой теме.",
@@ -604,6 +621,18 @@
 	"Update": "Обновить",
 	"Updated": "Обновлено",
 	"Upgrade Ban": "Запрет на обновление",
+	"Uploaded %s new assets.": {
+		"one": "загружен %s новый актив.",
+		"other": "загружено %s новых активов."
+	},
+	"Uploaded %s new banners.": {
+		"one": "загружен 1 новый баннер.",
+		"other": "загружено %s новых баннеров."
+	},
+	"Uploaded %s new flags.": {
+		"one": "загружен %s новый флаг.",
+		"other": "загружено %s новых флагов."
+	},
 	"URI e.g. /uri/": "URI, например / uri /",
 	"URI or tags": "URI или теги",
 	"Use bold": "Использовать жирный шрифт",

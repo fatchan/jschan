@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': res.locals.__('Success'),
-		'message': 'Added newspost',
+		'message': res.locals.__('Added newspost'),
 		'redirect': '/globalmanage/news.html'
 	});
 
