@@ -134,6 +134,7 @@
 	"Assets": "Assets",
 	"Attempting to reconnect...": "Attempting to reconnect...",
 	"Bad request": "Bad request",
+	"Ban Duration": "Ban Duration",
 	"Ban duration e.g. 7d": "Ban duration e.g. 7d",
 	"Ban Poster": "Ban Poster",
 	"Ban reason": "Ban reason",
@@ -243,6 +244,7 @@
 		"other": "Double tap to highlight (%s)"
 	},
 	"Draw": "Draw",
+	"e.g. 7d": "e.g. 7d",
 	"Edit": "Edit",
 	"Edit Account": "Edit Account",
 	"Edit account permissions for": "Edit account permissions for",
@@ -338,6 +340,7 @@
 	"Internal server error": "Internal server error",
 	"Invalid dimensions.": "Invalid dimensions.",
 	"IP": "IP",
+	"IP/Hash": "IP/Hash",
 	"IP/ID": "IP/ID",
 	"IPV4": "IPV4",
 	"IPV6": "IPV6",

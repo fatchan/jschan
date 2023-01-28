@@ -133,6 +133,7 @@
 	},
 	"Assets": "Assets",
 	"Attempting to reconnect...": "A ligar...",
+	"Ban Duration": "Duração Ban",
 	"Ban duration e.g. 7d": "Duração do ban e.g. 7d",
 	"Ban Poster": "Banir Utilizador",
 	"Ban reason": "Motivodo do Ban",
@@ -242,6 +243,7 @@
 		"other": "Carrega duas vezes para mostrar todos (%s)"
 	},
 	"Draw": "Desenhar",
+	"e.g. 7d": "e.g. 7d",
 	"Edit": "Editar",
 	"Edit Account": "Edit Account",
 	"Edit account permissions for": "Edit account permissions for",
@@ -337,6 +339,7 @@
 	"Internal server error": "Erro interno do servidor",
 	"Invalid dimensions.": "Dimensões invalidas.",
 	"IP": "IP",
+	"IP/Hash": "IP/Hash",
 	"IP/ID": "IP/ID",
 	"IPV4": "IPV4",
 	"IPV6": "IPV6",
