@@ -3,23 +3,23 @@ include ../mixins/boardheader.pug
 include ../mixins/boardnav.pug
 
 block head
-	title /#{board._id}/ - Logs
+	title /#{board._id}/ - #{__('Logs')}
 
 block content
-	+boardheader('Logs')
+	+boardheader(__('Logs'))
 	br
 	include ../includes/stickynav.pug
 	.pages
 		+boardnav('logs', true, false)
 	hr(size=1)
 	if dates.length === 0
-		p No Logs.
+		p #{__('No Logs.')}
 	else
 		.table-container.flex-center.mv-10.text-center
 			table
 				tr
-					th Date
-					th Events
+					th #{__('Date')}
+					th #{__('Events')}
 				for row in dates
 					tr
 						-

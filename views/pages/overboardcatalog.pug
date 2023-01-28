@@ -4,15 +4,15 @@ include ../mixins/overboardform.pug
 include ../mixins/announcements.pug
 
 block head
-	title Overboard Catalog
+	title #{__('Overboard Catalog')}
 
 block content
 	.board-header.mb-5
-		h1.board-title Overboard Catalog
-		h4.board-description Recently bumped threads from multiple boards
+		h1.board-title #{__('Overboard Catalog')}
+		h4.board-description #{__('Recently bumped threads from multiple boards')}
 			|  
 			| (
-			a(href=`/overboard.html?${cacheQueryString}`) Index View
+			a(href=`/overboard.html?${cacheQueryString}`) #{__('Index View')}
 			| )
 	if allowCustomOverboard === true
 		+overboardform('/catalog.html')
@@ -28,7 +28,7 @@ block content
 				option(value="replies") #{__('Reply Count')}
 	hr(size=1)
 	if threads.length === 0
-		p No posts.
+		p #{__('No posts.')}
 	else 
 		.catalog
 			for thread, i in threads

@@ -4,15 +4,15 @@ include ../mixins/overboardform.pug
 include ../mixins/announcements.pug
 
 block head
-	title Overboard Index
+	title #{__('Overboard Index')}
 
 block content
 	.board-header
-		h1.board-title Overboard Index
-		h4.board-description Recently bumped threads from multiple boards
+		h1.board-title #{__('Overboard Index')}
+		h4.board-description #{__('Recently bumped threads from multiple boards')}
 			|  
 			| (
-			a(href=`/catalog.html?${cacheQueryString}`) Catalog View
+			a(href=`/catalog.html?${cacheQueryString}`) #{__('Catalog View')}
 			| )
 	include ../includes/stickynav.pug
 	if allowCustomOverboard === true
@@ -20,7 +20,7 @@ block content
 	+announcements(true, true, false)
 	hr(size=1)
 	if threads.length === 0
-		p No posts.
+		p #{__('No posts.')}
 	for thread in threads
 		h4.no-m-p Thread from #[a(href=`/${thread.board}/index.html`) /#{thread.board}/]
 		.thread

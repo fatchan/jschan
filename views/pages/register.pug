@@ -1,25 +1,25 @@
 extends ../layout.pug
 
 block head
-	title Register
+	title #{__('Register')}
 
 block content
-	h1.board-title Register
+	h1.board-title #{__('Register')}
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/register' method='POST' data-captcha-preload='true')
 			.row
-				.label Username
-				input(type='text', name='username', maxlength='50' pattern='[a-zA-Z0-9]+' required title='alphanumeric only')
+				.label #{__('Username')}
+				input(type='text', name='username', maxlength='50' pattern='[a-zA-Z0-9]+' required title=__('alphanumeric only'))
 			.row
-				.label Password
+				.label #{__('Password')}
 				input(type='password', name='password', maxlength='100' required)
 			.row
-				.label Confirm Password
+				.label #{__('Confirm Password')}
 				input(type='password', name='passwordconfirm', maxlength='100' required)
 			if captchaOptions.type === 'text'
 				include ../includes/captchasidelabel.pug
 			else
 				include ../includes/captchafieldrow.pug
-			input(type='submit', value='Register')
-		p: a(href='/login.html') Login
-		p: a(href='/changepassword.html') Change Password
+			input(type='submit', value=__('Register'))
+		p: a(href='/login.html') #{__('Login')}
+		p: a(href='/changepassword.html') #{__('Change Password')}
