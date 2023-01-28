@@ -15,7 +15,7 @@ module.exports = {
 
 	paramConverter: paramConverter({
 		timeFields: ['ban_duration', 'delete_protection_age'],
-		trimFields: ['filters', 'moderators', 'tags', 'announcement', 'description', 'name', 'custom_css', 'language'],
+		trimFields: ['filters', 'tags', 'announcement', 'description', 'name', 'custom_css', 'language'],
 		allowedArrays: ['countries'],
 		numberFields: ['lock_reset', 'captcha_reset', 'filter_mode', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode', 'tph_trigger', 'pph_trigger', 'pph_trigger_action',
 			'tph_trigger_action', 'bump_limit', 'reply_limit', 'max_files', 'thread_limit', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length',
@@ -35,7 +35,6 @@ module.exports = {
 			{ result: lengthBody(req.body.filters, 0, 20000), expected: false, error: 'Filters length must be 20000 characters or less' },
 			{ result: lengthBody(req.body.custom_css, 0, globalLimits.customCss.max), expected: false, error: `Custom CSS must be ${globalLimits.customCss.max} characters or less` },
 			{ result: arrayInBody(globalLimits.customCss.filters, req.body.custom_css), permission: Permissions.ROOT, expected: false, error: `Custom CSS strict mode is enabled and does not allow the following: "${globalLimits.customCss.filters.join('", "')}"` },
-			{ result: lengthBody(req.body.moderators, 0, 500), expected: false, error: 'Moderators length must be 500 characters orless' },
 			{ result: lengthBody(req.body.name, 1, globalLimits.fieldLength.boardname), expected: false, error: `Board name must be 1-${globalLimits.fieldLength.boardname} characters` },
 			{ result: lengthBody(req.body.default_name, 0, 50), expected: false, error: 'Anon name must be 50 characters or less' },
 			{ result: numberBody(req.body.reply_limit, globalLimits.replyLimit.min, globalLimits.replyLimit.max), expected: true, error: `Reply Limit must be ${globalLimits.replyLimit.min}-${globalLimits.replyLimit.max}` },
