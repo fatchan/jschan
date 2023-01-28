@@ -19,8 +19,8 @@ module.exports = async (req, res, next) => {
 	const ratelimit = await Ratelimits.incrmentQuota(username, '2fa', 50);
 	if (ratelimit > 100) {
 		return dynamicResponse(req, res, 429, 'message', {
-			'title': 'Ratelimited',
-			'message': 'Please wait before generating another 2FA QR code.',
+			'title': res.locals.__('Ratelimited'),
+			'message': res.locals.__('Please wait before generating another 2FA QR code.'),
 		});
 	}
 
