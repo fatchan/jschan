@@ -50,8 +50,15 @@ todo: handle some more situations
 		messageHash = createHash('sha256').update(noQuoteMessage).digest('base64');
 	}
 	//new name, trip and cap
-	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permissions,
-		board.settings, board.owner, board.staff, res.locals.user ? res.locals.user.username : null);
+	const { name, tripcode, capcode } = await nameHandler(
+		req.body.name,
+		res.locals.permissions,
+		board.settings,
+		board.owner,
+		board.staff,
+		res.locals.user ? res.locals.user.username : null,
+		res.locals.__
+	);
 	//new message and quotes
 	const nomarkup = prepareMarkdown(req.body.message, false);
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread, res.locals.permissions);

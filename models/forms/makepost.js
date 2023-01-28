@@ -403,8 +403,15 @@ module.exports = async (req, res) => {
 	let subject = (!isStaffOrGlobal && req.body.thread && disableReplySubject) ? null : req.body.subject;
 
 	//get name, trip and cap
-	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permissions,
-		res.locals.board.settings, res.locals.board.owner, res.locals.board.staff, res.locals.user ? res.locals.user.username : null);
+	const { name, tripcode, capcode } = await nameHandler(
+		req.body.name,
+		res.locals.permissions,
+		res.locals.board.settings,
+		res.locals.board.owner,
+		res.locals.board.staff,
+		res.locals.user ? res.locals.user.username : null,
+		res.locals.__
+	);
 	//get message, quotes and crossquote array
 	const nomarkup = prepareMarkdown(req.body.message, true);
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread, res.locals.permissions);
