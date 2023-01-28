@@ -84,7 +84,7 @@ module.exports = async (req, res) => {
 	res.locals.board.assets = res.locals.board.assets.concat(filenames);
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': res.locals.__('Success'),
 		'message': `Uploaded ${filenames.length} new assets.`,
 		'redirect': redirect
 	});

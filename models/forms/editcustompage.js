@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': res.locals.__('Success'),
 		'message': 'Updated custom page',
 		'redirect': `/${req.params.board}/manage/custompages.html`,
 	});

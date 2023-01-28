@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': res.locals.__('Success'),
 		'message': `Resigned from ${ownsBoard ? 'owner' : 'staff'} position on /${req.body.board}/`,
 		'redirect': '/account.html'
 	});

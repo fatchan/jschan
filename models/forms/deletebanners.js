@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': res.locals.__('Success'),
 		'message': `Deleted ${amount} banners.`,
 		'redirect': redirect
 	});

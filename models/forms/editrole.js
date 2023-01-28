@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
 	redis.redisPublisher.publish('roles', null);
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': res.locals.__('Success'),
 		'message': 'Edited role',
 		'redirect': `/globalmanage/editrole/${req.body.roleid}.html`,
 	});

@@ -232,7 +232,7 @@ module.exports = async (req, res) => {
 	debugLogs && console.log(req.params.board, 'board settings changed');
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': res.locals.__('Success'),
 		'message': 'Updated settings.',
 		'redirect': `/${req.params.board}/manage/settings.html`
 	});

@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': res.locals.__('Success'),
 		'message': 'Edited account',
 		'redirect': `/globalmanage/editaccount/${req.body.username}.html`,
 	});

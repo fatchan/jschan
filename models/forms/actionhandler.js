@@ -630,7 +630,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': res.locals.__('Success'),
 		'messages': messages,
 		redirect,
 	});

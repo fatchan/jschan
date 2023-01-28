@@ -151,7 +151,7 @@ todo: handle some more situations
 	await buildThread(buildOptions);
 
 	dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': res.locals.__('Success'),
 		'message': 'Post edited successfully',
 		'redirect': req.body.referer,
 	});
