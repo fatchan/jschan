@@ -2,7 +2,7 @@
 select(name='countries' size='10' multiple)
 	optgroup(label=__('Currently blocked'))
 		each code in board.settings.blockedCountries
-			option(value=code selected=true) #{countryNamesMap[code]}
+			option(value=code selected=true) #{countryNamesMap[code]} (#{code})
 	optgroup(label=__('Not blocked'))
 		each code in countryCodes.filter(c => !blockedCountries.has(c))
-			option(value=code) #{countryNamesMap[code]}
+			option(value=code) #{countryNamesMap[code]} (#{code})
