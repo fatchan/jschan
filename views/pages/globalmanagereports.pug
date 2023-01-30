@@ -12,7 +12,7 @@ block content
 	form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		if reports.length === 0
 			hr(size=1)
-			p No reports.
+			p #{__('No reports.')}
 		else
 			input(type='hidden' name='_csrf' value=csrf)
 			hr(size=1)
