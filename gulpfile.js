@@ -445,9 +445,25 @@ async function custompages() {
 		.pipe(gulp.dest(paths.pug.dest));
 }
 
+async function langs() {
+	const i18n = require(__dirname+'/lib/locale/locale.js');
+	await del([ 'static/js/lang/' ]);
+	fs.mkdirSync(`${paths.scripts.dest}lang/`);
+	const feStrings = require(__dirname+'/tools/festrings.json');
+	Object.entries(i18n.getCatalog())
+		.forEach(entry => {
+			const [lang, dict] = entry;
+			const minimalDict = feStrings.reduce((acc, key) => {
+				acc[key] = dict[key];
+				return acc;
+			}, {});
+			const langScript = `const LANG = ${JSON.stringify(minimalDict)};`;
+			fs.writeFileSync(`${paths.scripts.dest}lang/${lang}.js`, langScript);
+		});
+}
+
 async function scripts() {
-	const { themes, codeThemes } = require(__dirname+'/lib/misc/themes.js')
-		, i18n = require(__dirname+'/lib/locale/locale.js');
+	const { themes, codeThemes } = require(__dirname+'/lib/misc/themes.js');
 	try {
 
 		// compile some locals/variables needed from configs in fe scripts
@@ -468,20 +484,6 @@ const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
 const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
-
-		await del([ 'static/js/lang/' ]);
-		fs.mkdirSync(`${paths.scripts.dest}lang/`);
-		const feStrings = require(__dirname+'/tools/festrings.json');
-		Object.entries(i18n.getCatalog())
-			.forEach(entry => {
-				const [lang, dict] = entry;
-				const minimalDict = feStrings.reduce((acc, key) => {
-					acc[key] = dict[key];
-					return acc;
-				}, {});
-				const langScript = `const LANG = ${JSON.stringify(minimalDict)};`;
-				fs.writeFileSync(`${paths.scripts.dest}lang/${lang}.js`, langScript);
-			});
 
 //		const pugRuntimeFuncs = pugRuntime(['classes', 'style', 'attr', 'escape']);
 //		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);
@@ -614,7 +616,7 @@ async function closeConnections() {
 	}
 }
 
-const build = gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages));
+const build = gulp.parallel(gulp.series(scripts, langs, css), images, icons, gulp.series(deletehtml, custompages));
 
 //godhelpme
 module.exports = {
@@ -629,6 +631,7 @@ module.exports = {
 	cache: gulp.series(cache, closeConnections),
 	migrate: gulp.series(init, migrate, closeConnections),
 	password: gulp.series(init, password, closeConnections),
+	langs: gulp.series(init, langs, closeConnections),
 	ips: gulp.series(init, ips, closeConnections),
 	default: gulp.series(init, build, closeConnections),
 	buildTasks: { //dont include init, etc
