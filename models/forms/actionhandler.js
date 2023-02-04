@@ -231,7 +231,7 @@ module.exports = async (req, res, next) => {
 		}
 		//lock, sticky, bumplock, cyclic
 		if (req.body.bumplock) {
-			const { message, action, query } = bumplockPosts(res.locals.posts);
+			const { message, action, query } = bumplockPosts(res.locals);
 			if (action) {
 				modlogActions.push('Bumplock');
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
@@ -239,7 +239,7 @@ module.exports = async (req, res, next) => {
 			messages.push(message);
 		}
 		if (req.body.lock) {
-			const { message, action, query } = lockPosts(res.locals.posts);
+			const { message, action, query } = lockPosts(res.locals);
 			if (action) {
 				modlogActions.push('Lock');
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
@@ -247,7 +247,7 @@ module.exports = async (req, res, next) => {
 			messages.push(message);
 		}
 		if (req.body.sticky != null) {
-			const { message, action, query } = stickyPosts(res.locals.posts, req.body.sticky);
+			const { message, action, query } = stickyPosts(res.locals, req.body.sticky);
 			if (action) {
 				modlogActions.push('Sticky');
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
@@ -255,7 +255,7 @@ module.exports = async (req, res, next) => {
 			messages.push(message);
 		}
 		if (req.body.cyclic) {
-			const { message, action, query } = cyclePosts(res.locals.posts);
+			const { message, action, query } = cyclePosts(res.locals);
 			if (action) {
 				modlogActions.push('Cycle');
 				combinedQuery[action] = { ...combinedQuery[action], ...query};

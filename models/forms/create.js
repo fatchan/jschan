@@ -11,6 +11,7 @@ const { Boards, Accounts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const { boardDefaults } = config.get;
 
 	const { name, description } = req.body
@@ -20,8 +21,8 @@ module.exports = async (req, res) => {
 
 	if (restrictedURIs.has(uri)) {
 		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad Request',
-			'message': 'That URI is not available for board creation',
+			'title': __('Bad Request'),
+			'message': __('URI "%s" is reserved', uri),
 			'redirect': '/create.html'
 		});
 	}
@@ -31,8 +32,8 @@ module.exports = async (req, res) => {
 	// if board exists reject
 	if (board != null) {
 		return dynamicResponse(req, res, 409, 'message', {
-			'title': 'Conflict',
-			'message': 'Board with this URI already exists',
+			'title': __('Conflict'),
+			'message': __('Board with this URI already exists'),
 			'redirect': '/create.html'
 		});
 	}

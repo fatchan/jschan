@@ -35,6 +35,7 @@ const { Boards, Posts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const { globalLimits } = config.get;
 
 	//oldsettings before changes
@@ -232,8 +233,8 @@ module.exports = async (req, res) => {
 	debugLogs && console.log(req.params.board, 'board settings changed');
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': res.locals.__('Success'),
-		'message': 'Updated settings.',
+		'title': __('Success'),
+		'message': __('Updated settings.'),
 		'redirect': `/${req.params.board}/manage/settings.html`
 	});
 

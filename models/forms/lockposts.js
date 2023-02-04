@@ -2,7 +2,9 @@
 
 const { NumberInt } = require(__dirname+'/../../db/db.js');
 
-module.exports = (posts) => {
+module.exports = (locals) => {
+
+	const { posts, __, __n } = locals;
 
 	const filteredposts = posts.filter(post => {
 		return !post.thread;
@@ -10,12 +12,12 @@ module.exports = (posts) => {
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'No thread(s) to lock',
+			message: __('No threads selected to Lock'),
 		};
 	}
 
 	return {
-		message: `Toggled Lock for ${filteredposts.length} thread(s)`,
+		message: __n('Toggled Lock for %s threads', filteredposts.length),
 		action: '$bit',
 		query: {
 			'locked': {

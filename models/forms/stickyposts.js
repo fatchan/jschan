@@ -2,7 +2,9 @@
 
 const { NumberInt } = require(__dirname+'/../../db/db.js');
 
-module.exports = (posts, sticky) => {
+module.exports = (locals, sticky) => {
+
+	const { posts, __, __n } = locals;
 
 	const filteredposts = posts.filter(post => {
 		return !post.thread;
@@ -10,14 +12,14 @@ module.exports = (posts, sticky) => {
 
 	if (filteredposts.length === 0) {
 		return {
-			message: 'No thread(s) to sticky',
+			message: __('No threads selected to Sticky'),
 		};
 	}
 
 	const stickyValue = NumberInt(sticky);
 
 	return {
-		message: `Set sticky for ${filteredposts.length} thread(s) to ${sticky}`,
+		message: __n('Set Sticky level for %s threads to %s', filteredposts.length, sticky),
 		action: '$set',
 		query: {
 			'sticky': stickyValue,

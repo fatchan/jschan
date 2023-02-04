@@ -40,6 +40,7 @@ const { Boards } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const promises = [];
 	const oldSettings = config.get;
 
@@ -371,8 +372,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': res.locals.__('Success'),
-		'message': 'Updated settings.',
+		'title': __('Success'),
+		'message': __('Updated settings.'),
 		'redirect': '/globalmanage/settings.html'
 	});
 
