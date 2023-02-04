@@ -155,7 +155,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 				small.cb.mt-5.ml-5.edited
 					| Last edited 
 					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(undefined, { hourCycle:'h23' })}
-					|  by #{post.edited.username}
+					|  by #{post.edited.username || __('Hidden User')}
 			if post.banmessage
 				p.ban
 					span.message USER WAS BANNED FOR THIS POST
