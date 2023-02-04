@@ -83,7 +83,7 @@ router.get('/:board/manage/custompages.html', useSession, sessionRefresh, isLogg
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, manageCustomPages);
 router.get('/:board/manage/editcustompage/:custompageid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, custompageParamConverter, editCustomPage);
-router.get('/:board/manage/staff.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/staff.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, manageStaff);
 router.get('/:board/manage/editstaff/:staffusername([a-zA-Z0-9]{1,50}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, editStaff);
@@ -113,7 +113,6 @@ router.get('/globalmanage/editaccount/:accountusername([a-zA-Z0-9]{1,50}).html',
 	hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), csrf, editAccount);
 router.get('/globalmanage/editrole/:roleid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), csrf, roleParamConverter, editRole);
-//TODO: edit post edit page form, like editnews/editaccount/editrole endpoint
 
 //captcha
 router.get('/captcha', geoIp, processIp, captcha); //get captcha image and cookie

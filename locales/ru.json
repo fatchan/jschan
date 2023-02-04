@@ -261,6 +261,7 @@
 	"Change Password": "Изменить пароль.",
 	"Clear": "Очистить",
 	"Click here if you are not redirected automatically.": "Нажмите здесь, если вы не перенаправлены автоматически.",
+	"Client aborted request": "Client aborted request",
 	"Close": "Закрыть",
 	"Code Block": "Блок кода",
 	"Code Highlight Language Detect Threshold": "Порог определения языка выделения кода",
@@ -321,6 +322,28 @@
 	"Delete Selected": "Удалить выбранные",
 	"Delete selected layers?": "Удалить выбранные слои?",
 	"Delete your account": "Удалить свою учетную запись",
+	"Deleted %s accounts": {
+		"one": "Deleted %s account",
+		"other": "Deleted %s accounts"
+	},
+	"Deleted %s assets": {
+		"one": "Deleted %s asset",
+		"other": "Deleted %s assets"
+	},
+	"Deleted %s banners": {
+		"one": "Deleted %s banner",
+		"other": "Deleted %s banners"
+	},
+	"Deleted %s custom pages": {
+		"one": "Deleted %s custom page",
+		"other": "Deleted %s custom pages"
+	},
+	"Deleted %s files from server": {
+		"one": "Deleted %s file from server",
+		"other": "Deleted %s files from server"
+	},
+	"Deleted flags": "Deleted flags",
+	"Deleted news": "Deleted news",
 	"Deny Appeal": "Отклонить апелляцию",
 	"Descending": "По убыванию",
 	"Description": "Описание",
@@ -333,6 +356,7 @@
 	"Disconnected": "Отключен",
 	"Dismiss Global Reports": "Отклонить глобальные отчеты",
 	"Dismiss Reports": "Отклонять отчеты",
+	"Dismissed reports": "Dismissed reports",
 	"Distortion Intensity": "Интенсивность искажения",
 	"DNSBL": "DNSBL",
 	"DNSBL Addresses": "Адреса DNSBL",
@@ -515,12 +539,14 @@
 	"Index": "Индекс",
 	"Index View": "Вид индекса",
 	"Inline Monospace": "Встроенное моноширинное пространство",
-	"Internal server error": "Внутренняя ошибка сервера",
+	"Internal Server Error": "Внутренняя ошибка сервера",
+	"Invalid CSRF token": "Invalid CSRF token",
 	"Invalid dimensions.": "Недопустимые измерения",
 	"Invalid file \"%s\". Max banner dimensions are %sx%s and must be a 3:1 aspect ratio.": "Недопустимый файл \"%s\". Максимальные размеры баннера составляют %sx%s и должны иметь соотношение сторон 3:1.",
 	"Invalid file \"%s\". Max banner dimensions are %sx%s.": "Недопустимый файл \"%s\". Максимальные размеры баннера составляют %sx%s.",
 	"Invalid file type for %s. Mimetype %s not allowed.": "Недопустимый тип файла для %s. Mimetype %s не разрешен.",
 	"Invalid or missing \"Referer\" header. Are you posting from the correct URL?": "Недопустимый или отсутствующий заголовок \"Refererer\". Вы отправляете сообщения с правильного URL-адреса?",
+	"Invalid request body": "Invalid request body",
 	"IP": "IP",
 	"IP Header": "Заголовок IP",
 	"IP/Hash": "IP / Hash",
@@ -632,12 +658,14 @@
 	"No camera? Use this secret in your authenticator app instead": "Нет камеры? Вместо этого используйте этот секрет в своем приложении-аутентификаторе ",
 	"No Captcha": "Без капчи",
 	"No change": "Ничего не делать",
+	"No files found": "No files found",
 	"No Filters": "Нет фильтров",
 	"No Logs.": "Нет журналов",
 	"No news.": "Нет новостей",
 	"No Permission": "Нет разрешения",
 	"No posts.": "Нет сообщений.",
 	"No reason specified": "Причина не указана",
+	"No reports to dismiss": "No reports to dismiss",
 	"No reports.": "Нет отчетов.",
 	"No results.": "Нет результатов.",
 	"No threads selected to Bumplock": "Нет нитей, выбранных для блокировки",
@@ -903,6 +931,10 @@
 	"Unlimit media height": "Неограниченная высота носителя",
 	"Unlimit Media Height": "Неограниченная высота носителя",
 	"Unlink Files": "Отменить привязку файлов",
+	"Unlinked %s files": {
+		"one": "Unlinked %s file",
+		"other": "Unlinked %s files"
+	},
 	"Unlist from webring": "Удалить список из webring",
 	"Unlist locally": "Отменить список локально",
 	"Unlisted From Webring": "Не внесен в список из Webring",

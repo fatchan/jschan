@@ -166,7 +166,7 @@ module.exports = async (req, res, next) => {
 		}
 
 		if (req.body.delete_file) {
-			const { message } = await deletePostsFiles(res.locals.posts, false); //delete files, not just unlink
+			const { message } = await deletePostsFiles(res.locals, false); //delete files, not just unlink
 			messages.push(message);
 		}
 		const { action, message } = await deletePosts(res.locals.posts, req.body.delete_ip_global ? null : req.params.board);
@@ -210,7 +210,7 @@ module.exports = async (req, res, next) => {
 
 		// if it was getting deleted/moved, dont do these actions
 		if (req.body.unlink_file || req.body.delete_file) {
-			const { message, action, query } = await deletePostsFiles(res.locals.posts, req.body.unlink_file);
+			const { message, action, query } = await deletePostsFiles(res.locals, req.body.unlink_file);
 			if (action) {
 				if (req.body.unlink_file) {
 					modlogActions.push('Unlink files');

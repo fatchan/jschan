@@ -9,6 +9,7 @@ const { remove } = require('fs-extra')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
 	//delete file of all selected banners
@@ -33,8 +34,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': res.locals.__('Success'),
-		'message': `Deleted ${amount} banners.`,
+		'title': __('Success'),
+		'message': __('Deleted %s banners', amount),
 		'redirect': redirect
 	});
 };

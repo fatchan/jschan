@@ -120,7 +120,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 
 	// catch any unhandled errors
 	app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-
+		const { __ } = res.locals;
 		let errStatus = 500;
 		let errMessage = 'Internal Server Error';
 		if (err.code === 'EBADCSRFTOKEN') {
@@ -144,7 +144,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 					errMessage = 'Client aborted request';
 					break;
 				case 'entity.too.large':
-					errMessage = res.locals.__('Your upload was too large');
+					errMessage = 'Your upload was too large';
 					break;
 				default:
 					break;
@@ -155,8 +155,8 @@ const config = require(__dirname+'/lib/misc/config.js')
 			console.error(err);
 		}
 		return dynamicResponse(req, res, errStatus, 'message', {
-			'title': errStatus === 500 ? 'Internal Server Error' : 'Bad Request',
-			'error': errMessage,
+			'title': __(errStatus === 500 ? 'Internal Server Error' : 'Bad Request'),
+			'error': __(errMessage),
 			'redirect': req.headers.referer || '/'
 		});
 	});

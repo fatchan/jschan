@@ -261,6 +261,7 @@
 	"Change Password": "Alterar Password",
 	"Clear": "Limpar",
 	"Click here if you are not redirected automatically.": "Se não fores redirecionado automaticamente, podes clicar aqui.",
+	"Client aborted request": "Client aborted request",
 	"Close": "Fechar",
 	"Code Block": "Bloco de Código",
 	"Code Highlight Language Detect Threshold": "Limiar Para Detetar Línguas de Código",
@@ -321,6 +322,28 @@
 	"Delete Selected": "Apagar selecionados",
 	"Delete selected layers?": "Apagar camadas selecionadas?",
 	"Delete your account": "Apagar conta",
+	"Deleted %s accounts": {
+		"one": "Deleted %s account",
+		"other": "Deleted %s accounts"
+	},
+	"Deleted %s assets": {
+		"one": "Deleted %s asset",
+		"other": "Deleted %s assets"
+	},
+	"Deleted %s banners": {
+		"one": "Deleted %s banner",
+		"other": "Deleted %s banners"
+	},
+	"Deleted %s custom pages": {
+		"one": "Deleted %s custom page",
+		"other": "Deleted %s custom pages"
+	},
+	"Deleted %s files from server": {
+		"one": "Deleted %s file from server",
+		"other": "Deleted %s files from server"
+	},
+	"Deleted flags": "Deleted flags",
+	"Deleted news": "Deleted news",
 	"Deny Appeal": "Negar Recurso",
 	"Descending": "Descendente",
 	"Description": "Descrição",
@@ -333,6 +356,7 @@
 	"Disconnected": "Desligado",
 	"Dismiss Global Reports": "Ignorar Deúncias Globais",
 	"Dismiss Reports": "Ignorar Denúncias",
+	"Dismissed reports": "Dismissed reports",
 	"Distortion Intensity": "Intensidade da Distorção",
 	"DNSBL": "DNSBL",
 	"DNSBL Addresses": "Endereços DNSBL",
@@ -515,12 +539,14 @@
 	"Index": "Index",
 	"Index View": "Index",
 	"Inline Monospace": "Linha Monoespacial",
-	"Internal server error": "Erro interno do servidor",
+	"Internal Server Error": "Erro interno do servidor",
+	"Invalid CSRF token": "Invalid CSRF token",
 	"Invalid dimensions.": "Dimensões inválidas.",
 	"Invalid file \"%s\". Max banner dimensions are %sx%s and must be a 3:1 aspect ratio.": "Ficheiro inválido \"%s\". Dimensões máximas de banner são %sx%s e têm que respeitar um rácio 3:1.",
 	"Invalid file \"%s\". Max banner dimensions are %sx%s.": "Ficheiro inválido \"%s\". Dimensões máximas de banner são %sx%s.",
 	"Invalid file type for %s. Mimetype %s not allowed.": "Tipo de ficheiro inválido para %s. Tipo %s não permitido.",
 	"Invalid or missing \"Referer\" header. Are you posting from the correct URL?": "Header \"Referer\" inválida. Estás a usar o URL correto?",
+	"Invalid request body": "Invalid request body",
 	"IP": "IP",
 	"IP Header": "IP Header",
 	"IP/Hash": "IP/Hash",
@@ -632,12 +658,14 @@
 	"No camera? Use this secret in your authenticator app instead": "Sem câmara? Usa este segredo na tua aplicação de autenticação",
 	"No Captcha": "Sem Captcha",
 	"No change": "No alteração",
+	"No files found": "No files found",
 	"No Filters": "Sem Filtros",
 	"No Logs.": "Sem Logs.",
 	"No news.": "Sem notícias.",
 	"No Permission": "Sem Permissões",
 	"No posts.": "Sem publicações.",
 	"No reason specified": "Sem motivo especificado",
+	"No reports to dismiss": "No reports to dismiss",
 	"No reports.": "Sem denúncias.",
 	"No results.": "Sem resultados.",
 	"No threads selected to Bumplock": "No threads selected to Bumplock",
@@ -903,6 +931,10 @@
 	"Unlimit media height": "Não limitar tamanho ficheiros abertos",
 	"Unlimit Media Height": "Altura Media Ilimitado",
 	"Unlink Files": "Remover Ficheiros",
+	"Unlinked %s files": {
+		"one": "Unlinked %s file",
+		"other": "Unlinked %s files"
+	},
 	"Unlist from webring": "Remover do webring",
 	"Unlist locally": "Remover localmente",
 	"Unlisted From Webring": "Remover do Webring",

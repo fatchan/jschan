@@ -261,6 +261,7 @@
 	"Change Password": "Change Password",
 	"Clear": "Clear",
 	"Click here if you are not redirected automatically.": "Click here if you are not redirected automatically.",
+	"Client aborted request": "Client aborted request",
 	"Close": "Close",
 	"Code Block": "Code Block",
 	"Code Highlight Language Detect Threshold": "Code Highlight Language Detect Threshold",
@@ -321,6 +322,28 @@
 	"Delete Selected": "Delete Selected",
 	"Delete selected layers?": "Delete selected layers?",
 	"Delete your account": "Delete your account",
+	"Deleted %s accounts": {
+		"one": "Deleted %s account",
+		"other": "Deleted %s accounts"
+	},
+	"Deleted %s assets": {
+		"one": "Deleted %s asset",
+		"other": "Deleted %s assets"
+	},
+	"Deleted %s banners": {
+		"one": "Deleted %s banner",
+		"other": "Deleted %s banners"
+	},
+	"Deleted %s custom pages": {
+		"one": "Deleted %s custom page",
+		"other": "Deleted %s custom pages"
+	},
+	"Deleted %s files from server": {
+		"one": "Deleted %s file from server",
+		"other": "Deleted %s files from server"
+	},
+	"Deleted flags": "Deleted flags",
+	"Deleted news": "Deleted news",
 	"Deny Appeal": "Deny Appeal",
 	"Descending": "Descending",
 	"Description": "Description",
@@ -333,6 +356,7 @@
 	"Disconnected": "Disconnected",
 	"Dismiss Global Reports": "Dismiss Global Reports",
 	"Dismiss Reports": "Dismiss Reports",
+	"Dismissed reports": "Dismissed reports",
 	"Distortion Intensity": "Distortion Intensity",
 	"DNSBL": "DNSBL",
 	"DNSBL Addresses": "DNSBL Addresses",
@@ -515,12 +539,14 @@
 	"Index": "Index",
 	"Index View": "Index View",
 	"Inline Monospace": "Inline Monospace",
-	"Internal server error": "Internal server error",
+	"Internal Server Error": "Internal Server Error",
+	"Invalid CSRF token": "Invalid CSRF token",
 	"Invalid dimensions.": "Invalid dimensions.",
 	"Invalid file \"%s\". Max banner dimensions are %sx%s and must be a 3:1 aspect ratio.": "Invalid file \"%s\". Max banner dimensions are %sx%s and must be a 3:1 aspect ratio.",
 	"Invalid file \"%s\". Max banner dimensions are %sx%s.": "Invalid file \"%s\". Max banner dimensions are %sx%s.",
 	"Invalid file type for %s. Mimetype %s not allowed.": "Invalid file type for %s. Mimetype %s not allowed.",
 	"Invalid or missing \"Referer\" header. Are you posting from the correct URL?": "Invalid or missing \"Referer\" header. Are you posting from the correct URL?",
+	"Invalid request body": "Invalid request body",
 	"IP": "IP",
 	"IP Header": "IP Header",
 	"IP/Hash": "IP/Hash",
@@ -632,12 +658,14 @@
 	"No camera? Use this secret in your authenticator app instead": "No camera? Use this secret in your authenticator app instead",
 	"No Captcha": "No Captcha",
 	"No change": "No change",
+	"No files found": "No files found",
 	"No Filters": "No Filters",
 	"No Logs.": "No Logs.",
 	"No news.": "No news.",
 	"No Permission": "No Permission",
 	"No posts.": "No posts.",
 	"No reason specified": "No reason specified",
+	"No reports to dismiss": "No reports to dismiss",
 	"No reports.": "No reports.",
 	"No results.": "No results.",
 	"No threads selected to Bumplock": "No threads selected to Bumplock",
@@ -903,6 +931,10 @@
 	"Unlimit media height": "Unlimit media height",
 	"Unlimit Media Height": "Unlimit Media Height",
 	"Unlink Files": "Unlink Files",
+	"Unlinked %s files": {
+		"one": "Unlinked %s file",
+		"other": "Unlinked %s files"
+	},
 	"Unlist from webring": "Unlist from webring",
 	"Unlist locally": "Unlist locally",
 	"Unlisted From Webring": "Unlisted From Webring",
