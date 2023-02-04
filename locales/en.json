@@ -644,7 +644,6 @@
 	"No threads selected to Lock": "No threads selected to Lock",
 	"No threads selected to make Cyclical": "No threads selected to make Cyclical",
 	"No threads selected to Sticky": "No threads selected to Sticky",
-	"No threads to bumplock": "No threads to bumplock",
 	"No video/audio files in this thread.": "No video/audio files in this thread.",
 	"No.": "No.",
 	"Noise Effect Strength": "Noise Effect Strength",
@@ -864,10 +863,6 @@
 	"Toggle Cycle": "Toggle Cycle",
 	"Toggle Lock": "Toggle Lock",
 	"Toggle visibility": "Toggle visibility",
-	"Toggled bumplock for %s threads": {
-		"one": "Toggled bumplock for %s thread",
-		"other": "Toggled bumplock for %s threads"
-	},
 	"Toggled Bumplock for %s threads": {
 		"one": "Toggled Bumplock for %s thread",
 		"other": "Toggled Bumplock for %s threads"

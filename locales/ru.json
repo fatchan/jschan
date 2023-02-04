@@ -189,7 +189,7 @@
 	"Banner File Size Max": "Максимальный размер файла баннера",
 	"Banner Height Max": "Максимальная высота баннера",
 	"Banner Width Max": "Максимальная ширина баннера",
-	"Banners": "Banners",
+	"Banners": "Баннеры",
 	"Banners Per Upload Max": "Максимальная загрузка баннеров",
 	"Bans": "Запреты",
 	"Bans & Appeals": "Запреты и апелляции",
@@ -204,7 +204,7 @@
 	"Board Custom CSS": "Board Custom CSS",
 	"Board Defaults": "Board Defaults",
 	"Board Description": "Описание платы",
-	"Board has no custom banners.": "Board has no custom banners.",
+	"Board has no custom banners.": "На доске нет пользовательских баннеров.",
 	"Board List": "Список досок",
 	"Board Locked": "Board Locked",
 	"Board Management": "Управление досками",
@@ -214,7 +214,7 @@
 	"Board Staff": "Персонал доски",
 	"Board URI": "URI доски",
 	"Board Wide": "все потоки",
-	"Board with this URI already exists": "Board with this URI already exists",
+	"Board with this URI already exists": "Доска с этим URI уже существует",
 	"Board-specific permissions": "Разрешения для конкретной доски",
 	"Boards": "Доски",
 	"Boards you are staff on": "Доски, на которых вы персонал включен",
@@ -272,7 +272,7 @@
 	"Completed block bypass, you may go back and make your post.": "Завершив обход блока, вы можете вернуться и сделать свой пост.",
 	"Confirm New Password": "Подтвердить новый пароль",
 	"Confirm Password": "Подтвердить пароль",
-	"Conflict": "Conflict",
+	"Conflict": "Конфликт",
 	"Connected for live posts": "Подключено для живые сообщения",
 	"Connected for live posts (%sms)": "Подключено для живых сообщений (%sms)",
 	"Connecting...": "Подключение ...",
@@ -510,7 +510,7 @@
 	"Inactive Account Action": "Действие неактивной учетной записи",
 	"Inactive Account Time": "Время неактивной учетной записи",
 	"Include Default Boards": "Включить платы по умолчанию",
-	"Incorrect account credentials": "Incorrect account credentials",
+	"Incorrect account credentials": "Неверные учетные данные учетной записи",
 	"Incorrect captcha answer": "Неправильный ответ на капчу",
 	"Index": "Индекс",
 	"Index View": "Вид индекса",
@@ -640,11 +640,10 @@
 	"No reason specified": "Причина не указана",
 	"No reports.": "Нет отчетов.",
 	"No results.": "Нет результатов.",
-	"No threads selected to Bumplock": "No threads selected to Bumplock",
-	"No threads selected to Lock": "No threads selected to Lock",
-	"No threads selected to make Cyclical": "No threads selected to make Cyclical",
-	"No threads selected to Sticky": "No threads selected to Sticky",
-	"No threads to bumplock": "No threads to bumplock",
+	"No threads selected to Bumplock": "Нет нитей, выбранных для блокировки",
+	"No threads selected to Lock": "Потоки не выбраны для блокировки",
+	"No threads selected to make Cyclical": "Потоки не выбраны для создания циклических",
+	"No threads selected to Sticky": "Нет нитей, выбранных для прилипания",
 	"No video/audio files in this thread.": "Нет видео / аудио файлов в этой теме.",
 	"No.": "№",
 	"Noise Effect Strength": "Сила шумового эффекта",
@@ -684,7 +683,7 @@
 	},
 	"Paint Effect Strength": "Сила эффекта рисования",
 	"Password": "Пароль",
-	"Password updated successfully": "Password updated successfully",
+	"Password updated successfully": "Пароль успешно обновлен",
 	"Pause": "Пауза",
 	"Payload Too Large": "Слишком большая полезная нагрузка",
 	"Pen": "Ручка",
@@ -788,8 +787,8 @@
 	},
 	"Sessions": "Сеансы",
 	"Set Sticky level for %s threads to %s": {
-		"one": "Set Sticky level for %s thread to %s",
-		"other": "Set Sticky level for %s threads to %s"
+		"one": "Установите уровень липкости для потока %s на %s",
+		"other": "Установите уровень липкости для потоков %s на %s"
 	},
 	"Settings": "Настройки",
 	"Setup 2FA": "Настройка 2FA",
@@ -864,21 +863,17 @@
 	"Toggle Cycle": "Переключить цикл",
 	"Toggle Lock": "Переключить блокировку.",
 	"Toggle visibility": "Переключить видимость",
-	"Toggled bumplock for %s threads": {
-		"one": "Toggled bumplock for %s thread",
-		"other": "Toggled bumplock for %s threads"
-	},
 	"Toggled Bumplock for %s threads": {
-		"one": "Toggled Bumplock for %s thread",
-		"other": "Toggled Bumplock for %s threads"
+		"one": "Переключаемый фиксатор отбойника для %s резьбы",
+		"other": "Переключаемый фиксатор отбойника на %s резьбы"
 	},
 	"Toggled Cyclical mode for %s threads": {
-		"one": "Toggled Cyclical mode for %s thread",
-		"other": "Toggled Cyclical mode for %s threads"
+		"one": "Переключенный циклический режим для %s потока",
+		"other": "Переключенный циклический режим для %s потоков"
 	},
 	"Toggled Lock for %s threads": {
-		"one": "Toggled Lock for %s thread",
-		"other": "Toggled Lock for %s threads"
+		"one": "Переключаемый замок для %s резьбы",
+		"other": "Переключаемый замок для %s потоков"
 	},
 	"Tone": "Тон",
 	"Too many files": "Слишком много файлов",
@@ -917,7 +912,7 @@
 	"Unregistered User": "Незарегистрированный пользователь",
 	"Update": "Обновить",
 	"Updated": "Обновлено",
-	"Updated settings.": "Updated settings.",
+	"Updated settings.": "Обновлены настройки.",
 	"Upgrade Ban": "Запрет на обновление",
 	"Uploaded %s new assets.": {
 		"one": "загружен %s новый актив.",
@@ -931,7 +926,7 @@
 		"one": "загружен %s новый флаг.",
 		"other": "загружено %s новых флагов."
 	},
-	"URI \"%s\" is reserved": "URI \"%s\" is reserved",
+	"URI \"%s\" is reserved": "URI \"%s\" зарезервирован",
 	"URI e.g. /uri/": "URI, например / uri /",
 	"URI or tags": "URI или теги",
 	"Use bold": "Использовать жирный шрифт",
