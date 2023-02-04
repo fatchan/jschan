@@ -189,6 +189,7 @@
 	"Banner File Size Max": "Tamanho Máx Ficheiro Banner",
 	"Banner Height Max": "Altura Máx de Banner",
 	"Banner Width Max": "Largura Máx de Banner",
+	"Banners": "Banners",
 	"Banners Per Upload Max": "N.º Máx de Banners Por Carregamento",
 	"Bans": "Bans",
 	"Bans & Appeals": "Bans & Recursos",
@@ -203,6 +204,7 @@
 	"Board Custom CSS": "CSS Custom Tábua",
 	"Board Defaults": "Defaults de Tábua",
 	"Board Description": "Descrição da Tábua",
+	"Board has no custom banners.": "Board has no custom banners.",
 	"Board List": "Tábuas",
 	"Board Locked": "Tábua Trancada",
 	"Board Management": "Gestão tábuas",
@@ -212,6 +214,7 @@
 	"Board Staff": "Staff da tábua",
 	"Board URI": "URI tábua",
 	"Board Wide": "Toda a Tábua",
+	"Board with this URI already exists": "Board with this URI already exists",
 	"Board-specific permissions": "Permissões de tábuas",
 	"Boards": "Tábuas",
 	"Boards you are staff on": "Tábuas em que fazes parte do staff",
@@ -269,6 +272,7 @@
 	"Completed block bypass, you may go back and make your post.": "Bypass completado, podes voltar e fazer fazer a publicação.",
 	"Confirm New Password": "Confirmar Nova Password",
 	"Confirm Password": "Confirmar Password",
+	"Conflict": "Conflict",
 	"Connected for live posts": "Ligado",
 	"Connected for live posts (%sms)": "Ligado (%sms)",
 	"Connecting...": "A ligar...",
@@ -506,6 +510,7 @@
 	"Inactive Account Action": "Ação de Contas Inativas",
 	"Inactive Account Time": "Tempo de Contas Inaticas",
 	"Include Default Boards": "Incluir Tábuas Default",
+	"Incorrect account credentials": "Incorrect account credentials",
 	"Incorrect captcha answer": "Captcha errado",
 	"Index": "Index",
 	"Index View": "Index",
@@ -635,6 +640,11 @@
 	"No reason specified": "Sem motivo especificado",
 	"No reports.": "Sem denúncias.",
 	"No results.": "Sem resultados.",
+	"No threads selected to Bumplock": "No threads selected to Bumplock",
+	"No threads selected to Lock": "No threads selected to Lock",
+	"No threads selected to make Cyclical": "No threads selected to make Cyclical",
+	"No threads selected to Sticky": "No threads selected to Sticky",
+	"No threads to bumplock": "No threads to bumplock",
 	"No video/audio files in this thread.": "Ficheiros vídeo/áudio não são permitidos neste fio.",
 	"No.": "/#/",
 	"Noise Effect Strength": "Força do Efeito de Ruído",
@@ -674,6 +684,7 @@
 	},
 	"Paint Effect Strength": "Força de Efeito Desenho",
 	"Password": "Password",
+	"Password updated successfully": "Password updated successfully",
 	"Pause": "Pausar",
 	"Payload Too Large": "Carregamento Demasiado Grande",
 	"Pen": "Caneta",
@@ -776,6 +787,10 @@
 		"other": "Seleciona/Arrasta/Cola ficheiros"
 	},
 	"Sessions": "Sessões",
+	"Set Sticky level for %s threads to %s": {
+		"one": "Set Sticky level for %s thread to %s",
+		"other": "Set Sticky level for %s threads to %s"
+	},
 	"Settings": "Opções",
 	"Setup 2FA": "Configuração 2FA",
 	"Setup 2FA (TOTP)": "Configurar 2FA (TOTP)",
@@ -849,6 +864,22 @@
 	"Toggle Cycle": "Reciclar",
 	"Toggle Lock": "Trancar",
 	"Toggle visibility": "Alterar visibilidade",
+	"Toggled bumplock for %s threads": {
+		"one": "Toggled bumplock for %s thread",
+		"other": "Toggled bumplock for %s threads"
+	},
+	"Toggled Bumplock for %s threads": {
+		"one": "Toggled Bumplock for %s thread",
+		"other": "Toggled Bumplock for %s threads"
+	},
+	"Toggled Cyclical mode for %s threads": {
+		"one": "Toggled Cyclical mode for %s thread",
+		"other": "Toggled Cyclical mode for %s threads"
+	},
+	"Toggled Lock for %s threads": {
+		"one": "Toggled Lock for %s thread",
+		"other": "Toggled Lock for %s threads"
+	},
 	"Tone": "Matiz",
 	"Too many files": "Demasiados ficheiros",
 	"Tor Exit Node": "Tor Exit Node",
@@ -886,6 +917,7 @@
 	"Unregistered User": "Não Registado",
 	"Update": "Atualizar",
 	"Updated": "Atualizado",
+	"Updated settings.": "Updated settings.",
 	"Upgrade Ban": "Alterar Range",
 	"Uploaded %s new assets.": {
 		"one": "Carregado %s asset novo.",
@@ -899,6 +931,7 @@
 		"one": "Carregado %s especial novo.",
 		"other": "Carregados %s especiais novos."
 	},
+	"URI \"%s\" is reserved": "URI \"%s\" is reserved",
 	"URI e.g. /uri/": "URI e.g. /uri/",
 	"URI or tags": "URI ou tags",
 	"Use bold": "Utilizar Negrito",

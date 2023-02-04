@@ -3,10 +3,10 @@ include ../mixins/boardheader.pug
 include ../mixins/boardnav.pug
 
 block head
-	title /#{board._id}/ - Banners
+	title /#{board._id}/ - #{__('Banners')}
 
 block content
-	+boardheader('Banners')
+	+boardheader(__('Banners'))
 	br
 	include ../includes/stickynav.pug
 	.pages
@@ -17,7 +17,7 @@ block content
 			each banner in board.banners
 				img.board-banner(src=`/banner/${board._id}/${banner}` loading='lazy')
 	else
-		p Board has no custom banners.
+		p #{__('Board has no custom banners.')}
 	include ../includes/stickynav.pug
 	hr(size=1)
 	.pages

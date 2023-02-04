@@ -189,6 +189,7 @@
 	"Banner File Size Max": "Banner File Size Max",
 	"Banner Height Max": "Banner Height Max",
 	"Banner Width Max": "Banner Width Max",
+	"Banners": "Banners",
 	"Banners Per Upload Max": "Banners Per Upload Max",
 	"Bans": "Bans",
 	"Bans & Appeals": "Bans & Appeals",
@@ -203,6 +204,7 @@
 	"Board Custom CSS": "Board Custom CSS",
 	"Board Defaults": "Board Defaults",
 	"Board Description": "Board Description",
+	"Board has no custom banners.": "Board has no custom banners.",
 	"Board List": "Board List",
 	"Board Locked": "Board Locked",
 	"Board Management": "Board Management",
@@ -212,6 +214,7 @@
 	"Board Staff": "Board Staff",
 	"Board URI": "Board URI",
 	"Board Wide": "Board Wide",
+	"Board with this URI already exists": "Board with this URI already exists",
 	"Board-specific permissions": "Board-specific permissions",
 	"Boards": "Boards",
 	"Boards you are staff on": "Boards you are staff on",
@@ -269,6 +272,7 @@
 	"Completed block bypass, you may go back and make your post.": "Completed block bypass, you may go back and make your post.",
 	"Confirm New Password": "Confirm New Password",
 	"Confirm Password": "Confirm Password",
+	"Conflict": "Conflict",
 	"Connected for live posts": "Connected for live posts",
 	"Connected for live posts (%sms)": "Connected for live posts (%sms)",
 	"Connecting...": "Connecting...",
@@ -506,6 +510,7 @@
 	"Inactive Account Action": "Inactive Account Action",
 	"Inactive Account Time": "Inactive Account Time",
 	"Include Default Boards": "Include Default Boards",
+	"Incorrect account credentials": "Incorrect account credentials",
 	"Incorrect captcha answer": "Incorrect captcha answer",
 	"Index": "Index",
 	"Index View": "Index View",
@@ -635,6 +640,11 @@
 	"No reason specified": "No reason specified",
 	"No reports.": "No reports.",
 	"No results.": "No results.",
+	"No threads selected to Bumplock": "No threads selected to Bumplock",
+	"No threads selected to Lock": "No threads selected to Lock",
+	"No threads selected to make Cyclical": "No threads selected to make Cyclical",
+	"No threads selected to Sticky": "No threads selected to Sticky",
+	"No threads to bumplock": "No threads to bumplock",
 	"No video/audio files in this thread.": "No video/audio files in this thread.",
 	"No.": "No.",
 	"Noise Effect Strength": "Noise Effect Strength",
@@ -674,6 +684,7 @@
 	},
 	"Paint Effect Strength": "Paint Effect Strength",
 	"Password": "Password",
+	"Password updated successfully": "Password updated successfully",
 	"Pause": "Pause",
 	"Payload Too Large": "Payload Too Large",
 	"Pen": "Pen",
@@ -776,6 +787,10 @@
 		"other": "Select/Drop/Paste files"
 	},
 	"Sessions": "Sessions",
+	"Set Sticky level for %s threads to %s": {
+		"one": "Set Sticky level for %s thread to %s",
+		"other": "Set Sticky level for %s threads to %s"
+	},
 	"Settings": "Settings",
 	"Setup 2FA": "Setup 2FA",
 	"Setup 2FA (TOTP)": "Setup 2FA (TOTP)",
@@ -849,6 +864,22 @@
 	"Toggle Cycle": "Toggle Cycle",
 	"Toggle Lock": "Toggle Lock",
 	"Toggle visibility": "Toggle visibility",
+	"Toggled bumplock for %s threads": {
+		"one": "Toggled bumplock for %s thread",
+		"other": "Toggled bumplock for %s threads"
+	},
+	"Toggled Bumplock for %s threads": {
+		"one": "Toggled Bumplock for %s thread",
+		"other": "Toggled Bumplock for %s threads"
+	},
+	"Toggled Cyclical mode for %s threads": {
+		"one": "Toggled Cyclical mode for %s thread",
+		"other": "Toggled Cyclical mode for %s threads"
+	},
+	"Toggled Lock for %s threads": {
+		"one": "Toggled Lock for %s thread",
+		"other": "Toggled Lock for %s threads"
+	},
 	"Tone": "Tone",
 	"Too many files": "Too many files",
 	"Tor Exit Node": "Tor Exit Node",
@@ -886,6 +917,7 @@
 	"Unregistered User": "Unregistered User",
 	"Update": "Update",
 	"Updated": "Updated",
+	"Updated settings.": "Updated settings.",
 	"Upgrade Ban": "Upgrade Ban",
 	"Uploaded %s new assets.": {
 		"one": "Uploaded %s new asset.",
@@ -899,6 +931,7 @@
 		"one": "Uploaded %s new flag.",
 		"other": "Uploaded %s new flags."
 	},
+	"URI \"%s\" is reserved": "URI \"%s\" is reserved",
 	"URI e.g. /uri/": "URI e.g. /uri/",
 	"URI or tags": "URI or tags",
 	"Use bold": "Use bold",
