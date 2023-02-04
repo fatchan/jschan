@@ -24,6 +24,7 @@ todo: handle some more situations
 - different permission levels for historical posts when remarked up (or not, fuck that)
 */
 
+	const { __ } = res.locals;
 	const { filterBanAppealable, previewReplies, strictFiltering } = config.get;
 	const { board, post } = res.locals;
 
@@ -107,7 +108,7 @@ todo: handle some more situations
 	}, {
 		'$set': {
 			edited: {
-				username: req.body.hide_name ? 'Hidden User' : req.session.user,
+				username: req.body.hide_name ? null : req.session.user,
 				date: new Date(),
 			},
 			nomarkup,
@@ -151,8 +152,8 @@ todo: handle some more situations
 	await buildThread(buildOptions);
 
 	dynamicResponse(req, res, 200, 'message', {
-		'title': res.locals.__('Success'),
-		'message': 'Post edited successfully',
+		'title': __('Success'),
+		'message': __('Post edited successfully'),
 		'redirect': req.body.referer,
 	});
 	res.end();
