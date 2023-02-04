@@ -345,7 +345,7 @@ module.exports = async (req, res) => {
 						break;
 					}
 					default:
-						throw new Error(`invalid file mime type: ${processedFile.mimetype}`);
+						throw new Error(__('invalid file mime type: %s', processedFile.mimetype));
 				}
 			}
 
