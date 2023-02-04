@@ -31,7 +31,7 @@
 }
 
 body {
-	background: linear-gradient(#6d99BA50,#1c1c1c75 400px calc(100% - 200px),#d2738A90),url(/css/themes/iwakura-bg.gif),#0d0d0d none repeat scroll 0 0
+	background: linear-gradient(#6d99BA50,#1c1c1c75 400px calc(100% - 200px),#d2738A90),url(/css/themes/assets/iwakura-bg.gif),#0d0d0d none repeat scroll 0 0
 }
 
 a.quote {
@@ -43,7 +43,7 @@ table {
 }
 
 tr {
-	background: var(--background-rest) url(/css/themes/iwakura-bg.gif)
+	background: var(--background-rest) url(/css/themes/assets/iwakura-bg.gif)
 }
 
 .captcha {

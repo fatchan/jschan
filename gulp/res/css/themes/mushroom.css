@@ -30,7 +30,7 @@
 	--pinktext-color: #e0727f;
 }
 body {
-	background: var(--background-rest) url(/css/themes/mushroom.png);
+	background: var(--background-rest) url(/css/themes/assets/mushroom.png);
 }
 a.post-name {
 	color: #a0ffff;
@@ -42,7 +42,7 @@ table {
 	border: 1px solid var(--box-border-color);
 }
 tr {
-	background: var(--background-rest) url(/css/themes/mushroom.png);
+	background: var(--background-rest) url(/css/themes/assets/mushroom.png);
 }
 .captcha {
 	filter: invert(90%);

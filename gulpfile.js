@@ -340,22 +340,23 @@ async function css() {
 	await gulp.src([
 		`${paths.styles.src}/codethemes/*.css`,
 	])
-		.pipe(replace('url(./', 'url(/css/codethemes/'))
+		.pipe(replace('url(./', 'url(/css/codethemes/assets/'))
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
-	//move any non-css (images) for code themes to codetheme folder
+
+	//move assets for code codethemes/assets folder
 	await gulp.src([
 		`${paths.styles.src}/codethemes/*`,
 		`!${paths.styles.src}/codethemes/*.css`,
 	])
-		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
-	//move any non-css (images) for themes to theme folder
+		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/assets/`));
+	//move assets for themes to theme/assets folder
 	await gulp.src([
-		`${paths.styles.src}/themes/*`,
-		`!${paths.styles.src}/themes/*.css`,
+		`${paths.styles.src}/themes/assets/*`,
 	])
-		.pipe(gulp.dest(`${paths.styles.dest}/themes/`));
+		.pipe(gulp.dest(`${paths.styles.dest}/themes/assets/`));
+
 	await gulp.src([
 		`${paths.styles.src}/locals.css`,
 		`${paths.styles.src}/nscaptcha.css`,
