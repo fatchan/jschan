@@ -1,3 +1,8 @@
+### 0.11.3
+  - Fix max vs total upload count in controller for uploading board assets, flags and banners.
+  - Move css theme assets to themes/assets instead of all lumped in one folder.
+  - Adjust the letter spacing and line spacing of the 2FA QR code.
+
 ### 0.11.2
   - Convert the assets page form handling to the newer checkSchema code.
   - Don't show the "Edit" option in the post dropdowns for public pages.
