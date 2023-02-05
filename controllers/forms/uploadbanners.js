@@ -17,7 +17,7 @@ module.exports = {
 		const errors = await checkSchema([
 			{ result: res.locals.numFiles === 0, expected: false, blocking: true, error: 'Must provide a file' },
 			{ result: numberBody(res.locals.numFiles, 0, globalLimits.bannerFiles.max), expected: true, error: `Exceeded max banner uploads in one request of ${globalLimits.bannerFiles.max}` },
-			{ result: numberBody(res.locals.board.banners.length+res.locals.numFiles, 0, globalLimits.bannerFiles.max), expected: true, error: `Total number of banners would exceed global limit of ${globalLimits.bannerFiles.total}` },
+			{ result: numberBody(res.locals.board.banners.length+res.locals.numFiles, 0, globalLimits.bannerFiles.total), expected: true, error: `Total number of banners would exceed global limit of ${globalLimits.bannerFiles.total}` },
 		]);
 
 		if (errors.length > 0) {
