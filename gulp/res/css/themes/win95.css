@@ -79,7 +79,7 @@ textarea,
 .navbar a:first-of-type::before {
 	content:'';
 	position:absolute;
-	background: url(/css/themes/win95home.png);
+	background: url(/css/themes/assets/win95home.png);
 	background-size: contain;
 	height: 1.75em;
 	width: 1.75em;

@@ -31,14 +31,14 @@
 }
 
 body {
-	background: #140e10 url(/css/themes/tchan-bg.png);
+	background: #140e10 url(/css/themes/assets/tchan-bg.png);
 	font-family: trebuchet ms,Tahoma,Verdana,Arial,sans-serif;
 	font-size: 13.3333px!important
 }
 
 .postmenu {
 	border: none;
-	background: url(/css/themes/tchan-star.png) no-repeat;
+	background: url(/css/themes/assets/tchan-star.png) no-repeat;
 	display: inline-block;
 	height: 19px;
 	width: 17px;
@@ -95,7 +95,7 @@ a.post-name:before {
 	font-weight: 700!important;
 	text-shadow: none;
 	content: '';
-	background: url(/css/themes/tchan-capcode.png) 0 0 no-repeat;
+	background: url(/css/themes/assets/tchan-capcode.png) 0 0 no-repeat;
 	background-size: cover;
 	width: 15px!important;
 	height: 16px!important;

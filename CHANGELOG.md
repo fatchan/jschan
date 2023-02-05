@@ -1,6 +1,6 @@
 ### 1.0.0
 Version 1.0.0 is here. jschan is mature enough and there's no need to go to version 0.999, but this does not mean it is perfect or complete!
-I want to keep improving jschan and there are plenty of features and internal improvements planned for versions 2, 3, and beyond.
+I want to keep improving jschan and there are plenty of new features and changes planned for versions 2, 3, and beyond.
 Thank you so much to all the jschan site admins, users & contributors for your help along the way. Your contributions have been invaluable to making this software great.
 Special shoutout to l29utp0 & loynet (ptchan.org), Homicide (94chan.org) and some_random_guy (trashchan.xyz).
 
@@ -18,6 +18,11 @@ Now, back to the program. Here are the changes for 1.0.0, with one especially no
   - Customflags will now show correctly when editing a post on a board with custom flags enabled.
   - Security improvement to the 2FA validation flow during login.
   - More minor bugfixes to permissions pages displays.
+
+### 0.11.3
+  - Fix max vs total upload count in controller for uploading board assets, flags and banners.
+  - Move css theme assets to themes/assets instead of all lumped in one folder.
+  - Adjust the letter spacing and line spacing of the 2FA QR code.
 
 ### 0.11.2
   - Convert the assets page form handling to the newer checkSchema code.

@@ -31,7 +31,7 @@
 }
 
 body {
-	background: linear-gradient(#f9e272,rgba(255,255,255,0) 400px calc(100% - 200px),#f9e272),url(/css/themes/56chan-bg.png),hsl(178 40% 80%)
+	background: linear-gradient(#f9e272,rgba(255,255,255,0) 400px calc(100% - 200px),#f9e272),url(/css/themes/assets/56chan-bg.png),hsl(178 40% 80%)
 }
 
 .board-title {
