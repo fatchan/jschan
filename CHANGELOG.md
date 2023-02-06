@@ -12,6 +12,7 @@ Now, back to the program. Here are the changes for 1.0.0, with one especially no
 	- 1.0.0 includes three* language packs: English (en-GB) and Portuguese (pt-PT) (Russian machine translation is also included, but may not be accurate).
 	- Huge credit to the ptchan.org admins for providing the Portuguese translation.
 	- Contributions for new language packs or improvements to existing ones are very welcome! Reach out via email/IRC to discuss imbursement for contributing language packs.
+	- Note: "global" pages e.g. overboards will adhere to global language setting. In a future iteration, these will be updated to (optionally, with global setting) support adhering to users browser language header for better UX going between a non-global language board and global pages.
   - Improve the css and markup to only show the appropriate wording e.g "tap" or "click" in tooltips depending if you are on mobile/desktop.
   - Notify the user when making a playlist from a thread if there were no files, rather than just silently logging.
   - Improve the installation process to fix a potential issue with the database connection settings.
