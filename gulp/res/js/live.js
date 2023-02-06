@@ -36,29 +36,32 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		const postContainer = anchor.nextSibling;
 		postContainer.classList.add('marked');
 		postContainer.setAttribute('data-mark', data.mark);
-		//handle any special cases for different marks
+		let dataMark = '';
 		switch (data.type) {
 			case 'delete':
+				dataMark = __('Deleted');
+				break;
 			case 'move':
-				if (postContainer.classList.contains('op')) {
-					//moved or delete OPs then apply to whole thread
-					const postContainers = document.getElementsByClassName('post-container');
-					Array.from(postContainers).forEach(e => {
-						e.classList.add('marked');
-						e.setAttribute('data-mark', data.mark);
-					});
-					//remove new reply buttons and postform
-					document.getElementById('postform').remove();
-					const postButtons = document.getElementsByClassName('post-button');
-					Array.from(postButtons).forEach(e => e.remove());
-					//and disconnect socket
-					if (socket.connected === true) {
-						socket.disconnect();
-					}
-				}
+				dataMark = __('Moved');
 				break;
 			default:
-				//nothing special
+				return;
+		}
+		if (postContainer.classList.contains('op')) {
+			//moved or delete OPs then apply to whole thread
+			const postContainers = document.getElementsByClassName('post-container');
+			Array.from(postContainers).forEach(e => {
+				e.classList.add('marked');
+				e.setAttribute('data-mark', dataMark);
+			});
+			//remove new reply buttons and postform
+			document.getElementById('postform').remove();
+			const postButtons = document.getElementsByClassName('post-button');
+			Array.from(postButtons).forEach(e => e.remove());
+			//and disconnect socket
+			if (socket.connected === true) {
+				socket.disconnect();
+			}
 		}
 	};
 

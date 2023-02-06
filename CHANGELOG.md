@@ -17,6 +17,7 @@ Now, back to the program. Here are the changes for 1.0.0, with one especially no
   - Improve the installation process to fix a potential issue with the database connection settings.
   - Customflags will now show correctly when editing a post on a board with custom flags enabled.
   - Security improvement to the 2FA validation flow during login.
+  - Log a few more errors related to hcaptcha/recaptcha, for debugging purposes. (already caught and returned in a friendly manner)
   - More minor bugfixes to permissions pages displays.
 
 ### 0.11.3

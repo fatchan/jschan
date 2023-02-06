@@ -222,7 +222,7 @@ module.exports = async (req, res, next) => {
 			}
 			messages.push(message);
 		} else if (req.body.spoiler) {
-			const { message, action, query } = spoilerPosts(res.locals.posts);
+			const { message, action, query } = spoilerPosts(res.locals);
 			if (action) {
 				modlogActions.push('Spoiler files');
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
