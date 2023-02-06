@@ -12,12 +12,12 @@ module.exports = async(db, redis) => {
 	console.log('Updating db for language settings');
 	await db.collection('globalsettings').updateOne({ _id: 'globalsettings' }, {
 		'$set': {
-			'language': 'en',
+			'language': 'en-GB',
 		},
 	});
 	await db.collection('boards').updateMany({}, {
 		'$set': {
-			'settings.language': 'en',
+			'settings.language': 'en-GB',
 		},
 	});	
 	console.log('Clearing globalsettings cache');
