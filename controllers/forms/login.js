@@ -13,17 +13,19 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const errors = await checkSchema([
-			{ result: existsBody(req.body.username), expected: true, error: 'Missing username' },
-			{ result: existsBody(req.body.password), expected: true, error: 'Missing password' },
-			{ result: lengthBody(req.body.username, 0, 50), expected: false, error: 'Username must be 1-50 characters' },
-			{ result: lengthBody(req.body.password, 0, 100), expected: false, error: 'Password must be 1-100 characters' },
-			{ result: lengthBody(req.body.twofactor, 0, 6), expected: false, error: 'Invalid 2FA code' },
+			{ result: existsBody(req.body.username), expected: true, error: __('Missing username') },
+			{ result: existsBody(req.body.password), expected: true, error: __('Missing password') },
+			{ result: lengthBody(req.body.username, 0, 50), expected: false, error: __('Username must be 1-50 characters') },
+			{ result: lengthBody(req.body.password, 0, 100), expected: false, error: __('Password must be 1-100 characters') },
+			{ result: lengthBody(req.body.twofactor, 0, 6), expected: false, error: __('Invalid 2FA code') },
 		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': '/login.html'
 			});

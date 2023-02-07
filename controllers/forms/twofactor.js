@@ -13,15 +13,17 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const errors = await checkSchema([
-			{ result: res.locals.user.twofactor === false, expected: true, error: 'You already have 2FA setup' },
-			{ result: existsBody(req.body.twofactor), expected: true, error: 'Missing 2FA code' },
-			{ result: lengthBody(req.body.twofactor, 6, 6), expected: false, error: '2FA code must be 6 characters' },
+			{ result: res.locals.user.twofactor === false, expected: true, error: __('You already have 2FA setup') },
+			{ result: existsBody(req.body.twofactor), expected: true, error: __('Missing 2FA code') },
+			{ result: lengthBody(req.body.twofactor, 6, 6), expected: false, error: __('2FA code must be 6 characters') },
 		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': '/twofactor.html'
 			});

@@ -17,6 +17,7 @@ module.exports = {
 	controller: async (req, res, next) => {
 
 		const { __ } = res.locals;
+
 		const { globalLimits } = config.get;
 
 		const errors = await checkSchema([
