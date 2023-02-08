@@ -9,6 +9,7 @@ const { Posts, Modlogs } = require(__dirname+'/../../db/')
 	, nameHandler = require(__dirname+'/../../lib/post/name.js')
 	, getFilterStrings = require(__dirname+'/../../lib/post/getfilterstrings.js')
 	, filterActions = require(__dirname+'/../../lib/post/filteractions.js')
+	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
@@ -20,8 +21,6 @@ module.exports = async (req, res) => {
 todo: handle some more situations
 - last activity date
 - correct bump date when editing thread or last post in a thread
-- allow for regular users (OP ONLY) and option for staff to disable in board settings
-- different permission levels for historical posts when remarked up (or not, fuck that)
 */
 
 	const { __ } = res.locals;
@@ -132,7 +131,7 @@ todo: handle some more situations
 			postId: post.postId,
 			thread: post.thread,
 		}],
-		actions: 'Edit',
+		actions: ModlogActions.EDIT,
 		date: new Date(),
 		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,

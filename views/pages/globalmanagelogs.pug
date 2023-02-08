@@ -57,7 +57,7 @@ block content
 									a(href=`recent.html?ip=${encodeURIComponent(logIp)}`) #{logIp}
 									|   
 									a(href=`?ip=${encodeURIComponent(logIp)}`) [+]
-								td #{log.actions}
+								td #{log.actions.map(a => __(a))}
 								td
 									if log.showLinks
 										for postLink in log.postLinks
