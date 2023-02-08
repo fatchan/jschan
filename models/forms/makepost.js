@@ -524,7 +524,7 @@ module.exports = async (req, res) => {
 			'postId': -1,
 		}).skip(replyLimit).toArray();
 		if (cyclicOverflowPosts.length > 0) {
-			await deletePosts(cyclicOverflowPosts, req.params.board);
+			await deletePosts(cyclicOverflowPosts, req.params.board, res.locals);
 			const fileCount = cyclicOverflowPosts.reduce((acc, post) => {
 				return acc + (post.files ? post.files.length : 0);
 			}, 0);
@@ -659,7 +659,7 @@ module.exports = async (req, res) => {
 		//new thread, prunes any old threads before rebuilds
 		const prunedThreads = await Posts.pruneThreads(res.locals.board);
 		if (prunedThreads.length > 0) {
-			await deletePosts(prunedThreads, req.params.board);
+			await deletePosts(prunedThreads, req.params.board, res.locals);
 		}
 		if (!enableCaptcha) {
 			const endPage = Math.ceil(threadLimit/10);

@@ -166,7 +166,7 @@ module.exports = async (req, res) => {
 			//prune old threads
 			const prunedThreads = await Posts.pruneThreads(res.locals.board);
 			if (prunedThreads.length > 0) {
-				await deletePosts(prunedThreads, req.params.board);
+				await deletePosts(prunedThreads, req.params.board, res.locals);
 				//remove board page html/json for pages > newMaxPage
 				for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
 					promises.push(remove(`${uploadDirectory}/html/${req.params.board}/${i}.html`));

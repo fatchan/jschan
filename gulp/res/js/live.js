@@ -34,8 +34,6 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		console.log('got mark post message', data);
 		const anchor = document.getElementById(data.postId);
 		const postContainer = anchor.nextSibling;
-		postContainer.classList.add('marked');
-		postContainer.setAttribute('data-mark', data.mark);
 		let dataMark = '';
 		switch (data.type) {
 			case 'delete':
@@ -47,6 +45,8 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 			default:
 				return;
 		}
+		postContainer.classList.add('marked');
+		postContainer.setAttribute('data-mark', dataMark);
 		if (postContainer.classList.contains('op')) {
 			//moved or delete OPs then apply to whole thread
 			const postContainers = document.getElementsByClassName('post-container');

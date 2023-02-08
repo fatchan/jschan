@@ -172,7 +172,7 @@ module.exports = async (req, res, next) => {
 			const { message } = await deletePostsFiles(res.locals, false); //delete files, not just unlink
 			messages.push(message);
 		}
-		const { action, message } = await deletePosts(res.locals.posts, req.body.delete_ip_global ? null : req.params.board);
+		const { action, message } = await deletePosts(res.locals.posts, req.body.delete_ip_global ? null : req.params.board, res.locals);
 		messages.push(message);
 		if (action) {
 			if (req.body.delete) {

@@ -428,6 +428,18 @@
 		"one": "Deleted %s file from server",
 		"other": "Deleted %s files from server"
 	},
+	"Deleted %s posts": {
+		"one": "Deleted post",
+		"other": "Deleted %s posts"
+	},
+	"Deleted %s thread and %s post": "Deleted %s thread and %s post",
+	"Deleted %s thread and %s posts": "Deleted %s thread and %s posts",
+	"Deleted %s threads": {
+		"one": "Deleted thread",
+		"other": "Deleted %s threads"
+	},
+	"Deleted %s threads and %s post": "Deleted %s threads and %s post",
+	"Deleted %s threads and %s posts": "Deleted %s threads and %s posts",
 	"Deleted flags": "Deleted flags",
 	"Deleted news": "Deleted news",
 	"Denied %s appeals": "Denied %s appeals",

@@ -20,6 +20,13 @@ module.exports = async(db, redis) => {
 			'settings.language': 'en-GB',
 		},
 	});	
+	await db.collection('modlog').updateMany({
+		'actions': 'Edit',
+	}, {
+		'$set': {
+			'actions': ['Edit'],
+		},
+	});
 	console.log('Clearing globalsettings cache');
 	await redis.deletePattern('globalsettings');
 	console.log('Clearing boards cache');

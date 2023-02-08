@@ -3,17 +3,24 @@
 const { CustomPages, Accounts, Boards, Stats, Posts, Bans, Modlogs } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
+	, i18n = require(__dirname+'/../../lib/locale/locale.js')
 	, { remove } = require('fs-extra');
 
 module.exports = async (uri, board) => {
 
+	//i18n mumbo jumbo
+	const deleteLocals = {};
+	i18n.init(deleteLocals);
+	const boardLanguage = board.settings.language;
+	deleteLocals.setLocale(deleteLocals, boardLanguage);
+	
 	//delete board
 	await Boards.deleteOne(uri);
 	//get all posts (should probably project to get files for deletin and anything else necessary)
 	const allPosts = await Posts.allBoardPosts(uri);
 	if (allPosts.length > 0) {
 		//delete posts and decrement images
-		await deletePosts(allPosts, uri, true);
+		await deletePosts(allPosts, uri, deleteLocals, true);
 	}
 	await Promise.all([
 		Accounts.removeOwnedBoard(board.owner, uri), //remove board from owner account

@@ -131,7 +131,7 @@ todo: handle some more situations
 			postId: post.postId,
 			thread: post.thread,
 		}],
-		actions: ModlogActions.EDIT,
+		actions: [ModlogActions.EDIT],
 		date: new Date(),
 		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,
