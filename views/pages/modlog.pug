@@ -25,7 +25,8 @@ block content
 					tr
 						- const logDate = new Date(log.date);
 						td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hourCycle:'h23'})}
-						td(class=(!log.showUser ? 'em' : '')) #{log.showUser ? log.user : __('Hidden User')}
+						- const logUser = log.user || __('Unregistered User');
+						td(class=(!log.showUser ? 'em' : '')) #{log.showUser ? logUser : __('Hidden User')}
 						td #{log.actions.map(a => __(a))}
 						td
 							if log.showLinks

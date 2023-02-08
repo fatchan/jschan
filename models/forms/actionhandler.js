@@ -319,12 +319,10 @@ module.exports = async (req, res, next) => {
 		const modlog = {};
 		const logDate = new Date(); //all events current date
 		const message = req.body.log_message || null;
-		let logUser;
+		let logUser = null;
 		//could even do if (req.session.user) {...}, but might cause cross-board log username contamination
 		if (isStaffOrGlobal) {
 			logUser = req.session.user;
-		} else {
-			logUser = 'Unregistered User';
 		}
 		for (let i = 0; i < res.locals.posts.length; i++) {
 			const post = res.locals.posts[i];
@@ -335,7 +333,7 @@ module.exports = async (req, res, next) => {
 					postLinks: [],
 					actions: modlogActions,
 					date: logDate,
-					showUser: !req.body.hide_name || logUser === 'Unregistered User' ? true : false,
+					showUser: !req.body.hide_name || logUser === null ? true : false,
 					message: message,
 					user: logUser,
 					ip: {
@@ -633,7 +631,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': res.locals.__('Success'),
+		'title': __('Success'),
 		'messages': messages,
 		redirect,
 	});
