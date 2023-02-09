@@ -49,6 +49,7 @@
 "Error reconnecting",
 "Expiry",
 "Export",
+"Export does not include post password or (You)'s",
 "Failed reconnecting",
 "Faster",
 "Fetching posts...",
