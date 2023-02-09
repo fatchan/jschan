@@ -24,7 +24,7 @@ block content
 						th
 							input.edit.left(type='text' name='title' value=page.title required)
 							- const pageDate = new Date(page.date);
-							time.right.reltime(datetime=pageDate.toISOString()) #{pageDate.toLocaleString(undefined, {hourCycle:'h23'})}
+							time.right.reltime(datetime=pageDate.toISOString()) #{pageDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 					tr
 						td
 

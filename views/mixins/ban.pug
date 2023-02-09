@@ -20,9 +20,9 @@ mixin ban(ban, banpage)
 		td #{__(['Single', 'Narrow', 'Wide'][ban.range])}
 		td #{(!banpage || ban.showUser === true) ? ban.issuer : __('Hidden User')}
 		- const banDate = new Date(ban.date);
-		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(undefined, {hourCycle:'h23'})}
+		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 		- const expireDate = new Date(ban.expireAt);
-		td: time.right.reltime(datetime=expireDate.toISOString()) #{expireDate.toLocaleString(undefined, {hourCycle:'h23'})}
+		td: time.right.reltime(datetime=expireDate.toISOString()) #{expireDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 		td.banposts
 			if ban.posts && ban.posts.length > 0
 				| #{__('Hover to view')}

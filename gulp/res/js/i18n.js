@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* globals LANG */
+/* globals TRANSLATIONS */
 
 const pluralMap = {
 	1: 'one',
@@ -8,14 +8,14 @@ const pluralMap = {
 
 //simple translation
 const __ = (key, replacement=null) => {
-	const translation = LANG[key] || key;
+	const translation = TRANSLATIONS[key] || key;
 	return replacement !== null ? translation.replace('%s', replacement) : translation;
 };
 
 //pluralisation
 const __n = (key, count) => {
 	const pluralKey = pluralMap[count] || 'other';
-	const translationObj = LANG[key];
+	const translationObj = TRANSLATIONS[key];
 	if (!translationObj) {
 		return key;
 	}

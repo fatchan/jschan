@@ -31,7 +31,7 @@ block content
 							span.post-capcode #{post.capcode}
 							| 
 						- const postDate = new Date(post.date);
-						time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(undefined, { hourCycle:'h23' })}
+						time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
 						| 
 						if post.userId
 							span.user-id(style=`background-color: #${post.userId}`) #{post.userId}

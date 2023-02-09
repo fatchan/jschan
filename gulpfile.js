@@ -458,7 +458,8 @@ async function langs() {
 				acc[key] = dict[key];
 				return acc;
 			}, {});
-			const langScript = `const LANG = ${JSON.stringify(minimalDict)};`;
+			const langScript = `const LANG = '${lang}';
+const TRANSLATIONS = ${JSON.stringify(minimalDict)};`;
 			fs.writeFileSync(`${paths.scripts.dest}lang/${lang}.js`, langScript);
 		});
 }

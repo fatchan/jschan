@@ -54,7 +54,7 @@ block content
 										| -		
 								td
 									if account.lastActiveDate
-										time.reltime(datetime=account.lastActiveDate.toISOString()) #{account.lastActiveDate.toLocaleString(undefined, {hourCycle:'h23'})}
+										time.reltime(datetime=account.lastActiveDate.toISOString()) #{account.lastActiveDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 									else
 										| -		
 								td #{roleNameMap[account.permissions.toString('base64')] || __('Custom')}

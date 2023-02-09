@@ -38,7 +38,7 @@ block content
 							td: input(type='checkbox' name='checkedstaff' value=staff[0])
 							td #{staff[0]}#{user.username === staff[0] ? ' '+__('(You)') : ''}
 							td 
-								time.reltime(datetime=staff[1].addedDate) #{staff[1].addedDate.toLocaleString(undefined, {hourCycle:'h23'})}
+								time.reltime(datetime=staff[1].addedDate) #{staff[1].addedDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 							td: a(href=`/${board._id}/manage/logs.html?username=${staff[0]}`) [#{__('View')}]
 							td
 								if user.username !== staff[0]

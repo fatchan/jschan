@@ -27,7 +27,7 @@ block content
 							p.no-m-p #{`${post.message.raw.substring(0,50)}${post.message.raw.length > 50 ? '...' : ''}`}
 						td
 							- const newsDate = new Date(post.date);
-							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
+							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 	if hotThreads && hotThreads.length > 0
 		.table-container.flex-center.mv-10
 			table#hotposts
@@ -50,7 +50,7 @@ block content
 									| >>>/#{post.board}/#{post.postId}
 						td
 							- const postedDate = new Date(post.date);
-							time.right.reltime(datetime=postedDate.toISOString()) #{postedDate.toLocaleString(undefined, {hourCycle:'h23'})}
+							time.right.reltime(datetime=postedDate.toISOString()) #{postedDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 	if boards && boards.length > 0
 		+boardtable(true, false)
 			each board in boards

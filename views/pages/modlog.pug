@@ -24,7 +24,7 @@ block content
 				for log in logs
 					tr
 						- const logDate = new Date(log.date);
-						td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hourCycle:'h23'})}
+						td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 						- const logUser = log.user || __('Unregistered User');
 						td(class=(!log.showUser ? 'em' : '')) #{log.showUser ? logUser : __('Hidden User')}
 						td #{log.actions.map(a => __(a))}

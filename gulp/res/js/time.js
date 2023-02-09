@@ -1,4 +1,4 @@
-/* globals __ __n SERVER_TIMEZONE setLocalStorage */
+/* globals __ __n LANG SERVER_TIMEZONE setLocalStorage */
 let relativeTime = localStorage.getItem('relative') == 'true';
 let hour24 = localStorage.getItem('24hour') == 'true';
 let localTime = localStorage.getItem('localtime') == 'true';
@@ -56,8 +56,7 @@ const changeDateFormat = (date) => {
 	if (!localTime) {
 		options.timeZone = SERVER_TIMEZONE;
 	}
-	const locale = hour24 ? 'en-US-u-hc-h23' : 'en-US';
-	const dateString = new Date(date.dateTime).toLocaleString(locale, options);
+	const dateString = new Date(date.dateTime).toLocaleString(LANG, options);
 	if (relativeTime) {
 		date.innerText = relativeTimeString(date.dateTime);
 		date.title = dateString;

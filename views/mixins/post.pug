@@ -47,7 +47,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					span.post-capcode #{post.capcode}
 					| 
 				- const postDate = new Date(post.date);
-				time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(undefined, { hourCycle:'h23' })}
+				time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
 				| 
 				if post.userId
 					span.user-id(style=`background-color: #${post.userId}`) #{post.userId}
@@ -154,7 +154,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 				- const postEditDate = new Date(post.edited.date);
 				small.cb.mt-5.ml-5.edited
 					| Last edited 
-					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(undefined, { hourCycle:'h23' })}
+					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
 					|  by #{post.edited.username || __('Hidden User')}
 			if post.banmessage
 				p.ban
