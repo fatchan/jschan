@@ -81,7 +81,7 @@ block content
 																			.label #{__('Language')}
 																			select(name='language')
 																				each language in languages
-																					option(value=language selected=settings.language === language) #{language}
+																					option(value=language selected=settings.language === language) #{__(language)} (#{language})
 																		.row
 																			.label #{__('Disable Anonymizer File Posting')}
 																			label.postform-style.ph-5
