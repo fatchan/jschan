@@ -231,14 +231,14 @@
   - Code highlighting now supports all highlight.js languages when explicitly specified. The whitelist now only applies to auto-detection, as originally intended.
   - Quotes for post references in modlog now have the proper quote class, and will show when hovered like any other quote.
   - Bugfixes
-  - [jschan-docs](http://fatchan.gitgud.site/jschan-docs/):
+  - [jschan-docs](https://fatchan.gitgud.site/jschan-docs/):
     - API docs improvements, now includes csrf token, posting, post actions (and mod variants), and more. It should be enough documentation for somebody to write a mobile app integration.
   - [globalafk](https://gitgud.io/fatchan/globalafk/) (my fork):
     - On android with termux, tapping the notification will open the post (in mod view) and the notification has new shortcut buttons to quickly delete, delete+ban or delete+global ban.
 
 ### 0.1.10
   - Add thread watcher/watchlist, so users can save list of threads to a little window and see unread count
-  - There are now API docs available at http://fatchan.gitgud.site/jschan-docs/
+  - There are now API docs available at https://fatchan.gitgud.site/jschan-docs/
   - Improved installation nginx script. Confirms overwriting and doesnt break when run more than once
   - Some visual tweaks (file "(u)" being on newline, "x" -> "×")
   - Bugfixes
