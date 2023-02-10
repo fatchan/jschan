@@ -22,7 +22,7 @@ block content
 	if threads.length === 0
 		p #{__('No posts.')}
 	for thread in threads
-		h4.no-m-p Thread from #[a(href=`/${thread.board}/index.html`) /#{thread.board}/]
+		h4.no-m-p #{__('Thread from')} #[a(href=`/${thread.board}/index.html`) /#{thread.board}/]
 		.thread
 			+post(thread, true, false, false, false, true)
 			for post in thread.replies
