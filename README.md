@@ -4,7 +4,7 @@ Anonymous imageboard software.
 
 Live instance: https://94chan.org
 
-API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/) - Gitgud pages link: http://fatchan.gitgud.site/jschan-docs/#introduction
+API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/) - Gitgud pages link: https://fatchan.gitgud.site/jschan-docs/#introduction
 
 Join the IRC: [open in client](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc.fatpeople.lol/#general)
 
@@ -14,7 +14,7 @@ Join the IRC: [open in client](ircs://irc.fatpeople.lol:6697/general) OR: [webch
 - [x] Multiple files per post
 - [x] Antispam/Anti-flood & DNSBL
 - [x] 3 customisable inbuilt captchas + 2 third party captchas (hcaptcha & recaptcha)
-- [x] [API documentation](http://fatchan.gitgud.site/jschan-docs/)
+- [x] [API documentation](https://fatchan.gitgud.site/jschan-docs/)
 - [x] Built-in webring (compatible w/ [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
 - [x] [Tegaki](https://github.com/desuwa/tegaki) applet with drawing and replays
 - [x] Two factor authentication (TOTP) for accounts
