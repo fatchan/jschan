@@ -25,6 +25,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 	const env = process.env.NODE_ENV;
 	const production = env === 'production';
 	debugLogs && console.log('process.env.NODE_ENV =', env);
+	process.env.NO_CAPTCHA && console.warn('WARNING, RUNNING WITH process.env.NO_CAPTCHA, CAPTCHA CHECKS ARE SKIPPED!');
 
 	// connect to mongodb
 	debugLogs && console.log('CONNECTING TO MONGODB');

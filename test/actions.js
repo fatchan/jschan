@@ -112,27 +112,6 @@ module.exports = () => describe('Test post modactions', () => {
 		expect(response.ok).toBe(true);
 	});
 
-	test('delete 5 random posts from /test/',  async () => {
-		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
-		const params = new URLSearchParams({
-			_csrf: csrfToken,
-			delete: '1',
-		});
-		for (let i = 0; i < 5; i++) {
-			const thread = threads[Math.floor(Math.random() * threads.length)];
-			params.append('checkedposts', thread.postId);
-		}
-		const response = await fetch('http://localhost/forms/board/test/modactions', {
-			headers: {
-				'x-using-xhr': 'true',
-				'cookie': sessionCookie,
-			},
-			method: 'POST',
-			body: params,
-		});
-		expect(response.ok).toBe(true);
-	});
-
 	test('lower reply limit',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
@@ -143,6 +122,7 @@ module.exports = () => describe('Test post modactions', () => {
 			theme: 'yotsuba-b',
 			code_theme: 'ir-black',
 			custom_css: '',
+			language: 'en-GB',
 			enable_tegaki: 'true',
 			max_files: '5',
 			files_allow_video: 'true',
@@ -318,6 +298,27 @@ module.exports = () => describe('Test post modactions', () => {
 			move_to_thread: threads[0].postId,
 		});
 		const response = await fetch('http://localhost/forms/board/test2/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('delete 5 random posts from /test/',  async () => {
+		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			delete: '1',
+		});
+		for (let i = 0; i < 5; i++) {
+			const thread = threads[Math.floor(Math.random() * threads.length)];
+			params.append('checkedposts', thread.postId);
+		}
+		const response = await fetch('http://localhost/forms/board/test/modactions', {
 			headers: {
 				'x-using-xhr': 'true',
 				'cookie': sessionCookie,
