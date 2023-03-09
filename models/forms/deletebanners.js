@@ -12,14 +12,15 @@ module.exports = async (req, res) => {
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
 	//delete file of all selected banners
-	await Promise.all(req.body.checkedbanners.map(async filename => {
+	await Promise.all(req.body.checkedbanners.map(filename => {
 		remove(`${uploadDirectory}/banner/${req.params.board}/${filename}`);
 	}));
 
 	//remove from db
-	const amount = await Boards.removeBanners(req.params.board, req.body.checkedbanners).then(result => result.modifiedCount);
+	await Boards.removeBanners(req.params.board, req.body.checkedbanners);
 
 	//update res locals banners in memory
+	const beforeBanners = res.locals.board.banners.length;
 	res.locals.board.banners = res.locals.board.banners.filter(banner => {
 		return !req.body.checkedbanners.includes(banner);
 	});
@@ -34,7 +35,7 @@ module.exports = async (req, res) => {
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'title': 'Success',
-		'message': `Deleted ${amount} banners.`,
+		'message': `Deleted ${beforeBanners - res.locals.board.banners.length} banners.`,
 		'redirect': redirect
 	});
 };
