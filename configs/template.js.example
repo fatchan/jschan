@@ -138,9 +138,9 @@ module.exports = {
 	//enable the webring (also copy configs/webring.json.example -> configs/webring.json and edit)
 	enableWebring: false,
 
-	//extension for thumbnails that do not contain transparency (png will be used)
-	thumbExtension: '.jpg',
-	//.gif images > thumbnail size will have animated .gif thumbnails, overriding thumbExtension
+	//extension for thumbnails
+	thumbExtension: '.webp',
+	//whether to animate gif thumbnails
 	animatedGifThumbnails: false,
 	//generate waveform thumbnails for audio
 	audioThumbnails: true,
@@ -262,10 +262,14 @@ module.exports = {
 			max: 1000
 		},
 		postFiles: { //number of files in a post
-			max: 5
+			max: 5,
 		},
-		postFilesSize: { //in bytes, 10MB default
-			max: 10485760
+		postFilesSize: {
+			max: 10485760, //in bytes, 10MB default
+			//width*height max number, 10000*10000 default, since square vs very wids vs very tall doesnt matter,
+			//just the raw number of pixels e.g. 4K 3840x2160=77414400, so we give PLENTY of headroom
+			imageResolution: 100000000,
+			videoResolution: 77414400,
 		},
 		bannerFiles: {
 			width: 300, //banner image max width in px

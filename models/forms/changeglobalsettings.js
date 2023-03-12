@@ -218,6 +218,8 @@ module.exports = async (req, res) => {
 			},
 			postFilesSize: {
 				max: numberSetting(req.body.global_limits_post_files_size_max, oldSettings.globalLimits.postFilesSize.max),
+				imageResolution: numberSetting(req.body.global_limits_post_files_size_image_resolution, oldSettings.globalLimits.postFilesSize.imageResolution),
+				videoResolution: numberSetting(req.body.global_limits_post_files_size_video_resolution, oldSettings.globalLimits.postFilesSize.videoResolution),
 			},
 			bannerFiles: {
 				width: numberSetting(req.body.global_limits_banner_files_width, oldSettings.globalLimits.bannerFiles.width),

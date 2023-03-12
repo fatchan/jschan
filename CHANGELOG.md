@@ -1,3 +1,7 @@
+### 0.11.4
+  - Bugfix for the message stating how many banners were deleted when deleting banners.
+  - Add an option to limit the total resolution of an image/video (width*height).
+
 ### 0.11.3
   - Fix max vs total upload count in controller for uploading board assets, flags and banners.
   - Move css theme assets to themes/assets instead of all lumped in one folder.

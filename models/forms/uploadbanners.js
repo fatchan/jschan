@@ -5,7 +5,7 @@ const { remove, pathExists } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, moveUpload = require(__dirname+'/../../lib/file/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../lib/file/mimetypes.js')
-	, imageIdentify = require(__dirname+'/../../lib/file/image/imageidentify.js')
+	, getDimensions = require(__dirname+'/../../lib/file/image/getdimensions.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { Boards } = require(__dirname+'/../../db/')
@@ -46,8 +46,8 @@ module.exports = async (req, res) => {
 		}
 
 		//300x100 check
-		const imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
-		let geometry = imageData.size;
+		const imageDimensions = await getDimensions(req.files.file[i].tempFilePath, null, true);
+		let geometry = imageDimensions;
 		if (Array.isArray(geometry)) {
 			geometry = geometry[0];
 		}

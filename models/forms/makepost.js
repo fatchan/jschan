@@ -16,7 +16,7 @@ const { createHash, randomBytes } = require('crypto')
 	, moveUpload = require(__dirname+'/../../lib/file/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../lib/file/mimetypes.js')
 	, imageThumbnail = require(__dirname+'/../../lib/file/image/imagethumbnail.js')
-	, imageIdentify = require(__dirname+'/../../lib/file/image/imageidentify.js')
+	, getDimensions = require(__dirname+'/../../lib/file/image/getdimensions.js')
 	, videoThumbnail = require(__dirname+'/../../lib/file/video/videothumbnail.js')
 	, audioThumbnail = require(__dirname+'/../../lib/file/audio/audiothumbnail.js')
 	, ffprobe = require(__dirname+'/../../lib/file/ffprobe.js')
@@ -36,7 +36,7 @@ const { createHash, randomBytes } = require('crypto')
 module.exports = async (req, res) => {
 
 	const { filterBanAppealable, checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		strictFiltering, animatedGifThumbnails, audioThumbnails, dontStoreRawIps } = config.get;
+		strictFiltering, animatedGifThumbnails, audioThumbnails, dontStoreRawIps, globalLimits } = config.get;
 
 	//spam/flood check
 	const flood = await spamCheck(req, res);
@@ -249,10 +249,9 @@ module.exports = async (req, res) => {
 				switch (type) {
 					case 'image': {
 						processedFile.thumbextension = thumbExtension;
-						///detect images with opacity for PNG thumbnails, set thumbextension before increment
-						let imageData;
+						let imageDimensions;
 						try {
-							imageData = await imageIdentify(req.files.file[i].tempFilePath, null, true);
+							imageDimensions = await getDimensions(req.files.file[i].tempFilePath, null, true);
 						} catch (e) {
 							await deleteTempFiles(req).catch(console.error);
 							return dynamicResponse(req, res, 400, 'message', {
@@ -261,15 +260,20 @@ module.exports = async (req, res) => {
 								'redirect': redirect
 							});
 						}
-						if (imageData['Channel Statistics'] && imageData['Channel Statistics']['Opacity']) {
-							//does this depend on GM version or anything?
-							const opacityMaximum = imageData['Channel Statistics']['Opacity']['Maximum'];
-							if (opacityMaximum !== '0.00 (0.0000)') {
-								processedFile.thumbextension = '.png';
-							}
+						if (Math.floor(imageDimensions.width*imageDimensions.height) > globalLimits.postFilesSize.imageResolution) {
+							await deleteTempFiles(req).catch(console.error);
+							return dynamicResponse(req, res, 400, 'message', {
+								'title': 'Bad request',
+								'message': `File "${req.files.file[i].name}" image resolution is too high. Width*Height must not exceed ${globalLimits.postFilesSize.imageResolution}.`,
+								'redirect': redirect
+							});
 						}
-						processedFile.geometry = imageData.size;
-						processedFile.geometryString = imageData.Geometry;
+						if (thumbExtension === '.jpg' && subtype === 'png') {
+							//avoid transparency issues for jpg thumbnails on pngs (the most common case -- for anything else, use webp thumbExtension)
+							processedFile.thumbextension = '.png';
+						}
+						processedFile.geometry = imageDimensions;
+						processedFile.geometryString = `${imageDimensions.width}x${imageDimensions.height}`;
 						const lteThumbSize = (processedFile.geometry.height <= thumbSize
 							&& processedFile.geometry.width <= thumbSize);
 						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
@@ -278,8 +282,6 @@ module.exports = async (req, res) => {
 						let firstFrameOnly = true;
 						if (processedFile.hasThumb //if it needs thumbnailing
 							&& (file.mimetype === 'image/gif' //and its a gif
-//								&& !lteThumbSize //and its big enough -> why was this a thing originally?
-								&& (imageData['Delay'] != null || imageData['Iterations'] != null) //and its not a static gif (naive check)
 								&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
 							firstFrameOnly = false;
 							processedFile.thumbextension = '.gif';
@@ -301,6 +303,14 @@ module.exports = async (req, res) => {
 						if (videoStreams.length > 0) {
 							processedFile.thumbextension = thumbExtension;
 							processedFile.geometry = {width: videoStreams[0].coded_width, height: videoStreams[0].coded_height};
+							if (Math.floor(processedFile.geometry.width*processedFile.geometry.height) > globalLimits.postFilesSize.videoResolution) {
+								await deleteTempFiles(req).catch(console.error);
+								return dynamicResponse(req, res, 400, 'message', {
+									'title': 'Bad request',
+									'message': `File "${req.files.file[i].name}" video resolution is too high. Width*Height must not exceed ${globalLimits.postFilesSize.videoResolution}.`,
+									'redirect': redirect
+								});
+							}
 							processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`;
 							processedFile.hasThumb = true;
 							await saveFull();
