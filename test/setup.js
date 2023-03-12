@@ -222,6 +222,8 @@ module.exports = () => describe('login and create test board', () => {
 			global_limits_post_files_max: '5',
 			global_limits_post_files_size_max: '10485760',
 			global_limits_custom_pages_max_length: '10000',
+			global_limits_post_files_size_video_resolution: '100000000',
+			global_limits_post_files_size_image_resolution: '100000000',
 			global_limits_custom_pages_max: '10',
 			global_limits_banner_files_width: '500',
 			global_limits_banner_files_height: '500',
