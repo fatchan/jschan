@@ -34,7 +34,7 @@ module.exports = {
 			'board_defaults_pph_trigger', 'board_defaults_tph_trigger_action', 'board_defaults_pph_trigger_action', 'board_defaults_captcha_reset', 'board_defaults_lock_reset',
 			'board_defaults_thread_limit', 'board_defaults_reply_limit', 'board_defaults_bump_limit', 'board_defaults_max_files', 'board_defaults_min_thread_message_length',
 			'board_defaults_min_reply_message_length', 'board_defaults_max_thread_message_length', 'board_defaults_max_reply_message_length', 'board_defaults_filter_mode',
-			'board_defaults_delete_protection_count', 'frontend_script_default_tegaki_height', 'frontend_script_default_tegaki_width']
+			'board_defaults_delete_protection_count', 'frontend_script_default_tegaki_height', 'frontend_script_default_tegaki_width', 'global_limits_post_files_size_image_resolution', 'global_limits_post_files_size_video_resolution']
 	}),
 
 	controller: async (req, res, next) => {
@@ -142,6 +142,8 @@ module.exports = {
 			{ result: minmaxBody(req.body.global_limits_bump_limit_min, req.body.global_limits_bump_limit_max), expected: true, error: __('Global bump limit min must be less than max') },
 			{ result: numberBody(req.body.global_limits_post_files_max), expected: true, error: __('Post files max must be a number') },
 			{ result: numberBody(req.body.global_limits_post_files_size_max), expected: true, error: __('Post files size must be a number') },
+			{ result: numberBody(req.body.global_limits_post_files_size_image_resolution), expected: true, error: __('Image resolution max must be a number') },
+			{ result: numberBody(req.body.global_limits_post_files_size_video_resolution), expected: true, error: __('Video resolution max must be a number') },
 			{ result: numberBody(req.body.global_limits_banner_files_width, 1), expected: true, error: __('Banner files height must be a number > 0') },
 			{ result: numberBody(req.body.global_limits_banner_files_height, 1), expected: true, error: __('Banner files width must be a number > 0') },
 			{ result: numberBody(req.body.global_limits_banner_files_size_max), expected: true, error: __('Banner files size must be a number') },

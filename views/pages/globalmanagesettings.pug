@@ -95,9 +95,6 @@ block content
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='prune_immediately', value='true' checked=settings.pruneImmediately)
 																		.row
-																			.label #{__('Thumbnail File Extension')}
-																			input(type='text' name='thumb_extension' value=settings.thumbExtension)
-																		.row
 																			.label #{__('Fuzzy Hash Images')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='hash_images' value='true' checked=settings.hashImages)
@@ -579,6 +576,15 @@ block content
 																		.row
 																			.label #{__('Space File Name Replacement')}
 																			input(type='text', name='space_file_name_replacement', value=settings.spaceFileNameReplacement)
+																		.row
+																			.label #{__('Thumbnail File Extension')}
+																			input(type='text' name='thumb_extension' value=settings.thumbExtension)
+																		.row
+																			.label #{__('Image Max Resolution')}
+																			input(type='text' name='global_limits_post_files_size_image_resolution' value=settings.globalLimits.postFilesSize.imageResolution)
+																		.row
+																			.label #{__('Video Max Resolution')}
+																			input(type='text' name='global_limits_post_files_size_video_resolution' value=settings.globalLimits.postFilesSize.videoResolution)
 
 																.tab.tab-9
 																	.col
