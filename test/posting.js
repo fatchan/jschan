@@ -130,7 +130,7 @@ int main() {...}
 			await postThreadsWithReplies('test', 30, 5);
 			await postThreadsWithReplies('test2', 10, 5);
 		} catch (e) {
-			console.error(e)
+			console.error(e);
 		}
 		jest.setTimeout(5*1000); //back to normal timeout
 	});
