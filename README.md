@@ -6,7 +6,7 @@ Live instance: https://94chan.org
 
 API documentation: [fatchan/jschan-docs](https://gitgud.io/fatchan/jschan-docs/) - Gitgud pages link: https://fatchan.gitgud.site/jschan-docs/#introduction
 
-Join the IRC: [open in client](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc.fatpeople.lol/#general)
+Join the IRC: [open in client](ircs://irc.fatpeople.lol:6697/general) OR: [webchat](https://irc-web.fatpeople.lol/#general)
 
 ## Features
 - [x] User created boards ala [infinity](https://github.com/ctrlcctrlv/infinity)
