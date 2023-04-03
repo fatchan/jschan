@@ -5,32 +5,32 @@ include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
 
 block head
-	title /#{board._id}/ - Recent Posts
+	title /#{board._id}/ - #{__('Recent Posts')}
 
 block content
-	+boardheader('Recent Posts')
+	+boardheader(__('Recent Posts'))
 	br
 	.wrapbar
 		+managenav('recent')
 		if page === 1 && !postId && !queryIp
 			.jsonly#livetext(data-view-raw-ip=(viewRawIp?'true':'false') data-room=`${board._id}-manage-recent-${viewRawIp === true ? 'raw' : 'hashed'}`)
 				.dot#livecolor
-				|  Connecting... 
-				input.postform-style.ml-5.di#updatepostsbutton(type='button' value='Update')
+				|  #{__('Connecting...')} 
+				input.postform-style.ml-5.di#updatepostsbutton(type='button' value=__('Update'))
 	form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
 		input(type='hidden' name='_csrf' value=csrf)
 		if posts.length === 0
 			hr(size=1)
-			p No posts.
+			p #{__('No posts.')}
 		else
 			hr(size=1)
 			- const ip = viewRawIp === true ? posts[0].ip.raw : posts[0].ip.cloak;
 			if postId || (queryIp && queryIp === ip)
-				h4.no-m-p Post history for #{ip}
+				h4.no-m-p #{__('Post history for %s', ip)}
 					|
 					if permissions.get(Permissions.MANAGE_GLOBAL_GENERAL)
 						|  
-						a(href=`/globalmanage/recent.html?ip=${encodeURIComponent(ip)}`) [See Global Post History]
+						a(href=`/globalmanage/recent.html?ip=${encodeURIComponent(ip)}`) [#{__('See Global Post History')}]
 				hr(size=1)
 			for p in posts
 				.thread

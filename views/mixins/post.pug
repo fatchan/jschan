@@ -39,13 +39,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 						span.post-name #{post.name}
 					| 
 				if post.country && post.country.code
-					if post.country.custom === true
-						span(title=post.country.name)
-							img.customflag(src=`/flag/${post.board}/${post.country.src}` alt=' ' loading='lazy')
-						| 
-					else
-						span(class=`flag flag-${post.country.code.toLowerCase()}` title=post.country.name alt=post.country.name)
-						| 
+					include ../includes/postflag.pug
 				if post.tripcode
 					span.post-tripcode #{post.tripcode}
 					| 
@@ -53,7 +47,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					span.post-capcode #{post.capcode}
 					| 
 				- const postDate = new Date(post.date);
-				time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(undefined, { hourCycle:'h23' })}
+				time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
 				| 
 				if post.userId
 					span.user-id(style=`background-color: #${post.userId}`) #{post.userId}
@@ -67,22 +61,22 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					|  
 					span.noselect: a(href=`${postURL}`) [Open]
 				select.jsonly.postmenu
-					option(value='single') Hide
+					option(value='single') #{__('Hide')}
 					if post.userId
-						option(value='fid') Filter ID
+						option(value='fid') #{__('Filter ID')}
 					if post.name
-						option(value='fname') Filter Name
+						option(value='fname') #{__('Filter Name')}
 					if post.subject
-						option(value='fsub') Filter Subject
+						option(value='fsub') #{__('Filter Subject')}
 					if post.tripcode
-						option(value='ftrip') Filter Tripcode
+						option(value='ftrip') #{__('Filter Tripcode')}
 					if !overboard && !ban
-						option(value='moderate') Moderate
+						option(value='moderate') #{__('Moderate')}
 					if !ban && (modview || manage || globalmanage)
-						option(value='edit') Edit
+						option(value='edit') #{__('Edit')}
 					if !post.thread
-						option(value='watch') Watch
-						option(value='playlist') Playlist
+						option(value='watch') #{__('Watch')}
+						option(value='playlist') #{__('Playlist')}
 		.post-data
 			if post.files.length > 0
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))
@@ -93,7 +87,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 							- const type = file.mimetype.split('/')[0]
 							span.post-file-info
 								span
-									a.filename(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? 'Spoiler File' : file.originalFilename}
+									a.filename(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? __('Spoiler File') : file.originalFilename}
 								br
 								if globalmanage && file.phash != null
 									span #{file.phash}
@@ -101,7 +95,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								if !file.attachment && !(post.spoiler || file.spoiler)
 									span.jsonly
 										b [
-										a.dummy-link.hide-image.noselect(data-src=`/file/${file.hasThumb ? 'thumb/'+file.hash+file.thumbextension : file.filename}`) Hide
+										a.dummy-link.hide-image.noselect(data-src=`/file/${file.hasThumb ? 'thumb/'+file.hash+file.thumbextension : file.filename}`) #{__('Hide')}
 										b ]
 								span 
 									|  (#{file.sizeString}
@@ -113,7 +107,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								if type === 'image'
 									if (board && board.settings.reverseImageSearchLinks === true) || (overboard && overboardReverseLinks === true) || manage || globalmanage
 										|  
-										span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title='Reverse Image Search' target='_blank') Reverse
+										span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title=__('Reverse Image Search') target='_blank') #{__('Reverse')}
 									if file.originalFilename.endsWith('-tegaki.png')
 										- const matchingReplayFile = post.files.find(f => f.originalFilename.slice(0, -4) === file.originalFilename.slice(0,-3));
 										if matchingReplayFile !== undefined
@@ -160,8 +154,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 				- const postEditDate = new Date(post.edited.date);
 				small.cb.mt-5.ml-5.edited
 					| Last edited 
-					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(undefined, { hourCycle:'h23' })}
-					|  by #{post.edited.username}
+					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
+					|  by #{post.edited.username || __('Hidden User')}
 			if post.banmessage
 				p.ban
 					span.message USER WAS BANNED FOR THIS POST

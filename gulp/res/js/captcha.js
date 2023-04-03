@@ -1,4 +1,4 @@
-/* globals captchaOptions captchaformsection */
+/* globals __ captchaOptions captchaformsection */
 const captchaCookieRegex = /captchaid=(.[^;]*)/ig;
 class CaptchaController {
 
@@ -46,7 +46,7 @@ class CaptchaController {
 			//captcha.parentElement.previousSibling.previousSibling.tagName === 'SUMMARY' ? captcha.parentElement.previousSibling.previousSibling :  captcha.parentElement;
 			hoverListener.addEventListener('mouseover', () => this.loadCaptcha(captcha), { once: true });
 		} else { //captchaOptions.type === 'text'
-			captcha.placeholder = 'focus to load captcha';
+			captcha.placeholder = __('focus to load captcha');
 			captcha.addEventListener('focus', () => this.loadCaptcha(captcha), { once: true });
 		}
 	}
@@ -117,12 +117,12 @@ class CaptchaController {
 		refreshDiv.addEventListener('click', (e) => this.refreshCaptchas(e), true);
 		refreshDiv.textContent = '↻';
 		if (captchaOptions.type === 'text') {
-			field.placeholder = 'loading';
+			field.placeholder = __('loading');
 		}
 		captchaImg.src = imgSrc;
 		captchaImg.onload = () => {
 			if (captchaOptions.type === 'text') {
-				field.placeholder = 'Captcha text';
+				field.placeholder = __('Captcha text');
 			}
 			captchaDiv.appendChild(captchaImg);
 			captchaDiv.appendChild(refreshDiv);

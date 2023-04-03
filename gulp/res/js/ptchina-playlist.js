@@ -1,3 +1,4 @@
+/* globals __ */
 //https://github.com/ussaohelcim/ptchina-playlist/tree/bookmarklet-let
 async function threadToPlaylist(board, postId) {
 	async function getThread() {
@@ -56,7 +57,7 @@ async function threadToPlaylist(board, postId) {
 		if (playlist.split('\n').length > 1) {
 			downloadPlaylist(`${thread.board}-${thread.postId}.m3u`, playlist);
 		} else {
-			console.log('No video/audio files in this thread.');
+			alert(__('No video/audio files in this thread.'));
 		}
 	} catch (error) {
 		console.log(error);

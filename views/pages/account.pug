@@ -1,94 +1,94 @@
 extends ../layout.pug
 
 block head
-	title Account
+	title #{__('Account')}
 
 block content
 	.board-header
-		h1.board-title Welcome, #{user.username}
+		h1.board-title #{__(`Welcome, %s`, user.username)}
 	br
 	hr(size=1)
-	h4.no-m-p General:
+	h4.no-m-p #{__('General')}:
 	ul
 		if !user.twofactor
-			li.bold: a(href='/twofactor.html') Setup 2FA (TOTP)
+			li.bold: a(href='/twofactor.html') #{__('Setup 2FA (TOTP)')}
 		if permissions.get(Permissions.CREATE_BOARD)
-			li: a(href='/create.html') Create a board
+			li: a(href='/create.html') #{__('Create a board')}
 		if permissions.get(Permissions.CREATE_ACCOUNT)
-			li: a(href='/register.html') Register an account
-		li: a(href='/changepassword.html') Change password
-		li: a(href='/mypermissions.html') My permissions
-		li: a(href='/sessions.html') Active sessions
+			li: a(href='/register.html') #{__('Register an account')}
+		li: a(href='/changepassword.html') #{__('Change password')}
+		li: a(href='/mypermissions.html') #{__('My permissions')}
+		li: a(href='/sessions.html') #{__('Active sessions')}
 	form(action='/forms/logout' method='post')
-		input(type='submit' value='Log out')
+		input(type='submit' value=__('Log out'))
 
 	if permissions.hasAny(Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_GLOBAL_BANS, Permissions.MANAGE_GLOBAL_BOARDS, Permissions.MANAGE_GLOBAL_LOGS, Permissions.MANAGE_GLOBAL_ACCOUNTS, Permissions.MANAGE_GLOBAL_NEWS, Permissions.MANAGE_GLOBAL_SETTINGS)
 		hr(size=1)
-		h4.no-m-p Global management:
+		h4.no-m-p #{__('Global Management')}:
 		ul
 			li
 				if permissions.get(Permissions.MANAGE_GLOBAL_GENERAL)
-					a(href=`/globalmanage/recent.html`) Recent
+					a(href=`/globalmanage/recent.html`) #{__('Recent')}
 					|   
-					a(href=`/globalmanage/reports.html`) Reports
+					a(href=`/globalmanage/reports.html`) #{__('Reports')}
 						if globalReportCount > 0
 							b  (#{globalReportCount})
 				if permissions.get(Permissions.MANAGE_GLOBAL_BANS)
 					|   
-					a(href=`/globalmanage/bans.html`) Bans
+					a(href=`/globalmanage/bans.html`) #{__('Bans')}
 				if permissions.get(Permissions.MANAGE_GLOBAL_BOARDS)
 					|   
-					a(href=`/globalmanage/boards.html`) Boards
+					a(href=`/globalmanage/boards.html`) #{__('Boards')}
 				if permissions.get(Permissions.MANAGE_GLOBAL_LOGS)
 					|   
-					a(href=`/globalmanage/globallogs.html`) Logs
+					a(href=`/globalmanage/globallogs.html`) #{__('Logs')}
 				if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
 					|   
-					a(href=`/globalmanage/accounts.html`) Accounts
+					a(href=`/globalmanage/accounts.html`) #{__('Accounts')}
 				if permissions.get(Permissions.MANAGE_GLOBAL_ROLES)
 					|   
-					a(href=`/globalmanage/roles.html`) Roles
+					a(href=`/globalmanage/roles.html`) #{__('Roles')}
 				if permissions.get(Permissions.MANAGE_GLOBAL_NEWS)
 					|   
-					a(href=`/globalmanage/news.html`) News
+					a(href=`/globalmanage/news.html`) #{__('News')}
 				if permissions.get(Permissions.MANAGE_GLOBAL_SETTINGS)
 					|   
-					a(href=`/globalmanage/settings.html`) Settings
+					a(href=`/globalmanage/settings.html`) #{__('Global Settings')}
 
 	hr(size=1)
-	h4.no-m-p Boards you own:
+	h4.no-m-p #{__('Boards you own')}:
 	if user.ownedBoards && user.ownedBoards.length > 0
 		ul
 			for b in user.ownedBoards
 				li
 					a(href=`/${b}/index.html`) /#{b}/
 					|  -  
-					a(href=`/${b}/manage/index.html`) Mod Index
+					a(href=`/${b}/manage/index.html`) #{__('Mod Index')}
 					|    
-					a(href=`/${b}/manage/catalog.html`) Mod Catalog
+					a(href=`/${b}/manage/catalog.html`) #{__('Mod Catalog')}
 					|   
-					a(href=`/${b}/manage/recent.html`) Recent
+					a(href=`/${b}/manage/recent.html`) #{__('Recent')}
 					|   
-					a(href=`/${b}/manage/reports.html`) Reports
+					a(href=`/${b}/manage/reports.html`) #{__('Reports')}
 						if boardReportCountMap[b]
 							b  (#{boardReportCountMap[b]})
 					|   
-					a(href=`/${b}/manage/bans.html`) Bans
+					a(href=`/${b}/manage/bans.html`) #{__('Bans')}
 					|   
-					a(href=`/${b}/manage/logs.html`) Logs
+					a(href=`/${b}/manage/logs.html`) #{__('Logs')}
 					|   
-					a(href=`/${b}/manage/settings.html`) Settings
+					a(href=`/${b}/manage/settings.html`) #{__('Settings')}
 					|   
-					a(href=`/${b}/manage/assets.html`) Assets
+					a(href=`/${b}/manage/assets.html`) #{__('Assets')}
 					|   
-					a(href=`/${b}/manage/custompages.html`) Custom Pages
+					a(href=`/${b}/manage/custompages.html`) #{__('Custom Pages')}
 					|   
-					a(href=`/${b}/manage/staff.html`) Staff
+					a(href=`/${b}/manage/staff.html`) #{__('Staff')}
 	else
-		p None
+		p #{__('Nothing')}
 
 	hr(size=1)
-	h4.no-m-p Boards you are staff on:
+	h4.no-m-p #{__('Boards you are staff on')}:
 	if user.staffBoards && user.staffBoards.length > 0
 		ul
 			for b in user.staffBoards
@@ -96,65 +96,65 @@ block content
 					if permissions.get(Permissions.MANAGE_BOARD_GENERAL) || boardPermissions[b].get(Permissions.MANAGE_BOARD_GENERAL)
 						a(href=`/${b}/index.html`) /#{b}/
 						|  -  
-						a(href=`/${b}/manage/index.html`) Mod Index
+						a(href=`/${b}/manage/index.html`) #{__('Mod Index')}
 						|    
-						a(href=`/${b}/manage/catalog.html`) Mod Catalog
+						a(href=`/${b}/manage/catalog.html`) #{__('Mod Catalog')}
 						|   
-						a(href=`/${b}/manage/recent.html`) Recent
+						a(href=`/${b}/manage/recent.html`) #{__('Recent')}
 						|   
-						a(href=`/${b}/manage/reports.html`) Reports
+						a(href=`/${b}/manage/reports.html`) #{__('Reports')}
 							if boardReportCountMap[b]
 								b  (#{boardReportCountMap[b]})
 					if permissions.get(Permissions.MANAGE_BOARD_BANS) || boardPermissions[b].get(Permissions.MANAGE_BOARD_BANS)
 						|   
-						a(href=`/${b}/manage/bans.html`) Bans
+						a(href=`/${b}/manage/bans.html`) #{__('Bans')}
 					if permissions.get(Permissions.MANAGE_BOARD_LOGS) || boardPermissions[b].get(Permissions.MANAGE_BOARD_LOGS)
 						|   
-						a(href=`/${b}/manage/logs.html`) Logs
+						a(href=`/${b}/manage/logs.html`) #{__('Logs')}
 					if permissions.get(Permissions.MANAGE_BOARD_SETTINGS) || boardPermissions[b].get(Permissions.MANAGE_BOARD_SETTINGS)
 						|   
-						a(href=`/${b}/manage/settings.html`) Settings
+						a(href=`/${b}/manage/settings.html`) #{__('Settings')}
 					if permissions.get(Permissions.MANAGE_BOARD_CUSTOMISATION) || boardPermissions[b].get(Permissions.MANAGE_BOARD_CUSTOMISATION)
 						|   
-						a(href=`/${b}/manage/assets.html`) Assets
+						a(href=`/${b}/manage/assets.html`) #{__('Assets')}
 					if permissions.get(Permissions.MANAGE_BOARD_CUSTOMISATION) || boardPermissions[b].get(Permissions.MANAGE_BOARD_CUSTOMISATION)
 						|   
-						a(href=`/${b}/manage/custompages.html`) Custom Pages
+						a(href=`/${b}/manage/custompages.html`) #{__('Custom Pages')}
 					if permissions.get(Permissions.MANAGE_BOARD_STAFF) || boardPermissions[b].get(Permissions.MANAGE_BOARD_STAFF)
 						|   
-						a(href=`/${b}/manage/staff.html`) Staff
+						a(href=`/${b}/manage/staff.html`) #{__('Staff')}
 	else
-		p None
+		p #{__('Nothing')}
 
 	if user.staffBoards.length > 0 ||  user.ownedBoards.length > 0
 		hr(size=1)
-		h4.no-m-p Resign from a staff position:
+		h4.no-m-p #{__('Resign from a staff position')}:
 		.form-wrapper.flexleft.mt-10
 			form.form-post(action=`/forms/resign`, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
 				.row
-					.label Boards
+					.label #{__('Boards')}
 					select(name='board' size='5')
-						optgroup(label='You own')
+						optgroup(label=__('You own'))
 							each board in user.ownedBoards
 								option(value=board) #{board}
-						optgroup(label='You moderate')
+						optgroup(label=__('You moderate'))
 							each board in user.staffBoards
 								option(value=board) #{board}
 				.row
-					.label I'm sure
+					.label #{__("I'm sure")}
 					label.postform-style.ph-5
 						input(type='checkbox', name='confirm', value='true' required)
-				input(type='submit', value='Submit')
+				input(type='submit', value=__('Resign'))
 
 	hr(size=1)
-	h4.no-m-p Delete your account:
+	h4.no-m-p #{__('Delete your account')}:
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/deleteaccount`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
-				.label I'm sure
+				.label #{__("I'm sure")}
 				label.postform-style.ph-5
 					input(type='checkbox', name='confirm', value='true' required)
-			input(type='submit', value='Submit')
+			input(type='submit', value=__('Delete'))
 	

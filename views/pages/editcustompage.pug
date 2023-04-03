@@ -3,10 +3,10 @@ include ../mixins/boardheader.pug
 include ../mixins/managenav.pug
 
 block head
-	title /#{board._id}/ - Edit Custom Page
+	title /#{board._id}/ - #{__('Edit Custom Page')}
 
 block content
-	+boardheader('Edit Custom Page')
+	+boardheader(__('Edit Custom Page'))
 	br
 	+managenav('custompages', true)
 	hr(size=1)
@@ -16,17 +16,17 @@ block content
 			input(type='hidden' name='_csrf' value=csrf)
 			input(type='hidden' name='page_id' value=page._id)
 			.row
-				.label .html name
-				input(type='text' name='page' pattern='[a-zA-Z0-9-_]+' title='a-zA-Z0-9-_ only' value=page.page required)
+				.label #{__('.html name')}
+				input(type='text' name='page' pattern='[a-zA-Z0-9-_]+' placeholder=__('a-zA-Z0-9-_ only') value=page.page required)
 			.table-container.flex-center.mv-5
 				table
 					tr
 						th
 							input.edit.left(type='text' name='title' value=page.title required)
 							- const pageDate = new Date(page.date);
-							time.right.reltime(datetime=pageDate.toISOString()) #{pageDate.toLocaleString(undefined, {hourCycle:'h23'})}
+							time.right.reltime(datetime=pageDate.toISOString()) #{pageDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 					tr
 						td
 
-							textarea.edit.fw(name='message' rows='10' placeholder='Supports post styling' required) #{page.message.raw}
-			input(type='submit', value='Save')
+							textarea.edit.fw(name='message' rows='10' placeholder=__('Supports post styling') required) #{page.message.raw}
+			input(type='submit', value=__('Save'))

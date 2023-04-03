@@ -102,7 +102,7 @@ block content
 					p A tripcode is a password of sorts, which users can provide in the tripcode component of their name. This tripcode is used in conjunction with a server-known secret to generate a unique* tripcode portion of the name. Long, unique tripcodes can be used as a form of identity. It is important that you keep tripcodes secret if you use them for some form of identity. A compromised tripcode can be used for impersonation and cannot be revoked in any way. Single # before tripcodes will use the traditional (what is now sometimes known as "insecure") tripcode algorithm shared by many imageboard softwares and websites. Double # before tripcodes will use a sha256 hash with server-side secret for a more secure, non-portable tripcode.
 
 					b Capcode
-					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. If there is no text after the ##, the role will be displayed alone. Leaving a space and putting custom text will be prefixed by the role name. This way, the role is always shown to prevent role impersonation.
+					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board staff. If there is no text after the ##, the role will be displayed alone. Leaving a space and putting custom text will be prefixed by the role name. This way, the role is always shown to prevent role impersonation.
 	.table-container.flex-center.mv-5
 		.anchor#post-styling
 		table
@@ -148,10 +148,10 @@ block content
 				td
 					span.detected ((( detected )))
 			tr
-				td ##2d9+3
+				td ##2%9+3
 				td
 					img(src='/file/dice.png' height='16' width='16')
-					span.dice (##2d9+3) Rolled 2 dice with 9 sides and modifier +3 = 10
+					span.dice (##2%9+3) = 10
 			tr
 				td https://example.com
 				td: a(href='#!') https://example.com

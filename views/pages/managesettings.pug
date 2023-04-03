@@ -5,35 +5,35 @@ include ../mixins/boardheader.pug
 include ../mixins/managenav.pug
 
 block head
-	title /#{board._id}/ - Settings
+	title /#{board._id}/ - #{__('Settings')} 
 
 block content
-	+boardheader('Settings')
+	+boardheader(__('Settings'))
 	br
 	+managenav('settings')
 	if permissions.get(Permissions.MANAGE_BOARD_OWNER)
 		hr(size=1)
-		h4.no-m-p Transfer ownership:
+		h4.no-m-p #{__('Transfer ownership')}:
 		.form-wrapper.flexleft.mt-10
 			form.form-post(action=`/forms/board/${board._id}/transfer`, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
 				.row
-					.label New owner username
+					.label #{__('New owner username')}:
 					input(type='text' name='username' placeholder=board.owner required)
-				input(type='submit', value='Submit')
+				input(type='submit', value=__('Submit'))
 		hr(size=1)
-		h4.no-m-p Delete board:
+		h4.no-m-p #{__('Delete board')}:
 		.form-wrapper.flexleft.mt-10
 			form.form-post(action=`/forms/board/${board._id}/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
 				.row
-					.label Board URI
+					.label #{__('Board URI')}:
 					input(type='text' name='uri' required)
 				.row
-					.label I'm sure
+					.label #{__("I'm sure")}
 					label.postform-style.ph-5
 						input(type='checkbox', name='confirm', value='true' required)
-				input(type='submit', value='Submit')
+				input(type='submit', value=__('Submit'))
 	hr(size=1)
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/board/${board._id}/settings` method='POST' enctype='application/x-www-form-urlencoded')
@@ -47,279 +47,284 @@ block content
 									.tabbed-area
 										ul.tabs.group
 											li
-												a(href='#tab-1') General
+												a(href='#tab-1') #{__('General')}
 											li
-												a(href='#tab-2') Posting
+												a(href='#tab-2') #{__('Posting')}
 											li
-												a(href='#tab-3') Files
+												a(href='#tab-3') #{__('Files')}
 											li
-												a(href='#tab-4') Limits
+												a(href='#tab-4') #{__('Limits')}
 											li
-												a(href='#tab-5') Antispam
+												a(href='#tab-5') #{__('Antispam')}
 										.box-wrap
 											.tab.tab-1
 												.col
 													.row
-														.label Board name
+														.label #{__('Board name')}
 														input(type='text' name='name' value=board.settings.name)
 													.row
-														.label Board Description
+														.label #{__('Board Description')}
 														input(type='text' name='description' value=board.settings.description)
 													.row
-														.label Tags
-														textarea(name='tags' placeholder='Newline separated, max 10') #{board.tags.join('\n')}
+														.label #{__('Tags')}
+														textarea(name='tags' placeholder=__('Newline separated, max 10')) #{board.tags.join('\n')}
 													.row
-														.label Announcement
-														textarea(name='announcement' placeholder='Supports post styling') #{board.settings.announcement.raw}
+														.label #{__('Announcement')}
+														textarea(name='announcement' placeholder=__('Supports post styling')) #{board.settings.announcement.raw}
 													.row
-														.label Theme
+														.label #{__('Language')}
+														select(name='language')
+															each language in languages
+																option(value=language selected=board.settings.language === language) #{__(language)} (#{language})
+													.row
+														.label #{__('Theme')}
 														select(name='theme')
 															each theme in themes
 																option(value=theme selected=board.settings.theme === theme) #{theme}
 													.row
-														.label Code Theme
+														.label #{__('Code Theme')}
 														select(name='code_theme')
 															each theme in codeThemes
 																option(value=theme selected=board.settings.codeTheme === theme) #{theme}
 													if globalLimits.customCss.enabled
 														.row
-															.label Custom CSS
-															textarea(name='custom_css' placeholder='Test first in top-right settings if you have javascript enabled' maxlength=globalLimits.customCss.max) #{board.settings.customCss}
+															.label #{__('Custom CSS')}
+															textarea(name='custom_css' placeholder=__('Test first in top-right settings if you have javascript enabled') maxlength=globalLimits.customCss.max) #{board.settings.customCss}
 													.row
-														.label Hide Banners
+														.label #{__('Hide Banners')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='hide_banners', value='true' checked=board.settings.hideBanners)
 													.row
-														.label IDs
+														.label #{__('IDs')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='ids', value='true' checked=board.settings.ids)
 													.row
-														.label Geo Flags
+														.label #{__('Geo Flags')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='geo_flags', value='true' checked=board.settings.geoFlags)
 													.row
-														.label Custom Flags
+														.label #{__('Custom Flags')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='custom_flags', value='true' checked=board.settings.customFlags)
 													.row
-														.label Reverse Image Search Links
+														.label #{__('Reverse Image Search Links')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='reverse_image_search_links', value='true' checked=board.settings.reverseImageSearchLinks)
 													.row
-														.label External Archive Links
+														.label #{__('External Archive Links')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='archive_links', value='true' checked=board.settings.archiveLinks)
 													.row
-														.label Enable Tegaki
+														.label #{__('Enable Tegaki')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='enable_tegaki', value='true' checked=board.settings.enableTegaki)
 													.row
-														.label SFW
+														.label #{__('SFW')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='sfw', value='true' checked=board.settings.sfw)
 													.row
-														.label Unlist locally
+														.label #{__('Unlist locally')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='unlisted_local', value='true' checked=board.settings.unlistedLocal)
 													.row
-														.label Unlist from webring
+														.label #{__('Unlist from webring')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='unlisted_webring', value='true' checked=board.settings.unlistedWebring)
 
 											.tab.tab-2
 												.col
 													.row
-														.label Anon Name
+														.label #{__('Anon Name')}
 														input(type='text' name='default_name' value=board.settings.defaultName)
 													.row
-														.label User Post Deletion
+														.label #{__('User Post Deletion')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='user_post_delete', value='true' checked=board.settings.userPostDelete)
 													.row
-														.label Force Anon
+														.label #{__('Force Anon')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='force_anon', value='true' checked=board.settings.forceAnon)
 													.row
-														.label Sage Only Email
+														.label #{__('Sage Only Email')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='sage_only_email', value='true' checked=board.settings.sageOnlyEmail)
 													.row
-														.label Force Thread Subject
+														.label #{__('Force Thread Subject')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='force_thread_subject', value='true' checked=board.settings.forceThreadSubject)
 													.row
-														.label Force Thread Message
+														.label #{__('Force Thread Message')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='force_thread_message', value='true' checked=board.settings.forceThreadMessage)
 													.row
-														.label Force Thread File
+														.label #{__('Force Thread File')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='force_thread_file', value='true' checked=board.settings.forceThreadFile)
 													.row
-														.label Force Reply Message
+														.label #{__('Force Reply Message')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='force_reply_message', value='true' checked=board.settings.forceReplyMessage)
 													.row
-														.label Force Reply File
+														.label #{__('Force Reply File')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='force_reply_file', value='true' checked=board.settings.forceReplyFile)
 													.row
-														.label Disable Reply Subject
+														.label #{__('Disable Reply Subject')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='disable_reply_subject', value='true' checked=board.settings.disableReplySubject)
 													.row
-														.label Min Thread Message Length
+														.label #{__('Min Thread Message Length')}
 														input(type='number' name='min_thread_message_length' value=board.settings.minThreadMessageLength min=0 max=globalLimits.fieldLength.message)
 													.row
-														.label Min Reply Message Length
+														.label #{__('Min Reply Message Length')}
 														input(type='number' name='min_reply_message_length' value=board.settings.minReplyMessageLength min=0 max=globalLimits.fieldLength.message)
 													.row
-														.label Max Thread Message Length
+														.label #{__('Max Thread Message Length')}
 														input(type='number' name='max_thread_message_length' value=board.settings.maxThreadMessageLength min=0 max=globalLimits.fieldLength.message)
 													.row
-														.label Max Reply Message Length
+														.label #{__('Max Reply Message Length')}
 														input(type='number' name='max_reply_message_length' value=board.settings.maxReplyMessageLength min=0 max=globalLimits.fieldLength.message)
 
 											.tab.tab-3
 												.col
 													.row
-														.label Max Files
+														.label #{__('Max Files')}
 														input(type='number' name='max_files' value=board.settings.maxFiles max=globalLimits.postFiles.max)
 													.row
-														.label Allow Video Files
+														.label #{__('Allow Video Files')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='files_allow_video', value='true' checked=board.settings.allowedFileTypes.video)
 													.row
-														.label Allow Image Files
+														.label #{__('Allow Image Files')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='files_allow_image', value='true' checked=board.settings.allowedFileTypes.image)
 													.row
-														.label Allow Animated Image Files
+														.label #{__('Allow Animated Image Files')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='files_allow_animated_image', value='true' checked=board.settings.allowedFileTypes.animatedImage)
 													.row
-														.label Allow Audio Files
+														.label #{__('Allow Audio Files')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='files_allow_audio', value='true' checked=board.settings.allowedFileTypes.audio)
 													.row
-														.label Allow Other Files
+														.label #{__('Allow Other Files')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='files_allow_other', value='true' checked=board.settings.allowedFileTypes.other)
 													.row
-														.label User File Spoilering
+														.label #{__('User File Spoilering')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='user_post_spoiler', value='true' checked=board.settings.userPostSpoiler)
 													.row
-														.label User File Unlinking
+														.label #{__('User File Unlinking')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='user_post_unlink', value='true' checked=board.settings.userPostUnlink)
 
 											.tab.tab-4
 												.col
 													.row
-														.label Thread Limit
+														.label #{__('Thread Limit')}
 														input(type='number' name='thread_limit' value=board.settings.threadLimit min=globalLimits.threadLimit.min max=globalLimits.threadLimit.max)
 													.row
-														.label Reply Limit
+														.label #{__('Reply Limit')}
 														input(type='number' name='reply_limit' value=board.settings.replyLimit min=globalLimits.replyLimit.min max=globalLimits.replyLimit.max)
 													.row
-														.label Bump Limit
+														.label #{__('Bump Limit')}
 														input(type='number' name='bump_limit' value=board.settings.bumpLimit min=globalLimits.bumpLimit.min max=globalLimits.bumpLimit.max)
 													.row
-														.label Enforce Unique Files
+														.label #{__('Enforce Unique Files')}
 														select(name='file_r9k_mode')
-															option(value='0', selected=board.settings.fileR9KMode === 0) Off
-															option(value='1', selected=board.settings.fileR9KMode === 1) Per Thread
-															option(value='2', selected=board.settings.fileR9KMode === 2) Board Wide
+															option(value='0', selected=board.settings.fileR9KMode === 0) #{__('Off')}
+															option(value='1', selected=board.settings.fileR9KMode === 1) #{__('Per Thread')}
+															option(value='2', selected=board.settings.fileR9KMode === 2) #{__('Board Wide')}
 													.row
-														.label Enforce Unique Messages
+														.label #{__('Enforce Unique Messages')}
 														select(name='message_r9k_mode')
-															option(value='0', selected=board.settings.messageR9KMode === 0) Off
-															option(value='1', selected=board.settings.messageR9KMode === 1) Per Thread
-															option(value='2', selected=board.settings.messageR9KMode === 2) Board Wide
+															option(value='0', selected=board.settings.messageR9KMode === 0) #{__('Off')}
+															option(value='1', selected=board.settings.messageR9KMode === 1) #{__('Per Thread')}
+															option(value='2', selected=board.settings.messageR9KMode === 2) #{__('Board Wide')}
 													.row
-														.label OP Reply Count Delete Protection
+														.label #{__('OP Reply Count Delete Protection')}
 														input(type='number' name='delete_protection_count' value=board.settings.deleteProtectionCount)
 													.row
-														.label OP Thread Age Delete Protection
-														input(type='text' name='delete_protection_age' placeholder='e.g. 1w' value=board.settings.deleteProtectionAge)
+														.label #{__('OP Thread Age Delete Protection')}
+														input(type='text' name='delete_protection_age' placeholder=__('e.g. 1w') value=board.settings.deleteProtectionAge)
 
 											.tab.tab-5
 												.col
 													.row
-														a.label(href='/faq.html#antispam') Antispam FAQ
+														a.label(href='/faq.html#antispam') #{__('Antispam FAQ')}
 													.row
-														.label Lock Mode
+														.label #{__('Lock Mode')}
 														select(name='lock_mode')
-															option(value='0', selected=board.settings.lockMode === 0) Unlocked
-															option(value='1', selected=board.settings.lockMode === 1) Lock thread creation
-															option(value='2', selected=board.settings.lockMode === 2) Lock board
+															option(value='0', selected=board.settings.lockMode === 0) #{__('Unlocked')}
+															option(value='1', selected=board.settings.lockMode === 1) #{__('Lock thread creation')}
+															option(value='2', selected=board.settings.lockMode === 2) #{__('Lock board')}
 													.row
-														.label Captcha Mode
+														.label #{__('Captcha Mode')}
 														select(name='captcha_mode')
-															option(value='0', selected=board.settings.captchaMode === 0) No Captcha
-															option(value='1', selected=board.settings.captchaMode === 1) Captcha for new thread
-															option(value='2', selected=board.settings.captchaMode === 2) Captcha for all posts
+															option(value='0', selected=board.settings.captchaMode === 0) #{__('No Captcha')}
+															option(value='1', selected=board.settings.captchaMode === 1) #{__('Captcha for new thread')}
+															option(value='2', selected=board.settings.captchaMode === 2) #{__('Captcha for all posts')}
 													.row
-														.label PPH Trigger Threshold
+														.label #{__('PPH Trigger Threshold')}
 														input(type='number', name='pph_trigger', value=board.settings.pphTrigger)
 													.row
-														.label PPH Trigger Action
+														.label #{__('PPH Trigger Action')}
 														select(name='pph_trigger_action')
-															option(value='0', selected=board.settings.pphTriggerAction === 0) Do nothing
-															option(value='1', selected=board.settings.pphTriggerAction === 1) Enable captcha for new thread
-															option(value='2', selected=board.settings.pphTriggerAction === 2) Enable captcha for all posts
-															option(value='3', selected=board.settings.pphTriggerAction === 3) Lock thread creation
-															option(value='4', selected=board.settings.pphTriggerAction === 4) Lock board
+															option(value='0', selected=board.settings.pphTriggerAction === 0) #{__('Do nothing')}
+															option(value='1', selected=board.settings.pphTriggerAction === 1) #{__('Enable captcha for new thread')}
+															option(value='2', selected=board.settings.pphTriggerAction === 2) #{__('Enable captcha for all posts')}
+															option(value='3', selected=board.settings.pphTriggerAction === 3) #{__('Lock thread creation')}
+															option(value='4', selected=board.settings.pphTriggerAction === 4) #{__('Lock board')}
 													.row
-														.label TPH Trigger Threshold
+														.label #{__('TPH Trigger Threshold')}
 														input(type='number', name='tph_trigger', value=board.settings.tphTrigger)
 													.row
-														.label TPH Trigger Action
+														.label #{__('TPH Trigger Action')}
 														select(name='tph_trigger_action')
-															option(value='0', selected=board.settings.tphTriggerAction === 0) Do nothing
-															option(value='1', selected=board.settings.tphTriggerAction === 1) Enable captcha for new thread
-															option(value='2', selected=board.settings.tphTriggerAction === 2) Enable captcha for all posts
-															option(value='3', selected=board.settings.tphTriggerAction === 3) Lock thread creation
-															option(value='4', selected=board.settings.tphTriggerAction === 4) Lock board
+															option(value='0', selected=board.settings.tphTriggerAction === 0) #{__('Do nothing')}
+															option(value='1', selected=board.settings.tphTriggerAction === 1) #{__('Enable captcha for new thread')}
+															option(value='2', selected=board.settings.tphTriggerAction === 2) #{__('Enable captcha for all posts')}
+															option(value='3', selected=board.settings.tphTriggerAction === 3) #{__('Lock thread creation')}
+															option(value='4', selected=board.settings.tphTriggerAction === 4) #{__('Lock board')}
 													.row
-														.label Trigger Reset Lock Mode
+														.label #{__('Trigger Reset Lock Mode')}
 														select(name='lock_reset')
-															option(value='0', selected=board.settings.lockReset === 0) No change
-															option(value='1', selected=board.settings.lockReset === 1) Unlock board
-															option(value='2', selected=board.settings.lockReset === 2) Lock thread creation
+															option(value='0', selected=board.settings.lockReset === 0) #{__('No change')}
+															option(value='1', selected=board.settings.lockReset === 1) #{__('Unlock board')}
+															option(value='2', selected=board.settings.lockReset === 2) #{__('Lock thread creation')}
 													.row
-														.label Trigger Reset Captcha Mode
+														.label #{__('Trigger Reset Captcha Mode')}
 														select(name='captcha_reset')
-															option(value='0', selected=board.settings.captchaReset === 0) No change
-															option(value='1', selected=board.settings.captchaReset === 1) Captcha disabled
-															option(value='2', selected=board.settings.captchaReset === 2) Captcha for new thread
+															option(value='0', selected=board.settings.captchaReset === 0) #{__('No change')}
+															option(value='1', selected=board.settings.captchaReset === 1) #{__('Captcha disabled')}
+															option(value='2', selected=board.settings.captchaReset === 2) #{__('Captcha for new thread')}
 													.row
-														.label Early 404
+														.label #{__('Early 404')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='early404', value='true' checked=board.settings.early404)
 													.row
-														.label Disable anonymizer file posting
+														.label #{__('Disable anonymizer file posting')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='disable_anonymizer_file_posting', value='true' checked=board.settings.disableAnonymizerFilePosting)
 													.row
-														.label Blocked Countries
+														.label #{__('Blocked Countries')}
 														include ../includes/2charisocountries.pug
 													.row
-														.label Filters
-														textarea(name='filters' placeholder='Newline separated') #{board.settings.filters.join('\n')}
+														.label #{__('Filters')}
+														textarea(name='filters' placeholder=__('Newline separated')) #{board.settings.filters.join('\n')}
 													.row
-														.label Strict Filtering
+														.label #{__('Strict Filtering')}
 														label.postform-style.ph-5
 															input(type='checkbox', name='strict_filtering', value='true' checked=board.settings.strictFiltering)
 													.row
-														.label Filter Mode
+														.label #{__('Filter Mode')}
 														select(name='filter_mode')
-															option(value='0', selected=board.settings.filterMode === 0) Do nothing
-															option(value='1', selected=board.settings.filterMode === 1) Block post
-															option(value='2', selected=board.settings.filterMode === 2) Ban
+															option(value='0', selected=board.settings.filterMode === 0) #{__('Do nothing')}
+															option(value='1', selected=board.settings.filterMode === 1) #{__('Block post')}
+															option(value='2', selected=board.settings.filterMode === 2) #{__('Ban')}
 													.row
-														.label Filter Auto Ban Duration
-														input(type='text' name='ban_duration' placeholder='e.g. 1w' value=board.settings.filterBanDuration)
+														.label #{__('Filter Auto Ban Duration')}
+														input(type='text' name='ban_duration' placeholder=__('e.g. 1w') value=board.settings.filterBanDuration)
 
-			input.row(type='submit', value='Save settings')
+			input.row(type='submit', value=__('Save settings'))

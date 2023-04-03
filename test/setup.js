@@ -99,6 +99,7 @@ module.exports = () => describe('login and create test board', () => {
 			overboard_limit: '20',
 			overboard_catalog_limit: '100',
 			allow_custom_overboard: 'true',
+			language: 'en-GB',
 			archive_links: 'https://archive.today/?run=1&url=%s',
 			reverse_links: 'https://tineye.com/search?url=%s',
 			prune_modlogs: '30',

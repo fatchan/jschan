@@ -5,17 +5,17 @@ include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
 
 block head
-	title /#{board._id}/ - Reports
+	title /#{board._id}/ - #{__('Reports')}
 
 block content
-	+boardheader('Reports')
+	+boardheader(__('Reports'))
 	br
 	+managenav('reports')
 	hr(size=1)
-	h4.no-m-p Reports:
+	h4.no-m-p #{__('Reports')}:
 	form(action=`/forms/board/${board._id}/modactions` method='POST' enctype='application/x-www-form-urlencoded')
 		if reports.length === 0
-			p No reports.
+			p #{__('No reports.')}
 		else
 			input(type='hidden' name='_csrf' value=csrf)
 			for report in reports

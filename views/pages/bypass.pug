@@ -1,10 +1,10 @@
 extends ../layout.pug
 
 block head
-	title Block Bypass
+	title #{__('Block Bypass')}
 
 block content
-	h1.board-title Block Bypass
+	h1.board-title #{__('Block Bypass')}
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/blockbypass' method='POST' data-captcha-preload='true')
 			.row
@@ -12,6 +12,6 @@ block content
 					include ../includes/captcha.pug
 			if minimal
 				input(type='hidden' name='minimal' value='1')
-			input(type='submit', value='Submit')
+			input(type='submit', value=__('Submit'))
 		if message
 			p.title #{message}

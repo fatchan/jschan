@@ -16,6 +16,7 @@ const express  = require('express')
 	, sessionRefresh = require(__dirname+'/../lib/middleware/permission/sessionrefresh.js')
 	, csrf = require(__dirname+'/../lib/middleware/misc/csrfmiddleware.js')
 	, setMinimal = require(__dirname+'/../lib/middleware/misc/setminimal.js')
+	, { setBoardLanguage, setQueryLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
 	//page models
 	, { manageRecent, manageReports, manageAssets, manageSettings, manageBans, editCustomPage, manageMyPermissions,
 		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages, manageStaff, editStaff, editPost } = require(__dirname+'/../models/pages/manage/')
@@ -44,47 +45,47 @@ router.get('/overboard.(html|json)', overboard); //overboard
 router.get('/catalog.(html|json)', overboardCatalog); //overboard catalog view
 
 //board pages
-router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, board); //index
-router.get('/:board/thread/:id([1-9][0-9]{0,}).(html|json)', Boards.exists, threadParamConverter, Posts.threadExistsMiddleware, thread); //thread view
-router.get('/:board/catalog.(html|json)', Boards.exists, catalog); //catalog
-router.get('/:board/logs.(html|json)', Boards.exists, modloglist);//modlog list
-router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).(html|json)', Boards.exists, logParamConverter, modlog); //daily log
-router.get('/:board/custompage/:page.(html|json)', Boards.exists, customPage); //board custom page
-router.get('/:board/banners.(html|json)', Boards.exists, banners); //banners
-router.get('/:board/settings.json', Boards.exists, boardSettings); //public board settings
+router.get('/:board/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).(html|json)', Boards.exists, setBoardLanguage, board); //index
+router.get('/:board/thread/:id([1-9][0-9]{0,}).(html|json)', Boards.exists, setBoardLanguage, threadParamConverter, Posts.threadExistsMiddleware, thread); //thread view
+router.get('/:board/catalog.(html|json)', Boards.exists, setBoardLanguage, catalog); //catalog
+router.get('/:board/logs.(html|json)', Boards.exists, setBoardLanguage, modloglist);//modlog list
+router.get('/:board/logs/:date(\\d{2}-\\d{2}-\\d{4}).(html|json)', Boards.exists, setBoardLanguage, logParamConverter, modlog); //daily log
+router.get('/:board/custompage/:page.(html|json)', Boards.exists, setBoardLanguage, customPage); //board custom page
+router.get('/:board/banners.(html|json)', Boards.exists, setBoardLanguage, banners); //banners
+router.get('/:board/settings.json', Boards.exists, setBoardLanguage, boardSettings); //public board settings
 router.get('/settings.json', globalSettings); //public global settings
 router.get('/randombanner', randombanner); //random banner
 
 //board manage pages
-router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/catalog.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageCatalog);
-router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/:page(1[0-9]{1,}|[2-9][0-9]{0,}|index).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageBoard);
-router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, threadParamConverter, calcPerms,
+router.get('/:board/manage/thread/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, threadParamConverter, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, Posts.threadExistsMiddleware, manageThread);
-router.get('/:board/manage/editpost/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, threadParamConverter, calcPerms,
+router.get('/:board/manage/editpost/:id([1-9][0-9]{0,}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, threadParamConverter, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, Posts.postExistsMiddleware, editPost);
-router.get('/:board/manage/reports.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/reports.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageReports);
-router.get('/:board/manage/recent.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/recent.(html|json)', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), csrf, manageRecent);
-router.get('/:board/manage/mypermissions.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/mypermissions.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), manageMyPermissions);
-router.get('/:board/manage/logs.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/logs.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_LOGS), csrf, manageLogs);
-router.get('/:board/manage/bans.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/bans.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_BANS), csrf, manageBans);
-router.get('/:board/manage/settings.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/settings.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, manageSettings);
-router.get('/:board/manage/assets.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/assets.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, manageAssets);
-router.get('/:board/manage/custompages.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/custompages.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, manageCustomPages);
-router.get('/:board/manage/editcustompage/:custompageid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/editcustompage/:custompageid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), csrf, custompageParamConverter, editCustomPage);
-router.get('/:board/manage/staff.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/staff.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, manageStaff);
-router.get('/:board/manage/editstaff/:staffusername([a-zA-Z0-9]{1,50}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, calcPerms,
+router.get('/:board/manage/editstaff/:staffusername([a-zA-Z0-9]{1,50}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, editStaff);
 
 //global manage pages
@@ -112,13 +113,12 @@ router.get('/globalmanage/editaccount/:accountusername([a-zA-Z0-9]{1,50}).html',
 	hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), csrf, editAccount);
 router.get('/globalmanage/editrole/:roleid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, calcPerms,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), csrf, roleParamConverter, editRole);
-//TODO: edit post edit page form, like editnews/editaccount/editrole endpoint
 
 //captcha
 router.get('/captcha', geoIp, processIp, captcha); //get captcha image and cookie
 router.get('/captcha.html', captchaPage); //iframed for noscript users
 router.get('/bypass.html', blockBypass); //block bypass page
-router.get('/bypass_minimal.html', setMinimal, blockBypass); //block bypass page
+router.get('/bypass_minimal.html', setMinimal, setQueryLanguage, blockBypass); //block bypass page
 
 //accounts
 router.get('/account.html', useSession, sessionRefresh, isLoggedIn, calcPerms, csrf, account); //page showing boards you are mod/owner of, links to password rese, logout, etc

@@ -6,6 +6,7 @@ const { Accounts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	let updatingPermissions;
 
 	if (req.body.template) {
@@ -20,15 +21,15 @@ module.exports = async (req, res) => {
 
 	if (updated === 0) {
 		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': 'Account does not exist',
+			'title': __('Bad request'),
+			'errors': __('Account does not exist'),
 			'redirect': req.headers.referer || '/globalmanage/accounts.html',
 		});
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Edited account',
+		'title': __('Success'),
+		'message': __('Edited account'),
 		'redirect': `/globalmanage/editaccount/${req.body.username}.html`,
 	});
 

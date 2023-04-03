@@ -10,6 +10,7 @@ const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const { threads, postIds, postMongoIds } = res.locals.posts
 		.sort((a, b) => {
 			return a.date - b.date; //could do postId, doesn't really matter.
@@ -119,7 +120,7 @@ module.exports = async (req, res) => {
 
 	//emit markPost moves
 	for (let i = 0; i < moveEmits.length; i++) {
-		Socketio.emitRoom(moveEmits[i].room, 'markPost', { postId: moveEmits[i].postId, type: 'move', mark: 'Moved' });
+		Socketio.emitRoom(moveEmits[i].room, 'markPost', { postId: moveEmits[i].postId, type: 'move' });
 	}
 
 	//no destination thread specified (making new thread from posts), need to fetch OP as destinationThread for remarkup/salt
@@ -190,7 +191,7 @@ module.exports = async (req, res) => {
 	}
 
 	return {
-		message: 'Moved posts',
+		message: __('Moved posts'),
 		action: movedPosts > 0,
 	};
 

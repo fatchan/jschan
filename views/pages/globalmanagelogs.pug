@@ -4,10 +4,10 @@ include ../mixins/globalmanagenav.pug
 include ../mixins/postlink.pug
 
 block head
-	title Logs
+	title #{__('Logs')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('logs')
 	hr(size=1)
@@ -16,37 +16,37 @@ block content
 		form.form-post.mv-5(action=`/globalmanage/globallogs.html` method='GET')
 			input(type='hidden' value=page)
 			.row
-				.label Board URI
+				.label #{__('Board URI')}
 				input(type='text' name='uri' value=uri)
 			.row
-				.label Username
+				.label #{__('Username')}
 				input(type='text' name='username' value=username)
 			.row
-				.label IP
+				.label #{__('IP')}
 				input(type='text' name='ip' value=ip)
-			input(type='submit', value='Filter')
+			input(type='submit', value=__('Filter'))
 		h4.no-m-p Global Logs:
 		if logs && logs.length > 0
 			.table-container.flex-center.mv-10.text-center
 				table.fw
 						tr
-							th Date
-							th Board
-							th User
-							th IP
-							th Actions
-							th Posts
-							th Log Message
+							th #{__('Date')}
+							th #{__('Board')}
+							th #{__('User')}
+							th #{__('IP')}
+							th #{__('Actions')}
+							th #{__('Posts')}
+							th #{__('Log Message')}
 						for log in logs
 							tr
 								- const logDate = new Date(log.date);
-								td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hourCycle:'h23'})}
+								td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 								td
 									a(href=`/${log.board}/index.html`) /#{log.board}/
 									|   
 									a(href=`?uri=${log.board}`) [+]
 								td
-									if log.user !== 'Unregistered User'
+									if log.user !== __('Unregistered User')
 										a(href=`accounts.html?username=${log.user}`) #{log.user}
 									else
 										| #{log.user}
@@ -57,7 +57,7 @@ block content
 									a(href=`recent.html?ip=${encodeURIComponent(logIp)}`) #{logIp}
 									|   
 									a(href=`?ip=${encodeURIComponent(logIp)}`) [+]
-								td #{log.actions}
+								td #{log.actions.map(a => __(a))}
 								td
 									if log.showLinks
 										for postLink in log.postLinks
@@ -69,4 +69,4 @@ block content
 			.pages.mv-5
 				include ../includes/pages.pug
 		else
-			p No logs.
+			p #{__('No Logs.')}

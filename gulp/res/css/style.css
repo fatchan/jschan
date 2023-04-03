@@ -209,7 +209,7 @@ pre {
 	cursor: pointer;
 }
 #settings::after {
-	content: "Settings";
+	content: attr(data-label);
 }
 .expand-omitted {
 	background-color: var(--post-color);
@@ -1113,7 +1113,7 @@ input:invalid, textarea:invalid {
 
 .you:after {
 	margin-left: 3px;
-	content: '(You)';
+	content: '(' attr(data-label) ')';
 	font-weight: lighter;
 	font-style: italic;
 }
@@ -1640,7 +1640,7 @@ row.wrap.sb .col {
 		content:attr(title);
 	}
 	.user-id[title]:hover:after {
-		content:"Double tap to highlight" attr(data-count);
+		content: attr(title-mobile);
 	}
 	[title]:hover:before {
 		content: '';

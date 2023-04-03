@@ -6,6 +6,8 @@ const { News } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
+
 	await News.deleteMany(req.body.checkednews);
 
 	buildQueue.push({
@@ -14,8 +16,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Deleted news',
+		'title': __('Success'),
+		'message': __('Deleted news'),
 		'redirect': '/globalmanage/news.html'
 	});
 

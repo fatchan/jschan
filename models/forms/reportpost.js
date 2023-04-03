@@ -4,6 +4,8 @@ const { ObjectId } = require(__dirname+'/../../db/db.js');
 
 module.exports = (req, res) => {
 
+	const { __n } = res.locals;
+
 	const report = {
 		'id': ObjectId(),
 		'reason': req.body.report_reason,
@@ -16,7 +18,7 @@ module.exports = (req, res) => {
 	};
 
 	const ret = {
-		message: `Reported ${res.locals.posts.length} post${res.locals.posts.length > 1 ? 's' : ''}`,
+		message: __n('Reported %s posts', res.locals.posts.length),
 		action: '$push',
 		query: {}
 	};

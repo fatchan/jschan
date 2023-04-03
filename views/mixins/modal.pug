@@ -6,7 +6,7 @@ mixin modal(data)
 			p.bold #{data.title}
 			a.close.postform-style#modalclose ×
 		if data.bans
-			h1.board-title Banned!
+			h1.board-title #{__('Banned!')}
 			.row#modalbanned
 				- const bans = data.bans;
 				include ../includes/banform.pug
@@ -29,9 +29,9 @@ mixin modal(data)
 		else if data.link
 			.row
 				a.button.mv-0(href=data.link.href target='_blank') #{data.link.text}
-		else if data.redirect && data.title === 'Success'
+		else if data.redirect && data.title === __('Success')
 			.row
-				a.button.mv-0(href=data.redirect) OK
+				a.button.mv-0(href=data.redirect) #{__('OK')}
 		else if data.settings
 			.row
 				.form-wrapper.flexleft.mt-10
@@ -40,109 +40,109 @@ mixin modal(data)
 							.row
 								label.postform-style.ph-5
 									input#live-setting(type='checkbox')
-								.rlabel Live posts
+								.rlabel #{__('Live posts')}
 							.row
 								label.postform-style.ph-5
 									input#notification-setting(type='checkbox')
-								.rlabel Notifications
+								.rlabel #{__('Notifications')}
 							.row
 								label.postform-style.ph-5
 									input#notification-yous-only(type='checkbox')
-								.rlabel Only notify (You)s
+								.rlabel #{__('Only notify (You)s')}
 							.row
 								label.postform-style.ph-5
 									input#scroll-setting(type='checkbox')
-								.rlabel Scroll to new posts
+								.rlabel #{__('Scroll to new posts')}
 							.row
 								label.postform-style.ph-5
 									input#localtime-setting(type='checkbox')
-								.rlabel Local time
+								.rlabel #{__('Local time')}
 							.row
 								label.postform-style.ph-5
 									input#24hour-setting(type='checkbox')
-								.rlabel 24h time
+								.rlabel #{__('24h time')}
 							.row
 								label.postform-style.ph-5
 									input#relative-setting(type='checkbox')
-								.rlabel Show relative time
+								.rlabel #{__('Show relative time')}
 							.row
 								label.postform-style.ph-5
 									input#noncolorids-setting(type='checkbox')
-								.rlabel Non-color IDs
+								.rlabel #{__('Non-color IDs')}
 							.row
 								label.postform-style.ph-5
 									input#hidepoststubs-setting(type='checkbox')
-								.rlabel Hide post stubs
+								.rlabel #{__('Hide post stubs')}
 							.row
 								label.postform-style.ph-5
 									input#hidedeletedpostcontent-setting(type='checkbox')
-								.rlabel Hide deleted post content
+								.rlabel #{__('Hide deleted post content')}
 							.row
 								label.postform-style.ph-5
 									input#disableboardcss-setting(type='checkbox')
-								.rlabel Disable board custom CSS
+								.rlabel #{__('Disable board custom CSS')}
 
 						.col
 							.row
 								label.postform-style.ph-5
 									input#hidethumbnails-setting(type='checkbox')
-								.rlabel Hide thumbnails
+								.rlabel #{__('Hide thumbnails')}
 							.row
 								label.postform-style.ph-5
 									input#hiderecursive-setting(type='checkbox')
-								.rlabel Recursive post hide
+								.rlabel #{__('Recursive post hide')}
 							.row
 								label.postform-style.ph-5
 									input#loop-setting(type='checkbox')
-								.rlabel Loop audio/video
+								.rlabel #{__('Loop audio/video')}
 							.row
 								label.postform-style.ph-5
 									input#heightlimit-setting(type='checkbox')
-								.rlabel Unlimit media height
+								.rlabel #{__('Unlimit media height')}
 							.row
 								label.postform-style.ph-5
 									input#crispimages-setting(type='checkbox')
-								.rlabel Crisp image rendering
+								.rlabel #{__('Crisp image rendering')}
 							.row
 								label.postform-style.ph-5
 									input#imageloadingbars-setting(type='checkbox')
-								.rlabel Image loading bars
+								.rlabel #{__('Image loading bars')}
 							.row
 								label.postform-style.ph-5
 									input#alwaysshowspoilers-setting(type='checkbox')
-								.rlabel Always reveal text spoilers
+								.rlabel #{__('Always reveal text spoilers')}
 							.row
 								label.postform-style.ph-5
 									input#yous-setting(type='checkbox')
-								.rlabel Show (You)s
+								.rlabel #{__('Show (You)s')}
 							.row
 								label.postform-style.ph-5
 									input#smoothscrolling-setting(type='checkbox')
-								.rlabel Smooth scrolling
+								.rlabel #{__('Smooth scrolling')}
 							.row
 								label.postform-style.ph-5
 									input#threadwatcher-setting(type='checkbox')
-								.rlabel Thread watcher
+								.rlabel #{__('Thread watcher')}
 					.row.wrap.sb.mt-5
 						.col.mr-5
 							.row
-								.label Video/Audio volume
+								.label #{__('Video/Audio volume')}
 								label.postform-style.ph-5
 									input#volume-setting(type='range' min='0' max='100')
 							.row
-								.label Default name
+								.label #{__('Default name')}
 								input#name-setting(type='text' name='name')
 							.row
-								.label Post password
+								.label #{__('Post password')}
 								input#postpassword-setting(type='password' name='postpassword' autocomplete='new-password')
 							.row
-								.label Theme
+								.label #{__('Theme')}
 								select#theme-setting
 									option(value='default') default
 									each theme in data.settings.themes
 										option(value=theme) #{theme}
 							.row
-								.label Code theme
+								.label #{__('Code theme')}
 								select#codetheme-setting
 									option(value='default') default
 									each theme in data.settings.codeThemes
@@ -150,29 +150,29 @@ mixin modal(data)
 
 						.col
 							.row
-								.label (You)s
+								.label #{__('(You)s')}
 								input.mr-1#youslist-setting(type='text' readonly)
-								input#youslist-clear(type='button' value='Clear')
+								input#youslist-clear(type='button' value=__('Clear'))
 							.row
-								.label Watchlist
+								.label #{__('Watchlist')}
 								input.mr-1#watchlist-setting(type='text' readonly)
-								input#watchlist-clear(type='button' value='Clear')
+								input#watchlist-clear(type='button' value=__('Clear'))
 							.row
-								.label Hidden images
+								.label #{__('Hidden images')}
 								input.mr-1#hiddenimages-setting(type='text' readonly)
-								input#hiddenimages-clear(type='button' value='Clear')
+								input#hiddenimages-clear(type='button' value=__('Clear'))
 							.row
-								.label Cache
+								.label #{__('Cache')}
 								input.mr-1#hovercachelist-setting(type='text' readonly)
-								input#hovercachelist-clear(type='button' value='Clear')
+								input#hovercachelist-clear(type='button' value=__('Clear'))
 							.row
-								.label Tegaki Size
+								.label #{__('Tegaki Size')}
 								input.mr-1.w50#tegakiwidth-setting(type='number')
 								.postform-style.ph-5.mr-1 × 
 								input.mr-1.w50#tegakiheight-setting(type='number')
 
 					.row.mt-5
-						.label Custom CSS
+						.label #{__('Custom CSS')}
 						textarea#customcss-setting(rows=7)
 
 					.row.mt-5
@@ -180,29 +180,29 @@ mixin modal(data)
 							table.fw
 								tbody#advancedfilters
 									tr
-										th(colspan=4) Post Filters
+										th(colspan=4) #{__('Post Filters')}
 									tr
-										td Type
-										td Value
-										td Regex?
-										td: input.right#filters-clear(type='button' value='Clear')
+										td #{__('Type')}
+										td #{__('Value')}
+										td #{__('Regex?')}
+										td: input.right#filters-clear(type='button' value=__('Clear'))
 									tr
 										td: select(name='type')
-											option(value='fname') Name
-											option(value='ftrip') Tripcode
-											option(value='fsub') Subject
-											option(value='fmsg') Message
+											option(value='fname') #{__('Name')}
+											option(value='ftrip') #{__('Tripcode')}
+											option(value='fsub') #{__('Subject')}
+											option(value='fmsg') #{__('Message')}
 										td
 											input#filter-value-input(required type='text' name='value')
 										td
 											input(type='checkbox' name='regex')
-										td: input.right(type='submit' value='Add')
+										td: input.right(type='submit' value=__('Add'))
 					.row.mt-5
 						.label
-							| Import/Export Settings
-							small.title Do NOT import untrusted settings data!
-							small Export does not include post password or (You)'s
+							| #{__('Import/Export Settings')}
+							small.title #{__('Do NOT import untrusted settings data!')}
+							small #{__("Export does not include post password or (You)'s")}
 						textarea#import-export-setting(type='text')
 					.row
-						input.mr-1#export-setting(type='button' value='Export')
-						input#import-setting(type='button' value='Import')
+						input.mr-1#export-setting(type='button' value=__('Export'))
+						input#import-setting(type='button' value=__('Import'))

@@ -24,6 +24,8 @@ module.exports = {
 		url: ''
 	},
 
+	language: 'en-GB',
+
 	filters: [],
 	strictFiltering: false,
 	filterMode: 0,
@@ -368,6 +370,7 @@ module.exports = {
 
 	//default board settings when a board is created
 	boardDefaults: {
+		language: 'en-GB',
 		theme: 'yotsuba-b',
 		codeTheme: 'ir-black',
 		sfw: false, //safe for work board

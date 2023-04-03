@@ -6,10 +6,10 @@ include ../mixins/boardheader.pug
 include ../mixins/announcements.pug
 
 block head
-	title /#{board._id}/ - #{board.settings.name} - page #{page}
+	title /#{board._id}/ - #{board.settings.name} - #{__n('Page %s', page)}
 
 block content
-	+boardheader(modview ? 'Mod Index' : null)
+	+boardheader(modview ? __('Mod Index') : null)
 	br
 	include ../includes/postform.pug
 	br
@@ -26,7 +26,7 @@ block content
 			input(type='hidden' name='_csrf' value=csrf)
 		hr(size=1)
 		if threads.length === 0
-			p No posts.
+			p #{__('No posts.')}
 			hr(size=1)
 		for thread in threads
 			.thread

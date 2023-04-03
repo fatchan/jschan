@@ -12,18 +12,20 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const { globalLimits } = config.get;
 
 		const errors = await checkSchema([
-			{ result: res.locals.numFiles === 0, expected: false, blocking: true, error: 'Must provide a file' },
-			{ result: numberBody(res.locals.numFiles, 0, globalLimits.flagFiles.max), expected: true, error: `Exceeded max flag uploads in one request of ${globalLimits.flagFiles.max}` },
-			{ result: numberBody(Object.keys(res.locals.board.flags).length+res.locals.numFiles, 0, globalLimits.flagFiles.total), expected: true, error: `Total number of flags would exceed global limit of ${globalLimits.flagFiles.total}` },
+			{ result: res.locals.numFiles === 0, expected: false, blocking: true, error: __('Must provide a file') },
+			{ result: numberBody(res.locals.numFiles, 0, globalLimits.flagFiles.max), expected: true, error: __('Exceeded max flag uploads in one request of %s', globalLimits.flagFiles.max) },
+			{ result: numberBody(Object.keys(res.locals.board.flags).length+res.locals.numFiles, 0, globalLimits.flagFiles.total), expected: true, error: __('Total number of flags would exceed global limit of %s', globalLimits.flagFiles.total) },
 		]);
 
 		if (errors.length > 0) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': `/${req.params.board}/manage/assets.html`
 			});

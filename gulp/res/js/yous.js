@@ -1,4 +1,4 @@
-/* globals setLocalStorage */
+/* globals __ setLocalStorage */
 let notificationsEnabled = localStorage.getItem('notifications') == 'true';
 let notificationYousOnly = localStorage.getItem('notification-yous-only') == 'true';
 let yousEnabled = localStorage.getItem('yous-setting') == 'true';
@@ -9,6 +9,7 @@ const toggleAllYous = (state) => savedYous.forEach(y => toggleOne(y, state));
 
 const toggleQuotes = (quotes, state) => {
 	quotes.forEach(q => {
+		q[state?'setAttribute':'removeAttribute']('data-label', __('You'));
 		q.classList[state?'add':'remove']('you');
 	});
 };
@@ -19,6 +20,7 @@ const toggleOne = (you, state) => {
 	if (post) {
 		const postName = post.querySelector('.post-name');
 		if (postName) {
+			postName[state?'setAttribute':'removeAttribute']('data-label', __('You'));
 			postName.classList[state?'add':'remove']('you');
 		}
 	}

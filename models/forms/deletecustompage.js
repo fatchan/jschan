@@ -7,6 +7,7 @@ const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 
 module.exports = async (req, res) => {
 
+	const { __, __n } = res.locals;
 	const deletedCount = await CustomPages.deleteMany(req.body.checkedcustompages, req.params.board).then(res => res.deletedCount);
 
 	if (deletedCount === 0) {
@@ -25,8 +26,8 @@ module.exports = async (req, res) => {
 	}));
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Deleted custom pages',
+		'title': __('Success'),
+		'message': __n('Deleted %s custom pages', deletedCount),
 		'redirect': `/${req.params.board}/manage/custompages.html`
 	});
 

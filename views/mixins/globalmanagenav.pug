@@ -1,28 +1,28 @@
 mixin globalmanagenav(selected, upLevel)
 	nav.pages
 		if permissions.get(Permissions.MANAGE_GLOBAL_GENERAL)
-			a(href=`${upLevel ? '../' : ''}recent.html` class=(selected === 'recent' ? 'bold' : '')) [Recent]
+			a(href=`${upLevel ? '../' : ''}recent.html` class=(selected === 'recent' ? 'bold' : '')) [#{__('Recent')}]
 			|  
-			a(href=`${upLevel ? '../' : ''}reports.html` class=(selected === 'reports' ? 'bold' : '')) [Reports]
+			a(href=`${upLevel ? '../' : ''}reports.html` class=(selected === 'reports' ? 'bold' : '')) [#{__('Reports')}]
 		if permissions.get(Permissions.MANAGE_GLOBAL_BANS)
 			|  
-			a(href=`${upLevel ? '../' : ''}bans.html` class=(selected === 'bans' ? 'bold' : '')) [Bans]
+			a(href=`${upLevel ? '../' : ''}bans.html` class=(selected === 'bans' ? 'bold' : '')) [#{__('Bans')}]
 		if permissions.get(Permissions.MANAGE_GLOBAL_BOARDS)
 			|  
-			a(href=`${upLevel ? '../' : ''}boards.html` class=(selected === 'boards' ? 'bold' : '')) [Boards]
+			a(href=`${upLevel ? '../' : ''}boards.html` class=(selected === 'boards' ? 'bold' : '')) [#{__('Boards')}]
 		if permissions.get(Permissions.MANAGE_GLOBAL_LOGS)
 			|  
-			a(href=`${upLevel ? '../' : ''}globallogs.html` class=(selected === 'logs' ? 'bold' : '')) [Logs]
+			a(href=`${upLevel ? '../' : ''}globallogs.html` class=(selected === 'logs' ? 'bold' : '')) [#{__('Logs')}]
 		if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
 			|  
-			a(href=`${upLevel ? '../' : ''}accounts.html` class=(selected === 'accounts' ? 'bold' : '')) [Accounts]
+			a(href=`${upLevel ? '../' : ''}accounts.html` class=(selected === 'accounts' ? 'bold' : '')) [#{__('Accounts')}]
 		if permissions.get(Permissions.MANAGE_GLOBAL_ROLES)
 			|  
-			a(href=`${upLevel ? '../' : ''}roles.html` class=(selected === 'roles' ? 'bold' : '')) [Roles]
+			a(href=`${upLevel ? '../' : ''}roles.html` class=(selected === 'roles' ? 'bold' : '')) [#{__('Roles')}]
 		if permissions.get(Permissions.MANAGE_GLOBAL_NEWS)
 			|  
-			a(href=`${upLevel ? '../' : ''}news.html` class=(selected === 'news' ? 'bold' : '')) [News]
+			a(href=`${upLevel ? '../' : ''}news.html` class=(selected === 'news' ? 'bold' : '')) [#{__('News')}]
 		if permissions.get(Permissions.MANAGE_GLOBAL_SETTINGS)
 			|  
-			a(href=`${upLevel ? '../' : ''}settings.html` class=(selected === 'settings' ? 'bold' : '')) [Settings]
+			a(href=`${upLevel ? '../' : ''}settings.html` class=(selected === 'settings' ? 'bold' : '')) [#{__('Settings')}]
 

@@ -19,19 +19,18 @@ block head
 				- const maintype = file.mimetype.split('/')[0];
 				case maintype
 					when 'image'
-						meta(property='og:image', content=`/file/${file.filename}`)
 					when 'video'
-						meta(property='og:video', content=`/file/${file.filename}`)
 					when 'audio'
-						meta(property='og:audio', content=`/file/${file.filename}`)
+						meta(property=`og:${maintype}`, content=`/file/${file.filename}`)
+						- break
 					default
 						- break
 
 block content
-	+boardheader(modview ? 'Mod View' : null)
+	+boardheader(modview ? __('Mod View') : null)
 	br
 	if thread.replyposts >= board.settings.replyLimit && !thread.cyclic && !modview
-		p.title.text-center ⊖ Thread has reached reply limit.
+		p.title.text-center #{__('⊖ Thread has reached reply limit.')}
 	else
 		include ../includes/postform.pug
 		br
@@ -54,9 +53,9 @@ block content
 				- uids && post.userId && uids.add(post.userId)
 				+post(post)
 		if thread.replyposts >= board.settings.replyLimit && !thread.cyclic && !modview
-			p.title.text-center ⊖ Thread has reached reply limit.
+			p.title.text-center #{__('⊖ Thread has reached reply limit.')}
 		else
-			a.bottom-reply.no-decoration.post-button(href='#postform') [New Reply]
+			a.bottom-reply.no-decoration.post-button(href='#postform') [#{__('New Reply')}]
 		hr(size=1)
 		.wrapbar
 			if modview
@@ -65,16 +64,16 @@ block content
 				.pages
 					+boardnav(null, true, true)
 			#threadstats 
-				span #{thread.replyposts} repl#{thread.replyposts === 1 ? 'y' : 'ies'}
+				span #{__n('%s replies', thread.replyposts)}
 				|  |  
-				span #{thread.replyfiles + thread.files.length} file#{thread.replyfiles + thread.files.length === 1 ? '' : 's'}
+				span #{__n('%s files', thread.replyfiles + thread.files.length)}
 				if board.settings.ids
 					|  |   
-					span #{uids.size} UID#{uids.size === 1 ? '' : 's'}
+					span #{__n('%s UIDs', uids.size)}
 		.jsonly#livetext
 			.dot#livecolor
-			|  Connecting... 
-			input.postform-style.ml-5.di#updatepostsbutton(type='button' value='Update')
+			|  #{__('Connecting...')} 
+			input.postform-style.ml-5.di#updatepostsbutton(type='button' value=__('Update'))
 		if modview
 			include ../includes/actionfooter_manage.pug
 		else

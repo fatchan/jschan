@@ -1,5 +1,5 @@
 mixin filters(filterArr)
-	- const filterTypeMap = { single: 'Single', fid: 'ID', fname: 'Name', ftrip: 'Tripcode', fnamer: 'Name', ftripr: 'Tripcode', fsub: 'Subject', fsubr: 'Subject', fmsg: 'Message', fmsgr: 'Message' }
+	- const filterTypeMap = { single: __('Single'), fid: __('ID'), fname: __('Name'), ftrip: __('Tripcode'), fnamer: __('Name'), ftripr: __('Tripcode'), fsub: __('Subject'), fsubr: __('Subject'), fmsg: __('Message'), fmsgr: __('Message') }
 	if filterArr.length > 0
 		each filter in filterArr
 			tr
@@ -8,4 +8,4 @@ mixin filters(filterArr)
 				td: input(disabled type='checkbox' checked=filter.type.endsWith('r'))
 				td: a.right.close(data-type=filter.type data-data=filter.val) ×
 	else
-		td(colspan=4) No Filters
+		td(colspan=4) #{__('No Filters')}

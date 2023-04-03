@@ -4,10 +4,10 @@ include ../mixins/boardnav.pug
 include ../mixins/postlink.pug
 
 block head
-	title /#{board._id}/ - Logs for #{startDate.toDateString()}
+	title /#{board._id}/ - #{__('Logs for %s', startDate.toDateString())}
 
 block content
-	+boardheader('Logs')
+	+boardheader(__('Logs'))
 	br
 	include ../includes/stickynav.pug
 	.pages
@@ -16,17 +16,18 @@ block content
 	.table-container.flex-center.mv-10.text-center
 		table
 				tr
-					th Date
-					th User
-					th Actions
-					th Posts
-					th Log Message
+					th #{__('Date')}
+					th #{__('User')}
+					th #{__('Actions')}
+					th #{__('Posts')}
+					th #{__('Log Message')}
 				for log in logs
 					tr
 						- const logDate = new Date(log.date);
-						td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hourCycle:'h23'})}
-						td(class=(!log.showUser ? 'em' : '')) #{log.showUser ? log.user : 'Hidden User'}
-						td #{log.actions}
+						td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
+						- const logUser = log.user || __('Unregistered User');
+						td(class=(!log.showUser ? 'em' : '')) #{log.showUser ? logUser : __('Hidden User')}
+						td #{log.actions.map(a => __(a))}
 						td
 							if log.showLinks
 								for postLink in log.postLinks

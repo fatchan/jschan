@@ -8,6 +8,7 @@ const { News } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const message = prepareMarkdown(req.body.message, false);
 	const { message: markdownNews } = await messageHandler(message, null, null, res.locals.permissions);
 
@@ -15,8 +16,8 @@ module.exports = async (req, res) => {
 
 	if (updated === 0) {
 		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': 'News post does not exist',
+			'title': __('Bad request'),
+			'errors': __('News post does not exist'),
 			'redirect': req.headers.referer || '/globalmanage/news.html'
 		});
 	}
@@ -27,8 +28,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Updated newspost',
+		'title': __('Success'),
+		'message': __('Updated newspost'),
 		'redirect': '/globalmanage/news.html'
 	});
 

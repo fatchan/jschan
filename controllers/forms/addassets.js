@@ -12,18 +12,20 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const { globalLimits } = config.get;
 
 		const errors = await checkSchema([
-			{ result: res.locals.numFiles === 0, expected: false, blocking: true, error: 'Must provide a file' },
-			{ result: numberBody(res.locals.numFiles, 0, globalLimits.assetFiles.max), expected: true, error: `Exceeded max asset uploads in one request of ${globalLimits.assetFiles.max}` },
-			{ result: numberBody(res.locals.board.assets.length+res.locals.numFiles, 0, globalLimits.assetFiles.total), expected: true, error: `Total number of assets would exceed global limit of ${globalLimits.assetFiles.total}` },
+			{ result: res.locals.numFiles === 0, expected: false, blocking: true, error: __('Must provide a file') },
+			{ result: numberBody(res.locals.numFiles, 0, globalLimits.assetFiles.max), expected: true, error: __('Exceeded max asset uploads in one request of %s', globalLimits.assetFiles.max) },
+			{ result: numberBody(res.locals.board.assets.length+res.locals.numFiles, 0, globalLimits.assetFiles.total), expected: true, error: __('Total number of assets would exceed global limit of %s', globalLimits.assetFiles.total) },
 		]);
 
 		if (errors.length > 0) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': `/${req.params.board}/manage/assets.html`
 			});

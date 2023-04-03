@@ -3,13 +3,13 @@ include ../mixins/ban.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Bans
+	title #{__('Bans')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('bans')
 	hr(size=1)
-	h4.no-m-p Global Bans & Appeals:
+	h4.no-m-p #{__('Global Bans & Appeals')}:
 	form(action=`/forms/global/editbans` method='POST' enctype='application/x-www-form-urlencoded')
 		include ../includes/managebanform.pug

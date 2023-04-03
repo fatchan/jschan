@@ -3,23 +3,23 @@ include ../mixins/managenav.pug
 include ../mixins/boardheader.pug
 
 block head
-	title /#{board._id}/ - Staff
+	title /#{board._id}/ - #{__('Staff')}
 
 block content
-	+boardheader('Staff')
+	+boardheader(__('Staff'))
 	br
 	+managenav('staff')
 	hr(size=1)
 	.form-wrapper.flexleft
-		h4.no-m-p Add Staff:
+		h4.no-m-p #{__('Add Staff')}:
 		form.form-post.mv-5(action=`/forms/board/${board._id}/addstaff` method='POST' enctype='application/x-www-form-urlencoded')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
-				.label Username
+				.label #{__('Username')}
 				input(type='text' name='username' required)
-			input(type='submit', value='Add')
+			input(type='submit', value=__('Add'))
 	hr(size=1)
-	h4.no-m-p Current Staff:
+	h4.no-m-p #{__('Current Staff')}:
 	//-ew
 	- const staffEntries = Object.entries(board.staff).sort((a, b) => new Date(a[1].addedDate) - new Date(b[1].addedDate));
 	if staffEntries.length > 0
@@ -29,25 +29,25 @@ block content
 				table
 					tr
 						th
-						th Username
-						th Date Added
-						th Logs
-						th Permissions
+						th #{__('Username')}
+						th #{__('Date Added')}
+						th #{__('Logs')}
+						th #{__('Permissions')}
 					for staff in staffEntries
 						tr
 							td: input(type='checkbox' name='checkedstaff' value=staff[0])
-							td #{staff[0]}#{user.username === staff[0] ? ' (You)' : ''}
+							td #{staff[0]}#{user.username === staff[0] ? ' '+__('(You)') : ''}
 							td 
-								time.reltime(datetime=staff[1].addedDate) #{staff[1].addedDate.toLocaleString(undefined, {hourCycle:'h23'})}
-							td: a(href=`/${board._id}/manage/logs.html?username=${staff[0]}`) [View]
+								time.reltime(datetime=staff[1].addedDate) #{staff[1].addedDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
+							td: a(href=`/${board._id}/manage/logs.html?username=${staff[0]}`) [#{__('View')}]
 							td
 								if user.username !== staff[0]
-									a(href=`/${board._id}/manage/editstaff/${staff[0]}.html`) [Edit]
+									a(href=`/${board._id}/manage/editstaff/${staff[0]}.html`) [#{__('Edit')}]
 								else
-									a(href=`/${board._id}/manage/mypermissions.html`) [View]
+									a(href=`/${board._id}/manage/mypermissions.html`) [#{__('View')}]
 
-			h4.no-m-p Delete Selected:
+			h4.no-m-p #{__('Delete Selected')}:
 			input(type='submit', value='Delete')
 
 	else
-		p None.
+		p #{__('None')}

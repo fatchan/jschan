@@ -9,6 +9,7 @@ const { Posts, Modlogs } = require(__dirname+'/../../db/')
 	, nameHandler = require(__dirname+'/../../lib/post/name.js')
 	, getFilterStrings = require(__dirname+'/../../lib/post/getfilterstrings.js')
 	, filterActions = require(__dirname+'/../../lib/post/filteractions.js')
+	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
@@ -20,10 +21,9 @@ module.exports = async (req, res) => {
 todo: handle some more situations
 - last activity date
 - correct bump date when editing thread or last post in a thread
-- allow for regular users (OP ONLY) and option for staff to disable in board settings
-- different permission levels for historical posts when remarked up (or not, fuck that)
 */
 
+	const { __ } = res.locals;
 	const { filterBanAppealable, previewReplies, strictFiltering } = config.get;
 	const { board, post } = res.locals;
 
@@ -50,8 +50,15 @@ todo: handle some more situations
 		messageHash = createHash('sha256').update(noQuoteMessage).digest('base64');
 	}
 	//new name, trip and cap
-	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permissions,
-		board.settings, board.owner, board.staff, res.locals.user ? res.locals.user.username : null);
+	const { name, tripcode, capcode } = await nameHandler(
+		req.body.name,
+		res.locals.permissions,
+		board.settings,
+		board.owner,
+		board.staff,
+		res.locals.user ? res.locals.user.username : null,
+		res.locals.__
+	);
 	//new message and quotes
 	const nomarkup = prepareMarkdown(req.body.message, false);
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread, res.locals.permissions);
@@ -100,7 +107,7 @@ todo: handle some more situations
 	}, {
 		'$set': {
 			edited: {
-				username: req.body.hide_name ? 'Hidden User' : req.session.user,
+				username: req.body.hide_name ? null : req.session.user,
 				date: new Date(),
 			},
 			nomarkup,
@@ -124,7 +131,7 @@ todo: handle some more situations
 			postId: post.postId,
 			thread: post.thread,
 		}],
-		actions: 'Edit',
+		actions: [ModlogActions.EDIT],
 		date: new Date(),
 		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,
@@ -144,8 +151,8 @@ todo: handle some more situations
 	await buildThread(buildOptions);
 
 	dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Post edited successfully',
+		'title': __('Success'),
+		'message': __('Post edited successfully'),
 		'redirect': req.body.referer,
 	});
 	res.end();

@@ -8,7 +8,7 @@ const uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, deleteQuotes = require(__dirname+'/../../lib/post/deletequotes.js')
 	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js');
 
-module.exports = async (posts, board, all=false) => {
+module.exports = async (posts, board, locals, all=false) => {
 
 	const { pruneImmediately } = config.get;
 
@@ -113,7 +113,7 @@ module.exports = async (posts, board, all=false) => {
 	const deletedPosts = await Posts.deleteMany(postMongoIds).then(result => result.deletedCount);
 	//emit the deletes to thread sockets (not recent sockets [yet?])
 	for (let i = 0; i < deleteEmits.length; i++) {
-		Socketio.emitRoom(deleteEmits[i].room, 'markPost', { postId: deleteEmits[i].postId, type: 'delete', mark: 'Deleted' });
+		Socketio.emitRoom(deleteEmits[i].room, 'markPost', { postId: deleteEmits[i].postId, type: 'delete' });
 	}
 
 	if (all === false) {
@@ -137,7 +137,17 @@ module.exports = async (posts, board, all=false) => {
 		}));
 	}
 
+	const { __n, __ } = locals;
+
 	//hooray!
-	return { action: deletedPosts > 0, message:`Deleted ${threads.length > 0 ? (threads.length + ' thread' + (threads.length > 1 ? 's' : '')) : ''} ${threads.length > 0 && deletedPosts-threads.length > 0 ? 'and' : ''} ${deletedPosts-threads.length > 0 ? (deletedPosts-threads.length + ' post' + (deletedPosts-threads.length > 1 ? 's' : '')) : ''}` };
+	return {
+		action: deletedPosts > 0,
+		//How in the fuck do I use __n with multiple arguments?
+		message: (threads.length > 0 && deletedPosts-threads.length > 0)
+			? __(`Deleted %s thread${threads.length>1?'s':''} and %s post${(deletedPosts-threads.length)>1?'s':''}`, threads.length, deletedPosts-threads.length)
+			: ((threads.length > 0)
+				? __n('Deleted %s threads', threads.length)
+				: __n('Deleted %s posts', deletedPosts))
+	};
 
 };

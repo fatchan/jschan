@@ -1,4 +1,4 @@
-/* globals setLocalStorage pugfilters isCatalog captchaController threadWatcher */
+/* globals __ setLocalStorage pugfilters isCatalog captchaController threadWatcher */
 const getFiltersFromLocalStorage = () => {
 	const savedFilters = JSON.parse(localStorage.getItem('filters1'));
 	return savedFilters.reduce((acc, filter) => {
@@ -79,7 +79,7 @@ const togglePostsHidden = (posts, state, single) => {
 		} else {
 			elem.classList['add']('hidden');
 		}
-		elem.querySelector('.postmenu').children[0].textContent = (showing ? 'Hide' : 'Show');
+		elem.querySelector('.postmenu').children[0].textContent = (showing ? __('Hide') : __('Show'));
 	}
 };
 

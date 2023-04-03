@@ -15,6 +15,7 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, movePosts = require(__dirname+'/moveposts.js')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
+	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
 	, getAffectedBoards = require(__dirname+'/../../lib/misc/affectedboards.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
@@ -24,6 +25,8 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, { createHash, timingSafeEqual } = require('crypto');
 
 module.exports = async (req, res, next) => {
+
+	const { __ } = res.locals;
 
 	//try to set a good redirect
 	let redirect = req.headers.referer;
@@ -54,8 +57,8 @@ module.exports = async (req, res, next) => {
 		}
 		if (passwordPosts.length === 0) {
 			return dynamicResponse(req, res, 403, 'message', {
-				'title': 'Forbidden',
-				'error': 'Password did not match any selected posts',
+				'title': __('Forbidden'),
+				'error': __('Password did not match any selected posts'),
 				redirect,
 			});
 		}
@@ -89,14 +92,14 @@ module.exports = async (req, res, next) => {
 	if (req.body.ban || req.body.global_ban || req.body.report_ban || req.body.global_report_ban) {
 		const { message, action, query } = await banPoster(req, res, next);
 		if (req.body.ban) {
-			modlogActions.push('Ban');
+			modlogActions.push(ModlogActions.BAN);
 		} else if (req.body.global_ban) {
-			modlogActions.push('Global Ban');
+			modlogActions.push(ModlogActions.GLOBAL_BAN);
 		}
 		if (req.body.report_ban) {
-			modlogActions.push('Ban reporter');
+			modlogActions.push(ModlogActions.BAN_REPORTER);
 		} else if (req.body.global_report_ban) {
-			modlogActions.push('Global ban reporter');
+			modlogActions.push(ModlogActions.GLOBAL_BAN_REPORTER);
 		}
 		if (action) {
 			combinedQuery[action] = { ...combinedQuery[action], ...query};
@@ -117,8 +120,8 @@ module.exports = async (req, res, next) => {
 				});
 				if (protectedThread === true) {
 					return dynamicResponse(req, res, 403, 'message', {
-						'title': 'Forbidden',
-						'error': 'You cannot delete old threads or threads with too many replies',
+						'title': __('Forbidden'),
+						'error': __('You cannot delete old threads or threads with too many replies'),
 						redirect,
 					});
 				}
@@ -166,18 +169,18 @@ module.exports = async (req, res, next) => {
 		}
 
 		if (req.body.delete_file) {
-			const { message } = await deletePostsFiles(res.locals.posts, false); //delete files, not just unlink
+			const { message } = await deletePostsFiles(res.locals, false); //delete files, not just unlink
 			messages.push(message);
 		}
-		const { action, message } = await deletePosts(res.locals.posts, req.body.delete_ip_global ? null : req.params.board);
+		const { action, message } = await deletePosts(res.locals.posts, req.body.delete_ip_global ? null : req.params.board, res.locals);
 		messages.push(message);
 		if (action) {
 			if (req.body.delete) {
-				modlogActions.push('Delete');
+				modlogActions.push(ModlogActions.DELETE);
 			} else if (req.body.delete_ip_board) {
-				modlogActions.push('Delete by IP');
+				modlogActions.push(ModlogActions.DELETE_BY_IP);
 			} else if (req.body.delete_ip_global) {
-				modlogActions.push('Global delete by IP');
+				modlogActions.push(ModlogActions.GLOBAL_DELETE_BY_IP);
 			}
 			recalculateThreadMetadata = true;
 		}
@@ -196,7 +199,7 @@ module.exports = async (req, res, next) => {
 		}
 		const { message, action } = await movePosts(req, res);
 		if (action) {
-			modlogActions.push('Moved');
+			modlogActions.push(ModlogActions.MOVE);
 			recalculateThreadMetadata = true;
 			if (res.locals.destinationBoard && res.locals.destinationThread) {
 				res.locals.posts.push(res.locals.destinationThread);
@@ -210,54 +213,54 @@ module.exports = async (req, res, next) => {
 
 		// if it was getting deleted/moved, dont do these actions
 		if (req.body.unlink_file || req.body.delete_file) {
-			const { message, action, query } = await deletePostsFiles(res.locals.posts, req.body.unlink_file);
+			const { message, action, query } = await deletePostsFiles(res.locals, req.body.unlink_file);
 			if (action) {
 				if (req.body.unlink_file) {
-					modlogActions.push('Unlink files');
+					modlogActions.push(ModlogActions.UNLINK_FILES);
 				} else if (req.body.delete_file) {
-					modlogActions.push('Delete files');
+					modlogActions.push(ModlogActions.DELETE_FILES);
 				}
 				recalculateThreadMetadata = true;
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		} else if (req.body.spoiler) {
-			const { message, action, query } = spoilerPosts(res.locals.posts);
+			const { message, action, query } = spoilerPosts(res.locals);
 			if (action) {
-				modlogActions.push('Spoiler files');
+				modlogActions.push(ModlogActions.SPOILER_FILES);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
 		//lock, sticky, bumplock, cyclic
 		if (req.body.bumplock) {
-			const { message, action, query } = bumplockPosts(res.locals.posts);
+			const { message, action, query } = bumplockPosts(res.locals);
 			if (action) {
-				modlogActions.push('Bumplock');
+				modlogActions.push(ModlogActions.BUMPLOCK);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
 		if (req.body.lock) {
-			const { message, action, query } = lockPosts(res.locals.posts);
+			const { message, action, query } = lockPosts(res.locals);
 			if (action) {
-				modlogActions.push('Lock');
+				modlogActions.push(ModlogActions.LOCK);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
 		if (req.body.sticky != null) {
-			const { message, action, query } = stickyPosts(res.locals.posts, req.body.sticky);
+			const { message, action, query } = stickyPosts(res.locals, req.body.sticky);
 			if (action) {
-				modlogActions.push('Sticky');
+				modlogActions.push(ModlogActions.STICKY);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
 		}
 		if (req.body.cyclic) {
-			const { message, action, query } = cyclePosts(res.locals.posts);
+			const { message, action, query } = cyclePosts(res.locals);
 			if (action) {
-				modlogActions.push('Cycle');
+				modlogActions.push(ModlogActions.CYCLE);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
@@ -274,9 +277,9 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = dismissReports(req, res);
 			if (action) {
 				if (req.body.dismiss) {
-					modlogActions.push('Dismiss reports');
+					modlogActions.push(ModlogActions.DISMISS);
 				} else if (req.body.global_dismiss) {
-					modlogActions.push('Dismiss global reports');
+					modlogActions.push(ModlogActions.GLOBAL_DISMISS);
 				}
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
@@ -316,12 +319,10 @@ module.exports = async (req, res, next) => {
 		const modlog = {};
 		const logDate = new Date(); //all events current date
 		const message = req.body.log_message || null;
-		let logUser;
+		let logUser = null;
 		//could even do if (req.session.user) {...}, but might cause cross-board log username contamination
 		if (isStaffOrGlobal) {
 			logUser = req.session.user;
-		} else {
-			logUser = 'Unregistered User';
 		}
 		for (let i = 0; i < res.locals.posts.length; i++) {
 			const post = res.locals.posts[i];
@@ -332,7 +333,7 @@ module.exports = async (req, res, next) => {
 					postLinks: [],
 					actions: modlogActions,
 					date: logDate,
-					showUser: !req.body.hide_name || logUser === 'Unregistered User' ? true : false,
+					showUser: !req.body.hide_name || logUser === null ? true : false,
 					message: message,
 					user: logUser,
 					ip: {
@@ -630,7 +631,7 @@ module.exports = async (req, res, next) => {
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
+		'title': __('Success'),
 		'messages': messages,
 		redirect,
 	});

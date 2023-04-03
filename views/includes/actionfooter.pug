@@ -1,32 +1,32 @@
 details.toggle-label#actionform
-	summary.collapse#action-menu Show Post Actions
+	summary.collapse#action-menu #{__('Show Post Actions')}
 	.actions
 		input(type='hidden' name='hide_name' value='1')
-		h4.no-m-p Actions:
+		h4.no-m-p #{__('Actions')}:
 		if board.settings.userPostDelete
 			label
 				input.post-check(type='checkbox', name='delete' value='1')
-				| Delete Posts
+				| #{__('Delete Posts')}
 		if board.settings.userPostUnlink
 			label
 				input.post-check(type='checkbox', name='unlink_file' value='1')
-				| Unlink Files
+				| #{__('Unlink Files')}
 		if board.settings.userPostSpoiler
 			label
 				input.post-check(type='checkbox', name='spoiler' value='1')
-				| Spoiler Files
+				| #{__('Spoiler Files')}
 		if board.settings.userPostSpoiler || board.settings.userPostUnlink || board.settings.userPostDelete
 			label
-				input#password(type='password', name='postpassword', placeholder='Post password' autocomplete='off')
+				input#password(type='password', name='postpassword', placeholder=__('Password') autocomplete='off')
 		label
 			input.post-check(type='checkbox', name='report' value='1')
-			| Report
+			| #{__('Report')}
 		label
 			input.post-check(type='checkbox', name='global_report' value='1')
-			| Global Report
+			| #{__('Global Report')}
 		label
-			input#report(type='text', name='report_reason', placeholder='Report reason' autocomplete='off')
+			input#report(type='text', name='report_reason', placeholder=__('Report reason') autocomplete='off')
 	.actions
-		h4.no-m-p Captcha:
+		h4.no-m-p #{__('Captcha')}:
 		include ./captcha.pug
-	input(type='submit', value='Submit')
+	input(type='submit', value=__('Submit'))

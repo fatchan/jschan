@@ -6,36 +6,36 @@ include ../mixins/boardheader.pug
 include ../mixins/postlink.pug
 
 block head
-	title /#{board._id}/ - Logs
+	title /#{board._id}/ - #{__('Logs')}
 
 block content
-	+boardheader('Logs')
+	+boardheader(__('Logs'))
 	br
 	+managenav('logs')
 	hr(size=1)
 	.form-wrapper.flexleft
-		h4.no-m-p Search:
+		h4.no-m-p #{__('Search')}:
 		form.form-post.mv-5(action=`/${board._id}/manage/logs.html` method='GET')
 			input(type='hidden' value=page)
 			.row
-				.label Username
+				.label #{__('Username')}
 				input(type='text' name='username' value=username)
-			input(type='submit', value='Filter')
+			input(type='submit', value=__('Filter'))
 		h4.no-m-p Logs:
 		if logs && logs.length > 0
 			.table-container.flex-center.mv-10.text-center
 				table.fw
 						tr
-							th Date
-							th User
-							th IP
-							th Actions
-							th Posts
-							th Log Message
+							th #{__('Date')}
+							th #{__('User')}
+							th #{__('IP')}
+							th #{__('Actions')}
+							th #{__('Posts')}
+							th #{__('Log Message')}
 						for log in logs
 							tr
 								- const logDate = new Date(log.date);
-								td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(undefined, {hourCycle:'h23'})}
+								td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 								td
 									| #{log.user}
 									|   
@@ -43,7 +43,7 @@ block content
 								td
 									- const logIp = viewRawIp === true ? log.ip.raw : log.ip.cloak;
 									| #{logIp}
-								td #{log.actions}
+								td #{log.actions.map(a => __(a))}
 								td
 									if log.showLinks
 										for postLink in log.postLinks
@@ -55,4 +55,4 @@ block content
 			.pages.mv-5
 				include ../includes/pages.pug
 		else
-			p No logs.
+			p #{__('No logs.')}

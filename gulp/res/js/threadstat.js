@@ -1,4 +1,4 @@
-/* globals isThread */
+/* globals __n isThread */
 window.addEventListener('DOMContentLoaded', () => {
 
 	const statsElem = document.getElementById('threadstats');
@@ -16,7 +16,8 @@ window.addEventListener('DOMContentLoaded', () => {
 			if (updateId && updateId !== idString) { continue; }
 			const count = idMap.get(idString);
 			idElems[i].setAttribute('data-count', ` (${count})`);
-			idElems[i].setAttribute('title', `Double click to highlight (${count})`);
+			idElems[i].setAttribute('title', __n('Double click to highlight (%s)', count));
+			idElems[i].setAttribute('title-mobile', __n('Double tap to highlight (%s)', count));
 		}
 	};
 
@@ -49,8 +50,8 @@ window.addEventListener('DOMContentLoaded', () => {
 			const numFiles = +statsElem.children[1].innerText.match(/^(\d+)/g);
 			const filesTotal = numFiles + newFiles;
 			const postTotal = numPosts + 1;
-			statsElem.children[0].innerText = `${postTotal} repl${postTotal === 1 ? 'y' : 'ies'}`;
-			statsElem.children[1].innerText = `${filesTotal} file${filesTotal === 1 ? '' : 's'}`;
+			statsElem.children[0].innerText = __n('%s replies', postTotal);
+			statsElem.children[1].innerText = __n('%s files', filesTotal);
 			if (e.detail.json.userId) {
 				const userId = e.detail.post.querySelector('.user-id');
 				idElems.push(userId);
@@ -67,7 +68,7 @@ window.addEventListener('DOMContentLoaded', () => {
 					statsElem.appendChild(spacer);
 					statsElem.appendChild(uidSpan);
 				}
-				statsElem.children[2].innerText = `${idMap.size} UID${idMap.size === 1 ? '' : 's'}`;
+				statsElem.children[2].innerText = __n('%s UIDs', idMap.size);
 			}
 		});
 	}

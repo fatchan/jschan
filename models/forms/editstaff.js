@@ -6,6 +6,7 @@ const { Boards } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	let updatingPermissions = new Permission(res.locals.board.staff[req.body.username].permissions);
 
 	updatingPermissions = new Permission(res.locals.board.staff[req.body.username].permissions);
@@ -16,15 +17,15 @@ module.exports = async (req, res) => {
 
 	if (updated === 0) {
 		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'errors': 'Staff does not exist',
+			'title': __('Bad request'),
+			'errors': __('Staff does not exist'),
 			'redirect': req.headers.referer || `/${req.params.board}/manage/staff.html`,
 		});
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Edited staff',
+		'title': __('Success'),
+		'message': __('Edited staff'),
 		'redirect': `/${req.params.board}/manage/editstaff/${req.body.username}.html`,
 	});
 

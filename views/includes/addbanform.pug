@@ -1,22 +1,22 @@
 .row
-	.label IP/Hash
+	.label #{__('IP/Hash')}
 	input(type='text' name='ip' required)
 .row
-	.label Ban Reason
+	.label #{__('Ban Reason')}
 	input(type='text' name='ban_reason')
 .row
-	.label Modlog Message
+	.label #{__('Modlog Message')}
 	input(type='text' name='log_message')
 .row
-	.label Ban Duration
+	.label #{__('Ban Duration')}
 	input(type='text' name='ban_duration' placeholder='e.g. 7d')
 .row
-	.label Non-appealable Ban
+	.label #{__('Non-appealable Ban')}
 	label.postform-style.ph-5
 		input(type='checkbox', name='no_appeal' value='1')
 .row
-	.label Hide Username In Modlog
+	.label #{__('Hide Username In Modlog')}
 	label.postform-style.ph-5
 		input(type='checkbox', name='hide_name' value='1')
-input(type='submit', value='Submit')
+input(type='submit', value=__('Submit'))
 

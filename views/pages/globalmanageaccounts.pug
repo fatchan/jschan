@@ -5,7 +5,7 @@ block head
 	title Accounts
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('accounts')
 	hr(size=1)
@@ -14,13 +14,13 @@ block content
 		form.form-post.mv-5(action=`/globalmanage/accounts.html` method='GET')
 			input(type='hidden' value=page)
 			.row
-				.label Username
+				.label #{__('Username')}
 				input(type='text' name='username' value=username)
 			.row
-				.label Board URI
+				.label #{__('Board URI')}
 				input(type='text' name='uri' value=uri)
-			input(type='submit', value='Filter')
-		h4.mv-5 Accounts:
+			input(type='submit', value=__('Filter'))
+		h4.mv-5 #{__('Accounts')}:
 		if accounts && accounts.length > 0
 			form.form-post.nogrow(action=`/forms/global/deleteaccounts` method='POST' enctype='application/x-www-form-urlencoded')
 				input(type='hidden' name='_csrf' value=csrf)
@@ -28,12 +28,12 @@ block content
 					table
 						tr
 							th
-							th Username
-							th Own Boards
-							th Staff Boards
-							th Last Active
-							th Role
-							th Permissions
+							th #{__('Username')}
+							th #{__('Own Boards')}
+							th #{__('Staff Boards')}
+							th #{__('Last Active')}
+							th #{__('Role')}
+							th #{__('Permissions')}
 						for account in accounts
 							tr
 								td: input(type='checkbox', name='checkedaccounts' value=account._id)
@@ -54,18 +54,18 @@ block content
 										| -		
 								td
 									if account.lastActiveDate
-										time.reltime(datetime=account.lastActiveDate.toISOString()) #{account.lastActiveDate.toLocaleString(undefined, {hourCycle:'h23'})}
+										time.reltime(datetime=account.lastActiveDate.toISOString()) #{account.lastActiveDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 									else
 										| -		
-								td #{roleNameMap[account.permissions.toString('base64')] || 'Custom'}
+								td #{roleNameMap[account.permissions.toString('base64')] || __('Custom')}
 								td
 									if account._id !== user.username
-										a(href=`/globalmanage/editaccount/${account._id}.html`) [Edit]
+										a(href=`/globalmanage/editaccount/${account._id}.html`) [#{__('Edit')}]
 									else
-										a(href=`/mypermissions.html`) [View]
+										a(href=`/mypermissions.html`) [#{__('View')}]
 				.pages.mv-5
 					include ../includes/pages.pug
-				h4.mv-5 Delete Selected:
-				input(type='submit', value='Delete')
+				h4.mv-5 #{__('Delete Selected')}:
+				input(type='submit', value=__('Delete'))
 		else
-			p No results.
+			p #{__('No results.')}

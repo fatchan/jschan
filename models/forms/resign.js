@@ -5,12 +5,13 @@ const { Boards, Accounts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const moderatesBoard = res.locals.user.staffBoards.includes(req.body.board);
 	const ownsBoard = res.locals.user.ownedBoards.includes(req.body.board);
 	if (!ownsBoard && !moderatesBoard) {
 		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'message': 'You do not own or moderate that board',
+			'title': __('Bad request'),
+			'message': __('You do not own or moderate that board'),
 			'redirect': '/account.html'
 		});
 	}
@@ -29,8 +30,8 @@ module.exports = async (req, res) => {
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': `Resigned from ${ownsBoard ? 'owner' : 'staff'} position on /${req.body.board}/`,
+		'title': __('Success'),
+		'message': __(`Resigned from ${ownsBoard ? 'owner' : 'staff'} position on /%s/`, req.body.board),
 		'redirect': '/account.html'
 	});
 

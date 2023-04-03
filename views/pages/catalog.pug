@@ -6,10 +6,10 @@ include ../mixins/boardheader.pug
 include ../mixins/announcements.pug
 
 block head
-	title /#{board._id}/ - Catalog
+	title /#{board._id}/ - #{__('Catalog')}
 
 block content
-	+boardheader(modview ? 'Mod Catalog' : 'Catalog')
+	+boardheader(modview ? __('Mod Catalog') : __('Catalog'))
 	br
 	include ../includes/postform.pug
 	br
@@ -22,18 +22,18 @@ block content
 			.pages
 				+boardnav('catalog', true, false)
 		.pages.jsonly
-			input#catalogfilter(type='text' placeholder='Filter')
+			input#catalogfilter(type='text' placeholder=__('Filter'))
 			select.ml-5.right#catalogsort
-				option(value="" disabled selected hidden) Sort by
-				option(value="bump") Bump order
-				option(value="date") Creation date
-				option(value="replies") Reply count
+				option(value="" disabled selected hidden) #{__('Sort By')}
+				option(value="bump") #{__('Bump Order')}
+				option(value="date") #{__('Creation Date')}
+				option(value="replies") #{__('Reply Count')}
 	form(action=`/forms/board/${board._id}/${modview ? 'mod' : ''}actions` method='POST' enctype='application/x-www-form-urlencoded')
 		if modview
 			input(type='hidden' name='_csrf' value=csrf)
 		hr(size=1)
 		if threads.length === 0
-			p No posts.
+			p #{__('No posts')}
 		else 
 			.catalog
 				for thread, i in threads

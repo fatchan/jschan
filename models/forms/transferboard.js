@@ -6,6 +6,7 @@ const { Boards, Accounts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const newOwner = res.locals.newOwner;
 
 	//remove current owner
@@ -33,8 +34,8 @@ module.exports = async (req, res) => {
 	}
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Transferred ownership',
+		'title': __('Success'),
+		'message': __('Transferred ownership'),
 		'redirect': `/${req.params.board}/index.html`
 	});
 

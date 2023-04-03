@@ -2,27 +2,27 @@ extends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Settings
+	title #{__('Settings')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('settings')
 	hr(size=1)
-	h4.no-m-p Delete board:
+	h4.no-m-p #{__('Delete board')}:
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
-				.label Board URI
+				.label #{__('Board URI')}:
 				input(type='text' name='uri' required)
 			.row
-				.label I'm sure
+				.label #{__("I'm sure")}
 				label.postform-style.ph-5
 					input(type='checkbox', name='confirm', value='true' required)
-			input(type='submit', value='Submit')
+			input(type='submit', value=__('Submit'))
 	hr(size=1)
-	h4.no-m-p Settings:
+	h4.no-m-p #{__('Settings')}:
 	.form-wrapper.flexleft
 		form.form-post(action=`/forms/global/settings`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
@@ -40,92 +40,97 @@ block content
 														.tabbed-area
 															ul.tabs.group
 																li
-																	a(href='#tab-1') General
+																	a(href='#tab-1') #{__('General')}
 																li
-																	a(href='#tab-2') Security
+																	a(href='#tab-2') #{__('Security')}
 																li
-																	a(href='#tab-3') Limits
+																	a(href='#tab-3') #{__('Limits')}
 																li
-																	a(href='#tab-4') Captcha
+																	a(href='#tab-4') #{__('Captcha')}
 																li
-																	a(href='#tab-5') Antispam
+																	a(href='#tab-5') #{__('Antispam')}
 																li
-																	a(href='#tab-6') Style
+																	a(href='#tab-6') #{__('Style')}
 																li
-																	a(href='#tab-7') Webring
+																	a(href='#tab-7') #{__('Webring')}
 																li
-																	a(href='#tab-8') Files & Thumbnails
+																	a(href='#tab-8') #{__('Files & Thumbnails')}
 																li
-																	a(href='#tab-9') Frontend Script Defaults
+																	a(href='#tab-9') #{__('Frontend Script Defaults')}
 																li
-																	a(href='#tab-10') Board Defaults
+																	a(href='#tab-10') #{__('Board Defaults')}
 															.box-wrap
 																.tab.tab-1
 																	.col
 																		.row
-																			.label Global Announcement
+																			.label #{__('Global Announcement')}
 																			textarea(name='global_announcement') #{settings.globalAnnouncement.raw}
 																		.row
-																			.label Country Code Header
+																			.label #{__('Country Code Header')}
 																			input(type='text' name='country_code_header' value=settings.countryCodeHeader)
 																		.row
-																			.label IP Header
+																			.label #{__('IP Header')}
 																			input(type='text' name='ip_header' value=settings.ipHeader)
 																		.row
-																			.label Meta Site Name
+																			.label #{__('Meta Site Name')}
 																			input(type='text' name='meta_site_name' value=settings.meta.siteName)
 																		.row
-																			.label Meta URL
+																			.label #{__('Meta URL')}
 																			input(type='text' name='meta_url' value=settings.meta.url)
 																		.row
-																			.label Disable Anonymizer File Posting
+																			.label #{__('Language')}
+																			select(name='language')
+																				each language in languages
+																					option(value=language selected=settings.language === language) #{__(language)} (#{language})
+																		.row
+																			.label #{__('Disable Anonymizer File Posting')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='disable_anonymizer_file_posting', value='true' checked=settings.disableAnonymizerFilePosting)
 																		.row
-																			.label Stats Count Anonymizers
+																			.label #{__('Stats Count Anonymizers')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='stats_count_anonymizers', value='true' checked=settings.statsCountAnonymizers)
 																		.row
-																			.label Prune Files Immediately
+																			.label #{__('Prune Files Immediately')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='prune_immediately', value='true' checked=settings.pruneImmediately)
 																		.row
-																			.label Fuzzy Hash Images
+																			.label #{__('Fuzzy Hash Images')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='hash_images' value='true' checked=settings.hashImages)
 																		.row
-																			.label Template Cache
+																			.label #{__('Template Cache')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='cache_templates' value='true' checked=settings.cacheTemplates)
 																		.row
-																			.label Template Generation Lock Time
+																			.label #{__('Template Generation Lock Time')}
 																			input(type='number' name='lock_wait' value=settings.lockWait)
 																		.row
-																			.label Hot Threads Limit
+																			.label #{__('Hot Threads Limit')}
 																			input(type='number' name='hot_threads_limit' value=settings.hotThreadsLimit)
 																		.row
-																			.label Hot Threads Reply Threshold
+																			.label #{__('Hot Threads Reply Threshold')}
 																			input(type='number' name='hot_threads_threshold' value=settings.hotThreadsThreshold)
 																		.row
-																			.label Hot Threads Max Age
-																			input(type='text' name='hot_threads_max_age' placeholder='e.g. 1mo' value=settings.hotThreadsMaxAge)
+																			.label #{__('Hot Threads Max Age')}
+																			input(type='text' name='hot_threads_max_age' placeholder=__('e.g. 1mo') value=settings.hotThreadsMaxAge)
 																		.row
-																			.label Overboard Index Thread Limit
+																			.label #{__('Overboard Index Thread Limit')}
 																			input(type='number' name='overboard_limit' value=settings.overboardLimit)
 																		.row
-																			.label Overboard Catalog Thread Limit
+																			.label #{__('Overboard Catalog Thread Limit')}
 																			input(type='number' name='overboard_catalog_limit' value=settings.overboardCatalogLimit)
 																		.row
-																			.label Overboard Reverse Image Search
+																			.label #{__('Overboard Reverse Image Search')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='overboard_reverse_links' value='true' checked=settings.overboardReverseLinks)
 																		.row
-																			.label Allow Custom Overboard
+																			.label #{__('Allow Custom Overboard')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='allow_custom_overboard' value='true' checked=settings.allowCustomOverboard)
 																		.row
 																			.label
-																				| External Archive Links URL
+																				| #{__('External Archive Links URL')}
 																				|
 																				small
 																					| (
@@ -134,7 +139,7 @@ block content
 																			input(type='text', name='archive_links', value=settings.archiveLinksURL)
 																		.row
 																			.label
-																				| Reverse Image Search Links URL
+																				| #{__('Reverse Image Search Links URL')}
 																				|
 																				small
 																					| (
@@ -142,760 +147,759 @@ block content
 																					| )
 																			input(type='text', name='reverse_links', value=settings.reverseImageLinksURL)
 																		.row
-																			.label Prune Modlogs Days
+																			.label #{__('Prune Modlogs Days')}
 																			input(type='number', name='prune_modlogs' value=settings.pruneModlogs)
 
 																.tab.tab-2
 																	.col
 																		.row
-																			.label Referer Check
+																			.label #{__('Referer Check')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='referrer_check', value='true' checked=settings.refererCheck)
 																		.row
-																			.label Allowed Hosts
-																			textarea(name='allowed_hosts' placeholder='Newline separated') #{settings.allowedHosts.join('\n')}
+																			.label #{__('Allowed Hosts')}
+																			textarea(name='allowed_hosts' placeholder=__('Newline separated')) #{settings.allowedHosts.join('\n')}
 																		.row
-																			.label Secure Cookies
+																			.label #{__('Secure Cookies')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='secure_cookies', value='true' checked=settings.secureCookies)
 																		.row
-																			.label Don't store raw IPs
+																			.label #{__("Don't store raw IPs")}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='dont_store_raw_ips', value='true' checked=settings.dontStoreRawIps)
 																		.row
-																			.label Prune IPs Days
+																			.label #{__('Prune IPs Days')}
 																			input(type='number', name='prune_ips' value=settings.pruneIps)
 
 																.tab.tab-3
 																	.col
 																		.row
-																			.label Default Ban Duration
-																			input(type='text', name='default_ban_duration',  placeholder='e.g. 1w', value=settings.defaultBanDuration)
+																			.label #{__('Default Ban Duration')}
+																			input(type='text', name='default_ban_duration',  placeholder=__('e.g. 1w'), value=settings.defaultBanDuration)
 																		.row
-																			.label Quote Limit
+																			.label #{__('Quote Limit')}
 																			input(type='number', name='quote_limit', value=settings.quoteLimit)
 																		.row
-																			.label Preview Replies
+																			.label #{__('Preview Replies')}
 																			input(type='number', name='preview_replies', value=settings.previewReplies)
 																		.row
-																			.label Sticky Preview Replies
+																			.label #{__('Sticky Preview Replies')}
 																			input(type='number', name='sticky_preview_replies', value=settings.stickyPreviewReplies)
 																		.row
-																			.label Early 404 Fraction
+																			.label #{__('Early 404 Fraction')}
 																			input(type='number', name='early_404_fraction', value=settings.early404Fraction)
 																		.row
-																			.label Early 404 Replies
+																			.label #{__('Early 404 Replies')}
 																			input(type='number', name='early_404_replies', value=settings.early404Replies)
 																		.row
-																			.label Max Homepage News Entries
+																			.label #{__('Max Homepage News Entries')}
 																			input(type='number', name='max_recent_news', value=settings.maxRecentNews)
 																		.row
-																			.label Inactive Account Time
-																			input(type='text', name='inactive_account_time',  placeholder='e.g. 1w', value=settings.inactiveAccountTime)
+																			.label #{__('Inactive Account Time')}
+																			input(type='text', name='inactive_account_time',  placeholder=__('e.g. 1w'), value=settings.inactiveAccountTime)
 																		.row
-																			.label Inactive Account Action
+																			.label #{__('Inactive Account Action')}
 																			select(name='inactive_account_action')
-																				option(value='0', selected=settings.inactiveAccountAction === 0) Do nothing
-																				option(value='1', selected=settings.inactiveAccountAction === 1) Forfeit staff positions
-																				option(value='2', selected=settings.inactiveAccountAction === 2) Delete Account
+																				option(value='0', selected=settings.inactiveAccountAction === 0) #{__('Do nothing')}
+																				option(value='1', selected=settings.inactiveAccountAction === 1) #{__('Forfeit staff positions')}
+																				option(value='2', selected=settings.inactiveAccountAction === 2) #{__('Delete Account')}
 																		.row
-																			.label Abandoned Board Action
+																			.label #{__('Abandoned Board Action')}
 																			select(name='abandoned_board_action')
-																				option(value='0', selected=settings.abandonedBoardAction === 0) Do nothing
-																				option(value='1', selected=settings.abandonedBoardAction === 1) Lock board
-																				option(value='2', selected=settings.abandonedBoardAction === 2) Lock+unlist board
-																				option(value='3', selected=settings.abandonedBoardAction === 3) Delete board
+																				option(value='0', selected=settings.abandonedBoardAction === 0) #{__('Do nothing')}
+																				option(value='1', selected=settings.abandonedBoardAction === 1) #{__('Lock board')}
+																				option(value='3', selected=settings.abandonedBoardAction === 3) #{__('Delete board')}
 																		.row
-																			h4.mv-5 Global Limits
+																			h4.mv-5 #{__('Global Limits')}
 																		.row
-																			.label Reply Limit Min
+																			.label #{__('Reply Limit Min')}
 																			input(type='number' name='global_limits_reply_limit_min' value=settings.globalLimits.replyLimit.min)
 																		.row
-																			.label Reply Limit Max
+																			.label #{__('Reply Limit Max')}
 																			input(type='number' name='global_limits_reply_limit_max' value=settings.globalLimits.replyLimit.max)
 																		.row
-																			.label Thread Limit Min
+																			.label #{__('Thread Limit Min')}
 																			input(type='number' name='global_limits_thread_limit_min' value=settings.globalLimits.threadLimit.min)
 																		.row
-																			.label Thread Limit Max
+																			.label #{__('Thread Limit Max')}
 																			input(type='number' name='global_limits_thread_limit_max' value=settings.globalLimits.threadLimit.max)
 																		.row
-																			.label Bump Limit Min
+																			.label #{__('Bump Limit Min')}
 																			input(type='number' name='global_limits_bump_limit_min' value=settings.globalLimits.bumpLimit.min)
 																		.row
-																			.label Bump Limit Max
+																			.label #{__('Bump Limit Max')}
 																			input(type='number' name='global_limits_bump_limit_max' value=settings.globalLimits.bumpLimit.max)
 																		.row
-																			.label Files Per Post Max
+																			.label #{__('Files Per Post Max')}
 																			input(type='number' name='global_limits_post_files_max' value=settings.globalLimits.postFiles.max)
 																		.row
-																			.label Post File Size Max
+																			.label #{__('Post File Size Max')}
 																			input(type='number' name='global_limits_post_files_size_max' value=settings.globalLimits.postFilesSize.max)
 																		.row
-																			.label Custom Pages Max Characters
+																			.label #{__('Custom Pages Max Characters')}
 																			input(type='number' name='global_limits_custom_pages_max_length' value=settings.globalLimits.customPages.maxLength)
 																		.row
-																			.label Total Custom Pages Per Board
+																			.label #{__('Total Custom Pages Per Board')}
 																			input(type='number' name='global_limits_custom_pages_max' value=settings.globalLimits.customPages.max)
 																		.row
-																			.label Banner Width Max
+																			.label #{__('Banner Width Max')}
 																			input(type='number' name='global_limits_banner_files_width' value=settings.globalLimits.bannerFiles.width)
 																		.row
-																			.label Banner Height Max
+																			.label #{__('Banner Height Max')}
 																			input(type='number' name='global_limits_banner_files_height' value=settings.globalLimits.bannerFiles.height)
 																		.row
-																			.label Force 3:1 Banner Aspect Ratio
+																			.label #{__('Force 3:1 Banner Aspect Ratio')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='global_limits_banner_files_force_aspect_ratio' value='true' checked=settings.globalLimits.bannerFiles.forceAspectRatio)
 																		.row
-																			.label Banner File Size Max
+																			.label #{__('Banner File Size Max')}
 																			input(type='number' name='global_limits_banner_files_size_max' value=settings.globalLimits.bannerFilesSize.max)
 																		.row
-																			.label Banners Per Upload Max
+																			.label #{__('Banners Per Upload Max')}
 																			input(type='number' name='global_limits_banner_files_max' value=settings.globalLimits.bannerFiles.max)
 																		.row
-																			.label Total Banners Per Board
+																			.label #{__('Total Banners Per Board')}
 																			input(type='number' name='global_limits_banner_files_total' value=settings.globalLimits.bannerFiles.total)
 																		.row
-																			.label Flag File Size Max
+																			.label #{__('Flag File Size Max')}
 																			input(type='number' name='global_limits_flag_files_size_max' value=settings.globalLimits.flagFilesSize.max)
 																		.row
-																			.label Flags Per Upload Max
+																			.label #{__('Flags Per Upload Max')}
 																			input(type='number' name='global_limits_flag_files_max' value=settings.globalLimits.flagFiles.max)
 																		.row
-																			.label Total Flags Per Board
+																			.label #{__('Total Flags Per Board')}
 																			input(type='number' name='global_limits_flag_files_total' value=settings.globalLimits.flagFiles.total)
 																		.row
-																			.label Asset File Size Max
+																			.label #{__('Asset File Size Max')}
 																			input(type='number' name='global_limits_asset_files_size_max' value=settings.globalLimits.assetFilesSize.max)
 																		.row
-																			.label Assets Per Upload Max
+																			.label #{__('Assets Per Upload Max')}
 																			input(type='number' name='global_limits_asset_files_max' value=settings.globalLimits.assetFiles.max)
 																		.row
-																			.label Total Assets Per Board
+																			.label #{__('Total Assets Per Board')}
 																			input(type='number' name='global_limits_asset_files_total' value=settings.globalLimits.assetFiles.total)
 																		.row
-																			h4.mv-5 Field Length Limits
+																			h4.mv-5 #{__('Field Length Limits')}
 																		.row
-																			.label Name
+																			.label #{__('Name')}
 																			input(type='number', name='global_limits_field_length_name' value=settings.globalLimits.fieldLength.name)
 																		.row
-																			.label Email
+																			.label #{__('Email')}
 																			input(type='number', name='global_limits_field_length_email' value=settings.globalLimits.fieldLength.email)
 																		.row
-																			.label Subject
+																			.label #{__('Subject')}
 																			input(type='number', name='global_limits_field_length_subject' value=settings.globalLimits.fieldLength.subject)
 																		.row
-																			.label Post Password
+																			.label #{__('Post Password')}
 																			input(type='number', name='global_limits_field_length_postpassword' value=settings.globalLimits.fieldLength.postpassword)
 																		.row
-																			.label Message
+																			.label #{__('Message')}
 																			input(type='number', name='global_limits_field_length_message' value=settings.globalLimits.fieldLength.message)
 																		.row
-																			.label Report Reason
+																			.label #{__('Report Reason')}
 																			input(type='number', name='global_limits_field_length_report_reason' value=settings.globalLimits.fieldLength.report_reason)
 																		.row
-																			.label Ban Reason
+																			.label #{__('Ban Reason')}
 																			input(type='number', name='global_limits_field_length_ban_reason' value=settings.globalLimits.fieldLength.ban_reason)
 																		.row
-																			.label Log Messages
+																			.label #{__('Log Messages')}
 																			input(type='number', name='global_limits_field_length_log_message' value=settings.globalLimits.fieldLength.log_message)
 																		.row
-																			.label Board URI
+																			.label #{__('Board URI')}
 																			input(type='number', name='global_limits_field_length_uri' value=settings.globalLimits.fieldLength.uri)
 																		.row
-																			.label Board Name
+																			.label #{__('Board Name')}
 																			input(type='number', name='global_limits_field_length_boardname' value=settings.globalLimits.fieldLength.boardname)
 																		.row
-																			.label Board Description
+																			.label #{__('Board Description')}
 																			input(type='number', name='global_limits_field_length_description' value=settings.globalLimits.fieldLength.description)
 																		.row
-																			.label Multi Input Form Anon
+																			.label #{__('Multi Input Form Anon')}
 																			input(type='number', name='global_limits_multi_input_posts_anon' value=settings.globalLimits.multiInputs.posts.anon)
 																		.row
-																			.label Multi Input Form Staff
+																			.label #{__('Multi Input Form Staff')}
 																			input(type='number', name='global_limits_multi_input_posts_staff' value=settings.globalLimits.multiInputs.posts.staff)
 
 																.tab.tab-4
 																	.col
 																		.row
-																			.label Type
+																			.label #{__('Type')}
 																			select(name='captcha_options_type')
-																				option(value='text', selected=settings.captchaOptions.type === 'text') Text
-																				option(value='grid', selected=settings.captchaOptions.type === 'grid') Grid v1
-																				option(value='grid2', selected=settings.captchaOptions.type === 'grid2') Grid v2
-																				option(value='google', selected=settings.captchaOptions.type === 'google') Google
-																				option(value='hcaptcha', selected=settings.captchaOptions.type === 'hcaptcha') Hcaptcha
+																				option(value='text', selected=settings.captchaOptions.type === 'text') #{__('Text')}
+																				option(value='grid', selected=settings.captchaOptions.type === 'grid') #{__('Grid v1')}
+																				option(value='grid2', selected=settings.captchaOptions.type === 'grid2') #{__('Grid v2')}
+																				option(value='google', selected=settings.captchaOptions.type === 'google') #{__('Google')}
+																				option(value='hcaptcha', selected=settings.captchaOptions.type === 'hcaptcha') #{__('Hcaptcha')}
 																		.row
-																			.label Generate Limit
+																			.label #{__('Generate Limit')}
 																			input(type='number' name='captcha_options_generate_limit' value=settings.captchaOptions.generateLimit)
 																		.row
-																			.label Font
+																			.label #{__('Font')}
 																			select(name='captcha_options_font')
-																				option(value='default' selected=(settings.captchaOptions.font === 'default')) Default
+																				option(value='default' selected=(settings.captchaOptions.font === 'default')) #{__('Default')}
 																				each font in fontList
 																						option(value=font.path selected=(settings.captchaOptions.font === font.path)) #{font.name}
 																		.row
-																			h4.mv-5 Text Captcha Options
+																			h4.mv-5 #{__('Text Captcha Options')}
 																		.row
-																			.label Strikethrough Effect
+																			.label #{__('Strikethrough Effect')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='captcha_options_text_line', value='true' checked=settings.captchaOptions.text.line)
 																		.row
-																			.label Wave Effect Strength
+																			.label #{__('Wave Effect Strength')}
 																			label.postform-style.ph-5
 																				input(type='range' name='captcha_options_text_wave' min='0' max='10' value=settings.captchaOptions.text.wave)
 																		.row
-																			.label Paint Effect Strength
+																			.label #{__('Paint Effect Strength')}
 																			label.postform-style.ph-5
 																				input(type='range' name='captcha_options_text_paint' min='0' max='10' value=settings.captchaOptions.text.paint)
 																		.row
-																			.label Noise Effect Strength
+																			.label #{__('Noise Effect Strength')}
 																			label.postform-style.ph-5
 																				input(type='range' name='captcha_options_text_noise' min='0' max='10' value=settings.captchaOptions.text.noise)
 																		.row
-																			h4.mv-5 Grid Captcha Options
+																			h4.mv-5 #{__('Grid Captcha Options')}
 																		.row
-																			.label Image Size
+																			.label #{__('Image Size')}
 																			input(type='number' name='captcha_options_grid_image_size' value=settings.captchaOptions.grid.imageSize)
 																		.row
-																			.label Grid Size
+																			.label #{__('Grid Size')}
 																			input(type='number' name='captcha_options_grid_size' value=settings.captchaOptions.grid.size)
 																		.row
-																			.label Icon Offset
+																			.label #{__('Icon Offset')}
 																			input(type='number' name='captcha_options_grid_icon_y_offset' value=settings.captchaOptions.grid.iconYOffset)
 																		.row
-																			.label True Characters
-																			textarea(name='captcha_options_grid_trues' placeholder='Newline separated') #{settings.captchaOptions.grid.trues.join('\n')}
+																			.label #{__('True Characters')}
+																			textarea(name='captcha_options_grid_trues' placeholder=__('Newline separated')) #{settings.captchaOptions.grid.trues.join('\n')}
 																		.row
-																			.label False Characters
-																			textarea(name='captcha_options_grid_falses' placeholder='Newline separated') #{settings.captchaOptions.grid.falses.join('\n')}
+																			.label #{__('False Characters')}
+																			textarea(name='captcha_options_grid_falses' placeholder=__('Newline separated')) #{settings.captchaOptions.grid.falses.join('\n')}
 																		.row
-																			.label Question Text
+																			.label #{__('Question Text')}
 																			input(type='text' name='captcha_options_grid_question' value=settings.captchaOptions.grid.question)
 																		.row
-																			.label Edge Effect Strength
+																			.label #{__('Edge Effect Strength')}
 																			label.postform-style.ph-5
 																				input(type='range' name='captcha_options_grid_edge' min='0' max='50' value=settings.captchaOptions.grid.edge)
 																		.row
-																			.label Noise Effect Strength
+																			.label #{__('Noise Effect Strength')}
 																			label.postform-style.ph-5
 																				input(type='range' name='captcha_options_grid_noise' min='0' max='10' value=settings.captchaOptions.grid.noise)
 																		.row
-																			h4.mv-5 Captcha Distortion
+																			h4.mv-5 #{__('Captcha Distortion')}
 																		.row
-																			.label Minimum Distortions
+																			.label #{__('Minimum Distortions')}
 																			input(type='number' name='captcha_options_num_distorts_min' value=settings.captchaOptions.numDistorts.min)
 																		.row
-																			.label Maximum Distortions
+																			.label #{__('Maximum Distortions')}
 																			input(type='number' name='captcha_options_num_distorts_max' value=settings.captchaOptions.numDistorts.max)
 																		.row
-																			.label Distortion Intensity
+																			.label #{__('Distortion Intensity')}
 																			input(type='number' name='captcha_options_distortion' value=settings.captchaOptions.distortion)
 
 																.tab.tab-5
 																	.col
 																		.row
-																			.label Block Bypass
+																			.label #{__('Block Bypass')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='block_bypass_enabled', value='true' checked=settings.blockBypass.enabled)
 																		.row
-																			.label Force Anonymizers
+																			.label #{__('Force Anonymizers')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='block_bypass_force_anonymizers', value='true' checked=settings.blockBypass.forceAnonymizers)
 																		.row
-																			.label Bypass DNSBL
+																			.label #{__('Bypass DNSBL')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='block_bypass_bypass_dnsbl', value='true' checked=settings.blockBypass.bypassDnsbl)
 																		.row
-																			.label Expire After Uses
+																			.label #{__('Expire After Uses')}
 																			input(type='number' name='block_bypass_expire_after_uses' value=settings.blockBypass.expireAfterUses)
 																		.row
-																			.label Expire After Time
-																			input(type='text' name='block_bypass_expire_after_time' placeholder='e.g. 1d' value=settings.blockBypass.expireAfterTime)
+																			.label #{__('Expire After Time')}
+																			input(type='text' name='block_bypass_expire_after_time' placeholder=__('e.g. 1d') value=settings.blockBypass.expireAfterTime)
 																		.row
-																			h4.mv-5 Filters
+																			h4.mv-5 #{__('Filters')}
 																		.row
-																			.label Filters
-																			textarea(name='filters' placeholder='Newline separated') #{settings.filters.join('\n')}
+																			.label #{__('Filters')}
+																			textarea(name='filters' placeholder=__('Newline separated')) #{settings.filters.join('\n')}
 																		.row
-																			.label Strict Filtering
+																			.label #{__('Strict Filtering')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='strict_filtering', value='true', checked=settings.strictFiltering)
 																		.row
-																			.label Filter Bans Appealable
+																			.label #{__('Filter Bans Appealable')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='filter_ban_appealable', value='true', checked=settings.filterBanAppealable)
 																		.row
-																			.label Filter Mode
+																			.label #{__('Filter Mode')}
 																			select(name='filter_mode')
-																				option(value='0', selected=settings.filterMode === 0) Do nothing
-																				option(value='1', selected=settings.filterMode === 1) Block post
-																				option(value='2', selected=settings.filterMode === 2) Ban
+																				option(value='0', selected=settings.filterMode === 0) #{__('Do nothing')}
+																				option(value='1', selected=settings.filterMode === 1) #{__('Block post')}
+																				option(value='2', selected=settings.filterMode === 2) #{__('Ban')}
 																		.row
-																			.label Filter Auto Ban Duration
-																			input(type='text' name='ban_duration' placeholder='e.g. 1w' value=settings.filterBanDuration)
+																			.label #{__('Filter Auto Ban Duration')}
+																			input(type='text' name='ban_duration' placeholder=__('e.g. 1w') value=settings.filterBanDuration)
 																		.row
-																			h4.mv-5 Flood Protection
+																			h4.mv-5 #{__('Flood Protection')}
 																		.row
-																			.label Same Content Same IP/ID
+																			.label #{__('Same Content Same IP/ID')}
 																			input(type='number' name='flood_timers_same_content_same_ip' value=settings.floodTimers.sameContentSameIp)
 																		.row
-																			.label Same Content Any IP/ID
+																			.label #{__('Same Content Any IP/ID')}
 																			input(type='number' name='flood_timers_same_content_any_ip' value=settings.floodTimers.sameContentAnyIp)
 																		.row
-																			.label Any Content Same IP/ID
+																			.label #{__('Any Content Same IP/ID')}
 																			input(type='number' name='flood_timers_any_content_same_ip' value=settings.floodTimers.anyContentSameIp)
 																		.row
-																			h4.mv-5 DNSBL
+																			h4.mv-5 #{__('DNSBL')}
 																		.row
-																			.label DNSBL Enabled
+																			.label #{__('DNSBL Enabled')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='dnsbl_enabled', value='true' checked=settings.dnsbl.enabled)
 																		.row
-																			.label DNSBL Addresses
-																			textarea(name='dnsbl_blacklists' placeholder='Newline separated') #{settings.dnsbl.blacklists.join('\n')}
+																			.label #{__('DNSBL Addresses')}
+																			textarea(name='dnsbl_blacklists' placeholder=__('Newline separated')) #{settings.dnsbl.blacklists.join('\n')}
 																		.row
-																			.label Cache Time
-																			input(type='text' name='dnsbl_cache_time' placeholder='e.g. 1h' value=settings.dnsbl.cacheTime)
+																			.label #{__('Cache Time')}
+																			input(type='text' name='dnsbl_cache_time' placeholder=__('e.g. 1h') value=settings.dnsbl.cacheTime)
 																		.row
-																			h4.mv-5 Ratelimits
+																			h4.mv-5 #{__('Ratelimits')}
 																		.row
-																			.label Generate Captcha
+																			.label #{__('Generate Captcha')}
 																			input(type='number' name='rate_limit_cost_captcha' value=settings.rateLimitCost.captcha)
 																		.row
-																			.label Change Board Settings
+																			.label #{__('Change Board Settings')}
 																			input(type='number' name='rate_limit_cost_board_settings' value=settings.rateLimitCost.boardSettings)
 																		.row
-																			.label Edit Post
+																			.label #{__('Edit Post')}
 																			input(type='number' name='rate_limit_cost_edit_post' value=settings.rateLimitCost.editPost)
 
 																.tab.tab-6
 																	.col
 																		.row
-																			.label Allowed Themes
-																			textarea(name='themes' placeholder='Newline separated') #{settings.themes.join('\n')}
+																			.label #{__('Allowed Themes')}
+																			textarea(name='themes' placeholder=__('Newline separated')) #{settings.themes.join('\n')}
 																		.row
-																			.label Allowed Code Themes
-																			textarea(name='code_themes' placeholder='Newline separated') #{settings.codeThemes.join('\n')}
+																			.label #{__('Allowed Code Themes')}
+																			textarea(name='code_themes' placeholder=__('Newline separated')) #{settings.codeThemes.join('\n')}
 																		.row
-																			.label Default Theme
+																			.label #{__('Default Theme')}
 																			select(name='board_defaults_theme')
 																				each theme in themes
 																					option(value=theme selected=settings.boardDefaults.theme === theme) #{theme}
 																		.row
-																			.label Default Code Theme
+																			.label #{__('Default Code Theme')}
 																			select(name='board_defaults_code_theme')
 																				each theme in codeThemes
 																					option(value=theme selected=settings.boardDefaults.codeTheme === theme) #{theme}
 																		.row
 																			.label
-																				| Code Highlighting Auto-Detect Languages
+																				| #{__('Code Highlighting Auto-Detect Languages')}
 																				|
 																				small
 																					| (
-																					a(rel='nofollow' referrerpolicy='same-origin' target='_blank' href='https://github.com/highlightjs/highlight.js/blob/master/SUPPORTED_LANGUAGES.md') Supported Languages
+																					a(rel='nofollow' referrerpolicy='same-origin' target='_blank' href='https://github.com/highlightjs/highlight.js/blob/master/SUPPORTED_LANGUAGES.md') #{__('Supported Languages')}
 																					| )
-																			textarea(name='highlight_options_language_subset' placeholder='Newline separated') #{settings.highlightOptions.languageSubset.join('\n')}
+																			textarea(name='highlight_options_language_subset' placeholder=__('Newline separated')) #{settings.highlightOptions.languageSubset.join('\n')}
 																		.row
-																			.label Code Highlight Language Detect Threshold
+																			.label #{__('Code Highlight Language Detect Threshold')}
 																			input(type='number' name='highlight_options_threshold' value=settings.highlightOptions.threshold)
 																		.row
-																			.label Board Custom CSS
+																			.label #{__('Board Custom CSS')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='global_limits_custom_css_enabled' value='true' checked=settings.globalLimits.customCss.enabled)
 																		.row
-																			.label Custom CSS Filters
-																			textarea(name='global_limits_custom_css_filters' placeholder='Newline separated') #{settings.globalLimits.customCss.filters.join('\n')}
+																			.label #{__('Custom CSS Filters')}
+																			textarea(name='global_limits_custom_css_filters' placeholder=__('Newline separated')) #{settings.globalLimits.customCss.filters.join('\n')}
 																		.row
-																			.label Strict Filtering
+																			.label #{__('Strict Filtering')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='global_limits_custom_css_strict' value='true' checked=settings.globalLimits.customCss.strict)
 																		.row
-																			.label Custom CSS Max Length
+																			.label #{__('Custom CSS Max Length')}
 																			input(type='number' name='global_limits_custom_css_max' value=settings.globalLimits.customCss.max)
 
 																.tab.tab-7
 																	.col
 																		.row
-																			.label Enable
+																			.label #{__('Enable')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='enable_webring' value='true' checked=settings.enableWebring)
 																		.row
-																			.label Use Socks Proxy
+																			.label #{__('Use Socks Proxy')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='webring_proxy_enabled', value='true' placeholder='socks5h://127.0.0.1:9050' checked=settings.proxy.enabled)
 																		.row
-																			.label Proxy Address
+																			.label #{__('Proxy Address')}
 																			input(type='text', name='webring_proxy_address', value=settings.proxy.address)
 																		.row
-																			.label Following
-																			textarea(name='webring_following' placeholder='Newline separated') #{settings.following.join('\n')}
+																			.label #{__('Following')}
+																			textarea(name='webring_following' placeholder=__('Newline separated')) #{settings.following.join('\n')}
 																		.row
-																			.label Logo URLs
-																			textarea(name='webring_logos' placeholder='Newline separated') #{settings.logo.join('\n')}
+																			.label #{__('Logo URLs')}
+																			textarea(name='webring_logos' placeholder=__('Newline separated')) #{settings.logo.join('\n')}
 																		.row
-																			.label Blacklist
-																			textarea(name='webring_blacklist' placeholder='Newline separated') #{settings.blacklist.join('\n')}
+																			.label #{__('Blacklist')}
+																			textarea(name='webring_blacklist' placeholder=__('Newline separated')) #{settings.blacklist.join('\n')}
 
 																.tab.tab-8
 																	.col
 																		.row
-																			.label Animated .gif Thumbnails
+																			.label #{__('Animated .gif Thumbnails')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='animated_gif_thumbnails', value='true' checked=settings.animatedGifThumbnails)
 																		.row
-																			.label Audio Thumbnails
+																			.label #{__('Audio Thumbnails')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='audio_thumbnails', value='true' checked=settings.audioThumbnails)
 																		.row
-																			.label Use ffmpeg For .gif Thumbnails
+																			.label #{__('Use ffmpeg For .gif Thumbnails')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='ffmpeg_gif_thumbnails', value='true' checked=settings.ffmpegGifThumbnails)
 																		.row
-																			.label Thumbnail Dimensions
+																			.label #{__('Thumbnail Dimensions')}
 																			input(type='number', name='thumb_size', value=settings.thumbSize)
 																		.row
-																			.label Video Thumbnail Percentage
+																			.label #{__('Video Thumbnail Percentage')}
 																			input(type='number', name='video_thumb_percentage', value=settings.videoThumbPercentage)
 																		.row
-																			.label Other Mime Types
-																			textarea(name='other_mime_types' placeholder='Newline separated') #{settings.otherMimeTypes.join('\n')}
+																			.label #{__('Other Mime Types')}
+																			textarea(name='other_mime_types' placeholder=__('Newline separated')) #{settings.otherMimeTypes.join('\n')}
 																		.row
-																			.label Validate Mime Types
+																			.label #{__('Validate Mime Types')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='check_real_mime_types', value='true' checked=settings.checkRealMimeTypes)
 																		.row
-																			.label Unknown Types Pass Validation
+																			.label #{__('Unknown Types Pass Validation')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='allow_mime_no_match', value='true' checked=settings.allowMimeNoMatch)
 																		.row
-																			.label Space File Name Replacement
+																			.label #{__('Space File Name Replacement')}
 																			input(type='text', name='space_file_name_replacement', value=settings.spaceFileNameReplacement)
 																		.row
-																			.label Thumbnail File Extension
+																			.label #{__('Thumbnail File Extension')}
 																			input(type='text' name='thumb_extension' value=settings.thumbExtension)
 																		.row
-																			.label Image Max Resolution
+																			.label #{__('Image Max Resolution')}
 																			input(type='text' name='global_limits_post_files_size_image_resolution' value=settings.globalLimits.postFilesSize.imageResolution)
 																		.row
-																			.label Video Max Resolution
+																			.label #{__('Video Max Resolution')}
 																			input(type='text' name='global_limits_post_files_size_video_resolution' value=settings.globalLimits.postFilesSize.videoResolution)
 
 																.tab.tab-9
 																	.col
 																		.row
-																			.label Embeds Enabled
+																			.label #{__('Embeds Enabled')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_embeds_enabled', value='true' checked=settings.frontendScriptDefault.embedsEnabled)
 																		.row
-																			.label Unlimit Media Height
+																			.label #{__('Unlimit Media Height')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_height_unlimit', value='true' checked=settings.frontendScriptDefault.heightUnlimit)
 																		.row
-																			.label Recursive Post Hiding
+																			.label #{__('Recursive Post Hiding')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_hide_recursive', value='true' checked=settings.frontendScriptDefault.hideRecursive)
 																		.row
-																			.label Crisp Image Rendering
+																			.label #{__('Crisp Image Rendering')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_crisp_images', value='true' checked=settings.frontendScriptDefault.crispImages)
 																		.row
-																			.label Hide Thumbnails
+																			.label #{__('Hide Thumbnails')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_hide_thumbnails', value='true' checked=settings.frontendScriptDefault.hideThumbnails)
 																		.row
-																			.label Non-Color IDs
+																			.label #{__('Non-Color IDs')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_non_color_ids', value='true' checked=settings.frontendScriptDefault.nonColorIds)
 																		.row
-																			.label Always Reveal Spoiler Markdown
+																			.label #{__('Always Reveal Spoiler Markdown')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_always_show_spoilers', value='true' checked=settings.frontendScriptDefault.alwaysShowSpoilers)
 																		.row
-																			.label Hide Post Stubs
+																			.label #{__('Hide Post Stubs')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_hide_post_stubs', value='true' checked=settings.frontendScriptDefault.hidePostStubs)
 																		.row
-																			.label Hide Deleted Post Content
+																			.label #{__('Hide Deleted Post Content')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_hide_deleted_post_content', value='true' checked=settings.frontendScriptDefault.hideDeletedPostContent)
 																		.row
-																			.label Smooth Scrolling
+																			.label #{__('Smooth Scrolling')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_smooth_scrolling', value='true' checked=settings.frontendScriptDefault.smoothScrolling)
 																		.row
-																			.label Thread Watcher
+																			.label #{__('Thread Watcher')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_thread_watcher', value='true' checked=settings.frontendScriptDefault.threadWatcher)
 																		.row
-																			.label Default Volume
+																			.label #{__('Default Volume')}
 																			label.postform-style.ph-5
 																				input(type='range' name='frontend_script_default_volume' min='0' max='100' value=settings.frontendScriptDefault.defaultVolume)
 																		.row
-																			.label Loop Audio/Video
+																			.label #{__('Loop Audio/Video')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_loop', value='true' checked=settings.frontendScriptDefault.loop)
 																		.row
-																			.label Image Loading Bars
+																			.label #{__('Image Loading Bars')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_image_loading_bars', value='true' checked=settings.frontendScriptDefault.imageLoadingBars)
 																		.row
-																			.label Live Posts
+																			.label #{__('Live Posts')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_live', value='true' checked=settings.frontendScriptDefault.live)
 																		.row
-																			.label Scroll To New Posts
+																			.label #{__('Scroll To New Posts')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_scroll_to_posts', value='true' checked=settings.frontendScriptDefault.scrollToPosts)
 																		.row
-																			.label Local Time
+																			.label #{__('Local Time')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_local_time', value='true' checked=settings.frontendScriptDefault.localTime)
 																		.row
-																			.label 24 Hour Time
+																			.label #{__('24 Hour Time')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_hour_24_time', value='true' checked=settings.frontendScriptDefault.hour24Time)
 																		.row
-																			.label Use Relative Time
+																			.label #{__('Use Relative Time')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_relative_time', value='true' checked=settings.frontendScriptDefault.relativeTime)
 																		.row
-																			.label Notifications
+																			.label #{__('Notifications')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_notifications', value='true' checked=settings.frontendScriptDefault.notificationsEnabled)
 																		.row
-																			.label Show (You)s
+																			.label #{__('Show (You)s')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_show_yous', value='true' checked=settings.frontendScriptDefault.showYous)
 																		.row
-																			.label Only Notify (You)s
+																			.label #{__('Only Notify (You)s')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='frontend_script_default_notifications_yous_only', value='true' checked=settings.frontendScriptDefault.notificationsYousOnly)
 																		.row
-																			.label Tegaki Width
+																			.label #{__('Tegaki Width')}
 																			input(type='number', name='frontend_script_default_tegaki_width', value=settings.frontendScriptDefault.tegakiWidth)
 																		.row
-																			.label Tegaki Height
+																			.label #{__('Tegaki Height')}
 																			input(type='number', name='frontend_script_default_tegaki_height', value=settings.frontendScriptDefault.tegakiHeight)
 
 																.tab.tab-10
 																	.col
 																		.row
-																			.label SFW
+																			.label #{__('SFW')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_sfw' value='true' checked=settings.boardDefaults.sfw)
 																		.row
-																			.label Unlisted Locally
+																			.label #{__('Unlisted Locally')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_unlisted_local' value='true' checked=settings.boardDefaults.unlistedLocal)
 																		.row
-																			.label Unlisted From Webring
+																			.label #{__('Unlisted From Webring')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_unlisted_webring' value='true' checked=settings.boardDefaults.unlistedWebring)
 																		.row
-																			.label Unique Message Enforcement
+																			.label #{__('Unique Message Enforcement')}
 																			select(name='board_defaults_message_r9k_mode')
-																				option(value='0', selected=settings.boardDefaults.messageR9KMode === 0) Off
-																				option(value='1', selected=settings.boardDefaults.messageR9KMode === 1) Per Thread
-																				option(value='2', selected=settings.boardDefaults.messageR9KMode === 2) Board Wide
+																				option(value='0', selected=settings.boardDefaults.messageR9KMode === 0) #{__('Off')}
+																				option(value='1', selected=settings.boardDefaults.messageR9KMode === 1) #{__('Per Thread')}
+																				option(value='2', selected=settings.boardDefaults.messageR9KMode === 2) #{__('Board Wide')}
 																		.row
-																			.label Unique File Enforcement
+																			.label #{__('Unique File Enforcement')}
 																			select(name='board_defaults_file_r9k_mode')
-																				option(value='0', selected=settings.boardDefaults.fileR9KMode === 0) Off
-																				option(value='1', selected=settings.boardDefaults.fileR9KMode === 1) Per Thread
-																				option(value='2', selected=settings.boardDefaults.fileR9KMode === 2) Board Wide
+																				option(value='0', selected=settings.boardDefaults.fileR9KMode === 0) #{__('Off')}
+																				option(value='1', selected=settings.boardDefaults.fileR9KMode === 1) #{__('Per Thread')}
+																				option(value='2', selected=settings.boardDefaults.fileR9KMode === 2) #{__('Board Wide')}
 																		.row
-																			.label Lock Mode
+																			.label #{__('Lock Mode')}
 																			select(name='board_defaults_lock_mode')
-																				option(value='0', selected=settings.boardDefaults.lockMode === 0) Unlocked
-																				option(value='1', selected=settings.boardDefaults.lockMode === 1) Lock Thread Creation
-																				option(value='2', selected=settings.boardDefaults.lockMode === 2) Board Locked
+																				option(value='0', selected=settings.boardDefaults.lockMode === 0) #{__('Unlocked')}
+																				option(value='1', selected=settings.boardDefaults.lockMode === 1) #{__('Lock Thread Creation')}
+																				option(value='2', selected=settings.boardDefaults.lockMode === 2) #{__('Board Locked')}
 																		.row
-																			.label Captcha Mode
+																			.label #{__('Captcha Mode')}
 																			select(name='board_defaults_captcha_mode')
-																				option(value='0', selected=settings.boardDefaults.captchaMode === 0) No Captcha
-																				option(value='1', selected=settings.boardDefaults.captchaMode === 1) Captcha for new thread
-																				option(value='2', selected=settings.boardDefaults.captchaMode === 2) Captcha for all posts
+																				option(value='0', selected=settings.boardDefaults.captchaMode === 0) #{__('No Captcha')}
+																				option(value='1', selected=settings.boardDefaults.captchaMode === 1) #{__('Captcha for new thread')}
+																				option(value='2', selected=settings.boardDefaults.captchaMode === 2) #{__('Captcha for all posts')}
 																		.row
-																			.label PPH Trigger Threshold
+																			.label #{__('PPH Trigger Threshold')}
 																			input(type='number', name='board_defaults_pph_trigger', value=settings.boardDefaults.pphTrigger)
 																		.row
-																			.label PPH Trigger Action
+																			.label #{__('PPH Trigger Action')}
 																			select(name='board_defaults_pph_trigger_action')
-																				option(value='0', selected=settings.boardDefaults.pphTriggerAction === 0) Do nothing
-																				option(value='1', selected=settings.boardDefaults.pphTriggerAction === 1) Enable captcha for new thread
-																				option(value='2', selected=settings.boardDefaults.pphTriggerAction === 2) Enable captcha for all posts
-																				option(value='3', selected=settings.boardDefaults.pphTriggerAction === 3) Lock thread creation
-																				option(value='4', selected=settings.boardDefaults.pphTriggerAction === 4) Lock board
+																				option(value='0', selected=settings.boardDefaults.pphTriggerAction === 0) #{__('Do nothing')}
+																				option(value='1', selected=settings.boardDefaults.pphTriggerAction === 1) #{__('Enable captcha for new thread')}
+																				option(value='2', selected=settings.boardDefaults.pphTriggerAction === 2) #{__('Enable captcha for all posts')}
+																				option(value='3', selected=settings.boardDefaults.pphTriggerAction === 3) #{__('Lock thread creation')}
+																				option(value='4', selected=settings.boardDefaults.pphTriggerAction === 4) #{__('Lock board')}
 																		.row
-																			.label TPH Trigger Threshold
+																			.label #{__('TPH Trigger Threshold')}
 																			input(type='number', name='board_defaults_tph_trigger', value=settings.boardDefaults.tphTrigger)
 																		.row
-																			.label TPH Trigger Action
+																			.label #{__('TPH Trigger Action')}
 																			select(name='board_defaults_tph_trigger_action')
-																				option(value='0', selected=settings.boardDefaults.tphTriggerAction === 0) Do nothing
-																				option(value='1', selected=settings.boardDefaults.tphTriggerAction === 1) Enable captcha for new thread
-																				option(value='2', selected=settings.boardDefaults.tphTriggerAction === 2) Enable captcha for all posts
-																				option(value='3', selected=settings.boardDefaults.tphTriggerAction === 3) Lock thread creation
-																				option(value='4', selected=settings.boardDefaults.tphTriggerAction === 4) Lock board
+																				option(value='0', selected=settings.boardDefaults.tphTriggerAction === 0) #{__('Do nothing')}
+																				option(value='1', selected=settings.boardDefaults.tphTriggerAction === 1) #{__('Enable captcha for new thread')}
+																				option(value='2', selected=settings.boardDefaults.tphTriggerAction === 2) #{__('Enable captcha for all posts')}
+																				option(value='3', selected=settings.boardDefaults.tphTriggerAction === 3) #{__('Lock thread creation')}
+																				option(value='4', selected=settings.boardDefaults.tphTriggerAction === 4) #{__('Lock board')}
 																		.row
-																			.label Trigger Reset Lock Mode
+																			.label #{__('Trigger Reset Lock Mode')}
 																			select(name='board_defaults_lock_reset')
-																				option(value='0', selected=settings.boardDefaults.lockReset === 0) No change
-																				option(value='1', selected=settings.boardDefaults.lockReset === 1) Unlock board
-																				option(value='2', selected=settings.boardDefaults.lockReset === 2) Lock thread creation
+																				option(value='0', selected=settings.boardDefaults.lockReset === 0) #{__('No change')}
+																				option(value='1', selected=settings.boardDefaults.lockReset === 1) #{__('Unlock board')}
+																				option(value='2', selected=settings.boardDefaults.lockReset === 2) #{__('Lock thread creation')}
 																		.row
-																			.label Trigger Reset Captcha Mode
+																			.label #{__('Trigger Reset Captcha Mode')}
 																			select(name='board_defaults_captcha_reset')
-																				option(value='0', selected=settings.boardDefaults.captchaReset === 0) No change
-																				option(value='1', selected=settings.boardDefaults.captchaReset === 1) Captcha disabled
-																				option(value='2', selected=settings.boardDefaults.captchaReset === 2) Captcha for new thread
+																				option(value='0', selected=settings.boardDefaults.captchaReset === 0) #{__('No change')}
+																				option(value='1', selected=settings.boardDefaults.captchaReset === 1) #{__('Captcha disabled')}
+																				option(value='2', selected=settings.boardDefaults.captchaReset === 2) #{__('Captcha for new thread')}
 																		.row
-																			.label Anon Name
+																			.label #{__('Anon Name')}
 																			input(type='text' name='board_defaults_default_name' value=settings.boardDefaults.defaultName)
 																		.row
-																			.label Force Anon
+																			.label #{__('Force Anon')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_force_anon', value='true' checked=settings.boardDefaults.forceAnon)
 																		.row
-																			.label Sage Only Email
+																			.label #{__('Sage Only Email')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_sage_only_email', value='true' checked=settings.boardDefaults.sageOnlyEmail)
 																		.row
-																			.label Early 404
+																			.label #{__('Early 404')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_early404', value='true' checked=settings.boardDefaults.early404)
 																		.row
-																			.label IDs
+																			.label #{__('IDs')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_ids', value='true' checked=settings.boardDefaults.ids)
 																		.row
-																			.label Geo Flags
+																			.label #{__('Geo Flags')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_geo_flags', value='true' checked=settings.boardDefaults.geoFlags)
 																		.row
-																			.label Custom Flags
+																			.label #{__('Custom Flags')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_custom_flags', value='true' checked=settings.boardDefaults.customFlags)
 																		.row
-																			.label Enable Tegaki
+																			.label #{__('Enable Tegaki')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_enable_tegaki', value='true' checked=settings.boardDefaults.enableTegaki)
 																		.row
-																			.label User Post Deletion
+																			.label #{__('User Post Deletion')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_user_post_delete', value='true' checked=settings.boardDefaults.userPostDelete)
 																		.row
-																			.label User File Spoilering
+																			.label #{__('User File Spoilering')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_user_post_spoiler', value='true' checked=settings.boardDefaults.userPostSpoiler)
 																		.row
-																			.label User File Unlinking
+																			.label #{__('User File Unlinking')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_user_post_unlink', value='true' checked=settings.boardDefaults.userPostUnlink)
 																		.row
-																			.label Thread Limit
+																			.label #{__('Thread Limit')}
 																			input(type='number' name='board_defaults_thread_limit' value=settings.boardDefaults.threadLimit)
 																		.row
-																			.label Reply Limit
+																			.label #{__('Reply Limit')}
 																			input(type='number' name='board_defaults_reply_limit' value=settings.boardDefaults.replyLimit)
 																		.row
-																			.label Bump Limit
+																			.label #{__('Bump Limit')}
 																			input(type='number' name='board_defaults_bump_limit' value=settings.boardDefaults.bumpLimit)
 																		.row
-																			.label Max Files
+																			.label #{__('Max Files')}
 																			input(type='number' name='board_defaults_max_files' value=settings.boardDefaults.maxFiles)
 																		.row
-																			.label Force Thread Subject
+																			.label #{__('Force Thread Subject')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_force_thread_subject', value='true' checked=settings.boardDefaults.forceThreadSubject)
 																		.row
-																			.label Force Thread Message
+																			.label #{__('Force Thread Message')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_force_thread_message', value='true' checked=settings.boardDefaults.forceThreadMessage)
 																		.row
-																			.label Force Thread File
+																			.label #{__('Force Thread File')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_force_thread_file', value='true' checked=settings.boardDefaults.forceThreadFile)
 																		.row
-																			.label Force Reply Message
+																			.label #{__('Force Reply Message')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_force_reply_message', value='true' checked=settings.boardDefaults.forceReplyMessage)
 																		.row
-																			.label Force Reply File
+																			.label #{__('Force Reply File')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_force_reply_file', value='true' checked=settings.boardDefaults.forceReplyFile)
 																		.row
-																			.label Disable Reply Subject
+																			.label #{__('Disable Reply Subject')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_disable_reply_subject', value='true' checked=settings.boardDefaults.disableReplySubject)
 																		.row
-																			.label Hide Banners
+																			.label #{__('Hide Banners')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_hide_banners', value='true' checked=settings.boardDefaults.hideBanners)
 																		.row
-																			.label Min Thread Message Length
+																			.label #{__('Min Thread Message Length')}
 																			input(type='number' name='board_defaults_min_thread_message_length' value=settings.boardDefaults.minThreadMessageLength)
 																		.row
-																			.label Min Reply Message Length
+																			.label #{__('Min Reply Message Length')}
 																			input(type='number' name='board_defaults_min_reply_message_length' value=settings.boardDefaults.minReplyMessageLength)
 																		.row
-																			.label Max Thread Message Length
+																			.label #{__('Max Thread Message Length')}
 																			input(type='number' name='board_defaults_max_thread_message_length' value=settings.boardDefaults.maxThreadMessageLength)
 																		.row
-																			.label Max Reply Message Length
+																			.label #{__('Max Reply Message Length')}
 																			input(type='number' name='board_defaults_max_reply_message_length' value=settings.boardDefaults.maxReplyMessageLength)
 																		.row
-																			.label OP Reply Count Delete Protection
+																			.label #{__('OP Reply Count Delete Protection')}
 																			input(type='number' name='board_defaults_delete_protection_count' value=settings.boardDefaults.deleteProtectionCount)
 																		.row
-																			.label OP Thread Age Delete Protection
-																			input(type='text' name='board_defaults_delete_protection_age' placeholder='e.g. 1w' value=settings.boardDefaults.deleteProtectionAge)
+																			.label #{__('OP Thread Age Delete Protection')}
+																			input(type='text' name='board_defaults_delete_protection_age' placeholder=__('e.g. 1w') value=settings.boardDefaults.deleteProtectionAge)
 																		.row
-																			.label Disable anonymizer file posting
+																			.label #{__('Disable anonymizer file posting')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_disable_anonymizer_file_posting', value='true' checked=settings.boardDefaults.disableAnonymizerFilePosting)
 																		.row
-																			.label Strict Filtering
+																			.label #{__('Strict Filtering')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_strict_filtering', value='true' checked=settings.boardDefaults.strictFiltering)
 																		.row
-																			.label Filter Mode
+																			.label #{__('Filter Mode')}
 																			select(name='board_defaults_filter_mode')
-																				option(value='0', selected=settings.boardDefaults.filterMode === 0) Do nothing
-																				option(value='1', selected=settings.boardDefaults.filterMode === 1) Block post
-																				option(value='2', selected=settings.boardDefaults.filterMode === 2) Ban
+																				option(value='0', selected=settings.boardDefaults.filterMode === 0) #{__('Do nothing')}
+																				option(value='1', selected=settings.boardDefaults.filterMode === 1) #{__('Block post')}
+																				option(value='2', selected=settings.boardDefaults.filterMode === 2) #{__('Ban')}
 																		.row
-																			.label Filter Auto Ban Duration
-																			input(type='text' name='board_defaults_filter_ban_duration' placeholder='e.g. 1w' value=settings.boardDefaults.filterBanDuration)
+																			.label #{__('Filter Auto Ban Duration')}
+																			input(type='text' name='board_defaults_filter_ban_duration' placeholder=__('e.g. 1w') value=settings.boardDefaults.filterBanDuration)
 																		.row
-																			.label Allow Video Files
+																			.label #{__('Allow Video Files')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_allowed_file_types_video', value='true' checked=settings.boardDefaults.allowedFileTypes.video)
 																		.row
-																			.label Allow Image Files
+																			.label #{__('Allow Image Files')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_allowed_file_types_image', value='true' checked=settings.boardDefaults.allowedFileTypes.image)
 																		.row
-																			.label Allow Animated Image Files
+																			.label #{__('Allow Animated Image Files')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_allowed_file_types_animated_image', value='true' checked=settings.boardDefaults.allowedFileTypes.animatedImage)
 																		.row
-																			.label Allow Audio Files
+																			.label #{__('Allow Audio Files')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_allowed_file_types_audio', value='true' checked=settings.boardDefaults.allowedFileTypes.audio)
 																		.row
-																			.label Allow Other Files
+																			.label #{__('Allow Other Files')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_allowed_file_types_other', value='true' checked=settings.boardDefaults.allowedFileTypes.other)
 																		.row
-																			.label Reverse Image Search Links
+																			.label #{__('Reverse Image Search Links')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_reverse_image_search_links', value='true' checked=settings.boardDefaults.reverseImageSearchLinks)
 																		.row
-																			.label External Archive Links
+																			.label #{__('External Archive Links')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_archive_links', value='true' checked=settings.boardDefaults.archiveLinks)
 
-			input.row(type='submit', value='Save settings')
+			input.row(type='submit', value=__('Save settings'))

@@ -4,30 +4,30 @@ include ../mixins/managenav.pug
 include ../mixins/custompage.pug
 
 block head
-	title /#{board._id}/ - Custom Pages
+	title /#{board._id}/ - #{__('Custom Pages')}
 
 block content
-	+boardheader('Custom Pages')
+	+boardheader(__('Custom Pages'))
 	br
 	+managenav('custompages')
 	hr(size=1)
-	h4.mv-5 Add Custom Page:
+	h4.mv-5 #{__('Add Custom Page')}:
 	.form-wrapper.flexleft
 		form.form-post(action=`/forms/board/${board._id}/addcustompages`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
-				.label .html name
-				input(type='text' name='page' pattern='[a-zA-Z0-9-_]+' title='a-zA-Z0-9-_ only' required)
+				.label #{__('.html name')}
+				input(type='text' name='page' pattern='[a-zA-Z0-9-_]+' placeholder=__('a-zA-Z0-9-_ only') required)
 			.row
-				.label Title
+				.label #{__('Title')}
 				input(type='text' name='title' required)
 			.row
-				.label Message
-				textarea(name='message' rows='10' placeholder='Supports post styling' required)
-			input(type='submit', value='Submit')
+				.label #{__('Message')}
+				textarea(name='message' rows='10' placeholder=__('Supports post styling') required)
+			input(type='submit', value=__('Submit'))
 	if customPages.length > 0
 		hr(size=1)
-		h4.no-m-p Manage Custom Pages:
+		h4.no-m-p #{__('Manage Custom Pages')}:
 		.form-wrapper.flexleft
 			form.form-post(action=`/forms/board/${board._id}/deletecustompages`, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
@@ -35,4 +35,4 @@ block content
 					+custompage(page, true)
 				if customPages.length === 1
 					.anchor
-				input(type='submit', value='Delete')
+				input(type='submit', value=__('Delete'))

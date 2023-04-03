@@ -3,35 +3,22 @@ include ../mixins/boardheader.pug
 include ../mixins/managenav.pug
 
 block head
-	title /#{board._id}/ - Edit Staff Permissions
+	title /#{board._id}/ - #{__('Edit Staff Permissions')}
 
 block content
-	+boardheader('Edit Staff Permissions')
+	+boardheader(__('Edit Staff Permissions'))
 	br
 	+managenav('staff', true)
 	hr(size=1)
-	h4.mv-5 Edit board permissions for "#{staffUsername}"
+	h4.mv-5 #{__('Edit board permissions for "%s"', staffUsername)}
 		|
 		if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
 			|  
-			a(href=`/globalmanage/editaccount/${staffUsername}.html`) [Edit Account Permissions]
+			a(href=`/globalmanage/editaccount/${staffUsername}.html`) [#{__('Edit Account Permissions')}]
 	- const jsonPermissions = staffPermissions.toJSON();
 	.form-wrapper.flexleft
 		form(action=`/forms/board/${board._id}/editstaff` method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			input(type='hidden' name='username' value=staffUsername)
-			//-for perm in Object.keys(jsonPermissions)
-			for bit, index in Object.keys(jsonPermissions).filter(p => manageBoardBits.includes(parseInt(p)))
-				if jsonPermissions[bit].title && index > 0
-					hr(size=1)
-					h4.mv-5 #{jsonPermissions[bit].title}
-					if jsonPermissions[bit].subtitle
-						p #{jsonPermissions[bit].subtitle}
-				.row
-					- const parentAllowed = jsonPermissions[bit].parent == null || permissions.get(jsonPermissions[bit].parent);
-					- const parentLabel = !parentAllowed ? jsonPermissions[jsonPermissions[bit].parent].label : '';
-					label.postform-style.ph-5(class=(!hasParent ? 'notallowed' : null) title=(!parentAllowed ? `Requires permission "${parentLabel}"` : null))
-						input(type='checkbox' name=`permission_bit_${bit}` value=bit checked=jsonPermissions[bit].state disabled=(!parentAllowed || jsonPermissions[bit].block))
-					.rlabel #{jsonPermissions[bit].label}
-					p #{jsonPermissions[bit].desc}
-			input(type='submit', value='Save')
+			include ../includes/staffpermissionsform.pug
+

@@ -409,7 +409,31 @@ function deletehtml() {
 }
 
 async function custompages() {
-	const formatSize = require(__dirname+'/lib/converter/formatsize.js');
+	const formatSize = require(__dirname+'/lib/converter/formatsize.js')
+		, i18n = require(__dirname+'/lib/locale/locale.js')
+		, locals = {
+			Permissions,
+			early404Fraction: config.get.early404Fraction,
+			early404Replies: config.get.early404Replies,
+			meta: config.get.meta,
+			archiveLinksURL: config.get.archiveLinksURL,
+			reverseImageLinksURL: config.get.reverseImageLinksURL,
+			enableWebring: config.get.enableWebring,
+			globalLimits: config.get.globalLimits,
+			codeLanguages: config.get.highlightOptions.languageSubset,
+			defaultTheme: config.get.boardDefaults.theme,
+			defaultCodeTheme: config.get.boardDefaults.codeTheme,
+			postFilesSize: formatSize(config.get.globalLimits.postFilesSize.max),
+			googleRecaptchaSiteKey: google.siteKey,
+			hcaptchaSiteKey: hcaptcha.siteKey,
+			globalAnnouncement: config.get.globalAnnouncement,
+			captchaOptions: config.get.captchaOptions,
+			commit,
+			version,
+			globalLanguage: config.get.language,
+		};
+	i18n.init(locals);
+	locals.setLocale(locals, config.get.language);
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/404.pug`,
@@ -418,29 +442,26 @@ async function custompages() {
 		`${paths.pug.src}/pages/503.pug`,
 		`${paths.pug.src}/pages/504.pug`
 	])
-		.pipe(gulppug({
-			locals: {
-				Permissions,
-				early404Fraction: config.get.early404Fraction,
-				early404Replies: config.get.early404Replies,
-				meta: config.get.meta,
-				archiveLinksURL: config.get.archiveLinksURL,
-				reverseImageLinksURL: config.get.reverseImageLinksURL,
-				enableWebring: config.get.enableWebring,
-				globalLimits: config.get.globalLimits,
-				codeLanguages: config.get.highlightOptions.languageSubset,
-				defaultTheme: config.get.boardDefaults.theme,
-				defaultCodeTheme: config.get.boardDefaults.codeTheme,
-				postFilesSize: formatSize(config.get.globalLimits.postFilesSize.max),
-				googleRecaptchaSiteKey: google.siteKey,
-				hcaptchaSiteKey: hcaptcha.siteKey,
-				globalAnnouncement: config.get.globalAnnouncement,
-				captchaOptions: config.get.captchaOptions,
-				commit,
-				version,
-			}
-		}))
+		.pipe(gulppug({ locals }))
 		.pipe(gulp.dest(paths.pug.dest));
+}
+
+async function langs() {
+	const i18n = require(__dirname+'/lib/locale/locale.js');
+	await del([ 'static/js/lang/' ]);
+	fs.mkdirSync(`${paths.scripts.dest}lang/`);
+	const feStrings = require(__dirname+'/tools/festrings.json');
+	Object.entries(i18n.getCatalog())
+		.forEach(entry => {
+			const [lang, dict] = entry;
+			const minimalDict = feStrings.reduce((acc, key) => {
+				acc[key] = dict[key];
+				return acc;
+			}, {});
+			const langScript = `const LANG = '${lang}';
+const TRANSLATIONS = ${JSON.stringify(minimalDict)};`;
+			fs.writeFileSync(`${paths.scripts.dest}lang/${lang}.js`, langScript);
+		});
 }
 
 async function scripts() {
@@ -497,6 +518,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 	gulp.src([
 		//put scripts in order for dependencies
 		`${paths.scripts.src}/locals.js`,
+		`${paths.scripts.src}/i18n.js`,
 		`${paths.scripts.src}/localstorage.js`,
 //		`${paths.scripts.src}/pugruntime.js`,
 		`${paths.scripts.src}/modal.js`,
@@ -596,7 +618,7 @@ async function closeConnections() {
 	}
 }
 
-const build = gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages));
+const build = gulp.parallel(gulp.series(scripts, langs, css), images, icons, gulp.series(deletehtml, custompages));
 
 //godhelpme
 module.exports = {
@@ -611,6 +633,7 @@ module.exports = {
 	cache: gulp.series(cache, closeConnections),
 	migrate: gulp.series(init, migrate, closeConnections),
 	password: gulp.series(init, password, closeConnections),
+	langs: gulp.series(init, langs, closeConnections),
 	ips: gulp.series(init, ips, closeConnections),
 	default: gulp.series(init, build, closeConnections),
 	buildTasks: { //dont include init, etc

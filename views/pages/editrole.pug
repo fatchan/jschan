@@ -2,14 +2,14 @@ extends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Edit role
+	title #{__('Edit Role')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('roles', true)
 	hr(size=1)
-	h4.mv-5 Edit role "#{roleNameMap[rolePermissions.base64]}"
+	h4.mv-5 #{__('Edit role %s', __(roleNameMap[rolePermissions.base64]))}
 	- const jsonPermissions = rolePermissions.toJSON();
 	.form-wrapper.flexleft
 		form(action=`/forms/global/editrole` method='POST')

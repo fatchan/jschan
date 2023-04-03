@@ -9,28 +9,28 @@ mixin ban(ban, banpage)
 			if ban.board
 				a(href=`/${ban.board}/`) /#{ban.board}/
 			else
-				| Global
+				| #{__('Global')}
 		td= ban.reason
 		- const ip = viewRawIp === true ? ban.ip.raw : ban.ip.cloak;
 		if viewRawIp === true
 			td #{ip}
 		else
 			td #{ip}#{'.*'.repeat(ban.range)}
-		td #{['IPV4', 'IPV6', 'Bypass', 'Pruned IP'][ban.ip.type]}
-		td #{['Single', 'Narrow', 'Wide'][ban.range]}
-		td #{(!banpage || ban.showUser === true) ? ban.issuer : 'Hidden User'}
+		td #{__(['IPV4', 'IPV6', 'Bypass', 'Pruned IP'][ban.ip.type])}
+		td #{__(['Single', 'Narrow', 'Wide'][ban.range])}
+		td #{(!banpage || ban.showUser === true) ? ban.issuer : __('Hidden User')}
 		- const banDate = new Date(ban.date);
-		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(undefined, {hourCycle:'h23'})}
+		td: time.right.reltime(datetime=banDate.toISOString()) #{banDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 		- const expireDate = new Date(ban.expireAt);
-		td: time.right.reltime(datetime=expireDate.toISOString()) #{expireDate.toLocaleString(undefined, {hourCycle:'h23'})}
+		td: time.right.reltime(datetime=expireDate.toISOString()) #{expireDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 		td.banposts
 			if ban.posts && ban.posts.length > 0
-				| Hover to view
+				| #{__('Hover to view')}
 				.thread
 					each p in ban.posts
 						+post(p, false, false, false, true)
 			else
-				Posts not shown
+				| #{__('Posts not shown')}
 		td
 			if ban.seen
 				| &#10003;
@@ -45,7 +45,7 @@ mixin ban(ban, banpage)
 			if ban.appeal
 				textarea(rows=1 disabled='true') #{ban.appeal}
 			else if ban.allowAppeal
-				| No appeal submitted
+				| #{__('No appeal submitted')}
 			else 
 				| -
 		td

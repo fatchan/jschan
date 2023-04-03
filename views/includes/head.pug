@@ -5,6 +5,7 @@ meta(name='viewport' content='width=device-width initial-scale=1')
 noscript
 	style .jsonly { display: none!important; } .user-id { cursor: auto!important; }
 
+
 //- whether this page is rendered for a board
 - const isBoard = board != null;
 
@@ -30,6 +31,10 @@ if isBoard && board.settings.customCss
 
 //- include html_code from gulp-favicon
 include ../../gulp/res/icons/html_code.html
+
+//- language pack
+- const pageLanguage = isBoard ? board.settings.language : (locale || globalLanguage);
+script(src=`/js/lang/${pageLanguage}.js?v=${commit}`)
 
 //- main script
 script(src=`/js/all.js?v=${commit}&ct=${captchaOptions.type}`)

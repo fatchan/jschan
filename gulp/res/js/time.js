@@ -1,4 +1,4 @@
-/* globals SERVER_TIMEZONE setLocalStorage */
+/* globals __ __n LANG SERVER_TIMEZONE setLocalStorage */
 let relativeTime = localStorage.getItem('relative') == 'true';
 let hour24 = localStorage.getItem('24hour') == 'true';
 let localTime = localStorage.getItem('localtime') == 'true';
@@ -19,34 +19,34 @@ const YEAR = 31536000000
 const relativeTimeString = (date) => {
 	let difference = Date.now() - new Date(date).getTime();
 	let amount = 0;
-	let ret = '';
+	let unit = '';
 	let isFuture = false;
 	if (difference < 0) {
 		difference = Math.abs(difference);
 		isFuture = true;
 	}
 	if (difference < MINUTE) {
-		return 'Now';
+		return __('Now');
 	} else if (difference < MINUTE*59.5) {
 		amount = Math.round(difference / MINUTE);
-		ret = `${amount} minute`;
+		unit = 'minute';
 	} else if (difference < HOUR*23.5) {
 		amount = Math.round(difference / HOUR);
-		ret = `${amount} hour`;
+		unit = 'hour';
 	} else if (difference < DAY*6.5) {
 		amount = Math.round(difference / DAY);
-		ret = `${amount} day`;
+		unit = 'day';
 	} else if (difference < WEEK*3.5) {
 		amount = Math.round(difference / WEEK);
-		ret = `${amount} week`;
+		unit = 'week';
 	} else if (difference < MONTH*11.5) {
 		amount = Math.round(difference / MONTH);
-		ret = `${amount} month`;
+		unit = 'month';
 	} else {
 		amount = Math.round(difference / YEAR);
-		ret = `${amount} year`;
+		unit = 'year';
 	}
-	return `${ret}${amount > 1 ? 's' : ''} ${isFuture ? 'from now' :  'ago'}`;
+	return __n(`%s ${unit} ${isFuture ? 'from now' :  'ago'}`, amount);
 };
 
 const changeDateFormat = (date) => {
@@ -56,8 +56,7 @@ const changeDateFormat = (date) => {
 	if (!localTime) {
 		options.timeZone = SERVER_TIMEZONE;
 	}
-	const locale = hour24 ? 'en-US-u-hc-h23' : 'en-US';
-	const dateString = new Date(date.dateTime).toLocaleString(locale, options);
+	const dateString = new Date(date.dateTime).toLocaleString(LANG, options);
 	if (relativeTime) {
 		date.innerText = relativeTimeString(date.dateTime);
 		date.title = dateString;

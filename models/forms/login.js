@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const username = req.body.username.toLowerCase();
 	const password = req.body.password;
 	let goto = req.body.goto;
@@ -22,8 +23,8 @@ module.exports = async (req, res) => {
 	//if the account doesnt exist, reject
 	if (!account) {
 		return dynamicResponse(req, res, 403, 'message', {
-			'title': 'Forbidden',
-			'message': 'Incorrect login credentials',
+			'title': __('Forbidden'),
+			'message': __('Incorrect login credentials'),
 			'redirect': failRedirect
 		});
 	}
@@ -31,24 +32,17 @@ module.exports = async (req, res) => {
 	// bcrypt compare input to saved hash
 	const passwordMatch = await bcrypt.compare(password, account.passwordHash);
 
-	//if hashes matched
-	if (passwordMatch === false) {
+	//2fA (TOTP) validation
+	const delta = await doTwoFactor(username, account.twofactor, req.body.twofactor || '');
+
+	//if password was correct and 2fa valid (if enabled)
+	if (passwordMatch === false
+		|| (account.twofactor && delta === null)) {
 		return dynamicResponse(req, res, 403, 'message', {
-			'title': 'Forbidden',
-			'message': 'Incorrect login credentials',
+			'title': __('Forbidden'),
+			'message': __('Incorrect login credentials'),
 			'redirect': failRedirect
 		});
-	}
-
-	if (account.twofactor) {
-		const delta = await doTwoFactor(username, account.twofactor, req.body.twofactor);
-		if (delta === null) {
-			return dynamicResponse(req, res, 403, 'message', {
-				'title': 'Forbidden',
-				'message': 'Incorrect login credentials', //better to not tell them, i think
-				'redirect': failRedirect
-			});
-		}
 	}
 
 	// add the account to the session and authenticate if password was correct

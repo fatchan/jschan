@@ -8,6 +8,7 @@ const { Roles, Accounts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	let rolePermissions = new Permission(res.locals.editingRole.permissions);
 	rolePermissions.handleBody(req.body, res.locals.permissions);
 	// rolePermissions.applyInheritance();
@@ -15,8 +16,8 @@ module.exports = async (req, res) => {
 	const existingRoleName = roleManager.roleNameMap[rolePermissions.base64];
 	if (existingRoleName) {
 		return dynamicResponse(req, res, 409, 'message', {
-			'title': 'Conflict',
-			'error': `Another role already exists with those same permissions: "${existingRoleName}"`,
+			'title': __('Conflict'),
+			'error': __('Another role already exists with the same permissions: "%s"', existingRoleName),
 			'redirect': req.headers.referer || '/globalmanage/roles.html',
 		});
 	}
@@ -25,8 +26,8 @@ module.exports = async (req, res) => {
 
 	if (updated === 0) {
 		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'error': 'Role does not exist',
+			'title': __('Bad request'),
+			'error': __('Role does not exist'),
 			'redirect': req.headers.referer || '/globalmanage/roles.html',
 		});
 	}
@@ -37,8 +38,8 @@ module.exports = async (req, res) => {
 	redis.redisPublisher.publish('roles', null);
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Edited role',
+		'title': __('Success'),
+		'message': __('Edited role'),
 		'redirect': `/globalmanage/editrole/${req.body.roleid}.html`,
 	});
 

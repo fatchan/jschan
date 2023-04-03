@@ -14,13 +14,15 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const errors = await checkSchema([
-			{ result: lengthBody(req.body.checkednews, 1), expected: false, error: 'Must select at least one newspost to delete' },
+			{ result: lengthBody(req.body.checkednews, 1), expected: false, error: __('Must select at least one newspost to delete') },
 		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': '/globalmanage/news.html'
 			});

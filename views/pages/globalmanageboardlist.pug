@@ -4,10 +4,10 @@ include ../mixins/globalmanagenav.pug
 include ../mixins/boardtable.pug
 
 block head
-	title Boards
+	title #{__('Boards')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('boards')
 	hr(size=1)
@@ -18,29 +18,29 @@ block content
 			.row.wrap.sb
 				.col.mr-5
 					.row
-						.label Search
-						input(type='text' name='search' value=search placeholder='Uri or tags')
+						.label #{__('Search')}
+						input(type='text' name='search' value=search placeholder=__('URI or tags'))
 					.row
-						.label Sort
+						.label #{__('Sort')}
 						select(name='sort')
-							option(value='popularity') Popularity
-							option(value='activity' selected=query.sort === 'activity') Latest Activity
+							option(value='popularity') #{__('Popularity')}
+							option(value='activity' selected=query.sort === 'activity') #{__('Latest Activity')}
 					.row
-						.label Order
+						.label #{__('Order')}
 						select(name='direction')
-							option(value='desc') Descending
-							option(value='asc' selected=query.direction === 'asc') Ascending
+							option(value='desc') #{__('Descending')}
+							option(value='asc' selected=query.direction === 'asc') #{__('Ascending')}
 				.col
 					.row
-						.label Unlisted
+						.label #{__('Unlisted')}
 						label.postform-style.ph-5
 							input(type='checkbox', name='filter_unlisted', value='1' checked=(query.filter_unlisted != null))
 					.row
-						.label SFW
+						.label #{__('SFW')}
 						label.postform-style.ph-5
 							input(type='checkbox', name='filter_sfw', value='1' checked=(query.filter_sfw != null))
 					.row
-						.label Abandoned
+						.label #{__('Abandoned')}
 						label.postform-style.ph-5
 							input(type='checkbox', name='filter_abandoned', value='1' checked=(query.filter_abandoned != null))
 			input(type='submit', value='Filter')
@@ -52,13 +52,13 @@ block content
 					td 
 						span.left
 							if board.settings.sfw === true
-								span.help(title='SFW') &#x1F4BC;
+								span.help(title=__('SFW')) &#x1F4BC;
 								|  
 							if board.settings.unlistedLocal === true
-								span.help(title='Unlisted') &#x1F441;&#xFE0F;
+								span.help(title=__('Unlisted')) &#x1F441;&#xFE0F;
 								|  
 							if !board.owner
-								span.help(title='Abandoned') &#x1F3DA;&#xFE0F;
+								span.help(title=__('Abandoned')) &#x1F3DA;&#xFE0F;
 								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					if permissions.get(Permissions.GLOBAL_MANAGE_ACCOUNTS)

@@ -13,13 +13,15 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const errors = await checkSchema([
-			{ result: lengthBody(req.body.checkedassets, 1), expected: false, error: 'Must select at least one asset to delete' },
+			{ result: lengthBody(req.body.checkedassets, 1), expected: false, error: __('Must select at least one asset to delete') },
 		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': `/${req.params.board}/manage/assets.html`
 			});
@@ -28,8 +30,8 @@ module.exports = {
 		for (let i = 0; i < req.body.checkedassets.length; i++) {
 			if (!res.locals.board.assets.includes(req.body.checkedassets[i])) {
 				return dynamicResponse(req, res, 400, 'message', {
-					'title': 'Bad request',
-					'message': 'Invalid assets selected',
+					'title': __('Bad request'),
+					'message': __('Invalid assets selected'),
 					'redirect': `/${req.params.board}/manage/assets.html`
 				});
 			}

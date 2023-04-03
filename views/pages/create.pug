@@ -1,27 +1,27 @@
 extends ../layout.pug
 
 block head
-	title Create Board
+	title #{__('Create Board')}
 
 block content
-	h1.board-title Create Board
+	h1.board-title #{__('Create Board')}
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/create' method='POST' data-captcha-preload='true')
 			.row
-				.label URI e.g. /uri/
-				input(type='text', name='uri', maxlength=globalLimits.fieldLength.uri pattern='[a-zA-Z0-9]+' required title='alphanumeric only')
+				.label #{__('URI e.g. /uri/')}
+				input(type='text', name='uri', maxlength=globalLimits.fieldLength.uri pattern='[a-zA-Z0-9]+' required title=__('alphanumeric only'))
 			.row
-				.label Name
+				.label #{__('Name')}
 				input(type='text', name='name', maxlength=globalLimits.fieldLength.boardname required)
 			.row
-				.label Description
+				.label #{__('Description')}
 				input(type='text', name='description', maxlength=globalLimits.fieldLength.description)
 			.row
-				.label Tags
-				textarea(name='tags' placeholder='Newline separated, max 10')
+				.label #{__('Tags')}
+				textarea(name='tags' placeholder=__('Newline separated, max 10'))
 			if captchaOptions.type === 'text'
 				include ../includes/captchasidelabel.pug
 			else
 				include ../includes/captchafieldrow.pug
-			input(type='submit', value='Submit')
+			input(type='submit', value=__('Create'))
 

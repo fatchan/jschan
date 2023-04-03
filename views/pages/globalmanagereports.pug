@@ -3,21 +3,21 @@ include ../mixins/post.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Reports
+	title #{__('Reports')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('reports')
 	form(action=`/forms/global/actions` method='POST' enctype='application/x-www-form-urlencoded')
 		if reports.length === 0
 			hr(size=1)
-			p No reports.
+			p #{__('No reports.')}
 		else
 			input(type='hidden' name='_csrf' value=csrf)
 			hr(size=1)
 			if ip
-				h4.no-m-p Reports against or by #{ip}
+				h4.no-m-p #{__('Reports against or by ip %s', ip)}
 				hr(size=1)
 			for report in reports
 				.thread

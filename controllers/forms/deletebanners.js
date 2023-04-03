@@ -13,13 +13,15 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const errors = await checkSchema([
-			{ result: lengthBody(req.body.checkedbanners, 1), expected: false, error: 'Must select at least one banner to delete' },
+			{ result: lengthBody(req.body.checkedbanners, 1), expected: false, error: __('Must select at least one banner to delete') },
 		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': `/${req.params.board}/manage/assets.html`
 			});
@@ -28,8 +30,8 @@ module.exports = {
 		for (let i = 0; i < req.body.checkedbanners.length; i++) {
 			if (!res.locals.board.banners.includes(req.body.checkedbanners[i])) {
 				return dynamicResponse(req, res, 400, 'message', {
-					'title': 'Bad request',
-					'message': 'Invalid banners selected',
+					'title': __('Bad request'),
+					'message': __('Invalid banners selected'),
 					'redirect': `/${req.params.board}/manage/assets.html`
 				});
 			}

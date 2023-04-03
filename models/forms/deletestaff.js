@@ -5,6 +5,7 @@ const { Boards, Accounts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	//only a ROOT could do this, per the permission bypass in the controller
 	const deletingBoardOwner = req.body.checkedstaff.some(s => s === res.locals.board.owner);
 
@@ -16,8 +17,8 @@ module.exports = async (req, res) => {
 	]);
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Deleted staff',
+		'title': __('Success'),
+		'message': __('Deleted staff'),
 		'redirect': `/${req.params.board}/manage/staff.html`,
 	});
 

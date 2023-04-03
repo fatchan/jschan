@@ -2,12 +2,12 @@ extends ../layout.pug
 include ../mixins/newspost.pug
 
 block head
-	title News
+	title #{__('News')}
 
 block content
-	h1.board-title News
+	h1.board-title #{__('News')}
 	if news.length === 0
-		p.text-center No news.	
+		p.text-center #{__('No news.')}
 	else 
 		include ../includes/stickynav.pug
 		each post in news

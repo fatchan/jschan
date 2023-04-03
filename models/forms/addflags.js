@@ -14,6 +14,7 @@ const path = require('path')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const { checkRealMimeTypes } = config.get;
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
@@ -28,8 +29,8 @@ module.exports = async (req, res) => {
 		})) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
-				'message': `Invalid file type for ${req.files.file[i].name}. Mimetype ${req.files.file[i].mimetype} not allowed.`,
+				'title': __('Bad request'),
+				'message': __('Invalid file type for %s. Mimetype %s not allowed.', req.files.file[i].name, req.files.file[i].mimetype),
 				'redirect': redirect
 			});
 		}
@@ -41,8 +42,8 @@ module.exports = async (req, res) => {
 			if (!(await mimeTypes.realMimeCheck(req.files.file[i]))) {
 				deleteTempFiles(req).catch(console.error);
 				return dynamicResponse(req, res, 400, 'message', {
-					'title': 'Bad request',
-					'message': `Mime type mismatch for file "${req.files.file[i].name}"`,
+					'title': __('Bad request'),
+					'message': __('Mime type mismatch for file "%s"', req.files.file[i].name),
 					'redirect': redirect
 				});
 			}
@@ -95,8 +96,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': `Uploaded ${res.locals.numFiles} new flags.`,
+		'title': __('Success'),
+		'message': __('Uploaded %s new flags.', res.locals.numFiles),
 		'redirect': redirect
 	});
 

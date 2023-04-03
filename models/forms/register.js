@@ -6,6 +6,7 @@ const { Accounts } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const original = req.body.username; //stored but not used yet
 	const username = original.toLowerCase(); //lowercase to prevent duplicates with mixed case
 	const password = req.body.password;
@@ -15,8 +16,8 @@ module.exports = async (req, res) => {
 	// if the account exists reject
 	if (account != null) {
 		return dynamicResponse(req, res, 409, 'message', {
-			'title': 'Conflict',
-			'message': 'Account with this username already exists',
+			'title': __('Conflict'),
+			'message': __('Account with that username already exists'),
 			'redirect': '/register.html'
 		});
 	}
