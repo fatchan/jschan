@@ -6,7 +6,7 @@ Special shoutout to l29utp0 & loynet (ptchan.org), Homicide (94chan.org) and som
 
 -Tom
 
-Now, back to the program. Here are the changes for 1.0.0
+Now, back to the program. Here are the changes for 1.0.0:
   - **Multiple language support.**
 
 jschan now supports language packs. There is a global and board-level language setting which completely translates the interface to another language. Using server side rendering and logic, so it remains noscript compatible.
@@ -15,7 +15,7 @@ An effort has been made to translate everything, but given there is almost 4 yea
 1.0.0 includes three* complete language packs:
   - English (en-GB)
   - Portuguese (pt-PT)
-  - Russian* (ru-RU) *Machine translated, may not be accurate
+  - Russian (ru-RU) *Machine translated, may not be accurate.
 
 Huge credit to the ptchan.org admins for providing the Portuguese translation.
 Contributions for new language packs or improvements to existing ones are very welcome! **Reach out via email, IRC, or session (See README.md) to discuss imbursement for contributing language packs.**
@@ -27,7 +27,7 @@ Note: "global" pages e.g. overboards will adhere to global language setting. In 
   - Customflags will now show correctly when editing a post on a board with custom flags enabled.
   - Security improvement to the 2FA validation flow during login.
   - Log a few more errors related to hcaptcha/recaptcha, for debugging purposes. (already caught and returned in a friendly manner)
-  - Remove showing language and relevance data when auto detecting highlighted code block language
+  - Remove showing language and relevance data when auto detecting highlighted code block language.
   - Add more themes (cybhub, digi, favela, ptchan, teletext).
   - More minor bugfixes to permissions pages displays.
 
