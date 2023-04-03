@@ -1,0 +1,347 @@
+/* with love from ptchan */
+
+:root {
+    /* light theme colors */
+    --bg: #f7f8fa;
+    --bg-light: #fff;
+    --bg-dark: #f3f4f6;
+    --fg: #292d31;
+    --fg-dark: #24292e;
+    --fg-light: #6e7781;
+    --selection: #d0d7de;
+    --selection-dark: #cdd0d4;
+    --blue: #0969da;
+    --blue-light: #0072f3;
+    --green: #2da44e;
+    --orange: #e36209;
+    --pink: #ff5fba;
+    --red: #d73a49;
+    --red-light: #da4a59;
+    --yellow: #e3ca09;
+
+    /* navbar and green btn colors, dark and light themes share these elements */
+    --bg-navbar: #24292f;
+    --fg-navbar: #fff;
+    --fg-navbar-hover: #b1bac4;
+    --bg-btn-primary: #2da44e;
+    --bg-btn-primary-hover: #2c974b;
+    --text-btn-primary: #fff;
+    --border-btn-primary: rgba(27, 31, 36, 0.15);
+    --shadow-btn-primary: 0 1px 0 rgba(27, 31, 36, 0.1);
+    --shadow-inset-btn-primary: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+
+    /* main colors assignment */
+    --darken: var(--bg-dark);
+    --hr: var(--selection);
+    --navbar-color: var(--bg-navbar);
+    --background-top: var(--bg);
+    --background-rest: var(--bg);
+    --post-color: var(--bg-light);
+    --post-outline-color: var(--selection);
+    --highlighted-post-color: var(--bg-light);
+    --highlighted-post-outline-color: var(--selection);
+    --label-color: var(--bg-dark);
+    --box-border-color: var(--selection);
+    --alt-label-color: var(--bg);
+    --alt-font-color: var(--fg);
+    --input-color: var(--fg);
+    --input-borders: var(--selection);
+    --input-background: var(--bg-light);
+    --board-title: var(--fg-dark);
+    --title-color: var(--red-light);
+    --font-color: var(--fg);
+    --name-color: var(--blue);
+    --subject-color: var(--fg-dark);
+    --link-color: var(--fg-dark);
+    --link-hover: var(--blue);
+    --post-link-color: var(--fg-dark);
+    --dice-color: var(--orange);
+    --greentext-color: var(--green);
+    --pinktext-color: var(--pink);
+    --capcode-color: var(--red);
+    --icon-color: saturate(100%) hue-rotate(2deg) brightness(95%) contrast(100%);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* dark theme colors */
+        --bg: #010409;
+        --bg-light: #0d1117;
+        --bg-dark: #21262d;
+        --fg: #ededf0;
+        --fg-dark: #fff;
+        --fg-light: #b1bac4;
+        --selection: #30363d;
+        --blue: #58a6ff;
+        --blue-light: #79c0ff;
+        --green: #56d364;
+        --orange: #d29922;
+        --pink: #d2a8ff;
+        --red: #ff7b72;
+        --red-light: #ffa198;
+        --yellow: #e3b341;
+    }
+}
+
+#action-menu,
+#customflag,
+#dragHandle,
+#float,
+#livetext,
+#postform,
+#threadstats,
+#threadwatcher,
+.bottom-reply,
+.captcha,
+.catalog-tile,
+.close,
+.collapse,
+.modal,
+.pages,
+.post-container,
+.stickynav,
+input[type=submit] {
+    border-radius: 6px !important
+}
+
+.file-thumb,
+.post-file-src * {
+    border-radius: 5px
+}
+
+#float {
+    box-shadow: none !important
+}
+
+/* darker post-info */
+.post-container.highlighted .post-info,
+.post-container:target,
+.post-info {
+    background: var(--darken);
+    margin: -6.5px -6.5px 5px -6.5px;
+    border-bottom: 1px solid var(--post-outline-color);
+    border-radius: 6px 6px 0 0
+}
+
+/* darker post-info */
+@media screen and (min-width:900px) {
+    .container {
+        width: 78vw;
+        margin: 0 auto
+    }
+
+    /* exceptions */
+    .navbar,
+    .main>.container {
+        width: 100%
+    }
+}
+
+a {
+    font-style: italic
+}
+
+/* better highlight */
+#float,
+.anchor:target+.catalog-tile,
+.anchor:target+.post-container,
+.anchor:target+table,
+.anchor:target+table tbody tr th,
+.post-container.highlighted,
+.post-container.hoverhighlighted {
+    outline: 2px solid var(--blue-light)
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    background: var(--highlighted-post-color);
+    border: 2px solid var(--blue-light)
+}
+
+/* post menu fixes */
+.postmenu {
+    border: solid var(--font-color);
+    border-width: 0 1px 1px 0;
+    background: 0 0
+}
+
+.postmenu:hover {
+    border: solid var(--link-hover);
+    border-width: 0 1px 1px 0;
+    background: 0 0
+}
+
+.postmenu:focus {
+    border: solid var(--font-color);
+    border-width: 0 1px 1px 0;
+    background: 0 0
+}
+
+/* files box */
+.filelabel {
+    background: var(--highlighted-post-color);
+    border: 2px dashed var(--blue-light)
+}
+
+/* big title */
+.board-title {
+    font-size: 55px
+}
+
+/* navbar */
+.navbar {
+    border: 0;
+    box-shadow: none
+}
+
+.stickynav {
+    background: var(--bg-navbar);
+    border: 0;
+    box-shadow: none
+}
+
+a.nav-item {
+    color: var(--fg-navbar);
+
+    font-weight: bold;
+    /* overwrites italic from links */
+    font-style: normal !important
+}
+
+a.nav-item:hover {
+    color: var(--fg-navbar-hover) !important
+}
+
+
+/* primary buttons */
+.bottom-reply.no-decoration,
+.collapse.no-decoration,
+.expand-omitted,
+input[type=submit] {
+    background: var(--bg-btn-primary);
+    border-color: var(--border-btn-primary);
+    color: var(--text-btn-primary);
+    box-shadow: var(--shadow-btn-primary), var(--shadow-inset-btn-primary);
+    transition: .2s cubic-bezier(.3, 0, .5, 1);
+    transition-property: color, background-color, border-color;
+
+    font-weight: bold;
+    /* overwrites italic from links */
+    font-style: normal !important
+}
+
+.bottom-reply.no-decoration:hover,
+.collapse.no-decoration:hover,
+.expand-omitted:hover,
+input[type=submit]:hover {
+    background: var(--bg-btn-primary-hover);
+    /* overwrites blue from links hover */
+    color: var(--text-btn-primary) !important
+}
+
+/* grey buttons */
+#action-menu,
+.close,
+.pages,
+.collapse {
+    background: var(--bg-light);
+    border-color: var(--selection);
+    box-shadow: var(--shadow-btn-primary), var(--shadow-inset-btn-primary);
+    transition: .2s cubic-bezier(.3, 0, .5, 1);
+    transition-property: color, background-color, border-color;
+}
+
+#action-menu:hover,
+.close:hover,
+.pages:hover,
+.collapse:hover {
+    background: var(--bg-dark);
+}
+
+/* dimmed info display */
+#livetext,
+#threadstats {
+    background: 0 0;
+    border: none
+}
+
+#livetext,
+#threadstats,
+.board-description,
+.cb,
+.edited,
+.footer,
+.post-date,
+.post-file-info,
+.replies {
+    color: var(--fg-light)
+}
+
+/* tables style */
+table {
+    border-collapse: separate;
+    border-radius: 6px;
+}
+
+td {
+    border-top: 1px solid var(--post-outline-color);
+    border-left: 1px solid var(--post-outline-color);
+}
+
+td:first-child,
+th:first-child {
+    border-left: none;
+}
+
+
+/* table exceptions */
+table.boardtable.w900 td:last-child {
+    background-color: unset !important;
+    text-shadow: unset;
+    color: var(--font-color) !important;
+}
+
+#hotposts,
+#hotposts td,
+#hotposts tr {
+    border: none;
+    background: none;
+}
+
+/* forms (post form and threadwatcher) */
+.modal,
+#postform,
+#threadwatcher {
+    background-color: var(--bg-light);
+    outline: 2px solid var(--blue-light);
+}
+
+.label {
+    border-radius: 6px 0px 0px 6px !important;
+}
+
+input[type="text"],
+input[type="password"],
+select:not(.postmenu),
+#message,
+#postpassword,
+.filelabel {
+    border-radius: 0px 6px 6px 0px !important;
+}
+
+#postform-dragHandle,
+#threadwatcher-dragHandle {
+    margin-bottom: 4px;
+    border-radius: 6px;
+    background-color: var(--bg);
+    padding: 5px;
+}
+
+#submitpost {
+    margin-top: 6px;
+}
+
+.rlabel {
+    border-radius: 0px 6px 6px 0px;
+}

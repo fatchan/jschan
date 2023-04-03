@@ -1,0 +1,149 @@
+/* from ptchan with love */
+
+:root {
+	--icon-color: invert(17%)sepia(89%)saturate(7057%)hue-rotate(2deg)brightness(93%)contrast(120%);
+	--alt-label-color: #040404;
+	--alt-font-color: #e8eaf6;
+	--background-top: #000;
+	--background-rest: #000;
+	--navbar-color: #040404;
+	--post-color: #000;
+	--post-outline-color: #111;
+	--label-color: #040404;
+	--box-border-color: #111;
+	--darken: #040404;
+	--highlighted-post-color: #000;
+	--highlighted-post-outline-color: #444;
+	--board-title: #e8eaf6;
+	--hr: #040404;
+	--font-color: #e8eaf6;
+	--name-color: #e8eaf6;
+	--capcode-color: #f00;
+	--subject-color: #b294bb;
+	--link-color: white;
+	--post-link-color: #5f89ac;
+	--link-hover: #81a2be;
+	--input-borders: #111;
+	--input-color: #e8eaf6;
+	--input-background: #040404;
+	--dice-color: darkorange;
+	--title-color: #d70000;
+	--greentext-color: lime;
+	--pinktext-color: magenta;
+}
+
+.spoiler {
+	background: gray;
+	color: azuregray;
+}
+
+.spoiler:not(:hover) * {
+	color: gray;
+	background: gray !important;
+}
+
+.post-info, .post-container:target .post-info, .post-container.highlighted .post-info {
+	background: none !important;
+    border: none !important
+}
+
+@font-face {
+    font-family: VCR OSD Mono;
+    src: url(/css/themes/assets/VCR-OSD-Mono.ttf);
+}
+
+* {
+    font-family: 'VCR OSD Mono', sans-serif !important;
+}
+
+body {
+    background: black !important;
+    width: 80%;
+    margin: auto;
+    font-size: medium;
+}
+
+a {
+    text-decoration: none !important;
+	color: var(--link-color) !important;
+}
+
+th {
+    text-transform: uppercase;
+}
+
+tr:nth-child(2n) * {
+    color: yellow;
+}
+
+.bold {
+	color: var(--link-color) !important;
+}
+
+.navbar {
+    width: inherit;
+}
+
+.navbar .nav-item {
+    text-transform: uppercase;
+}
+
+.board-title {
+    background-color: black;
+    color: white;
+    text-transform: uppercase;
+    border: 6px solid red;
+    width: 60%;
+    margin: auto;
+    letter-spacing: 0.5em;
+    padding: 10px;
+}
+
+.no-m-p  {
+    background-color: blue;
+    color: var(--font-color) !important; 
+    padding: 10px 10px;
+}
+
+.footer {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    align-content: space-between;
+    justify-content: space-between;
+    background-color: black;
+    font-size: 0; /* This a trick used to hide the bullet points that aren't encapsulated by tags */
+    line-height: normal;
+}
+
+.footer a {
+    color: blue !important;
+    flex: 1;
+    text-transform: uppercase;
+    font-size: initial;
+	padding: 5px 0;
+}
+
+.footer > div {
+    line-break: after;
+    color: red;
+    font-size: initial;
+    padding: 10px 0;
+}
+
+.footer a:nth-child(4n + 1) {
+    background-color: red;
+    color: white !important;
+}
+
+.footer a:nth-child(4n + 2) {
+    background-color: lime;
+}
+
+.footer a:nth-child(4n + 3) {
+    background-color: yellow;
+}
+
+.footer a:nth-child(4n + 4) {
+    background-color: cyan;
+}

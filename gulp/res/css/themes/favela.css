@@ -1,0 +1,141 @@
+/* with love from ptchan */
+
+:root {
+    --icon-color: invert(17%) sepia(89%) saturate(7057%) hue-rotate(2deg) brightness(93%) contrast(120%);
+    --alt-label-color: #d6f0da;
+    --alt-font-color: #333;
+    --background-top: #eefff2;
+    --background-rest: #eefff2;
+    --navbar-color: #d6f0da;
+    --post-color: #d6f0da;
+    --post-outline-color: transparent;
+    --label-color: #d6f0da;
+    --box-border-color: #d6f0da;
+    --darken: #0000000f;
+    --highlighted-post-color: #d6bad0;
+    --highlighted-post-outline-color: transparent;
+    --board-title: #b90000;
+    --hr: #DDD;
+    --font-color: #333;
+    --name-color: #117743;
+    --capcode-color: #f00;
+    --subject-color: #004A99;
+    --link-color: #34345c;
+    --post-link-color: #34345c;
+    --link-hover: #8d0000;
+    --input-borders: #d2d2d2;
+    --input-color: #333;
+    --input-background: #f5f5f5;
+    --dice-color: maroon;
+    --title-color: #d70000;
+    --greentext-color: #789922;
+    --pinktext-color: #E0727F;
+}
+
+.post-container, #float .post-container, .stickynav, .pages, .toggle-summary, .catalog-tile, #livetext, #threadstats {
+	border-width: 0 1px 1px 0;
+}
+a.quote {
+    color:var(--post-link-color);
+}
+
+.alt {
+    background: var(--label-color);
+    color: var(--font-color);
+}
+
+td, th {
+    padding: 5px;
+    overflow-wrap: anywhere;
+    padding: 6px;
+}
+
+table {
+    background: var(--background-rest);
+    border-radius: 5px;
+}
+
+#float .post-container, #livetext, #threadstats, .catalog-tile, .pages, .post-container, .stickynav, .toggle-summary {
+    border-width: 1px 1px 1px 1px;
+    border-radius: 5px;
+}
+
+.post-container {
+    padding: 10px;
+}
+
+.toggle-summary {
+    padding: 13px;
+}
+
+#postform {
+
+    border-radius: 5px;
+}
+
+#dragHandle {
+
+    border-radius: 5px;
+}
+
+.label, .rlabel {
+	border: none;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.modal {
+
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.post-date{
+    opacity: 0.5;
+}
+
+img {
+    border-radius: 5px;
+}
+
+video {
+    border-radius: 5px;
+}
+
+@media only screen and (max-width: 600px) {
+.post-info {
+    background: var(--darken);
+    margin: -6.5px -6.5px 5px -6.5px;
+    border-bottom: 1px solid var(--post-outline-color);
+    border-radius: 5px;
+}
+
+.container {
+    padding: 5px;
+    
+}
+}
+
+.user-id {
+    text-shadow: none;
+    color: #fff;
+    padding: 1px 5px;
+    border: none;
+    border-radius: 5px;
+}
+
+.bottom-reply {
+    border-radius: 5px;
+}
+
+.collapse {
+    border-radius: 5px;
+}
+
+body {
+	background: url(/css/themes/assets/favela-bg.jpg) repeat 0 0 azure
+}
+
+hr {
+    border-top: 1px solid var(--post-color);
+}
