@@ -4,5 +4,6 @@ docker/jschan/Dockerfile
 docker/jschan/Dockerfile-reset
 docker/nginx/Dockerfile
 docker/static/
-tools/
+tools/*.sh
+tools/*.sh.example
 gulp/res/js/socket.io.js
