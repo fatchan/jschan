@@ -25,6 +25,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					else if modview
 						a.bold(href=`${upLevel ? '../' : ''}recent.html?postid=${post.postId}`) [+]
 					else if globalmanage
+						a.bold(class='post-board', href=`/${post.board}/manage/index.html`) /#{post.board}/
+						|  
 						- const ip = viewRawIp === true ? post.ip.raw : post.ip.cloak;
 						a.bold(href=`?ip=${encodeURIComponent(ip)}`) [#{ip}]
 					| 
