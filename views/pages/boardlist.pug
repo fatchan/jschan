@@ -13,7 +13,7 @@ block content
 				div(class=`col${enableWebring ? ' mr-5' : ''}`)
 					.row
 						.label #{__('Search')}
-						input(type='text' name='search' value=search placeholder='Uri or tags')
+						input(type='text' name='search' value=search placeholder=__('Uri or tags'))
 					.row
 						.label #{__('Sort')}
 						select(name='sort')
@@ -40,7 +40,7 @@ block content
 								optgroup(label=__('Not Shown'))
 									each site in notShown
 										option(value=site) #{site}
-			input(type='submit', value='Filter')
+			input(type='submit', value=__('Filter'))
 	if boards && boards.length > 0
 		+boardtable(true, true)
 			each board in boards

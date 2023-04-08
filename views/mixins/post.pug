@@ -55,13 +55,13 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					span.user-id(style=`background-color: #${post.userId}`) #{post.userId}
 					| 
 			span.post-links
-				a.noselect.no-decoration(href=`${postURL}#${post.postId}`) No.
+				a.noselect.no-decoration(href=`${postURL}#${post.postId}`) #{__('No.')}
 				span.post-quoters
 					a.no-decoration(href=`${postURL}#postform`) #{post.postId}
 				|  
 				if !post.thread && (truncate || manage || globalmanage)
 					|  
-					span.noselect: a(href=`${postURL}`) [Open]
+					span.noselect: a(href=`${postURL}`) [#{__('Open')}]
 				select.jsonly.postmenu
 					option(value='single') #{__('Hide')}
 					if post.userId
@@ -114,10 +114,10 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 										- const matchingReplayFile = post.files.find(f => f.originalFilename.slice(0, -4) === file.originalFilename.slice(0,-3));
 										if matchingReplayFile !== undefined
 											|  
-											span: a.dummy-link.replay-tegaki.noselect(href=`/file/${matchingReplayFile.filename}` download=matchingReplayFile.originalFilename) Replay
+											span: a.dummy-link.replay-tegaki.noselect(href=`/file/${matchingReplayFile.filename}` download=matchingReplayFile.originalFilename) #{__('Replay')}
 								if file.mimetype === 'tegaki/replay'
 									|  
-									span.jsonly: a.dummy-link.replay-tegaki.noselect(href=`/file/${file.filename}` download=file.originalFilename) Replay
+									span.jsonly: a.dummy-link.replay-tegaki.noselect(href=`/file/${file.filename}` download=file.originalFilename) #{__('Replay')}
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/file/${file.filename}`)
 									if post.spoiler || file.spoiler
@@ -151,42 +151,41 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 				else
 					pre.post-message !{post.message}
 			if !post.message && post.files.length === 0
-				p No message or files.
+				p #{__('No message or files.')}
 			if post.edited
 				- const postEditDate = new Date(post.edited.date);
 				small.cb.mt-5.ml-5.edited
-					| Last edited 
+					| #{__('Last edited')} 
 					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
 					|  by #{post.edited.username || __('Hidden User')}
 			if post.banmessage
 				p.ban
-					span.message USER WAS BANNED FOR THIS POST
+					span.message #{__('USER WAS BANNED FOR THIS POST')}
 					|  
 					span.reason(data-reason=post.banmessage) #{post.banmessage}
 			if truncatedMessage !== post.message
 				div.cb.mt-5.ml-5
-					| Message too long. #[a.viewfulltext(href=`${postURL}#${post.postId}`) View the full text]
+					| #{__('Message too long.')} #[a.viewfulltext(href=`${postURL}#${post.postId}`) #{__('View the full text')}]
 			if post.omittedposts || post.omittedfiles
 				div.cb.mt-5.ml-5
 					img.jsonly.dummy-link.expand-omitted(height='12' width='12' data-shown=post.replies.length data-board=post.board data-thread=post.postId src='/file/plus.png')
 					- const ompo = post.omittedposts;
 					- const omfi = post.omittedfiles;
 					span
-						| #{ompo} repl#{ompo > 1 ? 'ies' : 'y'}
-						| #{omfi > 0 ? ` and ${omfi} file${omfi > 1 ? 's' : ''}` : ''} omitted. 
-					| #[a(href=postURL) View the full thread]
+						| #{__(`${ompo > 1 ? '%s' : ompo} repl${ompo > 1 ? 'ies' : 'y'}${omfi > 0 ? ` and ${omfi > 1 ? '%s' : omfi} file${omfi > 1 ? 's' : ''}` : ''} omitted.`, ompo > 1 ? ompo : omfi, omfi)} 
+					| #[a(href=postURL) #{__('View the full thread')}]
 			if post.previewbacklinks != null
 				if post.previewbacklinks.length > 0
-					div.replies.mt-5.ml-5 Replies: 
+					div.replies.mt-5.ml-5 #{__n('Replies', 2)}: 
 						each backlink in post.previewbacklinks
 							a.quote(href=`${postURL}#${backlink.postId}`) &gt;&gt;#{backlink.postId}
 							|  
 						if post.previewbacklinks.length < post.backlinks.length
 							- const ombls = post.backlinks.length-post.previewbacklinks.length;
-							| + #[a(href=`${postURL}#${post.postId}`) #{ombls} earlier]
+							| + #[a(href=`${postURL}#${post.postId}`) #{__('%s earlier', ombls)}]
 							|  
 			else if post.backlinks && post.backlinks.length > 0
-				div.replies.mt-5.ml-5 Replies: 
+				div.replies.mt-5.ml-5 #{__n('Replies', 2)}: 
 					each backlink in post.backlinks
 						a.quote(href=`${postURL}#${backlink.postId}`) &gt;&gt;#{backlink.postId}
 						|  

@@ -1379,5 +1379,17 @@
 	"Your post was blocked by a word filter": "A tua publicação foi bloqueada por um filtro de palavras.",
 	"Your request was blocked because your IP address is listed on a blacklist.": "O teu pedido foi bloqueado porque o teu IP está numa blacklist.",
 	"Your upload was too large": "O teu carregamento é demasiado grande.",
-	"Zoom": "Zoom"
+	"Zoom": "Zoom",
+	"1 reply omitted.": "1 reply omitted.",
+	"%s replies omitted.": "%s replies omitted.",
+	"1 reply and 1 file omitted.": "%s reply and 1 file omitted.",
+	"%s replies and 1 file omitted.": "%s replies and 1 file omitted.",
+	"1 reply and %s files omitted.": "1 reply and %s files omitted.",
+	"%s replies and %s files omitted.": "%s replies and %s files omitted.",
+	"Replay": "Replay",
+	"No message or files.": "No message or files.",
+	"Message too long.": "Message too long.",
+	"View the full text": "View the full text",
+	"View the full thread": "View the full thread",
+	"%s earlier": "%s earlier"
 }

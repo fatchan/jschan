@@ -25,6 +25,6 @@ block content
 		|
 		if permissions.get(Permissions.MANAGE_GLOBAL_ACCOUNTS)
 			|  
-			a(href=`/globalmanage/editaccount/${user.username}.html`) [Edit]
+			a(href=`/globalmanage/editaccount/${user.username}.html`) [#{__('Edit')}]
 	- const jsonPermissions = permissions.toJSON();
 	+mypermissions(jsonPermissions)
