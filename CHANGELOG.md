@@ -1,3 +1,7 @@
+### 1.0.1
+  - Translation improvements.
+  - Add a link to board in mod view e.g. /test/ on globalmanage recent posts to give some context.
+
 ### 1.0.0
 Version 1.0.0 is here. jschan is stable and mature enough and has been for a while. There's no need to go to version 0.9999.9999 and I am comfortable enough to call it "Version 1".
 Of course, that doesn't mean jschan is perfect or finished by any means. I want to keep improving jschan and there are plenty of new features and changes planned for versions 2, 3, and beyond.
