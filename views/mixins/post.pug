@@ -155,9 +155,10 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 			if post.edited
 				- const postEditDate = new Date(post.edited.date);
 				small.cb.mt-5.ml-5.edited
-					| #{__('Last edited')} 
+					- lastEdited = __('Last edited | by %s', (post.edited.username || __('Hidden User'))).split('|'); //How do I interpolate a whole tag properly?
+					| #{lastEdited[0]}
 					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
-					|  by #{post.edited.username || __('Hidden User')}
+					| #{lastEdited[1]}
 			if post.banmessage
 				p.ban
 					span.message #{__('USER WAS BANNED FOR THIS POST')}
