@@ -1,3 +1,6 @@
+### 1.0.2
+  - Translation improvements.
+
 ### 1.0.1
   - Translation improvements.
   - Add a link to board in mod view e.g. /test/ on globalmanage recent posts to give some context.
