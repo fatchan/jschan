@@ -20,7 +20,7 @@ const express  = require('express')
 	, dnsblCheck = require(__dirname+'/../lib/middleware/ip/dnsbl.js')
 	, blockBypass = require(__dirname+'/../lib/middleware/captcha/blockbypass.js')
 	, fileMiddlewares = require(__dirname+'/../lib/middleware/file/filemiddlewares.js')
-	, { setBoardLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
+	, { setBoardLanguage, setQueryLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
 //controllers
 	, { deleteBoardController, editBansController, appealController, globalActionController, twofactorController,
 		actionController, addCustomPageController, deleteCustomPageController, addNewsController,
@@ -123,7 +123,7 @@ router.post('/deletesessions', useSession, sessionRefresh, csrf, calcPerms, isLo
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptchaForm);
 //solve captcha for block bypass
-router.post('/blockbypass', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, blockBypassForm);
+router.post('/blockbypass', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, setQueryLanguage, blockBypassForm);
 
 module.exports = router;
 
