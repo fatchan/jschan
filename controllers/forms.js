@@ -123,7 +123,7 @@ router.post('/deletesessions', useSession, sessionRefresh, csrf, calcPerms, isLo
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptchaForm);
 //solve captcha for block bypass
-router.post('/blockbypass', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, setQueryLanguage, blockBypassForm);
+router.post('/blockbypass', geoIp, processIp, useSession, sessionRefresh, calcPerms, setQueryLanguage, verifyCaptcha, blockBypassForm);
 
 module.exports = router;
 

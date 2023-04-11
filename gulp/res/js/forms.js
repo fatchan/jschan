@@ -334,12 +334,12 @@ class postFormHandler {
 					} else {
 
 						//not a 200 so probably error
-						if (!this.captchaField && json.message === 'Incorrect captcha answer') {
+						if (!this.captchaField && json.message === __('Incorrect captcha answer')) {
 							/* add missing captcha field if we got an error about it and the form has no captcha field
 								(must have been enabeld after we loaded the page) */
 							captchaController.addMissingCaptcha();
 							this.captchaField = true;
-						} else if (json.message === 'Captcha expired') {
+						} else if (json.message === __('Captcha expired')) {
 							//if captcha is expired, just refresh the captcha
 							const captcha = this.form.querySelector('.captcharefresh');
 							if (captcha) {
