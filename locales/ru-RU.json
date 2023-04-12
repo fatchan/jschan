@@ -1392,5 +1392,6 @@
 	"Message too long.": "Сообщение слишком длинное.",
 	"View the full text": "Просмотреть полный текст",
 	"View the full thread": "Просмотреть полную ветку",
-	"%s earlier": "%s выше"
+	"%s earlier": "%s выше",
+	"Lock+Unlist board": "замок+исключить из списка"
 }

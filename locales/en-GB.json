@@ -1392,5 +1392,6 @@
 	"Message too long.": "Message too long.",
 	"View the full text": "View the full text",
 	"View the full thread": "View the full thread",
-	"%s earlier": "%s earlier"
+	"%s earlier": "%s earlier",
+	"Lock+Unlist board": "Lock+Unlist board"
 }

@@ -1392,5 +1392,6 @@
 	"Message too long.": "Mensagem demasiado longa.",
 	"View the full text": "Ver texto completo",
 	"View the full thread": "Ver fio completo",
-	"%s earlier": "%s anteriores"
+	"%s earlier": "%s anteriores",
+	"Lock+Unlist board": "Trancar+Remover da lista"
 }
