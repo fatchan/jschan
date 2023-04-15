@@ -1,3 +1,8 @@
+### 1.0.4
+  - Translation improvements.
+  - Fix Tor hidden service country name not displaying correctly.
+  - Make global disabling of anonymizer file posting apply to board banners, flags, custompages.
+
 ### 1.0.3
   - Translation improvements.
   - Add back missing "Lock+Unlist" mode for handling ianctive boards.
