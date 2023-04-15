@@ -1,6 +1,7 @@
 'use strict';
 
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
