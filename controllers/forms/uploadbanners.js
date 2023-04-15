@@ -14,10 +14,11 @@ module.exports = {
 
 		const { __ } = res.locals;
 
-		const { globalLimits } = config.get;
+		const { globalLimits, disableAnonymizerFilePosting } = config.get;
 
 		const errors = await checkSchema([
 			{ result: res.locals.numFiles === 0, expected: false, blocking: true, error: __('Must provide a file') },
+			{ result: (res.locals.anonymizer && disableAnonymizerFilePosting), expected: false, error: __('Posting files through anonymizers has been disabled globally') },
 			{ result: numberBody(res.locals.numFiles, 0, globalLimits.bannerFiles.max), expected: true, error: __('Exceeded max banner uploads in one request of %s', globalLimits.bannerFiles.max) },
 			{ result: numberBody(res.locals.board.banners.length+res.locals.numFiles, 0, globalLimits.bannerFiles.total), expected: true, error: __('Total number of banners would exceed global limit of %s', globalLimits.bannerFiles.total) },
 		]);

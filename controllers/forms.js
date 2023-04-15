@@ -62,15 +62,15 @@ router.post('/board/:board/deleteboard', useSession, sessionRefresh, csrf, Board
 	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.controller); //delete board
 
 //board crud banners, flags, assets, custompages
-router.post('/board/:board/addbanners', useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.banner, csrf, calcPerms, isLoggedIn,
+router.post('/board/:board/addbanners', geoIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.banner, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), numFiles, uploadBannersController.controller); //add banners
 router.post('/board/:board/deletebanners', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), deleteBannersController.paramConverter, deleteBannersController.controller); //delete banners
-router.post('/board/:board/addassets', useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.asset, csrf, calcPerms, isLoggedIn,
+router.post('/board/:board/addassets', geoIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.asset, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), numFiles, addAssetsController.controller); //add assets
 router.post('/board/:board/deleteassets', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), deleteAssetsController.paramConverter, deleteAssetsController.controller); //delete assets
-router.post('/board/:board/addflags', useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.flag, csrf, calcPerms, isLoggedIn,
+router.post('/board/:board/addflags', geoIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.flag, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), numFiles, addFlagsController.controller); //add flags
 router.post('/board/:board/deleteflags', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), deleteFlagsController.paramConverter, deleteFlagsController.controller); //delete flags
