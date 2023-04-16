@@ -6,7 +6,7 @@ block head
 block content
 	h1.board-title #{__('Block Bypass')}
 	.form-wrapper.flex-center.mv-10
-		form.form-post(action='/forms/blockbypass' method='POST' data-captcha-preload='true')
+		form.form-post(action=`/forms/blockbypass?language=${encodeURIComponent(pageLanguage)}` method='POST' data-captcha-preload='true')
 			.row
 				.col
 					include ../includes/captcha.pug

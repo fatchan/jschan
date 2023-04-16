@@ -1,10 +1,20 @@
+### 1.0.4
+  - Translation improvements.
+  - Fix Tor hidden service country name not displaying correctly.
+  - Make global disabling of anonymizer file posting apply to board banners, flags, custompages.
+
+### 1.0.3
+  - Translation improvements.
+  - Add back missing "Lock+Unlist" mode for handling ianctive boards.
+  - Npm audit.
+
 ### 1.0.2
   - Translation improvements.
 
 ### 1.0.1
   - Translation improvements.
   - Add a link to board in mod view e.g. /test/ on globalmanage recent posts to give some context.
-  - Fix dockerignore for docker testing/development, was broken due to translations
+  - Fix dockerignore for docker testing/development, was broken due to translations.
 
 ### 1.0.0
 Version 1.0.0 is here. jschan is stable and mature enough and has been for a while. There's no need to go to version 0.9999.9999 and I am comfortable enough to call it "Version 1".

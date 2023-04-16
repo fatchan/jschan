@@ -20,7 +20,7 @@ const express  = require('express')
 	, dnsblCheck = require(__dirname+'/../lib/middleware/ip/dnsbl.js')
 	, blockBypass = require(__dirname+'/../lib/middleware/captcha/blockbypass.js')
 	, fileMiddlewares = require(__dirname+'/../lib/middleware/file/filemiddlewares.js')
-	, { setBoardLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
+	, { setBoardLanguage, setQueryLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
 //controllers
 	, { deleteBoardController, editBansController, appealController, globalActionController, twofactorController,
 		actionController, addCustomPageController, deleteCustomPageController, addNewsController,
@@ -62,15 +62,15 @@ router.post('/board/:board/deleteboard', useSession, sessionRefresh, csrf, Board
 	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.controller); //delete board
 
 //board crud banners, flags, assets, custompages
-router.post('/board/:board/addbanners', useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.banner, csrf, calcPerms, isLoggedIn,
+router.post('/board/:board/addbanners', geoIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.banner, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), numFiles, uploadBannersController.controller); //add banners
 router.post('/board/:board/deletebanners', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), deleteBannersController.paramConverter, deleteBannersController.controller); //delete banners
-router.post('/board/:board/addassets', useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.asset, csrf, calcPerms, isLoggedIn,
+router.post('/board/:board/addassets', geoIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.asset, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), numFiles, addAssetsController.controller); //add assets
 router.post('/board/:board/deleteassets', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), deleteAssetsController.paramConverter, deleteAssetsController.controller); //delete assets
-router.post('/board/:board/addflags', useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.flag, csrf, calcPerms, isLoggedIn,
+router.post('/board/:board/addflags', geoIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.flag, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), numFiles, addFlagsController.controller); //add flags
 router.post('/board/:board/deleteflags', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_CUSTOMISATION), deleteFlagsController.paramConverter, deleteFlagsController.controller); //delete flags
@@ -123,7 +123,7 @@ router.post('/deletesessions', useSession, sessionRefresh, csrf, calcPerms, isLo
 //removes captcha cookie, for refreshing for noscript users
 router.post('/newcaptcha', newCaptchaForm);
 //solve captcha for block bypass
-router.post('/blockbypass', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, blockBypassForm);
+router.post('/blockbypass', geoIp, processIp, useSession, sessionRefresh, calcPerms, setQueryLanguage, verifyCaptcha, blockBypassForm);
 
 module.exports = router;
 

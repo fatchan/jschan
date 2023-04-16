@@ -1051,7 +1051,7 @@
 	"Raw IPs": "Raw IPs",
 	"Reason": "Reason",
 	"Recent": "Recent",
-	"Recent Posts": "Recept Posts",
+	"Recent Posts": "Recent Posts",
 	"Recently bumped threads from multiple boards": "Recently bumped threads from multiple boards",
 	"Recording replay": "Recording replay",
 	"Recursive post hide": "Recursive post hide",
@@ -1118,7 +1118,7 @@
 	"Secure Cookies": "Secure Cookies",
 	"Security": "Security",
 	"See Global Post History": "See Global Post History",
-	"Seen?": "Visto?",
+	"Seen?": "Seen?",
 	"Select/Drop/Paste files": {
 		"one": "Select/Drop/Paste file",
 		"other": "Select/Drop/Paste files"
@@ -1392,5 +1392,6 @@
 	"Message too long.": "Message too long.",
 	"View the full text": "View the full text",
 	"View the full thread": "View the full thread",
-	"%s earlier": "%s earlier"
+	"%s earlier": "%s earlier",
+	"Lock+Unlist board": "Lock+Unlist board"
 }

@@ -1,6 +1,7 @@
 'use strict';
 
 const makePost = require(__dirname+'/../../models/forms/makepost.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, deleteTempFiles = require(__dirname+'/../../lib/file/deletetempfiles.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { func: pruneFiles } = require(__dirname+'/../../schedules/tasks/prune.js')
@@ -25,11 +26,11 @@ module.exports = {
 		const { globalLimits, disableAnonymizerFilePosting } = config.get;
 
 		const hasNoMandatoryFile = globalLimits.postFiles.max !== 0 && res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0;
-			//maybe add more duplicates here?
+		const disableBoardAnonymizerFilePosting = res.locals.board.settings.disableAnonymizerFilePosting && !res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL);
 
 		const errors = await checkSchema([
 			{ result: (lengthBody(req.body.message, 1) && res.locals.numFiles === 0), expected: false, error: __('Posts must include a message or file') },
-			{ result: (res.locals.anonymizer && (disableAnonymizerFilePosting || res.locals.board.settings.disableAnonymizerFilePosting)
+			{ result: (res.locals.anonymizer && (disableAnonymizerFilePosting || disableBoardAnonymizerFilePosting)
 				&& res.locals.numFiles > 0), expected: false, error: __(`Posting files through anonymizers has been disabled ${disableAnonymizerFilePosting ? 'globally' : 'on this board'}`) },
 			{ result: res.locals.numFiles > res.locals.board.settings.maxFiles, blocking: true, expected: false, error: __(`Too many files. Max files per post ${res.locals.board.settings.maxFiles < globalLimits.postFiles.max ? 'on this board ' : ''}is %s`, res.locals.board.settings.maxFiles) },
 			{ result: (lengthBody(req.body.subject, 1) && (!existsBody(req.body.thread)

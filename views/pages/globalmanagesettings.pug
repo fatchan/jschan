@@ -208,6 +208,7 @@ block content
 																			select(name='abandoned_board_action')
 																				option(value='0', selected=settings.abandonedBoardAction === 0) #{__('Do nothing')}
 																				option(value='1', selected=settings.abandonedBoardAction === 1) #{__('Lock board')}
+																				option(value='2', selected=settings.abandonedBoardAction === 2) #{__('Lock+Unlist board')}
 																				option(value='3', selected=settings.abandonedBoardAction === 3) #{__('Delete board')}
 																		.row
 																			h4.mv-5 #{__('Global Limits')}
