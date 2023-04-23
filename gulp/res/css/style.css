@@ -1185,15 +1185,19 @@ input[type="button"][disabled] {
 	opacity: 0.5;
 }
 
-input[type="button"], input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea, select {
+input, textarea, select {
+	accent-color: var(--accent-color);
 	border: 1px solid var(--input-borders);
+	border-radius: 0px;
 	background: var(--input-background);
 	color: var(--input-color);
-	font-size: inherit;
 	font-family: arial, helvetica, sans-serif;
+	font-size: inherit;
+}
+
+input[type="button"], input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea, select {
 	margin: 0;
 	flex-grow: 1;
-	border-radius: 0px;
 }
 
 .nogrow * {

@@ -44,6 +44,7 @@
     --box-border-color: var(--selection);
     --alt-label-color: var(--bg);
     --alt-font-color: var(--fg);
+    --accent-color: var(--selection);
     --input-color: var(--fg);
     --input-borders: var(--selection);
     --input-background: var(--bg-light);
