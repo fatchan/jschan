@@ -255,107 +255,107 @@ module.exports = async (req, res) => {
 				await saveFull();
 			} else {
 				const existsThumb = await pathExists(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
-				switch (type) {
-					case 'image': {
-						processedFile.thumbextension = thumbExtension;
-						let imageDimensions;
-						try {
-							imageDimensions = await getDimensions(req.files.file[i].tempFilePath, null, true);
-						} catch (e) {
-							await deleteTempFiles(req).catch(console.error);
-							return dynamicResponse(req, res, 400, 'message', {
-								'title': __('Bad request'),
-								'message': __('The server failed to process "%s". Possible unsupported or corrupt file.', req.files.file[i].name),
-								'redirect': redirect
-							});
-						}
-						if (Math.floor(imageDimensions.width*imageDimensions.height) > globalLimits.postFilesSize.imageResolution) {
-							await deleteTempFiles(req).catch(console.error);
-							return dynamicResponse(req, res, 400, 'message', {
-								'title': 'Bad request',
-								'message': `File "${req.files.file[i].name}" image resolution is too high. Width*Height must not exceed ${globalLimits.postFilesSize.imageResolution}.`,
-								'redirect': redirect
-							});
-						}
-						if (thumbExtension === '.jpg' && subtype === 'png') {
-							//avoid transparency issues for jpg thumbnails on pngs (the most common case -- for anything else, use webp thumbExtension)
-							processedFile.thumbextension = '.png';
-						}
-						processedFile.geometry = imageDimensions;
-						processedFile.geometryString = `${imageDimensions.width}x${imageDimensions.height}`;
-						const lteThumbSize = (processedFile.geometry.height <= thumbSize
-							&& processedFile.geometry.width <= thumbSize);
-						processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
-							&& subtype !== 'png'
-							&& lteThumbSize);
-						let firstFrameOnly = true;
-						if (processedFile.hasThumb //if it needs thumbnailing
-							&& (file.mimetype === 'image/gif' //and its a gif
-								&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
-							firstFrameOnly = false;
-							processedFile.thumbextension = '.gif';
-						}
-						await saveFull();
-						if (!existsThumb) {
-							await imageThumbnail(processedFile, firstFrameOnly);
-						}
-						processedFile = fixGifs(processedFile);
-						break;
-					}
-					case 'audio':
-					case 'video': {
-						//video metadata
-						const audioVideoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
-						processedFile.duration = audioVideoData.format.duration;
-						processedFile.durationString = timeUtils.durationString(audioVideoData.format.duration*1000);
-						const videoStreams = audioVideoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
-						if (videoStreams.length > 0) {
+				try {
+					switch (type) {
+						case 'image': {
 							processedFile.thumbextension = thumbExtension;
-							processedFile.geometry = {width: videoStreams[0].coded_width, height: videoStreams[0].coded_height};
-							if (Math.floor(processedFile.geometry.width*processedFile.geometry.height) > globalLimits.postFilesSize.videoResolution) {
+							const imageDimensions = await getDimensions(req.files.file[i].tempFilePath, null, true);
+							if (Math.floor(imageDimensions.width*imageDimensions.height) > globalLimits.postFilesSize.imageResolution) {
 								await deleteTempFiles(req).catch(console.error);
 								return dynamicResponse(req, res, 400, 'message', {
 									'title': 'Bad request',
-									'message': `File "${req.files.file[i].name}" video resolution is too high. Width*Height must not exceed ${globalLimits.postFilesSize.videoResolution}.`,
+									'message': `File "${req.files.file[i].name}" image resolution is too high. Width*Height must not exceed ${globalLimits.postFilesSize.imageResolution}.`,
 									'redirect': redirect
 								});
 							}
-							processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`;
-							processedFile.hasThumb = true;
+							if (thumbExtension === '.jpg' && subtype === 'png') {
+								//avoid transparency issues for jpg thumbnails on pngs (the most common case -- for anything else, use webp thumbExtension)
+								processedFile.thumbextension = '.png';
+							}
+							processedFile.geometry = imageDimensions;
+							processedFile.geometryString = `${imageDimensions.width}x${imageDimensions.height}`;
+							const lteThumbSize = (processedFile.geometry.height <= thumbSize
+								&& processedFile.geometry.width <= thumbSize);
+							processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
+								&& subtype !== 'png'
+								&& lteThumbSize);
+							let firstFrameOnly = true;
+							if (processedFile.hasThumb //if it needs thumbnailing
+								&& (file.mimetype === 'image/gif' //and its a gif
+									&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
+								firstFrameOnly = false;
+								processedFile.thumbextension = '.gif';
+							}
 							await saveFull();
 							if (!existsThumb) {
-								const numFrames = videoStreams[0].nb_frames;
-								if (numFrames === 'N/A' && subtype === 'webm') {
-									await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
-								} else {
-									await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
-								}
-								//check and fix bad thumbnails in all cases, helps prevent complaints from child molesters who want improper encoding handled better
-								let videoThumbStat = null;
-								try {
-									videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
-								} catch (err) { /*ENOENT probably, ignore*/}
-								if (!videoThumbStat || videoThumbStat.code === 'ENOENT' || videoThumbStat.size === 0) {
-									//create thumb again at 0 timestamp and lets hope it exists this time
-									await videoThumbnail(processedFile, processedFile.geometry, 0);
-								}
+								await imageThumbnail(processedFile, firstFrameOnly);
 							}
-						} else {
-							//audio file, or video with only audio streams
-							type = 'audio';
-							processedFile.mimetype = `audio/${subtype}`;
-							processedFile.thumbextension = '.png';
-							processedFile.hasThumb = audioThumbnails;
-							processedFile.geometry = { thumbwidth: thumbSize, thumbheight: thumbSize };
-							await saveFull();
-							if (!existsThumb) {
-								await audioThumbnail(processedFile);
-							}
+							processedFile = fixGifs(processedFile);
+							break;
 						}
-						break;
+						case 'audio':
+						case 'video': {
+							//video metadata
+							const audioVideoData = await ffprobe(req.files.file[i].tempFilePath, null, true);
+							processedFile.duration = audioVideoData.format.duration;
+							processedFile.durationString = timeUtils.durationString(audioVideoData.format.duration*1000);
+							const videoStreams = audioVideoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
+							if (videoStreams.length > 0) {
+								processedFile.thumbextension = thumbExtension;
+								processedFile.geometry = {width: videoStreams[0].coded_width, height: videoStreams[0].coded_height};
+								if (Math.floor(processedFile.geometry.width*processedFile.geometry.height) > globalLimits.postFilesSize.videoResolution) {
+									await deleteTempFiles(req).catch(console.error);
+									return dynamicResponse(req, res, 400, 'message', {
+										'title': 'Bad request',
+										'message': `File "${req.files.file[i].name}" video resolution is too high. Width*Height must not exceed ${globalLimits.postFilesSize.videoResolution}.`,
+										'redirect': redirect
+									});
+								}
+								processedFile.geometryString = `${processedFile.geometry.width}x${processedFile.geometry.height}`;
+								processedFile.hasThumb = true;
+								await saveFull();
+								if (!existsThumb) {
+									const numFrames = videoStreams[0].nb_frames;
+									if (numFrames === 'N/A' && subtype === 'webm') {
+										await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
+									} else {
+										await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
+									}
+									//check and fix bad thumbnails in all cases, helps prevent complaints from child molesters who want improper encoding handled better
+									let videoThumbStat = null;
+									try {
+										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
+									} catch (err) { /*ENOENT probably, ignore*/}
+									if (!videoThumbStat || videoThumbStat.code === 'ENOENT' || videoThumbStat.size === 0) {
+										//create thumb again at 0 timestamp and lets hope it exists this time
+										await videoThumbnail(processedFile, processedFile.geometry, 0);
+									}
+								}
+							} else {
+								//audio file, or video with only audio streams
+								type = 'audio';
+								processedFile.mimetype = `audio/${subtype}`;
+								processedFile.thumbextension = '.png';
+								processedFile.hasThumb = audioThumbnails;
+								processedFile.geometry = { thumbwidth: thumbSize, thumbheight: thumbSize };
+								await saveFull();
+								if (!existsThumb) {
+									await audioThumbnail(processedFile);
+								}
+							}
+							break;
+						}
+						default:
+							throw new Error(__('invalid file mime type: %s', processedFile.mimetype));
 					}
-					default:
-						throw new Error(__('invalid file mime type: %s', processedFile.mimetype));
+				} catch (e) {
+					console.error(e);
+					await deleteTempFiles(req).catch(console.error);
+					return dynamicResponse(req, res, 400, 'message', {
+						'title': __('Bad request'),
+						'message': __('The server failed to process "%s". Possible unsupported or corrupt file.', req.files.file[i].name),
+						'redirect': redirect
+					});
 				}
 			}
 
