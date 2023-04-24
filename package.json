@@ -1,6 +1,6 @@
 {
   "name": "jschan",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "migrateVersion": "1.0.0",
   "description": "",
   "main": "server.js",
