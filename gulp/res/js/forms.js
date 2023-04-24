@@ -66,7 +66,7 @@ function doModal(data, postcallback, loadcallback) {
 			}
 			if (postcallback) {
 				checkInterval = setInterval(() => {
-					if (modalframe && modalframe.contentDocument.title == 'Success') {
+					if (modalframe && modalframe.contentDocument.title == __('Success')) {
 						clearInterval(checkInterval);
 						removeModal();
 						postcallback();
