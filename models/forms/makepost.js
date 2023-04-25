@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
 
 	const { __ } = res.locals;
 	const { filterBanAppealable, checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		strictFiltering, animatedGifThumbnails, audioThumbnails, dontStoreRawIps, globalLimits } = config.get;
+		strictFiltering, audioThumbnails, dontStoreRawIps, globalLimits } = config.get;
 
 	//spam/flood check
 	const flood = await spamCheck(req, res);
@@ -279,16 +279,9 @@ module.exports = async (req, res) => {
 							processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
 								&& subtype !== 'png'
 								&& lteThumbSize);
-							let firstFrameOnly = true;
-							if (processedFile.hasThumb //if it needs thumbnailing
-								&& (file.mimetype === 'image/gif' //and its a gif
-									&& animatedGifThumbnails === true)) { //and animated thumbnails for gifs are enabled
-								firstFrameOnly = false;
-								processedFile.thumbextension = '.gif';
-							}
 							await saveFull();
 							if (!existsThumb) {
-								await imageThumbnail(processedFile, firstFrameOnly);
+								await imageThumbnail(processedFile);
 							}
 							processedFile = fixGifs(processedFile);
 							break;

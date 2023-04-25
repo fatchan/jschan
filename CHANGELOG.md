@@ -2,6 +2,7 @@
   - Fix bypass not auto closing and submitting on non english locale.
   - Actually fix Tor hidden service country name not displaying correctly.
   - Make the error handling for "possible corrupt or unsupported file" catch more bad files and processing errors.
+  - Make animated webp thumbnailing at least work and not give the above error (not supporting animated thumbs like .gif yet).
   - Add "ttf" extension to nginx snippets because some themes include fonts.
   - Reorganize <input> styling, use accent-color property on <input> elements, by @disco.
   - Npm audit.
