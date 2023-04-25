@@ -8,7 +8,7 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, i18n = require(__dirname+'/../../lib/locale/locale.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
-		inArrayBody } = require(__dirname+'/../../lib/input/schema.js');
+		inArrayBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -73,6 +73,7 @@ module.exports = {
 				}
 				return false;
 			}, expected: true, error: __('Invalid reverse image search links URL format, must be a link containing %s where the url param belongs.') },
+			{ result: existsBody(req.body.referrer_check) ? lengthBody(req.body.allowed_hosts, 1) : false, expected: false, error: __('Please enter at least one allowed host in the "Allowed Hosts" field when the "Referer Check" option is selected.') },
 			{ result: numberBody(req.body.inactive_account_time), expected: true, error: __('Invalid inactive account time') },
 			{ result: numberBody(req.body.inactive_account_action, 0, 2), expected: true, error: __('Inactive account action must be a number from 0-2') },
 			{ result: numberBody(req.body.abandoned_board_action, 0, 3), expected: true, error: __('Abandoned board action must be a number from 0-3') },

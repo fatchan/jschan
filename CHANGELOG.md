@@ -5,6 +5,7 @@
   - Make animated webp thumbnailing at least work and not give the above error (not supporting animated thumbs like .gif yet).
   - Add "ttf" extension to nginx snippets because some themes include fonts.
   - Reorganize <input> styling, use accent-color property on <input> elements, by @disco.
+  - Fix an issue with the referer because of translation, and prevent invalid settings for it from breaking the web panel.
   - Npm audit.
 
 ### 1.0.4

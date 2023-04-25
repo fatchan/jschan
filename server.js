@@ -61,10 +61,6 @@ const config = require(__dirname+'/lib/misc/config.js')
 	//trust proxy for nginx
 	app.set('trust proxy', 1);
 
-	//self explanatory middlewares
-	const referrerCheck = require(__dirname+'/lib/middleware/misc/referrercheck.js');
-	app.use(referrerCheck);
-
 	// use pug view engine
 	const views = path.join(__dirname, 'views/pages');
 	app.set('view engine', 'pug');
@@ -110,6 +106,10 @@ const config = require(__dirname+'/lib/misc/config.js')
 	const { setGlobalLanguage } = require(__dirname+'/lib/middleware/locale/locale.js');
 	app.use(i18n.init);
 	app.use(setGlobalLanguage);
+
+	//referer check middleware
+	const referrerCheck = require(__dirname+'/lib/middleware/misc/referrercheck.js');
+	app.use(referrerCheck);
 
 	app.use('/forms', require(__dirname+'/controllers/forms.js'));
 	app.use('/', require(__dirname+'/controllers/pages.js'));
