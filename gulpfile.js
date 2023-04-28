@@ -276,11 +276,13 @@ async function wipe() {
 		del([ 'static/flag/*' ]),
 		del([ 'static/asset/*' ]),
 		del([ 'static/css/*' ]),
+		del([ 'static/js/*' ]),
 	]);
 
 	return Promise.all([
 		fs.ensureDir(`${uploadDirectory}/captcha`),
 		fs.ensureDir(`${uploadDirectory}/file/thumb`),
+		fs.ensureDir(paths.scripts.dest),
 	]);
 
 }
