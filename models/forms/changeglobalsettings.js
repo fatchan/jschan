@@ -273,6 +273,7 @@ module.exports = async (req, res) => {
 			}
 		},
 		boardDefaults: {
+			language: trimSetting(req.body.board_defaults_language, oldSettings.boardDefaults.language),
 			theme: trimSetting(req.body.board_defaults_theme, oldSettings.boardDefaults.theme),
 			codeTheme: trimSetting(req.body.board_defaults_code_theme, oldSettings.boardDefaults.codeTheme),
 			reverseImageSearchLinks: booleanSetting(req.body.board_defaults_reverse_image_search_links, oldSettings.boardDefaults.reverseImageSearchLinks),

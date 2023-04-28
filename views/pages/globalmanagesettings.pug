@@ -760,6 +760,11 @@ block content
 																			.label #{__('Anon Name')}
 																			input(type='text' name='board_defaults_default_name' value=settings.boardDefaults.defaultName)
 																		.row
+																			.label #{__('Language')}
+																			select(name='board_defaults_language')
+																				each language in languages
+																					option(value=language selected=settings.boardDefaults.language === language) #{__(language)} (#{language})
+																		.row
 																			.label #{__('Force Anon')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_force_anon', value='true' checked=settings.boardDefaults.forceAnon)
