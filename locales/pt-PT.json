@@ -1393,5 +1393,6 @@
 	"View the full text": "Ver texto completo",
 	"View the full thread": "Ver fio completo",
 	"%s earlier": "%s anteriores",
-	"Lock+Unlist board": "Trancar+Remover da lista"
+	"Lock+Unlist board": "Trancar+Remover da lista",
+	"pt-BR": "pt-BR"
 }
