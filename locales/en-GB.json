@@ -1394,5 +1394,6 @@
 	"View the full thread": "View the full thread",
 	"%s earlier": "%s earlier",
 	"Lock+Unlist board": "Lock+Unlist board",
-	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected."
+	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.",
+	"pt-BR": "Brazilian Portuguese"
 }

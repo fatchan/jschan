@@ -1394,5 +1394,6 @@
 	"View the full thread": "Просмотреть полную ветку",
 	"%s earlier": "%s выше",
 	"Lock+Unlist board": "замок+исключить из списка",
-	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Пожалуйста, введите хотя бы один разрешенный хост в поле \"Разрешенные хосты\", когда выбрана опция \"Проверка реферера\"."
+	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Пожалуйста, введите хотя бы один разрешенный хост в поле \"Разрешенные хосты\", когда выбрана опция \"Проверка реферера\".",
+	"pt-br": "бразильский"
 }
