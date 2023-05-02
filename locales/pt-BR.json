@@ -1394,6 +1394,6 @@
 	"View the full thread": "Ver fio completo",
 	"%s earlier": "%s anteriores",
 	"Lock+Unlist board": "Trancar+Esconder da lista",
-	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Por favor insere pelo menos um host permitido no campo de \"Hosts Permitidos\" quando a opção de \"Verificar Referer\" está selecionada.",	
+	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Por favor insira pelo menos um host permitido no campo de \"Hosts Permitidos\" quando a opção de \"Verificar Referer\" estiver selecionada.",
 	"pt-BR": "Português Brasileiro"
 }
