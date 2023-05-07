@@ -175,6 +175,7 @@ module.exports = () => describe('login and create test board', () => {
 			highlight_options_threshold: '5',
 			themes: '',
 			code_themes: '',
+			board_defaults_language: 'en-GB',
 			board_defaults_theme: 'yotsuba-b',
 			board_defaults_code_theme: 'ir-black',
 			global_limits_custom_css_enabled: 'true',

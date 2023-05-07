@@ -215,6 +215,7 @@ module.exports = () => describe('test two factor authentication', () => {
 			body: params,
 			redirect: 'manual',
 		});
+		redis.close();
 		expect(response.status).toBe(200);
 	});	
 

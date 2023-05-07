@@ -96,14 +96,13 @@ int main() {...}
 		threadParams.append('captcha', '000000');
 		for (let t = 0; t < threads; t++) {
 			const response = await fetch(`http://localhost/forms/board/${board}/post`, {
-				headers: {
-					'x-using-xhr': 'true',
-				},
 				method: 'POST',
 				body: threadParams
 			});
 			expect(response.ok).toBe(true);
-			const thread = (await response.json()).postId;
+			let thread = await fetch(`http://localhost/${board}/catalog.json`)
+				.then(res => res.json())
+				.then(json => json[Math.floor(Math.random()*json.length)].postId);
 			for (let r = 0; r < replies; r++) {
 				const replyParams = new URLSearchParams();
 				replyParams.append('message', Math.random());
