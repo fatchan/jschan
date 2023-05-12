@@ -1,148 +1,184 @@
 {
-	".html name": ".html имя",
+	".html name": ".html-имя",
 	".html name must be 50 characters or less": ".html-имя должно содержать не более 50 символов",
 	".html name must be unique": ".html-имя должно быть уникальным",
-	".html name must contain a-z 0-9 _ - only": ".html-имя должно содержать только a-z 0-9 _ -",
+	".html name must contain a-z 0-9 _ - only": ".html-имя должно содержать только символы от a до z, цифры, _ и -",
 	"(You)": "(Вы)",
-	"(You)s": "(Вы) s",
+	"(You)s": "(Вы)",
 	"%s characters": {
-		"one": "символ s",
-		"other": "символы s"
+		"one": "%s символ",
+		"few": "%s символа",
+		"many": "%s символов",
+		"other": "%s символ"
 	},
 	"%s day ago": {
-		"one": "%s дней назад",
-		"other": "%s дней назад"
+		"one": "%s день назад",
+		"few": "%s дня назад",
+		"many": "%s дней назад",
+		"other": "%s день назад"
 	},
 	"%s day from now": {
-		"one": "%s день с этого момента",
-		"other": "%s дней с этого момента"
+		"one": "%s день спустя",
+		"few": "%s дня спустя",
+		"many": "%s дней спустя",
+		"other": "%s день спустя"
 	},
 	"%s files": {
 		"one": "%s файл",
-		"other": "%s файлы"
+		"few": "%s файла",
+		"many": "%s файлов",
+		"other": "%s файл"
 	},
-	"%s files are being served, totaling %s.": "Обрабатываются файлы %s, всего %s.",
+	"%s files are being served, totaling %s.": "Обрабатываются %s файлов, всего %s.",
 	"%s files selected": {
-		"one": "выбран файл %s",
-		"other": "выбраны файлы %s"
+		"one": "выбран %s файл",
+		"few": "выбрано %s файла",
+		"many": "выбрано %s файлов",
+		"other": "выбран %s файл"
 	},
 	"%s hour ago": {
-		"one": "%s часов назад",
-		"other": "%s часов назад"
+		"one": "%s час назад",
+		"few": "%s часа назад",
+		"many": "%s часов назад",
+		"other": "%s час назад"
 	},
 	"%s hour from now": {
-		"one": "%s через час с этого момента",
-		"other": "%s через несколько часов с этого момента"
+		"one": "%s час спустя",
+		"few": "%s часа спустя",
+		"many": "%s часов спустя",
+		"other": "%s час спустя"
 	},
 	"%s minute ago": {
-		"one": "%s минут назад",
-		"other": "%s минут назад"
+		"one": "%s минуту назад",
+		"few": "%s минуты назад",
+		"many": "%s минут назад",
+		"other": "%s минуту назад"
 	},
 	"%s minute from now": {
-		"one": "%s с минуты на минуту",
-		"other": "%s с минуты на минуту"
+		"one": "%s минуту спустя",
+		"few": "%s минуты спустя",
+		"many": "%s минут спустя",
+		"other": "%s минуту спустя"
 	},
 	"%s month ago": {
 		"one": "%s месяц назад",
-		"other": "%s месяцев назад"
+		"few": "%s месяца назад",
+		"many": "%s месяцев назад",
+		"other": "%s месяц назад"
 	},
 	"%s month from now": {
-		"one": "%s месяц с этого момента",
-		"other": "%s месяцев с этого момента"
+		"one": "%s месяц спустя",
+		"few": "%s месяца спустя",
+		"many": "%s месяцев спустя",
+		"other": "%s месяц спустя"
 	},
 	"%s replies": {
-		"one": "%s отвечает",
-		"other": "%s отвечает"
+		"one": "%s ответ",
+		"few": "%s ответа",
+		"many": "%s ответов",
+		"other": "%s ответ"
 	},
 	"%s UIDs": {
 		"one": "%s UID",
-		"other": "%s UIDs"
+		"few": "%s UID'а",
+		"many": "%s UID'ов",
+		"other": "%s UID"
 	},
 	"%s week ago": {
 		"one": "%s неделю назад",
-		"other": "%s недель назад"
+		"few": "%s недели назаж",
+		"many": "%s недель назад",
+		"other": "%s неделю назад"
 	},
 	"%s week from now": {
-		"one": "%s неделя с этого момента",
-		"other": "%s недели с этого момента"
+		"one": "%s неделю спустя",
+		"few": "%s недели спустя",
+		"many": "%s недель спустя",
+		"other": "%s неделю спустя"
 	},
 	"%s year ago": {
-		"one": "%s лет назад",
-		"other": "%s лет назад"
+		"one": "%s год назад",
+		"few": "%s года назад",
+		"many": "%s лет назад",
+		"other": "%s год назад"
 	},
 	"%s year from now": {
-		"one": "%s через год",
-		"other": "%s через год"
+		"one": "%s год спустя",
+		"few": "%s года спустя",
+		"many": "%s лет спустя",
+		"other": "%s год спустя"
 	},
-	"⊖ Thread has reached reply limit.": "⊖ Поток достиг предела ответа.",
+	"⊖ Thread has reached reply limit.": "⊖ Тред достиг предела ответов.",
 	"24 Hour Time": "24-часовое время",
-	"24h time": "24 часа времени",
-	"2FA Code": "Код 2FA",
+	"24h time": "24-чвсовое временя",
+	"2FA Code": "Код двуфакторной авторизации",
 	"2FA code must be 6 characters": "Код 2FA должен состоять из 6 символов",
-	"2FA QR code expired, try again": "Срок действия QR-кода 2FA истек, попробуйте еще раз",
+	"2FA QR code expired, try again": "Срок действия QR-кода истек, попробуйте еще раз",
 	"404 Not Found": "404 не найдено",
 	"500 Internal Server Error": "500 Внутренняя ошибка сервера",
 	"502 Bad Gateway": "502 Плохой шлюз",
 	"503 Service Unavailable": "503 Служба недоступна",
-	"504 Gateway Timeout": "504 Время ожидания шлюза",
+	"504 Gateway Timeout": "504 Время ожидания истекло",
 	"6 digits": "6 цифр",
-	"a-zA-Z0-9-_ only": "a-zA-Z0-9-_ только",
+	"a-zA-Z0-9-_ only": "только a-zA-Z0-9-_",
 	"Abandoned Board Action": "Действие на заброшенной доске",
 	"Abandoned board action must be a number from 0-3": "Действие на заброшенной доске должно быть числом от 0 до 3",
-	"Ability to create new boards.": "Возможность создавать новые доски объявлений.",
+	"Ability to create new boards.": "Возможность создавать новые доски.",
 	"Ability to register an account.": "Возможность зарегистрировать учетную запись.",
-	"Ability to see raw IPs in moderation interfaces.": "Возможность видеть необработанные IP-адреса в интерфейсах модерации.",
-	"Access board bans. Ability to unban, edit, or deny appeals.": "Запреты на доступ к доске объявлений. Возможность отмены запрета, редактирования или отклонения апелляций.",
-	"Access board logs. Ability to search/filter.": "Доступ к журналам доски объявлений. Возможность поиска / фильтрации.",
+	"Ability to see raw IPs in moderation interfaces.": "Возможность видеть IP-адреса в интерфейсах модерации.",
+	"Access board bans. Ability to unban, edit, or deny appeals.": "Доступ к банам на доске. Возможность отмены бана, редактирования или отклонения апелляций.",
+	"Access board logs. Ability to search/filter.": "Доступ к журналам доски. Возможность поиска / фильтрации.",
 	"Access board settings. Ability to change any settings. Settings page will show transfer/delete forms for those with \"Board Owner\" permission.": "Доступ к настройкам доски. Возможность изменения любых настроек. Страница настроек покажет перенос / удаление форм для тех, у кого есть разрешение \"Владелец доски\".",
-	"Access global bans. Ability to unban, edit, or deny appeals.": "Доступ к глобальным запретам. Возможность отмены запрета, редактирования или отклонения апелляций.",
+	"Access global bans. Ability to unban, edit, or deny appeals.": "Доступ к глобальным банам. Возможность отмены бана, редактирования или отклонения апелляций.",
 	"Access global logs. Ability to search/filter": "Доступ к глобальным журналам. Возможность поиска / фильтрации",
 	"Access global settings. Ability to change any settings.": "Доступ к глобальным настройкам. Возможность изменять любые настройки.",
 	"Access news posting. Ability to add, edit, or delete newsposts.": "Доступ к публикации новостей. Возможность добавлять, редактировать или удалять новостные сообщения.",
 	"Access roles list. Ability to edit roles": "Доступ к списку ролей. Возможность редактирования ролей",
-	"Access the accounts list. Ability to search/sort. Ability to edit permissions of any user.": "Доступ к списку учетных записей. Возможность поиска / сортировки. Возможность редактировать разрешения любого пользователя.",
+	"Access the accounts list. Ability to search/sort. Ability to edit permissions of any user.": "Доступ к списку учетных записей. Возможность поиска / сортировки. Возможность редактировать права любого пользователя.",
 	"Access the global board list. Ability to search/filter. Also grants the ability to transfer or delete any board.": "Доступ к глобальному списку досок. Возможность поиска / фильтрации. Также предоставляет возможность перенести или удалить любую доску.",
-	"Access to board assets and custompages. Ability to upload, create, edit, delete.": "Доступ к ресурсам доски и пользовательским страницам. Возможность загружать, создавать, редактировать, удалять.",
-	"Access to staff management, and ability to add or remove permissions from others. Can only be given by somebody else with \"Board Owner\" permission. Use with caution!": "Доступ к управлению персоналом и возможность добавлять или удалять разрешения от других пользователей. Может быть предоставлен только кем-то другим с разрешения \"Владельца доски\". Используйте с осторожностью!",
+	"Access to board assets and custompages. Ability to upload, create, edit, delete.": "Доступ к ресурсам доски и своим страницам. Возможность загружать, создавать, редактировать, удалять.",
+	"Access to staff management, and ability to add or remove permissions from others. Can only be given by somebody else with \"Board Owner\" permission. Use with caution!": "Доступ к управлению персоналом и возможность управлять правами других пользователей. Может быть предоставлен только кем-то другим с разрешения \"Владельца доски\". Используйте с осторожностью!",
 	"Account": "Учетная запись",
 	"Account deleted": "Учетная запись удалена",
 	"Account does not exist": "Учетная запись не существует",
-	"Account permissions": "Разрешения учетной записи",
+	"Account permissions": "Права учетной записи",
 	"Account with that username already exists": "Учетная запись с таким именем пользователя уже существует",
 	"Accounts": "Учетные записи",
 	"Actions": "Действия",
 	"Active sessions": "Активные сеансы",
-	"Active Sessions": "Активные сеансы.",
+	"Active Sessions": "Активные Сеансы.",
 	"Add": "Добавить",
 	"Add Asset (Max %s)": {
-		"one": "Добавить активы (макс. %s)",
-		"other": "Добавить активы (макс. %s)"
+		"one": "Добавить вложение (макс. %s)",
+		"other": "Добавить вложения (макс. %s)"
 	},
 	"Add Banner (Max %s)": {
 		"one": "Добавить баннер (макс. %s)",
 		"other": "Добавить баннеры (макс. %s)"
 	},
-	"Add Boards": "Добавить доски объявлений",
-	"Add Custom Page": "Добавить пользовательскую страницу",
+	"Add Boards": "Добавить доски",
+	"Add Custom Page": "Добавить свою страницу",
 	"Add Flag (Max %s)": {
 		"one": "Добавить флаг (макс. %s)",
 		"other": "Добавить флаги (макс. %s)"
 	},
 	"Add layer": "Добавить слой",
-	"Add News": "Добавить новости",
+	"Add News": "Добавить новость",
 	"Add Staff": "Добавить персонал",
 	"Added %s bans": {
 		"one": "Добавлен %s бан",
-		"other": "Добавлено %s запретов"
+		"few": "Добавлено %s бана",
+		"many": "Добавлено %s банов",
+		"other": "Добавлен %s бан"
 	},
 	"Added custom page": "Добавлена пользовательская страница",
-	"Added newspost": "Добавлена публикация новостей",
-	"Added staff": "Добавленный персонал",
+	"Added newspost": "Добавлена новость",
+	"Added staff": "Добавлен персонал",
 	"Admin": "Администратор",
-	"Airbrush": "Аэрография",
-	"Allow Animated Image Files": "Разрешить файлы анимированных изображений",
+	"Airbrush": "Распылитель",
+	"Allow Animated Image Files": "Разрешить анимированные изображения",
 	"Allow Audio Files": "Разрешить аудиофайлы",
-	"Allow Custom Overboard": "Разрешить пользовательские настройки за бортом",
+	"Allow Custom Overboard": "Разрешить пользовательские настройки трекера",
 	"Allow Image Files": "Разрешить файлы изображений",
 	"Allow Other Files": "Разрешить другие файлы",
 	"Allow Video Files": "Разрешить видеофайлы",
@@ -153,22 +189,24 @@
 	"alphanumeric only": "только буквенно-цифровой",
 	"Always Reveal Spoiler Markdown": "Всегда показывать спойлер Markdown",
 	"Always reveal text spoilers": "Всегда выявлять текстовые спойлеры",
-	"Animated .gif Thumbnails": "Анимированные .gif миниатюры",
-	"Announcement": "Объявление",
-	"Anon Name": "Имя по умолчанию",
+	"Animated .gif Thumbnails": "Анимированные .gif-миниатюры",
+	"Announcement": "Анонс",
+	"Anon Name": "Имя анонима по умолчанию",
 	"Anon name must be 50 characters or less": "Имя анонима должно содержать 50 символов или меньше",
-	"Another role already exists with the same permissions: \"%s\"": "Другая роль уже существует с теми же разрешениями:\"%s\"",
-	"Antispam": "Защита от спама",
-	"Antispam FAQ": "Защита от спама FAQ",
-	"Any Content Same IP/ID": "Любой контент с тем же IP /ID",
+	"Another role already exists with the same permissions: \"%s\"": "Уже существует другая рольс теми же разрешениями:\"%s\"",
+	"Antispam": "Антиспам",
+	"Antispam FAQ": "ЧаВо антиспама",
+	"Any Content Same IP/ID": "Любой контент с тем же IP/ID",
 	"Appeal": "Апелляция",
-	"Appeal message must be %s characters or less": "Сообщение об апелляции должно содержать не более символов %s",
+	"Appeal message must be %s characters or less": "Сообщение апелляции должно содержать не более %s символов ",
 	"Appealable?": "Подлежит обжалованию?",
 	"Appealed %s bans successfully": {
-		"one": "Обжалование запрета успешно",
-		"other": "Успешно обжаловал %s запретов"
+		"one": "%s бан успешно обжалован",
+		"few": "%s бана успешно обжаловано",
+		"many": "%s банов успешно обжаловано",
+		"other": "%s бан успешно обжалован"
 	},
-	"Appeals must include a message": "Обращения должны содержать сообщение",
+	"Appeals must include a message": "Аппеляции должны содержать сообщение",
 	"Apply": "Применить",
 	"Arbitrary assets that can be used for other purposes e.g. custom CSS": "Произвольные ресурсы, которые могут быть использованы для других целей, например, пользовательский CSS",
 	"Archive": "Архив",
@@ -176,86 +214,86 @@
 	"Are you sure? Your work will be lost.": "Вы уверены? Ваша работа будет потеряна.",
 	"Ascending": "По возрастанию",
 	"Asset": {
-		"one": "Актив",
-		"other": "Активы"
+		"one": "Вложение",
+		"other": "Вложения"
 	},
 	"Asset already exist": {
-		"one": "Актив уже существует",
-		"other": "Активы уже существуют"
+		"one": "Вложение уже есть",
+		"other": "Вложения уже есть"
 	},
-	"Asset File Size Max": "Максимальный размер файла активов",
-	"Asset files max must be a number": "Максимальное количество файлов активов должно быть числом",
-	"Asset files size must be a number": "Размер файлов активов должен быть числом",
-	"Asset files total must be a number": "Общее количество файлов активов должно быть числом",
-	"Assets": "Активы",
-	"Assets Per Upload Max": "Ресурсы на максимальную загрузку",
+	"Asset File Size Max": "Максимальный размер вложения",
+	"Asset files max must be a number": "Максимальное количество вложений должно быть числом",
+	"Asset files size must be a number": "Размер вложений должен быть числом",
+	"Asset files total must be a number": "Общее количество вложений должно быть числом",
+	"Assets": "Вложения",
+	"Assets Per Upload Max": "Максимум вложений на загрузку",
 	"At least the following file is not unique: %s": "По крайней мере, следующий файл не уникален: %s",
 	"At least the following files are not unique: %s": "По крайней мере, следующие файлы не являются уникальными: %s",
 	"Attempting to reconnect...": "Попытка повторного подключения ...",
 	"Audio Thumbnails": "Миниатюры аудио",
 	"Bad request": "Неверный запрос",
-	"Ban": "Запрет",
-	"Ban Duration": "Длительность запрета",
-	"Ban duration e.g. 7d": "Длительность запрета, например, 7 дней",
-	"Ban note must be %s characters or less": "Примечание о запрете должно содержать не более символов %s",
-	"Ban Poster": "Запретить плакат",
-	"Ban reason": "Причина запрета",
-	"Ban Reason": "Причина запрета",
-	"Ban reason must be %s characters or less": "Причина запрета должна содержать не более символов %s",
-	"Ban reporter": "Запретить репортеру",
-	"Ban Reporters": "Запретить репортеров",
-	"Banned!": "Запрещено!",
+	"Ban": "Бан",
+	"Ban Duration": "Длительность бана",
+	"Ban duration e.g. 7d": "Длительность бана, например, 7d",
+	"Ban note must be %s characters or less": "Примечание о бане должно содержать не более символов %s",
+	"Ban Poster": "Забанить плакат",
+	"Ban reason": "Причина бана",
+	"Ban Reason": "Причина Бана",
+	"Ban reason must be %s characters or less": "Причина бана должна содержать не более %s символов",
+	"Ban reporter": "Забанить докладчика",
+	"Ban Reporters": "Забанить докладчиков",
+	"Banned!": "Забанено!",
 	"Banner": {
 		"one": "Баннер",
 		"other": "Баннеры"
 	},
 	"Banner File Size Max": "Максимальный размер файла баннера",
-	"Banner files height must be a number > 0": "Высота файлов баннеров должна быть числом > 0",
-	"Banner files max must be a number": "Максимальное количество файлов баннеров должно быть числом",
+	"Banner files height must be a number > 0": "Высота файла баннера должна быть больше нуля",
+	"Banner files max must be a number": "Максимальное количество баннеров должно быть числом",
 	"Banner files size must be a number": "Размер файлов баннеров должен быть числом",
 	"Banner files total must be a number": "Общее количество файлов баннеров должно быть числом",
-	"Banner files width must be a number > 0": "Ширина файлов баннеров должна быть числом > 0",
+	"Banner files width must be a number > 0": "Ширина файлов баннеров должна быть больше нуля",
 	"Banner Height Max": "Максимальная высота баннера",
 	"Banner Width Max": "Максимальная ширина баннера",
 	"Banners": "Баннеры",
-	"Banners Per Upload Max": "Максимальная загрузка баннеров",
-	"Bans": "Запреты",
-	"Bans & Appeals": "Запреты и апелляции",
-	"Bans currently in place against your IP": "Запреты, действующие в настоящее время в отношении вашего IP",
+	"Banners Per Upload Max": "Максимальное количество баннеров на загрузку",
+	"Bans": "Баны",
+	"Bans & Appeals": "Баны и апелляции",
+	"Bans currently in place against your IP": "Баны, действующие в настоящее время в отношении вашего IP",
 	"Blacklist": "Черный список",
 	"Block Bypass": "Обход блокировки",
-	"Block bypass expire after uses must be a number > 0": "Срок действия обхода блока истекает после использования, должно быть число > 0",
+	"Block bypass expire after uses must be a number > 0": "Количество использований, после которых истекает обход блокировки, должно быть число > 0",
 	"Block bypass expired or exceeded max uses": "Срок действия обхода блока истек или превышено максимальное количество использований",
 	"Block post": "Блок-пост",
-	"Blocked Countries": "Запретные страны",
+	"Blocked Countries": "Заблокированные страны",
 	"Blur": "Размытие",
 	"Board": "Доска",
-	"Board /%s/ does not exist": "Плата /%s/ не существует",
-	"Board announcements must be 5000 characters or less": "Объявления на доске объявлений должны содержать не более 5000 символов",
-	"Board Custom CSS": "Пользовательский CSS доски",
-	"Board default captcha mode must be a number from 0-2": "В режиме captcha по умолчанию должно быть число от 0-2",
-	"Board default file r9k mode must be a number from 0-2": "Файл платы по умолчанию в режиме r9k должен иметь номер от 0-2",
-	"Board default lock mode must be a number from 0-2": "Режим блокировки платы по умолчанию должен быть числом от 0-2",
-	"Board default message r9k mode must be a number from 0-2": "Сообщение платы по умолчанию режим r9k должно быть числом от 0-2",
-	"Board default pph trigger action must be a number from 0-4": "Действие триггера php по умолчанию должно быть числом от 0 go 4",
-	"Board default pph trigger must be a number": "Php-триггер по умолчанию должен быть числом",
-	"Board default tph trigger action must be a number from 0-4": "Действие триггера tph по умолчанию должно быть числом от 0 до 4",
-	"Board default tph trigger must be a number": "Триггер tph платы по умолчанию должен быть числом",
-	"Board Defaults": "Значения по умолчанию на плате",
-	"Board defaults bump limit must be within global limits": "Ограничение по умолчанию для платы должно быть в пределах глобальных ограничений",
-	"Board defaults captcha reset must be a number from 0-2": "Сброс капчи по умолчанию на плате должен быть числом от 0-2",
-	"Board defaults filter ban duration must be a number": "Длительность запрета фильтра по умолчанию на доске должна быть числом",
-	"Board defaults filter mode must be a number from 0-2": "Режим фильтрации платы по умолчанию должен иметь значение от 0 до 2",
-	"Board defaults lock reset must be a number from 0-2": "Сброс блокировки платы по умолчанию должен быть числом от 0-2",
-	"Board defaults max files must be within global limits": "Максимальное количество файлов по умолчанию на плате должно находиться в глобальных пределах",
+	"Board /%s/ does not exist": "Доска /%s/ не существует",
+	"Board announcements must be 5000 characters or less": "Посты на доске должны содержать не более 5000 символов",
+	"Board Custom CSS": "Пользовательский CSS для доски",
+	"Board default captcha mode must be a number from 0-2": "В капче по умолчанию должно быть число от 0-2",
+	"Board default file r9k mode must be a number from 0-2": "Файл доски в режиме r9k по умолчанию должен иметь номер от 0-2",
+	"Board default lock mode must be a number from 0-2": "Режим блокировки доски по умолчанию должен быть числом от 0-2",
+	"Board default message r9k mode must be a number from 0-2": "Сообщение доски в режиме r9k по умолчанию должно быть числом от 0-2",
+	"Board default pph trigger action must be a number from 0-4": "Действие триггера PPH на доске по умолчанию должно быть числом от 0 go 4",
+	"Board default pph trigger must be a number": "PPH-триггер доски должен быть числом",
+	"Board default tph trigger action must be a number from 0-4": "Действие TPH-триггера по умолчанию должно быть числом от 0 до 4",
+	"Board default tph trigger must be a number": "TPH-триггер доски должен быть числом",
+	"Board Defaults": "Значения по умолчанию доски",
+	"Board defaults bump limit must be within global limits": "Бамп-лимиты доски должны быть меньше глобальных",
+	"Board defaults captcha reset must be a number from 0-2": "Капча сброса доски по умолчанию должна быть числом от 0 до 2",
+	"Board defaults filter ban duration must be a number": "Длительность бана от автофильтра по умолчанию должна быть числом",
+	"Board defaults filter mode must be a number from 0-2": "Режим автофильтрации должен быть числом от 0 до 2",
+	"Board defaults lock reset must be a number from 0-2": "Сброс блокировки доски должен быть числом от 0 до 2",
+	"Board defaults max files must be within global limits": "Максимальное количество файлов по умолчанию на доске должно находиться в глобальных пределах",
 	"Board defaults max reply message length must be within global limits": "Максимальная длина ответного сообщения по умолчанию должна быть в глобальных пределах",
-	"Board defaults max thread message length must be within global limits": "Максимальная длина сообщения потока по умолчанию на плате должна быть в глобальных пределах",
-	"Board defaults min reply message length must be a number": "Плата по умолчанию минимальная длина ответного сообщения должна быть числом",
-	"Board defaults min thread message length must be a number": "Плата по умолчанию минимальная длина сообщения потока должна быть числом",
+	"Board defaults max thread message length must be within global limits": "Максимальная длина сообщения треда по умолчанию на плате должна быть в глобальных пределах",
+	"Board defaults min reply message length must be a number": "Минимальный размер поста должен быть числом",
+	"Board defaults min thread message length must be a number": "Минимальный размер треда должен быть числом",
 	"Board defaults reply limit must be within global limits": "Лимит ответов по умолчанию на доске должен быть в глобальных пределах",
-	"Board defaults reply message length min must be less than max": "Плата по умолчанию длина ответного сообщения min должна быть меньше максимальной",
-	"Board defaults thread limit must be within global limits": "Ограничение потока платы по умолчанию должно быть в глобальных пределах",
-	"Board defaults thread message length min must be less than max": "Плата по умолчанию длина сообщения потока min должна быть меньше максимальной",
+	"Board defaults reply message length min must be less than max": "Длина ответа не должна быть больше максимальной",
+	"Board defaults thread limit must be within global limits": "Тред-лимит доски должен быть меньше такового в глобальных целях",
+	"Board defaults thread message length min must be less than max": "Длина треда должна быть меньше макимальной",
 	"Board deleted": "Доска удалена",
 	"Board Description": "Описание платы",
 	"Board description must be %s characters or less": "Описание доски должно состоять из символов %s или меньше",
@@ -409,34 +447,48 @@
 	"Delete your account": "Удалить свою учетную запись",
 	"Deleted": "Удалено",
 	"Deleted %s accounts": {
-		"one": "Удаленная учетная запись",
-		"other": "Удалено %s учетных записей"
+		"one": "Удалена %s учетная запись",
+		"few": "Удалено %s учётных записи",
+		"many": "Удалено %s учётных записей",
+		"other": "Удалена %s учетная запись"
 	},
 	"Deleted %s assets": {
-		"one": "Удаленные активы",
-		"other": "Удалить %s активов"
+		"one": "Удалено %s вложение",
+		"few": "Удалено %s вложения",
+		"many": "Удалено %s вложений",
+		"other": "Удалено %s вложение"
 	},
 	"Deleted %s banners": {
-		"one": "Удалить баннер",
-		"other": "Удалено %s баннеров"
+		"one": "Удалён %s баннер",
+		"few": "Удалено %s баннера",
+		"many": "Удалено %s баннеров",
+		"other": "Удалён %s баннер"
 	},
 	"Deleted %s custom pages": {
-		"one": "Удаленная пользовательская страница",
-		"other": "Удалено %s пользовательских страниц"
+		"one": "Удалена %s своя страница",
+		"few": "Удалены %s свои страницы",
+		"many": "Удалены %s своих страниц",
+		"other": "Удалена %s своих страница"
 	},
 	"Deleted %s files from server": {
-		"one": "Удаленный файл с сервера",
-		"other": "Удалил %s файлов с сервера"
+		"one": "Удалён %s файл с сервера",
+		"few": "Удалено %s файла с сервера",
+		"many": "Удалено %s файлов с сервера",
+		"other": "Удалён %s файл с сервера"
 	},
 	"Deleted %s posts": {
-		"one": "Удаленное сообщение",
-		"other": "Удалено %s сообщений"
+		"one": "Удалено %s сообщение",
+		"few": "Удалено %s сообщения",
+		"many": "Удалено %s сообщений",
+		"other": "Удалено %s сообщение"
 	},
 	"Deleted %s thread and %s post": "Удалена 1 тема и 1 сообщение",
 	"Deleted %s thread and %s posts": "Удалена 1 тема и %s сообщений",
 	"Deleted %s threads": {
-		"one": "Удаленный поток",
-		"other": "Удалено %s потоков"
+		"one": "Удалён %s тред",
+		"few": "Удалено %s треда",
+		"many": "Удалено %s тредов",
+		"other": "Удален %s тред"
 	},
 	"Deleted %s threads and %s post": "Удалено %s тем и 1 сообщение",
 	"Deleted %s threads and %s posts": "Удалено %s тем и %s сообщений",
@@ -801,12 +853,14 @@
 	"Manage Custom Pages": "Управление пользовательскими страницами",
 	"Manage News": "Управление новостями",
 	"Max %s": {
-		"one": "Макс %s",
-		"other": "Макс %s"
+		"one": "Максимум %s",
+		"other": "Максимум %s"
 	},
 	"Max %s files": {
-		"one": "Макс %s Файл",
-		"other": "Макс %s Файлы"
+		"one": "Максимум %s файл",
+		"few": "Максимум %s файла",
+		"many": "Максимум %s файлов",
+		"other": "Максимум %s файл"
 	},
 	"Max Files": "Максимальное количество файлов",
 	"Max files must be 0-%s": "Максимальное количество файлов должно составлять 0-%s",
@@ -970,12 +1024,12 @@
 	"Or, apply a role": "Или применить роль",
 	"Order": "Заказать",
 	"Other Mime Types": "Другие типы Mime",
-	"Overboard": "За бортом",
-	"Overboard Catalog": "Каталог за бортом",
-	"Overboard Catalog Thread Limit": "Ограничение потока каталога за бортом",
-	"Overboard Index": "Индекс за бортом",
-	"Overboard Index Thread Limit": "Превышение предела индексной резьбы",
-	"Overboard Reverse Image Search": "Обратный поиск изображений за бортом",
+	"Overboard": "Трекер",
+	"Overboard Catalog": "Каталог трекера",
+	"Overboard Catalog Thread Limit": "Лимит тредов каталога трекера",
+	"Overboard Index": "Индекс трекера",
+	"Overboard Index Thread Limit": "Лимит тредов индекса трекера",
+	"Overboard Reverse Image Search": "Обратный поиск изображений трекера",
 	"Own Boards": "Собственные доски",
 	"Owner": "Владелец",
 	"Page": "Страница",
@@ -1066,8 +1120,8 @@
 	"Removed %s bans": "Удалены %s запретов",
 	"Replayable?": "Воспроизводимый?",
 	"Replies": {
-		"one": "Ответить",
-		"other": "Ответить"
+		"one": "Ответ",
+		"other": "Ответы"
 	},
 	"Replies must include a file": "Ответы должны содержать файл",
 	"Replies must include a message": "Ответы должны содержать сообщение",
@@ -1082,10 +1136,12 @@
 	"Report reason": "Причина отчета",
 	"Report Reason": "Причина отчета",
 	"Reported %s posts": {
-		"one": "Сообщенный %s пост",
-		"other": "Сообщенный %s пост"
+		"one": "Пожаловался на %s пост",
+		"few": "Пожаловался на %s поста",
+		"many":" Пожаловался на %s постов",
+		"other": "Пожаловался на %s пост"
 	},
-	"Reports": "Отчеты",
+	"Reports": "Жалобы",
 	"Reports against or by ip %s": "Отчеты против или по ip %s",
 	"Reports must have a reason": "У отчетов должна быть причина",
 	"Resign": "Уйти в отставку",
@@ -1120,15 +1176,17 @@
 	"See Global Post History": "Просмотр глобальной истории сообщений",
 	"Seen?": "Признан?",
 	"Select/Drop/Paste files": {
-		"one": "Выбрать / Удалить / Вставить файл",
-		"other": "Выбрать / Удалить / Вставить файлы"
+		"one": "Выбрать/Бросить сюда/Вставить файл",
+		"other": "Выбрать/Бросить сюда/Вставить файлы"
 	},
 	"Selected posts not found": "Выбранные сообщения не найдены",
 	"Sessions": "Сеансы",
 	"Sessions deleted": "Удаленные сеансы",
 	"Set Sticky level for %s threads to %s": {
-		"one": "Установите уровень липкости для потока %s на %s",
-		"other": "Установите уровень липкости для потоков %s на %s"
+		"one": "Установитт уровень прилипания для %s треда на %s",
+		"few": "Установить уровень прилипания для %s тредов на %s",
+		"many": "Установить уровень прилипания для %s тредов на %s",
+		"other": "Установить уровень прилипания для %s треда на %s"
 	},
 	"Settings": "Настройки",
 	"Setup 2FA": "Настройка 2FA",
@@ -1155,8 +1213,10 @@
 	"Spoiler files": "Файлы спойлеров",
 	"Spoiler Files": "Файлы-спойлеры",
 	"Spoilered %s posts": {
-		"one": "Испорченный пост %s",
-		"other": "Испорченные посты %s"
+		"one": "Заспойлерен %s пост",
+		"few": "Заспойлерено %s поста",
+		"many": "Засполерено %s постов",
+		"other": "Заспойлерен %s пост"
 	},
 	"Staff": "Персонал",
 	"Staff Boards": "Доски объявлений персонала",
@@ -1228,16 +1288,22 @@
 	"Toggle Lock": "Переключить блокировку.",
 	"Toggle visibility": "Переключить видимость",
 	"Toggled Bumplock for %s threads": {
-		"one": "Переключаемый фиксатор отбойника для %s резьбы",
-		"other": "Переключаемый фиксатор отбойника на %s резьбы"
+		"one": "Переключена блокировка бампов для %s треда",
+		"few": "Переключена блокировка бампов для %s тредов",
+		"many": "Переключена блокировка бампов для %s тредов",
+		"other": "Переключена блокировка бампов для %s треда"
 	},
 	"Toggled Cyclical mode for %s threads": {
-		"one": "Переключенный циклический режим для %s потока",
-		"other": "Переключенный циклический режим для %s потоков"
+		"one": "Переключен циклический режим для %s треда",
+		"few": "Переключен циклический режим для %s тредов",
+		"many": "Переключен циклический режим для %s тредов",
+		"other": "Переключен циклический режим для %s треда"
 	},
 	"Toggled Lock for %s threads": {
-		"one": "Переключаемый замок для %s резьбы",
-		"other": "Переключаемый замок для %s потоков"
+		"one": "Переключена блокировка для %s треда",
+		"few": "Переключена блокировка для %s тредов",
+		"many": "Переключена блокировка для %s тредов",
+		"other": "Переключена блокировка для %s треда"
 	},
 	"Tone": "Тон",
 	"Too many files": "Слишком много файлов",
@@ -1274,8 +1340,10 @@
 	"Unlink files": "Разблокируйте файлы",
 	"Unlink Files": "Отменить привязку файлов",
 	"Unlinked %s files": {
-		"one": "Unlinked %s file",
-		"other": "Unlinked %s files"
+		"one": "Отвязан %s файл",
+		"few": "Отвязано %s файла",
+		"many": "Отвязано %s файлов",
+		"other": "Отвязан %s файл"
 	},
 	"Unlist from webring": "Удалить список из webring",
 	"Unlist locally": "Отменить список локально",
@@ -1292,16 +1360,22 @@
 	"Upgrade Ban": "Запрет на обновление",
 	"Upgraded %s bans": "Обновленные %s запретов",
 	"Uploaded %s new assets.": {
-		"one": "загружен %s новый актив.",
-		"other": "загружено %s новых активов."
+		"one": "Загружено %s новое вложение.",
+		"few": "Загружено %s новых вложения",
+		"many": "Загружено %s новых вложений",
+		"other": "Загружено %s новое вложение."
 	},
 	"Uploaded %s new banners.": {
-		"one": "загружен 1 новый баннер.",
-		"other": "загружено %s новых баннеров."
+		"one": "Загружено %s новых баннеров.",
+		"few": "Загружено %s новых баннера",
+		"many": "Загружено %s новых баннеров",
+		"other": "Загружено %s новых баннеров."
 	},
 	"Uploaded %s new flags.": {
-		"one": "загружен %s новый флаг.",
-		"other": "загружено %s новых флагов."
+		"one": "Загружен %s новый флаг.",
+		"few": "Загружено %s новых флага",
+		"many": "Загружено %s новых флагов",
+		"other": "Загружен %s новый флаг."
 	},
 	"Uploaded files must be unique in this thread.": "Загруженные файлы должны быть уникальными в этом потоке.",
 	"Uploaded files must be unique on this board.": "Загруженные файлы должны быть уникальными на этой доске.",
@@ -1393,7 +1467,7 @@
 	"View the full text": "Просмотреть полный текст",
 	"View the full thread": "Просмотреть полную ветку",
 	"%s earlier": "%s выше",
-	"Lock+Unlist board": "замок+исключить из списка",
-	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Пожалуйста, введите хотя бы один разрешенный хост в поле \"Разрешенные хосты\", когда выбрана опция \"Проверка реферера\".",
-	"pt-br": "бразильский"
+	"Lock+Unlist board": "Блокировка и снятие с учета доски",
+	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Пожалуйста, введите хотя бы один разрешенный хостинг в поле \"Разрешенные хосты\", когда выбрана опция \"Проверка ссылки\".",
+	"pt-br": "Бразильский португальский"
 }
