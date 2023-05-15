@@ -1,5 +1,6 @@
 ### 1.0.6
   - Bugfix in translation of blocked country message when posting.
+  - Some Improvements to the Russian translation courtesy of an anon from bbs.quietplace.xyz. Handling of the complex plural rules in Russian will be improved in a future version.
   - Npm audit.
 
 ### 1.0.5

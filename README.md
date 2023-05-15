@@ -12,7 +12,7 @@ Contact via:
  - Email: see my gitgud profile
 
 ## Features
-- [x] Multiple language support (en-GB, pt-PT, ru-RU included)
+- [x] Multiple language support (en-GB, pt-PT, pt-BR, ru-RU included)
 - [x] Optional user created boards ala [infinity](https://github.com/ctrlcctrlv/infinity)
 - [x] Multiple files per post
 - [x] [Tegaki](https://github.com/desuwa/tegaki) applet with drawing and replays
