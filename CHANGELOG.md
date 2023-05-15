@@ -1,3 +1,7 @@
+### 1.0.6
+  - Bugfix in translation of blocked country message when posting.
+  - Npm audit.
+
 ### 1.0.5
   - Add pt-BR language pack, by @thugking from Rchan.
   - Fix bypass not auto closing and submitting on non english locale.

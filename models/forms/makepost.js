@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
 		await deleteTempFiles(req).catch(console.error);
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': __('Forbidden'),
-			'message': __('Your country "%s" is not allowed to post on this board'. getCountryName(res.locals.country.code, res.locals.locale)),
+			'message': __('Your country "%s" is not allowed to post on this board', getCountryName(res.locals.country.code, res.locals.locale)),
 			'redirect': redirect
 		});
 	}
