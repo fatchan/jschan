@@ -25,6 +25,7 @@ fi
 read -p "Should robots.txt disallow compliant crawlers? (y/n): " ROBOTS_TXT_DISALLOW
 read -p "Allow google captcha in content-security policy? (y/n): " GOOGLE_CAPTCHA
 read -p "Allow Hcaptcha in content-security policy? (y/n): " H_CAPTCHA
+read -p "Allow Yandex SmartCaptcha in content-security policy? (y/n): " Y_CAPTCHA
 read -p "Download and setup geoip for post flags? (y/n): " GEOIP
 
 #looks good?
@@ -40,6 +41,7 @@ no https cert: $NOHTTPS
 robots.txt disallow all: $ROBOTS_TXT_DISALLOW
 google captcha: $GOOGLE_CAPTCHA
 hcaptcha: $H_CAPTCHA
+yandex captcha: $Y_CAPTCHA
 geoip: $GEOIP
 (y/n): " CORRECT
 #not saying no = yes, just like real life
@@ -257,6 +259,14 @@ if [ "$H_CAPTCHA" == "y" ]; then
 	sudo sed -i "s|frame-src|frame-src https://hcaptcha.com https://*.hcaptcha.com |g" /etc/nginx/snippets/*
 	sudo sed -i "s|style-src|style-src https://hcaptcha.com https://*.hcaptcha.com |g" /etc/nginx/snippets/*
 	sudo sed -i "s|connect-src|connect-src https://hcaptcha.com https://*.hcaptcha.com |g" /etc/nginx/snippets/*
+fi
+
+if [ "$Y_CAPTCHA" == "y" ]; then
+	echo "Allowing Yandex SmartCaptcha in CSP..."
+	#add yandex captcha CSP exceptions
+	sudo sed -i "s|script-src|script-src https://smartcaptcha.yandexcloud.net/captcha.js |g" /etc/nginx/snippets/*
+	sudo sed -i "s|frame-src|frame-src https://smartcaptcha.yandexcloud.net/ |g" /etc/nginx/snippets/*
+	sudo sed -i "s|font-src|font-src yastatic.net |g" /etc/nginx/snippets/*
 fi
 
 if [ "$ROBOTS_TXT_DISALLOW" == "y" ]; then

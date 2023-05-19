@@ -17,7 +17,7 @@ Contact via:
 - [x] Multiple files per post
 - [x] [Tegaki](https://github.com/desuwa/tegaki) applet with drawing and replays
 - [x] Antispam/Anti-flood & DNSBL
-- [x] 3 customisable inbuilt captchas + 2 third party captchas (hcaptcha & recaptcha)
+- [x] 3 customisable inbuilt captchas + 3 third party captchas (hcaptcha, recaptcha, yandex smartcaptcha)
 - [x] [API documentation](https://fatchan.gitgud.site/jschan-docs/)
 - [x] Built-in webring (compatible w/ [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
 - [x] Two factor authentication (TOTP) for accounts

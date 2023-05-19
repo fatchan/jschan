@@ -1,6 +1,7 @@
 ### 1.1.0
   - Fix pluralisation of thread stickying message.
   - Posts edited by staff will update live through the websocket.
+  - Added Yandex Smart Captcha as an additional captcha type option.
 
 ### 1.0.6
   - Bugfix in translation of blocked country message when posting.

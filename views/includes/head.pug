@@ -39,8 +39,10 @@ script(src=`/js/lang/${pageLanguage}.js?v=${commit}`)
 //- main script
 script(src=`/js/all.js?v=${commit}&ct=${captchaOptions.type}`)
 
-//- additional scripts included only if hcaptcha or recaptcha is used
+//- additional scripts included only if hcaptcha, recaptcha, or yandex smartcaptcha are used
 if captchaOptions.type === 'google'
 	script(src='https://www.google.com/recaptcha/api.js' async defer)
 if captchaOptions.type === 'hcaptcha'
 	script(src='https://hcaptcha.com/1/api.js' async defer)
+if captchaOptions.type === 'yandex'
+	script(src='https://smartcaptcha.yandexcloud.net/captcha.js' async defer)

@@ -88,7 +88,7 @@ module.exports = {
 			{ result: lengthBody(req.body.meta_url, 0, 100), expected: false, error: __('Meta url must not exceed 100 characters') },
 			{ result: inArrayBody(req.body.language, i18n.getLocales()), expected: true, error: __('Invalid language') },
 			{ result: inArrayBody(req.body.board_defaults_language, i18n.getLocales()), expected: true, error: __('Invalid language') },
-			{ result: inArrayBody(req.body.captcha_options_type, ['grid', 'grid2', 'text', 'google', 'hcaptcha']), expected: true, error: __('Invalid captcha options type') },
+			{ result: inArrayBody(req.body.captcha_options_type, ['grid', 'grid2', 'text', 'google', 'hcaptcha', 'yandex']), expected: true, error: __('Invalid captcha options type') },
 			{ result: numberBody(req.body.captcha_options_generate_limit, 1), expected: true, error: __('Captcha options generate limit must be a number > 0') },
 			{ result: numberBody(req.body.captcha_options_grid_size, 2, 6), expected: true, error: __('Captcha options grid size must be a number from 2-6') },
 			{ result: numberBody(req.body.captcha_options_grid_image_size, 50, 500), expected: true, error: __('Captcha options grid image size must be a number from 50-500') },

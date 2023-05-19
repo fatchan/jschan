@@ -265,11 +265,13 @@ class postFormHandler {
 			//request finished
 			if (xhr.readyState === 4) {
 
-				//if the google/hcaptcha was filled, reset it now
+				//if the google/hcaptcha/yandex was filled, reset it now
 				if (captchaResponse && grecaptcha) {
 					grecaptcha.reset();
 				} else if(captchaResponse && hcaptcha) {
 					hcaptcha.reset();
+				} else if(captchaResponse && window.smartCaptcha) {
+					window.smartCaptcha.reset();
 				}
 
 				//remove captcha if server says it is no longer enabled	(submitting one when not needed doesnt cause any problem)
