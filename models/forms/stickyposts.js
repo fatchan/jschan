@@ -19,7 +19,7 @@ module.exports = (locals, sticky) => {
 	const stickyValue = NumberInt(sticky);
 
 	return {
-		message: __n('Set Sticky level for %s threads to %s', filteredposts.length, sticky),
+		message: __n('Set Sticky level for %s threads to %s', 'Set Sticky level for %s threads to %s', filteredposts.length, sticky),
 		action: '$set',
 		query: {
 			'sticky': stickyValue,

@@ -142,7 +142,7 @@ module.exports = async (posts, board, locals, all=false) => {
 	//hooray!
 	return {
 		action: deletedPosts > 0,
-		//How in the fuck do I use __n with multiple arguments?
+		//How in the fuck do I use __n with multiple plural modifiers?
 		message: (threads.length > 0 && deletedPosts-threads.length > 0)
 			? __(`Deleted %s thread${threads.length>1?'s':''} and %s post${(deletedPosts-threads.length)>1?'s':''}`, threads.length, deletedPosts-threads.length)
 			: ((threads.length > 0)
