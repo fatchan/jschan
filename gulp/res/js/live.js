@@ -78,14 +78,14 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 			}
 		}
 		if (data.type === 'edit') {
-			const insertPoint = anchor.previousSibling;
-			console.log(anchor, postContainer, insertPoint);
-			postContainer.remove();
+			const insertPoint = postContainer.nextSibling;
+			// console.log(anchor, postContainer, insertPoint);
 			anchor.remove();
+			postContainer.remove();
 			newPost(data, {
 				nonotify: true, //should we notify of edits in open threads, maybe just for OP? idk
-				insertPoint: anchor.previousSibling,
-				insertPosition: 'afterbegin',
+				insertPoint: insertPoint,
+				insertPosition: 'beforeBegin',
 			});
 		}
 	};
