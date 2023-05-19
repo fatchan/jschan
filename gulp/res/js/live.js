@@ -34,34 +34,59 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		console.log('got mark post message', data);
 		const anchor = document.getElementById(data.postId);
 		const postContainer = anchor.nextSibling;
-		let dataMark = '';
+		let dataMark;
+		let applyToReplies = false;
+		let disableReplies = false;
 		switch (data.type) {
 			case 'delete':
 				dataMark = __('Deleted');
+				applyToReplies = true;
+				disableReplies = true;
 				break;
 			case 'move':
 				dataMark = __('Moved');
+				applyToReplies = true;
+				disableReplies = true;
+				break;
+			case 'edit':
+				//opting for no data mark, already has the usual "edited x ago"
 				break;
 			default:
 				return;
 		}
-		postContainer.classList.add('marked');
-		postContainer.setAttribute('data-mark', dataMark);
-		if (postContainer.classList.contains('op')) {
+		if (dataMark) {
+			//mark with a red text
+			postContainer.classList.add('marked');
+			postContainer.setAttribute('data-mark', dataMark);
+		}
+		if (postContainer.classList.contains('op') && applyToReplies === true) {
 			//moved or delete OPs then apply to whole thread
 			const postContainers = document.getElementsByClassName('post-container');
 			Array.from(postContainers).forEach(e => {
 				e.classList.add('marked');
 				e.setAttribute('data-mark', dataMark);
 			});
+		}
+		if (disableReplies === true) {
 			//remove new reply buttons and postform
 			document.getElementById('postform').remove();
 			const postButtons = document.getElementsByClassName('post-button');
 			Array.from(postButtons).forEach(e => e.remove());
 			//and disconnect socket
-			if (socket.connected === true) {
+			if (socket.connected === true) { //&& disconnectSocket?
 				socket.disconnect();
 			}
+		}
+		if (data.type === 'edit') {
+			const insertPoint = anchor.previousSibling;
+			console.log(anchor, postContainer, insertPoint);
+			postContainer.remove();
+			anchor.remove();
+			newPost(data, {
+				nonotify: true, //should we notify of edits in open threads, maybe just for OP? idk
+				insertPoint: anchor.previousSibling,
+				insertPosition: 'afterbegin',
+			});
 		}
 	};
 
@@ -69,7 +94,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		//insert at end of thread, but insert at top for globalmanage
 		//console.log('got new post', data);
 		const postData = data;
-		lastPostIds[postData.board] = postData.postId;
+		lastPostIds[postData.board] = Math.max(lastPostIds[postData.board], postData.postId);
 		//create a new post
 		const postHtml = post({
 			viewRawIp,

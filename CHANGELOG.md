@@ -1,5 +1,6 @@
 ### 1.1.0
   - Fix pluralisation of thread stickying message.
+  - Posts edited by staff will update live through the websocket.
 
 ### 1.0.6
   - Bugfix in translation of blocked country message when posting.

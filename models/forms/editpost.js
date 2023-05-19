@@ -13,6 +13,7 @@ const { Posts, Modlogs } = require(__dirname+'/../../db/')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
 	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js');
 
 module.exports = async (req, res) => {
@@ -120,6 +121,42 @@ todo: handle some more situations
 			capcode,
 			email: req.body.email,
 			subject: req.body.subject,
+		}
+	});
+
+	//emit the edit over websocket so post gets updated live
+	Socketio.emitRoom(`${board._id}-${post.thread || post.postId}`, 'markPost', {
+		postId: post.postId,
+		type: 'edit',
+		name,
+		message,
+		tripcode,
+		capcode,
+		email: req.body.email,
+		subject: req.body.subject,
+		//existing post props
+		_id: post._id,
+		u: post.u,
+		date: post.date,
+		country: post.country,
+		board: post.board,
+		nomarkup: post.nomarkup,
+		thread: post.thread,
+		spoiler: post.spoiler,
+		banmessage: post.banmessage,
+		userId: post.userId,
+		files: post.files,
+		quotes: post.quotes,
+		backlinks: post.backlinks,
+		replyposts: post.replyposts,
+		replyfiles: post.replyfiles,
+		sticky: post.sticky,
+		locked: post.locked,
+		bumplocked: post.bumplocked,
+		cyclic: post.cyclic,
+		edited: {
+			username: req.body.hide_name ? null : req.session.user,
+			date: new Date(),
 		}
 	});
 
