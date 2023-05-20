@@ -493,7 +493,7 @@
 	"Edit Duration": "Edit Duration",
 	"Edit News": "Edit News",
 	"Edit newspost": "Edit Newspost",
-	"Edit Newspost": "Editar notícia",
+	"Edit Newspost": "Edit Newspost",
 	"Edit Note": "Edit Note",
 	"Edit Post": "Edit Post",
 	"Edit Role": "Edit Role",
@@ -644,6 +644,7 @@
 	"Grid v1": "Grid v1",
 	"Grid v2": "Grid v2",
 	"Hcaptcha": "Hcaptcha",
+	"Yandex": "Yandex",
 	"Hidden images": "Hidden images",
 	"Hidden User": "Hidden User",
 	"Hide": "Hide",
@@ -1051,7 +1052,7 @@
 	"Raw IPs": "Raw IPs",
 	"Reason": "Reason",
 	"Recent": "Recent",
-	"Recent Posts": "Recept Posts",
+	"Recent Posts": "Recent Posts",
 	"Recently bumped threads from multiple boards": "Recently bumped threads from multiple boards",
 	"Recording replay": "Recording replay",
 	"Recursive post hide": "Recursive post hide",
@@ -1103,7 +1104,7 @@
 	"Role does not exist": "Role does not exist",
 	"Roles": "Roles",
 	"Root": "Root",
-	"ru-RU": "Russian - Machine translation",
+	"ru-RU": "Russian",
 	"rules": "rules",
 	"Sage Only Email": "Sage Only Email",
 	"Same Content Any IP/ID": "Same Content Any IP/ID",
@@ -1393,5 +1394,7 @@
 	"View the full text": "View the full text",
 	"View the full thread": "View the full thread",
 	"%s earlier": "%s earlier",
-	"Lock+Unlist board": "Lock+Unlist board"
+	"Lock+Unlist board": "Lock+Unlist board",
+	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.",
+	"pt-BR": "Brazilian Portuguese"
 }
