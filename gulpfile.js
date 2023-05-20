@@ -499,7 +499,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 //		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);
 		
 		//compile some pug client side functions
-		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher']
+		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher', 'banmessage']
 			.forEach(templateName => {
 				const compilationOptions = {
 					compileDebug: false,
@@ -531,6 +531,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 //		`${paths.scripts.src}/pugruntime.js`,
 		`${paths.scripts.src}/modal.js`,
 		`${paths.scripts.src}/pugfilters.js`,
+		`${paths.scripts.src}/banmessage.js`,
 		`${paths.scripts.src}/post.js`,
 		`${paths.scripts.src}/settings.js`,
 		`${paths.scripts.src}/live.js`,

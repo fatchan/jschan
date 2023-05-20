@@ -1,6 +1,7 @@
 'use strict';
 
 const { Bans } = require(__dirname+'/../../db/')
+	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
 	, config = require(__dirname+'/../../lib/misc/config.js');
 
 module.exports = async (req, res) => {
@@ -21,6 +22,14 @@ module.exports = async (req, res) => {
 				acc[post.ip.cloak] = [];
 			}
 			acc[post.ip.cloak].push(post);
+			if (req.body.ban_reason) {
+				//send banmessage over websocket
+				Socketio.emitRoom(`${post.board}-${post.thread || post.postId}`, 'markPost', {
+					postId: post.postId,
+					type: 'banmessage',
+					banmessage: req.body.ban_reason,
+				});
+			}
 			return acc;
 		}, {});
 		for (let ip in ipPosts) {

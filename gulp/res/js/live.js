@@ -1,4 +1,4 @@
-/* globals __ isRecent isGlobalRecent isThread post extraLocals isModView io setLocalStorage */
+/* globals __ isRecent banmessage isGlobalRecent isThread post extraLocals isModView io setLocalStorage */
 let liveEnabled = localStorage.getItem('live') == 'true';
 let scrollEnabled = localStorage.getItem('scroll') == 'true';
 let socket;
@@ -48,8 +48,8 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 				applyToReplies = true;
 				disableReplies = true;
 				break;
-			case 'edit':
-				//opting for no data mark, already has the usual "edited x ago"
+			case 'banmessage':
+			case 'edit': //opting for no data mark, already has the usual "edited x ago"
 				break;
 			default:
 				return;
@@ -87,6 +87,17 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 				insertPoint: insertPoint,
 				insertPosition: 'beforeBegin',
 			});
+		} else if (data.type === 'banmessage') {
+			const banMessageHtml = banmessage({
+				banmessage: data.banmessage,
+			});
+			const existingBanMessage = postContainer.querySelector('.ban');
+			if (existingBanMessage) {
+				existingBanMessage.insertAdjacentHTML('afterend', banMessageHtml);
+				existingBanMessage.remove();
+			} else {
+				postContainer.insertAdjacentHTML('beforeend', banMessageHtml);
+			}
 		}
 	};
 

@@ -1,0 +1,5 @@
+mixin banmessage(banmessage)
+	p.ban
+		span.message #{__('USER WAS BANNED FOR THIS POST')}
+		|  
+		span.reason(data-reason=banmessage) #{banmessage}

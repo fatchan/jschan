@@ -7,6 +7,7 @@
 		"gulp/res/js/modal.js",
 		"gulp/res/js/uploaditem.js",
 		"gulp/res/js/pugfilter.js",
+		"gulp/res/js/banmessage.js",
 		"gulp/res/js/captchaformsection.js",
 		"gulp/res/js/watchedthread.js",
 		"gulp/res/js/threadwatcher.js",
