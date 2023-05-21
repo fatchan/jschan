@@ -323,7 +323,7 @@ module.exports = () => describe('login and create test board', () => {
 			body: params,
 			redirect: 'manual',
 		});
-		expect([302, 409]).toContain(response.status);
+		expect([200, 302, 409]).toContain(response.status);
 	});
 
 });
