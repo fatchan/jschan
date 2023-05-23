@@ -38,7 +38,7 @@ module.exports = {
   yandex: {
     siteKey: 'process.env.YANDEX_CAPTCHA_SITEKEY',
     secretKey: process.env.YANDEX_CAPTCHA_SECRETKEY,
-  },
+    },
 
 	//enable debug logging
 	debugLogs: true,
