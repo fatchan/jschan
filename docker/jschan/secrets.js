@@ -34,6 +34,12 @@ module.exports = {
 		secretKey: process.env.HCAPTCHA_SECRETKEY,
 	},
 
+	//keys for yandex smartcaptcha
+	yandex: {
+		siteKey: process.env.YANDEX_CAPTCHA_SITEKEY,
+		secretKey: process.env.YANDEX_CAPTCHA_SECRETKEY,
+	},
+
 	//enable debug logging
 	debugLogs: true,
 
