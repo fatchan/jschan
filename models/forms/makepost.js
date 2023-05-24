@@ -295,7 +295,7 @@ module.exports = async (req, res) => {
 							const videoStreams = audioVideoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
 							if (videoStreams.length > 0) {
 								processedFile.thumbextension = thumbExtension;
-								processedFile.geometry = {width: videoStreams[0].coded_width, height: videoStreams[0].coded_height};
+								processedFile.geometry = {width: videoStreams[0].width, height: videoStreams[0].height};
 								if (Math.floor(processedFile.geometry.width*processedFile.geometry.height) > globalLimits.postFilesSize.videoResolution) {
 									await deleteTempFiles(req).catch(console.error);
 									return dynamicResponse(req, res, 400, 'message', {
