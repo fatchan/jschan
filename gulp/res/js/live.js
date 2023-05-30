@@ -34,6 +34,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		console.log('got mark post message', data);
 		const anchor = document.getElementById(data.postId);
 		const postContainer = anchor.nextSibling;
+		const isOp = postContainer && postContainer.classList.contains('op');
 		let dataMark;
 		let applyToReplies = false;
 		let disableReplies = false;
@@ -59,7 +60,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 			postContainer.classList.add('marked');
 			postContainer.setAttribute('data-mark', dataMark);
 		}
-		if (postContainer.classList.contains('op') && applyToReplies === true) {
+		if (isOp && applyToReplies === true) {
 			//moved or delete OPs then apply to whole thread
 			const postContainers = document.getElementsByClassName('post-container');
 			Array.from(postContainers).forEach(e => {
@@ -67,7 +68,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 				e.setAttribute('data-mark', dataMark);
 			});
 		}
-		if (disableReplies === true) {
+		if (isOp && disableReplies === true) {
 			//remove new reply buttons and postform
 			document.getElementById('postform').remove();
 			const postButtons = document.getElementsByClassName('post-button');
