@@ -1,3 +1,8 @@
+### 1.1.1
+  - Bugfix live post updates triggering the disconnect and removal of postforms on non-OP delete/move.
+  - Improve text wrapping on long table data.
+  - Npm audit.
+
 ### 1.1.0
   - Posts edits and "USER WAS BANNED FOR THIS POST" messages will now be updated live through the websocket.
   - Added Yandex Smart Captcha support, as an additional captcha type option.
