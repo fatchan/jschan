@@ -553,11 +553,9 @@ th {
 
 td, th {
 	padding: 5px;
-	/*word-break: break-all;*/
-	overflow-wrap: anywhere;
 }
 
-td pre {
+td {
 	overflow-wrap: anywhere;
 }
 
@@ -1379,14 +1377,6 @@ hr + .thread {
 
 tr:nth-child(odd) {
 	 background: var(--post-color);
-}
-
-table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
-table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
-table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
-table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
-	word-break: keep-all;
-	overflow-wrap: break-word;
 }
 
 table.boardtable.w900 th:last-child {
