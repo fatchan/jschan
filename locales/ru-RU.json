@@ -1470,5 +1470,19 @@
 	"%s earlier": "%s выше",
 	"Lock+Unlist board": "Блокировка и снятие с учета доски",
 	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Пожалуйста, введите хотя бы один разрешенный хостинг в поле \"Разрешенные хосты\", когда выбрана опция \"Проверка ссылки\".",
-	"pt-br": "Бразильский португальский"
+	"pt-BR": "Бразильский португальский",
+	"it-IT": "Итальянский",
+	"Manage Filters": "Управление фильтрами",
+	"Add Filter": "Добавить фильтр",
+	"Added filter": "Добавлен фильтр",
+	"Updated filter": "Обновленный фильтр",
+	"Filter does not exist": "Фильтр не существует",
+	"Must select at least one filter to delete": "Необходимо выбрать хотя бы один фильтр для удаления",
+	"Missing filter id": "Отсутствующий идентификатор фильтра",
+	"Filters max must be a number": "Максимальное количество фильтров должно быть числом",
+	"Max Filters Per Board": "Максимальное количество фильтров на плате",
+	"Total number of filters would exceed global limit of %s": "Общее количество фильтров превысило бы глобальный предел в %s",
+	"Filters FAQ": "Часто задаваемые вопросы по фильтрам",
+	"e.g. Rule 1: No ad spam": "например, отсутствие спама",
+	"e.g. 3d": "например, 3d"
 }

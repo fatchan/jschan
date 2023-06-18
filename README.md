@@ -4,27 +4,27 @@ Anonymous imageboard software that doesn't suck.
 
 Live instances (Unofficial):
   - English: https://94chan.org
-  - Português: https://ptchan.org
+  - Português: https://ptchan.org  
 
 Contact via:
- - IRC: [open in client](ircs://irc.fatpeople.lol:6697/general) or [webchat](https://irc-web.fatpeople.lol/#general)
- - [Session](https://getsession.org/): `051b2ff270769d20764fa1b8e6bc3240b0a3c28ffb3242e7cce60db479b23ef427`
- - Email: see my gitgud profile
+  - IRC: [open in client](ircs://irc.fatpeople.lol:6697/general) or [webchat](https://irc-web.fatpeople.lol/#general)
+  - [Session](https://getsession.org/): `051b2ff270769d20764fa1b8e6bc3240b0a3c28ffb3242e7cce60db479b23ef427`
+  - Email: see my gitgud profile
 
 ## Features
-- [x] Multiple language support (en-GB, pt-PT, pt-BR, ru-RU included)
-- [x] Optional user created boards ala [infinity](https://github.com/ctrlcctrlv/infinity)
-- [x] Multiple files per post
-- [x] [Tegaki](https://github.com/desuwa/tegaki) applet with drawing and replays
-- [x] Antispam/Anti-flood & DNSBL
-- [x] 3 customisable inbuilt captchas + 3 third party captchas (hcaptcha, recaptcha, yandex smartcaptcha)
-- [x] [API documentation](https://fatchan.gitgud.site/jschan-docs/)
-- [x] Built-in webring (compatible w/ [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
-- [x] Two factor authentication (TOTP) for accounts
-- [x] Manage everything from the web panel
-- [x] Granular account permissions
-- [x] Works properly with anonymizer networks (Tor, Lokinet, etc)
-- [x] Beautiful bundled frontend with lots of themes and options, see below:
+  - [x] Multiple language support (en-GB, pt-PT, pt-BR, ru-RU, it-IT included)
+  - [x] Optional user created boards ala [infinity](https://github.com/ctrlcctrlv/infinity)
+  - [x] Multiple files per post
+  - [x] [Tegaki](https://github.com/desuwa/tegaki) applet with drawing and replays
+  - [x] Antispam/Anti-flood & DNSBL
+  - [x] 3 customisable inbuilt captchas + 3 third party captchas (hcaptcha, recaptcha, yandex smartcaptcha)
+  - [x] [API documentation](https://fatchan.gitgud.site/jschan-docs/)
+  - [x] Built-in webring (compatible w/ [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring))
+  - [x] Two factor authentication (TOTP) for accounts
+  - [x] Manage everything from the web panel
+  - [x] Granular account permissions
+  - [x] Works properly with anonymizer networks (Tor, Lokinet, etc)
+  - [x] Beautiful bundled frontend with lots of themes and options, see below:
 
 ![screenshots](collage.gif "screenshots")
 
