@@ -1,6 +1,6 @@
 'use strict';
 
-const { Posts, Modlogs } = require(__dirname+'/../../db/')
+const { Posts, Modlogs, Filters } = require(__dirname+'/../../db/')
 	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, { createHash } = require('crypto')
 	, Mongo = require(__dirname+'/../../db/db.js')
@@ -8,6 +8,7 @@ const { Posts, Modlogs } = require(__dirname+'/../../db/')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
 	, nameHandler = require(__dirname+'/../../lib/post/name.js')
 	, getFilterStrings = require(__dirname+'/../../lib/post/getfilterstrings.js')
+	, checkFilters = require(__dirname+'/../../lib/post/checkfilters.js')
 	, filterActions = require(__dirname+'/../../lib/post/filteractions.js')
 	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
@@ -25,22 +26,20 @@ todo: handle some more situations
 */
 
 	const { __ } = res.locals;
-	const { filterBanAppealable, previewReplies, strictFiltering } = config.get;
+	const { previewReplies } = config.get;
 	const { board, post } = res.locals;
 
 	//filters
 	if (!res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
 		//only global filters are checked, because anybody who could edit bypasses board filters
-		const { filters, filterMode, filterBanDuration } = config.get;
-		if (filters.length > 0 && filterMode > 0) {
-			let hitGlobalFilter = false;
-			const { strictCombinedString } = getFilterStrings(req, res, strictFiltering);
-			hitGlobalFilter = filters.find(filter => { return strictCombinedString.includes(filter.toLowerCase()); });
-			//block/ban edit
-			if (hitGlobalFilter) {
-				return filterActions(req, res, hitGlobalFilter, null, 0, filterMode,
-					0, filterBanDuration, filterBanAppealable, null);
-			}
+		const globalFilters = await Filters.findForBoard(null);
+
+		let hitFilter = false;
+		let { combinedString, strictCombinedString } = getFilterStrings(req, res);
+
+		hitFilter = checkFilters(globalFilters, combinedString, strictCombinedString);
+		if (hitFilter) {
+			return filterActions(req, res, true, hitFilter[0], hitFilter[1], hitFilter[2], hitFilter[3], hitFilter[4], null);
 		}
 	}
 

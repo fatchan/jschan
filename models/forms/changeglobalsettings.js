@@ -51,11 +51,6 @@ module.exports = async (req, res) => {
 	}
 
 	const newSettings = {
-		filters: arraySetting(req.body.filters, oldSettings.filters),
-		filterMode: numberSetting(req.body.filter_mode, oldSettings.filterMode),
-		strictFiltering: booleanSetting(req.body.strict_filtering, oldSettings.strictFiltering),
-		filterBanDuration: numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
-		filterBanAppealable: booleanSetting(req.body.filter_ban_appealable),
 		allowedHosts: arraySetting(req.body.allowed_hosts, oldSettings.allowedHosts),
 		countryCodeHeader: trimSetting(req.body.country_code_header, oldSettings.countryCodeHeader),
 		ipHeader: trimSetting(req.body.ip_header, oldSettings.ipHeader),
@@ -318,14 +313,10 @@ module.exports = async (req, res) => {
 			maxThreadMessageLength: numberSetting(req.body.board_defaults_max_thread_message_length, oldSettings.boardDefaults.maxThreadMessageLength),
 			maxReplyMessageLength: numberSetting(req.body.board_defaults_max_reply_message_length, oldSettings.boardDefaults.maxReplyMessageLength),
 			disableAnonymizerFilePosting: booleanSetting(req.body.board_defaults_disable_anonymizer_file_posting, oldSettings.boardDefaults.disableAnonymizerFilePosting),
-			filterMode: numberSetting(req.body.board_defaults_filter_mode, oldSettings.boardDefaults.filterMode),
-			filterBanDuration: numberSetting(req.body.board_defaults_filter_ban_duration, oldSettings.boardDefaults.filterBanDuration),
 			deleteProtectionAge: numberSetting(req.body.board_defaults_delete_protection_age, oldSettings.boardDefaults.deleteProtectionAge),
 			deleteProtectionCount: numberSetting(req.body.board_defaults_delete_protection_count, oldSettings.boardDefaults.deleteProtectionCount),
-			strictFiltering: booleanSetting(req.body.board_defaults_strict_filtering, oldSettings.boardDefaults.strictFiltering),
 			customCSS: null,
 			blockedCountries: [],
-			filters: [],
 			announcement: {
 				raw: null,
 				markdown: null

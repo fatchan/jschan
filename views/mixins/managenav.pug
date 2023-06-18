@@ -20,6 +20,9 @@ mixin managenav(selected, upLevel)
 			a(href=`${upLevel ? '../' : ''}logs.html` class=(selected === 'logs' ? 'bold' : '')) [#{__('Logs')}]
 		if permissions.get(Permissions.MANAGE_BOARD_SETTINGS)
 			|  
+			a(href=`${upLevel ? '../' : ''}filters.html` class=(selected === 'filters' ? 'bold' : '')) [#{__('Filters')}]
+		if permissions.get(Permissions.MANAGE_BOARD_SETTINGS)
+			|  
 			a(href=`${upLevel ? '../' : ''}settings.html` class=(selected === 'settings' ? 'bold' : '')) [#{__('Settings')}]
 		if permissions.get(Permissions.MANAGE_BOARD_CUSTOMISATION)
 			|  

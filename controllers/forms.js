@@ -27,9 +27,10 @@ const express  = require('express')
 		editNewsController, deleteNewsController, uploadBannersController, deleteBannersController, addFlagsController,
 		deleteFlagsController, boardSettingsController, transferController, addAssetsController, deleteAssetsController,
 		resignController, deleteAccountController, loginController, registerController, changePasswordController,
-		deleteAccountsController, editAccountController, globalSettingsController, createBoardController, makePostController,
-		addStaffController, deleteStaffController, editStaffController, editCustomPageController, editPostController,
-		editRoleController, newCaptchaForm, blockBypassForm, logoutForm, deleteSessionsController } = require(__dirname+'/forms/index.js');
+		deleteAccountsController, editAccountController, addFilterController, editFilterController, deleteFilterController, 
+		globalSettingsController, createBoardController, makePostController, addStaffController, deleteStaffController, 
+		editStaffController, editCustomPageController, editPostController, editRoleController, newCaptchaForm, 
+		blockBypassForm, logoutForm, deleteSessionsController } = require(__dirname+'/forms/index.js');
 
 //make new post
 router.post('/board/:board/post', geoIp, processIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, calcPerms, banCheck, fileMiddlewares.posts,
@@ -58,6 +59,12 @@ router.post('/board/:board/settings', geoIp, processIp, useSession, sessionRefre
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), boardSettingsController.paramConverter, boardSettingsController.controller);
 router.post('/board/:board/editbans', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_BANS), editBansController.paramConverter, editBansController.controller); //edit bans
+router.post('/board/:board/addfilter', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), addFilterController.paramConverter, addFilterController.controller); //add new filter
+router.post('/board/:board/editfilter', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), editFilterController.paramConverter, editFilterController.controller); //edit filter
+router.post('/board/:board/deletefilter', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), deleteFilterController.paramConverter, deleteFilterController.controller); //delete filter
 router.post('/board/:board/deleteboard', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.controller); //delete board
 
@@ -104,6 +111,12 @@ router.post('/global/editaccount', useSession, sessionRefresh, csrf, calcPerms, 
 	hasPerms.one(Permissions.MANAGE_GLOBAL_ACCOUNTS), editAccountController.paramConverter, editAccountController.controller); //account editing
 router.post('/global/editrole', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_ROLES), editRoleController.paramConverter, editRoleController.controller); //role editing
+router.post('/global/addfilter', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), addFilterController.paramConverter, addFilterController.controller); //add new filter
+router.post('/global/editfilter', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), editFilterController.paramConverter, editFilterController.controller); //edit filter
+router.post('/global/deletefilter', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), deleteFilterController.paramConverter, deleteFilterController.controller); //delete filter
 router.post('/global/settings', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), globalSettingsController.paramConverter, globalSettingsController.controller); //global settings
 
