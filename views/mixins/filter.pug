@@ -4,8 +4,7 @@ mixin filter(f, globalmanage=false)
 		td
 			input.left.post-check(type='checkbox', name='checkedfilters' value=f._id)  
 		td
-			each line in f.filters
-				pre.no-m-p.nowrap #{line}
+			textarea(rows='2' readonly=true) #{f.filters.join('\n')}
 		td.text-center
 			label
 				input(type='checkbox', name='strict_filtering', value='true', checked=f.strictFiltering, disabled='true')

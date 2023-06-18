@@ -1,5 +1,5 @@
 input(type='hidden' name='_csrf' value=csrf)
-.table-container.flex-center.mv-5
+.table-container.mv-5.horscroll
 	table
 		tr
 			th #{__('Filters')}
@@ -10,7 +10,7 @@ input(type='hidden' name='_csrf' value=csrf)
 			th #{__('Filter Bans Appealable')}
 		tr
 			td
-				textarea(name='filters' rows='2' placeholder=__('Newline separated') required)
+				textarea(name='filters' rows='3' placeholder=__('Newline separated') required)
 			td.text-center
 				label
 					input(type='checkbox', name='strict_filtering', value='true')

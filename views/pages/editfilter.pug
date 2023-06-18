@@ -8,11 +8,13 @@ block head
 block content
 	+boardheader(__('Edit Filter'))
 	br
-	+managenav('filters')
+	+managenav('filters', true)
 	hr(size=1)
-	h4.mv-5
-		a(href='/faq.html#filters') #{__('Filters FAQ')}:
-	h4.mv-5 #{__('Edit Filter')}:
+	h4.no-m-p
+		| #{__('Edit Filter')}
+		|  (
+		a(href='/faq.html#filters') #{__('Filters FAQ')}
+		| ):
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action=`/forms/board/${board._id}/editfilter` method='POST')
 			include ../includes/filtereditform.pug

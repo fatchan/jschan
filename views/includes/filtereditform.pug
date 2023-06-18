@@ -1,6 +1,6 @@
 input(type='hidden' name='_csrf' value=csrf)
 input(type='hidden' name='filter_id' value=filter._id)
-.table-container.flex-center.mv-5
+.table-container.flex-center.mv-5.horscroll
 	table
 		tr
 			th #{__('Filters')}
@@ -11,7 +11,7 @@ input(type='hidden' name='filter_id' value=filter._id)
 			th #{__('Filter Bans Appealable')}
 		tr
 			td
-				textarea(name='filters' rows='2' placeholder=__('Newline separated') required) #{filter.filters.join('\n')}
+				textarea(name='filters' rows='10' placeholder=__('Newline separated') required) #{filter.filters.join('\n')}
 			td.text-center
 				input(type='checkbox', name='strict_filtering', value='true', checked=filter.strictFiltering)
 			td
