@@ -265,7 +265,10 @@ module.exports = async (req, res) => {
 			customPages: {
 				max: numberSetting(req.body.global_limits_custom_pages_max, oldSettings.globalLimits.customPages.max),
 				maxLength: numberSetting(req.body.global_limits_custom_pages_max_length, oldSettings.globalLimits.customPages.maxLength),
-			}
+			},
+			filters: {
+				max: numberSetting(req.body.global_limits_filters_max, oldSettings.globalLimits.filters.max),
+			},
 		},
 		boardDefaults: {
 			language: trimSetting(req.body.board_defaults_language, oldSettings.boardDefaults.language),

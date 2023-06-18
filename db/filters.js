@@ -17,6 +17,10 @@ module.exports = {
 			.toArray();
 	},
 
+	count: (board) => {
+		return db.countDocuments({'board': board});
+	},
+
 	findOne: (board, id) => {
 		return db.findOne({
 			'_id': id,
@@ -40,8 +44,8 @@ module.exports = {
 		});
 	},
 
-	insertOne: (filters) => {
-		return db.insertOne(filters);
+	insertOne: (filter) => {
+		return db.insertOne(filter);
 	},
 
 	deleteMany: (board, ids) => {

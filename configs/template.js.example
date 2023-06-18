@@ -327,6 +327,9 @@ module.exports = {
 		customPages: {
 			max: 10, //max number of custom pages per board
 			maxLength: 10000, //max number of characters to allow per page
+		},
+		filters: {
+			max: 50,
 		}
 	},
 
