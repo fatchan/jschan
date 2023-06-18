@@ -140,6 +140,10 @@ module.exports = {
 	//enable the webring (also copy configs/webring.json.example -> configs/webring.json and edit)
 	enableWebring: false,
 
+	//web3
+	enableWeb3: false,
+	ethereumNode: '',
+
 	//extension for thumbnails
 	thumbExtension: '.webp',
 	//whether to animate gif thumbnails
@@ -395,6 +399,7 @@ module.exports = {
 		geoFlags: false, //show geo flags, requires nginx setup
 		customFlags: false, //show custom flags
 		enableTegaki: true,
+		enableWeb3: false,
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
 		userPostUnlink: true, //alow user to unlink files fomr their post

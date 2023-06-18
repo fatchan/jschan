@@ -27,6 +27,7 @@ gulp/res/js/watchedthread.js
 gulp/res/js/pugruntime.js
 gulp/res/js/uploaditem.js
 gulp/res/js/socket.io.js
+gulp/res/js/web3.js
 
 # some ide and testing files, artefacts, etc
 .idea/

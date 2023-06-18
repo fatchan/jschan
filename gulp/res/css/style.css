@@ -635,6 +635,10 @@ td {
 	word-break: break-all;
 }
 
+.web3-signature, .web3-address {
+	word-break: break-all;
+}
+
 .modal-bg {
 	position: fixed;
 	top: 0;
@@ -1536,7 +1540,8 @@ row.wrap.sb .col {
 #tab-7:target .tab-7,
 #tab-8:target .tab-8,
 #tab-9:target .tab-9,
-#tab-10:target .tab-10 { 
+#tab-10:target .tab-10,
+#tab-11:target .tab-11 { 
 	display: flex;
 }
 
@@ -1549,7 +1554,8 @@ row.wrap.sb .col {
 #tab-7:target a[href="#tab-7"],
 #tab-8:target a[href="#tab-8"],
 #tab-9:target a[href="#tab-9"],
-#tab-10:target a[href="#tab-10"] {
+#tab-10:target a[href="#tab-10"],
+#tab-11:target a[href="#tab-11"] {
 	border-bottom: 1px solid var(--background-rest);
 	background: var(--background-rest);
 }

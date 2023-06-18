@@ -238,7 +238,7 @@ module.exports = () => describe('login and create test board', () => {
 			global_limits_asset_files_size_max: '10485760',
 			global_limits_asset_files_max: '10',
 			global_limits_asset_files_total: '50',
-			webring_proxy_address: '',
+			proxy_address: '',
 			webring_following: '',
 			webring_logos: '',
 			webring_blacklist: '',

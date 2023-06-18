@@ -427,6 +427,14 @@ module.exports = async (req, res) => {
 	const nomarkup = prepareMarkdown(req.body.message, true);
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.params.board, req.body.thread, res.locals.permissions);
 
+	//web3 sig
+	let signature = null
+		, address = null;
+	if (res.locals.recoveredAddress) {
+		signature = req.body.signature;
+		address = res.locals.recoveredAddress;
+	}
+
 	//build post data for db. for some reason all the property names are lower case :^)
 	const now = Date.now();
 	const data = {
@@ -445,6 +453,8 @@ module.exports = async (req, res) => {
 		password,
 		email,
 		spoiler,
+		signature,
+		address,
 		'banmessage': null,
 		userId,
 		'ip': res.locals.ip,

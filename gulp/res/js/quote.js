@@ -8,6 +8,9 @@ window.addEventListener('DOMContentLoaded', () => {
 		if (e) {
 			e.preventDefault();
 		}
+		if (!postForm) {
+			return;
+		}
 		history.replaceState({}, '', '#postform');
 		postForm.style.display = 'flex';
 		topPostButton.style.visibility = 'hidden';

@@ -436,6 +436,7 @@ async function custompages() {
 			yandexSiteKey: yandex ? yandex.siteKey : '',
 			globalAnnouncement: config.get.globalAnnouncement,
 			captchaOptions: config.get.captchaOptions,
+			enableWeb3: config.get.enableWeb3,
 			commit,
 			version,
 			globalLanguage: config.get.language,
@@ -511,16 +512,15 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 				fs.writeFileSync(`gulp/res/js/${templateName}.js`, compiledClient);
 			});
 
+		//symlink web3
+		await fs.symlink(__dirname+'/node_modules/web3/dist/web3.min.js', __dirname+'/gulp/res/js/web3.js', 'file')
+			.catch(e => { console.warn(e); });
 		//symlink socket.io file
-		fs.symlinkSync(__dirname+'/node_modules/socket.io/client-dist/socket.io.min.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
+		await fs.symlink(__dirname+'/node_modules/socket.io/client-dist/socket.io.min.js', __dirname+'/gulp/res/js/socket.io.js', 'file')
+			.catch(e => { console.warn(e); });
 
 	} catch (e) {
-
-		//ignore EEXIST, probably the socket.io
-		if (e.code !== 'EEXIST') {
-			console.log(e);
-		}
-
+		console.log(e);
 	}
 
 	gulp.src([
@@ -549,9 +549,17 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`!${paths.scripts.src}/catalog.js`,
 		`!${paths.scripts.src}/time.js`,
 		`!${paths.scripts.src}/timezone.js`,
+		`!${paths.scripts.src}/renderweb3.js`,
 	])
 		.pipe(concat('all.js'))
 		.pipe(uglify({compress:true}))
+		.pipe(gulp.dest(paths.scripts.dest));
+		
+	gulp.src([
+		`${paths.scripts.src}/web3.js`,
+	])
+		.pipe(concat('web3.js'))
+		// .pipe(uglify({compress:true})) //No need, we symlink from web3.min.js
 		.pipe(gulp.dest(paths.scripts.dest));
 
 	return gulp.src([
@@ -564,6 +572,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`${paths.scripts.src}/watchlist.js`,
 		`${paths.scripts.src}/catalog.js`,
 		`${paths.scripts.src}/time.js`,
+		`${paths.scripts.src}/renderweb3.js`,
 	])
 		.pipe(concat('render.js'))
 		.pipe(uglify({compress:true}))

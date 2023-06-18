@@ -12,6 +12,7 @@
 		"gulp/res/js/watchedthread.js",
 		"gulp/res/js/threadwatcher.js",
 		"gulp/res/js/socket.io.js",
+		"gulp/res/js/web3.js",
 		"gulp/res/js/tegaki.js"
 	],
     "env": {

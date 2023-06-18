@@ -40,6 +40,11 @@ section.form-wrapper.flex-center
 			- const minLength = (isThread ? board.settings.minReplyMessageLength : board.settings.minThreadMessageLength) || 0;
 			- const maxLength = Math.min((isThread ? board.settings.maxReplyMessageLength : board.settings.maxThreadMessageLength), globalLimits.fieldLength.message) || globalLimits.fieldLength.message;
 			textarea#message(name='message', rows='5', autocomplete='off' minlength=minLength maxlength=maxLength required=messageRequired)
+		if enableWeb3 === true && board.settings.enableWeb3 === true
+			section.row.jsonly.web3
+				.label #{__('Web3')}
+				input.dummy-link.web3-button(type='button', value=__('Sign'))
+				textarea.ml-1.no-resize(name='signature', rows='1', autocomplete='off' readonly)
 		if board.settings.maxFiles > 0 && Object.values(board.settings.allowedFileTypes).some(x => x === true)
 			- const maxFiles = board.settings.maxFiles;
 			section.row

@@ -118,6 +118,13 @@ class postFormHandler {
 			this.tegakiButton.addEventListener('click', () => this.doTegaki());
 		}
 
+		//if web3 signature button, attach the listener to open tegaki
+		this.web3Button = form.querySelector('.web3-button');
+		if (this.web3Button) {
+			this.web3Button.addEventListener('click', () => this.doWeb3Sign());
+			this.messageBox.addEventListener('input', () => this.form.elements.signature.value = '');
+		}
+
 		//if file input, attach listeners for adding files, drag+drop, etc
 		this.fileInput = form.querySelector('input[type="file"]');
 		if (this.fileInput) {
@@ -188,6 +195,20 @@ class postFormHandler {
 		});
 		Tegaki.resetLayers();
 		Tegaki.setColorPalette(2); //picks a better default color palette
+	}
+
+	async doWeb3Sign() {
+		const messageContent = this.messageBox.value || '';
+		try {
+			const accounts = await window.jschanweb3.eth.requestAccounts();
+			const signature = await window.jschanweb3.currentProvider.request({
+				method: 'personal_sign',
+				params: [messageContent, accounts[0]],
+			});
+			this.form.elements.signature.value = signature;
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	updateFlagField() {
