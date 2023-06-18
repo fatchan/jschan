@@ -27,6 +27,7 @@ module.exports = () => describe('Test loading a bunch of pages', () => {
 		'globalmanage/roles.html',
 		'globalmanage/roles.json',
 		'globalmanage/news.html',
+		'globalmanage/filters.html',
 		'globalmanage/settings.html',
 	];
 

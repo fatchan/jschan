@@ -262,6 +262,13 @@ block content
 					p Early 404: When a new thread is posted, delete any existing threads with less than #{early404Replies} replies beyond the first 1/#{early404Fraction} of threads.
 					p Disable anonymizer file posting: Prevent users posting images through anonymizers such as Tor hidden services, lokinet SNApps or i2p eepsites.
 					p Blocked Countries: Block country codes (based on geo Ip data) from posting.
+	.table-container.flex-center.mv-5
+		.anchor#filters
+		table
+			tr
+				th: a(href='#filters') What do the filter options do?
+			tr
+				td
 					p Filters: Newline separated list of words or phrases to match in posts. Checks name, message, email, subject, and filenames.
 					p Strict Filtering: More aggressively match filters, by normalising the input compared against the filters.
 					p Filter Mode: What to do when a post matches a filter.

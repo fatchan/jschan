@@ -230,6 +230,85 @@ testing 123`
 		expect(response2.status).toBe(404);
 	});
 
+	let filterId;
+	test('add filter post',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			filters: `notgood
+bad words`,
+			strict_filtering: 'true',
+			filter_mode: '1',
+			filter_message: 'Rule+1:+No+fun+allowed',
+			filter_ban_duration: '1s',
+			filter_ban_appealable: 'true',
+		});
+		const response = await fetch('http://localhost/forms/board/test/addfilter', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.ok).toBe(true);
+		const filterPage = await fetch('http://localhost/test/manage/filter.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkIndex = filterPage.indexOf('name="checkedfilter" value="');
+		filterId = filterPage.substring(checkIndex+28, checkIndex+28+24);
+	});
+
+	test('edit filter post',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			board: test,
+			filter_id: filterId,
+			filters: 'edited filters',
+			strict_filtering: 'true',
+			filter_mode: '0',
+			filter_message: 'edited message',
+			filter_ban_duration: '0'
+			// filter_ban_appealable omitted to change to false
+		});
+		const response = await fetch('http://localhost/forms/board/test/editfilter', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.ok).toBe(true);
+		const filterPage = await fetch('http://localhost/test/manage/filter.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const editTextIndex = filterPage.indexOf('edited filters');
+		expect(editTextIndex).not.toBe(-1);
+	});
+
+	test('delete filter post',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedfilter: filterId,
+		});
+		const response = await fetch('http://localhost/forms/board/test/deletefilter', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.ok).toBe(true);
+	});
+
 	test('add staff',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,

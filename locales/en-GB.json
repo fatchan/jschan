@@ -1396,5 +1396,9 @@
 	"%s earlier": "%s earlier",
 	"Lock+Unlist board": "Lock+Unlist board",
 	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.",
-	"pt-BR": "Brazilian Portuguese"
+	"pt-BR": "Brazilian Portuguese",
+	"Filters max must be a number": "Filters max must be a number",
+	"Max Filters Per Board": "Max Filters Per Board",
+	"Filters FAQ": "Filters FAQ",
+	"Total number of filters would exceed global limit of %s": "Total number of filters would exceed global limit of %s"
 }

@@ -1,0 +1,20 @@
+extends ../layout.pug
+include ../mixins/globalmanagenav.pug
+
+block head
+	title #{__('Edit Filter')}
+
+block content
+	h1.board-title #{__('Global Management')}
+	br
+	+globalmanagenav('filters', true)
+	hr(size=1)
+	h4.no-m-p
+		| #{__('Edit Filter')}
+		|  (
+		a(href='/faq.html#filters') #{__('Filters FAQ')}
+		| ):
+	include ../includes/stickynav.pug
+	.form-wrapper.flex-center.mv-10
+		form.form-post(action='/forms/global/editfilter' method='POST')
+			include ../includes/filtereditform.pug

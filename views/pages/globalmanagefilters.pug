@@ -1,0 +1,40 @@
+extends ../layout.pug
+include ../mixins/filter.pug
+include ../mixins/globalmanagenav.pug
+
+block head
+	title #{__('Filters')}
+
+block content
+	h1.board-title #{__('Global Management')}
+	br
+	+globalmanagenav('filters')
+	hr(size=1)
+	h4.no-m-p
+		| #{__('Add Filter')}
+		|  (
+		a(href='/faq.html#filters') #{__('Filters FAQ')}
+		| ):
+	.form-wrapper.flexleft
+		form.form-post(action='/forms/global/addfilter', enctype='application/x-www-form-urlencoded', method='POST')
+			include ../includes/filternewform.pug
+	if filters.length > 0
+		hr(size=1)
+		h4.no-m-p #{__('Manage Filters')}:
+			.form-wrapper.flexleft
+				form.form-post(action='/forms/global/deletefilter', enctype='application/x-www-form-urlencoded', method='POST')
+					input(type='hidden' name='_csrf' value=csrf)
+					.table-container.mv-5.horscroll
+						table
+							tr
+								th
+								th #{__('Filters')}
+								th #{__('Strict Filtering')}
+								th #{__('Filter Mode')}
+								th #{__('Block/Ban Message')}
+								th #{__('Filter Auto Ban Duration')}
+								th #{__('Filter Bans Appealable')}
+								th #{__('Edit')}
+							each f in filters
+								+filter(f, true)
+					input(type='submit', value=__('Delete'))

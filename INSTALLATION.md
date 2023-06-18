@@ -27,7 +27,7 @@
 
 ```bash
 sudo apt update -y
-sudo apt install curl wget gnupg nginx ffmpeg imagemagick graphicsmagick python3-certbot-nginx fonts-dejavu -y
+sudo apt install curl wget gnupg nginx ffmpeg imagemagick graphicsmagick python3-certbot-nginx fontconfig fonts-dejavu -y
 ```
 
 **3. Install MongoDB**
