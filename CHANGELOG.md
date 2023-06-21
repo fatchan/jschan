@@ -7,6 +7,7 @@
     - This gives the flexibility to add a filter "replace" mode in a future release.
   - Added Italian locale (it-IT) courtesy of @zocram from niuchan.org
   - Improved Portuguese translations thanks to @l29utp0 from ptchan.org
+  - Improved Russian translations thanks to Kusankot
   - Minor addition to INSTALLATION.md for those using Ubuntu rather than Debian.
   - Npm audit & dependencies updated.
 
