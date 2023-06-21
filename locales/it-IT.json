@@ -1103,7 +1103,7 @@
 	"Role does not exist": "Il ruolo non esiste",
 	"Roles": "Ruoli",
 	"Root": "Root",
-	"ru-RU": "Russo - Traduzione automatica",
+	"ru-RU": "Russo",
 	"rules": "regole",
 	"Sage Only Email": "Solo email Sage",
 	"Same Content Any IP/ID": "Stesso contenuto su qualsiasi IP/ID",
@@ -1396,5 +1396,18 @@
 	"Lock+Unlist board": "Blocca+Rimuovi dalla lista della board",
 	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Inserisci almeno un host consentito nel campo \"Host consentiti\" quando l'opzione \"Controllo referer\" è selezionata.",
 	"pt-BR": "Portoghese brasiliano",
-	"it-IT": "Italiano"
+	"it-IT": "Italiano",
+	"Manage Filters": "Manage Filters",
+	"Add Filter": "Add Filter",
+	"Added filter": "Added filter",
+	"Updated filter": "Updated filter",
+	"Filter does not exist": "Filter does not exist",
+	"Must select at least one filter to delete": "Must select at least one filter to delete",
+	"Missing filter id": "Missing filter id",
+	"Filters max must be a number": "Filters max must be a number",
+	"Max Filters Per Board": "Max Filters Per Board",
+	"Total number of filters would exceed global limit of %s": "Total number of filters would exceed global limit of %s",
+	"Filters FAQ": "Filters FAQ",
+	"e.g. Rule 1: No ad spam": "e.g. Rule 1: No ad spam",
+	"e.g. 3d": "e.g. 3d"
 }
