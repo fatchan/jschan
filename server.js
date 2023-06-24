@@ -68,7 +68,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 
 	const loadAppLocals = () => {
 		const { language, cacheTemplates, boardDefaults, globalLimits, captchaOptions, archiveLinksURL,
-			reverseImageLinksURL, meta, enableWebring, globalAnnouncement, enableWeb3 } = config.get;
+			reverseImageLinksURL, meta, enableWebring, globalAnnouncement, enableWeb3, ethereumLinksURL } = config.get;
 		//cache loaded templates
 		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
@@ -77,6 +77,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 		app.locals.defaultTheme = boardDefaults.theme;
 		app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 		app.locals.globalLimits = globalLimits;
+		app.locals.ethereumLinksURL = ethereumLinksURL;
 		app.locals.archiveLinksURL = archiveLinksURL;
 		app.locals.reverseImageLinksURL = reverseImageLinksURL;
 		app.locals.enableWebring = enableWebring;

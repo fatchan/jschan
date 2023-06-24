@@ -424,6 +424,7 @@ async function custompages() {
 			early404Fraction: config.get.early404Fraction,
 			early404Replies: config.get.early404Replies,
 			meta: config.get.meta,
+			ethereumLinksURL: config.get.ethereumLinksURL,
 			archiveLinksURL: config.get.archiveLinksURL,
 			reverseImageLinksURL: config.get.reverseImageLinksURL,
 			enableWebring: config.get.enableWebring,

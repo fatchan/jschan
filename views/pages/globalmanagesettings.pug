@@ -535,6 +535,15 @@ block content
 																				input(type='checkbox', name='enable_web3' value='true' checked=settings.enableWeb3)
 																		.row
 																			.label
+																				| #{__('Ethereum Links URL')}
+																				|
+																				small
+																					| (
+																					a(href='/faq.html#archive-reverse-url-format') ?
+																					| )
+																			input(type='text', name='ethereum_links', value=settings.ethereumLinksURL)
+																		//- .row
+																			.label
 																				| #{__('Ethereum Node')}
 																				| 
 																				small
