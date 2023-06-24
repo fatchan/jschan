@@ -1227,7 +1227,7 @@ input[type=number] {
 	appearance:textfield;
 }
 
-input[type="submit"] {
+input[type="submit"], .postform-style.dummy-link {
 	min-height: 2.5em;
 	cursor: pointer;
 }

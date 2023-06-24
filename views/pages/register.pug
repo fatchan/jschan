@@ -21,5 +21,21 @@ block content
 			else
 				include ../includes/captchafieldrow.pug
 			input(type='submit', value=__('Register'))
+	if enableWeb3 === true
+		.jsonly.web3.mv-10
+			.text-center OR
+			.form-wrapper.flex-center.mv-10
+				form.form-post(action='/forms/register' method='POST' data-captcha-preload='true')
+					input(type='hidden' name='nonce')
+					input(type='hidden' name='address')
+					input(type='hidden' name='signature')
+					if captchaOptions.type === 'text'
+						include ../includes/captchasidelabel.pug
+					else
+						include ../includes/captchafieldrow.pug
+					.postform-style.dummy-link.web3-login.ct-r1.ph-5
+						img(src='/file/metamask-fox.svg' width=24 height=24)
+						| #{__('Register with MetaMask')}
+	.text-center.mt-10
 		p: a(href='/login.html') #{__('Login')}
 		p: a(href='/changepassword.html') #{__('Change Password')}
