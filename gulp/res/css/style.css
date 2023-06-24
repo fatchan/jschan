@@ -202,8 +202,14 @@ pre {
 .pv-5 {
 	padding: 5px 0;
 }
+.p-0 {
+	padding: 0!important;
+}
 .vh {
 	visibility: hidden!important;
+}
+.wm {
+	width: max-content;
 }
 #settings, .dummy-link {
 	cursor: pointer;
