@@ -2,6 +2,7 @@
 'use strict';
 
 const Mongo = require(__dirname+'/db.js')
+	, cache = require(__dirname+'/../lib/redis/redis.js')
 	, db = Mongo.db.collection('filters');
 
 module.exports = {
@@ -9,12 +10,25 @@ module.exports = {
 	db,
 
 	// null board retrieves global filters only
-	findForBoard: (board=null, limit=0) => {
-		return db.find({'board': board}).sort({
-			'_id': -1
-		})
-			.limit(limit)
-			.toArray();
+	findForBoard: async (board=null, limit=0) => {
+		let filters = await cache.get(`filters:${board}`);
+		if (filters) {
+			return filters === 'no_exist' ? [] : filters;
+		} else {
+			filters = await db.find({
+				'board': board
+			}).sort({
+				'_id': -1
+			})
+				.limit(limit)
+				.toArray();
+			if (filters) {
+				cache.set(`filters:${board}`, filters, 3600);
+			} else {
+				cache.set(`filters:${board}`, 'no_exist', 600);
+			}
+		}
+		return filters;
 	},
 
 	count: (board) => {
@@ -29,6 +43,7 @@ module.exports = {
 	},
 
 	updateOne: (board, id, filters, strictFiltering, filterMode, filterMessage, filterBanDuration, filterBanAppealable) => {
+		cache.del(`filters:${board}`);
 		return db.updateOne({
 			'_id': id,
 			'board': board,
@@ -45,10 +60,12 @@ module.exports = {
 	},
 
 	insertOne: (filter) => {
+		cache.del(`filters:${filter.board}`);
 		return db.insertOne(filter);
 	},
 
 	deleteMany: (board, ids) => {
+		cache.del(`filters:${board}`);
 		return db.deleteMany({
 			'_id': {
 				'$in': ids
@@ -58,7 +75,8 @@ module.exports = {
 	},
 
 	deleteBoard: (board) => {
-		return db.deleteMany({'board': board});
+		cache.del(`filters:${board}`);
+		return db.deleteMany({ 'board': board });
 	},
 
 	deleteAll: () => {
