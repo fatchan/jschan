@@ -6,10 +6,11 @@ const { createHash, randomBytes } = require('crypto')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
-	, { Stats, Posts, Boards, Files } = require(__dirname+'/../../db/')
+	, { Stats, Posts, Boards, Files, Filters } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../lib/redis/redis.js')
 	, nameHandler = require(__dirname+'/../../lib/post/name.js')
 	, getFilterStrings = require(__dirname+'/../../lib/post/getfilterstrings.js')
+	, checkFilters = require(__dirname+'/../../lib/post/checkfilters.js')
 	, filterActions = require(__dirname+'/../../lib/post/filteractions.js')
 	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
@@ -37,8 +38,8 @@ const { createHash, randomBytes } = require('crypto')
 module.exports = async (req, res) => {
 
 	const { __ } = res.locals;
-	const { filterBanAppealable, checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage,
-		strictFiltering, audioThumbnails, dontStoreRawIps, globalLimits } = config.get;
+	const { checkRealMimeTypes, thumbSize, thumbExtension, videoThumbPercentage, audioThumbnails,
+		dontStoreRawIps, globalLimits } = config.get;
 
 	//spam/flood check
 	const flood = await spamCheck(req, res);
@@ -56,7 +57,7 @@ module.exports = async (req, res) => {
 	let salt = null;
 	let thread = null;
 	const isStaffOrGlobal = res.locals.permissions.hasAny(Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_BOARD_GENERAL);
-	const { filterBanDuration, filterMode, filters, blockedCountries, threadLimit, ids, userPostSpoiler,
+	const { blockedCountries, threadLimit, ids, userPostSpoiler,
 		pphTrigger, tphTrigger, tphTriggerAction, pphTriggerAction,
 		sageOnlyEmail, forceAnon, replyLimit, disableReplySubject,
 		captchaMode, lockMode, allowedFileTypes, customFlags, geoFlags, fileR9KMode, messageR9KMode } = res.locals.board.settings;
@@ -114,32 +115,29 @@ module.exports = async (req, res) => {
 	if (!res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
 
 		//deconstruct global filter settings to differnt names, else they would conflict with the respective board-level setting
-		const { filters: globalFilters, filterMode: globalFilterMode,
-			filterBanDuration: globalFilterBanDuration } = config.get;
+		const [globalFilters, localFilters] = await Promise.all([
+			Filters.findForBoard(null),
+			Filters.findForBoard(res.locals.board._id)
+		]);
 
-		let hitGlobalFilter = false
-			, hitLocalFilter = false;
-		let  { combinedString, strictCombinedString } = getFilterStrings(req, res, strictFiltering || res.locals.board.settings.strictFiltering);
+		let hitFilter = false
+			, globalFilter = false;
+		let { combinedString, strictCombinedString } = getFilterStrings(req, res);
 
 		//compare to global filters
-		if (globalFilters && globalFilters.length > 0 && globalFilterMode > 0) {
-			hitGlobalFilter = globalFilters.find(filter => { return strictCombinedString.includes(filter.toLowerCase()); });
+		hitFilter = checkFilters(globalFilters, combinedString, strictCombinedString);
+		if (hitFilter) {
+			globalFilter = true;
+		}
+		//if none matched, check local filters
+		if (!hitFilter) {
+			hitFilter = checkFilters(localFilters, combinedString, strictCombinedString);
 		}
 
-		//compare to board filters
-		if (!hitGlobalFilter && !res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL)
-			&& filterMode > 0 && filters && filters.length > 0) {
-			const localFilterContents = res.locals.board.settings.strictFiltering === true ? strictCombinedString : combinedString;
-			hitLocalFilter = filters.find(filter => { return localFilterContents.includes(filter.toLowerCase()); });
-		}
-
-		//block post/apply bans if an active filter matched
-		if (hitGlobalFilter || hitLocalFilter) {
+		if (hitFilter) {
 			await deleteTempFiles(req).catch(console.error);
-			return filterActions(req, res, hitGlobalFilter, hitLocalFilter, filterMode, globalFilterMode,
-				filterBanDuration, globalFilterBanDuration, filterBanAppealable, redirect);
+			return filterActions(req, res, globalFilter, hitFilter[0], hitFilter[1], hitFilter[2], hitFilter[3], hitFilter[4], redirect);
 		}
-
 	}
 
 	//for r9k messages. usually i wouldnt process these if its not enabled e.g. flags and IDs but in this case I think its necessary
@@ -295,7 +293,7 @@ module.exports = async (req, res) => {
 							const videoStreams = audioVideoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
 							if (videoStreams.length > 0) {
 								processedFile.thumbextension = thumbExtension;
-								processedFile.geometry = {width: videoStreams[0].width, height: videoStreams[0].height};
+								processedFile.geometry = {width: videoStreams[0].coded_width, height: videoStreams[0].coded_height};
 								if (Math.floor(processedFile.geometry.width*processedFile.geometry.height) > globalLimits.postFilesSize.videoResolution) {
 									await deleteTempFiles(req).catch(console.error);
 									return dynamicResponse(req, res, 400, 'message', {

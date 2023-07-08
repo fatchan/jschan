@@ -230,6 +230,127 @@ testing 123`
 		expect(response2.status).toBe(404);
 	});
 
+	let filterId;
+	test('add filter to test board',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			filters: `notgood
+bad words`,
+			strict_filtering: 'true',
+			filter_mode: '1',
+			filter_message: 'Rule+1:+No+fun+allowed',
+			filter_ban_duration: '1s',
+			filter_ban_appealable: 'true',
+		});
+		const response = await fetch('http://localhost/forms/board/test/addfilter', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.ok).toBe(true);
+		const filterPage = await fetch('http://localhost/test/manage/filters.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkIndex = filterPage.indexOf('name="checkedfilters" value="');
+		filterId = filterPage.substring(checkIndex+29, checkIndex+29+24);
+	});
+
+	test('edit filter on test board',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			filter_id: filterId,
+			filters: 'edited filters',
+			strict_filtering: 'true',
+			filter_mode: '1',
+			filter_message: 'edited message',
+			filter_ban_duration: '1s'
+			// filter_ban_appealable omitted to change to false
+		});
+		const response = await fetch('http://localhost/forms/board/test/editfilter', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.ok).toBe(true);
+		const filterPage = await fetch('http://localhost/test/manage/filters.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const editTextIndex = filterPage.indexOf('edited filters');
+		expect(editTextIndex).not.toBe(-1);
+	});
+
+	test('make a post that doesnt hit board filter',  async () => {
+		const params = new URLSearchParams();
+		params.append('message', 'blahblahblah');
+		params.append('captcha', '000000');
+		const response = await fetch('http://localhost/forms/board/test/post', {
+			headers: {
+				'x-using-xhr': 'true',
+			},
+			method: 'POST',
+			body: params
+		});
+		expect(response.ok).toBe(true);
+	});	
+
+	test('make a post that hits board filter',  async () => {
+		const params = new URLSearchParams();
+		params.append('message', 'edited filters');
+		params.append('captcha', '000000');
+		const response = await fetch('http://localhost/forms/board/test/post', {
+			headers: {
+				'x-using-xhr': 'true',
+			},
+			method: 'POST',
+			body: params
+		});
+		expect(response.ok).not.toBe(true);
+		await new Promise(res => setTimeout(res, 10000)); //let ban expire
+	});
+
+	test('delete test board filter',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedfilters: filterId,
+		});
+		const response = await fetch('http://localhost/forms/board/test/deletefilter', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('make a post that passes the deleted filter',  async () => {
+		const params = new URLSearchParams();
+		params.append('message', 'editing filter');
+		params.append('captcha', '000000');
+		const response = await fetch('http://localhost/forms/board/test/post', {
+			headers: {
+				'x-using-xhr': 'true',
+			},
+			method: 'POST',
+			body: params
+		});
+		expect(response.ok).toBe(true);
+	});
+	
 	test('add staff',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,

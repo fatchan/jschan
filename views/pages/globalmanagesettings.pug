@@ -280,6 +280,9 @@ block content
 																			.label #{__('Total Assets Per Board')}
 																			input(type='number' name='global_limits_asset_files_total' value=settings.globalLimits.assetFiles.total)
 																		.row
+																			.label #{__('Max Filters Per Board')}
+																			input(type='number' name='global_limits_filters_max' value=settings.globalLimits.filters.max)
+																		.row
 																			h4.mv-5 #{__('Field Length Limits')}
 																		.row
 																			.label #{__('Name')}
@@ -419,28 +422,6 @@ block content
 																		.row
 																			.label #{__('Expire After Time')}
 																			input(type='text' name='block_bypass_expire_after_time' placeholder=__('e.g. 1d') value=settings.blockBypass.expireAfterTime)
-																		.row
-																			h4.mv-5 #{__('Filters')}
-																		.row
-																			.label #{__('Filters')}
-																			textarea(name='filters' placeholder=__('Newline separated')) #{settings.filters.join('\n')}
-																		.row
-																			.label #{__('Strict Filtering')}
-																			label.postform-style.ph-5
-																				input(type='checkbox', name='strict_filtering', value='true', checked=settings.strictFiltering)
-																		.row
-																			.label #{__('Filter Bans Appealable')}
-																			label.postform-style.ph-5
-																				input(type='checkbox', name='filter_ban_appealable', value='true', checked=settings.filterBanAppealable)
-																		.row
-																			.label #{__('Filter Mode')}
-																			select(name='filter_mode')
-																				option(value='0', selected=settings.filterMode === 0) #{__('Do nothing')}
-																				option(value='1', selected=settings.filterMode === 1) #{__('Block post')}
-																				option(value='2', selected=settings.filterMode === 2) #{__('Ban')}
-																		.row
-																			.label #{__('Filter Auto Ban Duration')}
-																			input(type='text' name='ban_duration' placeholder=__('e.g. 1w') value=settings.filterBanDuration)
 																		.row
 																			h4.mv-5 #{__('Flood Protection')}
 																		.row
@@ -867,19 +848,6 @@ block content
 																			.label #{__('Disable anonymizer file posting')}
 																			label.postform-style.ph-5
 																				input(type='checkbox', name='board_defaults_disable_anonymizer_file_posting', value='true' checked=settings.boardDefaults.disableAnonymizerFilePosting)
-																		.row
-																			.label #{__('Strict Filtering')}
-																			label.postform-style.ph-5
-																				input(type='checkbox', name='board_defaults_strict_filtering', value='true' checked=settings.boardDefaults.strictFiltering)
-																		.row
-																			.label #{__('Filter Mode')}
-																			select(name='board_defaults_filter_mode')
-																				option(value='0', selected=settings.boardDefaults.filterMode === 0) #{__('Do nothing')}
-																				option(value='1', selected=settings.boardDefaults.filterMode === 1) #{__('Block post')}
-																				option(value='2', selected=settings.boardDefaults.filterMode === 2) #{__('Ban')}
-																		.row
-																			.label #{__('Filter Auto Ban Duration')}
-																			input(type='text' name='board_defaults_filter_ban_duration' placeholder=__('e.g. 1w') value=settings.boardDefaults.filterBanDuration)
 																		.row
 																			.label #{__('Allow Video Files')}
 																			label.postform-style.ph-5

@@ -1396,5 +1396,19 @@
 	"%s earlier": "%s earlier",
 	"Lock+Unlist board": "Lock+Unlist board",
 	"Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.": "Please enter at least one allowed host in the \"Allowed Hosts\" field when the \"Referer Check\" option is selected.",
-	"pt-BR": "Brazilian Portuguese"
+	"pt-BR": "Brazilian Portuguese",
+	"it-IT": "Italian",
+	"Manage Filters": "Manage Filters",
+	"Add Filter": "Add Filter",
+	"Added filter": "Added filter",
+	"Updated filter": "Updated filter",
+	"Filter does not exist": "Filter does not exist",
+	"Must select at least one filter to delete": "Must select at least one filter to delete",
+	"Missing filter id": "Missing filter id",
+	"Filters max must be a number": "Filters max must be a number",
+	"Max Filters Per Board": "Max Filters Per Board",
+	"Total number of filters would exceed global limit of %s": "Total number of filters would exceed global limit of %s",
+	"Filters FAQ": "Filters FAQ",
+	"e.g. Rule 1: No ad spam": "e.g. Rule 1: No ad spam",
+	"e.g. 3d": "e.g. 3d"
 }

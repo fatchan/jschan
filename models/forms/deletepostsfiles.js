@@ -19,7 +19,8 @@ module.exports = async (locals, unlinkOnly) => {
 				return {
 					filename: file.filename,
 					hash: file.hash,
-					thumbextension: file.thumbextension
+					thumbextension: file.thumbextension,
+					hasThumb: file.hasThumb,
 				};
 			}));
 		}

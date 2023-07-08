@@ -161,7 +161,7 @@ async function wipe() {
 	await Mongo.setConfig(defaultConfig);
 
 	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
-		'modlog','news', 'posts', 'poststats', 'ratelimit', 'bypass', 'roles'];
+		'modlog', 'filters', 'news', 'posts', 'poststats', 'ratelimit', 'bypass', 'roles'];
 	for (const name of collectionNames) {
 		//drop collection so gulp reset can be run again. ignores error of dropping non existing collection first time
 		await db.dropCollection(name).catch(() => {});
@@ -169,7 +169,7 @@ async function wipe() {
 	}
 
 	const { Boards, Posts, Captchas, Ratelimits, News, CustomPages,
-		Accounts, Files, Stats, Modlogs, Bans, Bypass, Roles } = require(__dirname+'/db/');
+		Accounts, Files, Stats, Modlogs, Filters, Bans, Bypass, Roles } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
@@ -186,6 +186,7 @@ async function wipe() {
 		Modlogs.deleteAll(),
 		Bypass.deleteAll(),
 		News.deleteAll(),
+		Filters.deleteAll(),
 	]);
 
 	//add indexes - should profiled and changed at some point if necessary
@@ -201,10 +202,12 @@ async function wipe() {
 	await Posts.db.dropIndexes();
 	await Modlogs.db.dropIndexes();
 	await CustomPages.db.dropIndexes();
+	await Filters.db.dropIndexes();
 	await CustomPages.db.createIndex({ 'board': 1, 'page': 1 }, { unique: true });
 	await Roles.db.createIndex({ 'permissions': 1 }, { unique: true });
 	await Modlogs.db.createIndex({ 'board': 1 });
 	await Files.db.createIndex({ 'count': 1 });
+	await Filters.db.createIndex({ 'board': 1 });
 	await Bans.db.createIndex({ 'ip.cloak': 1 , 'board': 1 });
 	await Bans.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 }); //custom expiry, i.e. it will expire when current date > than this date
 	await Bypass.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 });

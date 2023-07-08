@@ -53,6 +53,9 @@ block content
 					a(href=`/globalmanage/news.html`) #{__('News')}
 				if permissions.get(Permissions.MANAGE_GLOBAL_SETTINGS)
 					|   
+					a(href=`/globalmanage/filters.html`) #{__('Filters')}
+				if permissions.get(Permissions.MANAGE_GLOBAL_SETTINGS)
+					|   
 					a(href=`/globalmanage/settings.html`) #{__('Global Settings')}
 
 	hr(size=1)
@@ -76,6 +79,8 @@ block content
 					a(href=`/${b}/manage/bans.html`) #{__('Bans')}
 					|   
 					a(href=`/${b}/manage/logs.html`) #{__('Logs')}
+					|   
+					a(href=`/${b}/manage/filters.html`) #{__('Filters')}
 					|   
 					a(href=`/${b}/manage/settings.html`) #{__('Settings')}
 					|   

@@ -1,0 +1,31 @@
+mixin filter(f, globalmanage=false)
+	.anchor(id=f._id)
+	tr
+		td
+			input.left.post-check(type='checkbox', name='checkedfilters' value=f._id)  
+		td
+			textarea(rows='2' readonly=true) #{f.filters.join('\n')}
+		td.text-center
+			label
+				input(type='checkbox', name='strict_filtering', value='true', checked=f.strictFiltering, disabled='true')
+		td
+			if f.filterMode === 0
+				p.no-m-p.nowrap #{__('Do nothing')}
+			else if f.filterMode === 1
+				p.no-m-p.nowrap #{__('Block post')}
+			else if f.filterMode === 2
+				p.no-m-p.nowrap #{__('Ban')}
+			else
+				p.no-m-p.nowrap ?
+		td
+			p.no-m-p #{f.filterMessage}
+		td
+			p.no-m-p(style='text-align:right;') #{f.filterBanDuration}
+		td.text-center
+			label
+				input(type='checkbox', name='filter_ban_appealable', value='true', checked=f.filterBanAppealable, disabled='true')
+		td
+			if globalmanage
+				a.ml-5(href=`/globalmanage/editfilter/${f._id}.html`, style='overflow-wrap: break-word;') [#{__('Edit')}]
+			else
+				a.ml-5(href=`/${board._id}/manage/editfilter/${f._id}.html`, style='overflow-wrap: break-word;') [#{__('Edit')}]

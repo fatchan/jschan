@@ -1,3 +1,16 @@
+### 1.2.0
+  - Massive filter system overhaul, huge thanks to @disco.
+    - Filters are no longer just a text box with some options that apply to all filters.
+    - Filters can now be created/edited/deleted on separate global and board pages.
+    - All previous filter options e.g. strict matching, ban/block mode, ban message, ban duration, and appealability are customisable per-filter.
+    - The PR for this, #532 on gitgud is an excellent example of how to add features to jschan and fits into the design patterns perfectly.
+    - This gives the flexibility to add a filter "replace" mode in a future release.
+  - Added Italian locale (it-IT) courtesy of @zocram from niuchan.org
+  - Improved Portuguese translations thanks to @l29utp0 from ptchan.org
+  - Improved Russian translations thanks to Kusankot
+  - Minor addition to INSTALLATION.md for those using Ubuntu rather than Debian.
+  - Npm audit & dependencies updated.
+
 ### 1.1.1
   - Bugfix live post updates triggering the disconnect and removal of postforms on non-OP delete/move.
   - Improve text wrapping on long table data.

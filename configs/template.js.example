@@ -26,12 +26,6 @@ module.exports = {
 
 	language: 'en-GB',
 
-	filters: [],
-	strictFiltering: false,
-	filterMode: 0,
-	filterBanDuration: 0,
-	filterBanAppealable: true,
-
 	//settings for captchas
 	captchaOptions: {
 		type: 'text',
@@ -176,9 +170,6 @@ module.exports = {
 
 	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
 	quoteLimit: 25,
-
-	//aply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
-	strictFiltering: true,
 
 	//how many replies to show on index pages under each OP
 	previewReplies: 5,
@@ -336,6 +327,9 @@ module.exports = {
 		customPages: {
 			max: 10, //max number of custom pages per board
 			maxLength: 10000, //max number of characters to allow per page
+		},
+		filters: {
+			max: 50,
 		}
 	},
 
@@ -419,12 +413,8 @@ module.exports = {
 		customCSS: null,
 		blockedCountries: [], //2 char ISO country codes to block
 		disableAnonymizerFilePosting: false,
-		filters: [], //words/phrases to block
-		filterMode: 0, //0=nothing, 1=prevent post, 2=auto ban
-		filterBanDuration: 0, //duration (in ms) to ban if filter mode=2
 		deleteProtectionAge: 0, //prevent non-staff OP from deleting their thread if it older than this age in ms
 		deleteProtectionCount: 0, //prevent non-staff op deleting their thread if it has more than this many replies
-		strictFiltering: false,
 		announcement: {
 			raw: null,
 			markdown: null

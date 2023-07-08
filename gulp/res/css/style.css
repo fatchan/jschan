@@ -1455,6 +1455,10 @@ table, .boardtable {
 	text-align: center;
 }
 
+.nowrap {
+	white-space: nowrap;
+}
+
 #settingsmodal{
 	min-width: 400px;
 }

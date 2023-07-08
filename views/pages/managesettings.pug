@@ -310,21 +310,5 @@ block content
 													.row
 														.label #{__('Blocked Countries')}
 														include ../includes/2charisocountries.pug
-													.row
-														.label #{__('Filters')}
-														textarea(name='filters' placeholder=__('Newline separated')) #{board.settings.filters.join('\n')}
-													.row
-														.label #{__('Strict Filtering')}
-														label.postform-style.ph-5
-															input(type='checkbox', name='strict_filtering', value='true' checked=board.settings.strictFiltering)
-													.row
-														.label #{__('Filter Mode')}
-														select(name='filter_mode')
-															option(value='0', selected=board.settings.filterMode === 0) #{__('Do nothing')}
-															option(value='1', selected=board.settings.filterMode === 1) #{__('Block post')}
-															option(value='2', selected=board.settings.filterMode === 2) #{__('Ban')}
-													.row
-														.label #{__('Filter Auto Ban Duration')}
-														input(type='text' name='ban_duration' placeholder=__('e.g. 1w') value=board.settings.filterBanDuration)
 
 			input.row(type='submit', value=__('Save settings'))
