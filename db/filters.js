@@ -31,20 +31,19 @@ module.exports = {
 		return filters;
 	},
 
-	count: (board) => {
+	count: (board=null) => {
 		return db.countDocuments({'board': board});
 	},
 
-	findOne: (board, id) => {
+	findOne: (board=null, id) => {
 		return db.findOne({
 			'_id': id,
 			'board': board,
 		});
 	},
 
-	updateOne: (board, id, filters, strictFiltering, filterMode, filterMessage, filterBanDuration, filterBanAppealable) => {
-		cache.del(`filters:${board}`);
-		return db.updateOne({
+	updateOne: async (board=null, id, filters, strictFiltering, filterMode, filterMessage, filterBanDuration, filterBanAppealable) => {
+		const updatedFilter = await db.updateOne({
 			'_id': id,
 			'board': board,
 		}, {
@@ -57,26 +56,31 @@ module.exports = {
 				'filterBanAppealable': filterBanAppealable,
 			}
 		});
+		await cache.del(`filters:${board}`);
+		return updatedFilter;
 	},
 
-	insertOne: (filter) => {
-		cache.del(`filters:${filter.board}`);
-		return db.insertOne(filter);
+	insertOne: async (filter) => {
+		const insertedFilter = await db.insertOne(filter);
+		await cache.del(`filters:${filter.board}`);
+		return insertedFilter;
 	},
 
-	deleteMany: (board, ids) => {
-		cache.del(`filters:${board}`);
-		return db.deleteMany({
+	deleteMany: async (board=null, ids) => {
+		const deletedFilter = await db.deleteMany({
 			'_id': {
 				'$in': ids
 			},
 			'board': board
 		});
+		await cache.del(`filters:${board}`);
+		return deletedFilter;
 	},
 
-	deleteBoard: (board) => {
-		cache.del(`filters:${board}`);
-		return db.deleteMany({ 'board': board });
+	deleteBoard: async (board=null) => {
+		const deletedFilters = await db.deleteMany({ 'board': board });
+		await cache.del(`filters:${board}`);
+		return deletedFilters;
 	},
 
 	deleteAll: () => {
