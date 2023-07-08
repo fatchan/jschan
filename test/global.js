@@ -140,7 +140,6 @@ bad words`,
 			filter_ban_duration: '1s'
 			// filter_ban_appealable omitted to change to false
 		});
-		console.log(params)
 		const response = await fetch('http://localhost/forms/global/editfilter', {
 			headers: {
 				'x-using-xhr': 'true',
@@ -156,7 +155,6 @@ bad words`,
 				'cookie': sessionCookie,
 			},
 		}).then(res => res.text());
-		console.log(filterPage)
 		const editTextIndex = filterPage.indexOf('edited globalfilters');
 		expect(editTextIndex).not.toBe(-1);
 	});
