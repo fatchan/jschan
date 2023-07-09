@@ -1,3 +1,6 @@
+### 1.2.1
+  - Bugfix ban upgrades not applying correctly due to bans format change.
+
 ### 1.2.0
   - Massive filter system overhaul, huge thanks to @disco.
     - Filters are no longer just a text box with some options that apply to all filters.
