@@ -1,3 +1,9 @@
+### 1.2.2
+  - Add a global setting to try and URI decode filenames
+  - Minor pt-PT and pt-BR language fixes
+  - Remove some unused dependencies
+  - Npm audit
+
 ### 1.2.1
   - Bugfix ban upgrades not applying correctly due to bans format change.
 

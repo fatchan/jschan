@@ -192,6 +192,7 @@ module.exports = async (req, res) => {
 		maxRecentNews: numberSetting(req.body.max_recent_news, oldSettings.maxRecentNews),
 		filterFileNames: booleanSetting(req.body.filter_file_names, oldSettings.filterFileNames),
 		spaceFileNameReplacement: req.body.space_file_name_replacement,
+		uriDecodeFileNames: booleanSetting(req.body.uri_decode_file_names, oldSettings.uriDecodeFileNames),
 		globalLimits:  {
 			customCss: {
 				enabled: booleanSetting(req.body.global_limits_custom_css_enabled, oldSettings.globalLimits.customCss.enabled),

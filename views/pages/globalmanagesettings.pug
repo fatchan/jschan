@@ -560,6 +560,10 @@ block content
 																			.label #{__('Space File Name Replacement')}
 																			input(type='text', name='space_file_name_replacement', value=settings.spaceFileNameReplacement)
 																		.row
+																			.label #{__('URI Decode File Names')}
+																			label.postform-style.ph-5
+																				input(type='checkbox', name='uri_decode_file_names', value='true' checked=settings.uriDecodeFileNames)
+																		.row
 																			.label #{__('Thumbnail File Extension')}
 																			input(type='text' name='thumb_extension' value=settings.thumbExtension)
 																		.row
