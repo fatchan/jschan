@@ -168,14 +168,15 @@ class postFormHandler {
 			onCancel: () => {},
 			onDone: () => {
 				const now = Date.now();
-				//add replay file if box was checked
+				let replayBlob;
 				if (saveReplay) {
-					const blob = Tegaki.replayRecorder.toBlob();
-					this.addFile(new File([blob], `${now}-tegaki.tgkr`, { type: 'tegaki/replay' }), { stripFilenames: false });
+					replayBlob = Tegaki.replayRecorder.toBlob();
 				}
 				//add tegaki image
-				Tegaki.flatten().toBlob(b => {
-					this.addFile(new File([b], `${now}-tegaki.png`, { type: 'image/png' }), { stripFilenames: false });
+				Tegaki.flatten().toBlob(imageBlob => {
+					this.addFile(new File([imageBlob], `${now}-tegaki.png`, { type: 'image/png' }), { stripFilenames: false });
+					//add replay file
+					replayBlob && this.addFile(new File([replayBlob], `${now}-tegaki.tgkr`, { type: 'tegaki/replay' }), { stripFilenames: false });
 				}, 'image/png');
 				//update file list
 				this.updateFilesText();
