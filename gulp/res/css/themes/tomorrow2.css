@@ -32,21 +32,29 @@
 	--pinktext-color:#E0727F;
 }
 
-.anchor:target + .post-container,
-.post-container.highlighted {
+.anchor:target + .post-container, .post-container.highlighted {
 	border: 1px solid var(--highlighted-post-outline-color) !important;
 }
 
-.post-container, #float .post-container, .stickynav, .pages, #action-menu, .catalog-tile, #livetext, #threadstats, .collapse, .bottom-reply {
-	border-bottom: 1px solid var(--post-outline-color);
-	border-right: 1px solid var(--post-outline-color);
-	border-top: 1px solid var(--post-color);
-	border-left: 1px solid var(--post-color);
+#float .post-container, #livetext, #threadstats, .navbar, .catalog-tile, .pages, .post-container, .stickynav, .collapse, .bottom-reply {
+	border-width: 1px!important;
+	border-color: var(--box-border-color)!important;
+}
+
+.navbar{
+	box-shadow: 0 0 3px 0px #00000030;
+}
+
+.post-container.op {
+	border-color: transparent!important;
 }
 
 table {
-	border: none;
-	border-spacing: 2px;
+	border-spacing: 0px;
+}
+
+tr:nth-child(2n+1) {
+	background: unset;
 }
 
 .captcha {
@@ -54,7 +62,7 @@ table {
 }
 
 .box-wrap, .tabs li a {
-	border: 1px solid #000;
+	border: 1px solid var(--box-border-color);
 }
 
 @media only screen and (max-width: 600px) {

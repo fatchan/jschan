@@ -27,7 +27,7 @@ module.exports = {
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': __('Bad request'),
-				'errors': req.params.board,
+				'errors': errors,
 				'redirect': req.params.board ? `/${req.params.board}/manage/filters.html` : '/globalmanage/filters.html'
 			});
 		}

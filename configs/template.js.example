@@ -207,6 +207,8 @@ module.exports = {
 		(spaces dont belong in filenames) */
 	spaceFileNameReplacement: '_',
 
+	uriDecodeFileNames: false,
+
 	//options for code block highlighting in posts
 	highlightOptions: {
 

@@ -99,7 +99,7 @@ testing 123`
 	});
 
 	let filterId;
-	test('add filter post',  async () => {
+	test('add global filter',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
 			filters: `notgood
@@ -120,24 +120,24 @@ bad words`,
 			redirect: 'manual',
 		});
 		expect(response.ok).toBe(true);
-		const filterPage = await fetch('http://localhost/globalmanage/filter.html', {
+		const filterPage = await fetch('http://localhost/globalmanage/filters.html', {
 			headers: {
 				'cookie': sessionCookie,
 			},
 		}).then(res => res.text());
-		const checkIndex = filterPage.indexOf('name="checkedfilter" value="');
-		filterId = filterPage.substring(checkIndex+28, checkIndex+28+24);
+		const checkIndex = filterPage.indexOf('name="checkedfilters" value="');
+		filterId = filterPage.substring(checkIndex+29, checkIndex+29+24);
 	});
 
-	test('edit filter post',  async () => {
+	test('edit global filter',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
 			filter_id: filterId,
-			filters: 'edited filters',
+			filters: 'edited globalfilters',
 			strict_filtering: 'true',
-			filter_mode: '0',
+			filter_mode: '1',
 			filter_message: 'edited message',
-			filter_ban_duration: '0'
+			filter_ban_duration: '1s'
 			// filter_ban_appealable omitted to change to false
 		});
 		const response = await fetch('http://localhost/forms/global/editfilter', {
@@ -150,19 +150,48 @@ bad words`,
 			redirect: 'manual',
 		});
 		expect(response.ok).toBe(true);
-		const filterPage = await fetch('http://localhost/globalmanage/filter.html', {
+		const filterPage = await fetch('http://localhost/globalmanage/filters.html', {
 			headers: {
 				'cookie': sessionCookie,
 			},
 		}).then(res => res.text());
-		const editTextIndex = filterPage.indexOf('edited filters');
+		const editTextIndex = filterPage.indexOf('edited globalfilters');
 		expect(editTextIndex).not.toBe(-1);
 	});
 
-	test('delete filter post',  async () => {
+	test('make post that doesnt hit global filter',  async () => {
+		const params = new URLSearchParams();
+		params.append('message', 'blahblahblah');
+		params.append('captcha', '000000');
+		const response = await fetch('http://localhost/forms/board/test/post', {
+			headers: {
+				'x-using-xhr': 'true',
+			},
+			method: 'POST',
+			body: params
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('make post that hits global filter',  async () => {
+		const params = new URLSearchParams();
+		params.append('message', 'edited globalfilters');
+		params.append('captcha', '000000');
+		const response = await fetch('http://localhost/forms/board/test/post', {
+			headers: {
+				'x-using-xhr': 'true',
+			},
+			method: 'POST',
+			body: params
+		});
+		expect(response.ok).not.toBe(true);
+		await new Promise(res => setTimeout(res, 10000)); //let ban expire
+	});
+
+	test('delete global filter',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
-			checkedfilter: filterId,
+			checkedfilters: filterId,
 		});
 		const response = await fetch('http://localhost/forms/global/deletefilter', {
 			headers: {

@@ -689,7 +689,7 @@ int main() {...}
 			_csrf: csrfToken,
 			checkedbans: banId,
 			option: 'edit_duration',
-			ban_duration: '3d',
+			ban_duration: '1s',
 		});
 		const response = await fetch('http://localhost/forms/global/editbans', {
 			headers: {
