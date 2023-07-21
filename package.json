@@ -47,17 +47,17 @@
     "redlock": "^4.2.0",
     "sanitize-html": "^2.11.0",
     "saslprep": "^1.0.3",
-    "semver": "^7.5.3",
+    "semver": "^7.5.4",
     "socket.io": "^4.7.1",
     "socks-proxy-agent": "^6.2.1",
     "uid-safe": "^2.1.5",
     "unix-crypt-td-js": "^1.1.4",
-    "web3": "^4.0.1",
-    "web3-eth-accounts": "^4.0.1",
-    "web3-utils": "^4.0.1"
+    "web3": "^4.0.3",
+    "web3-eth-accounts": "^4.0.3",
+    "web3-utils": "^4.0.3"
   },
   "devDependencies": {
-    "eslint": "^8.43.0",
+    "eslint": "^8.45.0",
     "eslint-plugin-jest": "^26.9.0",
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
