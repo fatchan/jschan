@@ -1303,6 +1303,7 @@ iframe.embed-video {
 	width: 500px;
 	height: 280px;
 	margin-top: 3px;
+	background-color: var(--darken);
 }
 
 iframe.bypass {
