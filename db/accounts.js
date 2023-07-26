@@ -36,9 +36,12 @@ module.exports = {
 		return account;
 	},
 
-	insertOne: async (original, username, password, permissions) => {
+	insertOne: async (original, username, password, permissions, web3=false) => {
 		// hash the password
-		const passwordHash = await bcrypt.hash(password, 12);
+		let passwordHash;
+		if (password) {
+			passwordHash = await bcrypt.hash(password, 12);
+		}
 		//add to db
 		const res = await db.insertOne({
 			'_id': username,
@@ -48,6 +51,7 @@ module.exports = {
 			'ownedBoards': [],
 			'staffBoards': [],
 			'twofactor': null,
+			web3,
 		});
 		cache.del(`users:${username}`);
 		return res;

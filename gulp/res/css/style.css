@@ -202,8 +202,14 @@ pre {
 .pv-5 {
 	padding: 5px 0;
 }
+.p-0 {
+	padding: 0!important;
+}
 .vh {
 	visibility: hidden!important;
+}
+.wm {
+	width: max-content;
 }
 #settings, .dummy-link {
 	cursor: pointer;
@@ -632,6 +638,10 @@ td {
 	margin: 5px;
 	padding: 0 15px;
 	/*list-style: none;*/
+	word-break: break-all;
+}
+
+.web3-signature, .web3-address {
 	word-break: break-all;
 }
 
@@ -1223,7 +1233,7 @@ input[type=number] {
 	appearance:textfield;
 }
 
-input[type="submit"] {
+input[type="submit"], .postform-style.dummy-link {
 	min-height: 2.5em;
 	cursor: pointer;
 }
@@ -1541,7 +1551,8 @@ row.wrap.sb .col {
 #tab-7:target .tab-7,
 #tab-8:target .tab-8,
 #tab-9:target .tab-9,
-#tab-10:target .tab-10 { 
+#tab-10:target .tab-10,
+#tab-11:target .tab-11 { 
 	display: flex;
 }
 
@@ -1554,7 +1565,8 @@ row.wrap.sb .col {
 #tab-7:target a[href="#tab-7"],
 #tab-8:target a[href="#tab-8"],
 #tab-9:target a[href="#tab-9"],
-#tab-10:target a[href="#tab-10"] {
+#tab-10:target a[href="#tab-10"],
+#tab-11:target a[href="#tab-11"] {
 	border-bottom: 1px solid var(--background-rest);
 	background: var(--background-rest);
 }

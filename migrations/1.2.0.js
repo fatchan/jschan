@@ -8,6 +8,7 @@ module.exports = async(db, redis) => {
 			'globalLimits.filters': {
 				max: 50,
 			},
+			'ethereumLinksURL': 'https://etherscan.io/address/%s',
 		},
 	});
 

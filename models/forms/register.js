@@ -7,9 +7,16 @@ const { Accounts } = require(__dirname+'/../../db/')
 module.exports = async (req, res) => {
 
 	const { __ } = res.locals;
-	const original = req.body.username; //stored but not used yet
-	const username = original.toLowerCase(); //lowercase to prevent duplicates with mixed case
-	const password = req.body.password;
+	let original, username, password;
+	if (res.locals.isWeb3) {
+		original = req.body.address;
+		username = req.body.address.toLowerCase();
+		password = null;
+	} else {
+		original = req.body.username;
+		username = original.toLowerCase(); //lowercase to prevent duplicates with mixed case
+		password = req.body.password;
+	}
 
 	const account = await Accounts.findOne(username);
 
@@ -22,8 +29,17 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	// add account to db. password is hashed in db model func for easier tests
-	await Accounts.insertOne(original, username, password, roleManager.roles.ANON);
+	await Accounts.insertOne(original, username, password, roleManager.roles.ANON, res.locals.isWeb3);
+
+	if (res.locals.isWeb3) {
+		req.session.user = username;
+		await Accounts.updateLastActiveDate(username);
+		let goto = req.body.goto;
+		if (goto == null || !/^\/[0-9a-zA-Z][0-9a-zA-Z._/-]*$/.test(goto)) {
+			goto = '/account.html';
+		}
+		return res.redirect(goto);
+	}
 
 	return res.redirect('/login.html');
 

@@ -1,5 +1,6 @@
 include ./report.pug
 include ./banmessage.pug
+include ./web3signature.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboard=false)
 	.anchor(id=post.postId)
 	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}`
@@ -162,6 +163,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					| #{lastEdited[1]}
 			if post.banmessage
 				+banmessage(post.banmessage)
+			if post.signature && post.address
+				+web3signature(post.signature, post.address)
 			if truncatedMessage !== post.message
 				div.cb.mt-5.ml-5
 					| #{__('Message too long.')} #[a.viewfulltext(href=`${postURL}#${post.postId}`) #{__('View the full text')}]
