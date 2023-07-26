@@ -4,6 +4,7 @@
     - Signed post messages will display a signature and link to their wallet at the bottom of the post.
     - The link uses etherscan by default but can be changed to another url with %s substituting the address, like other URL settings.
     - A board-level and global option is available to disable web3 features.
+    - `signature` and `address` are available as new properties on signed posts through the API.
     - No third party server communication or details are required for signing messages or authing.
     - This is a very exciting feature with a lot of possibilities for expanding in future. Stay tuned.
   - Video embeds now support youtube shorts and odysee.com.
