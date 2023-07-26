@@ -643,6 +643,7 @@ td {
 
 .web3-signature, .web3-address {
 	word-break: break-all;
+	cursor: text;
 }
 
 .modal-bg {
