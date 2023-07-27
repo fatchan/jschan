@@ -63,7 +63,7 @@ const anyFilterMatches = (filteringPost) => {
 		|| fid.has(userId)
 		|| fname.has(name)
 		|| ftrip.has(tripcode)
-		|| fsub.has(tripcode)
+		|| fsub.has(subject)
 		|| fmsg.has(message)
 		|| fnamer.some(r => r.test(name))
 		|| ftripr.some(r => r.test(tripcode))
