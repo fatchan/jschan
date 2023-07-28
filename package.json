@@ -52,9 +52,9 @@
     "socks-proxy-agent": "^6.2.1",
     "uid-safe": "^2.1.5",
     "unix-crypt-td-js": "^1.1.4",
-    "web3": "4.0.4-dev.0ee9bb4.0",
-    "web3-eth-accounts": "4.0.4-dev.0ee9bb4.0",
-    "web3-utils": "4.0.4-dev.0ee9bb4.0"
+    "web3": "^4.0.3",
+    "web3-eth-accounts": "^4.0.3",
+    "web3-utils": "^4.0.3"
   },
   "devDependencies": {
     "eslint": "^8.45.0",
