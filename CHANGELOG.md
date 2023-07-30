@@ -7,6 +7,7 @@
     - `signature` and `address` are available as new properties on signed posts through the API.
     - No third party server communication or details are required for signing messages or authing.
     - This is a very exciting feature with a lot of possibilities for expanding in future. Stay tuned.
+  - Client side filters can now be applied against flags or custom flags.
   - Video embeds now support youtube shorts and odysee.com.
   - New global option for URI decoding filenames, to display some characters such as quotation mark (") better in filenames.
   - Minor pt-PT language fixes.
