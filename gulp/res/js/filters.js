@@ -75,7 +75,7 @@ const anyFilterMatches = (filteringPost) => {
 		|| ftripr.some(r => r.test(tripcode))
 		|| fsubr.some(r => r.test(subject))
 		|| fmsgr.some(r => r.test(message))
-		|| fflag.some(r => r.test(flag));
+		|| fflagr.some(r => r.test(flag));
 };
 
 const togglePostsHidden = (posts, state, single) => {
