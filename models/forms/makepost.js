@@ -330,7 +330,7 @@ module.exports = async (req, res) => {
 								processedFile.hasThumb = audioThumbnails;
 								processedFile.geometry = { thumbwidth: thumbSize, thumbheight: thumbSize };
 								await saveFull();
-								if (!existsThumb) {
+								if (processedFile.hasThumb && !existsThumb) {
 									await audioThumbnail(processedFile);
 								}
 							}
