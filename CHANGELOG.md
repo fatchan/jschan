@@ -12,6 +12,7 @@
   - New global option for URI decoding filenames, to display some characters such as quotation mark (") better in filenames.
   - Minor pt-PT language fixes.
   - Small color adjustments to Yotsuba theme to match 4chan colors more closely.
+  - Update nginx config for new embeds in CSP, and some more file type support.
   - Npm audit.
 
 ### 1.2.2
