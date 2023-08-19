@@ -235,7 +235,7 @@ module.exports = () => describe('login and create test board', () => {
 			global_limits_asset_files_size_max: '10485760',
 			global_limits_asset_files_max: '10',
 			global_limits_asset_files_total: '50',
-			webring_proxy_address: '',
+			proxy_address: '',
 			webring_following: '',
 			webring_logos: '',
 			webring_blacklist: '',
@@ -268,6 +268,7 @@ module.exports = () => describe('login and create test board', () => {
 			board_defaults_allowed_file_types_image: 'true',
 			board_defaults_allowed_file_types_animated_image: 'true',
 			board_defaults_allowed_file_types_audio: 'true',
+			ethereum_links: 'https://example.com/%s',
 		});
 		const response = await fetch('http://localhost/forms/global/settings', {
 			headers: {

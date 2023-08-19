@@ -1,3 +1,27 @@
+### 1.3.0
+  - Web3 integration with MetaMask, development generously funded by @0xBekket
+    - Users with the MetaMask browser extension can now register/login to accounts, and sign their messages with MetaMask.
+    - Signed post messages will display a signature and link to their wallet at the bottom of the post.
+    - The link uses etherscan by default but can be changed to another url with %s substituting the address, like other URL settings.
+    - A board-level and global option is available to disable web3 features.
+    - `signature` and `address` are available as new properties on signed posts through the API.
+    - No third party server communication or details are required for signing messages or authing.
+    - This is a very exciting feature with a lot of possibilities for expanding in future. Stay tuned.
+  - Client side filters can now be applied against flags or custom flags.
+  - Fix order of Tegaki upload so files come before replays so catalog shows the thumbnail.
+  - Video embeds now support youtube shorts and odysee.com.
+  - New global option for URI decoding filenames, to display some characters such as quotation mark (") better in filenames.
+  - Minor pt-PT language fixes.
+  - Small color adjustments to Yotsuba theme to match 4chan colors more closely.
+  - Update nginx config for new embeds in CSP, and some more file type support.
+  - Npm audit.
+
+### 1.2.2
+  - Add a global setting to try and URI decode filenames
+  - Minor pt-PT and pt-BR language fixes
+  - Remove some unused dependencies
+  - Npm audit
+
 ### 1.2.1
   - Bugfix ban upgrades not applying correctly due to bans format change.
 

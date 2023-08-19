@@ -1,5 +1,6 @@
 include ./report.pug
 include ./banmessage.pug
+include ./web3signature.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboard=false)
 	.anchor(id=post.postId)
 	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}`
@@ -9,7 +10,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 		data-name=post.name
 		data-tripcode=post.tripcode
 		data-subject=post.subject
-		data-email=post.email)
+		data-email=post.email
+		data-flag=post.country && post.country.code)
 		- const postURL = `/${post.board}/${(modview || manage || globalmanage) ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info
 			span
@@ -69,10 +71,12 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 						option(value='fid') #{__('Filter ID')}
 					if post.name
 						option(value='fname') #{__('Filter Name')}
-					if post.subject
-						option(value='fsub') #{__('Filter Subject')}
 					if post.tripcode
 						option(value='ftrip') #{__('Filter Tripcode')}
+					if post.subject
+						option(value='fsub') #{__('Filter Subject')}
+					if post.country && post.country.code
+						option(value='fflag') #{__('Filter Flag')}
 					if !overboard && !ban
 						option(value='moderate') #{__('Moderate')}
 					if !ban && (modview || manage || globalmanage)
@@ -162,6 +166,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					| #{lastEdited[1]}
 			if post.banmessage
 				+banmessage(post.banmessage)
+			if post.signature && post.address
+				+web3signature(post.signature, post.address)
 			if truncatedMessage !== post.message
 				div.cb.mt-5.ml-5
 					| #{__('Message too long.')} #[a.viewfulltext(href=`${postURL}#${post.postId}`) #{__('View the full text')}]

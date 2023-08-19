@@ -112,9 +112,10 @@ module.exports = {
 	//max age of a hot thread, with a reducing score multiplier from 0-1 bias towards this date
 	hotThreadsMaxAge: 2629800000,
 
-	//default url format/links for archive and reverse image search links, %s will be replaced by the url
+	//default url format/links for archive, reverse image search, and ethereum links, %s will be replaced by the url
 	archiveLinksURL: 'https://archive.today/?run=1&url=%s',
 	reverseImageLinksURL: 'https://tineye.com/search?url=%s',
+	ethereumLinksURL: 'https://etherscan.io/address/%s',
 
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
@@ -133,6 +134,10 @@ module.exports = {
 
 	//enable the webring (also copy configs/webring.json.example -> configs/webring.json and edit)
 	enableWebring: false,
+
+	//web3
+	enableWeb3: false,
+	ethereumNode: '',
 
 	//extension for thumbnails
 	thumbExtension: '.webp',
@@ -201,6 +206,8 @@ module.exports = {
 	/* replace spaces and multiple spaces with some character default _ for better filenames
 		(spaces dont belong in filenames) */
 	spaceFileNameReplacement: '_',
+
+	uriDecodeFileNames: false,
 
 	//options for code block highlighting in posts
 	highlightOptions: {
@@ -389,6 +396,7 @@ module.exports = {
 		geoFlags: false, //show geo flags, requires nginx setup
 		customFlags: false, //show custom flags
 		enableTegaki: true,
+		enableWeb3: false,
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
 		userPostUnlink: true, //alow user to unlink files fomr their post

@@ -18,6 +18,7 @@ module.exports = {
 	globalSettings: require(__dirname+'/globalsettings.js'),
 	customPage: require(__dirname+'/custompage.js'),
 	csrfPage: require(__dirname+'/csrf.js'),
+	noncePage: require(__dirname+'/nonce.js'),
 	randombanner: require(__dirname+'/randombanner.js'),
 	news: require(__dirname+'/news.js'),
 	captchaPage: require(__dirname+'/captchapage.js'),

@@ -5,21 +5,37 @@ block head
 
 block content
 	h1.board-title #{__('Register')}
-	.form-wrapper.flex-center.mv-10
-		form.form-post(action='/forms/register' method='POST' data-captcha-preload='true')
-			.row
-				.label #{__('Username')}
-				input(type='text', name='username', maxlength='50' pattern='[a-zA-Z0-9]+' required title=__('alphanumeric only'))
-			.row
-				.label #{__('Password')}
-				input(type='password', name='password', maxlength='100' required)
-			.row
-				.label #{__('Confirm Password')}
-				input(type='password', name='passwordconfirm', maxlength='100' required)
-			if captchaOptions.type === 'text'
-				include ../includes/captchasidelabel.pug
-			else
-				include ../includes/captchafieldrow.pug
-			input(type='submit', value=__('Register'))
+
+	.mv-10
+		if enableWeb3 === true
+			.sm#tab-1
+				.sm#tab-2
+					.tabbed-area.flexcenter
+						ul.tabs.group.web3
+							li
+								a(href='#tab-1') #{__('Username')}
+							li.jsonly
+								a(href='#tab-2') #{__('MetaMask')}
+						.box-wrap.mv-0.wm
+							.tab.tab-1
+								.form-wrapper.flex-center
+									include ../includes/registration.pug
+							.tab.tab-2.jsonly.web3
+								.form-wrapper.flex-center
+									form.form-post(action='/forms/register' method='POST' data-captcha-preload='true')
+										input(type='hidden' name='nonce')
+										input(type='hidden' name='address')
+										input(type='hidden' name='signature')
+										if captchaOptions.type === 'text'
+											include ../includes/captchasidelabel.pug
+										else
+											include ../includes/captchafieldrow.pug
+										.postform-style.dummy-link.web3-login.ct-r1.ph-5
+											img(src='/file/metamask-fox.svg' width=24 height=24)
+											| #{__('Register with MetaMask')}
+		else
+			.form-wrapper.flex-center.mv-10
+				include ../includes/registration.pug
+	.text-center.mt-10
 		p: a(href='/login.html') #{__('Login')}
 		p: a(href='/changepassword.html') #{__('Change Password')}

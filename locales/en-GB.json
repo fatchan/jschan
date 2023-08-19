@@ -691,6 +691,7 @@
 	"Invalid account username": "Invalid account username",
 	"Invalid actions selected": "Invalid actions selected",
 	"Invalid archive links URL format, must be a link containing %s where the url param belongs.": "Invalid archive links URL format, must be a link containing %s where the url param belongs.",
+	"Invalid ethereum links URL format, must be a link containing %s where the url param belongs.": "Invalid ethereum links URL format, must be a link containing %s where the url param belongs.",
 	"Invalid assets selected": "Invalid assets selected",
 	"Invalid ban action": "Invalid ban action",
 	"Invalid ban duration": "Invalid ban duration",
@@ -1410,5 +1411,10 @@
 	"Total number of filters would exceed global limit of %s": "Total number of filters would exceed global limit of %s",
 	"Filters FAQ": "Filters FAQ",
 	"e.g. Rule 1: No ad spam": "e.g. Rule 1: No ad spam",
-	"e.g. 3d": "e.g. 3d"
+	"e.g. 3d": "e.g. 3d",
+	"Username must not be an ethereum address": "Username must not be an ethereum address",
+	"Login timed out": "Login timed out",
+	"Missing nonce": "Missing nonce",
+	"Missing signature": "Missing signature",
+	"Invalid login signature": "Invalid login signature"
 }

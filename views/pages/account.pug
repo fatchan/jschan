@@ -10,7 +10,7 @@ block content
 	hr(size=1)
 	h4.no-m-p #{__('General')}:
 	ul
-		if !user.twofactor
+		if !user.twofactor && !user.web3
 			li.bold: a(href='/twofactor.html') #{__('Setup 2FA (TOTP)')}
 		if permissions.get(Permissions.CREATE_BOARD)
 			li: a(href='/create.html') #{__('Create a board')}

@@ -13,17 +13,19 @@ const getFiltersFromLocalStorage = () => {
 		single: new Set(),
 		fid: new Set(),
 		fname: new Set(),
-		fsub: new Set(),
 		ftrip: new Set(),
+		fsub: new Set(),
 		fmsg: new Set(),
+		fflag: new Set(),
 		fnamer: [],
 		ftripr: [],
 		fsubr: [],
 		fmsgr: [],
+		fflagr: [],
 	});
 };
 
-let { single, fid, fname, ftrip, fsub, fmsg, fnamer, ftripr, fsubr, fmsgr } = getFiltersFromLocalStorage();
+let { single, fid, fname, ftrip, fsub, fmsg, fflag, fnamer, ftripr, fsubr, fmsgr, fflagr } = getFiltersFromLocalStorage();
 
 let filtersTable;
 const updateFiltersTable = () => {
@@ -47,28 +49,33 @@ const updateSavedFilters = () => {
 		...([...fname].map(x => ({type:'fname', val:x}))),
 		...([...fsub].map(x => ({type:'fsub', val:x}))),
 		...([...fmsg].map(x => ({type:'fmsg', val:x}))),
+		...([...fflag].map(x => ({type:'fflag', val:x}))),
 		...fnamer.map(x => ({type:'fnamer', val:x.source.toString()})),
 		...ftripr.map(x => ({type:'ftripr', val:x.source.toString()})),
 		...fsubr.map(x => ({type:'fsubr', val:x.source.toString()})),
 		...fmsgr.map(x => ({type:'fmsgr', val:x.source.toString()})),
+		...fflagr.map(x => ({type:'fflagr', val:x.source.toString()})),
 	]));
 	updateFiltersTable();
 };
 
 const anyFilterMatches = (filteringPost) => {
-	const { board, postId, userId, name, subject, tripcode } = filteringPost.dataset;
+	const { board, postId, userId, name, subject, tripcode, country } = filteringPost.dataset;
 	const postMessage = filteringPost.querySelector('.post-message');
 	const message = postMessage ? postMessage.textContent : null;
+	const flag = country ? country.code : null;
 	return single.has(`${board}-${postId}`)
 		|| fid.has(userId)
 		|| fname.has(name)
 		|| ftrip.has(tripcode)
-		|| fsub.has(tripcode)
+		|| fsub.has(subject)
 		|| fmsg.has(message)
+		|| fflag.has(flag)
 		|| fnamer.some(r => r.test(name))
 		|| ftripr.some(r => r.test(tripcode))
 		|| fsubr.some(r => r.test(subject))
-		|| fmsgr.some(r => r.test(message));
+		|| fmsgr.some(r => r.test(message))
+		|| fflagr.some(r => r.test(flag));
 };
 
 const togglePostsHidden = (posts, state, single) => {
@@ -138,6 +145,12 @@ const getPostsByFilter = (type, data) => {
 		case 'fmsgr':
 			posts = getPostsByMessage(data, true);
 			break;
+		case 'fflag':
+			posts = document.querySelectorAll(`[data-flag="${CSS.escape(data)}"]`);
+			break;
+		case 'fflagr':
+			posts = getPostsByRegex('data-flag', data);
+			break;
 		default:
 			break;
 	}
@@ -187,6 +200,15 @@ const setFilterState = (type, data, state) => {
 			fmsgr = fmsgr.filter(r => r.source != data.source);
 			if (state) {
 				fmsgr.push(data);
+			}
+			break;
+		case 'fflag':
+			fflag[addOrDelete](data);
+			break;
+		case 'fflagr':
+			fflagr = fflagr.filter(r => r.source != data.source);
+			if (state) {
+				fflagr.push(data);
 			}
 			break;
 		default:
@@ -263,6 +285,9 @@ const postMenuChange = function() {
 		case 'fsub':
 			filterData = postDataset.subject;
 			break;
+		case 'fflag':
+			filterData = postDataset.flag;
+			break;
 		case 'moderate':
 			return moderatePost(postContainer);
 		case 'edit':
@@ -303,14 +328,17 @@ const getHiddenElems = () => {
 	for (let name of fname) {
 		posts = posts.concat(getPostsByFilter('fname', name));
 	}
+	for (let tripcode of ftrip) {
+		posts = posts.concat(getPostsByFilter('ftrip', tripcode));
+	}
 	for (let subject of fsub) {
 		posts = posts.concat(getPostsByFilter('fsub', subject));
 	}
 	for (let message of fmsg) {
 		posts = posts.concat(getPostsByFilter('fmsg', message));
 	}
-	for (let tripcode of ftrip) {
-		posts = posts.concat(getPostsByFilter('ftrip', tripcode));
+	for (let flag of fflag) {
+		posts = posts.concat(getPostsByFilter('fflag', flag));
 	}
 	for (let namer of fnamer) {
 		posts = posts.concat(getPostsByFilter('fnamer', namer));
@@ -323,6 +351,9 @@ const getHiddenElems = () => {
 	}
 	for (let messager of fmsgr) {
 		posts = posts.concat(getPostsByFilter('fmsgr', messager));
+	}
+	for (let flagr of fflagr) {
+		posts = posts.concat(getPostsByFilter('fflagr', flagr));
 	}
 	return posts;
 };
@@ -374,13 +405,15 @@ window.addEventListener('settingsReady', function() {
 		single = new Set(),
 		fid = new Set(),
 		fname = new Set(),
+		ftrip = new Set(),
 		fsub = new Set(),
 		fmsg = new Set(),
-		ftrip = new Set(),
+		fflag = new Set(),
 		fnamer = [],
 		ftripr = [],
 		fsubr = [],
 		fmsgr = [],
+		fflagr = [],
 		updateFiltersTable();
 		togglePostsHidden(document.querySelectorAll(`.${isCatalog ? 'catalog-tile': 'post-container' }`), false);
 		updateSavedFilters();

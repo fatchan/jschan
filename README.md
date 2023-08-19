@@ -21,6 +21,7 @@ Contact via:
  - [x] Manage everything from the web panel
  - [x] Granular account permissions
  - [x] Works properly with anonymizer networks (Tor, Lokinet, etc)
+ - [x] Web3 integration - register, login, and sign posts with [MetaMask](https://metamask.io)
  - [x] [Tegaki](https://github.com/desuwa/tegaki) applet with drawing and replays
  - [x] [API documentation](https://fatchan.gitgud.site/jschan-docs/)
  - [x] Built-in webring (compatible w/ [lynxchan](https://gitlab.com/alogware/LynxChanAddon-Webring) & [infinity](https://gitlab.com/Tenicu/infinityaddon-webring))

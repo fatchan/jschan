@@ -18,6 +18,18 @@ block content
 				.label #{__('2FA Code')}
 				input(type='number' name='twofactor' placeholder=__('if enabled'))
 			input(type='submit', value=__('Login'))
+	if enableWeb3 === true
+		.jsonly.web3.mv-10
+			.text-center OR
+			.form-wrapper.flex-center.mv-10
+				form.form-post(action='/forms/login' method='POST' data-captcha-preload='true')
+					input(type='hidden' name='nonce')
+					input(type='hidden' name='address')
+					input(type='hidden' name='signature')
+					.postform-style.dummy-link.web3-login.ct-r1.ph-5
+						img(src='/file/metamask-fox.svg' width=24 height=24)
+						| #{__('Login with MetaMask')}
+	.text-center.mt-10
 		p: a(href='/register.html') #{__('Register')}
 		p: a(href='/changepassword.html') #{__('Change Password')}
 

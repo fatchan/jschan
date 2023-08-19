@@ -14,6 +14,7 @@ mixin catalogtile(post, index, overboard=false)
 		data-tripcode=post.tripcode
 		data-subject=post.subject
 		data-filter=((post.subject||'')+(post.nomarkup||'')).toLowerCase()
+		data-flag=post.country && post.country.code
 		data-date=post.date
 		data-replies=post.replyposts
 		data-bump=post.bumped)
@@ -42,6 +43,8 @@ mixin catalogtile(post, index, overboard=false)
 				option(value='single') #{__('Hide')}
 				if post.subject	
 					option(value='fsub') #{__('Filter Subject')}
+				if post.country && post.country.code
+					option(value='fflag') #{__('Filter Flag')}
 				if (modview || manage || globalmanage)
 					option(value='edit') #{__('Edit')}
 				if !overboard
