@@ -32,7 +32,7 @@ module.exports = {
 				{ result: existsBody(req.body.signature), expected: true, error: __('Missing signature') },
 			]);
 		} else {
-			errors = errors = await checkSchema([
+			errors = await checkSchema([
 				{ result: existsBody(req.body.username), expected: true, error: __('Missing username') },
 				{ result: existsBody(req.body.password), expected: true, error: __('Missing password') },
 				{ result: web3UtilsIsAddress(req.body.username), expected: false, error: __('Username must not be an ethereum address') },

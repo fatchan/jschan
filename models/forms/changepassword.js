@@ -16,8 +16,8 @@ module.exports = async (req, res) => {
 	//fetch an account
 	const account = await Accounts.findOne(username);
 
-	//if the account doesnt exist, reject
-	if (!account) {
+	//if the account doesnt exist (or is web3 where password change would be impossible), reject
+	if (!account || account.web3 == true) {
 		return dynamicResponse(req, res, 403, 'message', {
 			'title': __('Forbidden'),
 			'message': __('Incorrect account credentials'),

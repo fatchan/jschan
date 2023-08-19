@@ -268,6 +268,7 @@ module.exports = () => describe('login and create test board', () => {
 			board_defaults_allowed_file_types_image: 'true',
 			board_defaults_allowed_file_types_animated_image: 'true',
 			board_defaults_allowed_file_types_audio: 'true',
+			ethereum_links: 'https://example.com/%s',
 		});
 		const response = await fetch('http://localhost/forms/global/settings', {
 			headers: {

@@ -743,6 +743,7 @@
 	"Invalid account username": "Неверное имя пользователя учетной записи",
 	"Invalid actions selected": "Выбранные недопустимые действия",
 	"Invalid archive links URL format, must be a link containing %s where the url param belongs.": "Iнедопустимый формат URL ссылок на архив, должна быть ссылка, содержащая %s, к которому относится параметр url.",
+	"Invalid ethereum links URL format, must be a link containing %s where the url param belongs.": "Iнедопустимый формат URL ссылок на Ethereum, должна быть ссылка, содержащая %s, к которому относится параметр url.",
 	"Invalid assets selected": "Выбраны недопустимые активы",
 	"Invalid ban action": "Недопустимое действие запрета",
 	"Invalid ban duration": "Недопустимая продолжительность запрета",
@@ -1484,5 +1485,10 @@
 	"Total number of filters would exceed global limit of %s": "Общее количество фильтров превысило бы глобальный предел в %s",
 	"Filters FAQ": "Часто задаваемые вопросы по фильтрам",
 	"e.g. Rule 1: No ad spam": "например, отсутствие спама",
-	"e.g. 3d": "например, 3d"
+	"e.g. 3d": "например, 3d",
+	"Username must not be an ethereum address": "Username must not be an ethereum address",
+	"Login timed out": "Login timed out",
+	"Missing nonce": "Missing nonce",
+	"Missing signature": "Missing signature",
+	"Invalid login signature": "Invalid login signature"
 }
