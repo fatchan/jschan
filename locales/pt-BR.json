@@ -1417,5 +1417,6 @@
 	"Missing nonce": "Falta código",
 	"Missing signature": "Falta assinatura",
 	"Invalid login signature": "Assinatura de login inválida",
-	"Register with MetaMask": "Registar com MetaMask"
+	"Register with MetaMask": "Registar com MetaMask",
+	"Signature": "Assinatura Web3"
 }
