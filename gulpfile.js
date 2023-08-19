@@ -558,7 +558,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		.pipe(concat('all.js'))
 		.pipe(uglify({compress:true}))
 		.pipe(gulp.dest(paths.scripts.dest));
-		
+
 	gulp.src([
 		`${paths.scripts.src}/web3.js`,
 	])

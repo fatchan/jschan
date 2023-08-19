@@ -138,7 +138,7 @@ module.exports = async (req, res) => {
 		dontStoreRawIps: booleanSetting(req.body.dont_store_raw_ips, oldSettings.dontStoreRawIps),
 		pruneIps: numberSetting(req.body.prune_ips, oldSettings.pruneIps),
 		enableWebring: booleanSetting(req.body.enable_webring, oldSettings.enableWebring),
-		enableWeb3: booleanSetting(req.body.enable_web3, oldSettings.enableWeb3),	
+		enableWeb3: booleanSetting(req.body.enable_web3, oldSettings.enableWeb3),
 		// ethereumNode: trimSetting(req.body.ethereum_node, oldSettings.ethereumNode),
 		following: arraySetting(req.body.webring_following, oldSettings.following),
 		blacklist: arraySetting(req.body.webring_blacklist, oldSettings.blacklist),
