@@ -1,3 +1,7 @@
+### 1.3.1
+  - Pt language fixes and updates.
+  - Fix a bug in live posts not displaying web3 address/signatures.
+
 ### 1.3.0
   - Web3 integration with MetaMask, development generously funded by @0xBekket
     - Users with the MetaMask browser extension can now register/login to accounts, and sign their messages with MetaMask.
