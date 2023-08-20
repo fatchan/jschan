@@ -496,7 +496,7 @@ const codeThemes = ['${codeThemes.join('\', \'')}'];
 const captchaOptions = ${JSON.stringify(reducedCaptchaOptions)};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
-const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
+const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL, ethereumLinksURL: config.get.ethereumLinksURL })};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 

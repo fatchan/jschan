@@ -19,7 +19,7 @@ const { Boards } = require(__dirname+'/../../db/')
 		'meta.siteName': ['deletehtml', 'scripts', 'custompages'],
 		'meta.url': ['deletehtml', 'scripts', 'custompages'],
 		'archiveLinksURL': ['deletehtml', 'custompages'],
-		'ethereumLinksURL': ['deletehtml', 'custompages'],
+		'ethereumLinksURL': ['deletehtml', 'custompages', 'scripts'],
 		'reverseImageLinksURL': ['deletehtml', 'custompages'],
 		'enableWebring': ['deletehtml', 'custompages'],
 		'enableWeb3': ['deletehtml'],

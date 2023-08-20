@@ -614,6 +614,8 @@ module.exports = async (req, res) => {
 		'locked': data.locked,
 		'bumplocked': data.bumplocked,
 		'cyclic': data.cyclic,
+		'signature': data.signature,
+		'address': data.address,
 	};
 	if (data.thread) {
 		//dont emit thread to this socket, because the room only exists when the thread is open
