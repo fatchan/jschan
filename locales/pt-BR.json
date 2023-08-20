@@ -1412,9 +1412,11 @@
 	"Filters FAQ": "FAQ Filtros",
 	"e.g. Rule 1: No ad spam": "e.g. Regra 1: Proibido spam",
 	"e.g. 3d": "e.g. 3d",
-	"Username must not be an ethereum address": "Username must not be an ethereum address",
-	"Login timed out": "Login timed out",
-	"Missing nonce": "Missing nonce",
-	"Missing signature": "Missing signature",
-	"Invalid login signature": "Invalid login signature"
+	"Username must not be an ethereum address": "Username não pode ser um endereço ethereum",
+	"Login timed out": "Login expirado",
+	"Missing nonce": "Falta código",
+	"Missing signature": "Falta assinatura",
+	"Invalid login signature": "Assinatura de login inválida",
+	"Register with MetaMask": "Registrar com MetaMask",
+	"Signature": "Assinatura Web3"
 }
