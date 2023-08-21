@@ -1418,5 +1418,6 @@
 	"Missing signature": "Falta assinatura",
 	"Invalid login signature": "Assinatura de login inválida",
 	"Register with MetaMask": "Registrar com MetaMask",
-	"Signature": "Assinatura Web3"
+	"Signature": "Assinatura Web3",
+	"Login with MetaMask": "Entrar com MetaMask"
 }
