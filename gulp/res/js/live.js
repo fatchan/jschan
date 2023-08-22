@@ -74,19 +74,24 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 			const postButtons = document.getElementsByClassName('post-button');
 			Array.from(postButtons).forEach(e => e.remove());
 			//and disconnect socket
-			if (socket.connected === true) { //&& disconnectSocket?
+			if (socket.connected === true) {
 				socket.disconnect();
 			}
 		}
 		if (data.type === 'edit') {
-			const insertPoint = postContainer.nextSibling;
-			// console.log(anchor, postContainer, insertPoint);
+			let insertPoint = postContainer.nextSibling;
+			let insertPosition = 'beforeBegin'
+			if (!insertPoint) {
+				//No next sibling, this is the last post in a thread
+				insertPoint = postContainer.parentElement;
+				insertPosition = 'beforeEnd';
+			}
 			anchor.remove();
 			postContainer.remove();
 			newPost(data, {
 				nonotify: true, //should we notify of edits in open threads, maybe just for OP? idk
-				insertPoint: insertPoint,
-				insertPosition: 'beforeBegin',
+				insertPoint,
+				insertPosition,
 			});
 		} else if (data.type === 'banmessage') {
 			const banMessageHtml = banmessage({
