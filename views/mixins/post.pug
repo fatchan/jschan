@@ -157,17 +157,17 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					pre.post-message !{post.message}
 			if !post.message && post.files.length === 0
 				p #{__('No message or files.')}
+			if post.signature && post.address
+				+web3signature(post.signature, post.address)
 			if post.edited
 				- const postEditDate = new Date(post.edited.date);
-				small.cb.mt-5.ml-5.edited
+				small.cb.mv-5.ml-5.edited
 					- lastEdited = __('Last edited | by %s', (post.edited.username || __('Hidden User'))).split('|'); //How do I interpolate a whole tag properly?
 					| #{lastEdited[0]}
 					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
 					| #{lastEdited[1]}
 			if post.banmessage
 				+banmessage(post.banmessage)
-			if post.signature && post.address
-				+web3signature(post.signature, post.address)
 			if truncatedMessage !== post.message
 				div.cb.mt-5.ml-5
 					| #{__('Message too long.')} #[a.viewfulltext(href=`${postURL}#${post.postId}`) #{__('View the full text')}]

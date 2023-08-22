@@ -643,6 +643,9 @@ td {
 
 .web3-signature, .web3-address {
 	word-break: break-all;
+}
+
+.web3-signature {
 	cursor: text;
 }
 
