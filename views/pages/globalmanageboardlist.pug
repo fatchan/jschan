@@ -60,7 +60,7 @@ block content
 							if !board.owner
 								span.help(title=__('Abandoned')) &#x1F3DA;&#xFE0F;
 								|  
-						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
+						a(href=`/${board._id}/manage/index.html`) /#{board._id}/ - #{board.settings.name}
 					if permissions.get(Permissions.GLOBAL_MANAGE_ACCOUNTS)
 						if board.owner
 							td: a(href=`/globalmanage/accounts.html?username=${board.owner}`) #{board.owner}
