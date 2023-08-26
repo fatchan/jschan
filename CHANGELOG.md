@@ -1,3 +1,12 @@
+### 1.3.2
+  - Global management board list links now link to boards in manage mode.
+  - Bugfix live editing posts, when editing last post of a thread it no longer
+    moves to the top of a thread.
+  - pt-PT and pt-BR language improvements.
+  - Styling tweaks to web3 signatures.
+  - Update jschan-docs.
+  - Npm audit.
+
 ### 1.3.1
   - Pt language fixes and updates.
   - Fix a bug in live posts not displaying web3 address/signatures.
