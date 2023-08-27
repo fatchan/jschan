@@ -80,7 +80,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		}
 		if (data.type === 'edit') {
 			let insertPoint = postContainer.nextSibling;
-			let insertPosition = 'beforeBegin'
+			let insertPosition = 'beforeBegin';
 			if (!insertPoint) {
 				//No next sibling, this is the last post in a thread
 				insertPoint = postContainer.parentElement;
