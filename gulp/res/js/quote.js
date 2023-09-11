@@ -4,6 +4,8 @@ window.addEventListener('DOMContentLoaded', () => {
 	const postForm = document.querySelector('#postform');
 	const topPostButton = document.querySelector('a[href="#postform"]');
 	const bottomPostButton = document.querySelector('.bottom-reply');
+	const messageBox = document.getElementById('message');
+
 	const openPostForm = (e) => {
 		if (e) {
 			e.preventDefault();
@@ -16,6 +18,9 @@ window.addEventListener('DOMContentLoaded', () => {
 		topPostButton.style.visibility = 'hidden';
 		if (bottomPostButton) {
 			bottomPostButton.style.display = 'none';
+		}
+		if (messageBox) {
+			messageBox.focus();
 		}
 		postForm.dispatchEvent(new Event('opened'));
 	};
@@ -36,8 +41,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 		closeButton.addEventListener('click', closePostForm, false);
 	}
-
-	const messageBox = document.getElementById('message');
 
 	const addToMessageBox = (str) => {
 		const index = messageBox.selectionStart;
