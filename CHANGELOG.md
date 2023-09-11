@@ -1,3 +1,8 @@
+### 1.3.3
+  - Fix the "Board Defaults" section in globamanagement settings being inaccessible, and update the template to be slightly more maintainable (especially for forks).
+  - Make the message box focused by js when a page is opened with #postform.
+  - Fix an installation issue with a folder not getting created properly.
+
 ### 1.3.2
   - Global management board list links now link to boards in manage mode.
   - Bugfix live editing posts, when editing last post of a thread it no longer
