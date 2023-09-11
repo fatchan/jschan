@@ -462,7 +462,7 @@ async function custompages() {
 async function langs() {
 	const i18n = require(__dirname+'/lib/locale/locale.js');
 	await del([ 'static/js/lang/' ]);
-	fs.mkdirSync(`${paths.scripts.dest}lang/`);
+	fs.mkdirSync(`${paths.scripts.dest}lang/`, { recursive: true });
 	const feStrings = require(__dirname+'/tools/festrings.json');
 	Object.entries(i18n.getCatalog())
 		.forEach(entry => {
