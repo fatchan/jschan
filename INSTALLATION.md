@@ -32,6 +32,12 @@ sudo apt install curl wget gnupg nginx ffmpeg imagemagick graphicsmagick python3
 
 **3. Install MongoDB**
 
+NOTE: As per the MongoDB Documentation, since MongoDB 5.0, the AVX instruction set is required.
+
+> MongoDB 5.0 requires use of the AVX instruction set, available on [select Intel and AMD processors](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#CPUs_with_AVX).
+
+Please ensure your hardware is supported before reporting issues. The complete platform support matrix is available [here](https://www.mongodb.com/docs/manual/administration/production-notes/#platform-support-matrix).
+
 [MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian):
 ```bash
 wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
