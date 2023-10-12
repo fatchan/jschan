@@ -1,4 +1,4 @@
-hextends ../layout.pug
+extends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
@@ -24,11 +24,11 @@ block content
 	hr(size=1)
 	h4.no-m-p #{__('Clear All')}:
 	.form-wrapper.flexleft.mt-10
-		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
+		form.form-post(action=`/forms/global/clear`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
 				.label #{__('Table')}
-				select(name='clear')
+				select(name='table')
 					option(value='sessions') #{__('Login Sessions')}
 					option(value='blockbypass') #{__('Block Bypasses')}
 			.row
