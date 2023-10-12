@@ -1416,5 +1416,8 @@
 	"Login timed out": "Login timed out",
 	"Missing nonce": "Missing nonce",
 	"Missing signature": "Missing signature",
-	"Invalid login signature": "Invalid login signature"
+	"Invalid login signature": "Invalid login signature",
+	"Clear All": "Clear All",
+	"Login Sessions": "Login Sessions",
+	"Block Bypasses": "Block Bypasses"
 }

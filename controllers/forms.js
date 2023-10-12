@@ -30,7 +30,7 @@ const express  = require('express')
 		deleteAccountsController, editAccountController, addFilterController, editFilterController, deleteFilterController, 
 		globalSettingsController, createBoardController, makePostController, addStaffController, deleteStaffController, 
 		editStaffController, editCustomPageController, editPostController, editRoleController, newCaptchaForm, 
-		blockBypassForm, logoutForm, deleteSessionsController } = require(__dirname+'/forms/index.js');
+		blockBypassForm, logoutForm, deleteSessionsController, globalClearController } = require(__dirname+'/forms/index.js');
 
 //make new post
 router.post('/board/:board/post', geoIp, processIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, calcPerms, banCheck, fileMiddlewares.posts,
@@ -119,6 +119,8 @@ router.post('/global/deletefilter', useSession, sessionRefresh, csrf, calcPerms,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), deleteFilterController.paramConverter, deleteFilterController.controller); //delete filter
 router.post('/global/settings', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), globalSettingsController.paramConverter, globalSettingsController.controller); //global settings
+router.post('/global/clear', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), globalClearController.paramConverter, globalClearController.controller); //global clear
 
 //create board
 router.post('/create', geoIp, processIp, useSession, sessionRefresh, isLoggedIn, calcPerms, verifyCaptcha, createBoardController.paramConverter, createBoardController.controller);

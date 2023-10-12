@@ -1,4 +1,4 @@
-extends ../layout.pug
+hextends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
@@ -16,6 +16,21 @@ block content
 			.row
 				.label #{__('Board URI')}:
 				input(type='text' name='uri' required)
+			.row
+				.label #{__("I'm sure")}
+				label.postform-style.ph-5
+					input(type='checkbox', name='confirm', value='true' required)
+			input(type='submit', value=__('Submit'))
+	hr(size=1)
+	h4.no-m-p #{__('Clear All')}:
+	.form-wrapper.flexleft.mt-10
+		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
+			input(type='hidden' name='_csrf' value=csrf)
+			.row
+				.label #{__('Table')}
+				select(name='clear')
+					option(value='sessions') #{__('Login Sessions')}
+					option(value='blockbypass') #{__('Block Bypasses')}
 			.row
 				.label #{__("I'm sure")}
 				label.postform-style.ph-5

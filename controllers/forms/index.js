@@ -34,6 +34,7 @@ module.exports = {
 	editFilterController: require(__dirname+'/editfilter.js'),
 	deleteFilterController: require(__dirname+'/deletefilter.js'),
 	globalSettingsController: require(__dirname+'/globalsettings.js'),
+	globalClearController: require(__dirname+'/globalclear.js'),
 	createBoardController: require(__dirname+'/create.js'),
 	makePostController: require(__dirname+'/makepost.js'),
 	editPostController: require(__dirname+'/editpost.js'),
