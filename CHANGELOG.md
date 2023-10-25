@@ -1,5 +1,6 @@
 ### 1.4.0
   - Add a new global management feature to clear all blockbypasses or all login sessions
+  - Update dependencies
   - Npm audit fix
 
 ### 1.3.3
