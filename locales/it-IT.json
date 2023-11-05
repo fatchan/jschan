@@ -1418,5 +1418,9 @@
 	"Invalid login signature": "Invalid login signature",
 	"Clear All": "Clear All",
 	"Login Sessions": "Login Sessions",
-	"Block Bypasses": "Block Bypasses"
+	"Block Bypasses": "Block Bypasses",
+	"Deleted %n records.": {
+		"one": "Deleted %s record.",
+		"other": "Deleted %n records."
+	}
 }
