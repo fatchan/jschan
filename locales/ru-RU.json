@@ -330,6 +330,7 @@
 	"Bypass Captcha": "Обойти капчу",
 	"Bypass captcha.": "Обойти капчу.",
 	"Bypass DNSBL": "Байпас DNSBL",
+	"Bypass DNSBL.": "Байпас DNSBL.",
 	"Bypass Filters": "Обходные фильтры",
 	"Bypass Ratelimits": "Обходные ограничения скорости",
 	"Bypass ratelimits for getting new captchas, editing posts, editing board settings, etc.": "Обходные ограничения скорости для получения новых капчей, редактирования постов, настройки доски объявлений и т.д.",
