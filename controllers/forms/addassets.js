@@ -18,7 +18,7 @@ module.exports = {
 
 		const errors = await checkSchema([
 			{ result: res.locals.numFiles === 0, expected: false, blocking: true, error: __('Must provide a file') },
-			{ result: (res.locals.anonymizer && disableAnonymizerFilePosting), expected: false, error: __('Posting files through anonymizers has been disabled globally') },
+			{ result: (res.locals.anonymizer && disableAnonymizerFilePosting && !res.locals.permissions.get(Permissions.BYPASS_ANONYMIZER_RESTRICTIONS)), expected: false, error: __('Posting files through anonymizers has been disabled globally') },
 			{ result: numberBody(res.locals.numFiles, 0, globalLimits.assetFiles.max), expected: true, error: __('Exceeded max asset uploads in one request of %s', globalLimits.assetFiles.max) },
 			{ result: numberBody(res.locals.board.assets.length+res.locals.numFiles, 0, globalLimits.assetFiles.total), expected: true, error: __('Total number of assets would exceed global limit of %s', globalLimits.assetFiles.total) },
 		]);

@@ -1,3 +1,9 @@
+### 1.4.1
+  - Add a "Bypass DNSBL" account/role permission.
+  - Add a "Bypass Anonymizer Restrictions" account/role permission.
+  - Update dependencies.
+  - Npm audit fix.
+
 ### 1.4.0
   - Add a new global management feature to clear all blockbypasses or all login sessions.
   - Make (You)s sync over multiple tabs when posting or clearing.
