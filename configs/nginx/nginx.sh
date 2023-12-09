@@ -282,14 +282,10 @@ if [ "$GEOIP" == "y" ]; then
 	wget --retry-connrefused -qO- "https://download.db-ip.com/free/dbip-country-lite-`date +%Y-%m`.mmdb.gz"  | tee "/usr/share/GeoIP/dbip.mmdb.gz" >/dev/null
 	gunzip "/usr/share/GeoIP/dbip.mmdb.gz"
 	#add goeip_country to /etc/nginx/nginx.conf, only if not already exists
-	grep -qF "geoip2" /etc/nginx/nginx.conf
+	grep -qF "geoip_country" /etc/nginx/nginx.conf
 	if [ $? -eq 1 ]; then
 		sudo sed -i '/http {/a \
-geoip2 /usr/share/GeoIP/dbip.mmdb {\
-  auto_reload 5m;\
-  $geoip2_data_country_code default=unknown source=$remote_addr country iso_code;\
-  $geoip2_data_country_name country names en;\
-}' /etc/nginx/nginx.conf
+geoip_country /usr/share/GeoIP/geoip.mmdb;' /etc/nginx/nginx.conf
 	fi
 else
 	echo "Geoip not installed, removing directives..."
