@@ -27,7 +27,7 @@
 
 ```bash
 sudo apt update -y
-sudo apt install curl wget gnupg nginx ffmpeg imagemagick graphicsmagick python3-certbot-nginx fontconfig fonts-dejavu -y
+sudo apt install curl wget libgeoip-dev gnupg ffmpeg imagemagick graphicsmagick fontconfig fonts-dejavu -y
 ```
 
 **3. Install MongoDB**
@@ -40,10 +40,9 @@ Please ensure your hardware is supported before reporting issues. The complete p
 
 [MongoDB Installation](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian):
 ```bash
-wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
-echo "deb http://repo.mongodb.org/apt/debian $(lsb_release -sc)/mongodb-org/6.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-sudo apt update -y
-sudo apt install -y mongodb-org
+wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
+echo "deb http://repo.mongodb.org/apt/debian $(lsb_release -sc)/mongodb-org/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+hsudo apt install -y mongodb-org
 sudo systemctl enable --now mongod
 ```
 
@@ -94,7 +93,7 @@ sudo systemctl restart redis-server
 
 For easy installation, use [node version manager](https://github.com/nvm-sh/nvm#installing-and-updating) "nvm":
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
@@ -120,6 +119,10 @@ HiddenServicePort 80 unix:/var/run/nginx-tor.sock
 EOF
 
 sudo systemctl restart tor
+until [ -f /var/lib/tor/jschan/hostname ]
+do
+     sleep 1
+done
 sudo cat /var/lib/tor/jschan/hostname
 ```
 
@@ -158,6 +161,13 @@ Note down the .loki and .onion address for the next step.
 
 For standard installations, run `configs/nginx/nginx.sh`. This will prompt you for installation directory, domains, onion/lokinet, enable geoip, install a letsencrypt certificate with certbot and more:
 ```bash
+wget https://raw.githubusercontent.com/fatchan/nginx-autoinstall/master/nginx-autoinstall.sh
+chmod +x nginx-autoinstall.sh
+sudo su
+HEADLESS=y OPTION=1 NGINX_VER=STABLE SUBFILTER=y RTMP=y ./nginx-autoinstall.sh
+echo "You can safely ignore that error about restarting nginx ^"
+exit
+rm nginx-autoinstall.sh
 sudo bash configs/nginx/nginx.sh
 ```
 

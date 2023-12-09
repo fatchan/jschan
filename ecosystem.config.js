@@ -4,7 +4,7 @@ module.exports = {
 	apps : [{
 		name: 'build-worker',
 		script: 'worker.js',
-		instances: Math.floor(numCpus/2),
+		instances: Math.ceil(numCpus*0.75),
 		autorestart: true,
 		watch: false,
 		max_memory_restart: '1G',
@@ -21,7 +21,7 @@ module.exports = {
 	}, {
 		name: 'chan',
 		script: 'server.js',
-		instances: Math.floor(numCpus/2),
+		instances: Math.ceil(numCpus*0.75),
 		autorestart: true,
 		watch: false,
 		max_memory_restart: '1G',

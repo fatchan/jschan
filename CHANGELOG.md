@@ -1,4 +1,5 @@
 ### 1.4.1
+  - Update the INSTALLATION.md (install instructions).
   - Add a "Bypass DNSBL" account/role permission.
   - Add a "Bypass Anonymizer Restrictions" account/role permission.
   - Update dependencies.
