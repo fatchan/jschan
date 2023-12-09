@@ -1,15 +1,15 @@
 unless minimal
 	small.footer#bottom
-		| - 
 		a(href='/news.html') #{__('news')}
 		|  - 
 		a(href='/rules.html') #{__('rules')}
 		|  - 
 		a(href='/faq.html') #{__('faq')}
 		|  - 
+		a(href='https://gitgud.io/fatchan/jschan/') jschan #{version}
 		div
-			a(href='https://gitgud.io/fatchan/jschan/') jschan
-			|  #{version}
+			| Sponsored by 
+			a(href='https://basedflare.com') BasedFlare
 
 //- "render" script - for scripted things that are blocking
 script(src=`/js/render.js?v=${commit}`)
