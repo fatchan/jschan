@@ -6,14 +6,15 @@ block head
 
 block content
 	h1.board-title #{meta.siteName}
+	//img.logo(src='/url' title='') future mascot logo 
 	.table-container.flex-center.mv-10.text-center
-		table
+		//table
 			tr
 				th.alt #{__('Welcome')}
 			tr
 				td
 					pre.no-m-p
-						| The site administrator should edit views/pages/home.pug, then run "pm2 reload all" and "gulp html" to customise this page.
+						| Welcome do indiachan, an imageboard dedicated to all indian things?
 	if recentNews && recentNews.length > 0
 		.table-container.flex-center.mv-10
 			table.newstable
