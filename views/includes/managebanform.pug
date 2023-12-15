@@ -1,5 +1,5 @@
 if bans.length === 0
-	p No bans.
+	p #{__('No bans.')}
 else
 	input(type='hidden' name='_csrf' value=csrf)
 	include ../includes/bantable.pug
@@ -7,30 +7,30 @@ else
 			+ban(ban)
 	.action-wrapper.mv-10
 		.row
-			.label Unban
+			.label #{__('Unban')}
 			label.postform-style.ph-5
 				input(type='radio' name='option' value='unban' checked='checked')
 		.row
-			.label Deny Appeal
+			.label #{__('Deny Appeal')}
 			label.postform-style.ph-5
 				input(type='radio' name='option' value='deny_appeal')
 		.row
-			.label Upgrade Ban
+			.label #{__('Upgrade Ban')}
 			label.postform-style.ph-5.mr-1
 				input(type='radio' name='option' value='upgrade')
 			select(name='upgrade')
 				option(value='')
-				option(value='1') Narrow Range
-				option(value='2') Wide Range
+				option(value='1') #{__('Narrow Range')}
+				option(value='2') #{__('Wide Range')}
 		.row
-			.label Edit Duration
+			.label #{__('Edit Duration')}
 			label.postform-style.ph-5.mr-1
 				input(type='radio' name='option' value='edit_duration')
-			input(type='text' name='ban_duration' placeholder='Ban duration e.g. 7d' autocomplete='off')
+			input(type='text' name='ban_duration' placeholder=__('Ban duration e.g. 7d') autocomplete='off')
 		.row
-			.label Edit Note
+			.label #{__('Edit Note')}
 			label.postform-style.ph-5.mr-1
 				input(type='radio' name='option' value='edit_note')
 			input(type='text' name='ban_note')
-	input(type='submit' value='Submit')
+	input(type='submit' value=__('Submit'))
 

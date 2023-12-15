@@ -1,0 +1,6 @@
+mixin web3signature(signature, address)
+	div.mv-5.ml-5
+		a.web3-address(href=ethereumLinksURL.replace('%s', encodeURIComponent(address)) rel='nofollow' referrerpolicy='same-origin' target='_blank') #{address.substring(0,5)}…#{address.substring(38, 42)}
+		details.dummy-link
+			summary #{__('Signature')}
+			.web3-signature #{signature}

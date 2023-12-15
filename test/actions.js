@@ -112,27 +112,6 @@ module.exports = () => describe('Test post modactions', () => {
 		expect(response.ok).toBe(true);
 	});
 
-	test('delete 5 random posts from /test/',  async () => {
-		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
-		const params = new URLSearchParams({
-			_csrf: csrfToken,
-			delete: '1',
-		});
-		for (let i = 0; i < 5; i++) {
-			const thread = threads[Math.floor(Math.random() * threads.length)];
-			params.append('checkedposts', thread.postId);
-		}
-		const response = await fetch('http://localhost/forms/board/test/modactions', {
-			headers: {
-				'x-using-xhr': 'true',
-				'cookie': sessionCookie,
-			},
-			method: 'POST',
-			body: params,
-		});
-		expect(response.ok).toBe(true);
-	});
-
 	test('lower reply limit',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
@@ -143,6 +122,7 @@ module.exports = () => describe('Test post modactions', () => {
 			theme: 'yotsuba-b',
 			code_theme: 'ir-black',
 			custom_css: '',
+			language: 'en-GB',
 			enable_tegaki: 'true',
 			max_files: '5',
 			files_allow_video: 'true',
@@ -248,7 +228,7 @@ module.exports = () => describe('Test post modactions', () => {
 
 	});
 
-	test('move/merge a thread',  async () => {
+	test('move/merge a thread in same board',  async () => {
 		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
@@ -267,6 +247,88 @@ module.exports = () => describe('Test post modactions', () => {
 		expect(response.ok).toBe(true);
 	});
 
+	test('move/merge a thread cross board',  async () => {
+		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
+		const threads2 = await fetch('http://localhost/test2/catalog.json').then(res => res.json());
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedposts: threads[0].postId,
+			move: '1',
+			move_to_board: 'test2',
+			move_to_thread: threads2[0].postId,
+		});
+		const response = await fetch('http://localhost/forms/board/test/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('move/merge a thread cross board (new thread)',  async () => {
+		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedposts: threads[0].postId,
+			move: '1',
+			move_to_board: 'test2',
+		});
+		const response = await fetch('http://localhost/forms/board/test/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('move/merge a thread cross board (other way)',  async () => {
+		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
+		const threads2 = await fetch('http://localhost/test2/catalog.json').then(res => res.json());
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedposts: threads2[0].postId,
+			move: '1',
+			move_to_board: 'test',
+			move_to_thread: threads[0].postId,
+		});
+		const response = await fetch('http://localhost/forms/board/test2/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('delete 5 random posts from /test/',  async () => {
+		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			delete: '1',
+		});
+		for (let i = 0; i < 5; i++) {
+			const thread = threads[Math.floor(Math.random() * threads.length)];
+			params.append('checkedposts', thread.postId);
+		}
+		const response = await fetch('http://localhost/forms/board/test/modactions', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+	
 	let reportedPost;
 	test('test local report + global report',  async () => {
 		const threads = await fetch('http://localhost/test/catalog.json').then(res => res.json());
@@ -626,8 +688,8 @@ int main() {...}
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
 			checkedbans: banId,
-			option: 'edit',
-			ban_duration: '3d',
+			option: 'edit_duration',
+			ban_duration: '1s',
 		});
 		const response = await fetch('http://localhost/forms/global/editbans', {
 			headers: {

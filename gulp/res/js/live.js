@@ -1,4 +1,4 @@
-/* globals isRecent isGlobalRecent isThread post extraLocals isModView io setLocalStorage */
+/* globals __ isRecent banmessage isGlobalRecent isThread post extraLocals isModView io setLocalStorage */
 let liveEnabled = localStorage.getItem('live') == 'true';
 let scrollEnabled = localStorage.getItem('scroll') == 'true';
 let socket;
@@ -21,6 +21,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 	};
 	let lastPostIds = {};
 	let liveTimeout;
+	let retrySocketTimeout;
 	const postContainers = document.getElementsByClassName('post-container');
 	for (let i = 0; i < postContainers.length; i++) {
 		const postContainer = postContainers[i];
@@ -33,31 +34,76 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		console.log('got mark post message', data);
 		const anchor = document.getElementById(data.postId);
 		const postContainer = anchor.nextSibling;
-		postContainer.classList.add('marked');
-		postContainer.setAttribute('data-mark', data.mark);
-		//handle any special cases for different marks
+		const isOp = postContainer && postContainer.classList.contains('op');
+		let dataMark;
+		let applyToReplies = false;
+		let disableReplies = false;
 		switch (data.type) {
 			case 'delete':
+				dataMark = __('Deleted');
+				applyToReplies = true;
+				disableReplies = true;
+				break;
 			case 'move':
-				if (postContainer.classList.contains('op')) {
-					//moved or delete OPs then apply to whole thread
-					const postContainers = document.getElementsByClassName('post-container');
-					Array.from(postContainers).forEach(e => {
-						e.classList.add('marked');
-						e.setAttribute('data-mark', data.mark);
-					});
-					//remove new reply buttons and postform
-					document.getElementById('postform').remove();
-					const postButtons = document.getElementsByClassName('post-button');
-					Array.from(postButtons).forEach(e => e.remove());
-					//and disconnect socket
-					if (socket.connected === true) {
-						socket.disconnect();
-					}
-				}
+				dataMark = __('Moved');
+				applyToReplies = true;
+				disableReplies = true;
+				break;
+			case 'banmessage':
+			case 'edit': //opting for no data mark, already has the usual "edited x ago"
 				break;
 			default:
-				//nothing special
+				return;
+		}
+		if (dataMark) {
+			//mark with a red text
+			postContainer.classList.add('marked');
+			postContainer.setAttribute('data-mark', dataMark);
+		}
+		if (isOp && applyToReplies === true) {
+			//moved or delete OPs then apply to whole thread
+			const postContainers = document.getElementsByClassName('post-container');
+			Array.from(postContainers).forEach(e => {
+				e.classList.add('marked');
+				e.setAttribute('data-mark', dataMark);
+			});
+		}
+		if (isOp && disableReplies === true) {
+			//remove new reply buttons and postform
+			document.getElementById('postform').remove();
+			const postButtons = document.getElementsByClassName('post-button');
+			Array.from(postButtons).forEach(e => e.remove());
+			//and disconnect socket
+			if (socket.connected === true) {
+				socket.disconnect();
+			}
+		}
+		if (data.type === 'edit') {
+			let insertPoint = postContainer.nextSibling;
+			let insertPosition = 'beforeBegin';
+			if (!insertPoint) {
+				//No next sibling, this is the last post in a thread
+				insertPoint = postContainer.parentElement;
+				insertPosition = 'beforeEnd';
+			}
+			anchor.remove();
+			postContainer.remove();
+			newPost(data, {
+				nonotify: true, //should we notify of edits in open threads, maybe just for OP? idk
+				insertPoint,
+				insertPosition,
+			});
+		} else if (data.type === 'banmessage') {
+			const banMessageHtml = banmessage({
+				banmessage: data.banmessage,
+			});
+			const existingBanMessage = postContainer.querySelector('.ban');
+			if (existingBanMessage) {
+				existingBanMessage.insertAdjacentHTML('afterend', banMessageHtml);
+				existingBanMessage.remove();
+			} else {
+				postContainer.insertAdjacentHTML('beforeend', banMessageHtml);
+			}
 		}
 	};
 
@@ -65,7 +111,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		//insert at end of thread, but insert at top for globalmanage
 		//console.log('got new post', data);
 		const postData = data;
-		lastPostIds[postData.board] = postData.postId;
+		lastPostIds[postData.board] = Math.max(lastPostIds[postData.board], postData.postId);
 		//create a new post
 		const postHtml = post({
 			viewRawIp,
@@ -158,7 +204,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 	jsonPath = jsonParts.join('/');
 	const fetchNewPosts = async () => {
 		console.log('fetching posts from api');
-		updateLive('Fetching posts...', 'yellow');
+		updateLive(__('Fetching posts...'), 'yellow');
 		let json;
 		let newPosts = [];
 		try {
@@ -177,7 +223,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 				}
 			}
 		}
-		updateLive('Updated', 'green');
+		updateLive(__('Updated'), 'green');
 		return newPosts.length;
 	};
 
@@ -224,8 +270,19 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 				const pingStart = Date.now();
 				socket.volatile.emit('ping', () => {
 					const latency = Date.now() - pingStart;
-					updateLive(`Connected for live posts (${latency}ms)`, '#0de600');
+					updateLive(__('Connected for live posts (%sms)', latency), '#0de600');
 				});
+			};
+			const fallbackToPolling = () => {
+				console.log('falling back to polling');
+				socket.close();
+				supportsWebSockets = false;
+				enableLive();
+				clearTimeout(retrySocketTimeout);
+				retrySocketTimeout = setTimeout(() => {
+					supportsWebSockets = true;
+					enableLive();
+				}, 6000);
 			};
 			socket.on('connect', async () => {
 				console.log('socket connected');
@@ -237,40 +294,38 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 			socket.on('message', (message) => {
 				console.log(message, room);
 				if (message === 'joined') {
-					updateLive('Connected for live posts', '#0de600');
+					updateLive(__('Connected for live posts'), '#0de600');
 					socketPing();
 				}
 			});
 			socket.on('reconnect_attempt', () => {
-				updateLive('Attempting to reconnect...', 'yellow');
+				updateLive(__('Attempting to reconnect...'), 'yellow');
 			});
 			socket.on('disconnect', () => {
 				console.log('lost connection to room');
-				updateLive('Disconnected', 'red');
+				updateLive(__('Disconnected'), 'red');
 			});
 			socket.on('reconnect', () => {
 				console.log('reconnected to room');
 				fetchNewPosts();
 			});
 			socket.on('error', (e) => {
-				updateLive('Socket error', 'orange');
+				updateLive(__('Socket error'), 'orange');
 				console.error(e);
 			});
 			socket.on('connect_error', (e) => {
-				updateLive('Error connecting', 'orange');
+				updateLive(__('Error connecting'), 'orange');
 				console.error(e);
+				fallbackToPolling();
 			});
 			socket.on('reconnect_error', (e) => {
-				updateLive('Error reconnecting', 'orange');
+				updateLive(__('Error reconnecting'), 'orange');
 				console.error(e);
 			});
 			socket.on('reconnect_failed', (e) => {
-				updateLive('Failed reconnecting', 'orange');
+				updateLive(__('Failed reconnecting'), 'orange');
 				console.error(e);
-				console.log('failed to reconnnect, falling back to polling');
-				socket.close();
-				supportsWebSockets = false;
-				enableLive();
+				fallbackToPolling();
 			});
 			socket.on('newPost', newPost);
 			socket.on('markPost', markPost);
@@ -288,7 +343,7 @@ window.addEventListener('settingsReady', function() { //after domcontentloaded
 		if (socket && supportsWebSockets) {
 			socket.disconnect();
 		}
-		updateLive('Live posts off', 'darkgray');
+		updateLive(__('Live posts off'), 'darkgray');
 	};
 
 	const liveSetting = document.getElementById('live-setting');

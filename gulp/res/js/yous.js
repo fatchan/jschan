@@ -1,14 +1,27 @@
-/* globals setLocalStorage */
+/* globals __ setLocalStorage */
 let notificationsEnabled = localStorage.getItem('notifications') == 'true';
 let notificationYousOnly = localStorage.getItem('notification-yous-only') == 'true';
 let yousEnabled = localStorage.getItem('yous-setting') == 'true';
 let savedYous = new Set(JSON.parse(localStorage.getItem('yous')));
 let yousList;
 
-const toggleAllYous = (state) => savedYous.forEach(y => toggleOne(y, state));
+function clearYousList() {
+	if (yousEnabled) {
+		toggleAllYous(false);
+	}
+	savedYous = new Set();
+	yousList.value = '';
+	setLocalStorage('yous', '[]');
+	console.log('cleared yous');
+}
+
+function toggleAllYous(state) {
+	savedYous.forEach(y => toggleOne(y, state));
+}
 
 const toggleQuotes = (quotes, state) => {
 	quotes.forEach(q => {
+		q[state?'setAttribute':'removeAttribute']('data-label', __('You'));
 		q.classList[state?'add':'remove']('you');
 	});
 };
@@ -19,6 +32,7 @@ const toggleOne = (you, state) => {
 	if (post) {
 		const postName = post.querySelector('.post-name');
 		if (postName) {
+			postName[state?'setAttribute':'removeAttribute']('data-label', __('You'));
 			postName.classList[state?'add':'remove']('you');
 		}
 	}
@@ -60,6 +74,26 @@ const formatNotificationOptions = (postData) => {
 if (yousEnabled) {
 	toggleAllYous(yousEnabled);
 }
+
+//handle when (you)s change in a different tab
+const yousStorageEventHandler = (e) => {
+	if (e.storageArea === localStorage
+		&& e.key === 'yous') {
+		const newArrayYous = [...JSON.parse(e.newValue)];
+		newArrayYous.forEach(ny => {
+			if (!savedYous.has(ny)) {
+				savedYous.add(ny);
+				console.log('handle new (you) from other context:', ny);
+				toggleOne(ny, yousEnabled);
+			}
+		});
+		if (newArrayYous.length === 0) {
+			console.log('(you)s were cleared in another tab');
+			clearYousList();
+		}
+		yousList.value = newArrayYous.toString();
+	}
+};
 
 const handleNewYous = (e) => {
 	const postYou = `${e.detail.json.board}-${e.detail.postId}`;
@@ -109,6 +143,7 @@ const handleNewYous = (e) => {
 };
 
 window.addEventListener('addPost', handleNewYous, false);
+window.addEventListener('storage', yousStorageEventHandler, false);
 window.addEventListener('updatePostMessage', handleNewYous, false);
 
 window.addEventListener('settingsReady', () => {
@@ -116,15 +151,6 @@ window.addEventListener('settingsReady', () => {
 	yousList = document.getElementById('youslist-setting');
 	yousList.value = [...savedYous];
 	const yousListClearButton = document.getElementById('youslist-clear');
-	const clearYousList = () => {
-		if (yousEnabled) {
-			toggleAllYous(false);
-		}
-		savedYous = new Set();
-		yousList.value = '';
-		setLocalStorage('yous', '[]');
-		console.log('cleared yous');
-	};
 	yousListClearButton.addEventListener('click', clearYousList, false);
 
 	const yousSetting = document.getElementById('yous-setting');

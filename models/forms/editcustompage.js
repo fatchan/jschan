@@ -10,6 +10,7 @@ const { CustomPages } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const message = prepareMarkdown(req.body.message, false);
 	const { message: markdownPage } = await messageHandler(message, null, null, res.locals.permissions);
 	const editedDate = new Date();
@@ -19,8 +20,8 @@ module.exports = async (req, res) => {
 
 	if (oldPage === null) {
 		return dynamicResponse(req, res, 400, 'message', {
-			'title': 'Bad request',
-			'error': 'Custom page does not exist',
+			'title': __('Bad request'),
+			'error': __('Custom page does not exist'),
 			'redirect': req.headers.referer || `/${req.params.board}/manage/custompages.html`
 		});
 	}
@@ -50,8 +51,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Updated custom page',
+		'title': __('Success'),
+		'message': __('Updated custom page'),
 		'redirect': `/${req.params.board}/manage/custompages.html`,
 	});
 

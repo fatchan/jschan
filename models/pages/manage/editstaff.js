@@ -1,6 +1,7 @@
 'use strict';
 
-const Permission = require(__dirname+'/../../../lib/permission/permission.js');
+const Permission = require(__dirname+'/../../../lib/permission/permission.js')
+	, { Permissions } = require(__dirname+'/../../../lib/permission/permissions.js');
 
 module.exports = async (req, res, next) => {
 
@@ -19,6 +20,7 @@ module.exports = async (req, res, next) => {
 			permissions: res.locals.permissions,
 			staffUsername: req.params.staffusername,
 			staffPermissions: new Permission(staffData.permissions),
+			manageBoardBits: Permissions._MANAGE_BOARD_BITS,
 		});
 
 };

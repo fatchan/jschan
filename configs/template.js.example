@@ -24,11 +24,7 @@ module.exports = {
 		url: ''
 	},
 
-	filters: [],
-	strictFiltering: false,
-	filterMode: 0,
-	filterBanDuration: 0,
-	filterBanAppealable: true,
+	language: 'en-GB',
 
 	//settings for captchas
 	captchaOptions: {
@@ -116,9 +112,10 @@ module.exports = {
 	//max age of a hot thread, with a reducing score multiplier from 0-1 bias towards this date
 	hotThreadsMaxAge: 2629800000,
 
-	//default url format/links for archive and reverse image search links, %s will be replaced by the url
+	//default url format/links for archive, reverse image search, and ethereum links, %s will be replaced by the url
 	archiveLinksURL: 'https://archive.today/?run=1&url=%s',
 	reverseImageLinksURL: 'https://tineye.com/search?url=%s',
+	ethereumLinksURL: 'https://etherscan.io/address/%s',
 
 	//cache templates in memory. disable only if editing templates and doing dev work
 	cacheTemplates: true,
@@ -138,9 +135,13 @@ module.exports = {
 	//enable the webring (also copy configs/webring.json.example -> configs/webring.json and edit)
 	enableWebring: false,
 
-	//extension for thumbnails that do not contain transparency (png will be used)
-	thumbExtension: '.jpg',
-	//.gif images > thumbnail size will have animated .gif thumbnails, overriding thumbExtension
+	//web3
+	enableWeb3: false,
+	ethereumNode: '',
+
+	//extension for thumbnails
+	thumbExtension: '.webp',
+	//whether to animate gif thumbnails
 	animatedGifThumbnails: false,
 	//generate waveform thumbnails for audio
 	audioThumbnails: true,
@@ -175,9 +176,6 @@ module.exports = {
 	//max number of quotes that will be linked in a post. 0 for unlimited (not recommended)
 	quoteLimit: 25,
 
-	//aply global filters more aggressively, trying against extra text that strips diacritics and some ZWS chars
-	strictFiltering: true,
-
 	//how many replies to show on index pages under each OP
 	previewReplies: 5,
 	stickyPreviewReplies: 5, //choose a different amount for sticky posts if desired
@@ -208,6 +206,8 @@ module.exports = {
 	/* replace spaces and multiple spaces with some character default _ for better filenames
 		(spaces dont belong in filenames) */
 	spaceFileNameReplacement: '_',
+
+	uriDecodeFileNames: false,
 
 	//options for code block highlighting in posts
 	highlightOptions: {
@@ -262,10 +262,14 @@ module.exports = {
 			max: 1000
 		},
 		postFiles: { //number of files in a post
-			max: 5
+			max: 5,
 		},
-		postFilesSize: { //in bytes, 10MB default
-			max: 10485760
+		postFilesSize: {
+			max: 10485760, //in bytes, 10MB default
+			//width*height max number, 10000*10000 default, since square vs very wids vs very tall doesnt matter,
+			//just the raw number of pixels e.g. 4K 3840x2160=77414400, so we give PLENTY of headroom
+			imageResolution: 100000000,
+			videoResolution: 77414400,
 		},
 		bannerFiles: {
 			width: 300, //banner image max width in px
@@ -330,6 +334,9 @@ module.exports = {
 		customPages: {
 			max: 10, //max number of custom pages per board
 			maxLength: 10000, //max number of characters to allow per page
+		},
+		filters: {
+			max: 50,
 		}
 	},
 
@@ -364,6 +371,7 @@ module.exports = {
 
 	//default board settings when a board is created
 	boardDefaults: {
+		language: 'en-GB',
 		theme: 'yotsuba-b',
 		codeTheme: 'ir-black',
 		sfw: false, //safe for work board
@@ -388,6 +396,7 @@ module.exports = {
 		geoFlags: false, //show geo flags, requires nginx setup
 		customFlags: false, //show custom flags
 		enableTegaki: true,
+		enableWeb3: false,
 		userPostDelete: true, //allow users to delete their posts
 		userPostSpoiler: true, //allow user to spoiler their post files
 		userPostUnlink: true, //alow user to unlink files fomr their post
@@ -412,12 +421,8 @@ module.exports = {
 		customCSS: null,
 		blockedCountries: [], //2 char ISO country codes to block
 		disableAnonymizerFilePosting: false,
-		filters: [], //words/phrases to block
-		filterMode: 0, //0=nothing, 1=prevent post, 2=auto ban
-		filterBanDuration: 0, //duration (in ms) to ban if filter mode=2
 		deleteProtectionAge: 0, //prevent non-staff OP from deleting their thread if it older than this age in ms
 		deleteProtectionCount: 0, //prevent non-staff op deleting their thread if it has more than this many replies
-		strictFiltering: false,
 		announcement: {
 			raw: null,
 			markdown: null

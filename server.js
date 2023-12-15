@@ -10,20 +10,22 @@ const config = require(__dirname+'/lib/misc/config.js')
 	, app = express()
 	, server = require('http').createServer(app)
 	, cookieParser = require('cookie-parser')
-	, { port, cookieSecret, debugLogs, google, hcaptcha } = require(__dirname+'/configs/secrets.js')
+	, { port, cookieSecret, debugLogs, google, hcaptcha, yandex } = require(__dirname+'/configs/secrets.js')
 	, Mongo = require(__dirname+'/db/db.js')
 	, dynamicResponse = require(__dirname+'/lib/misc/dynamic.js')
 	, commit = require(__dirname+'/lib/misc/commit.js')
 	, { version } = require(__dirname+'/package.json')
 	, formatSize = require(__dirname+'/lib/converter/formatsize.js')
 	, CachePugTemplates = require('cache-pug-templates')
-	, Permissions = require(__dirname+'/lib/permission/permissions.js');
+	, { Permissions } = require(__dirname+'/lib/permission/permissions.js')
+	, i18n = require(__dirname+'/lib/locale/locale.js');
 
 (async () => {
 
 	const env = process.env.NODE_ENV;
 	const production = env === 'production';
 	debugLogs && console.log('process.env.NODE_ENV =', env);
+	process.env.NO_CAPTCHA && console.warn('WARNING, RUNNING WITH process.env.NO_CAPTCHA, CAPTCHA CHECKS ARE SKIPPED!');
 
 	// connect to mongodb
 	debugLogs && console.log('CONNECTING TO MONGODB');
@@ -59,18 +61,14 @@ const config = require(__dirname+'/lib/misc/config.js')
 	//trust proxy for nginx
 	app.set('trust proxy', 1);
 
-	//self explanatory middlewares
-	const referrerCheck = require(__dirname+'/lib/middleware/misc/referrercheck.js');
-	app.use(referrerCheck);
-
 	// use pug view engine
 	const views = path.join(__dirname, 'views/pages');
 	app.set('view engine', 'pug');
 	app.set('views', views);
 
 	const loadAppLocals = () => {
-		const { cacheTemplates, boardDefaults, globalLimits, captchaOptions, archiveLinksURL,
-			reverseImageLinksURL, meta, enableWebring, globalAnnouncement } = config.get;
+		const { language, cacheTemplates, boardDefaults, globalLimits, captchaOptions, archiveLinksURL,
+			reverseImageLinksURL, meta, enableWebring, globalAnnouncement, enableWeb3, ethereumLinksURL } = config.get;
 		//cache loaded templates
 		app.cache = {};
 		app[cacheTemplates === true ? 'enable' : 'disable']('view cache');
@@ -79,17 +77,23 @@ const config = require(__dirname+'/lib/misc/config.js')
 		app.locals.defaultTheme = boardDefaults.theme;
 		app.locals.defaultCodeTheme = boardDefaults.codeTheme;
 		app.locals.globalLimits = globalLimits;
+		app.locals.ethereumLinksURL = ethereumLinksURL;
 		app.locals.archiveLinksURL = archiveLinksURL;
 		app.locals.reverseImageLinksURL = reverseImageLinksURL;
 		app.locals.enableWebring = enableWebring;
+		app.locals.enableWeb3 = enableWeb3;
 		app.locals.commit = commit;
 		app.locals.version = version;
 		app.locals.meta = meta;
 		app.locals.postFilesSize = formatSize(globalLimits.postFilesSize.max);
-		app.locals.googleRecaptchaSiteKey = google.siteKey;
-		app.locals.hcaptchaSiteKey = hcaptcha.siteKey;
+		app.locals.googleRecaptchaSiteKey = google ? google.siteKey : '';
+		app.locals.hcaptchaSiteKey = hcaptcha ? hcaptcha.siteKey : '';
+		app.locals.yandexSiteKey = yandex ? yandex.siteKey : '';
 		app.locals.globalAnnouncement = globalAnnouncement;
 		app.locals.captchaOptions = captchaOptions;
+		app.locals.globalLanguage = language;
+		i18n.init(app.locals);
+		app.locals.setLocale(app.locals, language);
 	};
 	loadAppLocals();
 	redis.addCallback('config', loadAppLocals);
@@ -101,6 +105,15 @@ const config = require(__dirname+'/lib/misc/config.js')
 		app.use(express.static(__dirname+'/static/json', { redirect: false }));
 	}
 
+	//localisation
+	const { setGlobalLanguage } = require(__dirname+'/lib/middleware/locale/locale.js');
+	app.use(i18n.init);
+	app.use(setGlobalLanguage);
+
+	//referer check middleware
+	const referrerCheck = require(__dirname+'/lib/middleware/misc/referrercheck.js');
+	app.use(referrerCheck);
+
 	app.use('/forms', require(__dirname+'/controllers/forms.js'));
 	app.use('/', require(__dirname+'/controllers/pages.js'));
 
@@ -111,7 +124,7 @@ const config = require(__dirname+'/lib/misc/config.js')
 
 	// catch any unhandled errors
 	app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-
+		const { __ } = res.locals;
 		let errStatus = 500;
 		let errMessage = 'Internal Server Error';
 		if (err.code === 'EBADCSRFTOKEN') {
@@ -146,8 +159,8 @@ const config = require(__dirname+'/lib/misc/config.js')
 			console.error(err);
 		}
 		return dynamicResponse(req, res, errStatus, 'message', {
-			'title': errStatus === 500 ? 'Internal Server Error' : 'Bad Request',
-			'error': errMessage,
+			'title': __(errStatus === 500 ? 'Internal Server Error' : 'Bad Request'),
+			'error': __(errMessage),
 			'redirect': req.headers.referer || '/'
 		});
 	});

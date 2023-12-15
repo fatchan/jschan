@@ -7,6 +7,7 @@ const { Bypass } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const { secureCookies, blockBypass } = config.get;
 	const existingBypassId = req.signedCookies.bypassid || res.locals.pseudoIp;
 	const bypass = await Bypass.getBypass(res.locals.anonymizer, existingBypassId, blockBypass.expireAfterUses);
@@ -22,8 +23,8 @@ module.exports = async (req, res) => {
 
 	return dynamicResponse(req, res, 200, 'message', {
 		'minimal': req.body.minimal,
-		'title': 'Success',
-		'message': 'Completed block bypass, you may go back and make your post.',
+		'title': __('Success'),
+		'message': __('Completed block bypass, you may go back and make your post.'),
 	});
 
 };

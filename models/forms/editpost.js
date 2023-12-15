@@ -1,17 +1,20 @@
 'use strict';
 
-const { Posts, Modlogs } = require(__dirname+'/../../db/')
-	, Permissions = require(__dirname+'/../../lib/permission/permissions.js')
+const { Posts, Modlogs, Filters } = require(__dirname+'/../../db/')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, { createHash } = require('crypto')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
 	, nameHandler = require(__dirname+'/../../lib/post/name.js')
 	, getFilterStrings = require(__dirname+'/../../lib/post/getfilterstrings.js')
+	, checkFilters = require(__dirname+'/../../lib/post/checkfilters.js')
 	, filterActions = require(__dirname+'/../../lib/post/filteractions.js')
+	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
 	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js');
 
 module.exports = async (req, res) => {
@@ -20,26 +23,23 @@ module.exports = async (req, res) => {
 todo: handle some more situations
 - last activity date
 - correct bump date when editing thread or last post in a thread
-- allow for regular users (OP ONLY) and option for staff to disable in board settings
-- different permission levels for historical posts when remarked up (or not, fuck that)
 */
 
-	const { filterBanAppealable, previewReplies, strictFiltering } = config.get;
+	const { __ } = res.locals;
+	const { previewReplies } = config.get;
 	const { board, post } = res.locals;
 
 	//filters
 	if (!res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
 		//only global filters are checked, because anybody who could edit bypasses board filters
-		const { filters, filterMode, filterBanDuration } = config.get;
-		if (filters.length > 0 && filterMode > 0) {
-			let hitGlobalFilter = false;
-			const { strictCombinedString } = getFilterStrings(req, res, strictFiltering);
-			hitGlobalFilter = filters.find(filter => { return strictCombinedString.includes(filter.toLowerCase()); });
-			//block/ban edit
-			if (hitGlobalFilter) {
-				return filterActions(req, res, hitGlobalFilter, null, 0, filterMode,
-					0, filterBanDuration, filterBanAppealable, null);
-			}
+		const globalFilters = await Filters.findForBoard(null);
+
+		let hitFilter = false;
+		let { combinedString, strictCombinedString } = getFilterStrings(req, res);
+
+		hitFilter = checkFilters(globalFilters, combinedString, strictCombinedString);
+		if (hitFilter) {
+			return filterActions(req, res, true, hitFilter[0], hitFilter[1], hitFilter[2], hitFilter[3], hitFilter[4], null);
 		}
 	}
 
@@ -50,8 +50,15 @@ todo: handle some more situations
 		messageHash = createHash('sha256').update(noQuoteMessage).digest('base64');
 	}
 	//new name, trip and cap
-	const { name, tripcode, capcode } = await nameHandler(req.body.name, res.locals.permissions,
-		board.settings, board.owner, board.staff, res.locals.user ? res.locals.user.username : null);
+	const { name, tripcode, capcode } = await nameHandler(
+		req.body.name,
+		res.locals.permissions,
+		board.settings,
+		board.owner,
+		board.staff,
+		res.locals.user ? res.locals.user.username : null,
+		res.locals.__
+	);
 	//new message and quotes
 	const nomarkup = prepareMarkdown(req.body.message, false);
 	const { message, quotes, crossquotes } = await messageHandler(nomarkup, req.body.board, post.thread, res.locals.permissions);
@@ -100,7 +107,7 @@ todo: handle some more situations
 	}, {
 		'$set': {
 			edited: {
-				username: req.body.hide_name ? 'Hidden User' : req.session.user,
+				username: req.body.hide_name ? null : req.session.user,
 				date: new Date(),
 			},
 			nomarkup,
@@ -116,6 +123,42 @@ todo: handle some more situations
 		}
 	});
 
+	//emit the edit over websocket so post gets updated live
+	Socketio.emitRoom(`${board._id}-${post.thread || post.postId}`, 'markPost', {
+		postId: post.postId,
+		type: 'edit',
+		name,
+		message,
+		tripcode,
+		capcode,
+		email: req.body.email,
+		subject: req.body.subject,
+		//existing post props
+		_id: post._id,
+		u: post.u,
+		date: post.date,
+		country: post.country,
+		board: post.board,
+		nomarkup: post.nomarkup,
+		thread: post.thread,
+		spoiler: post.spoiler,
+		banmessage: post.banmessage,
+		userId: post.userId,
+		files: post.files,
+		quotes: post.quotes,
+		backlinks: post.backlinks,
+		replyposts: post.replyposts,
+		replyfiles: post.replyfiles,
+		sticky: post.sticky,
+		locked: post.locked,
+		bumplocked: post.bumplocked,
+		cyclic: post.cyclic,
+		edited: {
+			username: req.body.hide_name ? null : req.session.user,
+			date: new Date(),
+		}
+	});
+
 	//add the edit to the modlog
 	await Modlogs.insertOne({
 		board: board._id,
@@ -124,7 +167,7 @@ todo: handle some more situations
 			postId: post.postId,
 			thread: post.thread,
 		}],
-		actions: 'Edit',
+		actions: [ModlogActions.EDIT],
 		date: new Date(),
 		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,
@@ -144,8 +187,8 @@ todo: handle some more situations
 	await buildThread(buildOptions);
 
 	dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Post edited successfully',
+		'title': __('Success'),
+		'message': __('Post edited successfully'),
 		'redirect': req.body.referer,
 	});
 	res.end();

@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const username = req.body.username.toLowerCase();
 	const password = req.body.password;
 	const newPassword = req.body.newpassword;
@@ -15,11 +16,11 @@ module.exports = async (req, res) => {
 	//fetch an account
 	const account = await Accounts.findOne(username);
 
-	//if the account doesnt exist, reject
-	if (!account) {
+	//if the account doesnt exist (or is web3 where password change would be impossible), reject
+	if (!account || account.web3 == true) {
 		return dynamicResponse(req, res, 403, 'message', {
-			'title': 'Forbidden',
-			'message': 'Incorrect account credentials',
+			'title': __('Forbidden'),
+			'message': __('Incorrect account credentials'),
 			'redirect': '/changepassword.html'
 		});
 	}
@@ -30,8 +31,8 @@ module.exports = async (req, res) => {
 	//if hashes matched
 	if (passwordMatch === false) {
 		return dynamicResponse(req, res, 403, 'message', {
-			'title': 'Forbidden',
-			'message': 'Incorrect account credentials',
+			'title': __('Forbidden'),
+			'message': __('Incorrect account credentials'),
 			'redirect': '/changepassword.html'
 		});
 	}
@@ -40,8 +41,8 @@ module.exports = async (req, res) => {
 		const delta = await doTwoFactor(username, account.twofactor, req.body.twofactor);
 		if (delta === null) {
 			return dynamicResponse(req, res, 403, 'message', {
-				'title': 'Forbidden',
-				'message': 'Incorrect account credentials',
+				'title': __('Forbidden'),
+				'message': __('Incorrect account credentials'),
 				'redirect': '/changepassword.html'
 			});
 		}
@@ -54,8 +55,8 @@ module.exports = async (req, res) => {
 	]);
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Changed password',
+		'title': __('Success'),
+		'message': __('Password updated successfully'),
 		'redirect': '/login.html'
 	});
 

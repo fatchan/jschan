@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+process.env.NO_CAPTCHA = 1;
 
 module.exports = () => describe('login and create test board', () => {
 
@@ -43,10 +44,31 @@ module.exports = () => describe('login and create test board', () => {
 		expect([200, 404]).toContain(response.status);
 	});
 
-	test('create test board',  async () => {
+	test('create test boards',  async () => {
 		const params = new URLSearchParams();
-		params.append('uri', 'test');
-		params.append('name', 'test');
+		params.set('uri', 'test');
+		params.set('name', 'test');
+		const options = {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		};
+		const response1 = await fetch('http://localhost/forms/create', options);
+		expect([302, 409]).toContain(response1.status);
+		params.set('name', 'test2');
+		params.set('uri', 'test2');
+		const response2 = await fetch('http://localhost/forms/create', options);
+		expect([302, 409]).toContain(response2.status);
+	});
+
+	test('create another test board',  async () => {
+		const params = new URLSearchParams();
+		params.append('uri', 'test2');
+		params.append('name', 'test2');
 		const response = await fetch('http://localhost/forms/create', {
 			headers: {
 				'x-using-xhr': 'true',
@@ -77,10 +99,11 @@ module.exports = () => describe('login and create test board', () => {
 			overboard_limit: '20',
 			overboard_catalog_limit: '100',
 			allow_custom_overboard: 'true',
+			language: 'en-GB',
 			archive_links: 'https://archive.today/?run=1&url=%s',
 			reverse_links: 'https://tineye.com/search?url=%s',
 			prune_modlogs: '30',
-			default_ban_duration: '31536000000',
+			default_ban_duration: '1000',
 			quote_limit: '25',
 			preview_replies: '5',
 			sticky_preview_replies: '5',
@@ -115,10 +138,6 @@ module.exports = () => describe('login and create test board', () => {
 			block_bypass_force_anonymizers: 'true',
 			block_bypass_expire_after_uses: '50',
 			block_bypass_expire_after_time: '86400000',
-			filters: '',
-			strict_filtering: 'true',
-			filter_mode: '0',
-			ban_duration: '0',
 			flood_timers_same_content_same_ip: '0',
 			flood_timers_same_content_any_ip: '0',
 			flood_timers_any_content_same_ip: '0',
@@ -152,12 +171,14 @@ module.exports = () => describe('login and create test board', () => {
 			highlight_options_threshold: '5',
 			themes: '',
 			code_themes: '',
+			board_defaults_language: 'en-GB',
 			board_defaults_theme: 'yotsuba-b',
 			board_defaults_code_theme: 'ir-black',
 			global_limits_custom_css_enabled: 'true',
 			global_limits_custom_css_filters: '@\nurl(',
 			global_limits_custom_css_strict: 'true',
 			global_limits_custom_css_max: '10000',
+			global_limits_filters_max: 100,
 			global_limits_field_length_name: '100',
 			global_limits_field_length_email: '100',
 			global_limits_field_length_subject: '100',
@@ -200,6 +221,8 @@ module.exports = () => describe('login and create test board', () => {
 			global_limits_post_files_max: '5',
 			global_limits_post_files_size_max: '10485760',
 			global_limits_custom_pages_max_length: '10000',
+			global_limits_post_files_size_video_resolution: '100000000',
+			global_limits_post_files_size_image_resolution: '100000000',
 			global_limits_custom_pages_max: '10',
 			global_limits_banner_files_width: '500',
 			global_limits_banner_files_height: '500',
@@ -212,7 +235,7 @@ module.exports = () => describe('login and create test board', () => {
 			global_limits_asset_files_size_max: '10485760',
 			global_limits_asset_files_max: '10',
 			global_limits_asset_files_total: '50',
-			webring_proxy_address: '',
+			proxy_address: '',
 			webring_following: '',
 			webring_logos: '',
 			webring_blacklist: '',
@@ -241,12 +264,11 @@ module.exports = () => describe('login and create test board', () => {
 			board_defaults_max_reply_message_length: '20000',
 			board_defaults_delete_protection_count: '0',
 			board_defaults_delete_protection_age: '0',
-			board_defaults_filter_mode: '0',
-			board_defaults_filter_ban_duration: '0',
 			board_defaults_allowed_file_types_video: 'true',
 			board_defaults_allowed_file_types_image: 'true',
 			board_defaults_allowed_file_types_animated_image: 'true',
 			board_defaults_allowed_file_types_audio: 'true',
+			ethereum_links: 'https://example.com/%s',
 		});
 		const response = await fetch('http://localhost/forms/global/settings', {
 			headers: {
@@ -258,6 +280,46 @@ module.exports = () => describe('login and create test board', () => {
 			redirect: 'manual',
 		});
 		expect(response.status).toBe(200);
+	});
+
+	test('edit default role, allow bypass captcha',  async () => {
+		const roles = await fetch('http://localhost/globalmanage/roles.json', {
+			headers: {
+				'cookie': sessionCookie,
+			}
+		}).then(res => res.json());
+		const anonRole = roles.find(r => r.name === 'ANON');
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			roleid: anonRole._id,
+			CREATE_BOARD: '2',
+			CREATE_ACCOUNT: '3',
+			BYPASS_CAPTCHA: '8',
+			USE_MARKDOWN_PINKTEXT: '35',
+			USE_MARKDOWN_GREENTEXT: '36',
+			USE_MARKDOWN_BOLD: '37',
+			USE_MARKDOWN_UNDERLINE: '38',
+			USE_MARKDOWN_STRIKETHROUGH: '39',
+			USE_MARKDOWN_TITLE: '40',
+			USE_MARKDOWN_ITALIC: '41',
+			USE_MARKDOWN_SPOILER: '42',
+			USE_MARKDOWN_MONO: '43',
+			USE_MARKDOWN_CODE: '44',
+			USE_MARKDOWN_DETECTED: '45',
+			USE_MARKDOWN_LINK: '46',
+			USE_MARKDOWN_DICE: '47',
+			USE_MARKDOWN_FORTUNE: '48'
+		});
+		const response = await fetch('http://localhost/forms/global/editrole', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect([200, 302, 409]).toContain(response.status);
 	});
 
 });

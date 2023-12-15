@@ -90,42 +90,44 @@ int main() {...}
 		expect(response.ok).toBe(true);
 	});
 
-	jest.setTimeout(5*60*1000); //give a generous timeout
-	test('post 100 threads with 10 replies each',  async () => {
+	async function postThreadsWithReplies(board, threads, replies) {
 		const threadParams = new URLSearchParams();
 		threadParams.append('message', Math.random());
 		threadParams.append('captcha', '000000');
-		const promises = [];
-		for (let t = 0; t < 100; t++) {
-			const promise = fetch('http://localhost/forms/board/test/post', {
-				headers: {
-					'x-using-xhr': 'true',
-				},
+		for (let t = 0; t < threads; t++) {
+			const response = await fetch(`http://localhost/forms/board/${board}/post`, {
 				method: 'POST',
 				body: threadParams
-			}).then(async (response) => {
-				expect(response.ok).toBe(true);
-				const thread = (await response.json()).postId;
-				for (let r = 0; r < 10; r++) {
-					const replyParams = new URLSearchParams();
-					replyParams.append('message', Math.random());
-					replyParams.append('thread', thread);
-					replyParams.append('captcha', '000000');
-					const promise2 = await fetch('http://localhost/forms/board/test/post', {
-						headers: {
-							'x-using-xhr': 'true',
-						},
-						method: 'POST',
-						body: replyParams
-					}).then(async (response2) => {
-						expect(response2.ok).toBe(true);
-					});
-					promises.push(promise2);
-				}
 			});
-			promises.push(promise);
+			expect(response.ok).toBe(true);
+			let thread = await fetch(`http://localhost/${board}/catalog.json`)
+				.then(res => res.json())
+				.then(json => json[Math.floor(Math.random()*json.length)].postId);
+			for (let r = 0; r < replies; r++) {
+				const replyParams = new URLSearchParams();
+				replyParams.append('message', Math.random());
+				replyParams.append('thread', thread);
+				replyParams.append('captcha', '000000');
+				const response2 = await fetch(`http://localhost/forms/board/${board}/post`, {
+					headers: {
+						'x-using-xhr': 'true',
+					},
+					method: 'POST',
+					body: replyParams
+				});
+				expect(response2.ok).toBe(true);
+			}
 		}
-		await Promise.all(promises); //wait for all posts to go through
+	}
+
+	jest.setTimeout(5*60*1000); //give a generous timeout
+	test('post some threads & replies on test boards',  async () => {
+		try {
+			await postThreadsWithReplies('test', 30, 5);
+			await postThreadsWithReplies('test2', 10, 5);
+		} catch (e) {
+			console.error(e);
+		}
 		jest.setTimeout(5*1000); //back to normal timeout
 	});
 

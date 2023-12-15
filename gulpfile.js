@@ -3,8 +3,8 @@
 const config = require(__dirname+'/lib/misc/config.js')
 	, { Binary } = require('mongodb')
 	, Permission = require(__dirname+'/lib/permission/permission.js')
-	, Permissions = require(__dirname+'/lib/permission/permissions.js')
-	, { hcaptcha, google } = require(__dirname+'/configs/secrets.js')
+	, { Permissions } = require(__dirname+'/lib/permission/permissions.js')
+	, { hcaptcha, google, yandex } = require(__dirname+'/configs/secrets.js')
 	, gulp = require('gulp')
 //	, pugRuntime = require('pug-runtime/build')
 	, fs = require('fs-extra')
@@ -143,6 +143,9 @@ async function password() {
 	const { Accounts } = require(__dirname+'/db/');
 	const randomPassword = randomBytes(20).toString('base64');
 	await Accounts.changePassword('admin', randomPassword);
+	const ROOT = new Permission();
+	ROOT.setAll(Permission.allPermissions);
+	await Accounts.setAccountPermissions('admin', ROOT);
 	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
 }
 
@@ -158,7 +161,7 @@ async function wipe() {
 	await Mongo.setConfig(defaultConfig);
 
 	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
-		'modlog','news', 'posts', 'poststats', 'ratelimit', 'bypass', 'roles'];
+		'modlog', 'filters', 'news', 'posts', 'poststats', 'ratelimit', 'bypass', 'roles'];
 	for (const name of collectionNames) {
 		//drop collection so gulp reset can be run again. ignores error of dropping non existing collection first time
 		await db.dropCollection(name).catch(() => {});
@@ -166,7 +169,7 @@ async function wipe() {
 	}
 
 	const { Boards, Posts, Captchas, Ratelimits, News, CustomPages,
-		Accounts, Files, Stats, Modlogs, Bans, Bypass, Roles } = require(__dirname+'/db/');
+		Accounts, Files, Stats, Modlogs, Filters, Bans, Bypass, Roles } = require(__dirname+'/db/');
 
 	//wipe db shit
 	await Promise.all([
@@ -183,6 +186,7 @@ async function wipe() {
 		Modlogs.deleteAll(),
 		Bypass.deleteAll(),
 		News.deleteAll(),
+		Filters.deleteAll(),
 	]);
 
 	//add indexes - should profiled and changed at some point if necessary
@@ -198,10 +202,12 @@ async function wipe() {
 	await Posts.db.dropIndexes();
 	await Modlogs.db.dropIndexes();
 	await CustomPages.db.dropIndexes();
+	await Filters.db.dropIndexes();
 	await CustomPages.db.createIndex({ 'board': 1, 'page': 1 }, { unique: true });
 	await Roles.db.createIndex({ 'permissions': 1 }, { unique: true });
 	await Modlogs.db.createIndex({ 'board': 1 });
 	await Files.db.createIndex({ 'count': 1 });
+	await Filters.db.createIndex({ 'board': 1 });
 	await Bans.db.createIndex({ 'ip.cloak': 1 , 'board': 1 });
 	await Bans.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 }); //custom expiry, i.e. it will expire when current date > than this date
 	await Bypass.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 });
@@ -273,11 +279,13 @@ async function wipe() {
 		del([ 'static/flag/*' ]),
 		del([ 'static/asset/*' ]),
 		del([ 'static/css/*' ]),
+		del([ 'static/js/*' ]),
 	]);
 
 	return Promise.all([
 		fs.ensureDir(`${uploadDirectory}/captcha`),
 		fs.ensureDir(`${uploadDirectory}/file/thumb`),
+		fs.ensureDir(paths.scripts.dest),
 	]);
 
 }
@@ -295,6 +303,11 @@ async function css() {
 				bypassHeight = 500;
 				captchaHeight = 200;
 				captchaWidth = 200;
+				break;
+			case 'yandex':
+				bypassHeight = 500;
+				captchaWidth = 300;
+				captchaHeight = 82;
 				break;
 			case 'grid':
 			case 'grid2':
@@ -337,22 +350,23 @@ async function css() {
 	await gulp.src([
 		`${paths.styles.src}/codethemes/*.css`,
 	])
-		.pipe(replace('url(./', 'url(/css/codethemes/'))
+		.pipe(replace('url(./', 'url(/css/codethemes/assets/'))
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
-	//move any non-css (images) for code themes to codetheme folder
+
+	//move assets for code codethemes/assets folder
 	await gulp.src([
 		`${paths.styles.src}/codethemes/*`,
 		`!${paths.styles.src}/codethemes/*.css`,
 	])
-		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
-	//move any non-css (images) for themes to theme folder
+		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/assets/`));
+	//move assets for themes to theme/assets folder
 	await gulp.src([
-		`${paths.styles.src}/themes/*`,
-		`!${paths.styles.src}/themes/*.css`,
+		`${paths.styles.src}/themes/assets/*`,
 	])
-		.pipe(gulp.dest(`${paths.styles.dest}/themes/`));
+		.pipe(gulp.dest(`${paths.styles.dest}/themes/assets/`));
+
 	await gulp.src([
 		`${paths.styles.src}/locals.css`,
 		`${paths.styles.src}/nscaptcha.css`,
@@ -405,7 +419,34 @@ function deletehtml() {
 }
 
 async function custompages() {
-	const formatSize = require(__dirname+'/lib/converter/formatsize.js');
+	const formatSize = require(__dirname+'/lib/converter/formatsize.js')
+		, i18n = require(__dirname+'/lib/locale/locale.js')
+		, locals = {
+			Permissions,
+			early404Fraction: config.get.early404Fraction,
+			early404Replies: config.get.early404Replies,
+			meta: config.get.meta,
+			ethereumLinksURL: config.get.ethereumLinksURL,
+			archiveLinksURL: config.get.archiveLinksURL,
+			reverseImageLinksURL: config.get.reverseImageLinksURL,
+			enableWebring: config.get.enableWebring,
+			globalLimits: config.get.globalLimits,
+			codeLanguages: config.get.highlightOptions.languageSubset,
+			defaultTheme: config.get.boardDefaults.theme,
+			defaultCodeTheme: config.get.boardDefaults.codeTheme,
+			postFilesSize: formatSize(config.get.globalLimits.postFilesSize.max),
+			googleRecaptchaSiteKey: google ? google.siteKey : '',
+			hcaptchaSiteKey: hcaptcha ? hcaptcha.siteKey : '',
+			yandexSiteKey: yandex ? yandex.siteKey : '',
+			globalAnnouncement: config.get.globalAnnouncement,
+			captchaOptions: config.get.captchaOptions,
+			enableWeb3: config.get.enableWeb3,
+			commit,
+			version,
+			globalLanguage: config.get.language,
+		};
+	i18n.init(locals);
+	locals.setLocale(locals, config.get.language);
 	return gulp.src([
 		`${paths.pug.src}/custompages/*.pug`,
 		`${paths.pug.src}/pages/403.pug`,
@@ -415,29 +456,26 @@ async function custompages() {
 		`${paths.pug.src}/pages/503.pug`,
 		`${paths.pug.src}/pages/504.pug`
 	])
-		.pipe(gulppug({
-			locals: {
-				Permissions,
-				early404Fraction: config.get.early404Fraction,
-				early404Replies: config.get.early404Replies,
-				meta: config.get.meta,
-				archiveLinksURL: config.get.archiveLinksURL,
-				reverseImageLinksURL: config.get.reverseImageLinksURL,
-				enableWebring: config.get.enableWebring,
-				globalLimits: config.get.globalLimits,
-				codeLanguages: config.get.highlightOptions.languageSubset,
-				defaultTheme: config.get.boardDefaults.theme,
-				defaultCodeTheme: config.get.boardDefaults.codeTheme,
-				postFilesSize: formatSize(config.get.globalLimits.postFilesSize.max),
-				googleRecaptchaSiteKey: google.siteKey,
-				hcaptchaSiteKey: hcaptcha.siteKey,
-				globalAnnouncement: config.get.globalAnnouncement,
-				captchaOptions: config.get.captchaOptions,
-				commit,
-				version,
-			}
-		}))
+		.pipe(gulppug({ locals }))
 		.pipe(gulp.dest(paths.pug.dest));
+}
+
+async function langs() {
+	const i18n = require(__dirname+'/lib/locale/locale.js');
+	await del([ 'static/js/lang/' ]);
+	fs.mkdirSync(`${paths.scripts.dest}lang/`, { recursive: true });
+	const feStrings = require(__dirname+'/tools/festrings.json');
+	Object.entries(i18n.getCatalog())
+		.forEach(entry => {
+			const [lang, dict] = entry;
+			const minimalDict = feStrings.reduce((acc, key) => {
+				acc[key] = dict[key];
+				return acc;
+			}, {});
+			const langScript = `const LANG = '${lang}';
+const TRANSLATIONS = ${JSON.stringify(minimalDict)};`;
+			fs.writeFileSync(`${paths.scripts.dest}lang/${lang}.js`, langScript);
+		});
 }
 
 async function scripts() {
@@ -459,7 +497,7 @@ const codeThemes = ['${codeThemes.join('\', \'')}'];
 const captchaOptions = ${JSON.stringify(reducedCaptchaOptions)};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
-const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL })};
+const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL, ethereumLinksURL: config.get.ethereumLinksURL })};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 
@@ -467,7 +505,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 //		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);
 		
 		//compile some pug client side functions
-		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher']
+		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher', 'banmessage']
 			.forEach(templateName => {
 				const compilationOptions = {
 					compileDebug: false,
@@ -479,25 +517,26 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 				fs.writeFileSync(`gulp/res/js/${templateName}.js`, compiledClient);
 			});
 
+		//symlink web3
+		await fs.symlink(__dirname+'/node_modules/web3/dist/web3.min.js', __dirname+'/gulp/res/js/web3.js', 'file')
+			.catch(e => { console.warn(e); });
 		//symlink socket.io file
-		fs.symlinkSync(__dirname+'/node_modules/socket.io/client-dist/socket.io.min.js', __dirname+'/gulp/res/js/socket.io.js', 'file');
+		await fs.symlink(__dirname+'/node_modules/socket.io/client-dist/socket.io.min.js', __dirname+'/gulp/res/js/socket.io.js', 'file')
+			.catch(e => { console.warn(e); });
 
 	} catch (e) {
-
-		//ignore EEXIST, probably the socket.io
-		if (e.code !== 'EEXIST') {
-			console.log(e);
-		}
-
+		console.log(e);
 	}
 
 	gulp.src([
 		//put scripts in order for dependencies
 		`${paths.scripts.src}/locals.js`,
+		`${paths.scripts.src}/i18n.js`,
 		`${paths.scripts.src}/localstorage.js`,
 //		`${paths.scripts.src}/pugruntime.js`,
 		`${paths.scripts.src}/modal.js`,
 		`${paths.scripts.src}/pugfilters.js`,
+		`${paths.scripts.src}/banmessage.js`,
 		`${paths.scripts.src}/post.js`,
 		`${paths.scripts.src}/settings.js`,
 		`${paths.scripts.src}/live.js`,
@@ -515,9 +554,17 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`!${paths.scripts.src}/catalog.js`,
 		`!${paths.scripts.src}/time.js`,
 		`!${paths.scripts.src}/timezone.js`,
+		`!${paths.scripts.src}/renderweb3.js`,
 	])
 		.pipe(concat('all.js'))
 		.pipe(uglify({compress:true}))
+		.pipe(gulp.dest(paths.scripts.dest));
+
+	gulp.src([
+		`${paths.scripts.src}/web3.js`,
+	])
+		.pipe(concat('web3.js'))
+		// .pipe(uglify({compress:true})) //No need, we symlink from web3.min.js
 		.pipe(gulp.dest(paths.scripts.dest));
 
 	return gulp.src([
@@ -530,6 +577,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`${paths.scripts.src}/watchlist.js`,
 		`${paths.scripts.src}/catalog.js`,
 		`${paths.scripts.src}/time.js`,
+		`${paths.scripts.src}/renderweb3.js`,
 	])
 		.pipe(concat('render.js'))
 		.pipe(uglify({compress:true}))
@@ -593,7 +641,7 @@ async function closeConnections() {
 	}
 }
 
-const build = gulp.parallel(gulp.series(scripts, css), images, icons, gulp.series(deletehtml, custompages));
+const build = gulp.parallel(gulp.series(scripts, langs, css), images, icons, gulp.series(deletehtml, custompages));
 
 //godhelpme
 module.exports = {
@@ -608,6 +656,7 @@ module.exports = {
 	cache: gulp.series(cache, closeConnections),
 	migrate: gulp.series(init, migrate, closeConnections),
 	password: gulp.series(init, password, closeConnections),
+	langs: gulp.series(init, langs, closeConnections),
 	ips: gulp.series(init, ips, closeConnections),
 	default: gulp.series(init, build, closeConnections),
 	buildTasks: { //dont include init, etc

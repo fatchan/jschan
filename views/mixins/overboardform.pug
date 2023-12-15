@@ -1,17 +1,17 @@
 mixin overboardform(overboardFormAction)
 	.flexcenter.mv-10
 		details
-			summary.collapse Customise
+			summary.collapse #{__('Customise')}
 			form.mt-5.form-post#overboardform(action=overboardFormAction method='GET')
 				.col
 					.row
-						.label Include Default Boards
+						.label #{__('Include Default Boards')}
 						label.postform-style.ph-5
 							input(type='checkbox', name='include_default', value='true' checked=includeDefault)
 					.row
-						.label Add Boards
-						input(type='text' name='add' value=addBoards.join(',') placeholder='comma separated')
+						.label #{__('Add Boards')}
+						input(type='text' name='add' value=addBoards.join(',') placeholder=__('comma separated'))
 					.row
-						.label Remove Boards
-						input(type='text' name='rem' value=removeBoards.join(',') placeholder='comma separated')
-				input(type='submit', value='Filter')
+						.label #{__('Remove Boards')}
+						input(type='text' name='rem' value=removeBoards.join(',') placeholder=__('comma separated'))
+				input(type='submit', value=__('Filter'))

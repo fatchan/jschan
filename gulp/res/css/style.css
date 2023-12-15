@@ -144,9 +144,10 @@ pre {
 .twofactor { /* importants to try and prevent themes overriding */
 	background: white!important;
 	color: black!important;
-	line-height: 1.2em!important;
+	line-height: 1.15em!important;
 	font-family: monospace!important;
 	margin: 10px auto!important;
+	letter-spacing: -0.2px!important;
 }
 .edit {
 	background: transparent!important;
@@ -201,14 +202,20 @@ pre {
 .pv-5 {
 	padding: 5px 0;
 }
+.p-0 {
+	padding: 0!important;
+}
 .vh {
 	visibility: hidden!important;
+}
+.wm {
+	width: max-content;
 }
 #settings, .dummy-link {
 	cursor: pointer;
 }
 #settings::after {
-	content: "Settings";
+	content: attr(data-label);
 }
 .expand-omitted {
 	background-color: var(--post-color);
@@ -529,6 +536,10 @@ table {
 	max-width: 50px;
 }
 
+input[name="move_to_board"], input[name="move_to_thread"] {
+	max-width: 80px;
+}
+
 .w900 {
 	width: 900px;
 }
@@ -548,11 +559,9 @@ th {
 
 td, th {
 	padding: 5px;
-	/*word-break: break-all;*/
-	overflow-wrap: anywhere;
 }
 
-td pre {
+td {
 	overflow-wrap: anywhere;
 }
 
@@ -630,6 +639,14 @@ td pre {
 	padding: 0 15px;
 	/*list-style: none;*/
 	word-break: break-all;
+}
+
+.web3-signature, .web3-address {
+	word-break: break-all;
+}
+
+.web3-signature {
+	cursor: text;
 }
 
 .modal-bg {
@@ -766,6 +783,10 @@ span.captchacheckbox {
 
 .help {
 	cursor: help;
+}
+
+.notallowed {
+	cursor: not-allowed;
 }
 
 #float {
@@ -1113,7 +1134,7 @@ input:invalid, textarea:invalid {
 
 .you:after {
 	margin-left: 3px;
-	content: '(You)';
+	content: '(' attr(data-label) ')';
 	font-weight: lighter;
 	font-style: italic;
 }
@@ -1185,15 +1206,19 @@ input[type="button"][disabled] {
 	opacity: 0.5;
 }
 
-input[type="button"], input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea, select {
+input, textarea, select {
+	accent-color: var(--accent-color);
 	border: 1px solid var(--input-borders);
+	border-radius: 0px;
 	background: var(--input-background);
 	color: var(--input-color);
-	font-size: inherit;
 	font-family: arial, helvetica, sans-serif;
+	font-size: inherit;
+}
+
+input[type="button"], input[type="range"], input[type="number"], input[type="text"], input[type="submit"], input[type="password"], input[type="file"], textarea, select {
 	margin: 0;
 	flex-grow: 1;
-	border-radius: 0px;
 }
 
 .nogrow * {
@@ -1221,7 +1246,7 @@ input[type=number] {
 	appearance:textfield;
 }
 
-input[type="submit"] {
+input[type="submit"], .postform-style.dummy-link {
 	min-height: 2.5em;
 	cursor: pointer;
 }
@@ -1301,6 +1326,7 @@ iframe.embed-video {
 	width: 500px;
 	height: 280px;
 	margin-top: 3px;
+	background-color: var(--darken);
 }
 
 iframe.bypass {
@@ -1377,14 +1403,6 @@ tr:nth-child(odd) {
 	 background: var(--post-color);
 }
 
-table.boardtable td:nth-child(3), table.boardtable th:nth-child(3),
-table.boardtable td:nth-child(4), table.boardtable th:nth-child(4),
-table.boardtable td:nth-child(5), table.boardtable th:nth-child(5),
-table.boardtable td:nth-child(6), table.boardtable th:nth-child(6) {
-	word-break: keep-all;
-	overflow-wrap: break-word;
-}
-
 table.boardtable.w900 th:last-child {
 	min-width: 100px;
 }
@@ -1459,6 +1477,10 @@ table, .boardtable {
 
 .text-center {
 	text-align: center;
+}
+
+.nowrap {
+	white-space: nowrap;
 }
 
 #settingsmodal{
@@ -1542,7 +1564,8 @@ row.wrap.sb .col {
 #tab-7:target .tab-7,
 #tab-8:target .tab-8,
 #tab-9:target .tab-9,
-#tab-10:target .tab-10 { 
+#tab-10:target .tab-10,
+#tab-11:target .tab-11 {
 	display: flex;
 }
 
@@ -1555,7 +1578,8 @@ row.wrap.sb .col {
 #tab-7:target a[href="#tab-7"],
 #tab-8:target a[href="#tab-8"],
 #tab-9:target a[href="#tab-9"],
-#tab-10:target a[href="#tab-10"] {
+#tab-10:target a[href="#tab-10"],
+#tab-11:target a[href="#tab-11"] {
 	border-bottom: 1px solid var(--background-rest);
 	background: var(--background-rest);
 }
@@ -1640,7 +1664,7 @@ row.wrap.sb .col {
 		content:attr(title);
 	}
 	.user-id[title]:hover:after {
-		content:"Double tap to highlight" attr(data-count);
+		content: attr(title-mobile);
 	}
 	[title]:hover:before {
 		content: '';

@@ -1,3 +1,194 @@
+### 1.4.1
+  - Update the INSTALLATION.md (install instructions).
+  - Add a "Bypass DNSBL" account/role permission.
+  - Add a "Bypass Anonymizer Restrictions" account/role permission.
+  - Update dependencies.
+  - Npm audit fix.
+
+### 1.4.0
+  - Add a new global management feature to clear all blockbypasses or all login sessions.
+  - Make (You)s sync over multiple tabs when posting or clearing.
+  - Update dependencies.
+  - Npm audit fix.
+
+### 1.3.3
+  - Fix the "Board Defaults" section in globamanagement settings being inaccessible, and update the template to be slightly more maintainable (especially for forks).
+  - Make the message box focused by js when a page is opened with #postform.
+  - Fix an installation issue with a folder not getting created properly.
+
+### 1.3.2
+  - Global management board list links now link to boards in manage mode.
+  - Bugfix live editing posts, when editing last post of a thread it no longer
+    moves to the top of a thread.
+  - pt-PT and pt-BR language improvements.
+  - Styling tweaks to web3 signatures.
+  - Update jschan-docs.
+  - Npm audit.
+
+### 1.3.1
+  - Pt language fixes and updates.
+  - Fix a bug in live posts not displaying web3 address/signatures.
+
+### 1.3.0
+  - Web3 integration with MetaMask, development generously funded by @0xBekket
+    - Users with the MetaMask browser extension can now register/login to accounts, and sign their messages with MetaMask.
+    - Signed post messages will display a signature and link to their wallet at the bottom of the post.
+    - The link uses etherscan by default but can be changed to another url with %s substituting the address, like other URL settings.
+    - A board-level and global option is available to disable web3 features.
+    - `signature` and `address` are available as new properties on signed posts through the API.
+    - No third party server communication or details are required for signing messages or authing.
+    - This is a very exciting feature with a lot of possibilities for expanding in future. Stay tuned.
+  - Client side filters can now be applied against flags or custom flags.
+  - Fix order of Tegaki upload so files come before replays so catalog shows the thumbnail.
+  - Video embeds now support youtube shorts and odysee.com.
+  - New global option for URI decoding filenames, to display some characters such as quotation mark (") better in filenames.
+  - Minor pt-PT language fixes.
+  - Small color adjustments to Yotsuba theme to match 4chan colors more closely.
+  - Update nginx config for new embeds in CSP, and some more file type support.
+  - Npm audit.
+
+### 1.2.2
+  - Add a global setting to try and URI decode filenames
+  - Minor pt-PT and pt-BR language fixes
+  - Remove some unused dependencies
+  - Npm audit
+
+### 1.2.1
+  - Bugfix ban upgrades not applying correctly due to bans format change.
+
+### 1.2.0
+  - Massive filter system overhaul, huge thanks to @disco.
+    - Filters are no longer just a text box with some options that apply to all filters.
+    - Filters can now be created/edited/deleted on separate global and board pages.
+    - All previous filter options e.g. strict matching, ban/block mode, ban message, ban duration, and appealability are customisable per-filter.
+    - The PR for this, #532 on gitgud is an excellent example of how to add features to jschan and fits into the design patterns perfectly.
+    - This gives the flexibility to add a filter "replace" mode in a future release.
+  - Added Italian locale (it-IT) courtesy of @zocram from niuchan.org
+  - Improved Portuguese translations thanks to @l29utp0 from ptchan.org
+  - Improved Russian translations thanks to Kusankot
+  - Minor addition to INSTALLATION.md for those using Ubuntu rather than Debian.
+  - Npm audit & dependencies updated.
+
+### 1.1.1
+  - Bugfix live post updates triggering the disconnect and removal of postforms on non-OP delete/move.
+  - Improve text wrapping on long table data.
+  - Npm audit.
+
+### 1.1.0
+  - Posts edits and "USER WAS BANNED FOR THIS POST" messages will now be updated live through the websocket.
+  - Added Yandex Smart Captcha support, as an additional captcha type option.
+    - NOTE: This is still a WIP because Yandex does not support registration from my country and I am unable to get an API key. If you are able to share an API key for development purposes, please reach out via contact detaiils in README.md
+  - Fix pluralisation of thread stickying message.
+  - Fix some language mixups in translations.
+
+### 1.0.6
+  - Bugfix in translation of blocked country message when posting.
+  - Some Improvements to the Russian translation courtesy of an anon from bbs.quietplace.xyz. Handling of the complex plural rules in Russian will be improved in a future version.
+  - Npm audit.
+
+### 1.0.5
+  - Add pt-BR language pack, by @thugking from Rchan.
+  - Fix bypass not auto closing and submitting on non english locale.
+  - Actually fix Tor hidden service country name not displaying correctly.
+  - Make the error handling for "possible corrupt or unsupported file" catch more bad files and processing errors.
+  - Make animated webp thumbnailing at least work and not give the above error (not supporting animated thumbs like .gif yet).
+  - Add "ttf" extension to nginx snippets because some themes include fonts.
+  - Reorganize <input> styling, use accent-color property on <input> elements, by @disco.
+  - Add globalmanage setting for board default language.
+  - Fix an issue with the referer because of translation, and prevent invalid settings for it from breaking the web panel.
+  - Fix broken migration for board defaults causing language issues on newly created boards after updating from pre 1.0.0.
+  - Npm audit.
+
+### 1.0.4
+  - Translation improvements.
+  - Fix Tor hidden service country name not displaying correctly.
+  - Make global disabling of anonymizer file posting apply to board banners, flags, custompages.
+
+### 1.0.3
+  - Translation improvements.
+  - Add back missing "Lock+Unlist" mode for handling ianctive boards.
+  - Npm audit.
+
+### 1.0.2
+  - Translation improvements.
+
+### 1.0.1
+  - Translation improvements.
+  - Add a link to board in mod view e.g. /test/ on globalmanage recent posts to give some context.
+  - Fix dockerignore for docker testing/development, was broken due to translations.
+
+### 1.0.0
+Version 1.0.0 is here. jschan is stable and mature enough and has been for a while. There's no need to go to version 0.9999.9999 and I am comfortable enough to call it "Version 1".
+Of course, that doesn't mean jschan is perfect or finished by any means. I want to keep improving jschan and there are plenty of new features and changes planned for versions 2, 3, and beyond.
+Thank you so much to all the jschan site admins, users & contributors for your help along the way. Your contributions have been invaluable to making this software great.
+Special shoutout to l29utp0 & loynet (ptchan.org), Homicide (94chan.org) and some_random_guy (trashchan.xyz).
+
+-Tom
+
+Now, back to the program. Here are the changes for 1.0.0:
+  - **Multiple language support.**
+
+jschan now supports language packs. There is a global and board-level language setting which completely translates the interface to another language. Using server side rendering and logic, so it remains noscript compatible.
+An effort has been made to translate everything, but given there is almost 4 years of code, some things may have slipped through the cracks. If something isn't translated, please report it on gitgud.
+    
+1.0.0 includes three* complete language packs:
+  - English (en-GB)
+  - Portuguese (pt-PT)
+  - Russian (ru-RU) *Machine translated, may not be accurate.
+
+Huge credit to the ptchan.org admins for providing the Portuguese translation.
+Contributions for new language packs or improvements to existing ones are very welcome! **Reach out via email, IRC, or session (See README.md) to discuss imbursement for contributing language packs.**
+Note: "global" pages e.g. overboards will adhere to global language setting. In a future iteration, these will be updated to (optionally, with global setting) support adhering to users browser language header for better UX going between a non-global language board and global pages.
+
+  - Notify the user when making a playlist from a thread if there were no files, rather than just silently logging.
+  - Improves the css and markup to only show the appropriate wording e.g "tap" or "click" in tooltips depending if you are on mobile/desktop.
+  - Improve the installation process to fix a potential issue with the database connection settings.
+  - Customflags will now show correctly when editing a post on a board with custom flags enabled.
+  - Security improvement to the 2FA validation flow during login.
+  - Log a few more errors related to hcaptcha/recaptcha, for debugging purposes. (already caught and returned in a friendly manner)
+  - Remove showing language and relevance data when auto detecting highlighted code block language.
+  - Add more themes (cybhub, digi, favela, ptchan, teletext).
+  - More minor bugfixes to permissions pages displays.
+
+### 0.11.4
+  - Bugfix for the message stating how many banners were deleted when deleting banners.
+  - Add an option to limit the total resolution of an image/video (width*height).
+
+### 0.11.3
+  - Fix max vs total upload count in controller for uploading board assets, flags and banners.
+  - Move css theme assets to themes/assets instead of all lumped in one folder.
+  - Adjust the letter spacing and line spacing of the 2FA QR code.
+
+### 0.11.2
+  - Convert the assets page form handling to the newer checkSchema code.
+  - Don't show the "Edit" option in the post dropdowns for public pages.
+  - No longer apply permissions inheritance after editing to prevent confusion.
+  - Improve duplicate checking when editing roles to only explicitly match updated roles rather than applying inheritance first.
+  - Bugfix "my permission" page not displaying correctly and board staff permission editing not applying.
+  - Improve required parent permission display to show "requires X" in the tooltip of disabled checkboxes.
+
+### 0.11.1
+  - Bugfix non logged in users not able to use actions because of an issue in move post logic (thanks @some_random_guy).
+  - Bugfix editing posts from the actions form (not the new dropdown "Edit" button) always redirecting to OP.
+
+### 0.11.0
+  - Improve the fallback behaviour of live posts to work on connect_error instead of only reconnect_failed, and also attempt to upgrade again to the socket.
+  - The post form in modview now shows the full email field even with "sage only email", same as how the name field shows in modview with "force anon"
+  - Globals or users who are staff on multiple boards can move posts between boards
+  - IP/ban type display and suffixes improved to make IPv4/6/Bypass/Pruned IP clearer for more informed moderation.
+  - Post editing is now available as a link in the post dropdown, and makes a GET for the page (like editcustompage/editnews)
+  - Labelled link format markdown now supports mailto.
+  - "Hide name" set by default when using public actions form.
+  - Bugfix saveoverboard script so it works on catalog instead of only index, and improve the code to be more general and allow /catalog.html in navbar link.
+  - Bugfix BYPASS_CAPTCHA permission not able to be applied to roles.
+  - Add a small note on global account/role permission editing about the implication of setting "board management" permissions globally.
+  - Update README with some new related projects and change demo/test instance to 94chan.
+  - Globalmanage roles are now available in json format in the API.
+  - Improve some of the templates and refactor some repetitive bits into includes/mixins.
+  - Add and update some tests.
+  - Npm audit & dependencies updated.
+  - Buon Natale e buon anno 🎉
+
 ### 0.10.2
   - Bugfix to 2fa, code-reuse prevention was blocking all codes rather than only a recently used correct code.
 
@@ -196,14 +387,14 @@
   - Code highlighting now supports all highlight.js languages when explicitly specified. The whitelist now only applies to auto-detection, as originally intended.
   - Quotes for post references in modlog now have the proper quote class, and will show when hovered like any other quote.
   - Bugfixes
-  - [jschan-docs](http://fatchan.gitgud.site/jschan-docs/):
+  - [jschan-docs](https://fatchan.gitgud.site/jschan-docs/):
     - API docs improvements, now includes csrf token, posting, post actions (and mod variants), and more. It should be enough documentation for somebody to write a mobile app integration.
   - [globalafk](https://gitgud.io/fatchan/globalafk/) (my fork):
     - On android with termux, tapping the notification will open the post (in mod view) and the notification has new shortcut buttons to quickly delete, delete+ban or delete+global ban.
 
 ### 0.1.10
   - Add thread watcher/watchlist, so users can save list of threads to a little window and see unread count
-  - There are now API docs available at http://fatchan.gitgud.site/jschan-docs/
+  - There are now API docs available at https://fatchan.gitgud.site/jschan-docs/
   - Improved installation nginx script. Confirms overwriting and doesnt break when run more than once
   - Some visual tweaks (file "(u)" being on newline, "x" -> "×")
   - Bugfixes

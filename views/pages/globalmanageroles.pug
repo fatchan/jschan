@@ -2,21 +2,21 @@ extends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Roles
+	title #{__('Roles')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('roles')
 	hr(size=1)
-	h4.mv-5 Roles:
+	h4.mv-5 #{__('Roles')}:
 	.table-container.flex-left.text-center
 		table
 			tr
-				th Role
-				th Permissions
+				th #{__('Role')}
+				th #{__('Permissions')}
 			for role in allRoles
 				tr
 					td #{roleNameMap[role.permissions.toString('base64')]}
-					td: a(href=`/globalmanage/editrole/${role._id}.html`) [Edit]
+					td: a(href=`/globalmanage/editrole/${role._id}.html`) [#{__('Edit')}]
 

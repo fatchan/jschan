@@ -1,6 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
 
 	const messageBox = document.getElementById('message');
+	const parentForm = messageBox && messageBox.form;
 
 	if (messageBox) {
 		const messageBoxLabel = messageBox.previousSibling;
@@ -25,6 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			}
 			currentLength = messageBox.value.length;
 			updateCounter();
+			parentForm && parentForm.dispatchEvent(new CustomEvent('messageBoxChange'));
 		};
 
 		updateCounter();

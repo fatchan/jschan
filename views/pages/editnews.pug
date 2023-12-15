@@ -2,14 +2,14 @@ extends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Edit News
+	title #{__('Edit News')}
 
 block content
-	h1.board-title Global Management
+	h1.board-title #{__('Global Management')}
 	br
 	+globalmanagenav('news', true)
 	hr(size=1)
-	h4.no-m-p Edit newspost:
+	h4.no-m-p #{__('Edit Newspost')}:
 	include ../includes/stickynav.pug
 	.form-wrapper.flex-center.mv-10
 		form.form-post(action='/forms/global/editnews' method='POST')
@@ -21,8 +21,8 @@ block content
 						th
 							input.edit.left(type='text' name='title' value=news.title required)
 							- const newsDate = new Date(news.date);
-							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
+							time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 					tr
 						td
-							textarea.edit.fw(name='message' rows='10' placeholder='Supports post styling' required) #{news.message.raw}
-			input(type='submit', value='Save')
+							textarea.edit.fw(name='message' rows='10' placeholder=__('Supports post styling') required) #{news.message.raw}
+			input(type='submit', value=__('Save'))

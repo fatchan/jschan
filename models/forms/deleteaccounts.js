@@ -6,6 +6,7 @@ const { Accounts, Boards } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __, __n } = res.locals;
 	const accountsWithBoards = await Accounts.getOwnedOrStaffBoards(req.body.checkedaccounts);
 	if (accountsWithBoards.length > 0) {
 		const bulkWrites = [];
@@ -62,8 +63,8 @@ module.exports = async (req, res) => {
 	}));
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': `Deleted ${amount} accounts`,
+		'title': __('Success'),
+		'message': __n('Deleted %s accounts', amount),
 		'redirect': '/globalmanage/accounts.html'
 	});
 

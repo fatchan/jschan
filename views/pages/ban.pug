@@ -2,9 +2,9 @@ extends ../layout.pug
 include ../mixins/ban.pug
 
 block head
-	title Banned!
+	title #{__('Banned!')}
 
 block content
-	h1.board-title Banned!
-	h4.board-description Bans currently in place against your IP:
+	h1.board-title #{__('Banned!')}
+	h4.board-description #{__('Bans currently in place against your IP')}:
 	include ../includes/banform.pug

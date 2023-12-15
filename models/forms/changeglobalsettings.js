@@ -19,8 +19,10 @@ const { Boards } = require(__dirname+'/../../db/')
 		'meta.siteName': ['deletehtml', 'scripts', 'custompages'],
 		'meta.url': ['deletehtml', 'scripts', 'custompages'],
 		'archiveLinksURL': ['deletehtml', 'custompages'],
+		'ethereumLinksURL': ['deletehtml', 'custompages', 'scripts'],
 		'reverseImageLinksURL': ['deletehtml', 'custompages'],
 		'enableWebring': ['deletehtml', 'custompages'],
+		'enableWeb3': ['deletehtml'],
 		'thumbSize': ['deletehtml', 'css', 'scripts'],
 		'previewReplies': ['deletehtml', 'custompages'],
 		'stickyPreviewReplies': ['deletehtml', 'custompages'],
@@ -29,6 +31,7 @@ const { Boards } = require(__dirname+'/../../db/')
 		'codeThemes': ['scripts'],
 		'globalLimits.postFiles.max': ['deletehtml', 'custompages'],
 		'globalLimits.postFilesSize.max': ['deletehtml', 'custompages'],
+		'language': ['deletehtml', 'css', 'scripts', 'custompages'],
 		//these will make it easier to keep updated and include objects where any/all property change needs tasks
 		//basically, it expands to all of globalLimits.fieldLength.* or frontendScriptDefault.*
 		//it could be calculated in compareSettings with *, but im just precompiling it now. probably a tiny bit faster not doing it each time
@@ -39,6 +42,7 @@ const { Boards } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const promises = [];
 	const oldSettings = config.get;
 
@@ -49,11 +53,6 @@ module.exports = async (req, res) => {
 	}
 
 	const newSettings = {
-		filters: arraySetting(req.body.filters, oldSettings.filters),
-		filterMode: numberSetting(req.body.filter_mode, oldSettings.filterMode),
-		strictFiltering: booleanSetting(req.body.strict_filtering, oldSettings.strictFiltering),
-		filterBanDuration: numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
-		filterBanAppealable: booleanSetting(req.body.filter_ban_appealable),
 		allowedHosts: arraySetting(req.body.allowed_hosts, oldSettings.allowedHosts),
 		countryCodeHeader: trimSetting(req.body.country_code_header, oldSettings.countryCodeHeader),
 		ipHeader: trimSetting(req.body.ip_header, oldSettings.ipHeader),
@@ -65,6 +64,7 @@ module.exports = async (req, res) => {
 			siteName: trimSetting(req.body.meta_site_name, oldSettings.meta.siteName),
 			url: trimSetting(req.body.meta_url, oldSettings.meta.url),
 		},
+		language: trimSetting(req.body.language, oldSettings.language),
 		captchaOptions: {
 			type: trimSetting(req.body.captcha_options_type, oldSettings.captchaOptions.type),
 			generateLimit: numberSetting(req.body.captcha_options_generate_limit, oldSettings.captchaOptions.generateLimit),
@@ -131,18 +131,21 @@ module.exports = async (req, res) => {
 		allowCustomOverboard: booleanSetting(req.body.allow_custom_overboard, oldSettings.allowCustomOverboard),
 		archiveLinksURL: trimSetting(req.body.archive_links, oldSettings.archiveLinksURL),
 		reverseImageLinksURL: trimSetting(req.body.reverse_links, oldSettings.reverseImageLinksURL),
+		ethereumLinksURL: trimSetting(req.body.ethereum_links, oldSettings.ethereumLinksURL),
 		cacheTemplates: booleanSetting(req.body.cache_templates, oldSettings.cacheTemplates),
 		lockWait: numberSetting(req.body.lock_wait, oldSettings.lockWait),
 		pruneModlogs: numberSetting(req.body.prune_modlogs, oldSettings.pruneModlogs),
 		dontStoreRawIps: booleanSetting(req.body.dont_store_raw_ips, oldSettings.dontStoreRawIps),
 		pruneIps: numberSetting(req.body.prune_ips, oldSettings.pruneIps),
 		enableWebring: booleanSetting(req.body.enable_webring, oldSettings.enableWebring),
+		enableWeb3: booleanSetting(req.body.enable_web3, oldSettings.enableWeb3),
+		// ethereumNode: trimSetting(req.body.ethereum_node, oldSettings.ethereumNode),
 		following: arraySetting(req.body.webring_following, oldSettings.following),
 		blacklist: arraySetting(req.body.webring_blacklist, oldSettings.blacklist),
 		logo: arraySetting(req.body.webring_logos, oldSettings.logo),
 		proxy: {
-			enabled: booleanSetting(req.body.webring_proxy_enabled, oldSettings.proxy.enabled),
-			address: trimSetting(req.body.webring_proxy_address, oldSettings.proxy.address),
+			enabled: booleanSetting(req.body.proxy_enabled, oldSettings.proxy.enabled),
+			address: trimSetting(req.body.proxy_address, oldSettings.proxy.address),
 		},
 		thumbExtension: trimSetting(req.body.thumb_extension, oldSettings.thumbExtension),
 		highlightOptions: {
@@ -194,6 +197,7 @@ module.exports = async (req, res) => {
 		maxRecentNews: numberSetting(req.body.max_recent_news, oldSettings.maxRecentNews),
 		filterFileNames: booleanSetting(req.body.filter_file_names, oldSettings.filterFileNames),
 		spaceFileNameReplacement: req.body.space_file_name_replacement,
+		uriDecodeFileNames: booleanSetting(req.body.uri_decode_file_names, oldSettings.uriDecodeFileNames),
 		globalLimits:  {
 			customCss: {
 				enabled: booleanSetting(req.body.global_limits_custom_css_enabled, oldSettings.globalLimits.customCss.enabled),
@@ -218,6 +222,8 @@ module.exports = async (req, res) => {
 			},
 			postFilesSize: {
 				max: numberSetting(req.body.global_limits_post_files_size_max, oldSettings.globalLimits.postFilesSize.max),
+				imageResolution: numberSetting(req.body.global_limits_post_files_size_image_resolution, oldSettings.globalLimits.postFilesSize.imageResolution),
+				videoResolution: numberSetting(req.body.global_limits_post_files_size_video_resolution, oldSettings.globalLimits.postFilesSize.videoResolution),
 			},
 			bannerFiles: {
 				width: numberSetting(req.body.global_limits_banner_files_width, oldSettings.globalLimits.bannerFiles.width),
@@ -265,9 +271,13 @@ module.exports = async (req, res) => {
 			customPages: {
 				max: numberSetting(req.body.global_limits_custom_pages_max, oldSettings.globalLimits.customPages.max),
 				maxLength: numberSetting(req.body.global_limits_custom_pages_max_length, oldSettings.globalLimits.customPages.maxLength),
-			}
+			},
+			filters: {
+				max: numberSetting(req.body.global_limits_filters_max, oldSettings.globalLimits.filters.max),
+			},
 		},
 		boardDefaults: {
+			language: trimSetting(req.body.board_defaults_language, oldSettings.boardDefaults.language),
 			theme: trimSetting(req.body.board_defaults_theme, oldSettings.boardDefaults.theme),
 			codeTheme: trimSetting(req.body.board_defaults_code_theme, oldSettings.boardDefaults.codeTheme),
 			reverseImageSearchLinks: booleanSetting(req.body.board_defaults_reverse_image_search_links, oldSettings.boardDefaults.reverseImageSearchLinks),
@@ -312,14 +322,10 @@ module.exports = async (req, res) => {
 			maxThreadMessageLength: numberSetting(req.body.board_defaults_max_thread_message_length, oldSettings.boardDefaults.maxThreadMessageLength),
 			maxReplyMessageLength: numberSetting(req.body.board_defaults_max_reply_message_length, oldSettings.boardDefaults.maxReplyMessageLength),
 			disableAnonymizerFilePosting: booleanSetting(req.body.board_defaults_disable_anonymizer_file_posting, oldSettings.boardDefaults.disableAnonymizerFilePosting),
-			filterMode: numberSetting(req.body.board_defaults_filter_mode, oldSettings.boardDefaults.filterMode),
-			filterBanDuration: numberSetting(req.body.board_defaults_filter_ban_duration, oldSettings.boardDefaults.filterBanDuration),
 			deleteProtectionAge: numberSetting(req.body.board_defaults_delete_protection_age, oldSettings.boardDefaults.deleteProtectionAge),
 			deleteProtectionCount: numberSetting(req.body.board_defaults_delete_protection_count, oldSettings.boardDefaults.deleteProtectionCount),
-			strictFiltering: booleanSetting(req.body.board_defaults_strict_filtering, oldSettings.boardDefaults.strictFiltering),
 			customCSS: null,
 			blockedCountries: [],
-			filters: [],
 			announcement: {
 				raw: null,
 				markdown: null
@@ -369,8 +375,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Updated settings.',
+		'title': __('Success'),
+		'message': __('Updated settings.'),
 		'redirect': '/globalmanage/settings.html'
 	});
 

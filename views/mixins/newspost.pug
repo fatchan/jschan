@@ -8,9 +8,9 @@ mixin newspost(post, globalmanage=false)
 						input.left.post-check(type='checkbox', name='checkednews' value=post._id)  
 					a.left(href=`/news.html#${post._id}`) #{post.title}
 					if globalmanage === true
-						a.right.ml-5(href=`/globalmanage/editnews/${post._id}.html`) [Edit]
+						a.right.ml-5(href=`/globalmanage/editnews/${post._id}.html`) [#{__('Edit')}]
 					- const newsDate = new Date(post.date);
-					time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(undefined, {hourCycle:'h23'})}
+					time.right.reltime(datetime=newsDate.toISOString()) #{newsDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 			tr
 				td
 					if globalmanage === true
@@ -20,6 +20,6 @@ mixin newspost(post, globalmanage=false)
 
 					if post.edited
 						small.right.cb.edited
-							| Last edited  
+							| #{__('Last edited')}  
 							- const newsEditDate = new Date(post.edited);
-							time.reltime(datetime=newsEditDate.toISOString()) #{newsEditDate.toLocaleString(undefined, {hourCycle:'h23'})}
+							time.reltime(datetime=newsEditDate.toISOString()) #{newsEditDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}

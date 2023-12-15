@@ -17,17 +17,19 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const { globalLimits } = config.get;
 
 		const errors = await checkSchema([
-			{ result: existsBody(req.body.message), expected: true, error: 'Appeals must include a message' },
-			{ result: existsBody(req.body.checkedbans), expected: true, error: 'Must select at least one ban to appeal' },
-			{ result: numberBody(res.locals.messageLength, 0, globalLimits.fieldLength.message), expected: true, error: `Appeal message must be ${globalLimits.fieldLength.message} characters or less` },
+			{ result: existsBody(req.body.message), expected: true, error: __('Appeals must include a message') },
+			{ result: existsBody(req.body.checkedbans), expected: true, error: __('Must select at least one ban to appeal') },
+			{ result: numberBody(res.locals.messageLength, 0, globalLimits.fieldLength.message), expected: true, error: __('Appeal message must be %s characters or less', globalLimits.fieldLength.message) },
 		]); //should appeals really be based off message field length global limit? minor.
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': '/'
 			});
@@ -44,15 +46,15 @@ module.exports = {
 			/* this can occur if they selected invalid id, non-ip match, already appealed, or unappealable bans. prevented by databse filter, so we use
 				use the updatedCount return value to check if any appeals were made successfully. if not, we end up here. */
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
-				'error': 'Invalid bans selected',
+				'title': __('Bad request'),
+				'error': __('Invalid bans selected'),
 				'redirect': '/'
 			});
 		}
 
 		return dynamicResponse(req, res, 200, 'message', {
-			'title': 'Success',
-			'message': `Appealed ${amount} bans successfully`,
+			'title': __('Success'),
+			'message': __('Appealed %s bans successfully', amount),
 			'redirect': '/'
 		});
 

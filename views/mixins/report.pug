@@ -6,5 +6,5 @@ mixin report(r, manage=false)
 		a.bold(href=`${manage ? 'recent.html' : ''}?ip=${encodeURIComponent(ip)}`) [#{ip}]
 		|  
 		- const reportDate = new Date(r.date);
-		time.reltime(datetime=reportDate.toISOString()) #{reportDate.toLocaleString(undefined, { hourCycle:'h23' })}
-		|  | Reason: #{r.reason}
+		time.reltime(datetime=reportDate.toISOString()) #{reportDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
+		|  | #{__('Reason')}: #{r.reason}

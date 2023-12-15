@@ -13,18 +13,20 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const errors = await checkSchema([
-			{ result: existsBody(req.body.username), expected: true, error: 'Missing username' },
-			{ result: lengthBody(req.body.username, 1, 50), expected: false, error: 'Username must be 50 characters or less' },
-			{ result: alphaNumericRegex.test(req.body.username), expected: true, error: 'Username must contain a-z 0-9 only' },
-			{ result: (res.locals.board.staff[req.body.username] != null), expected: true, error: 'Invalid staff username' },
-			{ result: (req.body.username === res.locals.board.owner), expected: false, error: 'You can\'t edit the permissions of the board owner' },
-			{ result: (res.locals.user.username === req.body.username), expected: false, error: 'You can\'t edit your own permissions' },
+			{ result: existsBody(req.body.username), expected: true, error: __('Missing username') },
+			{ result: lengthBody(req.body.username, 1, 50), expected: false, error: __('Username must be 50 characters or less') },
+			{ result: alphaNumericRegex.test(req.body.username), expected: true, error: __('Username must contain a-z 0-9 only') },
+			{ result: (res.locals.board.staff[req.body.username] != null), expected: true, error: __('Invalid staff username') },
+			{ result: (req.body.username === res.locals.board.owner), expected: false, error: __('You can\'t edit the permissions of the board owner') },
+			{ result: (res.locals.user.username === req.body.username), expected: false, error: __('You can\'t edit your own permissions') },
 		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': req.headers.referer || `/${req.params.board}/manage/staff.html`,
 			});

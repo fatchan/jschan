@@ -16,13 +16,18 @@ module.exports = () => describe('Test loading a bunch of pages', () => {
 		'rules.html',
 		'faq.html',
 		'globalmanage/recent.html',
+		'globalmanage/recent.json',
 		'globalmanage/reports.html',
+		'globalmanage/reports.json',
 		'globalmanage/bans.html',
 		'globalmanage/boards.html',
+		'globalmanage/boards.json',
 		'globalmanage/globallogs.html',
 		'globalmanage/accounts.html',
 		'globalmanage/roles.html',
+		'globalmanage/roles.json',
 		'globalmanage/news.html',
+		'globalmanage/filters.html',
 		'globalmanage/settings.html',
 	];
 

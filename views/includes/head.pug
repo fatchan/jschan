@@ -5,6 +5,7 @@ meta(name='viewport' content='width=device-width initial-scale=1')
 noscript
 	style .jsonly { display: none!important; } .user-id { cursor: auto!important; }
 
+
 //- whether this page is rendered for a board
 - const isBoard = board != null;
 
@@ -33,11 +34,21 @@ if isBoard && board.settings.customCss
 //- include html_code from gulp-favicon
 include ../../gulp/res/icons/html_code.html
 
+//- language pack
+- const pageLanguage = isBoard ? board.settings.language : (locale || globalLanguage);
+script(src=`/js/lang/${pageLanguage}.js?v=${commit}`)
+
 //- main script
 script(src=`/js/all.js?v=${commit}&ct=${captchaOptions.type}`)
 
-//- additional scripts included only if hcaptcha or recaptcha is used
+//- optional web3 script
+if enableWeb3 || isBoard && board.settings.enableWeb3
+	script(src=`/js/web3.js?v=${commit}`)
+
+//- additional scripts included only if hcaptcha, recaptcha, or yandex smartcaptcha are used
 if captchaOptions.type === 'google'
 	script(src='https://www.google.com/recaptcha/api.js' async defer)
 if captchaOptions.type === 'hcaptcha'
 	script(src='https://hcaptcha.com/1/api.js' async defer)
+if captchaOptions.type === 'yandex'
+	script(src='https://smartcaptcha.yandexcloud.net/captcha.js' async defer)

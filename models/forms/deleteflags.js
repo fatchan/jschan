@@ -8,6 +8,7 @@ const { remove } = require('fs-extra')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
 	const updatedFlags = res.locals.board.flags;
@@ -38,8 +39,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Deleted flags.',
+		'title': __('Success'),
+		'message': __('Deleted flags'),
 		'redirect': redirect
 	});
 };

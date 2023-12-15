@@ -8,6 +8,7 @@ const { CustomPages } = require(__dirname+'/../../db/')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const message = prepareMarkdown(req.body.message, false);
 	const { message: markdownMessage } = await messageHandler(message, null, null, res.locals.permissions);
 
@@ -36,8 +37,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Added custom page',
+		'title': __('Success'),
+		'message': __('Added custom page'),
 		'redirect': `/${req.params.board}/manage/custompages.html`
 	});
 

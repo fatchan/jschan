@@ -11,16 +11,18 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const { staffBoards, ownedBoards } = res.locals.user;
 
 		const errors = await checkSchema([
-			{ result: existsBody(req.body.confirm), expected: true, error: 'Missing confirmation' },
-			{ result: (numberBody(ownedBoards.length, 0, 0) && numberBody(staffBoards.length, 0, 0)), expected: true, error: 'You cannot delete your account while you hold staff position on any board' },
+			{ result: existsBody(req.body.confirm), expected: true, error: __('Missing confirmation') },
+			{ result: (numberBody(ownedBoards.length, 0, 0) && numberBody(staffBoards.length, 0, 0)), expected: true, error: __('You cannot delete your account while you hold staff position on any board') },
 		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': '/account.html',
 			});
@@ -33,8 +35,8 @@ module.exports = {
 		}
 
 		return dynamicResponse(req, res, 200, 'message', {
-			'title': 'Success',
-			'message': 'Account deleted',
+			'title': __('Success'),
+			'message': __('Account deleted'),
 			'redirect': '/',
 		});
 

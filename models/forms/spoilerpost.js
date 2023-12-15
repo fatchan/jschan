@@ -1,6 +1,8 @@
 'use strict';
 
-module.exports = (posts) => {
+module.exports = (locals) => {
+
+	const { __, __n, posts } = locals;
 
 	// filter to ones not spoilered
 	const filteredPosts = posts.filter(post => {
@@ -9,12 +11,12 @@ module.exports = (posts) => {
 
 	if (filteredPosts.length === 0) {
 		return {
-			message:'No post(s) to spoiler'
+			message: __('No files to spoiler'),
 		};
 	}
 
 	return {
-		message: `Spoilered ${filteredPosts.length} post(s)`,
+		message: __n('Spoilered %s posts', filteredPosts.length),
 		action: '$set',
 		query: {
 			'spoiler': true

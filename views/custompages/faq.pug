@@ -196,7 +196,7 @@ block content
 					p A tripcode is a password of sorts, which users can provide in the tripcode component of their name. This tripcode is used in conjunction with a server-known secret to generate a unique* tripcode portion of the name. Long, unique tripcodes can be used as a form of identity. It is important that you keep tripcodes secret if you use them for some form of identity. A compromised tripcode can be used for impersonation and cannot be revoked in any way. Single # before tripcodes will use the traditional (what is now sometimes known as "insecure") tripcode algorithm shared by many imageboard softwares and websites. Double # before tripcodes will use a sha256 hash with server-side secret for a more secure, non-portable tripcode.
 
 					b Capcode
-					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board moderators. If there is no text after the ##, the role will be displayed alone. Leaving a space and putting custom text will be prefixed by the role name. This way, the role is always shown to prevent role impersonation.
+					p A capcode is a component of the name field only available to authenticated users. This includes admins, global staff, board owners and board staff. If there is no text after the ##, the role will be displayed alone. Leaving a space and putting custom text will be prefixed by the role name. This way, the role is always shown to prevent role impersonation.
 
 	.table-container.flex-center.mv-5
 		.anchor#post-styling
@@ -243,10 +243,10 @@ block content
 				td
 					span.detected ((( detected )))
 			tr
-				td ##2d9+3
+				td ##2%9+3
 				td
 					img(src='/file/dice.png' height='16' width='16')
-					span.dice (##2d9+3) Rolled 2 dice with 9 sides and modifier +3 = 10
+					span.dice (##2%9+3) = 10
 			tr
 				td https://example.com
 				td: a(href='#!') https://example.com
@@ -345,6 +345,13 @@ block content
 					p Early 404: When a new thread is posted, delete any existing threads with less than #{early404Replies} replies beyond the first 1/#{early404Fraction} of threads.
 					p Disable anonymizer file posting: Prevent users posting images through anonymizers such as Tor hidden services, lokinet SNApps or i2p eepsites.
 					p Blocked Countries: Block country codes (based on geo Ip data) from posting.
+	.table-container.flex-center.mv-5
+		.anchor#filters
+		table
+			tr
+				th: a(href='#filters') What do the filter options do?
+			tr
+				td
 					p Filters: Newline separated list of words or phrases to match in posts. Checks name, message, email, subject, and filenames.
 					p Strict Filtering: More aggressively match filters, by normalising the input compared against the filters.
 					p Filter Mode: What to do when a post matches a filter.

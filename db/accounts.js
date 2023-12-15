@@ -5,7 +5,7 @@ const Mongo = require(__dirname+'/db.js')
 	, bcrypt = require('bcrypt')
 	, cache = require(__dirname+'/../lib/redis/redis.js')
 	, { MONTH } = require(__dirname+'/../lib/converter/timeutils.js')
-	, Permissions = require(__dirname+'/../lib/permission/permissions.js');
+	, { Permissions } = require(__dirname+'/../lib/permission/permissions.js');
 
 module.exports = {
 
@@ -36,9 +36,12 @@ module.exports = {
 		return account;
 	},
 
-	insertOne: async (original, username, password, permissions) => {
+	insertOne: async (original, username, password, permissions, web3=false) => {
 		// hash the password
-		const passwordHash = await bcrypt.hash(password, 12);
+		let passwordHash;
+		if (password) {
+			passwordHash = await bcrypt.hash(password, 12);
+		}
 		//add to db
 		const res = await db.insertOne({
 			'_id': username,
@@ -48,6 +51,7 @@ module.exports = {
 			'ownedBoards': [],
 			'staffBoards': [],
 			'twofactor': null,
+			web3,
 		});
 		cache.del(`users:${username}`);
 		return res;

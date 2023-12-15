@@ -1,4 +1,6 @@
 include ./report.pug
+include ./banmessage.pug
+include ./web3signature.pug
 mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboard=false)
 	.anchor(id=post.postId)
 	div(class=`post-container ${post.thread || ban === true ? '' : 'op'}`
@@ -8,7 +10,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 		data-name=post.name
 		data-tripcode=post.tripcode
 		data-subject=post.subject
-		data-email=post.email)
+		data-email=post.email
+		data-flag=post.country && post.country.code)
 		- const postURL = `/${post.board}/${(modview || manage || globalmanage) ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info
 			span
@@ -25,6 +28,8 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					else if modview
 						a.bold(href=`${upLevel ? '../' : ''}recent.html?postid=${post.postId}`) [+]
 					else if globalmanage
+						a.bold(class='post-board', href=`/${post.board}/manage/index.html`) /#{post.board}/
+						|  
 						- const ip = viewRawIp === true ? post.ip.raw : post.ip.cloak;
 						a.bold(href=`?ip=${encodeURIComponent(ip)}`) [#{ip}]
 					| 
@@ -39,13 +44,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 						span.post-name #{post.name}
 					| 
 				if post.country && post.country.code
-					if post.country.custom === true
-						span(title=post.country.name)
-							img.customflag(src=`/flag/${post.board}/${post.country.src}` alt=' ' loading='lazy')
-						| 
-					else
-						span(class=`flag flag-${post.country.code.toLowerCase()}` title=post.country.name alt=post.country.name)
-						| 
+					include ../includes/postflag.pug
 				if post.tripcode
 					span.post-tripcode #{post.tripcode}
 					| 
@@ -53,34 +52,38 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					span.post-capcode(data-cap=post.capcode) #{post.capcode}
 					| 
 				- const postDate = new Date(post.date);
-				time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(undefined, { hourCycle:'h23' })}
+				time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
 				| 
 				if post.userId
 					span.user-id(style=`background-color: #${post.userId}`) #{post.userId}
 					| 
 			span.post-links
-				a.noselect.no-decoration(href=`${postURL}#${post.postId}`) No.
+				a.noselect.no-decoration(href=`${postURL}#${post.postId}`) #{__('No.')}
 				span.post-quoters
 					a.no-decoration(href=`${postURL}#postform`) #{post.postId}
 				|  
 				if !post.thread && (truncate || manage || globalmanage)
 					|  
-					span.noselect: a(href=`${postURL}`) [Open]
+					span.noselect: a(href=`${postURL}`) [#{__('Open')}]
 				select.jsonly.postmenu
-					option(value='single') Hide
+					option(value='single') #{__('Hide')}
 					if post.userId
-						option(value='fid') Filter ID
+						option(value='fid') #{__('Filter ID')}
 					if post.name
-						option(value='fname') Filter Name
-					if post.subject
-						option(value='fsub') Filter Subject
+						option(value='fname') #{__('Filter Name')}
 					if post.tripcode
-						option(value='ftrip') Filter Tripcode
+						option(value='ftrip') #{__('Filter Tripcode')}
+					if post.subject
+						option(value='fsub') #{__('Filter Subject')}
+					if post.country && post.country.code
+						option(value='fflag') #{__('Filter Flag')}
 					if !overboard && !ban
-						option(value='moderate') Moderate
+						option(value='moderate') #{__('Moderate')}
+					if !ban && (modview || manage || globalmanage)
+						option(value='edit') #{__('Edit')}
 					if !post.thread
-						option(value='watch') Watch
-						option(value='playlist') Playlist
+						option(value='watch') #{__('Watch')}
+						option(value='playlist') #{__('Playlist')}
 		.post-data
 			if post.files.length > 0
 				.post-files(class=(post.files.length > 1 ? 'fn' : ''))
@@ -91,7 +94,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 							- const type = file.mimetype.split('/')[0]
 							span.post-file-info
 								span
-									a.filename(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? 'Spoiler File' : file.originalFilename}
+									a.filename(href='/file/'+file.filename title='Download '+file.originalFilename download=file.originalFilename) #{post.spoiler || file.spoiler ? __('Spoiler File') : file.originalFilename}
 								br
 								if globalmanage && file.phash != null
 									span #{file.phash}
@@ -99,7 +102,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								if !file.attachment && !(post.spoiler || file.spoiler)
 									span.jsonly
 										b [
-										a.dummy-link.hide-image.noselect(data-src=`/file/${file.hasThumb ? 'thumb/'+file.hash+file.thumbextension : file.filename}`) Hide
+										a.dummy-link.hide-image.noselect(data-src=`/file/${file.hasThumb ? 'thumb/'+file.hash+file.thumbextension : file.filename}`) #{__('Hide')}
 										b ]
 								span 
 									|  (#{file.sizeString}
@@ -111,15 +114,15 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 								if type === 'image'
 									if (board && board.settings.reverseImageSearchLinks === true) || (overboard && overboardReverseLinks === true) || manage || globalmanage
 										|  
-										span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title='Reverse Image Search' target='_blank') Reverse
+										span: a(href=`${reverseImageLinksURL.replace('%s', encodeURIComponent(meta.url+'/file/'+file.filename))}` rel='nofollow' referrerpolicy='same-origin' title=__('Reverse Image Search') target='_blank') #{__('Reverse')}
 									if file.originalFilename.endsWith('-tegaki.png')
 										- const matchingReplayFile = post.files.find(f => f.originalFilename.slice(0, -4) === file.originalFilename.slice(0,-3));
 										if matchingReplayFile !== undefined
 											|  
-											span: a.dummy-link.replay-tegaki.noselect(href=`/file/${matchingReplayFile.filename}` download=matchingReplayFile.originalFilename) Replay
+											span: a.dummy-link.replay-tegaki.noselect(href=`/file/${matchingReplayFile.filename}` download=matchingReplayFile.originalFilename) #{__('Replay')}
 								if file.mimetype === 'tegaki/replay'
 									|  
-									span.jsonly: a.dummy-link.replay-tegaki.noselect(href=`/file/${file.filename}` download=file.originalFilename) Replay
+									span.jsonly: a.dummy-link.replay-tegaki.noselect(href=`/file/${file.filename}` download=file.originalFilename) #{__('Replay')}
 							.post-file-src(data-type=type data-attachment=(file.attachment ? "true" : "false"))
 								a(target='_blank' href=`/file/${file.filename}`)
 									if post.spoiler || file.spoiler
@@ -153,42 +156,41 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 				else
 					pre.post-message !{post.message}
 			if !post.message && post.files.length === 0
-				p No message or files.
+				p #{__('No message or files.')}
+			if post.signature && post.address
+				+web3signature(post.signature, post.address)
 			if post.edited
 				- const postEditDate = new Date(post.edited.date);
-				small.cb.mt-5.ml-5.edited
-					| Last edited 
-					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(undefined, { hourCycle:'h23' })}
-					|  by #{post.edited.username}
+				small.cb.mv-5.ml-5.edited
+					- lastEdited = __('Last edited | by %s', (post.edited.username || __('Hidden User'))).split('|'); //How do I interpolate a whole tag properly?
+					| #{lastEdited[0]}
+					time.reltime(datetime=postEditDate.toISOString()) #{postEditDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
+					| #{lastEdited[1]}
 			if post.banmessage
-				p.ban
-					span.message USER WAS BANNED FOR THIS POST
-					|  
-					span.reason(data-reason=post.banmessage) #{post.banmessage}
+				+banmessage(post.banmessage)
 			if truncatedMessage !== post.message
 				div.cb.mt-5.ml-5
-					| Message too long. #[a.viewfulltext(href=`${postURL}#${post.postId}`) View the full text]
+					| #{__('Message too long.')} #[a.viewfulltext(href=`${postURL}#${post.postId}`) #{__('View the full text')}]
 			if post.omittedposts || post.omittedfiles
 				div.cb.mt-5.ml-5
 					img.jsonly.dummy-link.expand-omitted(height='12' width='12' data-shown=post.replies.length data-board=post.board data-thread=post.postId src='/file/plus.png')
 					- const ompo = post.omittedposts;
 					- const omfi = post.omittedfiles;
 					span
-						| #{ompo} repl#{ompo > 1 ? 'ies' : 'y'}
-						| #{omfi > 0 ? ` and ${omfi} file${omfi > 1 ? 's' : ''}` : ''} omitted. 
-					| #[a(href=postURL) View the full thread]
+						| #{__(`${ompo > 1 ? '%s' : ompo} repl${ompo > 1 ? 'ies' : 'y'}${omfi > 0 ? ` and ${omfi > 1 ? '%s' : omfi} file${omfi > 1 ? 's' : ''}` : ''} omitted.`, ompo > 1 ? ompo : omfi, omfi)} 
+					| #[a(href=postURL) #{__('View the full thread')}]
 			if post.previewbacklinks != null
 				if post.previewbacklinks.length > 0
-					div.replies.mt-5.ml-5 Replies: 
+					div.replies.mt-5.ml-5 #{__n('Replies', 2)}: 
 						each backlink in post.previewbacklinks
 							a.quote(href=`${postURL}#${backlink.postId}`) &gt;&gt;#{backlink.postId}
 							|  
 						if post.previewbacklinks.length < post.backlinks.length
 							- const ombls = post.backlinks.length-post.previewbacklinks.length;
-							| + #[a(href=`${postURL}#${post.postId}`) #{ombls} earlier]
+							| + #[a(href=`${postURL}#${post.postId}`) #{__('%s earlier', ombls)}]
 							|  
 			else if post.backlinks && post.backlinks.length > 0
-				div.replies.mt-5.ml-5 Replies: 
+				div.replies.mt-5.ml-5 #{__n('Replies', 2)}: 
 					each backlink in post.backlinks
 						a.quote(href=`${postURL}#${backlink.postId}`) &gt;&gt;#{backlink.postId}
 						|  

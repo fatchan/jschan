@@ -1,3 +1,3 @@
 mixin filelabel(id, max)
 	label.jsonly.postform-style.filelabel(for=id) 
-		| Select/Drop/Paste file#{max > 1 ? 's' : ''}
+		| #{__n(`Select/Drop/Paste files`, max)}

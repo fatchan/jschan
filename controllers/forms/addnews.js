@@ -15,18 +15,20 @@ module.exports = {
 
 	controller: async (req, res, next) => {
 
+		const { __ } = res.locals;
+
 		const { globalLimits } = config.get;
 
 		const errors = await checkSchema([
-			{ result: existsBody(req.body.message), expected: true, error: 'Missing message' },
-			{ result: existsBody(req.body.title), expected: true, error: 'Missing title' },
-			{ result: numberBody(res.locals.messageLength, 0, globalLimits.fieldLength.message), expected: true, error: `Message must be ${globalLimits.fieldLength.message} characters or less` },
-			{ result: lengthBody(req.body.title, 0, 50), expected: false, error: 'Title must be 50 characters or less' },
+			{ result: existsBody(req.body.message), expected: true, error: __('Missing message') },
+			{ result: existsBody(req.body.title), expected: true, error: __('Missing title') },
+			{ result: numberBody(res.locals.messageLength, 0, globalLimits.fieldLength.message), expected: true, error: __('Message must be %s characters or less', globalLimits.fieldLength.message) },
+			{ result: lengthBody(req.body.title, 0, 50), expected: false, error: __('Title must be 50 characters or less') },
 		]);
 
 		if (errors.length > 0) {
 			return dynamicResponse(req, res, 400, 'message', {
-				'title': 'Bad request',
+				'title': __('Bad request'),
 				'errors': errors,
 				'redirect': '/globalmanage/news.html'
 			});

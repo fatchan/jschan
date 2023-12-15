@@ -25,6 +25,7 @@ fi
 read -p "Should robots.txt disallow compliant crawlers? (y/n): " ROBOTS_TXT_DISALLOW
 read -p "Allow google captcha in content-security policy? (y/n): " GOOGLE_CAPTCHA
 read -p "Allow Hcaptcha in content-security policy? (y/n): " H_CAPTCHA
+read -p "Allow Yandex SmartCaptcha in content-security policy? (y/n): " Y_CAPTCHA
 read -p "Download and setup geoip for post flags? (y/n): " GEOIP
 
 #looks good?
@@ -40,6 +41,7 @@ no https cert: $NOHTTPS
 robots.txt disallow all: $ROBOTS_TXT_DISALLOW
 google captcha: $GOOGLE_CAPTCHA
 hcaptcha: $H_CAPTCHA
+yandex captcha: $Y_CAPTCHA
 geoip: $GEOIP
 (y/n): " CORRECT
 #not saying no = yes, just like real life
@@ -122,6 +124,7 @@ EOF
 	"
 	fi
 
+	if [ "$NOHTTPS" != "y" ]; then
 			HTTPS_MIDSECTION="
 	listen [::]:443 ssl ipv6only=on;
 	listen 443 ssl;
@@ -140,7 +143,8 @@ server {
 
 	server_name $CLEARNET_SERVER_NAME;
 	return 444;
-			"
+"
+	fi
 
 	#onion_location redirect header
 	ONION_LOCATION=""
@@ -236,7 +240,7 @@ echo "Writing main jschan vhost config..."
 printf "$JSCHAN_CONFIG" > /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
 sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
 
-if [ "$NOHTTPS" == "Y" ]; then
+if [ "$NOHTTPS" == "y" ]; then
 	echo "Adjusting config snippets to support NOHTTPS mode..."
 	sudo sed -i "s/Forwarded-Proto https/Forwarded-Proto http/g" /etc/nginx/snippets/jschan_clearnet_routes.conf
 fi
@@ -257,6 +261,14 @@ if [ "$H_CAPTCHA" == "y" ]; then
 	sudo sed -i "s|connect-src|connect-src https://hcaptcha.com https://*.hcaptcha.com |g" /etc/nginx/snippets/*
 fi
 
+if [ "$Y_CAPTCHA" == "y" ]; then
+	echo "Allowing Yandex SmartCaptcha in CSP..."
+	#add yandex captcha CSP exceptions
+	sudo sed -i "s|script-src|script-src https://smartcaptcha.yandexcloud.net/captcha.js |g" /etc/nginx/snippets/*
+	sudo sed -i "s|frame-src|frame-src https://smartcaptcha.yandexcloud.net/ |g" /etc/nginx/snippets/*
+	sudo sed -i "s|font-src|font-src yastatic.net |g" /etc/nginx/snippets/*
+fi
+
 if [ "$ROBOTS_TXT_DISALLOW" == "y" ]; then
 	echo "Setting robots.txt to disallow all..."
 	#add path / (all) to disallow to make robots.txt block all robots instead of allowing
@@ -267,17 +279,13 @@ if [ "$GEOIP" == "y" ]; then
 	echo "Downloading and installing geoip database for nginx..."
 	#download geoip data
 	cd /usr/share/GeoIP
-	mv GeoIP.dat GeoIP.dat.bak
-	wget --retry-connrefused https://dl.miyuru.lk/geoip/dbip/country/dbip.dat.gz
-	gunzip dbip.dat.gz
-	mv dbip.dat GeoIP.dat
-	chown www-data:www-data /usr/share/GeoIP/GeoIP.dat
-
+	wget --retry-connrefused -qO- "https://download.db-ip.com/free/dbip-country-lite-`date +%Y-%m`.mmdb.gz"  | tee "/usr/share/GeoIP/dbip.mmdb.gz" >/dev/null
+	gunzip "/usr/share/GeoIP/dbip.mmdb.gz"
 	#add goeip_country to /etc/nginx/nginx.conf, only if not already exists
 	grep -qF "geoip_country" /etc/nginx/nginx.conf
 	if [ $? -eq 1 ]; then
 		sudo sed -i '/http {/a \
-geoip_country /usr/share/GeoIP/GeoIP.dat;' /etc/nginx/nginx.conf
+geoip_country /usr/share/GeoIP/geoip.mmdb;' /etc/nginx/nginx.conf
 	fi
 else
 	echo "Geoip not installed, removing directives..."

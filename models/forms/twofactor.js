@@ -7,14 +7,15 @@ const redis = require(__dirname+'/../../lib/redis/redis.js')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const username = res.locals.user.username.toLowerCase();
 
 	// Get the temporary secret from redis and check it exists
 	const tempSecret = await redis.get(`twofactor_tempsecret:${username}`);
 	if (!tempSecret || !username) {
 		return dynamicResponse(req, res, 403, 'message', {
-			'title': 'Forbidden',
-			'message': '2FA QR code expired, try again',
+			'title': __('Forbidden'),
+			'message': __('2FA QR code expired, try again'),
 			'redirect': '/twofactor.html',
 		});
 	}
@@ -25,8 +26,8 @@ module.exports = async (req, res) => {
 	// Check if code was valid
 	if (delta === null) {
 		return dynamicResponse(req, res, 403, 'message', {
-			'title': 'Forbidden',
-			'message': 'Incorrect 2FA code',
+			'title': __('Forbidden'),
+			'message': __('Incorrect 2FA code'),
 			'redirect': '/twofactor.html',
 		});
 	}
@@ -43,8 +44,8 @@ module.exports = async (req, res) => {
 	]);
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Two factor authentication enabled successfully',
+		'title': __('Success'),
+		'message': __('Two factor authentication enabled successfully'),
 		'redirect': '/login.html',
 	});
 

@@ -8,6 +8,7 @@ const { remove } = require('fs-extra')
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
 	//delete file of all selected assets
@@ -24,8 +25,8 @@ module.exports = async (req, res) => {
 	});
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': `Deleted ${amount} assets.`,
+		'title': __('Success'),
+		'message': __('Deleted %s assets', amount),
 		'redirect': redirect
 	});
 };

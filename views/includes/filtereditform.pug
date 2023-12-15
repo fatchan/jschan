@@ -1,0 +1,28 @@
+input(type='hidden' name='_csrf' value=csrf)
+input(type='hidden' name='filter_id' value=filter._id)
+.table-container.flex-center.mv-5.horscroll
+	table
+		tr
+			th #{__('Filters')}
+			th #{__('Strict Filtering')}
+			th #{__('Filter Mode')}
+			th #{__('Block/Ban Message')}
+			th #{__('Filter Auto Ban Duration')}
+			th #{__('Filter Bans Appealable')}
+		tr
+			td
+				textarea(name='filters' rows='10' placeholder=__('Newline separated') required) #{filter.filters.join('\n')}
+			td.text-center
+				input(type='checkbox', name='strict_filtering', value='true', checked=filter.strictFiltering)
+			td
+				select(name='filter_mode')
+					option(value='0', selected=filter.filterMode === 0) #{__('Do nothing')}
+					option(value='1', selected=filter.filterMode === 1) #{__('Block post')}
+					option(value='2', selected=filter.filterMode === 2) #{__('Ban')}
+			td
+				input(type='text' name='filter_message' placeholder=__('e.g. Rule 1: No ad spam') value=filter.filterMessage)
+			td
+				input(type='text' name='filter_ban_duration' placeholder=__('e.g. 3d') value=filter.filterBanDuration)
+			td.text-center
+				input(type='checkbox', name='filter_ban_appealable', value='true', checked=filter.filterBanAppealable)
+input(type='submit', value=__('Save'))

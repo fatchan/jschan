@@ -22,6 +22,7 @@
 	--link-color: #c5c8c6;
 	--post-link-color: #5f89ac;
 	--link-hover: #81a2be;
+	--accent-color: #c5c8c6;
 	--input-borders: #111;
 	--input-color: #c5c8c6;
 	--input-background: #1d1d21;
@@ -37,7 +38,11 @@
 
 #float .post-container, #livetext, #threadstats, .navbar, .catalog-tile, .pages, .post-container, .stickynav, .collapse, .bottom-reply {
 	border-width: 1px!important;
+<<<<<<< HEAD
 	border-color: black!important;
+=======
+	border-color: var(--box-border-color)!important;
+>>>>>>> master
 }
 
 .navbar{
@@ -61,7 +66,7 @@ tr:nth-child(2n+1) {
 }
 
 .box-wrap, .tabs li a {
-	border: 1px solid #000;
+	border: 1px solid var(--box-border-color);
 }
 
 @media only screen and (max-width: 600px) {

@@ -5,4 +5,5 @@ docker/jschan/Dockerfile-reset
 docker/nginx/Dockerfile
 docker/static/
 tools/
+!tools/festrings.json
 gulp/res/js/socket.io.js

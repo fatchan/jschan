@@ -41,10 +41,12 @@ module.exports = {
 					},
 					'board': board,
 					//bypass or pruned IP bans aren't upgraded, duh!
-					'type': 0,
+					'ip.type': {
+						'$lt': 2,
+					},
 					//dont allow half -> quarter
 					'range': {
-						'$lt': upgradeType
+						'$lt': upgradeType,
 					}
 				}
 			}, {
@@ -59,6 +61,7 @@ module.exports = {
 						'$substr': substrProjection,
 					},
 					'ip.raw': '$ip.raw',
+					'ip.type': '$ip.type',
 				}
 			}, {
 				'$merge': {

@@ -22,4 +22,4 @@ block content
 		div
 			a.button(href=link.href target='_blank') #{link.text}
 	if redirect
-		p You will be redirected shortly. If you are not redirected automatically, you can #[a(href=redirect) click here].
+		p #{__('You will be redirected shortly.')} #[a(href=redirect) #{__('Click here if you are not redirected automatically.')}]

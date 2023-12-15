@@ -1,53 +1,53 @@
 details.toggle-label#actionform
-	summary.collapse#action-menu Show Post Actions
+	summary.collapse#action-menu #{__('Show Post Actions')}
 	.actions 
-		h4.no-m-p Actions:
+		h4.no-m-p #{__('Moderate')}:
 		label
 			input.post-check(type='checkbox', name='delete' value='1')
-			| Delete Posts
+			| #{__('Delete Posts')}
 		label
 			input.post-check(type='checkbox', name='unlink_file' value='1')
-			| Unlink Files
+			| #{__('Unlink Files')}
 		label
 			input.post-check(type='checkbox', name='delete_file' value='1')
-			| Delete Files
+			| #{__('Delete Files')}
 		label
 			input.post-check(type='checkbox', name='spoiler' value='1')
-			| Spoiler Files
+			| #{__('Spoiler Files')}
 		label
 			input.post-check(type='checkbox', name='edit' value='1')
-			| Edit Post
+			| #{__('Edit Post')}
 		label
 			input.post-check(type='checkbox', name='delete_ip_global' value='1')
-			| Delete from IP globally
+			| #{__('Delete from IP globally')}
 		label
 			input.post-check(type='checkbox', name='global_dismiss' value='1')
-			| Dismiss Global Reports
+			| #{__('Dismiss Global Reports')}
 		label
 			input.post-check(type='checkbox', name='global_report_ban' value='1')
-			| Global Ban Reporters
+			| #{__('Global Ban Reporters')}
 		label
 			input.post-check(type='checkbox', name='global_ban' value='1')
-			| Global Ban Poster
+			| #{__('Global Ban Poster')}
 		label
 			input.post-check(type='checkbox', name='ban_q' value='1')
-			| Narrow Range
+			| #{__('Narrow Range')}
 		label
 			input.post-check(type='checkbox', name='ban_h' value='1')
-			| Wide Range
+			| #{__('Wide Range')}
 		label
 			input.post-check(type='checkbox', name='no_appeal' value='1')
-			| Non-appealable Ban
+			| #{__('Non-appealable Ban')}
 		label
 			input.post-check(type='checkbox', name='preserve_post' value='1')
-			| Show Post In Ban
+			| #{__('Show Post In Ban')}
 		label
 			input.post-check(type='checkbox', name='hide_name' value='1')
-			| Hide Username In Modlog
+			| #{__('Hide Username In Modlog')}
 		label
-			input(type='text', name='ban_reason', placeholder='Ban reason' autocomplete='off')
+			input(type='text', name='ban_reason', placeholder=__('Ban reason') autocomplete='off')
 		label
-			input(type='text', name='ban_duration', placeholder='Ban duration e.g. 7d' autocomplete='off')
+			input(type='text', name='ban_duration', placeholder=__('Ban duration e.g. 7d') autocomplete='off')
 		label
-			input(type='text', name='log_message', placeholder='Modlog message' autocomplete='off')
-	input(type='submit', value='Submit')
+			input(type='text', name='log_message', placeholder=__('Modlog message') autocomplete='off')
+	input(type='submit', value=__('Submit'))

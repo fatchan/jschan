@@ -108,7 +108,8 @@ window.addEventListener('DOMContentLoaded', () => {
 						}
 						thumbElement.style.opacity = '0.5';
 						thumbElement.style.cursor = 'wait';
-						if (localStorage.getItem('imageloadingbars') == 'true') {
+						if (localStorage.getItem('imageloadingbars') == 'true'
+							&& window.URL.createObjectURL) {
 							const request = new XMLHttpRequest();
 							request.onprogress = (e) => {
 								const progress = Math.floor((e.loaded/e.total)*100);

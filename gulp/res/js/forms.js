@@ -1,4 +1,4 @@
-/* globals modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem */
+/* globals __ __n modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem */
 async function videoThumbnail(file) {
 	return new Promise((resolve, reject) => {
 		const hiddenVideo = document.createElement('video');
@@ -66,7 +66,7 @@ function doModal(data, postcallback, loadcallback) {
 			}
 			if (postcallback) {
 				checkInterval = setInterval(() => {
-					if (modalframe && modalframe.contentDocument.title == 'Success') {
+					if (modalframe && modalframe.contentDocument.title == __('Success')) {
 						clearInterval(checkInterval);
 						removeModal();
 						postcallback();
@@ -118,6 +118,18 @@ class postFormHandler {
 			this.tegakiButton.addEventListener('click', () => this.doTegaki());
 		}
 
+		//if web3 signature button, attach the listeners for message signing
+		this.web3SignButton = form.querySelector('.web3-sign');
+		if (this.web3SignButton) {
+			this.web3SignButton.addEventListener('click', () => this.doWeb3Sign());
+		}
+
+		//if web3 login button, do login procedure on click
+		this.web3LoginButton = form.querySelector('.web3-login');
+		if (this.web3LoginButton) {
+			this.web3LoginButton.addEventListener('click', (e) => this.doWeb3Login(e));
+		}
+
 		//if file input, attach listeners for adding files, drag+drop, etc
 		this.fileInput = form.querySelector('input[type="file"]');
 		if (this.fileInput) {
@@ -147,6 +159,7 @@ class postFormHandler {
 		}
 
 		form.addEventListener('submit', e => this.formSubmit(e));
+		form.addEventListener('messageBoxChange', () => this.handleMessageChange());
 	}
 
 	reset() {
@@ -168,14 +181,15 @@ class postFormHandler {
 			onCancel: () => {},
 			onDone: () => {
 				const now = Date.now();
-				//add replay file if box was checked
+				let replayBlob;
 				if (saveReplay) {
-					const blob = Tegaki.replayRecorder.toBlob();
-					this.addFile(new File([blob], `${now}-tegaki.tgkr`, { type: 'tegaki/replay' }), { stripFilenames: false });
+					replayBlob = Tegaki.replayRecorder.toBlob();
 				}
 				//add tegaki image
-				Tegaki.flatten().toBlob(b => {
-					this.addFile(new File([b], `${now}-tegaki.png`, { type: 'image/png' }), { stripFilenames: false });
+				Tegaki.flatten().toBlob(imageBlob => {
+					this.addFile(new File([imageBlob], `${now}-tegaki.png`, { type: 'image/png' }), { stripFilenames: false });
+					//add replay file
+					replayBlob && this.addFile(new File([replayBlob], `${now}-tegaki.tgkr`, { type: 'tegaki/replay' }), { stripFilenames: false });
 				}, 'image/png');
 				//update file list
 				this.updateFilesText();
@@ -188,6 +202,56 @@ class postFormHandler {
 		});
 		Tegaki.resetLayers();
 		Tegaki.setColorPalette(2); //picks a better default color palette
+	}
+
+	handleMessageChange() {
+		if (!this.messageBox) { return; }
+		const emptyMessage = this.messageBox.value.length === 0;
+		if (this.web3SignButton) {
+			this.form.elements.signature.value = '';
+			this.web3SignButton.disabled = emptyMessage;
+		}
+	}
+
+	async doWeb3Login(e) {
+		e.target.style.pointerEvents = 'none'; //way of disabling dummy button to prevent double click
+		try {
+			const accounts = await window.jschanweb3.eth.requestAccounts();
+			const nonceResponse = await fetch(`/nonce/${encodeURIComponent(accounts[0])}.json`)
+				.then(res => res.json());
+			const nonce = nonceResponse && nonceResponse.nonce;
+			if (!nonce) { throw Error('Nonce request failed'); }
+			const signingMesssage = `Nonce: ${nonce}`;
+			const signature = await window.jschanweb3.currentProvider.request({
+				method: 'personal_sign',
+				params: [signingMesssage, accounts[0]],
+			});
+			this.form.elements.signature.value = signature;
+			this.form.elements.address.value = accounts[0];
+			this.form.elements.nonce.value = nonce;
+			this.form.requestSubmit();
+		} catch(e) {
+			console.warn(e);
+		} finally {
+			e.target.style.pointerEvents = 'auto';
+		}
+	}
+
+	async doWeb3Sign() {
+		if (!this.messageBox.value || this.messageBox.value.length === 0) {
+			return;
+		}
+		const messageContent = this.messageBox.value;
+		try {
+			const accounts = await window.jschanweb3.eth.requestAccounts();
+			const signature = await window.jschanweb3.currentProvider.request({
+				method: 'personal_sign',
+				params: [messageContent, accounts[0]],
+			});
+			this.form.elements.signature.value = signature;
+		} catch (e) {
+			console.warn(e);
+		}
 	}
 
 	updateFlagField() {
@@ -242,22 +306,23 @@ class postFormHandler {
 		//prepare new request
 		const xhr = new XMLHttpRequest();
 
-		//disable submit button to prevent submitting while one in progress
-		this.submit.disabled = true;
-
-		//update the text on the submit button, and show upload progress if form has files
-		this.submit.value = 'Processing...';
-		if (this.files && this.files.length > 0) {
-			xhr.onloadstart = () => {
-				this.submit.value = '0%';
-			};
-			xhr.upload.onprogress = (ev) => {
-				const progress = Math.floor((ev.loaded / ev.total) * 100);
-				this.submit.value = `${progress}%`;
-			};
-			xhr.onload = () => {
-				this.submit.value = this.originalSubmitText;
-			};
+		if (this.submit) {
+			//disable submit button to prevent submitting while one in progress
+			this.submit.disabled = true;
+			//update the text on the submit button, and show upload progress if form has files
+			this.submit.value = 'Processing...';
+			if (this.files && this.files.length > 0) {
+				xhr.onloadstart = () => {
+					this.submit.value = '0%';
+				};
+				xhr.upload.onprogress = (ev) => {
+					const progress = Math.floor((ev.loaded / ev.total) * 100);
+					this.submit.value = `${progress}%`;
+				};
+				xhr.onload = () => {
+					this.submit.value = this.originalSubmitText;
+				};
+			}
 		}
 
 		xhr.onreadystatechange = () => {
@@ -265,11 +330,13 @@ class postFormHandler {
 			//request finished
 			if (xhr.readyState === 4) {
 
-				//if the google/hcaptcha was filled, reset it now
+				//if the google/hcaptcha/yandex was filled, reset it now
 				if (captchaResponse && grecaptcha) {
 					grecaptcha.reset();
 				} else if(captchaResponse && hcaptcha) {
 					hcaptcha.reset();
+				} else if(captchaResponse && window.smartCaptcha) {
+					window.smartCaptcha.reset();
 				}
 
 				//remove captcha if server says it is no longer enabled	(submitting one when not needed doesnt cause any problem)
@@ -279,8 +346,10 @@ class postFormHandler {
 				}
 
 				//re-enable the submit button now, and set the submit button text back to original value
-				this.submit.disabled = false;
-				this.submit.value = this.originalSubmitText;
+				if (this.submit) {
+					this.submit.disabled = false;
+					this.submit.value = this.originalSubmitText;
+				}
 
 				//try and parse json from the response if there is a body
 				let json;
@@ -334,12 +403,12 @@ class postFormHandler {
 					} else {
 
 						//not a 200 so probably error
-						if (!this.captchaField && json.message === 'Incorrect captcha answer') {
+						if (!this.captchaField && json.message === __('Incorrect captcha answer')) {
 							/* add missing captcha field if we got an error about it and the form has no captcha field
 								(must have been enabeld after we loaded the page) */
 							captchaController.addMissingCaptcha();
 							this.captchaField = true;
-						} else if (json.message === 'Captcha expired') {
+						} else if (json.message === __('Captcha expired')) {
 							//if captcha is expired, just refresh the captcha
 							const captcha = this.form.querySelector('.captcharefresh');
 							if (captcha) {
@@ -387,7 +456,9 @@ class postFormHandler {
 					});
 				}
 
-				this.submit.value = this.originalSubmitText;
+				if (this.submit) {
+					this.submit.value = this.originalSubmitText;
+				}
 
 			}
 		};
@@ -399,8 +470,10 @@ class postFormHandler {
 				'title': 'Error',
 				'message': 'Something broke'
 			});
-			this.submit.disabled = false;
-			this.submit.value = this.originalSubmitText;
+			if (this.submit) {
+				this.submit.disabled = false;
+				this.submit.value = this.originalSubmitText;
+			}
 		};
 
 		//open the request
@@ -517,9 +590,9 @@ class postFormHandler {
 		if (this.files && this.files.length === 0) {
 			this.fileUploadList.textContent = '';
 			this.fileUploadList.style.display = 'none';
-			this.fileLabelText.nodeValue = `Select/Drop/Paste file${this.multipleFiles ? 's' : ''}`;
+			this.fileLabelText.nodeValue = __n('Select/Drop/Paste files', this.multipleFiles ? 2 : 1);
 		} else {
-			this.fileLabelText.nodeValue = `${this.files.length} file${this.files.length > 1 ? 's' : ''} selected`;
+			this.fileLabelText.nodeValue =  __n('%s files selected', this.files.length);
 		}
 		this.fileInput.value = null;
 	}

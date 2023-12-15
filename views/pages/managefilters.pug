@@ -1,0 +1,41 @@
+extends ../layout.pug
+include ../mixins/filter.pug
+include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
+
+block head
+	title /#{board._id}/ - #{__('Filters')}
+
+block content
+	+boardheader(__('Filters'))
+	br
+	+managenav('filters')
+	hr(size=1)
+	h4.no-m-p
+		| #{__('Add Filter')}
+		|  (
+		a(href='/faq.html#filters') #{__('Filters FAQ')}
+		| ):
+	.form-wrapper.flexleft
+		form.form-post(action=`/forms/board/${board._id}/addfilter`, enctype='application/x-www-form-urlencoded', method='POST')
+			include ../includes/filternewform.pug
+	if filters.length > 0
+		hr(size=1)
+		h4.no-m-p #{__('Manage Filters')}:
+		.form-wrapper.flexleft
+			form.form-post(action=`/forms/board/${board._id}/deletefilter`, enctype='application/x-www-form-urlencoded', method='POST')
+				input(type='hidden' name='_csrf' value=csrf)
+				.table-container.mv-5.horscroll
+					table
+						tr
+							th
+							th #{__('Filters')}
+							th #{__('Strict Filtering')}
+							th #{__('Filter Mode')}
+							th #{__('Block/Ban Message')}
+							th #{__('Filter Auto Ban Duration')}
+							th #{__('Filter Bans Appealable')}
+							th #{__('Edit')}
+						each f in filters
+							+filter(f)
+				input(type='submit', value=__('Delete'))

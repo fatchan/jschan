@@ -11,6 +11,6 @@ module.exports = async (req, res, next) => {
 		return next(err);
 	}
 
-	return res.send(html);
+	return res.set('Cache-Control', 'max-age=0').send(html);
 
 };

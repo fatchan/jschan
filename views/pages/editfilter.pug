@@ -1,0 +1,20 @@
+extends ../layout.pug
+include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
+
+block head
+	title /#{board._id}/ - #{__('Edit Filter')}
+
+block content
+	+boardheader(__('Edit Filter'))
+	br
+	+managenav('filters', true)
+	hr(size=1)
+	h4.no-m-p
+		| #{__('Edit Filter')}
+		|  (
+		a(href='/faq.html#filters') #{__('Filters FAQ')}
+		| ):
+	.form-wrapper.flex-center.mv-10
+		form.form-post(action=`/forms/board/${board._id}/editfilter` method='POST')
+			include ../includes/filtereditform.pug

@@ -2,26 +2,26 @@ include ./filelabel.pug
 
 mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameList, filePath, imageClass, showName, showLink, formDescription)
 	- const capitalName = `${name.charAt(0).toUpperCase()}${name.substring(1)}`;
-	h4.no-m-p Add #{capitalName}s (Max #{total})
+	h4.no-m-p #{__n(`Add ${capitalName} (Max %s)`, total)}
 	p #{formDescription}
 	.form-wrapper.flexleft.mt-10
 		form.form-post(action=addPath, enctype='multipart/form-data', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
 				.label
-					span #{capitalName}#{max > 1 ? 's' : ''}
+					span #{__n(capitalName, max)}
 						span.required *
 					if max > 1
 						|  
 						|  
-						small (Max #{max})
+						small (#{__n('Max %s', max)})
 				span.col
 					+filelabel(name, max)
 					input(id=name type='file', name='file' multiple required)
 					.upload-list(data-spoilers='false' data-strip-filenames='false')
-			input(type='submit', value='Submit')
+			input(type='submit', value=__('Submit'))
 	if fileList.length > 0
-		h4.mv-5 Delete #{capitalName}s:
+		h4.mv-5 #{__(`Delete ${capitalName}s`)}:
 		.form-wrapper.flexleft.mt-10
 			form.form-post(action=deletePath, enctype='application/x-www-form-urlencoded', method='POST')
 				input(type='hidden' name='_csrf' value=csrf)
@@ -34,4 +34,4 @@ mixin fileform(name, max, total, addPath, deletePath, checkName, fileList, nameL
 								small #{nameList[index]}
 							if showLink
 								a(href=`${filePath}/${file}`) Link
-				input(type='submit', value='Delete')
+				input(type='submit', value=__('Delete'))

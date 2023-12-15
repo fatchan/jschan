@@ -10,10 +10,9 @@ const { Boards, Posts } = require(__dirname+'/../../db/')
 	, deletePosts = require(__dirname+'/deletepost.js')
 	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
-	, { countryCodes } = require(__dirname+'/../../lib/misc/countries.js')
+	, { countryCodesSet } = require(__dirname+'/../../lib/misc/countries.js')
 	, { trimSetting, numberSetting, booleanSetting, arraySetting } = require(__dirname+'/../../lib/input/setting.js')
 	, { compareSettings } = require(__dirname+'/../../lib/input/settingsdiff.js')
-	, validCountryCodes = new Set(countryCodes)
 	, settingChangeEntries = Object.entries({
 		'userPostDelete': ['board', 'catalog', 'threads'],
 		'userPostSpoiler': ['board', 'catalog', 'threads'],
@@ -27,14 +26,17 @@ const { Boards, Posts } = require(__dirname+'/../../db/')
 		'codetheme': ['board', 'threads', 'catalog', 'other'],
 		'announcement.raw': ['board', 'threads', 'catalog', 'other'],
 		'customCss': ['board', 'threads', 'catalog', 'other'],
+		'language': ['board', 'threads', 'catalog', 'other'],
 		'allowedFileTypes.other': ['board', 'threads', 'catalog'],
 		'allowedFileTypes.image': ['board', 'threads', 'catalog'],
 		'enableTegaki': ['board', 'threads', 'catalog'],
 		'hideBanners': ['board', 'threads', 'catalog'],
+		'enableWeb3': ['board', 'threads', 'catalog'],
 	});
 
 module.exports = async (req, res) => {
 
+	const { __ } = res.locals;
 	const { globalLimits } = config.get;
 
 	//oldsettings before changes
@@ -51,14 +53,15 @@ module.exports = async (req, res) => {
 
 	if (req.body.countries) {
 		req.body.countries = [...new Set(req.body.countries)] //prevents submitting multiple of same code, not like it matters, but meh
-			.filter(code => validCountryCodes.has(code))
-			.slice(0,countryCodes.length);
+			.filter(code => countryCodesSet.has(code))
+			.slice(0, countryCodesSet.size);
 	}
 
 	const newSettings = {
 		'name': trimSetting(req.body.name, oldSettings.name),
 		'description': trimSetting(req.body.description, oldSettings.description),
 		'defaultName': trimSetting(req.body.default_name, oldSettings.defaultName),
+		'language': trimSetting(req.body.language, oldSettings.language),
 		'theme': req.body.theme || oldSettings.theme,
 		'codeTheme': req.body.code_theme || oldSettings.codeTheme,
 		'sfw': booleanSetting(req.body.sfw),
@@ -71,6 +74,7 @@ module.exports = async (req, res) => {
 		'geoFlags': booleanSetting(req.body.geo_flags),
 		'customFlags': booleanSetting(req.body.custom_flags),
 		'enableTegaki': booleanSetting(req.body.enable_tegaki),
+		'enableWeb3': booleanSetting(req.body.enable_web3),
 		'forceAnon': booleanSetting(req.body.force_anon),
 		'sageOnlyEmail': booleanSetting(req.body.sage_only_email),
 		'userPostDelete': booleanSetting(req.body.user_post_delete),
@@ -101,14 +105,10 @@ module.exports = async (req, res) => {
 		'lockMode': numberSetting(req.body.lock_mode, oldSettings.lockMode),
 		'messageR9KMode': numberSetting(req.body.message_r9k_mode, oldSettings.messageR9KMode),
 		'fileR9KMode': numberSetting(req.body.file_r9k_mode, oldSettings.fileR9KMode),
-		'filterMode': numberSetting(req.body.filter_mode, oldSettings.filterMode),
-		'filterBanDuration': numberSetting(req.body.ban_duration, oldSettings.filterBanDuration),
 		'deleteProtectionAge': numberSetting(req.body.delete_protection_age, oldSettings.deleteProtectionAge),
 		'deleteProtectionCount': numberSetting(req.body.delete_protection_count, oldSettings.deleteProtectionCount),
-		'filters': arraySetting(req.body.filters, oldSettings.filters, 50),
 		'blockedCountries': req.body.countries || [],
 		'disableAnonymizerFilePosting': booleanSetting(req.body.disable_anonymizer_file_posting),
-		'strictFiltering': booleanSetting(req.body.strict_filtering),
 		'customCss': globalLimits.customCss.enabled ? (req.body.custom_css !== null ? req.body.custom_css : oldSettings.customCss) : null,
 		'announcement': {
 			'raw': announcement !== null ? announcement : oldSettings.announcement.raw,
@@ -164,7 +164,7 @@ module.exports = async (req, res) => {
 			//prune old threads
 			const prunedThreads = await Posts.pruneThreads(res.locals.board);
 			if (prunedThreads.length > 0) {
-				await deletePosts(prunedThreads, req.params.board);
+				await deletePosts(prunedThreads, req.params.board, res.locals);
 				//remove board page html/json for pages > newMaxPage
 				for (let i = newMaxPage+1; i <= oldMaxPage; i++) {
 					promises.push(remove(`${uploadDirectory}/html/${req.params.board}/${i}.html`));
@@ -231,8 +231,8 @@ module.exports = async (req, res) => {
 	debugLogs && console.log(req.params.board, 'board settings changed');
 
 	return dynamicResponse(req, res, 200, 'message', {
-		'title': 'Success',
-		'message': 'Updated settings.',
+		'title': __('Success'),
+		'message': __('Updated settings.'),
 		'redirect': `/${req.params.board}/manage/settings.html`
 	});
 
