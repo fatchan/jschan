@@ -171,39 +171,41 @@ mixin modal(data)
 								.postform-style.ph-5.mr-1 × 
 								input.mr-1.w50#tegakiheight-setting(type='number')
 
-					.row.mt-5
-						.label #{__('Custom CSS')}
-						textarea#customcss-setting(rows=7)
+					details.fw.mt-5
+						summary.label.more More
+						.row.mt-5
+							.label #{__('Custom CSS')}
+							textarea#customcss-setting(rows=7)
 
-					.row.mt-5
-						form.text-center#filter-form
-							table.fw
-								tbody#advancedfilters
-									tr
-										th(colspan=4) #{__('Post Filters')}
-									tr
-										td #{__('Type')}
-										td #{__('Value')}
-										td #{__('Regex?')}
-										td: input.right#filters-clear(type='button' value=__('Clear'))
-									tr
-										td: select(name='type')
-											option(value='fname') #{__('Name')}
-											option(value='ftrip') #{__('Tripcode')}
-											option(value='fsub') #{__('Subject')}
-											option(value='fmsg') #{__('Message')}
-											option(value='fflag') #{__('Flag')}
-										td
-											input#filter-value-input(required type='text' name='value')
-										td
-											input(type='checkbox' name='regex')
-										td: input.right(type='submit' value=__('Add'))
-					.row.mt-5
-						.label
-							| #{__('Import/Export Settings')}
-							small.title #{__('Do NOT import untrusted settings data!')}
-							small #{__("Export does not include post password or (You)'s")}
-						textarea#import-export-setting(type='text')
-					.row
-						input.mr-1#export-setting(type='button' value=__('Export'))
-						input#import-setting(type='button' value=__('Import'))
+						.row.mt-5
+							form.text-center#filter-form
+								table.fw
+									tbody#advancedfilters
+										tr
+											th(colspan=4) #{__('Post Filters')}
+										tr
+											td #{__('Type')}
+											td #{__('Value')}
+											td #{__('Regex?')}
+											td: input.right#filters-clear(type='button' value=__('Clear'))
+										tr
+											td: select(name='type')
+												option(value='fname') #{__('Name')}
+												option(value='ftrip') #{__('Tripcode')}
+												option(value='fsub') #{__('Subject')}
+												option(value='fmsg') #{__('Message')}
+												option(value='fflag') #{__('Flag')}
+											td
+												input#filter-value-input(required type='text' name='value')
+											td
+												input(type='checkbox' name='regex')
+											td: input.right(type='submit' value=__('Add'))
+						.row.mt-5
+							.label
+								| #{__('Import/Export Settings')}
+								small.title #{__('Do NOT import untrusted settings data!')}
+								small #{__("Export does not include post password or (You)'s")}
+							textarea#import-export-setting(type='text')
+						.row
+							input.mr-1#export-setting(type='button' value=__('Export'))
+							input#import-setting(type='button' value=__('Import'))
