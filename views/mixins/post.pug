@@ -49,7 +49,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 					span.post-tripcode #{post.tripcode}
 					| 
 				if post.capcode
-					span.post-capcode #{post.capcode}
+					span.post-capcode(data-cap=post.capcode) #{post.capcode}
 					| 
 				- const postDate = new Date(post.date);
 				time.post-date.reltime(datetime=postDate.toISOString()) #{postDate.toLocaleString(pageLanguage, { hourCycle:'h23' })}
