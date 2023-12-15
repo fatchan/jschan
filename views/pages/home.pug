@@ -6,15 +6,15 @@ block head
 
 block content
 	h1.board-title #{meta.siteName}
-	//img.logo(src='/url' title='') future mascot logo 
+	img.logo(src='/file/indiachan-square.png' title='' width='256' height='256')
 	.table-container.flex-center.mv-10.text-center
-		//table
+		table
 			tr
 				th.alt #{__('Welcome')}
 			tr
 				td
 					pre.no-m-p
-						| Welcome to indiachan, an imageboard dedicated to all indian things?
+						| Indiachan [ˈɪndiəʧæn]: dive into the Bharata of online musings and shitposts.
 	if recentNews && recentNews.length > 0
 		.table-container.flex-center.mv-10
 			table.newstable
