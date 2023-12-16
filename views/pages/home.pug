@@ -14,12 +14,16 @@ block content
 			tr
 				td
 					pre.no-m-p
-						| Indiachan [ˈɪndiəʧæn]: dive into the Bharata of online musings and shitposts.
-	if recentNews && recentNews.length > 0
+						| Indiachan [ˈɪndiəʧæn]: dive into the bharata of online musings and shitposts.
+	if (recentNews && recentNews.length > 0) || globalAnnouncement.markdown
 		.table-container.flex-center.mv-10
 			table.newstable
 				tr
 					th(colspan=3) #{__('Latest News')}
+				if globalAnnouncement.markdown
+					tr
+						td(colspan=3)
+							pre.post-message.no-m-p.text-center !{globalAnnouncement.markdown}
 				each post in recentNews
 					tr
 						td

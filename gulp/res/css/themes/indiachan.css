@@ -1,35 +1,45 @@
+/*yotsuba b*/
 :root {
-    /* Gray and Indian flag-inspired colors */
-    --icon-color: #FF9933; /* Saffron for icons */
-    --alt-label-color: #4a4a4a; /* Dark gray */
-    --alt-font-color: #d4d4d4; /* Light gray for contrast */
-    --background-top: #323232; /* Dark gray */
-    --background-rest: #323232; /* Dark gray */
-    --navbar-color: #4a4a4a; /* Dark gray */
-    --post-color: #4a4a4a; /* Dark gray */
-    --post-outline-color: #5c5c5c; /* Slightly lighter gray */
-    --label-color: #4a4a4a; /* Dark gray */
-    --box-border-color: #5c5c5c; /* Slightly lighter gray */
-    --darken: #ffffff08; /* Light overlay for contrast */
-    --highlighted-post-color: #d7000030; /* Dark green, inspired by Indian flag */
-    --highlighted-post-outline-color: #f6525230; /* Darker green shade */
-    --board-title: #FF9933; /* Saffron for board titles */
-    --hr: #505050; /* Medium gray for horizontal rules */
-    --font-color: #d4d4d4; /* Light gray for readability */
-    --name-color: #128807; /* Dark green, inspired by Indian flag */
-    --capcode-color: #ff4141; /* Bright red for attention */
-    --subject-color: #8f8dc9; /* Muted purple for subtlety */
-    --link-color: white; /* Soft blue for links */
-    --post-link-color: #f65252; /* Bright red for contrast */
-    --link-hover: #f65252; /* Bright red on hover for visibility */
-    --accent-color: #6a6a6a; /* Medium gray for accents */
-    --input-borders: #6a6a6a; /* Medium gray for input borders */
-    --input-color: #d4d4d4; /* Light gray for input text */
-    --input-background: #323232; /* Dark gray for input background */
-    --dice-color: darkorange; /* Dark orange for dice */
-    --title-color: #d70000; /* Dark red for titles */
-    --greentext-color: #128807; /* Dark green for greentext */
-    --pinktext-color: #E0727F; /* Muted pink for subtlety */
+	--icon-color:invert(17%)sepia(89%)saturate(7057%)hue-rotate(2deg)brightness(93%)contrast(120%);
+	--alt-label-color: #800;
+	--alt-font-color: #fff;
+	--background-top: #fed6af90;
+	--background-rest: #ffe;
+	--navbar-color: #f0e0d6;
+	--post-color: #f0e0d6;
+	--post-outline-color: #d9bfb7;
+	--label-color: #fca;
+	--box-border-color: #000;
+	--darken: #ead6ca;
+	--highlighted-post-color: #f0c0b0;
+	--highlighted-post-outline-color: #d99f91;
+	--board-title: #af0a0f;
+	--hr: #D9BFB7;
+	--font-color: #800000;
+	--name-color: #117743;
+	--capcode-color: #f00;
+	--subject-color: #f00;
+	--link-color: #800;
+	--post-link-color: navy;
+	--link-hover: #f00;
+	--accent-color: #800000;
+	--input-borders: #a9a9a9;
+	--input-color: #000;
+	--input-background: white;
+	--dice-color: darkorange;
+	--title-color: #d70000;
+	--greentext-color: #789922;
+	--pinktext-color:#E0727F;
 }
 
-/* Rest of the CSS remains unchanged... */
+.post-container, #float .post-container, .stickynav, .pages, #action-menu, .catalog-tile, #livetext, #threadstats, .collapse, .bottom-reply {
+	border-width: 0 1px 1px 0;
+}
+
+tr, tr:nth-child(2n+1) {
+	background: #fff;
+}
+
+body {
+	background: url(/css/themes/assets/favela-bg.jpg) repeat 0 0 azure
+}
