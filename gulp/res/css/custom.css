@@ -106,3 +106,8 @@ span.post-capcode[data-cap="## Admin"] {
 	image-rendering: pixelated;
 	-ms-interpolation-mode: nearest-neighbor;
 }
+
+/* Adjust hotpost date width */
+#hotposts td:nth-child(3) {
+	min-width: 8em;
+}
