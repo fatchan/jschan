@@ -5,7 +5,7 @@ unless minimal
 			| #{__('Boards')} 
 			if enableWebring
 				.rainbow +Webring
-		a.nav-item#overboardlink(href='/overboard.html') #{__('Overboard')}
+		a.nav-item#overboardlink(href='/catalog.html') #{__('Overboard')}
 		a.nav-item(href='/account.html') #{__('Account')}
 		if !modview && board
 			a.nav-item(href=`/${board._id}/manage/${managePage || 'index.html'}`) #{__('Manage')}
