@@ -318,7 +318,7 @@ p {
 	display: block;
 	box-shadow: 0 0 3px black;
 	width: auto;
-	max-height: 100px;
+	max-height: 150px;
 	box-sizing: border-box;
 	object-fit: cover;
 	margin: 3px;
@@ -326,8 +326,8 @@ p {
 }
 
 .catalog-thumb.attachmentimg, .catalog-thumb.audioimg, .catalog-thumb.spoilerimg {
-	height: 64px;
-	width: 64px;
+	height: 150px;
+	width: 150px;
 }
 
 .catalog-thumb.small {
