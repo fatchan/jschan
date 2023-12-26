@@ -11,6 +11,7 @@ mixin post(post, truncate, manage=false, globalmanage=false, ban=false, overboar
 		data-tripcode=post.tripcode
 		data-subject=post.subject
 		data-email=post.email
+		data-spamvector=post.spamvector
 		data-flag=post.country && post.country.code)
 		- const postURL = `/${post.board}/${(modview || manage || globalmanage) ? 'manage/' : ''}thread/${post.thread || post.postId}.html`;
 		.post-info

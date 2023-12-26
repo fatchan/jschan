@@ -462,6 +462,7 @@ module.exports = async (req, res) => {
 		quotes, //posts this post replies to
 		crossquotes, //quotes to other threads in same board
 		'backlinks': [], //posts replying to this post
+		'spamvector': null,
 	};
 
 	if (!req.body.thread) {
@@ -483,6 +484,57 @@ module.exports = async (req, res) => {
 	if (data.thread) {
 		threadPage = await Posts.getThreadPage(req.params.board, data.thread);
 	}
+
+	/*
+	 * Testing spamvector vvv
+	 */
+	if (data.nomarkup && data.nomarkup.length > 0) {
+		try {
+			const controller = new AbortController();
+			const signal = controller.signal;
+			setTimeout(() => {
+				controller.abort();
+			}, 5000); //5s timeout
+			/*
+			 * Note: this can be made async and update the post afterwards
+			 * but then live posts on globalmanage wont have the spamvector data
+			 */
+			const spamvector = await fetch('http://localhost:8000/query', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ message: data.nomarkup }),
+				signal,
+			})
+				.then(response => response.json())
+				.then(json => (json||[]).filter(x => x.payload.site === 'disco spam posts'))
+				.catch(error => console.error('Spamvector error:', error));
+			if (spamvector && Array.isArray(spamvector)) {
+				data.spamvector = spamvector.length;
+				if (spamvector.length > 0) {
+					data.globalreports = [{
+						id: Mongo.ObjectId(),
+						reason: `Spamvector (${spamvector.length}/10)`,
+						date: new Date(),
+						ip: {
+							cloak: 'Spamvector.BP',
+							raw: 'Spamvector.BP',
+							type: 2,
+						},
+					}];
+				}
+			} else {
+				data.spamvector = null;
+			}
+		} catch (e) {
+			console.error('Spamvector error:', e);
+			data.spamvector = null;
+		}
+	}
+	/*
+	 * Testing spamvector ^^^
+	 */
 
 	const { postId, postMongoId } = await Posts.insertOne(res.locals.board, data, thread, res.locals.anonymizer);
 
@@ -616,6 +668,7 @@ module.exports = async (req, res) => {
 		'cyclic': data.cyclic,
 		'signature': data.signature,
 		'address': data.address,
+		'spamvector': data.spamvector,
 	};
 	if (data.thread) {
 		//dont emit thread to this socket, because the room only exists when the thread is open
