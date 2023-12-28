@@ -307,12 +307,16 @@ module.exports = async (req, res) => {
 								await saveFull();
 								if (!existsThumb) {
 									const numFrames = videoStreams[0].nb_frames;
-									if (numFrames === 'N/A' && subtype === 'webm') {
-										await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
-									} else {
-										await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
-									}
+									const timestamp = processedFile.duration * videoThumbPercentage / 100;
+									try {
+										if (numFrames === 'N/A' && subtype === 'webm') {
+											await videoThumbnail(processedFile, processedFile.geometry, timestamp);
+										} else {
+											await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : timestamp));
+										}
+									} catch (err) { /*No keyframe after timestamp probably. ignore, we'll retry*/}
 									//check and fix bad thumbnails in all cases, helps prevent complaints from child molesters who want improper encoding handled better
+									//for example, can fail on videos without keyframes after the seek timestamp e.g. music with only an album cover frame
 									let videoThumbStat = null;
 									try {
 										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
