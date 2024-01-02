@@ -49,7 +49,7 @@ module.exports = async (req, res, next) => {
 				.concat(addBoards)
 				.filter(b => !removeBoardsSet.has(b));
 			threads = await Posts.getCatalog(selectedBoards, false, overboardCatalogLimit);
-			cache.set(`catalog:${cacheQueryString}`, threads, 60);
+			cache.set(`catalog:${cacheQueryString}`, threads, 30);
 		} catch (err) {
 			return next(err);
 		}
