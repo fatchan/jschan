@@ -8,7 +8,7 @@ Mirror(s):
 
 Live instances (Unofficial):
  - 🇺🇸 https://94chan.org
- - 🇵🇹 /🇧🇷 https://ptchan.org
+ - 🇵🇹/🇧🇷 https://ptchan.org
  - 🇮🇳 https://indiachan.net
 
 Contact via:
