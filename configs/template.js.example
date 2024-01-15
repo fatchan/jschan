@@ -58,7 +58,7 @@ module.exports = {
 		kind of dns cache e.g. unbound to improve performance. DNSBL only checked for posting */
 	dnsbl: {
 		enabled: false,
-		blacklists: ['tor.dan.me.uk', 'zen.spamhaus.org'],
+		blacklists: ['tor.dan.me.uk'],
 		cacheTime: 3600 //in seconds, idk whats a good value
 	},
 
