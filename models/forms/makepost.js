@@ -246,7 +246,7 @@ module.exports = async (req, res) => {
 					await moveUpload(file, processedFile.filename, 'file');
 				}
 			};
-			if (mimeTypes.other.has(processedFile.mimetype)) {
+			if (mimeTypes.getOther().has(processedFile.mimetype)) {
 				//"other" mimes from config, overrides main type to avoid codec issues in browser or ffmpeg for unsupported filetypes
 				processedFile.hasThumb = false;
 				processedFile.attachment = true;
