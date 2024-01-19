@@ -141,7 +141,7 @@ module.exports = () => describe('login and create test board', () => {
 			flood_timers_same_content_same_ip: '0',
 			flood_timers_same_content_any_ip: '0',
 			flood_timers_any_content_same_ip: '0',
-			dnsbl_blacklists: 'tor.dan.me.uk\nzen.spamhaus.org',
+			dnsbl_blacklists: 'tor.dan.me.uk',
 			dnsbl_cache_time: '3600',
 			rate_limit_cost_captcha: '10',
 			rate_limit_cost_board_settings: '30',
