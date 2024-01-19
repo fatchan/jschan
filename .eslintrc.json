@@ -30,6 +30,10 @@
         "ecmaVersion": "latest"
     },
     "rules": {
+    	"block-spacing": [
+    		"error",
+    		"always"
+    	],
     	"keyword-spacing": [
     		"error",
     		{ "before": true, "after": true }

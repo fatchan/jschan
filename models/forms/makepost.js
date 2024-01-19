@@ -311,7 +311,7 @@ module.exports = async (req, res) => {
 									const timestamp = ((numFrames === 'N/A' && subtype !== 'webm') || numFrames <= 1) ? 0 : processedFile.duration * videoThumbPercentage / 100;
 									try {
 										await videoThumbnail(processedFile, processedFile.geometry, timestamp);
-									} catch (err) { /*No keyframe after timestamp probably. ignore, we'll retry*/}
+									} catch (err) { /*No keyframe after timestamp probably. ignore, we'll retry*/ }
 									//check and fix bad thumbnails in all cases, helps prevent complaints from child molesters who want improper encoding handled better
 									//for example, can fail on videos without keyframes after the seek timestamp e.g. music with only an album cover frame
 									let videoThumbStat = null;
