@@ -1,3 +1,15 @@
+### 1.5.0
+  - Thanks very much to @disco and @some_random_guy for valuable contributions for this release while I have been busy and on vacation.
+  - Remove spamhaus ZEN from the default included DNSBLs.
+  - Improved handling of video thumbnailing with transparent vp8 and vp9 codecs.
+    - Video codec now included in processedFile data.
+  - Fix frontend bug of hovering quotes on some global/manage pages.
+  - Added a tool to restore deleted posts from a backup.
+  - Fix issue with scheduled file pruning.
+  - Add a few more eslint rules to more strictly enforce code style.
+  - No longer exlude the tools folder from linting.
+  - Npm audit fix.
+
 ### 1.4.1
   - Update the INSTALLATION.md (install instructions).
   - Add a "Bypass DNSBL" account/role permission.
