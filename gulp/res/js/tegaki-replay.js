@@ -1,5 +1,5 @@
 /* globals Tegaki */
-function showTegakiReplay(e){
+function showTegakiReplay(e) {
 	e.preventDefault(); //prevent nojs download fallback
 	Tegaki.open({
 		replayMode: true,

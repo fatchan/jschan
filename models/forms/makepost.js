@@ -316,7 +316,7 @@ module.exports = async (req, res) => {
 									let videoThumbStat = null;
 									try {
 										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
-									} catch (err) { /*ENOENT probably, ignore*/}
+									} catch (err) { /*ENOENT probably, ignore*/ }
 									if (!videoThumbStat || videoThumbStat.code === 'ENOENT' || videoThumbStat.size === 0) {
 										//create thumb again at 0 timestamp and lets hope it exists this time
 										await videoThumbnail(processedFile, processedFile.geometry, 0);

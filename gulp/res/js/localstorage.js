@@ -26,7 +26,7 @@ function appendLocalStorageArray(key, value) {
 function deleteStartsWith(startString='hovercache') {
 	//clears cache when localstorage gets full
 	const hoverCaches = Object.keys(localStorage).filter(k => k.startsWith(startString));
-	for(let i = 0; i < hoverCaches.length; i++) {
+	for (let i = 0; i < hoverCaches.length; i++) {
 		localStorage.removeItem(hoverCaches[i]);
 	}
 }

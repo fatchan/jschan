@@ -47,7 +47,7 @@ module.exports = {
 		let amount = 0;
 		let message;
 		try {
-			switch(req.body.option) {
+			switch (req.body.option) {
 				case 'unban':
 					amount = await removeBans(req, res, next);
 					message = __('Removed %s bans', amount);
