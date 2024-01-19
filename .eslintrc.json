@@ -1,6 +1,6 @@
 {
 	"ignorePatterns": [
-		"docker/", "tmp/", "static/", "gulp/res/css/", "gulp/res/icons/", "gulp/res/img/", "tools/", "views/", "node_modules/",
+		"docker/", "tmp/", "static/", "gulp/res/css/", "gulp/res/icons/", "gulp/res/img/", "views/", "node_modules/",
 		"gulp/res/js/pugfilters.js",
 		"gulp/res/js/locals.js",
 		"gulp/res/js/post.js",
