@@ -62,10 +62,10 @@ block content
 								|  
 						a(href=`/${board._id}/index.html`) /#{board._id}/ - #{board.settings.name}
 					td #{board.settings.description}
-					td #{board.pph}
-					td #{board.ppd}
-					td #{board.ips}
-					td #{board.sequence_value-1}
+					td.nobreak #{board.pph}
+					td.nobreak #{board.ppd}
+					td.nobreak #{board.ips}
+					td.nobreak #{board.sequence_value-1}
 			if localStats.total-localStats.unlisted > boards.length
 				tr
 					td(colspan=6)

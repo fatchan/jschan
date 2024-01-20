@@ -6,6 +6,7 @@
   - Fix frontend bug of hovering quotes on some global/manage pages.
   - Added a tool to restore deleted posts from a backup.
   - Fix issue with scheduled file pruning.
+  - Fix minor issue of text wrapping on board tables.
   - Add a few more eslint rules to more strictly enforce code style.
   - No longer exlude the tools folder from linting.
   - Npm audit fix.
