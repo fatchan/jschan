@@ -15,7 +15,8 @@ module.exports = async (req, res) => {
 		req.body.filter_mode,
 		req.body.filter_message,
 		req.body.filter_ban_duration,
-		req.body.filter_ban_appealable ? true : false
+		req.body.filter_ban_appealable ? true : false,
+		req.body.replace_text
 	).then(r => r.matchedCount);
 
 	if (updated === 0) {

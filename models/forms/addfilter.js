@@ -29,6 +29,7 @@ module.exports = async (req, res) => {
 		'filterMessage': req.body.filter_message,
 		'filterBanDuration': req.body.filter_ban_duration,
 		'filterBanAppealable': req.body.filter_ban_appealable ? true : false,
+		'replaceText': req.body.replace_text,
 	};
 
 	await Filters.insertOne(filter);

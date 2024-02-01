@@ -15,6 +15,8 @@ mixin filter(f, globalmanage=false)
 				p.no-m-p.nowrap #{__('Block post')}
 			else if f.filterMode === 2
 				p.no-m-p.nowrap #{__('Ban')}
+			else if f.filterMode === 3
+				p.no-m-p.nowrap #{__('Replace')}
 			else
 				p.no-m-p.nowrap ?
 		td
@@ -24,6 +26,8 @@ mixin filter(f, globalmanage=false)
 		td.text-center
 			label
 				input(type='checkbox', name='filter_ban_appealable', value='true', checked=f.filterBanAppealable, disabled='true')
+		td
+			p.no-m-p #{f.replaceText}
 		td
 			if globalmanage
 				a.ml-5(href=`/globalmanage/editfilter/${f._id}.html`, style='overflow-wrap: break-word;') [#{__('Edit')}]

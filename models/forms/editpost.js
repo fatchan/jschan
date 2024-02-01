@@ -26,7 +26,7 @@ todo: handle some more situations
 */
 
 	const { __ } = res.locals;
-	const { previewReplies } = config.get;
+	const { globalLimits, previewReplies } = config.get;
 	const { board, post } = res.locals;
 
 	//filters
@@ -34,12 +34,31 @@ todo: handle some more situations
 		//only global filters are checked, because anybody who could edit bypasses board filters
 		const globalFilters = await Filters.findForBoard(null);
 
-		let hitFilter = false;
+		let hitFilters = false;
 		let { combinedString, strictCombinedString } = getFilterStrings(req, res);
 
-		hitFilter = checkFilters(globalFilters, combinedString, strictCombinedString);
-		if (hitFilter) {
-			return filterActions(req, res, true, hitFilter[0], hitFilter[1], hitFilter[2], hitFilter[3], hitFilter[4], null);
+		hitFilters = checkFilters(globalFilters, combinedString, strictCombinedString);
+		if (hitFilters) {
+			//if block or ban matched, only it is returned
+			if (hitFilters[0].f.filterMode === 1 || hitFilters[0].f.filterMode === 2) {
+				return filterActions(req, res, true, hitFilters[0].h, hitFilters[0].f, null);
+			} else {
+				for (const o of hitFilters) {
+					await filterActions(req, res, true, o.h, o.f, null);
+				}
+
+				const fields = ['name','email','subject','message'];
+				for (const field of fields) {
+					//check filters haven't pushed a field past its limit
+					if (req.body[field] && (req.body[field].length > globalLimits.fieldLength[field])) {
+						return dynamicResponse(req, res, 400, 'message', {
+							'title': __('Bad request'),
+							'message': __(`After applying filters, ${field} exceeds maximum length of %s`, globalLimits.fieldLength[field]),
+							'redirect': null
+						});
+					}
+				}
+			}
 		}
 	}
 
