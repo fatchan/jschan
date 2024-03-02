@@ -7,6 +7,7 @@
   - Added a tool to restore deleted posts from a backup.
   - Fix issue with scheduled file pruning.
   - Fix minor issue of text wrapping on board tables.
+  - Update vendorised dependencies (gm, express-fileupload, etc).
   - Add a few more eslint rules to more strictly enforce code style.
   - No longer exlude the tools folder from linting.
   - Npm audit fix.
