@@ -11,6 +11,7 @@ module.exports = {
 		return db.aggregate([
 			{
 				'$match': {
+					'public': true,
 					'board': board
 				}
 			},
@@ -74,6 +75,7 @@ module.exports = {
 		const startDate = Mongo.ObjectId.createFromTime(Math.floor(start.getTime()/1000));
 		const endDate = Mongo.ObjectId.createFromTime(Math.floor(end.getTime()/1000));
 		return db.find({
+			'public': true,
 			'_id': {
 				'$gte': startDate,
 				'$lte': endDate

@@ -11,6 +11,7 @@ const { Posts, Modlogs, Filters } = require(__dirname+'/../../db/')
 	, checkFilters = require(__dirname+'/../../lib/post/checkfilters.js')
 	, filterActions = require(__dirname+'/../../lib/post/filteractions.js')
 	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
+	, ModlogPublic = require(__dirname+'/../../lib/input/modlogpublic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
@@ -168,6 +169,7 @@ todo: handle some more situations
 			thread: post.thread,
 		}],
 		actions: [ModlogActions.EDIT],
+		public: [ModlogPublic.EDIT],
 		date: new Date(),
 		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,
