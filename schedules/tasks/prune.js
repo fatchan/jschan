@@ -38,7 +38,6 @@ module.exports = {
 	},
 	interval: timeUtils.DAY,
 	immediate: true,
-	condition: 'pruneImmediately'
+	condition: null,
 
 };
-

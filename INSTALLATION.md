@@ -53,8 +53,6 @@ mongosh admin --eval "db.getSiblingDB('jschan').createUser({user: 'jschan', pwd:
 sudo sh -c "cat > /etc/mongod.conf" <<'EOF'
 storage:
   dbPath: /var/lib/mongodb
-  journal:
-    enabled: true
 systemLog:
   destination: file
   logAppend: true
