@@ -111,3 +111,6 @@ span.post-capcode[data-cap="## Admin"] {
 #hotposts td:nth-child(3) {
 	min-width: 8em;
 }
+
+.rainbow { display: none; }
+.short-nav { line-height: 3em!important; }

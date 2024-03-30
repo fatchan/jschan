@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 	const direction = req.query.direction && req.query.direction === 'asc' ? 1 : -1;
 	const search = (typeof req.query.search === 'string' ? req.query.search : null);
-	const localFirst = req.query.local_first != null;
+	const localFirst = req.query && (Object.keys(req.query).length === 0 || req.query.local_first === 'true');
 	const sortType = req.query.sort && req.query.sort === 'activity' ? 'activity' : 'popularity';
 	let sort = {};
 
