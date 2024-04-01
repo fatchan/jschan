@@ -1,3 +1,7 @@
+### 1.6.0
+  - Filters now have a "replace" mode, by @disco.
+  - Global account management now has an option delete all boards owned by an account when deleting it.
+
 ### 1.5.0
   - Thanks very much to @disco and @some_random_guy for valuable contributions for this release while I have been busy and on vacation.
   - Remove spamhaus ZEN from the default included DNSBLs.

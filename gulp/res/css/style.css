@@ -1193,6 +1193,14 @@ a.button {
 	color: initial!important;
 }
 
+.prev-show {
+	display: none
+}
+
+input[type="checkbox"]:checked + .prev-show {
+	display: inline-block!important;
+}
+
 input[type="button"][disabled] {
 	opacity: 0.5;
 }
@@ -1456,6 +1464,10 @@ table.boardtable .nobreak {
 .post-file-src[data-type="image"][data-loading]::after {
 	content: attr(data-loading) "%";
 	color: white;
+}
+
+table.accounttable td:nth-child(1) {
+	text-align: left;
 }
 
 .post-file-src * {
