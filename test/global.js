@@ -225,11 +225,31 @@ bad words`,
 		expect(response.status).toBe(302);
 	});
 
-	test('edit account permission',  async () => {
+	test('register test2 account',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			username: 'test2',
+			password: 'test2',
+			passwordconfirm: 'test2',
+			captcha: '000000',
+		});
+		const response = await fetch('http://localhost/forms/register', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.status).toBe(302);
+	});
+
+	test('edit test account permission',  async () => {
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
 			username: 'test',
-			template: 'fz/P4B//gAA=',
+			template: 'fx/v4B//gAA=',
 		});
 		const response = await fetch('http://localhost/forms/global/editaccount', {
 			headers: {
@@ -241,6 +261,40 @@ bad words`,
 			redirect: 'manual',
 		});
 		expect(response.ok).toBe(true);
+	});
+
+	test('edit test2 account permission',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			username: 'test2',
+			template: 'fx/v4B//gAA=',
+		});
+		const response = await fetch('http://localhost/forms/global/editaccount', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('transfer /deleteownertest/ to test2 account',  async () => {
+		const params = new URLSearchParams();
+		params.append('username', 'test2');
+		params.append('_csrf', csrfToken);
+		const response = await fetch('http://localhost/forms/board/deleteownertest/transfer', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.status).toBe(200);
 	});
 
 });

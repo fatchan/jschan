@@ -44,7 +44,7 @@ module.exports = () => describe('login and create test board', () => {
 		expect([200, 404]).toContain(response.status);
 	});
 
-	test('create test boards',  async () => {
+	test('create /test/ board',  async () => {
 		const params = new URLSearchParams();
 		params.set('uri', 'test');
 		params.set('name', 'test');
@@ -65,10 +65,26 @@ module.exports = () => describe('login and create test board', () => {
 		expect([302, 409]).toContain(response2.status);
 	});
 
-	test('create another test board',  async () => {
+	test('create /test2/ board',  async () => {
 		const params = new URLSearchParams();
 		params.append('uri', 'test2');
 		params.append('name', 'test2');
+		const response = await fetch('http://localhost/forms/create', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect([302, 409]).toContain(response.status);
+	});
+
+	test('create /deleteownertest/ board',  async () => {
+		const params = new URLSearchParams();
+		params.append('uri', 'deleteownertest');
+		params.append('name', 'deleteownertest');
 		const response = await fetch('http://localhost/forms/create', {
 			headers: {
 				'x-using-xhr': 'true',

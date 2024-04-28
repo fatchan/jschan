@@ -65,7 +65,7 @@ module.exports = {
 					const destinationBoard = await Boards.findOne(req.body.move_to_board);
 					if (res.locals.permissions.get(Permissions.MANAGE_GLOBAL_GENERAL)
 						|| (res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL)
-							&& destinationBoard.staff[res.locals.user.username] != null)) {
+							&& destinationBoard && destinationBoard.staff[res.locals.user.username] != null)) {
 						res.locals.destinationBoard = destinationBoard;
 					}
 					return res.locals.destinationBoard != null;

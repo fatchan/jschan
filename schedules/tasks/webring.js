@@ -8,6 +8,7 @@ const fetch = require('node-fetch')
 	, { outputFile } = require('fs-extra')
 	, { SocksProxyAgent } = require('socks-proxy-agent')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
+	, { version } = require(__dirname+'/../../package.json')
 	, timeUtils = require(__dirname+'/../../lib/converter/timeutils.js');
 
 module.exports = {
@@ -32,7 +33,7 @@ module.exports = {
 					timeout: 20000,
 					agent,
 					headers: {
-						'User-Agent':''
+						'User-Agent': `jschan/${version} (https://gitgud.io/fatchan/jschan/)`,
 					}
 				})
 					.then(res => res.json())
