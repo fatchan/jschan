@@ -17,10 +17,6 @@ module.exports = async (req, res, next) => {
 	if (username) {
 		filter.user = username;
 	}
-	const uri = typeof req.query.uri === 'string' ? req.query.uri : null;
-	if (uri) {
-		filter.board = uri;
-	}
 
 	let logs, maxPage;
 	try {
