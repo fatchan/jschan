@@ -16,7 +16,6 @@ const { Posts, Boards, Modlogs } = require(__dirname+'/../../db/')
 	, { remove } = require('fs-extra')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
-	, ModlogPublic = require(__dirname+'/../../lib/input/modlogpublic.js')
 	, getAffectedBoards = require(__dirname+'/../../lib/misc/affectedboards.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
@@ -86,7 +85,6 @@ module.exports = async (req, res, next) => {
 
 	const messages = [];
 	const modlogActions = [];
-	const modlogPublic = [];
 	const combinedQuery = {};
 	let recalculateThreadMetadata = false;
 
@@ -95,17 +93,13 @@ module.exports = async (req, res, next) => {
 		const { message, action, query } = await banPoster(req, res, next);
 		if (req.body.ban) {
 			modlogActions.push(ModlogActions.BAN);
-			modlogPublic.push(ModlogPublic.BAN);
 		} else if (req.body.global_ban) {
 			modlogActions.push(ModlogActions.GLOBAL_BAN);
-			modlogPublic.push(ModlogPublic.GLOBAL_BAN);
 		}
 		if (req.body.report_ban) {
 			modlogActions.push(ModlogActions.BAN_REPORTER);
-			modlogPublic.push(ModlogPublic.BAN_REPORTER);
 		} else if (req.body.global_report_ban) {
 			modlogActions.push(ModlogActions.GLOBAL_BAN_REPORTER);
-			modlogPublic.push(ModlogPublic.GLOBAL_BAN_REPORTER);
 		}
 		if (action) {
 			combinedQuery[action] = { ...combinedQuery[action], ...query};
@@ -116,7 +110,7 @@ module.exports = async (req, res, next) => {
 	if (deleting) {
 
 		//OP delete protection. for old OPs or with a lot of replies
-		if (!isStaffOrGlobal) {
+		if (!isStaffOrGlobal) { //TODO: make this use a permission bit
 			const { deleteProtectionAge, deleteProtectionCount } = res.locals.board.settings;
 			if (deleteProtectionAge > 0 || deleteProtectionCount > 0) {
 				const protectedThread = res.locals.posts.some(p => {
@@ -183,13 +177,10 @@ module.exports = async (req, res, next) => {
 		if (action) {
 			if (req.body.delete) {
 				modlogActions.push(ModlogActions.DELETE);
-				modlogPublic.push(ModlogPublic.DELETE);
 			} else if (req.body.delete_ip_board) {
 				modlogActions.push(ModlogActions.DELETE_BY_IP);
-				modlogPublic.push(ModlogPublic.DELETE_BY_IP);
 			} else if (req.body.delete_ip_global) {
 				modlogActions.push(ModlogActions.GLOBAL_DELETE_BY_IP);
-				modlogPublic.push(ModlogPublic.GLOBAL_DELETE_BY_IP);
 			}
 			recalculateThreadMetadata = true;
 		}
@@ -209,7 +200,6 @@ module.exports = async (req, res, next) => {
 		const { message, action } = await movePosts(req, res);
 		if (action) {
 			modlogActions.push(ModlogActions.MOVE);
-			modlogPublic.push(ModlogPublic.MOVE);
 			recalculateThreadMetadata = true;
 			if (res.locals.destinationBoard && res.locals.destinationThread) {
 				res.locals.posts.push(res.locals.destinationThread);
@@ -227,10 +217,8 @@ module.exports = async (req, res, next) => {
 			if (action) {
 				if (req.body.unlink_file) {
 					modlogActions.push(ModlogActions.UNLINK_FILES);
-					modlogPublic.push(ModlogPublic.UNLINK_FILES);
 				} else if (req.body.delete_file) {
 					modlogActions.push(ModlogActions.DELETE_FILES);
-					modlogPublic.push(ModlogPublic.DELETE_FILES);
 				}
 				recalculateThreadMetadata = true;
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
@@ -240,7 +228,6 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = spoilerPosts(res.locals);
 			if (action) {
 				modlogActions.push(ModlogActions.SPOILER_FILES);
-				modlogPublic.push(ModlogPublic.SPOILER_FILES);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
@@ -250,7 +237,6 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = bumplockPosts(res.locals);
 			if (action) {
 				modlogActions.push(ModlogActions.BUMPLOCK);
-				modlogPublic.push(ModlogPublic.BUMPLOCK);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
@@ -259,7 +245,6 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = lockPosts(res.locals);
 			if (action) {
 				modlogActions.push(ModlogActions.LOCK);
-				modlogPublic.push(ModlogPublic.LOCK);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
@@ -268,7 +253,6 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = stickyPosts(res.locals, req.body.sticky);
 			if (action) {
 				modlogActions.push(ModlogActions.STICKY);
-				modlogPublic.push(ModlogPublic.STICKY);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
@@ -277,7 +261,6 @@ module.exports = async (req, res, next) => {
 			const { message, action, query } = cyclePosts(res.locals);
 			if (action) {
 				modlogActions.push(ModlogActions.CYCLE);
-				modlogPublic.push(ModlogPublic.CYCLE);
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
 			messages.push(message);
@@ -295,10 +278,8 @@ module.exports = async (req, res, next) => {
 			if (action) {
 				if (req.body.dismiss) {
 					modlogActions.push(ModlogActions.DISMISS);
-					modlogPublic.push(ModlogPublic.DISMISS);
 				} else if (req.body.global_dismiss) {
 					modlogActions.push(ModlogActions.GLOBAL_DISMISS);
-					modlogPublic.push(ModlogPublic.GLOBAL_DISMISS);
 				}
 				combinedQuery[action] = { ...combinedQuery[action], ...query};
 			}
@@ -351,7 +332,7 @@ module.exports = async (req, res, next) => {
 					showLinks: !deleting,
 					postLinks: [],
 					actions: modlogActions,
-					public: modlogPublic,
+					public: true,
 					date: logDate,
 					showUser: !req.body.hide_name || logUser === null ? true : false,
 					message: message,
