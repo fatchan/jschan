@@ -8,4 +8,5 @@ module.exports = async(db) => {
 			'public': true,
 		},
 	});
+
 };
