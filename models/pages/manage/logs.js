@@ -35,7 +35,6 @@ module.exports = async (req, res, next) => {
 			csrf: req.csrfToken(),
 			queryString,
 			username,
-			uri,
 			permissions: res.locals.permissions,
 			viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
 			logs,
