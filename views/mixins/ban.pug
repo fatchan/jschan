@@ -6,10 +6,10 @@ mixin ban(ban, banpage)
 			if !banpage || (ban.appeal == null && ban.allowAppeal === true)
 				input.post-check(type='checkbox', name='checkedbans' value=ban._id)
 		td
-			if ban.board
-				a(href=`/${ban.board}/`) /#{ban.board}/
-			else
+			if ban.global === true
 				| #{__('Global')}
+			else
+				a(href=`/${ban.board}/`) /#{ban.board}/
 		td= ban.reason
 		- const ip = viewRawIp === true ? ban.ip.raw : ban.ip.cloak;
 		if viewRawIp === true
