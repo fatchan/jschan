@@ -57,7 +57,7 @@ router.post('/board/:board/transfer', useSession, sessionRefresh, csrf, Boards.e
 	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), transferController.paramConverter, transferController.controller);
 router.post('/board/:board/settings', geoIp, processIp, useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), boardSettingsController.paramConverter, boardSettingsController.controller);
-router.post('/board/:board/editbans', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
+router.post('/board/:board/editbans', geoIp, processIp, useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_BANS), editBansController.paramConverter, editBansController.controller); //edit bans
 router.post('/board/:board/addfilter', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), addFilterController.paramConverter, addFilterController.controller); //add new filter

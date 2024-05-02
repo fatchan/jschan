@@ -8,6 +8,8 @@ const config = require(__dirname+'/../../lib/misc/config.js')
 	, editBanNote = require(__dirname+'/../../models/forms/editbannote.js')
 	, upgradeBans = require(__dirname+'/../../models/forms/upgradebans.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
+	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
+	, { Bans, Modlogs } = require(__dirname+'/../../db/')
 	, { checkSchema, lengthBody, numberBody, inArrayBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
@@ -44,6 +46,13 @@ module.exports = {
 			});
 		}
 
+		let bans = [];
+		try {
+			bans = await Bans.get(req.body.checkedbans, req.params.board ? req.params.board : null);
+		} catch (e) {
+			return next(e);
+		}
+
 		let amount = 0;
 		let message;
 		try {
@@ -71,6 +80,25 @@ module.exports = {
 				default:
 					throw __('Invalid ban action'); //should never happen anyway
 			}
+
+			// inserting these into non-public modlogs
+			const modlogs = bans.map(b => ({
+				board: Array.isArray(b.board) ? b.board.find(bx => bx != null) : b.board, //TODO: if in future multiple are allowed, update this to use an array
+				showLinks: true,
+				postLinks: [],
+				actions: [ModlogActions.BAN],
+				public: false,
+				date: new Date(),
+				showUser: true,
+				message: message,
+				user: req.session.user,
+				ip: {
+					cloak: res.locals.ip.cloak,
+					raw: res.locals.ip.raw,
+				}
+			}));
+			await Modlogs.insertMany(modlogs);
+
 		} catch (err) {
 			return next(err);
 		}
