@@ -95,7 +95,7 @@ router.post('/board/:board/deletestaff', useSession, sessionRefresh, csrf, Board
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), deleteStaffController.paramConverter, deleteStaffController.controller); //delete board staff
 
 //global management forms
-router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+router.post('/global/editbans', geoIp, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_BANS), editBansController.paramConverter, editBansController.controller); //remove bans
 router.post('/global/deleteboard', useSession, sessionRefresh, csrf, deleteBoardController.paramConverter, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.controller); //delete board from global management panel
