@@ -86,7 +86,7 @@ module.exports = {
 				board: Array.isArray(b.board) ? b.board.find(bx => bx != null) : b.board, //TODO: if in future multiple are allowed, update this to use an array
 				showLinks: true,
 				postLinks: [],
-				actions: [ModlogActions.BAN],
+				actions: [ModlogActions.EDIT_BAN],
 				public: false,
 				date: new Date(),
 				showUser: true,
