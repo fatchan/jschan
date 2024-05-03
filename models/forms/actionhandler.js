@@ -330,7 +330,7 @@ module.exports = async (req, res, next) => {
 				//per board actions, all actions combined to one event
 				modlog[post.board] = {
 					showLinks: !deleting,
-					postLinks: [],
+					postLinks: [], //TODO: rename this to just "links"
 					actions: modlogActions,
 					public: true,
 					date: logDate,
