@@ -3,7 +3,7 @@ include ./post.pug
 mixin ban(ban, banpage)
 	tr
 		td
-			if !banpage || (ban.appeal == null && ban.allowAppeal === true)
+			if (!board || !ban.global) && (!banpage || (ban.appeal == null && ban.allowAppeal === true))
 				input.post-check(type='checkbox', name='checkedbans' value=ban._id)
 		td
 			if ban.global === true
