@@ -1,2 +1,6 @@
 mixin postlink(log, postLink, manageLink=false)
-	a.quote(href=`/${postLink.board || log.board}/${manageLink ? 'manage/' : ''}thread/${postLink.thread || postLink.postId}.html#${postLink.postId}`) &gt;&gt;#{postLink.postId}
+	if postLink.thread || postLink.postId
+		a.quote(href=`/${postLink.board || log.board}/${manageLink ? 'manage/' : ''}thread/${postLink.thread || postLink.postId}.html#${postLink.postId}`) &gt;&gt;#{postLink.postId}
+	else
+		a.quote(href=`/${postLink.board || log.board}/${manageLink ? 'manage/' : ''}index.html`) &gt;&gt;&gt;/#{postLink.board}/
+	
