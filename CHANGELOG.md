@@ -5,7 +5,7 @@
     - So far covers creating boards, changing board settings, and ban editing/unban/upgrade.
     - Modlog entries for e.g. board creation are global and not linked to the board and will not be deleted along with the board (duh).
     - Private modlogs for edited global bans will also be available from the originating board.
-  - Added a global setting that toggles whether board ban lists include global bans that originated from that board.
+  - Added a permission for whether board ban lists include global bans that originated from that board.
   - Global account management now has an option delete all boards owned by an account when deleting it.
   - Bugfix moving posts to non existing board not correctly returning an error sometimes.
 
