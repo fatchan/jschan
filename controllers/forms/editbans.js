@@ -46,9 +46,12 @@ module.exports = {
 			});
 		}
 
+		const showGlobal = res.locals.permissions.get(Permissions.VIEW_BOARD_GLOBAL_BANS);
+		res.locals.bansBoard = req.params.board ? showGlobal ? req.parms.board : { '$eq': req.params.board } : null;
+
 		let bans = [];
 		try {
-			bans = await Bans.get(req.body.checkedbans, req.params.board ? req.params.board : null);
+			bans = await Bans.get(req.body.checkedbans, res.locals.bansBoard);
 		} catch (e) {
 			return next(e);
 		}
@@ -81,23 +84,25 @@ module.exports = {
 					throw __('Invalid ban action'); //should never happen anyway
 			}
 
-			// inserting these into non-public modlogs
-			const modlogs = bans.map(b => ({
-				board: Array.isArray(b.board) ? b.board.find(bx => bx != null) : b.board, //TODO: if in future multiple are allowed, update this to use an array
-				showLinks: true,
-				postLinks: [],
-				actions: [ModlogActions.EDIT_BAN],
-				public: false,
-				date: new Date(),
-				showUser: true,
-				message: message,
-				user: req.session.user,
-				ip: {
-					cloak: res.locals.ip.cloak,
-					raw: res.locals.ip.raw,
-				}
-			}));
-			await Modlogs.insertMany(modlogs);
+			if (amount > 0) {
+				// inserting these into non-public modlogs
+				const modlogs = bans.map(b => ({
+					board: Array.isArray(b.board) ? b.board.find(bx => bx != null) : b.board, //TODO: if in future multiple are allowed, update this to use an array
+					showLinks: true,
+					postLinks: [],
+					actions: [ModlogActions.EDIT_BAN],
+					public: false,
+					date: new Date(),
+					showUser: true,
+					message: message,
+					user: req.session.user,
+					ip: {
+						cloak: res.locals.ip.cloak,
+						raw: res.locals.ip.raw,
+					}
+				}));
+				await Modlogs.insertMany(modlogs);
+			}
 
 		} catch (err) {
 			return next(err);

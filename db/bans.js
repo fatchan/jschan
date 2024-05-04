@@ -182,7 +182,7 @@ module.exports = {
 			'board': board,
 			'_id': {
 				'$in': ids
-			}
+			},
 		});
 	},
 
