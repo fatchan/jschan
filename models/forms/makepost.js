@@ -266,7 +266,7 @@ module.exports = async (req, res) => {
 					await moveUpload(file, processedFile.filename, 'file');
 				}
 			};
-			if (mimeTypes.other.has(processedFile.mimetype)) {
+			if (mimeTypes.getOther().has(processedFile.mimetype)) {
 				//"other" mimes from config, overrides main type to avoid codec issues in browser or ffmpeg for unsupported filetypes
 				processedFile.hasThumb = false;
 				processedFile.attachment = true;
@@ -313,6 +313,7 @@ module.exports = async (req, res) => {
 							const videoStreams = audioVideoData.streams.filter(stream => stream.width != null); //filter to only video streams or something with a resolution
 							if (videoStreams.length > 0) {
 								processedFile.thumbextension = thumbExtension;
+								processedFile.codec = videoStreams[0].codec_name;
 								processedFile.geometry = {width: videoStreams[0].coded_width, height: videoStreams[0].coded_height};
 								if (Math.floor(processedFile.geometry.width*processedFile.geometry.height) > globalLimits.postFilesSize.videoResolution) {
 									await deleteTempFiles(req).catch(console.error);
@@ -327,16 +328,16 @@ module.exports = async (req, res) => {
 								await saveFull();
 								if (!existsThumb) {
 									const numFrames = videoStreams[0].nb_frames;
-									if (numFrames === 'N/A' && subtype === 'webm') {
-										await videoThumbnail(processedFile, processedFile.geometry, videoThumbPercentage+'%');
-									} else {
-										await videoThumbnail(processedFile, processedFile.geometry, ((numFrames === 'N/A' || numFrames <= 1) ? 0 : videoThumbPercentage+'%'));
-									}
+									const timestamp = ((numFrames === 'N/A' && subtype !== 'webm') || numFrames <= 1) ? 0 : processedFile.duration * videoThumbPercentage / 100;
+									try {
+										await videoThumbnail(processedFile, processedFile.geometry, timestamp);
+									} catch (err) { /*No keyframe after timestamp probably. ignore, we'll retry*/ }
 									//check and fix bad thumbnails in all cases, helps prevent complaints from child molesters who want improper encoding handled better
+									//for example, can fail on videos without keyframes after the seek timestamp e.g. music with only an album cover frame
 									let videoThumbStat = null;
 									try {
 										videoThumbStat = await fsStat(`${uploadDirectory}/file/thumb/${processedFile.hash}${processedFile.thumbextension}`);
-									} catch (err) { /*ENOENT probably, ignore*/}
+									} catch (err) { /*ENOENT probably, ignore*/ }
 									if (!videoThumbStat || videoThumbStat.code === 'ENOENT' || videoThumbStat.size === 0) {
 										//create thumb again at 0 timestamp and lets hope it exists this time
 										await videoThumbnail(processedFile, processedFile.geometry, 0);

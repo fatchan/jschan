@@ -67,12 +67,12 @@ block content
 						else
 							td -
 					td #{board.settings.description}
-					td #{board.pph}
-					td #{board.ppd}
-					td #{board.ips}
-					td #{board.sequence_value-1}
+					td.nobreak #{board.pph}
+					td.nobreak #{board.ppd}
+					td.nobreak #{board.ips}
+					td.nobreak #{board.sequence_value-1}
 					if board.lastPostTimestamp
-						td(style=`background-color: ${board.lastPostTimestamp.color}`) #{board.lastPostTimestamp.text}
+						td.nobreak(style=`background-color: ${board.lastPostTimestamp.color}`) #{board.lastPostTimestamp.text}
 					else
 						td -
 	.pages.text-center.mt-5.mv-0

@@ -17,10 +17,6 @@ module.exports = async (req, res, next) => {
 	if (username) {
 		filter.user = username;
 	}
-	const uri = typeof req.query.uri === 'string' ? req.query.uri : null;
-	if (uri) {
-		filter.board = uri;
-	}
 
 	let logs, maxPage;
 	try {
@@ -39,7 +35,6 @@ module.exports = async (req, res, next) => {
 			csrf: req.csrfToken(),
 			queryString,
 			username,
-			uri,
 			permissions: res.locals.permissions,
 			viewRawIp: res.locals.permissions.get(Permissions.VIEW_RAW_IP),
 			logs,

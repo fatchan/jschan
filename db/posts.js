@@ -713,7 +713,7 @@ module.exports = {
 
 	hotThreads: async () => {
 		const { hotThreadsLimit, hotThreadsThreshold, hotThreadsMaxAge } = config.get;
-		if (hotThreadsLimit === 0){ //0 limit = no limit in mongodb
+		if (hotThreadsLimit === 0) { //0 limit = no limit in mongodb
 			return [];
 		}
 		const listedBoards = await Boards.getLocalListed();

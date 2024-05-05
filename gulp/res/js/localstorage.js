@@ -3,7 +3,7 @@
 const isCatalog = /^\/(\w+\/(manage\/)?)?catalog.html/.test(window.location.pathname);
 const isThread = /\/\w+\/thread\/\d+.html/.test(window.location.pathname);
 const isModView = /\/\w+\/manage\/(thread\/)?(index|\d+).html/.test(window.location.pathname);
-const isManage = /\/(\w+\/manage|globalmanage)\/(recent|reports|bans|boards|logs|settings|banners|accounts|news|custompages).html/.test(window.location.pathname);
+const isManage = /\/(\w+\/manage|globalmanage)\/(recent|reports|bans|boards|(global)?logs|settings|banners|accounts|roles|news|filters|custompages).html/.test(window.location.pathname);
 const isGlobalRecent = window.location.pathname === '/globalmanage/recent.html';
 const isRecent = isGlobalRecent || window.location.pathname.endsWith('/manage/recent.html');
 
@@ -26,7 +26,7 @@ function appendLocalStorageArray(key, value) {
 function deleteStartsWith(startString='hovercache') {
 	//clears cache when localstorage gets full
 	const hoverCaches = Object.keys(localStorage).filter(k => k.startsWith(startString));
-	for(let i = 0; i < hoverCaches.length; i++) {
+	for (let i = 0; i < hoverCaches.length; i++) {
 		localStorage.removeItem(hoverCaches[i]);
 	}
 }

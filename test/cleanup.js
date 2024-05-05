@@ -103,6 +103,26 @@ module.exports = () => describe('delete tests and cleanup', () => {
 			body: params,
 			redirect: 'manual',
 		});
+		// console.log((await response.text()))
+		expect(response.ok).toBe(true);
+	});
+
+	test('delete test account (with delete_owned_boards option)',  async () => {
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedaccounts: 'test2',
+			delete_owned_boards: 'test2',
+		});
+		const response = await fetch('http://localhost/forms/global/deleteaccounts', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		// console.log((await response.text()))
 		expect(response.ok).toBe(true);
 	});
 

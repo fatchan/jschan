@@ -8,9 +8,9 @@ mixin boardtable(ppd=false, activity=false, owner=false)
 				th #{__('Description')}
 				th #{__('PPH')}
 				if ppd
-					th #{__('PPD')}
-				th #{__('Users')}
-				th #{__('Posts')}
+					th.nobreak #{__('PPD')}
+				th.nobreak #{__('Users')}
+				th.nobreak #{__('Posts')}
 				if activity
-					th #{__('Latest Activity')}
+					th.nobreak #{__('Latest Activity')}
 			block

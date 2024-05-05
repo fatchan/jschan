@@ -72,7 +72,7 @@ module.exports = async (req, res) => {
 		}
 	}
 
-	if (req.body.report_ban || req.body.global_report_ban){
+	if (req.body.report_ban || req.body.global_report_ban) {
 		const banBoard = req.body.global_report_ban ? null : req.params.board;
 		res.locals.posts.forEach(post => {
 			let ips = [];

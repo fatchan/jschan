@@ -49,7 +49,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 
 	const addQuote = function(number) {
-		openPostForm();
 		let quoteText = `>>${number}\n`;
 		let selection;
 		if (window.getSelection) {
@@ -65,6 +64,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				.join('\n'); //join it back together and newline
 			quoteText += `${quotedSelection}\n`;
 		}
+		openPostForm();
 		addToMessageBox(quoteText);
 		messageBox.focus();
 		messageBox.dispatchEvent(new Event('input'));

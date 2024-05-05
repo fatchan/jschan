@@ -74,7 +74,7 @@ function doModal(data, postcallback, loadcallback) {
 				}, 100);
 			}
 		}
-	} catch(e) {
+	} catch (e) {
 		console.error(e);
 	}
 }
@@ -230,7 +230,7 @@ class postFormHandler {
 			this.form.elements.address.value = accounts[0];
 			this.form.elements.nonce.value = nonce;
 			this.form.requestSubmit();
-		} catch(e) {
+		} catch (e) {
 			console.warn(e);
 		} finally {
 			e.target.style.pointerEvents = 'auto';
@@ -333,9 +333,9 @@ class postFormHandler {
 				//if the google/hcaptcha/yandex was filled, reset it now
 				if (captchaResponse && grecaptcha) {
 					grecaptcha.reset();
-				} else if(captchaResponse && hcaptcha) {
+				} else if (captchaResponse && hcaptcha) {
 					hcaptcha.reset();
-				} else if(captchaResponse && window.smartCaptcha) {
+				} else if (captchaResponse && window.smartCaptcha) {
 					window.smartCaptcha.reset();
 				}
 
