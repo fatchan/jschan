@@ -33,7 +33,8 @@ const { createHash, randomBytes } = require('crypto')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/secrets.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js');
+	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js')
+	, FIELDS_TO_REPLACE = ['email', 'subject', 'message'];
 
 module.exports = async (req, res) => {
 
@@ -144,8 +145,7 @@ module.exports = async (req, res) => {
 					await filterActions(req, res, globalFilter, o.h, o.f, redirect);
 				}
 
-				const fields = ['name','email','subject','message'];
-				for (const field of fields) {
+				for (const field of FIELDS_TO_REPLACE) {
 					//check filters haven't pushed a field past its limit
 					if (req.body[field] && (req.body[field].length > globalLimits.fieldLength[field])) {
 						await deleteTempFiles(req).catch(console.error);
