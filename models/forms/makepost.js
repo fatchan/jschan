@@ -33,7 +33,8 @@ const { createHash, randomBytes } = require('crypto')
 	, { postPasswordSecret } = require(__dirname+'/../../configs/secrets.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js');
+	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js')
+	, FIELDS_TO_REPLACE = ['email', 'subject', 'message'];
 
 module.exports = async (req, res) => {
 
@@ -120,23 +121,42 @@ module.exports = async (req, res) => {
 			Filters.findForBoard(res.locals.board._id)
 		]);
 
-		let hitFilter = false
+		let hitFilters = false
 			, globalFilter = false;
 		let { combinedString, strictCombinedString } = getFilterStrings(req, res);
 
 		//compare to global filters
-		hitFilter = checkFilters(globalFilters, combinedString, strictCombinedString);
-		if (hitFilter) {
+		hitFilters = checkFilters(globalFilters, combinedString, strictCombinedString);
+		if (hitFilters) {
 			globalFilter = true;
 		}
 		//if none matched, check local filters
-		if (!hitFilter) {
-			hitFilter = checkFilters(localFilters, combinedString, strictCombinedString);
+		if (!hitFilters) {
+			hitFilters = checkFilters(localFilters, combinedString, strictCombinedString);
 		}
 
-		if (hitFilter) {
-			await deleteTempFiles(req).catch(console.error);
-			return filterActions(req, res, globalFilter, hitFilter[0], hitFilter[1], hitFilter[2], hitFilter[3], hitFilter[4], redirect);
+		if (hitFilters) {
+			//if block or ban matched, only it is returned
+			if (hitFilters[0].f.filterMode === 1 || hitFilters[0].f.filterMode === 2) {
+				await deleteTempFiles(req).catch(console.error);
+				return filterActions(req, res, globalFilter, hitFilters[0].h, hitFilters[0].f, redirect);
+			} else {
+				for (const o of hitFilters) {
+					await filterActions(req, res, globalFilter, o.h, o.f, redirect);
+				}
+
+				for (const field of FIELDS_TO_REPLACE) {
+					//check filters haven't pushed a field past its limit
+					if (req.body[field] && (req.body[field].length > globalLimits.fieldLength[field])) {
+						await deleteTempFiles(req).catch(console.error);
+						return dynamicResponse(req, res, 400, 'message', {
+							'title': __('Bad request'),
+							'message': __(`After applying filters, ${field} exceeds maximum length of %s`, globalLimits.fieldLength[field]),
+							'redirect': redirect
+						});
+					}
+				}
+			}
 		}
 	}
 

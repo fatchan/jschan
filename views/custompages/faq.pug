@@ -272,7 +272,10 @@ block content
 					p Filters: Newline separated list of words or phrases to match in posts. Checks name, message, email, subject, and filenames.
 					p Strict Filtering: More aggressively match filters, by normalising the input compared against the filters.
 					p Filter Mode: What to do when a post matches a filter.
+					p Block/Ban Message: The message returned if a post is blocked, or the ban reason if a poster is banned.
 					p Filter Auto Ban Duration: How long to automatically ban for when filter mode is set to ban. Input the duration in time format described in the #[a(href='#moderation') moderation section].
+					p Filter Bans Appealable: Whether or not a ban given by this filter can be appealed. This can be useful if the ban hits an innocent user by mistake.
+					p Replace Text: Text to substitute in for a replace filter. This is how word filters are added.
 	.table-container.flex-center.mv-5
 		.anchor#archive-reverse-url-format
 		table

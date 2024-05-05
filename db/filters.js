@@ -42,7 +42,7 @@ module.exports = {
 		});
 	},
 
-	updateOne: async (board=null, id, filters, strictFiltering, filterMode, filterMessage, filterBanDuration, filterBanAppealable) => {
+	updateOne: async (board=null, id, filters, strictFiltering, filterMode, filterMessage, filterBanDuration, filterBanAppealable, replaceText) => {
 		const updatedFilter = await db.updateOne({
 			'_id': id,
 			'board': board,
@@ -54,6 +54,7 @@ module.exports = {
 				'filterMessage': filterMessage,
 				'filterBanDuration': filterBanDuration,
 				'filterBanAppealable': filterBanAppealable,
+				'replaceText': replaceText,
 			}
 		});
 		await cache.del(`filters:${board}`);
