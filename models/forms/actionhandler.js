@@ -446,9 +446,9 @@ module.exports = async (req, res, next) => {
 						};
 						if (!threads[i].bumplocked) {
 							if (replyAggregate.bumped === 0) {
-								aggregateSet['bumped'] = replyAggregate.bumped;
-							} else {
 								aggregateSet['bumped'] = threads[i].date;
+							} else {
+								aggregateSet['bumped'] = replyAggregate.bumped;
 							}
 						}
 						bulkWrites.push({
