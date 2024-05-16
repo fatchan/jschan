@@ -7,10 +7,11 @@ module.exports = {
 
 	db,
 
-	getDates: (board) => {
+	getDates: (board, publicOnly=true) => {
 		return db.aggregate([
 			{
 				'$match': {
+					...(publicOnly ? { 'public': true } : {}),
 					'board': board
 				}
 			},
@@ -70,7 +71,7 @@ module.exports = {
 		return db.countDocuments(filter);
 	},
 
-	findBetweenDate: (board, start, end) => {
+	findBetweenDate: (board, start, end, publicOnly=true) => {
 		const startDate = Mongo.ObjectId.createFromTime(Math.floor(start.getTime()/1000));
 		const endDate = Mongo.ObjectId.createFromTime(Math.floor(end.getTime()/1000));
 		return db.find({
@@ -78,7 +79,8 @@ module.exports = {
 				'$gte': startDate,
 				'$lte': endDate
 			},
-			'board': board._id
+			'board': board._id,
+			...(publicOnly ? { 'public': true } : {}),
 		}, {
 			projection: {
 				'ip': 0,

@@ -1,6 +1,7 @@
 'use strict';
 
-const { Boards, Accounts } = require(__dirname+'/../../db/')
+const { Boards, Accounts, Modlogs } = require(__dirname+'/../../db/')
+	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
 	, { Binary } = require(__dirname+'/../../db/db.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js')
@@ -65,6 +66,21 @@ module.exports = async (req, res) => {
 	};
 
 	await Promise.all([
+		Modlogs.insertOne({
+			board: null,
+			showLinks: true,
+			postLinks: [{ board: uri }],
+			actions: [ModlogActions.CREATE_BOARD],
+			public: false,
+			date: new Date(),
+			showUser: true,
+			message: __('Created board /%s/', uri),
+			user: req.session.user,
+			ip: {
+				cloak: res.locals.ip.cloak,
+				raw: res.locals.ip.raw,
+			}
+		}),
 		Boards.insertOne(newBoard),
 		Accounts.addOwnedBoard(owner, uri),
 		ensureDir(`${uploadDirectory}/html/${uri}`),

@@ -7,7 +7,9 @@ module.exports = async (req, res, next) => {
 
 	let bans;
 	try {
-		bans = await Bans.getBoardBans(req.params.board);
+		const showGlobal = res.locals.permissions.get(Permissions.VIEW_BOARD_GLOBAL_BANS);
+		const bansBoard = showGlobal ? req.params.board : { '$eq': req.params.board };
+		bans = await Bans.getBoardBans(bansBoard);
 	} catch (err) {
 		return next(err);
 	}

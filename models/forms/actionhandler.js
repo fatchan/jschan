@@ -110,7 +110,7 @@ module.exports = async (req, res, next) => {
 	if (deleting) {
 
 		//OP delete protection. for old OPs or with a lot of replies
-		if (!isStaffOrGlobal) {
+		if (!isStaffOrGlobal) { //TODO: make this use a permission bit
 			const { deleteProtectionAge, deleteProtectionCount } = res.locals.board.settings;
 			if (deleteProtectionAge > 0 || deleteProtectionCount > 0) {
 				const protectedThread = res.locals.posts.some(p => {
@@ -330,8 +330,9 @@ module.exports = async (req, res, next) => {
 				//per board actions, all actions combined to one event
 				modlog[post.board] = {
 					showLinks: !deleting,
-					postLinks: [],
+					postLinks: [], //TODO: rename this to just "links"
 					actions: modlogActions,
+					public: true,
 					date: logDate,
 					showUser: !req.body.hide_name || logUser === null ? true : false,
 					message: message,

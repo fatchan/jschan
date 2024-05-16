@@ -29,6 +29,15 @@ module.exports = {
 		}).toArray();
 	},
 
+	get: (ids, board) => {
+		return db.find({
+			'board': board,
+			'_id': {
+				'$in': ids
+			},
+		}).toArray();
+	},
+
 	upgrade: async (board, ids, upgradeType) => {
 		const substrProjection = upgradeType === 1
 			? ['$ip.cloak', 0, 16]
@@ -173,7 +182,7 @@ module.exports = {
 			'board': board,
 			'_id': {
 				'$in': ids
-			}
+			},
 		});
 	},
 

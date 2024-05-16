@@ -188,6 +188,7 @@ todo: handle some more situations
 			thread: post.thread,
 		}],
 		actions: [ModlogActions.EDIT],
+		public: true, //TODO: take an optional checkbox also controlled by a BO/global delegated perm
 		date: new Date(),
 		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,

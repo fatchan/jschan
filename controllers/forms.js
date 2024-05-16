@@ -57,7 +57,7 @@ router.post('/board/:board/transfer', useSession, sessionRefresh, csrf, Boards.e
 	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), transferController.paramConverter, transferController.controller);
 router.post('/board/:board/settings', geoIp, processIp, useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), boardSettingsController.paramConverter, boardSettingsController.controller);
-router.post('/board/:board/editbans', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
+router.post('/board/:board/editbans', geoIp, processIp, useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_BANS), editBansController.paramConverter, editBansController.controller); //edit bans
 router.post('/board/:board/addfilter', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), addFilterController.paramConverter, addFilterController.controller); //add new filter
@@ -95,7 +95,7 @@ router.post('/board/:board/deletestaff', useSession, sessionRefresh, csrf, Board
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), deleteStaffController.paramConverter, deleteStaffController.controller); //delete board staff
 
 //global management forms
-router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+router.post('/global/editbans', geoIp, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_BANS), editBansController.paramConverter, editBansController.controller); //remove bans
 router.post('/global/deleteboard', useSession, sessionRefresh, csrf, deleteBoardController.paramConverter, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.controller); //delete board from global management panel

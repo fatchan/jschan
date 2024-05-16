@@ -1430,5 +1430,6 @@
 	"Deleted %n records.": {
 		"one": "Deleted %s record.",
 		"other": "Deleted %n records."
-	}
+	},
+	"Created board /%s/": "Created board /%s/"
 }
