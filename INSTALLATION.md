@@ -42,7 +42,8 @@ Please ensure your hardware is supported before reporting issues. The complete p
 ```bash
 wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
 echo "deb http://repo.mongodb.org/apt/debian $(lsb_release -sc)/mongodb-org/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-hsudo apt install -y mongodb-org
+sudo apt update
+sudo apt install -y mongodb-org
 sudo systemctl enable --now mongod
 ```
 
