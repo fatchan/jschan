@@ -445,7 +445,11 @@ module.exports = async (req, res, next) => {
 							'replyfiles': replyAggregate.replyfiles,
 						};
 						if (!threads[i].bumplocked) {
-							aggregateSet['bumped'] = replyAggregate.bumped;
+							if (replyAggregate.bumped === 0) {
+								aggregateSet['bumped'] = threads[i].date;
+							} else {
+								aggregateSet['bumped'] = replyAggregate.bumped;
+							}
 						}
 						bulkWrites.push({
 							'updateOne': {
