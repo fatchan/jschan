@@ -9,7 +9,6 @@ Mirror(s):
 Live instances (Unofficial):
  - 🇺🇸 https://94chan.org
  - 🇵🇹/🇧🇷 https://ptchan.org
- - 🇮🇳 https://indiachan.net
 
 Contact via:
  - [Session](https://getsession.org/): `051b2ff270769d20764fa1b8e6bc3240b0a3c28ffb3242e7cce60db479b23ef427`
