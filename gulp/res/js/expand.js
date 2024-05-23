@@ -99,7 +99,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				toggle(thumbElement, expandedElement, fileName, pfs);
 			} else if (thumbElement.style.opacity !== '0.5') {
 				let source;
-				switch (type) {
+				switch(type) {
 					case 'image':
 						e.preventDefault();
 						if (!isSpoilered) {
@@ -176,6 +176,7 @@ window.addEventListener('DOMContentLoaded', () => {
 						expandedElement.controls = 'true';
 						source = document.createElement('source');
 						expandedElement.appendChild(source);
+						expandedElement.setAttribute('playsinline', '');
 						if (type === 'audio' && thumbElement.nodeName === 'IMG') {
 							expandedElement.style.backgroundImage =
 								`url("${encodeURI(thumbElement.src)}")`;
