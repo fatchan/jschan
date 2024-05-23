@@ -176,6 +176,7 @@ window.addEventListener('DOMContentLoaded', () => {
 						expandedElement.controls = 'true';
 						source = document.createElement('source');
 						expandedElement.appendChild(source);
+						expandedElement.setAttribute('playsinline', '');
 						if (type === 'audio' && thumbElement.nodeName === 'IMG') {
 							expandedElement.style.backgroundImage =
 								`url("${encodeURI(thumbElement.src)}")`;
