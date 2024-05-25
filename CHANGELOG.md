@@ -9,6 +9,7 @@
   - Global account management now has an option delete all boards owned by an account when deleting it.
   - Bugfix moving posts to non existing board not correctly returning an error sometimes.
   - Add "playsinline" attribute to expanded videos to prevent IOS defaulting them to fullscreen, thanks @l29utp0.
+  - Styling tweaks to prevent showing a white background in the overscroll space on IOS, thanks to l29utp0. 
 
 ### 1.5.0
   - Thanks very much to @disco and @some_random_guy for valuable contributions for this release while I have been busy and on vacation.
