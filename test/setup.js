@@ -58,11 +58,7 @@ module.exports = () => describe('login and create test board', () => {
 			redirect: 'manual',
 		};
 		const response1 = await fetch('http://localhost/forms/create', options);
-		expect([302, 409]).toContain(response1.status);
-		params.set('name', 'test2');
-		params.set('uri', 'test2');
-		const response2 = await fetch('http://localhost/forms/create', options);
-		expect([302, 409]).toContain(response2.status);
+		expect([302]).toContain(response1.status);
 	});
 
 	test('create /test2/ board',  async () => {
@@ -94,7 +90,7 @@ module.exports = () => describe('login and create test board', () => {
 			body: params,
 			redirect: 'manual',
 		});
-		expect([302, 409]).toContain(response.status);
+		expect([302]).toContain(response.status);
 	});
 
 	test('change global settings, disable antispam',  async () => {

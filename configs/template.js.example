@@ -62,6 +62,10 @@ module.exports = {
 		cacheTime: 3600 //in seconds, idk whats a good value
 	},
 
+	//TODO: default these true and update instructions for how to disable
+	forceAccountTwofactor: false,
+	forceActionTwofactor: false,
+
 	//disable file posting over anonymizers globally, overrides any board setting.
 	disableAnonymizerFilePosting: false,
 

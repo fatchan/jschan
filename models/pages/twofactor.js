@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
 
 	// Ratelimit QR code generation
 	const username = res.locals.user.username;
-	const ratelimit = await Ratelimits.incrmentQuota(username, '2fa', 50);
+	const ratelimit = await Ratelimits.incrmentQuota(username, '2fa', 10);
 	if (ratelimit > 100) {
 		const { __ } = res.locals;
 		return dynamicResponse(req, res, 429, 'message', {

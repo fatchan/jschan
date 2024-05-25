@@ -29,6 +29,7 @@ block content
 						li: a(href='#make-a-board') How do I make my own board?
 						li: a(href='#antispam') What do the board settings for antispam do?
 						li: a(href='#archive-reverse-url-format') What is the archive/reverse image search link url format?
+						li: a(href='#twofactor-enforcement') How does 2FA enforcement work?
 	.table-container.flex-center.mv-5
 		.anchor#whats-an-imageboard
 		table
@@ -289,6 +290,17 @@ block content
 						|  where the url of the page/file should go for reverse image search or archive links. For example 
 						span.mono https://tineye.com/search?url=#[span.bold %s]
 						| .
+	.table-container.flex-center.mv-5
+		.anchor#twofactor-enforcement
+		table
+			tr
+				th: a(href='#twofactor-enforcement') How does 2FA enforcement work?
+			tr
+				td
+					p There are two options included in global management settings that allow admins to increase security by enforcing the use of 2FA for all accounts and/or actions.
+					p Force Account 2FA: Forces all accounts to have 2FA, or else the user is redirected to the 2FA setup page.
+					p Force Action 2FA: If an account has 2FA enabled, changing board settings or deleting a board requires 2FA.
+					p The granularity of what actions require 2FA will be expanded and customisable in a future release.
 	.table-container.flex-center.mv-5
 		.anchor#contact
 		table

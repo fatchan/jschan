@@ -7,6 +7,7 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 	, { fontPaths } = require(__dirname+'/../../lib/misc/fonts.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, i18n = require(__dirname+'/../../lib/locale/locale.js')
+	, doTwoFactor = require(__dirname+'/../../lib/misc/dotwofactor.js')
 	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
@@ -14,7 +15,7 @@ module.exports = {
 
 	paramConverter: paramConverter({
 		timeFields: ['hot_threads_max_age', 'inactive_account_time', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
-		trimFields: ['captcha_options_grid_question', 'captcha_options_grid_trues', 'captcha_options_grid_falses', 'captcha_options_font', 'allowed_hosts', 'dnsbl_blacklists', 'other_mime_types',
+		trimFields: ['twofactor', 'captcha_options_grid_question', 'captcha_options_grid_trues', 'captcha_options_grid_falses', 'captcha_options_font', 'allowed_hosts', 'dnsbl_blacklists', 'other_mime_types',
 			'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'ethereum_links', 'reverse_links', 'language', 'board_defaults_language'],
 		numberFields: ['inactive_account_action', 'abandoned_board_action', 'auth_level', 'captcha_options_text_wave', 'captcha_options_text_paint', 'captcha_options_text_noise',
 			'captcha_options_grid_noise', 'captcha_options_grid_edge', 'captcha_options_generate_limit', 'captcha_options_grid_size',  'captcha_options_grid_image_size',
@@ -41,9 +42,26 @@ module.exports = {
 
 		const { __ } = res.locals;
 
-		const { globalLimits } = config.get;
+		const { globalLimits, forceActionTwofactor } = config.get;
 
 		const errors = await checkSchema([
+			{ result: existsBody(req.body.twofactor) ? lengthBody(req.body.twofactor, 0, 6) : false, expected: false, error: __('Invalid 2FA code') },
+			{ result: async () => {
+				if (res.locals.user.twofactor && forceActionTwofactor) {
+					//2fA (TOTP) validation
+					try {
+						const delta = await doTwoFactor(res.locals.user.username, res.locals.user.twofactor, req.body.twofactor || '');
+						if (delta === null) {
+							return false;
+						}
+					} catch (err) {
+						// console.warn(err);
+						return false;
+					}
+				} else {
+					return true; //Force twofactor not enabled
+				}
+			}, expected: true, error: __('Invalid 2FA Code') },
 			{ result: () => {
 				if (req.body.thumb_extension) {
 					return /\.[a-z0-9]+/i.test(req.body.thumb_extension);
@@ -209,6 +227,7 @@ module.exports = {
 			{ result: lengthBody(req.body.webring_following, 0, 10000), expected: false, error: __('Webring following list must not exceed 10000 characters') },
 			{ result: lengthBody(req.body.webring_blacklist, 0, 10000), expected: false, error: __('Webring blacklist must not exceed 10000 characters') },
 			{ result: lengthBody(req.body.webring_logos, 0, 10000), expected: false, error: __('Webring logos list must not exceed 10000 characters') },
+			{ result: lengthBody(req.body.twofactor, 0, 6), expected: false, error: __('Invalid 2FA code') },
 		]);
 
 		if (errors.length > 0) {

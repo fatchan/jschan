@@ -135,10 +135,24 @@ ul.tabs.group
 			.row
 				.label #{__('Use Socks Proxy')}
 				label.postform-style.ph-5
-					input(type='checkbox', name='proxy_enabled', value='true' placeholder='socks5h://127.0.0.1:9050' checked=settings.proxy.enabled)
+					input(type='checkbox', name='proxy_enabled', value='true' checked=settings.proxy.enabled)
 			.row
 				.label #{__('Proxy Address')}
-				input(type='text', name='proxy_address', value=settings.proxy.address)
+				input(type='text' name='proxy_address' placeholder='socks5h://127.0.0.1:9050' value=settings.proxy.address)
+			.row
+				.label #{__('Force Account 2FA')}
+				label.postform-style.ph-5
+					input(type='checkbox' name='force_account_twofactor' value='true' checked=settings.forceAccountTwofactor)
+			.row
+				.label
+					| #{__('Force Action 2FA')}
+					|
+					small
+						| (
+						a(href='/faq.html#twofactor-enforcement') ?
+						| )
+				label.postform-style.ph-5
+					input(type='checkbox' name='force_action_twofactor' value='true' checked=settings.forceActionTwofactor)
 
 	.tab.tab-3
 		.col

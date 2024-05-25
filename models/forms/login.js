@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
 		// bcrypt compare input to saved hash
 		const passwordMatch = await bcrypt.compare(password, account.passwordHash);
 		//2fA (TOTP) validation
-		const delta = await doTwoFactor(username, account.twofactor, req.body.twofactor || '');
+		const delta = await doTwoFactor(username, account.twofactor || '', req.body.twofactor || '');
 		//if password was correct and 2fa valid (if enabled)
 		if (passwordMatch === false
 			|| (account.twofactor && delta === null)) {

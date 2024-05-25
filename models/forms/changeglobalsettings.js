@@ -119,6 +119,8 @@ module.exports = async (req, res) => {
 			boardSettings: numberSetting(req.body.rate_limit_cost_board_settings, oldSettings.rateLimitCost.boardSettings),
 			editPost: numberSetting(req.body.rate_limit_cost_edit_post, oldSettings.rateLimitCost.editPost),
 		},
+		forceAccountTwofactor: booleanSetting(req.body.force_account_twofactor, oldSettings.forceAccountTwofactor),
+		forceActionTwofactor: booleanSetting(req.body.force_action_twofactor, oldSettings.forceActionTwofactor),
 		inactiveAccountTime: numberSetting(req.body.inactive_account_time, oldSettings.inactiveAccountTime),
 		inactiveAccountAction: numberSetting(req.body.inactive_account_action, oldSettings.inactiveAccountAction),
 		abandonedBoardAction: numberSetting(req.body.abandoned_board_action, oldSettings.abandonedBoardAction),
@@ -342,11 +344,16 @@ module.exports = async (req, res) => {
 
 	await Mongo.setConfig(newSettings);
 
+	//Toggling forced 2fa modes requires user cache to be cleared so new twofactor value can be fetched during refreshsession()
+	if (oldSettings.forceAccountTwofactor != newSettings.forceAccountTwofactor) {
+		promises.push(redis.deletePattern('users:*'));
+	}
+
 	//webring being disabled
 	if (oldSettings.enableWebring === true && newSettings.enableWebring === false) {
 		promises.push(Boards.db.deleteMany({ webring: true }));
 		promises.push(remove(`${uploadDirectory}/json/webring.json`));
-		redis.del('webringsites');
+		promises.push(redis.del('webringsites'));
 	}
 
 	//finish the promises in parallel e.g. removing files
