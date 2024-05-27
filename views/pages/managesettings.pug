@@ -315,4 +315,8 @@ block content
 														.label #{__('Blocked Countries')}
 														include ../includes/2charisocountries.pug
 
+			if forceActionTwofactor === true
+				.row
+					.label #{__('2FA Code')}
+					input(type='text' name='twofactor' required)
 			input.row(type='submit', value=__('Save settings'))

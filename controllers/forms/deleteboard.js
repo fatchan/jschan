@@ -3,8 +3,10 @@
 const { Boards } = require(__dirname+'/../../db/')
 	, deleteBoard = require(__dirname+'/../../models/forms/deleteboard.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { alphaNumericRegex, checkSchema, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, doTwoFactor = require(__dirname+'/../../lib/misc/dotwofactor.js')
+	, { alphaNumericRegex, checkSchema, existsBody, lengthBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -16,8 +18,22 @@ module.exports = {
 
 		const { __ } = res.locals;
 
+		const { forceActionTwofactor } = config.get;
+
 		let board = null;
 		const errors = await checkSchema([
+			{ result: existsBody(req.body.twofactor) ? lengthBody(req.body.twofactor, 0, 6) : false, expected: false, error: __('Invalid 2FA code') },
+			{ result: async () => {
+				if (res.locals.user.twofactor && forceActionTwofactor) {
+					//2fA (TOTP) validation
+					const delta = await doTwoFactor(res.locals.user.username, res.locals.user.twofactor, req.body.twofactor || '');
+					if (delta === null) {
+						return false;
+					}
+				} else {
+					return true; //Force twofactor not enabled
+				}
+			}, expected: true, error: __('Invalid 2FA Code') },
 			{ result: existsBody(req.body.confirm), expected: true, error: __('Missing confirmation') },
 			{ result: existsBody(req.body.uri), expected: true, error: __('Missing URI') },
 			{ result: alphaNumericRegex.test(req.body.uri), blocking: true, expected: true, error: __('URI must contain a-z 0-9 only') },
