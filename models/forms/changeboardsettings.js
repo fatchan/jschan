@@ -226,7 +226,7 @@ module.exports = async (req, res) => {
 
 	promises.push(Modlogs.insertOne({
 		board: req.params.board,
-		showLinks: true,
+		showLinks: false,
 		postLinks: [],
 		actions: [ModlogActions.SETTINGS],
 		public: false,

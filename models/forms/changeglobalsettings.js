@@ -1,6 +1,7 @@
 'use strict';
 
-const { Boards } = require(__dirname+'/../../db/')
+const { Boards, Modlogs } = require(__dirname+'/../../db/')
+	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
@@ -355,6 +356,22 @@ module.exports = async (req, res) => {
 		promises.push(remove(`${uploadDirectory}/json/webring.json`));
 		promises.push(redis.del('webringsites'));
 	}
+
+	promises.push(Modlogs.insertOne({
+		board: null,
+		showLinks: false,
+		postLinks: [],
+		actions: [ModlogActions.SETTINGS],
+		public: false,
+		date: new Date(),
+		showUser: true,
+		message: __('Updated settings.'),
+		user: req.session.user,
+		ip: {
+			cloak: res.locals.ip.cloak,
+			raw: res.locals.ip.raw,
+		}
+	}));
 
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {

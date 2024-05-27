@@ -117,7 +117,7 @@ router.post('/global/editfilter', useSession, sessionRefresh, csrf, calcPerms, i
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), editFilterController.paramConverter, editFilterController.controller); //edit filter
 router.post('/global/deletefilter', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), deleteFilterController.paramConverter, deleteFilterController.controller); //delete filter
-router.post('/global/settings', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+router.post('/global/settings', geoIp, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), globalSettingsController.paramConverter, globalSettingsController.controller); //global settings
 router.post('/global/clear', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), globalClearController.paramConverter, globalClearController.controller); //global clear
