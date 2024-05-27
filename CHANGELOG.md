@@ -2,14 +2,15 @@
   - Filters now have a "replace" mode, by @disco.
   - Global bans now show the board it originated from as "Global (<board>)".
   - Modlogs now have private entries for staff auditing
-    - So far covers creating boards, changing board settings, and ban editing/unban/upgrade.
+    - So far covers creating boards, changing settings (board or global), and ban editing/unban/upgrade.
     - Modlog entries for e.g. board creation are global and not linked to the board and will not be deleted along with the board (duh).
     - Private modlogs for edited global bans will also be available from the originating board.
   - Added a permission for whether board ban lists include global bans that originated from that board.
   - Global account management now has an option delete all boards owned by an account when deleting it.
   - Bugfix moving posts to non existing board not correctly returning an error sometimes.
   - Add "playsinline" attribute to expanded videos to prevent IOS defaulting them to fullscreen, thanks @l29utp0.
-  - Styling tweaks to prevent showing a white background in the overscroll space on IOS, thanks to l29utp0. 
+  - Styling tweaks to prevent showing a white background in the overscroll space on IOS, thanks to l29utp0.
+  - Fixed a bug where in certain circumstances a thread would be sent to the last page when a reply is deleted.
 
 ### 1.5.0
   - Thanks very much to @disco and @some_random_guy for valuable contributions for this release while I have been busy and on vacation.
