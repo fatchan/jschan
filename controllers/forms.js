@@ -132,7 +132,7 @@ router.post('/logout', useSession, logoutForm);
 router.post('/register', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, registerController.paramConverter, registerController.controller);
 router.post('/changepassword', geoIp, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController.paramConverter, changePasswordController.controller);
 router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, resignController.paramConverter, resignController.controller);
-router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteAccountController.controller);
+router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteAccountController.paramConverter, deleteAccountController.controller);
 router.post('/deletesessions', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteSessionsController.paramConverter, deleteSessionsController.controller);
 
 //removes captcha cookie, for refreshing for noscript users

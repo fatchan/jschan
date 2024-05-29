@@ -11,7 +11,7 @@ const { Boards } = require(__dirname+'/../../db/')
 module.exports = {
 
 	paramConverter: paramConverter({
-		trimFields: ['uri'],
+		trimFields: ['uri', 'twofactor'],
 	}),
 
 	controller: async (req, res, next) => {
