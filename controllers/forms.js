@@ -66,7 +66,7 @@ router.post('/board/:board/editfilter', useSession, sessionRefresh, csrf, Boards
 router.post('/board/:board/deletefilter', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), deleteFilterController.paramConverter, deleteFilterController.controller); //delete filter
 router.post('/board/:board/deleteboard', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
-	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.controller); //delete board
+	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.paramConverter, deleteBoardController.controller); //delete board
 
 //board crud banners, flags, assets, custompages
 router.post('/board/:board/addbanners', geoIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.banner, csrf, calcPerms, isLoggedIn,

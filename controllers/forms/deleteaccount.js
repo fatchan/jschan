@@ -2,20 +2,38 @@
 
 const deleteAccount = require(__dirname+'/../../models/forms/deleteaccount.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	//, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, numberBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
+	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
+	, config = require(__dirname+'/../../lib/misc/config.js')
+	, doTwoFactor = require(__dirname+'/../../lib/misc/dotwofactor.js')
+	, { checkSchema, numberBody, existsBody, lengthBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
-	//paramConverter: paramConverter({}),
+	paramConverter: paramConverter({
+		trimFields: ['twofactor'],
+	}),
 
 	controller: async (req, res, next) => {
+
+		const { forceActionTwofactor } = config.get;
 
 		const { __ } = res.locals;
 
 		const { staffBoards, ownedBoards } = res.locals.user;
 
 		const errors = await checkSchema([
+			{ result: existsBody(req.body.twofactor) ? lengthBody(req.body.twofactor, 0, 6) : false, expected: false, error: __('Invalid 2FA code') },
+			{ result: async () => {
+				if (res.locals.user.twofactor && forceActionTwofactor) {
+					//2fA (TOTP) validation
+					const delta = await doTwoFactor(res.locals.user.username, res.locals.user.twofactor, req.body.twofactor || '');
+					if (delta === null) {
+						return false;
+					}
+				} else {
+					return true; //Force twofactor not enabled
+				}
+			}, expected: true, error: __('Invalid 2FA Code') },
 			{ result: existsBody(req.body.confirm), expected: true, error: __('Missing confirmation') },
 			{ result: (numberBody(ownedBoards.length, 0, 0) && numberBody(staffBoards.length, 0, 0)), expected: true, error: __('You cannot delete your account while you hold staff position on any board') },
 		]);
