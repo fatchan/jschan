@@ -2,7 +2,6 @@
 
 const verifyTwofactor = require(__dirname+'/../../models/forms/twofactor.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
-	, { Accounts } = require(__dirname+'/../../db/')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
