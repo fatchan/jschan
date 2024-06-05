@@ -9,6 +9,7 @@ const deleteAccounts = require(__dirname+'/../../models/forms/deleteaccounts.js'
 module.exports = {
 
 	paramConverter: paramConverter({
+		trimFields: ['twofactor'],
 		allowedArrays: ['checkedaccounts', 'delete_owned_boards'],
 	}),
 
@@ -19,6 +20,18 @@ module.exports = {
 		const errors = await checkSchema([
 			{ result: lengthBody(req.body.checkedaccounts, 1), expected: false, error: __('Must select at least one account') },
 			{ result: !existsBody(req.body.delete_owned_boards) || res.locals.permissions.get(Permissions.GLOBAL_MANAGE_BOARDS), expected: true, error: __('No permission') },
+			{ result: existsBody(req.body.twofactor) ? lengthBody(req.body.twofactor, 0, 6) : false, expected: false, error: __('Invalid 2FA code') },
+			{ result: async () => {
+				if (res.locals.user.twofactor && forceActionTwofactor && existsBody(req.body.delete_owned_boards)) {
+					//2fA (TOTP) validation
+					const delta = await doTwoFactor(res.locals.user.username, res.locals.user.twofactor, req.body.twofactor || '');
+					if (delta === null) {
+						return false;
+					}
+				} else {
+					return true; //Force twofactor not enabled
+				}
+			}, expected: true, error: __('Invalid 2FA Code') },
 		]);
 
 		if (errors.length > 0) {
