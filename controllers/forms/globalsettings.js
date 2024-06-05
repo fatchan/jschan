@@ -4,6 +4,7 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, themeHelper = require(__dirname+'/../../lib/misc/themes.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
+	, { Accounts } = require(__dirname+'/../../db/')
 	, { fontPaths } = require(__dirname+'/../../lib/misc/fonts.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, i18n = require(__dirname+'/../../lib/locale/locale.js')
@@ -50,12 +51,14 @@ module.exports = {
 				if (res.locals.user.twofactor && forceActionTwofactor) {
 					//2fA (TOTP) validation
 					try {
-						const delta = await doTwoFactor(res.locals.user.username, res.locals.user.twofactor, req.body.twofactor || '');
+						const twofactorSecret = (await Accounts.findOne(req.session.user)).twofactor;
+						const delta = await doTwoFactor(res.locals.user.username, twofactorSecret, req.body.twofactor || '');
 						if (delta === null) {
 							return false;
 						}
+						return true;
 					} catch (err) {
-						// console.warn(err);
+						console.warn(err);
 						return false;
 					}
 				} else {
@@ -227,7 +230,6 @@ module.exports = {
 			{ result: lengthBody(req.body.webring_following, 0, 10000), expected: false, error: __('Webring following list must not exceed 10000 characters') },
 			{ result: lengthBody(req.body.webring_blacklist, 0, 10000), expected: false, error: __('Webring blacklist must not exceed 10000 characters') },
 			{ result: lengthBody(req.body.webring_logos, 0, 10000), expected: false, error: __('Webring logos list must not exceed 10000 characters') },
-			{ result: lengthBody(req.body.twofactor, 0, 6), expected: false, error: __('Invalid 2FA code') },
 		]);
 
 		if (errors.length > 0) {

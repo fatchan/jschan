@@ -4,6 +4,9 @@ const deleteAccounts = require(__dirname+'/../../models/forms/deleteaccounts.js'
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
+	, { Accounts } = require(__dirname+'/../../db/')
+	, config = require(__dirname+'/../../lib/misc/config.js')
+	, doTwoFactor = require(__dirname+'/../../lib/misc/dotwofactor.js')
 	, { existsBody, checkSchema, lengthBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
@@ -17,6 +20,8 @@ module.exports = {
 
 		const { __ } = res.locals;
 
+		const { forceActionTwofactor } = config.get;
+
 		const errors = await checkSchema([
 			{ result: lengthBody(req.body.checkedaccounts, 1), expected: false, error: __('Must select at least one account') },
 			{ result: !existsBody(req.body.delete_owned_boards) || res.locals.permissions.get(Permissions.GLOBAL_MANAGE_BOARDS), expected: true, error: __('No permission') },
@@ -24,8 +29,15 @@ module.exports = {
 			{ result: async () => {
 				if (res.locals.user.twofactor && forceActionTwofactor && existsBody(req.body.delete_owned_boards)) {
 					//2fA (TOTP) validation
-					const delta = await doTwoFactor(res.locals.user.username, res.locals.user.twofactor, req.body.twofactor || '');
-					if (delta === null) {
+					try {
+						const twofactorSecret = (await Accounts.findOne(req.session.user)).twofactor;
+						const delta = await doTwoFactor(res.locals.user.username, twofactorSecret, req.body.twofactor || '');
+						if (delta === null) {
+							return false;
+						}
+						return true;
+					} catch (err) {
+						console.warn(err);
 						return false;
 					}
 				} else {

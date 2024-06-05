@@ -3,7 +3,7 @@
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
 	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, { themes, codeThemes } = require(__dirname+'/../../lib/misc/themes.js')
-	, { Ratelimits } = require(__dirname+'/../../db/')
+	, { Accounts, Ratelimits } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
@@ -36,8 +36,15 @@ module.exports = {
 			{ result: async () => {
 				if (res.locals.user.twofactor && forceActionTwofactor) {
 					//2fA (TOTP) validation
-					const delta = await doTwoFactor(res.locals.user.username, res.locals.user.twofactor, req.body.twofactor || '');
-					if (delta === null) {
+					try {
+						const twofactorSecret = (await Accounts.findOne(req.session.user)).twofactor;
+						const delta = await doTwoFactor(res.locals.user.username, twofactorSecret, req.body.twofactor || '');
+						if (delta === null) {
+							return false;
+						}
+						return true;
+					} catch (err) {
+						console.warn(err);
 						return false;
 					}
 				} else {

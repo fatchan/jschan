@@ -1,6 +1,6 @@
 'use strict';
 
-const { Boards } = require(__dirname+'/../../db/')
+const { Accounts, Boards } = require(__dirname+'/../../db/')
 	, deleteBoard = require(__dirname+'/../../models/forms/deleteboard.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
@@ -24,10 +24,17 @@ module.exports = {
 		const errors = await checkSchema([
 			{ result: existsBody(req.body.twofactor) ? lengthBody(req.body.twofactor, 0, 6) : false, expected: false, error: __('Invalid 2FA code') },
 			{ result: async () => {
-				if (res.locals.user.twofactor && forceActionTwofactor) {
+				if (res.locals.usew && forceActionTwofactor) {
 					//2fA (TOTP) validation
-					const delta = await doTwoFactor(res.locals.user.username, res.locals.user.twofactor, req.body.twofactor || '');
-					if (delta === null) {
+					try {
+						const twofactorSecret = (await Accounts.findOne(req.session.user)).twofactor;
+						const delta = await doTwoFactor(res.locals.user.username, twofactorSecret, req.body.twofactor || '');
+						if (delta === null) {
+							return false;
+						}
+						return true;
+					} catch (err) {
+						console.warn(err);
 						return false;
 					}
 				} else {
