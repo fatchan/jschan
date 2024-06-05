@@ -1,6 +1,6 @@
 const fs = require('fs')
 	, locales = ['en-GB', 'pt-PT', 'pt-BR', 'ru-RU', 'it-IT']
-	, enGBData = require(__dirname+`/../locales/en-GB.json`);
+	, enGBData = require(__dirname+'/../locales/en-GB.json');
 
 locales.forEach(locale => {
 	const localeData = require(__dirname+`/../locales/${locale}.json`);

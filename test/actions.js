@@ -757,7 +757,7 @@ int main() {...}
 	});
 
 	test('check public modlog page does not contain public:false modlogs',  async () => {
-		const logsList = await fetch(`http://localhost/test/logs.json`, {
+		const logsList = await fetch('http://localhost/test/logs.json', {
 			headers: {
 				'cookie': sessionCookie,
 			},
