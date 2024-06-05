@@ -150,10 +150,7 @@ block content
 					.label #{__("I'm sure")}
 					label.postform-style.ph-5
 						input(type='checkbox', name='confirm', value='true' required)
-				if forceActionTwofactor === true
-					.row
-						.label #{__('2FA Code')}
-						input(type='text' name='twofactor' required)
+				include ../includes/forceactiontwofactor.pug
 				input(type='submit', value=__('Resign'))
 
 	hr(size=1)
@@ -165,9 +162,6 @@ block content
 				.label #{__("I'm sure")}
 				label.postform-style.ph-5
 					input(type='checkbox', name='confirm', value='true' required)
-			if forceActionTwofactor === true
-				.row
-					.label #{__('2FA Code')}
-					input(type='text' name='twofactor' required)
+			include ../includes/forceactiontwofactor.pug
 			input(type='submit', value=__('Delete'))
 	

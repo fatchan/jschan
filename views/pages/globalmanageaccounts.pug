@@ -72,10 +72,7 @@ block content
 				.pages.mv-5
 					include ../includes/pages.pug
 				h4.mv-5 #{__('Delete Selected')}:
-				if forceActionTwofactor === true
-					.row
-						.label #{__('2FA Code')}
-						input(type='text' name='twofactor' required)
+				include ../includes/forceactiontwofactor.pug
 				input(type='submit', value=__('Delete'))
 		else
 			p #{__('No results.')}

@@ -1,3 +1,4 @@
+
 'use strict';
 
 const config = require(__dirname+'/../../../lib/misc/config.js')
@@ -7,6 +8,8 @@ const config = require(__dirname+'/../../../lib/misc/config.js')
 	, { getCountryNames, countryCodes } = require(__dirname+'/../../../lib/misc/countries.js');
 
 module.exports = async (req, res) => {
+
+	const { forceActionTwofactor } = config.get;
 
 	res
 		.set('Cache-Control', 'private, max-age=5')
@@ -20,6 +23,7 @@ module.exports = async (req, res) => {
 			codeThemes,
 			fontList,
 			languages: i18n.getLocales(),
+			forceActionTwofactor,
 		});
 
 };

@@ -27,10 +27,7 @@ block content
 														.sm#tab-11
 															.tabbed-area
 																include ../includes/globalmanagesettings.pug
-			if settings.forceActionTwofactor === true
-				.row
-					.label #{__('2FA Code')}
-					input(type='text' name='twofactor' required)
+			include ../includes/forceactiontwofactor.pug
 			input.row(type='submit', value=__('Save settings'))
 	hr(size=1)
 	h4.no-m-p #{__('Delete board')}:
@@ -59,8 +56,5 @@ block content
 				.label #{__("I'm sure")}
 				label.postform-style.ph-5
 					input(type='checkbox', name='confirm', value='true' required)
-			if settings.forceActionTwofactor === true
-				.row
-					.label #{__('2FA Code')}
-					input(type='text' name='twofactor' required)
+			include ../includes/forceactiontwofactor.pug
 			input(type='submit', value=__('Submit'))
