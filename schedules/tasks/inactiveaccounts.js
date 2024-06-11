@@ -75,7 +75,7 @@ module.exports = {
 			if (inactiveUsernames.length > 0) {
 				accountsPromise = Accounts.deleteMany(inactiveUsernames);
 			}
-		} else{
+		} else {
 			debugLogs && console.log(`Removing staff positions from ${inactiveWithBoards.length} inactive accounts`);
 			const inactiveUsernames = inactiveWithBoards.map(acc => acc._id);
 			if (inactiveUsernames.length > 0) {

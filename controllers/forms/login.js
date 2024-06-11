@@ -13,7 +13,7 @@ const loginAccount = require(__dirname+'/../../models/forms/login.js')
 module.exports = {
 
 	paramConverter: paramConverter({
-		trimFields: ['username', 'password', 'twofactor', 'nonce', 'signature', 'address'],
+		trimFields: ['twofactor', 'username', 'password', 'twofactor', 'nonce', 'signature', 'address'],
 	}),
 
 	controller: async (req, res, next) => {

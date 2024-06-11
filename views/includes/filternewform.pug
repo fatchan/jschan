@@ -8,6 +8,7 @@ input(type='hidden' name='_csrf' value=csrf)
 			th #{__('Block/Ban Message')}
 			th #{__('Filter Auto Ban Duration')}
 			th #{__('Filter Bans Appealable')}
+			th #{__('Replace Text')}
 		tr
 			td
 				textarea(name='filters' rows='3' placeholder=__('Newline separated') required)
@@ -19,11 +20,14 @@ input(type='hidden' name='_csrf' value=csrf)
 					option(value='0', selected=true) #{__('Do nothing')}
 					option(value='1') #{__('Block post')}
 					option(value='2') #{__('Ban')}
+					option(value='3') #{__('Replace')}
 			td
 				input(type='text' name='filter_message' placeholder=__('e.g. Rule 1: No ad spam'))
 			td
 				input(type='text' name='filter_ban_duration' placeholder=__('e.g. 3d'))
 			td.text-center
 				label
-					input(type='checkbox', name='filter_ban_appealable', value='true')
+					input(type='checkbox', name='filter_ban_appealable', value='true', checked='checked')
+			td
+				input(type='text' name='replace_text')
 input(type='submit', value=__('Submit'))

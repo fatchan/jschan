@@ -58,7 +58,7 @@ module.exports = {
 						const fixedMessage = req.body.rawMessage.replace(/\r\n/igm, '\n');
 						res.locals.recoveredAddress = await web3EthAccountsRecover(fixedMessage, req.body.signature);
 						return true;
-					} catch(e) {
+					} catch (e) {
 						console.warn(e);
 						return false;
 					}

@@ -25,7 +25,7 @@ block content
 			form.form-post.nogrow(action=`/forms/global/deleteaccounts` method='POST' enctype='application/x-www-form-urlencoded')
 				input(type='hidden' name='_csrf' value=csrf)
 				.table-container.flex-left.text-center
-					table
+					table.accounttable
 						tr
 							th
 							th #{__('Username')}
@@ -36,7 +36,13 @@ block content
 							th #{__('Permissions')}
 						for account in accounts
 							tr
-								td: input(type='checkbox', name='checkedaccounts' value=account._id)
+								td
+									input.postform-style(type='checkbox', name='checkedaccounts' value=account._id)
+									| 
+									if permissions.get(Permissions.MANAGE_GLOBAL_BOARDS)
+										.prev-show
+											input(type='checkbox', name='delete_owned_boards' value=account._id)
+											| Delete all owned boards
 								td #{account._id}
 								td
 									if account.ownedBoards.length > 0
@@ -66,6 +72,7 @@ block content
 				.pages.mv-5
 					include ../includes/pages.pug
 				h4.mv-5 #{__('Delete Selected')}:
+				include ../includes/forceactiontwofactor.pug
 				input(type='submit', value=__('Delete'))
 		else
 			p #{__('No results.')}

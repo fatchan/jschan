@@ -746,4 +746,30 @@ int main() {...}
 		expect(response.ok).toBe(true);
 	});
 
+	test('check authed modlog page contains public:false modlogs',  async () => {
+		const logsPageText = await fetch('http://localhost/test/manage/logs.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const containsPrivateLogs = logsPageText.toLowerCase().includes('updated settings'); // changing settings is a non-public modlog entry
+		expect(containsPrivateLogs).toBe(true);
+	});
+
+	test('check public modlog page does not contain public:false modlogs',  async () => {
+		const logsList = await fetch('http://localhost/test/logs.json', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.json());
+		const firstLogDate = logsList[0].date;
+		const logsPageText = await fetch(`http://localhost/test/logs/${firstLogDate.day.toString().padStart(2, 0)}-${firstLogDate.month.toString().padStart(2, 0)}-${firstLogDate.year.toString().padStart(2, 0)}.html`, {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const containsPrivateLogs = logsPageText.toLowerCase().includes('updated settings'); // changing settings is a non-public modlog entry
+		expect(containsPrivateLogs).toBe(false);
+	});
+
 });

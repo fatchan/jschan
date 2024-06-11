@@ -109,9 +109,6 @@ int main() {...}
 				replyParams.append('thread', thread);
 				replyParams.append('captcha', '000000');
 				const response2 = await fetch(`http://localhost/forms/board/${board}/post`, {
-					headers: {
-						'x-using-xhr': 'true',
-					},
 					method: 'POST',
 					body: replyParams
 				});

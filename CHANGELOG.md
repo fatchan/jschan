@@ -1,3 +1,31 @@
+### 1.6.0
+  - Filters now have a "replace" mode, by @disco.
+  - Global bans now show the board it originated from as "Global (<board>)".
+  - Added a permission that allows board staff to see global bans in the board ban list if the ban was issued from a post on that board.
+  - Modlogs now have private entries for staff auditing
+    - So far covers creating boards, changing settings (board or global), and ban editing/unban/upgrade.
+    - Modlog entries for e.g. board creation are global and not linked to the board and will not be deleted along with the board (duh).
+    - Private modlogs for edited global bans will also be available from the originating board.
+  - Global account management now has an option delete all boards owned by an account when deleting it.
+  - Bugfix moving posts to non existing board not correctly returning an error sometimes.
+  - Add "playsinline" attribute to expanded videos to prevent IOS defaulting them to fullscreen, thanks @l29utp0.
+  - Styling tweaks to prevent showing a white background in the overscroll space on IOS, thanks to l29utp0.
+  - Fixed a bug where in certain circumstances a thread would be sent to the last page when a reply is deleted.
+
+### 1.5.0
+  - Thanks very much to @disco and @some_random_guy for valuable contributions for this release while I have been busy and on vacation.
+  - Remove spamhaus ZEN from the default included DNSBLs.
+  - Improved handling of video thumbnailing with transparent vp8 and vp9 codecs.
+    - Video codec now included in processedFile data.
+  - Fix frontend bug of hovering quotes on some global/manage pages.
+  - Added a tool to restore deleted posts from a backup.
+  - Fix issue with scheduled file pruning.
+  - Fix minor issue of text wrapping on board tables.
+  - Update vendorised dependencies (gm, express-fileupload, etc).
+  - Add a few more eslint rules to more strictly enforce code style.
+  - No longer exlude the tools folder from linting.
+  - Npm audit fix.
+
 ### 1.4.1
   - Update the INSTALLATION.md (install instructions).
   - Add a "Bypass DNSBL" account/role permission.

@@ -62,7 +62,7 @@ function toggleBoardCss() {
 }
 
 function changeTheme(type) {
-	switch(type) {
+	switch (type) {
 		case 'theme':
 		case 'codetheme': {
 			const theme = localStorage.getItem(type);
@@ -91,7 +91,7 @@ function changeTheme(type) {
 				themeLink.onload = function() {
 					css = '';
 					const rulesKey = themeLink.sheet.rules != null ? 'rules' : 'cssRules';
-					for(let i = 0; i < themeLink.sheet[rulesKey].length; i++) {
+					for (let i = 0; i < themeLink.sheet[rulesKey].length; i++) {
 						css += themeLink.sheet[rulesKey][i].cssText; //add all the rules to the css
 					}
 					//update localstorage with latest version

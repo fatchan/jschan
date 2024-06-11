@@ -7,7 +7,10 @@ const config = require(__dirname+'/../../lib/misc/config.js')
 	, editBanDuration = require(__dirname+'/../../models/forms/editbanduration.js')
 	, editBanNote = require(__dirname+'/../../models/forms/editbannote.js')
 	, upgradeBans = require(__dirname+'/../../models/forms/upgradebans.js')
+	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
+	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
+	, { Bans, Modlogs } = require(__dirname+'/../../db/')
 	, { checkSchema, lengthBody, numberBody, inArrayBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
@@ -44,10 +47,20 @@ module.exports = {
 			});
 		}
 
+		const showGlobal = res.locals.permissions.get(Permissions.VIEW_BOARD_GLOBAL_BANS);
+		res.locals.bansBoard = req.params.board ? showGlobal ? req.parms.board : { '$eq': req.params.board } : null;
+
+		let bans = [];
+		try {
+			bans = await Bans.get(req.body.checkedbans, res.locals.bansBoard);
+		} catch (e) {
+			return next(e);
+		}
+
 		let amount = 0;
 		let message;
 		try {
-			switch(req.body.option) {
+			switch (req.body.option) {
 				case 'unban':
 					amount = await removeBans(req, res, next);
 					message = __('Removed %s bans', amount);
@@ -71,6 +84,27 @@ module.exports = {
 				default:
 					throw __('Invalid ban action'); //should never happen anyway
 			}
+
+			if (amount > 0) {
+				// inserting these into non-public modlogs
+				const modlogs = bans.map(b => ({
+					board: Array.isArray(b.board) ? b.board.find(bx => bx != null) : b.board, //TODO: if in future multiple are allowed, update this to use an array
+					showLinks: true,
+					postLinks: [],
+					actions: [ModlogActions.EDIT_BAN],
+					public: false,
+					date: new Date(),
+					showUser: true,
+					message: message,
+					user: req.session.user,
+					ip: {
+						cloak: res.locals.ip.cloak,
+						raw: res.locals.ip.raw,
+					}
+				}));
+				await Modlogs.insertMany(modlogs);
+			}
+
 		} catch (err) {
 			return next(err);
 		}

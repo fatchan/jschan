@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
 	const bans = [];
 
 	if (req.body.ban || req.body.global_ban) {
-		const banBoard = req.body.global_ban ? null : req.params.board;
+		const banBoard = req.body.global_ban ? [null, req.params.board] : req.params.board;
 		const ipPosts = res.locals.posts.reduce((acc, post) => {
 			if (!acc[post.ip.cloak]) {
 				acc[post.ip.cloak] = [];
@@ -55,6 +55,7 @@ module.exports = async (req, res) => {
 					.join('.');
 			}
 			bans.push({
+				'global': req.body.global_ban != null,
 				'range': banRange,
 				'ip': banIp,
 				'reason': banReason,
@@ -72,8 +73,8 @@ module.exports = async (req, res) => {
 		}
 	}
 
-	if (req.body.report_ban || req.body.global_report_ban){
-		const banBoard = req.body.global_report_ban ? null : req.params.board;
+	if (req.body.report_ban || req.body.global_report_ban) {
+		const banBoard = req.body.global_report_ban ? [null, req.params.board] : req.params.board;
 		res.locals.posts.forEach(post => {
 			let ips = [];
 			if (req.body.report_ban) {
@@ -95,6 +96,7 @@ module.exports = async (req, res) => {
 			ips = ips.filter(n => n);
 			[...new Set(ips)].forEach(ip => {
 				bans.push({
+					'global': req.body.global_report_ban != null,
 					'range': 0,
 					'ip': ip,
 					'reason': banReason,
@@ -106,6 +108,7 @@ module.exports = async (req, res) => {
 					allowAppeal,
 					'appeal': null,
 					'showUser': !req.body.hide_name,
+					'note': null,
 					'seen': false
 				});
 			});

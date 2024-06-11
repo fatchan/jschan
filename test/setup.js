@@ -44,7 +44,7 @@ module.exports = () => describe('login and create test board', () => {
 		expect([200, 404]).toContain(response.status);
 	});
 
-	test('create test boards',  async () => {
+	test('create /test/ board',  async () => {
 		const params = new URLSearchParams();
 		params.set('uri', 'test');
 		params.set('name', 'test');
@@ -58,14 +58,10 @@ module.exports = () => describe('login and create test board', () => {
 			redirect: 'manual',
 		};
 		const response1 = await fetch('http://localhost/forms/create', options);
-		expect([302, 409]).toContain(response1.status);
-		params.set('name', 'test2');
-		params.set('uri', 'test2');
-		const response2 = await fetch('http://localhost/forms/create', options);
-		expect([302, 409]).toContain(response2.status);
+		expect([302]).toContain(response1.status);
 	});
 
-	test('create another test board',  async () => {
+	test('create /test2/ board',  async () => {
 		const params = new URLSearchParams();
 		params.append('uri', 'test2');
 		params.append('name', 'test2');
@@ -79,6 +75,22 @@ module.exports = () => describe('login and create test board', () => {
 			redirect: 'manual',
 		});
 		expect([302, 409]).toContain(response.status);
+	});
+
+	test('create /deleteownertest/ board',  async () => {
+		const params = new URLSearchParams();
+		params.append('uri', 'deleteownertest');
+		params.append('name', 'deleteownertest');
+		const response = await fetch('http://localhost/forms/create', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect([302]).toContain(response.status);
 	});
 
 	test('change global settings, disable antispam',  async () => {
@@ -141,7 +153,7 @@ module.exports = () => describe('login and create test board', () => {
 			flood_timers_same_content_same_ip: '0',
 			flood_timers_same_content_any_ip: '0',
 			flood_timers_any_content_same_ip: '0',
-			dnsbl_blacklists: 'tor.dan.me.uk\nzen.spamhaus.org',
+			dnsbl_blacklists: 'tor.dan.me.uk',
 			dnsbl_cache_time: '3600',
 			rate_limit_cost_captcha: '10',
 			rate_limit_cost_board_settings: '30',

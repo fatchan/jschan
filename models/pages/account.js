@@ -1,11 +1,13 @@
 'use strict';
 
 const { Posts, Boards } = require(__dirname+'/../../db/')
+	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, Permission = require(__dirname+'/../../lib/permission/permission.js');
 
 module.exports = async (req, res, next) => {
 
+	const { forceActionTwofactor } = config.get;
 	let boardReportCountMap = {}; //map of board to open report count
 	let globalReportCount = 0; //number of open global reports
 	let boardPermissions; //map of board perms
@@ -54,6 +56,7 @@ module.exports = async (req, res, next) => {
 			boardPermissions,
 			boardReportCountMap,
 			globalReportCount,
+			forceActionTwofactor,
 		});
 
 };

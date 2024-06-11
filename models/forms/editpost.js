@@ -15,7 +15,8 @@ const { Posts, Modlogs, Filters } = require(__dirname+'/../../db/')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
-	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js');
+	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js')
+	, FIELDS_TO_REPLACE = ['email', 'subject', 'message'];
 
 module.exports = async (req, res) => {
 
@@ -26,20 +27,39 @@ todo: handle some more situations
 */
 
 	const { __ } = res.locals;
-	const { previewReplies } = config.get;
+	const { globalLimits, previewReplies } = config.get;
 	const { board, post } = res.locals;
 
 	//filters
 	if (!res.locals.permissions.get(Permissions.BYPASS_FILTERS)) {
+
 		//only global filters are checked, because anybody who could edit bypasses board filters
 		const globalFilters = await Filters.findForBoard(null);
 
-		let hitFilter = false;
+		let hitFilters = false;
 		let { combinedString, strictCombinedString } = getFilterStrings(req, res);
 
-		hitFilter = checkFilters(globalFilters, combinedString, strictCombinedString);
-		if (hitFilter) {
-			return filterActions(req, res, true, hitFilter[0], hitFilter[1], hitFilter[2], hitFilter[3], hitFilter[4], null);
+		hitFilters = checkFilters(globalFilters, combinedString, strictCombinedString);
+		if (hitFilters) {
+			//if block or ban matched, only it is returned
+			if (hitFilters[0].f.filterMode === 1 || hitFilters[0].f.filterMode === 2) {
+				return filterActions(req, res, true, hitFilters[0].h, hitFilters[0].f, null);
+			} else {
+				for (const o of hitFilters) {
+					await filterActions(req, res, true, o.h, o.f, null);
+				}
+
+				for (const field of FIELDS_TO_REPLACE) {
+					//check filters haven't pushed a field past its limit
+					if (req.body[field] && (req.body[field].length > globalLimits.fieldLength[field])) {
+						return dynamicResponse(req, res, 400, 'message', {
+							'title': __('Bad request'),
+							'message': __(`After applying filters, ${field} exceeds maximum length of %s`, globalLimits.fieldLength[field]),
+							'redirect': null
+						});
+					}
+				}
+			}
 		}
 	}
 
@@ -168,6 +188,7 @@ todo: handle some more situations
 			thread: post.thread,
 		}],
 		actions: [ModlogActions.EDIT],
+		public: true, //TODO: take an optional checkbox also controlled by a BO/global delegated perm
 		date: new Date(),
 		showUser: req.body.hide_name ? false : true,
 		message: req.body.log_message || null,

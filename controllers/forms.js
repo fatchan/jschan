@@ -57,7 +57,7 @@ router.post('/board/:board/transfer', useSession, sessionRefresh, csrf, Boards.e
 	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), transferController.paramConverter, transferController.controller);
 router.post('/board/:board/settings', geoIp, processIp, useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), boardSettingsController.paramConverter, boardSettingsController.controller);
-router.post('/board/:board/editbans', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
+router.post('/board/:board/editbans', geoIp, processIp, useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_BANS), editBansController.paramConverter, editBansController.controller); //edit bans
 router.post('/board/:board/addfilter', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), addFilterController.paramConverter, addFilterController.controller); //add new filter
@@ -66,7 +66,7 @@ router.post('/board/:board/editfilter', useSession, sessionRefresh, csrf, Boards
 router.post('/board/:board/deletefilter', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), deleteFilterController.paramConverter, deleteFilterController.controller); //delete filter
 router.post('/board/:board/deleteboard', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
-	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.controller); //delete board
+	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.paramConverter, deleteBoardController.controller); //delete board
 
 //board crud banners, flags, assets, custompages
 router.post('/board/:board/addbanners', geoIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, fileMiddlewares.banner, csrf, calcPerms, isLoggedIn,
@@ -95,7 +95,7 @@ router.post('/board/:board/deletestaff', useSession, sessionRefresh, csrf, Board
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), deleteStaffController.paramConverter, deleteStaffController.controller); //delete board staff
 
 //global management forms
-router.post('/global/editbans', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+router.post('/global/editbans', geoIp, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_BANS), editBansController.paramConverter, editBansController.controller); //remove bans
 router.post('/global/deleteboard', useSession, sessionRefresh, csrf, deleteBoardController.paramConverter, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.controller); //delete board from global management panel
@@ -117,7 +117,7 @@ router.post('/global/editfilter', useSession, sessionRefresh, csrf, calcPerms, i
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), editFilterController.paramConverter, editFilterController.controller); //edit filter
 router.post('/global/deletefilter', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), deleteFilterController.paramConverter, deleteFilterController.controller); //delete filter
-router.post('/global/settings', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
+router.post('/global/settings', geoIp, processIp, useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), globalSettingsController.paramConverter, globalSettingsController.controller); //global settings
 router.post('/global/clear', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_GLOBAL_SETTINGS), globalClearController.paramConverter, globalClearController.controller); //global clear
@@ -132,7 +132,7 @@ router.post('/logout', useSession, logoutForm);
 router.post('/register', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, registerController.paramConverter, registerController.controller);
 router.post('/changepassword', geoIp, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController.paramConverter, changePasswordController.controller);
 router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, resignController.paramConverter, resignController.controller);
-router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteAccountController.controller);
+router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteAccountController.paramConverter, deleteAccountController.controller);
 router.post('/deletesessions', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteSessionsController.paramConverter, deleteSessionsController.controller);
 
 //removes captcha cookie, for refreshing for noscript users

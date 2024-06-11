@@ -1,11 +1,11 @@
 {
   "name": "jschan",
-  "version": "1.4.1",
-  "migrateVersion": "1.4.1",
+  "version": "1.6.0",
+  "migrateVersion": "1.6.0",
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "@fatchan/express-fileupload": "^1.4.3",
+    "@fatchan/express-fileupload": "^1.4.5",
     "@fatchan/gm": "^1.3.2",
     "@socket.io/redis-adapter": "^7.2.0",
     "bcrypt": "^5.1.1",

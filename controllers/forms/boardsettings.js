@@ -3,19 +3,20 @@
 const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardsettings.js')
 	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
 	, { themes, codeThemes } = require(__dirname+'/../../lib/misc/themes.js')
-	, { Ratelimits } = require(__dirname+'/../../db/')
+	, { Accounts, Ratelimits } = require(__dirname+'/../../db/')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, i18n = require(__dirname+'/../../lib/locale/locale.js')
-	, { checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
+	, doTwoFactor = require(__dirname+'/../../lib/misc/dotwofactor.js')
+	, { existsBody, checkSchema, lengthBody, numberBody, minmaxBody, numberBodyVariable,
 		inArrayBody, arrayInBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
 	paramConverter: paramConverter({
 		timeFields: ['delete_protection_age'],
-		trimFields: ['tags', 'announcement', 'description', 'name', 'custom_css', 'language'],
+		trimFields: ['twofactor', 'tags', 'announcement', 'description', 'name', 'custom_css', 'language'],
 		allowedArrays: ['countries'],
 		numberFields: ['lock_reset', 'captcha_reset', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode', 'tph_trigger', 'pph_trigger', 'pph_trigger_action',
 			'tph_trigger_action', 'bump_limit', 'reply_limit', 'max_files', 'thread_limit', 'max_thread_message_length', 'max_reply_message_length', 'min_thread_message_length',
@@ -26,11 +27,30 @@ module.exports = {
 
 		const { __ } = res.locals;
 
-		const { globalLimits, rateLimitCost } = config.get
+		const { globalLimits, rateLimitCost, forceActionTwofactor } = config.get
 			, maxThread = (Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxThreadMessageLength) || globalLimits.fieldLength.message)
 			, maxReply = (Math.min(globalLimits.fieldLength.message, res.locals.board.settings.maxReplyMessageLength) || globalLimits.fieldLength.message);
 
 		const errors = await checkSchema([
+			{ result: existsBody(req.body.twofactor) ? lengthBody(req.body.twofactor, 0, 6) : false, expected: false, error: __('Invalid 2FA code') },
+			{ result: async () => {
+				if (res.locals.user.twofactor && forceActionTwofactor) {
+					//2fA (TOTP) validation
+					try {
+						const twofactorSecret = (await Accounts.findOne(req.session.user)).twofactor;
+						const delta = await doTwoFactor(res.locals.user.username, twofactorSecret, req.body.twofactor || '');
+						if (delta === null) {
+							return false;
+						}
+						return true;
+					} catch (err) {
+						console.warn(err);
+						return false;
+					}
+				} else {
+					return true; //Force twofactor not enabled
+				}
+			}, expected: true, error: __('Invalid 2FA Code') },
 			{ result: lengthBody(req.body.description, 0, globalLimits.fieldLength.description), expected: false, error: __('Board description must be %s characters or less', globalLimits.fieldLength.description) },
 			{ result: lengthBody(req.body.announcements, 0, 5000), expected: false, error: __('Board announcements must be 5000 characters or less') },
 			{ result: lengthBody(req.body.tags, 0, 2000), expected: false, error: __('Tags length must be 2000 characters or less') },

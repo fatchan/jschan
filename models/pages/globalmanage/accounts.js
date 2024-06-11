@@ -1,12 +1,14 @@
 'use strict';
 
 const { Accounts } = require(__dirname+'/../../../db/')
+	, config = require(__dirname+'/../../../lib/misc/config.js')
 	, roleManager = require(__dirname+'/../../../lib/permission/rolemanager.js')
 	, pageQueryConverter = require(__dirname+'/../../../lib/input/pagequeryconverter.js')
 	, limit = 20;
 
 module.exports = async (req, res, next) => {
 
+	const { forceActionTwofactor } = config.get;
 	const { page, offset, queryString } = pageQueryConverter(req.query, limit);
 
 	let filter = {};
@@ -50,6 +52,7 @@ module.exports = async (req, res, next) => {
 			page,
 			maxPage,
 			roleNameMap: roleManager.roleNameMap,
+			forceActionTwofactor,
 		});
 
 };

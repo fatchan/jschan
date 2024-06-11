@@ -58,9 +58,13 @@ module.exports = {
 		kind of dns cache e.g. unbound to improve performance. DNSBL only checked for posting */
 	dnsbl: {
 		enabled: false,
-		blacklists: ['tor.dan.me.uk', 'zen.spamhaus.org'],
+		blacklists: ['tor.dan.me.uk'],
 		cacheTime: 3600 //in seconds, idk whats a good value
 	},
+
+	//TODO: default these true and update instructions for how to disable
+	forceAccountTwofactor: false,
+	forceActionTwofactor: false,
 
 	//disable file posting over anonymizers globally, overrides any board setting.
 	disableAnonymizerFilePosting: false,
@@ -383,7 +387,7 @@ module.exports = {
 		captchaMode: 0, //0=disabled, 1=for threads, 2=for all posts
 		tphTrigger: 10, //numebr of threads in an hour before trigger action is activated
 		pphTrigger: 50, //number of posts in an hour before ^
-		//0=none, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock board
+		//0=none, 1=captcha enable for threads, 2=captcha enable for all posts, 3=lock thread creation, 4=lock board
 		tphTriggerAction: 1,
 		pphTriggerAction: 2,
 		//0=dont change, 1=unlock board/disable captcha, 2=lock thread creation/enable captcha for thread creation

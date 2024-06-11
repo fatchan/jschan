@@ -27,6 +27,7 @@ block content
 														.sm#tab-11
 															.tabbed-area
 																include ../includes/globalmanagesettings.pug
+			include ../includes/forceactiontwofactor.pug
 			input.row(type='submit', value=__('Save settings'))
 	hr(size=1)
 	h4.no-m-p #{__('Delete board')}:
@@ -34,7 +35,7 @@ block content
 		form.form-post(action=`/forms/global/deleteboard`, enctype='application/x-www-form-urlencoded', method='POST')
 			input(type='hidden' name='_csrf' value=csrf)
 			.row
-				.label #{__('Board URI')}:
+				.label #{__('Board URI')}
 				input(type='text' name='uri' required)
 			.row
 				.label #{__("I'm sure")}
@@ -55,4 +56,5 @@ block content
 				.label #{__("I'm sure")}
 				label.postform-style.ph-5
 					input(type='checkbox', name='confirm', value='true' required)
+			include ../includes/forceactiontwofactor.pug
 			input(type='submit', value=__('Submit'))

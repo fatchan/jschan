@@ -29,6 +29,7 @@ block content
 						li: a(href='#make-a-board') How do I make my own board?
 						li: a(href='#antispam') What do the board settings for antispam do?
 						li: a(href='#archive-reverse-url-format') What is the archive/reverse image search link url format?
+						li: a(href='#twofactor-enforcement') How does 2FA enforcement work?
 	.table-container.flex-center.mv-5
 		.anchor#whats-an-imageboard
 		table
@@ -272,7 +273,10 @@ block content
 					p Filters: Newline separated list of words or phrases to match in posts. Checks name, message, email, subject, and filenames.
 					p Strict Filtering: More aggressively match filters, by normalising the input compared against the filters.
 					p Filter Mode: What to do when a post matches a filter.
+					p Block/Ban Message: The message returned if a post is blocked, or the ban reason if a poster is banned.
 					p Filter Auto Ban Duration: How long to automatically ban for when filter mode is set to ban. Input the duration in time format described in the #[a(href='#moderation') moderation section].
+					p Filter Bans Appealable: Whether or not a ban given by this filter can be appealed. This can be useful if the ban hits an innocent user by mistake.
+					p Replace Text: Text to substitute in for a replace filter. This is how word filters are added.
 	.table-container.flex-center.mv-5
 		.anchor#archive-reverse-url-format
 		table
@@ -286,6 +290,17 @@ block content
 						|  where the url of the page/file should go for reverse image search or archive links. For example 
 						span.mono https://tineye.com/search?url=#[span.bold %s]
 						| .
+	.table-container.flex-center.mv-5
+		.anchor#twofactor-enforcement
+		table
+			tr
+				th: a(href='#twofactor-enforcement') How does 2FA enforcement work?
+			tr
+				td
+					p There are two options included in global management settings that allow admins to increase security by enforcing the use of 2FA for all accounts and/or actions.
+					p Force Account 2FA: Forces all accounts to have 2FA, or else the user is redirected to the 2FA setup page.
+					p Force Action 2FA: If an account has 2FA enabled, the 2FA code must be input for: changing global settings, changing board settings, resigning from a staff position, deleting accounts, deleting your own account, or deleting a board.
+					p The granularity of what actions require 2FA will be expanded and customisable in a future release.
 	.table-container.flex-center.mv-5
 		.anchor#contact
 		table

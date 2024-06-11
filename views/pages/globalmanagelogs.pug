@@ -35,16 +35,19 @@ block content
 							th #{__('User')}
 							th #{__('IP')}
 							th #{__('Actions')}
-							th #{__('Posts')}
+							th #{__('Links')}
 							th #{__('Log Message')}
 						for log in logs
 							tr
 								- const logDate = new Date(log.date);
 								td: time.reltime(datetime=logDate.toISOString()) #{logDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 								td
-									a(href=`/${log.board}/index.html`) /#{log.board}/
-									|   
-									a(href=`?uri=${log.board}`) [+]
+									if log.board
+										a(href=`/${log.board}/index.html`) /#{log.board}/
+										|   
+										a(href=`?uri=${log.board}`) [+]
+									else
+										| -
 								td
 									if log.user !== __('Unregistered User')
 										a(href=`accounts.html?username=${log.user}`) #{log.user}

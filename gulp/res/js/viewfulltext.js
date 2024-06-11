@@ -26,7 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				postJson = hovercache.replies.find(r => r.postId == postId);
 			}
 		}
-		if (!postJson) {//wasnt cached or cache outdates
+		if (!postJson) { //wasnt cached or cache outdates
 			this.style.cursor = 'wait';
 			let json;
 			try {

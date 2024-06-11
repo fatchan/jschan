@@ -3,13 +3,13 @@ include ./post.pug
 mixin ban(ban, banpage)
 	tr
 		td
-			if !banpage || (ban.appeal == null && ban.allowAppeal === true)
+			if (!board || !ban.global) && (!banpage || (ban.appeal == null && ban.allowAppeal === true))
 				input.post-check(type='checkbox', name='checkedbans' value=ban._id)
 		td
-			if ban.board
-				a(href=`/${ban.board}/`) /#{ban.board}/
+			if ban.global === true
+				| #{__('Global')} (#{ban.board.filter(n => n).join(', ')})
 			else
-				| #{__('Global')}
+				a(href=`/${ban.board}/`) /#{ban.board}/
 		td= ban.reason
 		- const ip = viewRawIp === true ? ban.ip.raw : ban.ip.cloak;
 		if viewRawIp === true

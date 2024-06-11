@@ -1,6 +1,7 @@
 'use strict';
 
-const { Boards, Posts } = require(__dirname+'/../../db/')
+const { Boards, Posts, Modlogs } = require(__dirname+'/../../db/')
+	, ModlogActions = require(__dirname+'/../../lib/input/modlogactions.js')
 	, { debugLogs } = require(__dirname+'/../../configs/secrets.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
@@ -222,6 +223,22 @@ module.exports = async (req, res) => {
 			'board': res.locals.board,
 		}
 	});
+
+	promises.push(Modlogs.insertOne({
+		board: req.params.board,
+		showLinks: false,
+		postLinks: [],
+		actions: [ModlogActions.SETTINGS],
+		public: false,
+		date: new Date(),
+		showUser: true,
+		message: __('Updated settings.'),
+		user: req.session.user,
+		ip: {
+			cloak: res.locals.ip.cloak,
+			raw: res.locals.ip.raw,
+		}
+	}));
 
 	//finish the promises in parallel e.g. removing files
 	if (promises.length > 0) {
