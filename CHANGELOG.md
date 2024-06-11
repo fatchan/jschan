@@ -1,11 +1,11 @@
 ### 1.6.0
   - Filters now have a "replace" mode, by @disco.
   - Global bans now show the board it originated from as "Global (<board>)".
+  - Added a permission that allows board staff to see global bans in the board ban list if the ban was issued from a post on that board.
   - Modlogs now have private entries for staff auditing
     - So far covers creating boards, changing settings (board or global), and ban editing/unban/upgrade.
     - Modlog entries for e.g. board creation are global and not linked to the board and will not be deleted along with the board (duh).
     - Private modlogs for edited global bans will also be available from the originating board.
-  - Added a permission for whether board ban lists include global bans that originated from that board.
   - Global account management now has an option delete all boards owned by an account when deleting it.
   - Bugfix moving posts to non existing board not correctly returning an error sometimes.
   - Add "playsinline" attribute to expanded videos to prevent IOS defaulting them to fullscreen, thanks @l29utp0.
