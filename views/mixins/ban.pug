@@ -7,7 +7,9 @@ mixin ban(ban, banpage)
 				input.post-check(type='checkbox', name='checkedbans' value=ban._id)
 		td
 			if ban.global === true
-				| #{__('Global')} (#{ban.board.filter(n => n).join(', ')})
+				| #{__('Global')}
+				if Array.isArray(ban.board)
+					|  (#{ban.board.filter(n => n).join(', ')})
 			else
 				a(href=`/${ban.board}/`) /#{ban.board}/
 		td= ban.reason
