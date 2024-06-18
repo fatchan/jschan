@@ -11,7 +11,7 @@ block content
 	br
 	+globalmanagenav('boards')
 	hr(size=1)
-	h4.text-center.no-m-p Filter:
+	h4.text-center.no-m-p #{__('Filter')}:
 	.flexcenter.mv-10
 		form.form-post(action='/globalmanage/boards.html' method='GET')
 			input(type='hidden' value=page)
@@ -45,7 +45,7 @@ block content
 							input(type='checkbox', name='filter_abandoned', value='1' checked=(query.filter_abandoned != null))
 			input(type='submit', value='Filter')
 	if localBoards && localBoards.length > 0
-		h4.text-center.mv-10 Board List:
+		h4.text-center.mv-10 #{__('Board List')}:
 		+boardtable(true, true, permissions.get(Permissions.GLOBAL_MANAGE_ACCOUNTS))
 			each board in localBoards
 				tr

@@ -2,7 +2,7 @@ extends ../layout.pug
 include ../mixins/globalmanagenav.pug
 
 block head
-	title Accounts
+	title #{__('Accounts')}
 
 block content
 	h1.board-title #{__('Global Management')}
@@ -10,7 +10,7 @@ block content
 	+globalmanagenav('accounts')
 	hr(size=1)
 	.form-wrapper.flexleft
-		h4.no-m-p Search:
+		h4.no-m-p #{__('Search')}:
 		form.form-post.mv-5(action=`/globalmanage/accounts.html` method='GET')
 			input(type='hidden' value=page)
 			.row
@@ -42,7 +42,7 @@ block content
 									if permissions.get(Permissions.MANAGE_GLOBAL_BOARDS)
 										.prev-show
 											input(type='checkbox', name='delete_owned_boards' value=account._id)
-											| Delete all owned boards
+											| #{__('Delete all owned boards')}:
 								td #{account._id}
 								td
 									if account.ownedBoards.length > 0
