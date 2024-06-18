@@ -1502,5 +1502,14 @@
 	"Your post was blocked by a word filter": "Ваш пост был заблокирован словесным фильтром",
 	"Your request was blocked because your IP address is listed on a blacklist.": "Ваш запрос был заблокирован, потому что ваш IP-адрес внесен в черный список.",
 	"Your upload was too large": "Ваша загрузка была слишком большой",
-	"Zoom": "Увеличить"
+	"Zoom": "Увеличить",
+    "Global Bans & Appeals": "Глобальные блокировки и апелляции",
+    "Block/Ban Message": "Сообщение о блокировке/бане",
+    "Replace Text": "Заменить текст",
+    "Replace text cannot exceed 500 characters": "Заменяемый текст не может превышать 500 символов",
+    "Replace": "Заменить",
+    "Force Account 2FA": "Принудительная двухфакторная аутентификация аккаунта",
+    "Force Action 2FA": "Принудительная двухфакторная аутентификация действия",
+    "Table": "Таблица",
+	"Ethereum Links URL": "Ethereum Links URL"
 }

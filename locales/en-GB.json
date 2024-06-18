@@ -1428,5 +1428,14 @@
 	"Your post was blocked by a word filter": "Your post was blocked by a word filter",
 	"Your request was blocked because your IP address is listed on a blacklist.": "Your request was blocked because your IP address is listed on a blacklist.",
 	"Your upload was too large": "Your upload was too large",
-	"Zoom": "Zoom"
+	"Zoom": "Zoom",
+	"Global Bans & Appeals": "Global Bans & Appeals",
+	"Block/Ban Message": "Block/Ban Message",
+	"Replace Text": "Replace Text",
+	"Replace text cannot exceed 500 characters": "Replace text cannot exceed 500 characters",
+	"Replace": "Replace",
+	"Force Account 2FA": "Force Account 2FA",
+	"Force Action 2FA ": "Force Action 2FA ",
+	"Table":"Table",
+	"Ethereum Links URL": "Ethereum Links URL"
 }
