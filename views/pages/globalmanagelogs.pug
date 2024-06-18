@@ -12,7 +12,7 @@ block content
 	+globalmanagenav('logs')
 	hr(size=1)
 	.form-wrapper.flexleft
-		h4.no-m-p Search:
+		h4.no-m-p #{__('Search')}:
 		form.form-post.mv-5(action=`/globalmanage/globallogs.html` method='GET')
 			input(type='hidden' value=page)
 			.row
@@ -25,7 +25,7 @@ block content
 				.label #{__('IP')}
 				input(type='text' name='ip' value=ip)
 			input(type='submit', value=__('Filter'))
-		h4.no-m-p Global Logs:
+		h4.no-m-p #{__('Global Logs')}:
 		if logs && logs.length > 0
 			.table-container.flex-center.mv-10.text-center
 				table.fw
