@@ -1,3 +1,11 @@
+### 1.6.1
+  - Fixed a regression causing some video/audio file thumbnails to be blank or to be incorrectly rejected as corrupt.
+  - Fixed a bug breaking the global bans page.
+  - Translation updates thanks to @l29utp0 from ptchan.org.
+    - Added Spanish locale.
+    - Add new/missing translations to other locale files.
+    - Fix some untranslated strings in the frontend templates.
+
 ### 1.6.0
   - Filters now have a "replace" mode, by @disco.
   - Global bans now show the board it originated from as "Global (<board>)".
