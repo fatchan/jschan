@@ -16,7 +16,7 @@ Contact via:
  - Email: see my gitgud profile
 
 ## Features
- - [x] Multiple language support (🇬🇧 🇵🇹 🇧🇷 🇷🇺 🇮🇹)
+ - [x] Multiple language support (🇬🇧 🇵🇹 🇧🇷 🇷🇺 🇮🇹 🇪🇸)
  - [x] Optional user created boards
  - [x] Multiple files per post
  - [x] Antispam/Anti-flood & DNSBL
