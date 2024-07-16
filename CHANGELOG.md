@@ -1,3 +1,7 @@
+### 1.6.2
+  - Bugfix for "replace" filters not replacing all occurences of matches in some circumstances
+  - Npm audit fix
+
 ### 1.6.1
   - Fixed a regression causing some video/audio file thumbnails to be blank or to be incorrectly rejected as corrupt.
   - Fixed a bug breaking the global bans page.
