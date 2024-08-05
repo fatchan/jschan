@@ -111,6 +111,9 @@ module.exports = {
 			{ result: lengthBody(req.body.ip_header, 0, 100), expected: false, error: __('IP header length must not exceed 100 characters') },
 			{ result: lengthBody(req.body.meta_site_name, 0, 100), expected: false, error: __('Meta site name must not exceed 100 characters') },
 			{ result: lengthBody(req.body.meta_url, 0, 100), expected: false, error: __('Meta url must not exceed 100 characters') },
+			{ result: existsBody(req.body.enable_webring)
+				? (lengthBody(req.body.meta_site_name, 1, 100) || lengthBody(req.body.meta_url, 1, 100))
+				: false, expected: false, error: __('Meta url and site name must be set to enable webring') },
 			{ result: inArrayBody(req.body.language, i18n.getLocales()), expected: true, error: __('Invalid language') },
 			{ result: inArrayBody(req.body.board_defaults_language, i18n.getLocales()), expected: true, error: __('Invalid language') },
 			{ result: inArrayBody(req.body.captcha_options_type, ['grid', 'grid2', 'text', 'google', 'hcaptcha', 'yandex']), expected: true, error: __('Invalid captcha options type') },
