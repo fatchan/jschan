@@ -73,7 +73,6 @@ body {
 }
 
 .board-description {
-    font-size: 32px;
     font-family: pc-9800-bold;
     text-shadow: 2px 2px #000
 }
@@ -93,7 +92,6 @@ body {
 
 .text-center.no-m-p.post-message {
     font-family: pc-9800-bold;
-    font-size: 24px;
     max-width: max-content;
     margin: auto;
     font-weight: bold;
