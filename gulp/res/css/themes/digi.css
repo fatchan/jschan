@@ -33,12 +33,7 @@
 
 @font-face {
     font-family: pc-9800;
-    src: url(/asset/digi/pc-9800.ttf) 
-}
-
-@font-face {
-    font-family: pc-9800-bold;
-    src: url(/asset/digi/pc-9800-bold.ttf) 
+    src: url(/css/themes/assets/pc-9800.ttf) 
 }
 
 body {
@@ -73,7 +68,6 @@ body {
 }
 
 .board-description {
-    font-family: pc-9800-bold;
     text-shadow: 2px 2px #000
 }
 
@@ -91,7 +85,6 @@ body {
 }
 
 .text-center.no-m-p.post-message {
-    font-family: pc-9800-bold;
     max-width: max-content;
     margin: auto;
     font-weight: bold;
