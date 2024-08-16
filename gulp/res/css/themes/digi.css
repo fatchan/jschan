@@ -31,16 +31,10 @@
     --pinktext-color: #F85088 
 }
 
-@font-face {
-    font-family: pc-9800;
-    src: url(/css/themes/assets/pc-9800.ttf) 
-}
-
 body {
     font-size: 16px;
-    font-family: pc-9800;
     text-shadow: 1px 1px #000;
-    background-image: linear-gradient(45deg,#35134CEF,#35134CEF),url(/css/themes/assets/digi-bg.png)
+    background-image: linear-gradient(45deg,#35134CEF,#35134CEF),url(/css/themes/assets/digi-bg1.png)
 }
 
 #livetext,#threadstats,.bottom-reply,.catalog-tile,.collapse,.pages,.post-container {
