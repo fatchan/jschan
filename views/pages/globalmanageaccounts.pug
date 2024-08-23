@@ -32,6 +32,7 @@ block content
 							th #{__('Own Boards')}
 							th #{__('Staff Boards')}
 							th #{__('Last Active')}
+							th #{__('2FA')}
 							th #{__('Role')}
 							th #{__('Permissions')}
 						for account in accounts
@@ -63,6 +64,11 @@ block content
 										time.reltime(datetime=account.lastActiveDate.toISOString()) #{account.lastActiveDate.toLocaleString(pageLanguage, {hourCycle:'h23'})}
 									else
 										| -		
+								td
+									if account.twofactor
+										| &#10003;
+									else
+										| -
 								td #{roleNameMap[account.permissions.toString('base64')] || __('Custom')}
 								td
 									if account._id !== user.username
