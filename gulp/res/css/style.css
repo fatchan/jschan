@@ -1418,7 +1418,7 @@ table.boardtable .nobreak {
 /* ^="f" means only where attachment is false, to prevent showing on attachment files with audio or video mime type */
 .post-file-src[data-type="audio"][data-attachment^="f"]::after,
 .post-file-src[data-type="video"][data-attachment^="f"]::after {
-	content: "►";
+	content: "▸";
 	display: inline-block;
 	position: absolute;
 	top: 50%;
@@ -1431,7 +1431,7 @@ table.boardtable .nobreak {
 	line-height: 50px;
 	text-align:center;
 	box-sizing:border-box;
-	font-size: 20px;
+	font-size: 35px;
 	padding-left: 4px;
 	transform: translate(-50%, -50%);
 	opacity: 0.8;
