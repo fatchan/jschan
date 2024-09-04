@@ -511,6 +511,11 @@ p {
 	color: var(--pinktext-color);
 }
 
+.embimg {
+	max-width:100%;
+	max-height:40vh
+}
+
 .greentext {
 	color: var(--greentext-color);
 }
