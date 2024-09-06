@@ -1,6 +1,14 @@
+### 1.7.0
+  - On global accounts management, add the ability to see who has 2FA enabled.
+  - Add image embed support in posts (requires a permission), added to faq page "post styling" section.
+  - Make the appearance of the video play button more consistent across OS/devices and not display as an emoji on IOS.
+  - Update the digi theme.
+  - Improve global settings form validation to prevent enabling webring without some othre required fields being set.
+  - Update docs and jschan-api-go with the "global clear" endpoint.
+
 ### 1.6.2
   - Bugfix for "replace" filters not replacing all occurences of matches in some circumstances
-  - Npm audit fix
+  - Update dependencies & npm audit fix
 
 ### 1.6.1
   - Fixed a regression causing some video/audio file thumbnails to be blank or to be incorrectly rejected as corrupt.

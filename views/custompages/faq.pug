@@ -159,8 +159,15 @@ block content
 			tr
 				td
 					| [Board Rules](https://your.imageboard/a/custompage/rules.html)
-					small (staff only)
+					div
+						small (requires permission + staff only)
 				td: a(href='#!') Board Rules
+			tr
+				td
+					| ![Alt text](https://your.imageboard/file/example.jpg)
+					div
+						small (requires permission)
+				td: img(src='/file/attachment.png' alt='Alt text' title='alt-text' class='embimg' height='32' width='32')
 			tr
 				td &gt;&gt;123
 				td: a(class="quote" href="#!") &gt;&gt;123
