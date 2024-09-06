@@ -234,7 +234,7 @@ async function wipe() {
 	const BOARD_OWNER = new Permission(BOARD_STAFF.base64);
 	BOARD_OWNER.setAll([
 		Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF, Permissions.MANAGE_BOARD_CUSTOMISATION, 
-		Permissions.MANAGE_BOARD_SETTINGS,
+		Permissions.MANAGE_BOARD_SETTINGS, Permissions.USE_MARKDOWN_IMAGE
 	]);
 	const GLOBAL_STAFF = new Permission(BOARD_OWNER.base64);
 	GLOBAL_STAFF.setAll([
