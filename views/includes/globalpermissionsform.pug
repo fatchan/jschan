@@ -1,14 +1,3 @@
 for bit, index in Object.keys(jsonPermissions)
-	if jsonPermissions[bit].title && index > 0
-		hr(size=1)
-		h4.mv-5 #{__(jsonPermissions[bit].title)}
-		if jsonPermissions[bit].subtitle
-			p #{__(jsonPermissions[bit].subtitle)}
-	.row
-		- const parentAllowed = jsonPermissions[bit].parent == null || permissions.get(jsonPermissions[bit].parent);
-		- const parentLabel = !parentAllowed ? jsonPermissions[jsonPermissions[bit].parent].label : '';
-		label.postform-style.ph-5(class=(!parentAllowed ? 'notallowed' : null) title=(!parentAllowed ? __(`Requires permission "${parentLabel}"`) : null))
-			input(type='checkbox' name=`permission_bit_${bit}` value=bit checked=jsonPermissions[bit].state disabled=(!parentAllowed || jsonPermissions[bit].block))
-		.rlabel #{__(jsonPermissions[bit].label)}
-		p #{__(jsonPermissions[bit].desc)}
+	include ../includes/permissionsform.pug
 input(type='submit', value=__('Save'))
