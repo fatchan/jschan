@@ -3,7 +3,8 @@
 const { Posts, Boards } = require(__dirname+'/../../db/')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { Permissions } = require(__dirname+'/../../lib/permission/permissions.js')
-	, Permission = require(__dirname+'/../../lib/permission/permission.js');
+	, Permission = require(__dirname+'/../../lib/permission/permission.js')
+	, roleManager = require(__dirname+'/../../lib/permission/rolemanager.js');
 
 module.exports = async (req, res, next) => {
 
@@ -37,11 +38,14 @@ module.exports = async (req, res, next) => {
 		//calcperms isnt multi-board (but neither is this, really) its alright until then
 		boardPermissions = boardPermissions.reduce((acc, bs) => {
 			acc[bs._id] = new Permission(bs.staff[res.locals.user.username].permissions.toString('base64'));
-			if (acc[bs._id].get(Permissions.MANAGE_BOARD_OWNER)) {
-				acc[bs._id].setAll([
-					Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS, 
-					Permissions.MANAGE_BOARD_SETTINGS, Permissions.MANAGE_BOARD_CUSTOMISATION, Permissions.MANAGE_BOARD_STAFF, 
-				]);
+			const boardRolePermission = bs.owner === res.locals.user.username
+				? roleManager.roles.BOARD_OWNER
+				: roleManager.roles.BOARD_STAFF;
+			for (let bit of Permissions._MANAGE_BOARD_BITS) {
+				const inheritOrGlobal = res.locals.permissions.get(bit)
+					|| (acc[bs._id].get(bit)
+						&& boardRolePermission.get(bit));
+				acc[bs._id].set(bit, inheritOrGlobal);
 			}
 			return acc;
 		}, {});
