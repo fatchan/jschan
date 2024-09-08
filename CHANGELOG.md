@@ -1,6 +1,14 @@
 ### 1.7.0
+  - Important permission logic changes. Technical explanation:
+    - If an account is a board owner or board staff, they will only get the permissions that are under the `_MANAGE_BOARD_BITS` if the "Board Owner" or "Board Staff" roles respectively have the permission ticked, AND its ticked in the board staff permissions.
+    - The "applyInheritance" function has been modified to not set all _MANAGE_BOARD_BITS for a BO unconditionally anymore.
+    - This means admins can e.g. uncheck permissions on the "Board Owner"/"Board Staff" role globally to control what BOs and staff can access, or to prevent BOs delegating certain permissions to their staff, but still give it back on a per-account basis.
+    - Accounts who are e.g. "Global Staff" who have those permissions on their role (happens before the board calculation), or have it set at an account level will still have those perms, so removing them from the role or being a board staff and a "Global Staff" or having "Board Owner" role at an account level doesn't break their permissions.
   - On global accounts management, add the ability to see who has 2FA enabled.
   - Add image embed support in posts (requires a permission), added to faq page "post styling" section.
+  - When getting redirected for lack of authentication specifically to "/manage/thread/" paths, just redirect to the public version, rather than to /login.
+    - Makes it easier for staff to share links to threads without having to remove "/manage" from the URL.
+    - Logged out staff can just press "manage" in the top corner on the public page to get sent to /login with a ?goto query param for the thread anyway.
   - Make the appearance of the video play button more consistent across OS/devices and not display as an emoji on IOS.
   - Update the digi theme.
   - Improve global settings form validation to prevent enabling webring without some othre required fields being set.
