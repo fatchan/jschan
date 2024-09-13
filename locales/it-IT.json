@@ -279,6 +279,8 @@
 	"Board name must be 1-%s characters": "Il nome della board deve avere da 1 a %s caratteri",
 	"Board Owner": "Proprietario della board",
 	"Board Staff": "Staff della board",
+	"Board Staff Defaults": "Impostazioni predefinite per lo staff della board",
+	"Board Owner Defaults": "Impostazioni predefinite per il proprietario della board",
 	"Board URI": "URI della board",
 	"Board Wide": "Per tutta la board",
 	"Board with this URI already exists": "Esiste già una board con questo URI",

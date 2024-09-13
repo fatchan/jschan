@@ -279,6 +279,8 @@
 	"Board name must be 1-%s characters": "Nome da tábua tem que ter 1-%s caracteres",
 	"Board Owner": "Admin da tábua",
 	"Board Staff": "Staff da tábua",
+	"Board Staff Defaults": "Predefinições do Staff da Tábua",
+	"Board Owner Defaults": "Predefinições do Admin da Tábua",
 	"Board URI": "URI tábua",
 	"Board Wide": "Toda a Tábua",
 	"Board with this URI already exists": "Tábua com este URI já existe",

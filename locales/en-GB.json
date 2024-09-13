@@ -279,6 +279,8 @@
 	"Board name must be 1-%s characters": "Board name must be 1-%s characters",
 	"Board Owner": "Board Owner",
 	"Board Staff": "Board Staff",
+	"Board Staff Defaults": "Board Staff Defaults",
+	"Board Owner Defaults": "Board Owner Defaults",
 	"Board URI": "Board URI",
 	"Board Wide": "Board Wide",
 	"Board with this URI already exists": "Board with this URI already exists",

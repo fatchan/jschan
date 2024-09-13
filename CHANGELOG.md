@@ -1,7 +1,8 @@
 ### 1.7.0
   - Important permission logic changes. Technical explanation:
     - If an account is a board owner or board staff, they will only get the permissions that are under the `_MANAGE_BOARD_BITS` if the "Board Owner" or "Board Staff" roles respectively have the permission ticked, AND its ticked in the board staff permissions.
-    - The "applyInheritance" function has been modified to not set all _MANAGE_BOARD_BITS for a BO unconditionally anymore.
+    - Roles for "Board owner" and "Board staff" are now separate from "Board staff defaults" and "Board owner defaults". The defaults are the bits set by default on board owners/board staff, and the regular roles define the maximum permissions that board owners or staff can have. This allows more global control over what permissions BOs/staff can have and what BOs can delegate to their staff.
+    - The "applyInheritance" function has been modified to not set all _MANAGE_BOARD_BITS for a BO unconditionally anymore, see the previous point.
     - This means admins can e.g. uncheck permissions on the "Board Owner"/"Board Staff" role globally to control what BOs and staff can access, or to prevent BOs delegating certain permissions to their staff, but still give it back on a per-account basis.
     - Accounts who are e.g. "Global Staff" who have those permissions on their role (happens before the board calculation), or have it set at an account level will still have those perms, so removing them from the role or being a board staff and a "Global Staff" or having "Board Owner" role at an account level doesn't break their permissions.
   - On global accounts management, add the ability to see who has 2FA enabled.
