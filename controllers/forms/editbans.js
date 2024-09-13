@@ -48,7 +48,11 @@ module.exports = {
 		}
 
 		const showGlobal = res.locals.permissions.get(Permissions.VIEW_BOARD_GLOBAL_BANS);
-		res.locals.bansBoard = req.params.board ? showGlobal ? req.parms.board : { '$eq': req.params.board } : null;
+		res.locals.bansBoard = req.params.board
+			? (showGlobal
+				? req.params.board
+				: { '$eq': req.params.board })
+			: null;
 
 		let bans = [];
 		try {
