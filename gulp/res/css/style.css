@@ -453,7 +453,7 @@ p {
 	right:10px;
 }
 
-.ban {
+.ban, .br {
 	color: red;
 	font-weight: bold;
 }

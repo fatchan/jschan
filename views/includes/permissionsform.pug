@@ -6,7 +6,11 @@ if jsonPermissions[bit].title && index > 0
 .row
 	- const parentAllowed = jsonPermissions[bit].parents == null || permissions.hasAny(...jsonPermissions[bit].parents);
 	- const parentLabel = !parentAllowed ? (jsonPermissions[bit].parents ? jsonPermissions[bit].parents.map(p => jsonPermissions[p].label).join('\n') : '')	: '';
-	label.postform-style.ph-5(class=(!parentAllowed ? 'notallowed' : null) title=(!parentAllowed ? __(`Requires permission "${parentLabel}"`) : null))
+	label.postform-style.ph-5(id=`perm_${bit}` class=(!parentAllowed ? 'notallowed' : null) title=(!parentAllowed ? __(`Requires permission "${parentLabel}"`) : null))
 		input(type='checkbox' name=`permission_bit_${bit}` value=bit checked=jsonPermissions[bit].state disabled=(!parentAllowed || jsonPermissions[bit].block))
 	.rlabel #{__(jsonPermissions[bit].label)}
-	p #{__(jsonPermissions[bit].desc)}
+	p
+		if !parentAllowed && parentLabel
+			span.br #{__(`Requires permission "${parentLabel}"`)}
+			|  - 
+		| #{__(jsonPermissions[bit].desc)}
