@@ -227,9 +227,19 @@ async function wipe() {
 		Permissions.USE_MARKDOWN_DICE, Permissions.USE_MARKDOWN_FORTUNE, Permissions.CREATE_BOARD, 
 		Permissions.CREATE_ACCOUNT
 	]);
+	const BOARD_STAFF_DEFAULTS = new Permission(ANON.base64);
+	BOARD_STAFF_DEFAULTS.setAll([
+		Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS,
+	]);
 	const BOARD_STAFF = new Permission(ANON.base64);
 	BOARD_STAFF.setAll([
-		Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS, 
+		Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF, Permissions.MANAGE_BOARD_CUSTOMISATION,
+		Permissions.MANAGE_BOARD_SETTINGS
+	]);
+	const BOARD_OWNER_DEFAULTS = new Permission(BOARD_STAFF_DEFAULTS.base64);
+	BOARD_OWNER_DEFAULTS.setAll([
+		Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF, Permissions.MANAGE_BOARD_CUSTOMISATION,
+		Permissions.MANAGE_BOARD_SETTINGS, Permissions.USE_MARKDOWN_IMAGE
 	]);
 	const BOARD_OWNER = new Permission(BOARD_STAFF.base64);
 	BOARD_OWNER.setAll([
@@ -252,6 +262,8 @@ async function wipe() {
 		{ name: 'ANON', permissions: Binary(ANON.array) },
 		{ name: 'BOARD_STAFF', permissions: Binary(BOARD_STAFF.array) },
 		{ name: 'BOARD_OWNER', permissions: Binary(BOARD_OWNER.array) },
+		{ name: 'BOARD_STAFF_DEFAULTS', permissions: Binary(BOARD_STAFF_DEFAULTS.array) },
+		{ name: 'BOARD_OWNER_DEFAULTS', permissions: Binary(BOARD_OWNER_DEFAULTS.array) },
 		{ name: 'GLOBAL_STAFF', permissions: Binary(GLOBAL_STAFF.array) },
 		{ name: 'ADMIN', permissions: Binary(ADMIN.array) },
 		{ name: 'ROOT', permissions: Binary(ROOT.array) },
