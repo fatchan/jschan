@@ -1620,7 +1620,19 @@ row.wrap.sb .col {
 	}
 }
 
+
+@media only screen and (max-height: 400px) {
+	/* hide floating hover posts when < 400 height (too small landscape display) */
+	#float {
+		display: none;
+	}
+}
+
 @media only screen and (max-width: 600px) {
+	/* hide floating hover posts when < 600 width (too small portrait display) */
+	#float {
+		display: none;
+	}
 	.twofactor {
 		font-size: 50%;
 	}
