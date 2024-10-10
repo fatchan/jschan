@@ -48,11 +48,11 @@ geoip: $GEOIP
 [[ "$CORRECT" == "n" ]] && echo "Exiting..." && exit;
 
 #ask to overwrite if already exists
-if [[ -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME ]]; then
+if [[ -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf ]]; then
 	read -p "/etc/nginx/sites-available/$SITES_AVAILABLE_NAME already exists. Continue and overwrite existing configuration? (y/n)" OVERWRITE
 	[[ "$OVERWRITE" == "n" ]] && echo "Exiting..." && exit;
-	rm /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
-	rm /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
+	rm /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf
+	rm /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME.conf
 fi
 
 echo "Stopping nginx..."
@@ -237,8 +237,8 @@ fi
 
 #write the config to file and syymlink to sites-available
 echo "Writing main jschan vhost config..."
-printf "$JSCHAN_CONFIG" > /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
-sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
+printf "$JSCHAN_CONFIG" > /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf
+sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME.conf
 
 if [ "$NOHTTPS" == "y" ]; then
 	echo "Adjusting config snippets to support NOHTTPS mode..."
