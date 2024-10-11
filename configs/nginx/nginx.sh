@@ -48,11 +48,11 @@ geoip: $GEOIP
 [[ "$CORRECT" == "n" ]] && echo "Exiting..." && exit;
 
 #ask to overwrite if already exists
-if [[ -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME ]]; then
+if [[ -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf ]]; then
 	read -p "/etc/nginx/sites-available/$SITES_AVAILABLE_NAME already exists. Continue and overwrite existing configuration? (y/n)" OVERWRITE
 	[[ "$OVERWRITE" == "n" ]] && echo "Exiting..." && exit;
-	rm /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
-	rm /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
+	rm /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf
+	rm /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME.conf
 fi
 
 echo "Stopping nginx..."
@@ -62,10 +62,10 @@ if [ "$CERTBOT" == "y" ]; then
 	#run certbot for certificate
 	if [ "$ADD_WWW_SUBDOMAIN" == "y" ]; then
 		echo "Running certbot to setup SSL cert for $CLEARNET_DOMAIN and www.$CLEARNET_COMAIN..."
-		sudo certbot certonly --nginx -d $CLEARNET_DOMAIN -d www.$CLEARNET_DOMAIN
+		sudo sudo certbot certonly --standalone --register-unsafely-without-email -d $CLEARNET_DOMAIN -d www.$CLEARNET_DOMAIN
 	else
 		echo "Running certbot to setup SSL cert for $CLEARNET_DOMAIN..."
-		sudo certbot certonly --nginx -d $CLEARNET_DOMAIN
+		sudo sudo certbot certonly --standalone --register-unsafely-without-email -d $CLEARNET_DOMAIN
 	fi
 fi
 
@@ -91,22 +91,7 @@ fi
 
 if [ "$CLEARNET_DOMAIN" != "" ]; then
 
-	HTTPS_MIDSECTION=""
-	HTTPS_CERT_SECTION=""
-	if [ "$CERTBOT" == "y" ]; then
-		HTTPS_CERT_SECTION="
-	ssl_certificate /etc/letsencrypt/live/$CLEARNET_DOMAIN/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/$CLEARNET_DOMAIN/privkey.pem;
-	include /etc/letsencrypt/options-ssl-nginx.conf;
-	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-	"
-	elif [ "$SELFSIGNED" == "y" ]; then
-		echo "Generating self-signed SSL cert..."
-		mkdir /etc/ssl/private/
-		mkdir /etc/ssl/certs/
-		sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
-		echo "Generating dh group. This may take a while..."
-		sudo openssl dhparam -out /etc/nginx/dhparam.pem 4096
+	sudo openssl dhparam -out /etc/nginx/dhparam.pem 4096
 		cat > /etc/nginx/snippets/ssl-params.conf <<EOF
 ssl_session_cache shared:le_nginx_SSL:10m;
 ssl_session_timeout 1440m;
@@ -116,6 +101,22 @@ ssl_prefer_server_ciphers on;
 ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA";
 EOF
 
+
+	HTTPS_MIDSECTION=""
+	HTTPS_CERT_SECTION=""
+	if [ "$CERTBOT" == "y" ]; then
+		HTTPS_CERT_SECTION="
+	ssl_certificate /etc/letsencrypt/live/$CLEARNET_DOMAIN/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/$CLEARNET_DOMAIN/privkey.pem;
+	include /etc/nginx/snippets/ssl-params.conf;
+	ssl_dhparam /etc/nginx/dhparam.pem;
+	"
+	elif [ "$SELFSIGNED" == "y" ]; then
+		echo "Generating self-signed SSL cert..."
+		mkdir /etc/ssl/private/
+		mkdir /etc/ssl/certs/
+		sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
+		echo "Generating dh group. This may take a while..."
 		HTTPS_CERT_SECTION="
 	ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
 	ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
@@ -237,8 +238,8 @@ fi
 
 #write the config to file and syymlink to sites-available
 echo "Writing main jschan vhost config..."
-printf "$JSCHAN_CONFIG" > /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
-sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
+printf "$JSCHAN_CONFIG" > /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf
+sudo ln -s -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME.conf
 
 if [ "$NOHTTPS" == "y" ]; then
 	echo "Adjusting config snippets to support NOHTTPS mode..."

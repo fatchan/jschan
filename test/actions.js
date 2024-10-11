@@ -1,3 +1,4 @@
+
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 const fs = require('fs-extra');
@@ -375,6 +376,7 @@ __underline__
 ##2d9+3
 https://example.com
 [Board Rules](https://your.imageboard/a/custompage/rules.html)(staff only)
+![embed](https://your.imageboard/image.png)
 >>123
 >>>/test/
 >>>/test/123
@@ -605,6 +607,95 @@ int main() {...}
 			},
 			method: 'POST',
 			body: params,
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('edit board level ban duration',  async () => {
+		const banPage = await fetch('http://localhost/test/manage/bans.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkString = 'name="checkedbans" value="';
+		const checkIndex = banPage.indexOf(checkString);
+		banId = banPage.substring(checkIndex+checkString.length, checkIndex+checkString.length+24);
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedbans: banId,
+			option: 'edit_duration',
+			ban_duration: '3d',
+		});
+		const response = await fetch('http://localhost/forms/board/test/editbans', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('edit board level ban note',  async () => {
+		const banPage = await fetch('http://localhost/test/manage/bans.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkString = 'name="checkedbans" value="';
+		const checkIndex = banPage.indexOf(checkString);
+		banId = banPage.substring(checkIndex+checkString.length, checkIndex+checkString.length+24);
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedbans: banId,
+			option: 'edit_note',
+			ban_note: 'THIS IS A UNIQUE BAN NOTE',
+		});
+		const response = await fetch('http://localhost/forms/board/test/editbans', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
+		});
+		expect(response.ok).toBe(true);
+	});
+
+	test('check updated board level ban note',  async () => {
+		const banPage = await fetch('http://localhost/test/manage/bans.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		expect(banPage.includes('THIS IS A UNIQUE BAN NOTE')).toBe(true);
+	});
+
+	test('remove board level ban',  async () => {
+		const banPage = await fetch('http://localhost/test/manage/bans.html', {
+			headers: {
+				'cookie': sessionCookie,
+			},
+		}).then(res => res.text());
+		const checkString = 'name="checkedbans" value="';
+		const checkIndex = banPage.indexOf(checkString);
+		banId = banPage.substring(checkIndex+checkString.length, checkIndex+checkString.length+24);
+		const params = new URLSearchParams({
+			_csrf: csrfToken,
+			checkedbans: banId,
+			option: 'unban',
+		});
+		const response = await fetch('http://localhost/forms/board/test/editbans', {
+			headers: {
+				'x-using-xhr': 'true',
+				'cookie': sessionCookie,
+			},
+			method: 'POST',
+			body: params,
+			redirect: 'manual',
 		});
 		expect(response.ok).toBe(true);
 	});
