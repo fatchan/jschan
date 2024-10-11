@@ -14,6 +14,7 @@
   - Update the digi theme.
   - Improve global settings form validation to prevent enabling webring without some othre required fields being set.
   - Update docs and jschan-api-go with the "global clear" endpoint.
+  - Update INSTALLATION.md and various other components to make install work reliably again.
 
 ### 1.6.2
   - Bugfix for "replace" filters not replacing all occurences of matches in some circumstances
