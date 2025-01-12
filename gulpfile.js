@@ -58,7 +58,7 @@ gulp.task('generate-favicon', function(done) {
 	realFavicon.generateFavicon({
 		masterPicture: 'gulp/res/icons/master.png',
 		dest: 'gulp/res/icons',
-		iconsPath: '/file',
+		iconsPath: '/file/',
 		design: {
 			ios: {
 				pictureAspect: 'backgroundAndMargin',
@@ -121,6 +121,7 @@ gulp.task('generate-favicon', function(done) {
 		},
 		markupFile: FAVICON_DATA_FILE
 	}, function() {
+		fs.writeFileSync('gulp/res/icons/html_code.html', JSON.parse(fs.readFileSync(FAVICON_DATA_FILE)).favicon.html_code, 'utf8');
 		done();
 	});
 });

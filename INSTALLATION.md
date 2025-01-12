@@ -27,7 +27,7 @@
 
 ```bash
 sudo apt update -y
-sudo apt install curl wget libgeoip-dev gnupg ffmpeg imagemagick graphicsmagick fontconfig fonts-dejavu -y
+sudo apt install curl wget libgeoip-dev gnupg ffmpeg imagemagick graphicsmagick fontconfig fonts-dejavu certbot -y
 ```
 
 **3. Install MongoDB**
@@ -49,7 +49,10 @@ sudo systemctl enable --now mongod
 
 NOTE: If at this point, mongod doesn't start or has an error, fix the permissions ([stackoverflow](https://stackoverflow.com/questions/64608581/mongodb-code-exited-status-14-failed-but-not-any-clear-errors/66107451#66107451)):
 ```bash
+sudo mkdir -p /var/lib/mongodb
+sudo mkdir -p /var/log/mongodb
 sudo chown -R mongodb:mongodb /var/lib/mongodb
+sudo chown -R mongodb:mongodb /var/log/mongodb
 sudo chown mongodb:mongodb /tmp/mongodb-27017.sock
 sudo service mongod restart
 ```
@@ -85,7 +88,7 @@ sudo systemctl restart mongod
 ```bash
 sudo apt update -y
 sudo apt install redis-server -y
-sed -i 's/supervised no/supervised systemd/' /etc/redis/redis.conf
+sudo sed -i -e 's/supervised no/supervised systemd/' -e '$!b' -e '/# supervised auto/!b' -e 's/# supervised auto/supervised auto/' -e '$!s/$/\nsupervised systemd/' /etc/redis/redis.conf
 sudo systemctl enable --now redis-server
 ```
 
@@ -99,7 +102,7 @@ sudo systemctl restart redis-server
 
 For easy installation, use [node version manager](https://github.com/nvm-sh/nvm#installing-and-updating) "nvm":
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
@@ -165,15 +168,24 @@ Note down the .loki and .onion address for the next step.
 
 **7. Setup nginx**
 
-For standard installations, run `configs/nginx/nginx.sh`. This will prompt you for installation directory, domains, onion/lokinet, enable geoip, install a letsencrypt certificate with certbot and more:
+Become root:
 ```bash
+sudo su -
+```
+
+Once you are root:
+```
 wget https://raw.githubusercontent.com/fatchan/nginx-autoinstall/master/nginx-autoinstall.sh
 chmod +x nginx-autoinstall.sh
-sudo su
 HEADLESS=y OPTION=1 NGINX_VER=STABLE SUBFILTER=y RTMP=y ./nginx-autoinstall.sh
 echo "You can safely ignore that error about restarting nginx ^"
-exit
 rm nginx-autoinstall.sh
+sudo mkdir -p /etc/nginx/snippets
+exit # this exits being root
+```
+
+Back as your non-root sudo user, from within your jschan folder:
+```
 sudo bash configs/nginx/nginx.sh
 ```
 
