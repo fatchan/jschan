@@ -279,6 +279,8 @@
 	"Board name must be 1-%s characters": "El nombre del tablón debe tener de 1 a %s caracteres",
 	"Board Owner": "Dueño del Tablón",
 	"Board Staff": "Staff del Tablón",
+	"Board Staff Defaults": "Predeterminados del Staff del Tablón",
+	"Board Owner Defaults": "Predeterminados del Dueño del Tablón",
 	"Board URI": "URI del Tablón",
 	"Board Wide": "Todo el Tablón",
 	"Board with this URI already exists": "Ya existe un tablón con este URI",

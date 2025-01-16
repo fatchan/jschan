@@ -52,7 +52,7 @@ module.exports = async (req, res) => {
 		'webring': false,
 		'staff': {
 			[owner]: {
-				'permissions': Binary(roleManager.roles.BOARD_OWNER.array),
+				'permissions': Binary(roleManager.roles.BOARD_OWNER_DEFAULTS.array),
 				'addedDate': new Date(),
 			},
 		},

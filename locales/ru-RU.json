@@ -317,6 +317,8 @@
 	"Board name must be 1-%s characters": "Название доски должно состоять из символов 1-%s",
 	"Board Owner": "Владелец доски",
 	"Board Staff": "Персонал доски",
+	"Board Staff Defaults": "Настройки по умолчанию для персонала доски",
+	"Board Owner Defaults": "Настройки по умолчанию для владельца доски",
 	"Board URI": "URI доски",
 	"Board Wide": "все потоки",
 	"Board with this URI already exists": "Доска с этим URI уже существует",
