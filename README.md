@@ -8,7 +8,7 @@ Repo Mirror(s):
 
 Contact the author:
  - [Session](https://getsession.org/): `051b2ff270769d20764fa1b8e6bc3240b0a3c28ffb3242e7cce60db479b23ef427`
- - IRC: [open in client](ircs://irc.fatpeople.lol:6697/general) or [webchat](https://irc-web.fatpeople.lol/#general)
+ - Telegram: [t.me/basedflare](https://t.me/basedflare)
  - Email: see my gitgud profile
 
 
