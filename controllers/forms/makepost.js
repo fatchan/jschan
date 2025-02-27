@@ -51,21 +51,6 @@ module.exports = {
 			{ result: lengthBody(req.body.name, 0, globalLimits.fieldLength.name), expected: false, error: __('Name must be %s characters or less', globalLimits.fieldLength.name) },
 			{ result: lengthBody(req.body.subject, 0, globalLimits.fieldLength.subject), expected: false, error: __('Subject must be %s characters or less', globalLimits.fieldLength.subject) },
 			{ result: lengthBody(req.body.email, 0, globalLimits.fieldLength.email), expected: false, error: __('Email must be %s characters or less', globalLimits.fieldLength.email) },
-			{ result: async () => {
-				if (enableWeb3 === true && res.locals.board.settings.enableWeb3 === true
-					&& req.body.message && req.body.signature && req.body.signature.length < 200) {
-					try {
-						const fixedMessage = req.body.rawMessage.replace(/\r\n/igm, '\n');
-						res.locals.recoveredAddress = await web3EthAccountsRecover(fixedMessage, req.body.signature);
-						return true;
-					} catch (e) {
-						console.warn(e);
-						return false;
-					}
-				} else  {
-					return true;
-				}
-			}, expected: true, error: __('Failed to verify message signature') },
 		]);
 
 		if (errors.length > 0) {
