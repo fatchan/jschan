@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
 	rolePermissions.handleBody(req.body, res.locals.permissions);
 	// rolePermissions.applyInheritance();
 
-	const existingRoleName = roleManager.roleNameMap[rolePermissions.base64];
+	const existingRoleName = roleManager.rolePermissionMap[rolePermissions.base64];
 	if (existingRoleName) {
 		return dynamicResponse(req, res, 409, 'message', {
 			'title': __('Conflict'),

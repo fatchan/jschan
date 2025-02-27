@@ -9,7 +9,7 @@ block content
 	br
 	+globalmanagenav('roles', true)
 	hr(size=1)
-	h4.mv-5 #{__('Edit role %s', __(roleNameMap[rolePermissions.base64]))}
+	h4.mv-5 #{__('Edit role %s', __(roleNameMap[role.name]))}
 	- const jsonPermissions = rolePermissions.toJSON();
 	.form-wrapper.flexleft
 		form(action=`/forms/global/editrole` method='POST')

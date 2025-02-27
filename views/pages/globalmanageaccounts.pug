@@ -69,7 +69,7 @@ block content
 										| &#10003;
 									else
 										| -
-								td #{roleNameMap[account.permissions.toString('base64')] || __('Custom')}
+								td #{rolePermissionMap[account.permissions.toString('base64')] || __('Custom')}
 								td
 									if account._id !== user.username
 										a(href=`/globalmanage/editaccount/${account._id}.html`) [#{__('Edit')}]
