@@ -218,83 +218,82 @@ async function wipe() {
 	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } });
 	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } });
 
+	const ANON = new Permission();
+	ANON.setAll([
+		Permissions.USE_MARKDOWN_PINKTEXT,
+		Permissions.USE_MARKDOWN_GREENTEXT,
+		Permissions.USE_MARKDOWN_BOLD,
+		Permissions.USE_MARKDOWN_UNDERLINE,
+		Permissions.USE_MARKDOWN_STRIKETHROUGH,
+		Permissions.USE_MARKDOWN_TITLE,
+		Permissions.USE_MARKDOWN_ITALIC,
+		Permissions.USE_MARKDOWN_SPOILER,
+		Permissions.USE_MARKDOWN_MONO,
+		Permissions.USE_MARKDOWN_CODE,
+		Permissions.USE_MARKDOWN_DETECTED,
+		Permissions.USE_MARKDOWN_LINK,
+		Permissions.USE_MARKDOWN_DICE,
+		Permissions.USE_MARKDOWN_FORTUNE,
+		Permissions.CREATE_BOARD,
+		Permissions.CREATE_ACCOUNT,
+	]);
 
-        const ANON = new Permission();
-        ANON.setAll([
-                Permissions.USE_MARKDOWN_PINKTEXT,
-                Permissions.USE_MARKDOWN_GREENTEXT,
-                Permissions.USE_MARKDOWN_BOLD,
-                Permissions.USE_MARKDOWN_UNDERLINE,
-                Permissions.USE_MARKDOWN_STRIKETHROUGH,
-                Permissions.USE_MARKDOWN_TITLE,
-                Permissions.USE_MARKDOWN_ITALIC,
-                Permissions.USE_MARKDOWN_SPOILER,
-                Permissions.USE_MARKDOWN_MONO,
-                Permissions.USE_MARKDOWN_CODE,
-                Permissions.USE_MARKDOWN_DETECTED,
-                Permissions.USE_MARKDOWN_LINK,
-                Permissions.USE_MARKDOWN_DICE,
-                Permissions.USE_MARKDOWN_FORTUNE,
-                Permissions.CREATE_BOARD,
-                Permissions.CREATE_ACCOUNT,
-        ]);
+	const BOARD_STAFF_DEFAULTS = new Permission(ANON.base64);
+	BOARD_STAFF_DEFAULTS.setAll([
+		Permissions.MANAGE_BOARD_GENERAL,
+		Permissions.MANAGE_BOARD_BANS,
+		Permissions.MANAGE_BOARD_LOGS,
+	]);
 
-        const BOARD_STAFF_DEFAULTS = new Permission(ANON.base64);
-        BOARD_STAFF_DEFAULTS.setAll([
-                Permissions.MANAGE_BOARD_GENERAL,
-                Permissions.MANAGE_BOARD_BANS,
-                Permissions.MANAGE_BOARD_LOGS,
-        ]);
+	const BOARD_STAFF = new Permission(BOARD_STAFF_DEFAULTS.base64);
+	BOARD_STAFF.setAll([
+		Permissions.MANAGE_BOARD_OWNER,
+		Permissions.MANAGE_BOARD_STAFF,
+		Permissions.MANAGE_BOARD_CUSTOMISATION,
+		Permissions.MANAGE_BOARD_SETTINGS,
+		Permissions.USE_MARKDOWN_IMAGE,
+	]);
 
-        const BOARD_STAFF = new Permission(BOARD_STAFF_DEFAULTS.base64);
-        BOARD_STAFF.setAll([
-                Permissions.MANAGE_BOARD_OWNER,
-                Permissions.MANAGE_BOARD_STAFF,
-                Permissions.MANAGE_BOARD_CUSTOMISATION,
-                Permissions.MANAGE_BOARD_SETTINGS,
-                Permissions.USE_MARKDOWN_IMAGE,
-        ]);
+	const BOARD_OWNER_DEFAULTS = new Permission(BOARD_STAFF.base64);
+	BOARD_OWNER_DEFAULTS.setAll([
+		Permissions.MANAGE_BOARD_OWNER,
+		Permissions.MANAGE_BOARD_STAFF,
+		Permissions.MANAGE_BOARD_CUSTOMISATION,
+		Permissions.MANAGE_BOARD_SETTINGS,
+		Permissions.USE_MARKDOWN_IMAGE,
+	]);
 
-        const BOARD_OWNER_DEFAULTS = new Permission(BOARD_STAFF.base64);
-        BOARD_OWNER_DEFAULTS.setAll([
-                Permissions.MANAGE_BOARD_OWNER,
-                Permissions.MANAGE_BOARD_STAFF,
-                Permissions.MANAGE_BOARD_CUSTOMISATION,
-                Permissions.MANAGE_BOARD_SETTINGS,
-                Permissions.USE_MARKDOWN_IMAGE,
-        ]);
+	const BOARD_OWNER = new Permission(BOARD_STAFF.base64);
+	BOARD_OWNER.setAll([
+		Permissions.MANAGE_BOARD_OWNER,
+		Permissions.MANAGE_BOARD_STAFF,
+		Permissions.MANAGE_BOARD_CUSTOMISATION,
+		Permissions.MANAGE_BOARD_SETTINGS,
+		Permissions.USE_MARKDOWN_IMAGE,
+	]);
 
-        const BOARD_OWNER = new Permission(BOARD_STAFF.base64);
-        BOARD_OWNER.setAll([
-                Permissions.MANAGE_BOARD_OWNER,
-                Permissions.MANAGE_BOARD_STAFF,
-                Permissions.MANAGE_BOARD_CUSTOMISATION,
-                Permissions.MANAGE_BOARD_SETTINGS,
-                Permissions.USE_MARKDOWN_IMAGE,
-        ]);
+	const GLOBAL_STAFF = new Permission(BOARD_OWNER.base64);
+	GLOBAL_STAFF.setAll([
+		Permissions.MANAGE_GLOBAL_GENERAL,
+		Permissions.MANAGE_GLOBAL_BANS,
+		Permissions.MANAGE_GLOBAL_LOGS,
+		Permissions.MANAGE_GLOBAL_NEWS,
+		Permissions.MANAGE_GLOBAL_BOARDS,
+		Permissions.MANAGE_GLOBAL_SETTINGS,
+		Permissions.MANAGE_BOARD_OWNER,
+		Permissions.BYPASS_FILTERS,
+		Permissions.BYPASS_BANS,
+		Permissions.BYPASS_SPAMCHECK,
+		Permissions.BYPASS_RATELIMITS,
+		Permissions.USE_MARKDOWN_IMAGE,
+	]);
 
-        const GLOBAL_STAFF = new Permission(BOARD_OWNER.base64);
-        GLOBAL_STAFF.setAll([
-                Permissions.MANAGE_GLOBAL_GENERAL,
-                Permissions.MANAGE_GLOBAL_BANS,
-                Permissions.MANAGE_GLOBAL_LOGS,
-                Permissions.MANAGE_GLOBAL_NEWS,
-                Permissions.MANAGE_GLOBAL_BOARDS,
-                Permissions.MANAGE_GLOBAL_SETTINGS,
-                Permissions.MANAGE_BOARD_OWNER,
-                Permissions.BYPASS_FILTERS,
-                Permissions.BYPASS_BANS,
-                Permissions.BYPASS_SPAMCHECK,
-                Permissions.BYPASS_RATELIMITS,
-                Permissions.USE_MARKDOWN_IMAGE,
-        ]);
-
-        const ADMIN = new Permission(GLOBAL_STAFF.base64);
-        ADMIN.setAll([
-                Permissions.MANAGE_GLOBAL_ACCOUNTS,
-                Permissions.MANAGE_GLOBAL_ROLES,
-                Permissions.VIEW_RAW_IP,
-        ]);
+	const ADMIN = new Permission(GLOBAL_STAFF.base64);
+	ADMIN.setAll([
+		Permissions.MANAGE_GLOBAL_ACCOUNTS,
+		Permissions.MANAGE_GLOBAL_ROLES,
+		Permissions.VIEW_RAW_IP,
+	]);
 
 	const ROOT = new Permission();
 	ROOT.setAll(Permission.allPermissions);
