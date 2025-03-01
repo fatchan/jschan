@@ -142,6 +142,8 @@ module.exports = {
 	//web3
 	enableWeb3: false,
 	ethereumNode: '',
+	arbitrumNode: '',
+	baseNode: '',
 
 	//extension for thumbnails
 	thumbExtension: '.webp',
