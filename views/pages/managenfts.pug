@@ -1,0 +1,36 @@
+extends ../layout.pug
+include ../mixins/nftrule.pug
+include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
+
+block head
+	title /#{board._id}/ - #{__('NFT Settings')}
+
+block content
+	+boardheader(__('NFT Settings'))
+	br
+	+managenav('nfts')
+	hr(size=1)
+	h4.no-m-p
+		| #{__('Add NFT Rule')}:
+	.form-wrapper.flexleft
+		form.form-post(action=`/forms/board/${board._id}/addnftrule`, enctype='application/x-www-form-urlencoded', method='POST')
+			include ../includes/nftrulenewform.pug
+	if nftRules.length > 0
+		hr(size=1)
+		h4.no-m-p #{__('Manage NFT Rules')}:
+		.form-wrapper.flexleft
+			form.form-post(action=`/forms/board/${board._id}/deletenftrule`, enctype='application/x-www-form-urlencoded', method='POST')
+				input(type='hidden' name='_csrf' value=csrf)
+				.table-container.mv-5.horscroll
+					table
+						tr
+							th
+							th #{__('Network')}
+							th #{__('Contract Address')}
+							th #{__('Contract ABI')}
+							th #{__('Token ID')}
+							th #{__('Permissions')}
+						each nftr in nftRules
+							+nftRule(nftr)
+				input(type='submit', value=__('Delete'))

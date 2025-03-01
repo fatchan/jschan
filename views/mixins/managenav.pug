@@ -32,3 +32,6 @@ mixin managenav(selected, upLevel)
 		if permissions.get(Permissions.MANAGE_BOARD_STAFF)
 			|  
 			a(href=`${upLevel ? '../' : ''}staff.html` class=(selected === 'staff' ? 'bold' : '')) [#{__('Staff')}]
+		if board && board.settings && board.settings.enableWeb3 === true
+			|  
+			a(href=`${upLevel ? '../' : ''}nfts.html` class=(selected === 'nfts' ? 'bold' : '')) [#{__('NFT Settings')}]

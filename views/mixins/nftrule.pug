@@ -1,0 +1,18 @@
+mixin nftRule(nftr)
+	.anchor(id=nftr._id)
+	tr
+		td
+			input.left.post-check(type='checkbox', name='checkednftrules' value=nftr._id)  
+		td
+			select(name='network')
+				option(value='ethereum', selected=nftRule.network === 'ethereum') #{__('Ethereum')}
+				option(value='base', selected=nftRule.network === 'base') #{__('Base')}
+				option(value='arbitrum', selected=nftRule.network === 'arbitrum') #{__('Arbitrum')}
+		td
+			input(required type='text' name='contract_address' placeholder='0x...')
+		td
+			textarea(required name='abi' rows='10' placeholder='[...]')
+		td
+			input(type='text' name='token_id')
+		td
+			| todo permissions stuff

@@ -18,4 +18,5 @@ module.exports = {
 	editPost: require(__dirname+'/editpost.js'),
 	manageStaff: require(__dirname+'/staff.js'),
 	editStaff: require(__dirname+'/editstaff.js'),
+	manageNfts: require(__dirname+'/nfts.js'),
 };

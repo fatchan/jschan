@@ -7,6 +7,7 @@ input(type='hidden' name='nftrule_id' value=nftRule._id)
 			th #{__('Contract Address')}
 			th #{__('Contract ABI')}
 			th #{__('Token ID')}
+			th #{__('Permissions')}
 		tr
 			td
 				select(name='network')
@@ -16,7 +17,9 @@ input(type='hidden' name='nftrule_id' value=nftRule._id)
 			td.text-center
 				input(type='text' name='contract_address' placeholder='0x...' value=nftRule.contractAddress)
 			td
-				textarea(name='abi' rows='10' placeholder='[...]'} #{nftRule.abi}
+				textarea(name='abi' rows='10' placeholder='[...]') #{nftRule.abi}
 			td
 				input(type='text' name='token_id' value=nftRule.tokenId)
+			td
+				| todo edit button here
 input(type='submit', value=__('Save'))

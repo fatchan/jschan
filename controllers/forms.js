@@ -29,6 +29,7 @@ const express  = require('express')
 		deleteFlagsController, boardSettingsController, transferController, addAssetsController, deleteAssetsController,
 		resignController, deleteAccountController, loginController, registerController, changePasswordController,
 		deleteAccountsController, editAccountController, addFilterController, editFilterController, deleteFilterController, 
+		addNftRuleController, editNftRuleController, deleteNftRuleController,
 		globalSettingsController, createBoardController, makePostController, addStaffController, deleteStaffController, 
 		editStaffController, editCustomPageController, editPostController, editRoleController, newCaptchaForm, 
 		blockBypassForm, logoutForm, deleteSessionsController, globalClearController } = require(__dirname+'/forms/index.js');
@@ -66,6 +67,12 @@ router.post('/board/:board/editfilter', useSession, sessionRefresh, csrf, Boards
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), editFilterController.paramConverter, editFilterController.controller); //edit filter
 router.post('/board/:board/deletefilter', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), deleteFilterController.paramConverter, deleteFilterController.controller); //delete filter
+router.post('/board/:board/addnftrule', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), addNftRuleController.paramConverter, addNftRuleController.controller); //add new nft rule
+router.post('/board/:board/editnftrule', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), editNftRuleController.paramConverter, editNftRuleController.controller); //edit nft rule
+router.post('/board/:board/deletenftrule', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
+	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), deleteNftRuleController.paramConverter, deleteNftRuleController.controller); //delete nft rule
 router.post('/board/:board/deleteboard', useSession, sessionRefresh, csrf, Boards.exists, setBoardLanguage, calcPerms, isLoggedIn,
 	hasPerms.any(Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_GLOBAL_BOARDS), deleteBoardController.paramConverter, deleteBoardController.controller); //delete board
 
