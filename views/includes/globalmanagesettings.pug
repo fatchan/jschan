@@ -525,6 +525,12 @@ ul.tabs.group
 						a(rel='nofollow' referrerpolicy='same-origin' target='_blank' href='https://ethereumnodes.com/') #{__('Nodes')}
 						| )
 				input(type='text' name='ethereum_node' value=settings.ethereumNode)
+			.row
+				.label #{__('Arbitrum Node')}
+				input(type='text' name='arbitrum_node' value=settings.arbitrumNode)
+			.row
+				.label #{__('Base Node')}
+				input(type='text' name='base_node' value=settings.baseNode)
 
 	.tab.tab-9
 		.col
