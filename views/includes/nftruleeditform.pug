@@ -1,0 +1,22 @@
+input(type='hidden' name='_csrf' value=csrf)
+input(type='hidden' name='nftrule_id' value=nftRule._id)
+.table-container.flex-center.mv-5.horscroll
+	table
+		tr
+			th #{__('Network')}
+			th #{__('Contract Address')}
+			th #{__('Contract ABI')}
+			th #{__('Token ID')}
+		tr
+			td
+				select(name='network')
+					option(value='ethereum', selected=nftRule.network === 'ethereum') #{__('Ethereum')}
+					option(value='base', selected=nftRule.network === 'base') #{__('Base')}
+					option(value='arbitrum', selected=nftRule.network === 'arbitrum') #{__('Arbitrum')}
+			td.text-center
+				input(type='text' name='contract_address' placeholder='0x...' value=nftRule.contractAddress)
+			td
+				textarea(name='abi' rows='10' placeholder='[...]'} #{nftRule.abi}
+			td
+				input(type='text' name='token_id' value=nftRule.tokenId)
+input(type='submit', value=__('Save'))
