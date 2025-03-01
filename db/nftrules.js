@@ -3,32 +3,31 @@
 
 const Mongo = require(__dirname+'/db.js')
 	, cache = require(__dirname+'/../lib/redis/redis.js')
-	, db = Mongo.db.collection('nftru');
+	, db = Mongo.db.collection('nftrules');
 
 module.exports = {
 
 	db,
 
-	// null board retrieves global filters only
 	findForBoard: async (board=null, limit=0) => {
-		let filters = await cache.get(`filters:${board}`);
-		if (filters) {
-			return filters === 'no_exist' ? [] : filters;
+		let nftRules = await cache.get(`nftrules:${board}`);
+		if (nftRules) {
+			return nftRules === 'no_exist' ? [] : nftRules;
 		} else {
-			filters = await db.find({
+			nftRules = await db.find({
 				'board': board
 			}).sort({
 				'_id': -1
 			})
 				.limit(limit)
 				.toArray();
-			if (filters) {
-				cache.set(`filters:${board}`, filters, 3600);
+			if (nftRules) {
+				cache.set(`nftrules:${board}`, nftRules, 3600);
 			} else {
-				cache.set(`filters:${board}`, 'no_exist', 600);
+				cache.set(`nftrules:${board}`, 'no_exist', 600);
 			}
 		}
-		return filters;
+		return nftRules;
 	},
 
 	count: (board=null) => {
@@ -42,46 +41,40 @@ module.exports = {
 		});
 	},
 
-	updateOne: async (board=null, id, filters, strictFiltering, filterMode, filterMessage, filterBanDuration, filterBanAppealable, replaceText) => {
-		const updatedFilter = await db.updateOne({
+	updateOne: async (board=null, id, network, contractAddress, abi, tokenId) => {
+		const updatedNftRule = await db.updateOne({
 			'_id': id,
 			'board': board,
 		}, {
 			'$set': {
-				'filters': filters,
-				'strictFiltering': strictFiltering,
-				'filterMode': filterMode,
-				'filterMessage': filterMessage,
-				'filterBanDuration': filterBanDuration,
-				'filterBanAppealable': filterBanAppealable,
-				'replaceText': replaceText,
+				network, contractAddress, abi, tokenId,
 			}
 		});
-		await cache.del(`filters:${board}`);
-		return updatedFilter;
+		await cache.del(`nftrules:${board}`);
+		return updatedNftRule;
 	},
 
-	insertOne: async (filter) => {
-		const insertedFilter = await db.insertOne(filter);
-		await cache.del(`filters:${filter.board}`);
-		return insertedFilter;
+	insertOne: async (nftRule) => {
+		const insertedNftRule = await db.insertOne(nftRule);
+		await cache.del(`nftrules:${nftRule.board}`);
+		return insertedNftRule;
 	},
 
 	deleteMany: async (board=null, ids) => {
-		const deletedFilter = await db.deleteMany({
+		const deletedNftRule = await db.deleteMany({
 			'_id': {
 				'$in': ids
 			},
 			'board': board
 		});
-		await cache.del(`filters:${board}`);
-		return deletedFilter;
+		await cache.del(`nftrules:${board}`);
+		return deletedNftRule;
 	},
 
 	deleteBoard: async (board=null) => {
-		const deletedFilters = await db.deleteMany({ 'board': board });
-		await cache.del(`filters:${board}`);
-		return deletedFilters;
+		const deletedNftRules = await db.deleteMany({ 'board': board });
+		await cache.del(`nftrules:${board}`);
+		return deletedNftRules;
 	},
 
 	deleteAll: () => {

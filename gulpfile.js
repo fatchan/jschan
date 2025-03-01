@@ -242,6 +242,7 @@ async function wipe() {
 	await Modlogs.db.dropIndexes();
 	await CustomPages.db.dropIndexes();
 	await Filters.db.dropIndexes();
+	await NftRules.db.dropIndexes();
 	await CustomPages.db.createIndex({ 'board': 1, 'page': 1 }, { unique: true });
 	await Modlogs.db.createIndex({ 'board': 1 });
 	await Files.db.createIndex({ 'count': 1 });
