@@ -1,50 +1,49 @@
 'use strict';
 
-const config = require(__dirname+'/lib/misc/config.js')
-	, { Binary } = require('mongodb')
-	, Permission = require(__dirname+'/lib/permission/permission.js')
-	, { Permissions } = require(__dirname+'/lib/permission/permissions.js')
-	, { hcaptcha, google, yandex } = require(__dirname+'/configs/secrets.js')
-	, gulp = require('gulp')
-//	, pugRuntime = require('pug-runtime/build')
-	, fs = require('fs-extra')
-	, semver = require('semver')
-	, uploadDirectory = require(__dirname+'/lib/file/uploaddirectory.js')
-	, commit = require(__dirname+'/lib/misc/commit.js')
-	, replace = require('gulp-replace')
-	, less = require('gulp-less')
-	, concat = require('gulp-concat')
-	, cleanCSS = require('gulp-clean-css')
-	, uglify = require('gulp-uglify-es').default
-	, realFavicon = require('gulp-real-favicon')
-	, del = require('del')
-	, pug = require('pug')
-	, gulppug = require('gulp-pug')
-	, { migrateVersion, version } = require(__dirname+'/package.json')
-	, { randomBytes } = require('crypto')
-	, Redis = require(__dirname+'/lib/redis/redis.js')
-	, Mongo = require(__dirname+'/db/db.js')
-	, paths = {
+const config = require(__dirname + '/lib/misc/config.js'),
+	{ Binary } = require('mongodb'),
+	Permission = require(__dirname + '/lib/permission/permission.js'),
+	{ Permissions } = require(__dirname + '/lib/permission/permissions.js'),
+	{ hcaptcha, google, yandex } = require(__dirname + '/configs/secrets.js'),
+	gulp = require('gulp'),
+	fs = require('fs-extra'),
+	semver = require('semver'),
+	uploadDirectory = require(__dirname + '/lib/file/uploaddirectory.js'),
+	commit = require(__dirname + '/lib/misc/commit.js'),
+	replace = require('gulp-replace'),
+	less = require('gulp-less'),
+	concat = require('gulp-concat'),
+	cleanCSS = require('gulp-clean-css'),
+	uglify = require('gulp-uglify-es').default,
+	realFavicon = require('gulp-real-favicon'),
+	del = require('del'),
+	pug = require('pug'),
+	gulppug = require('gulp-pug'),
+	{ migrateVersion, version } = require(__dirname + '/package.json'),
+	{ randomBytes } = require('crypto'),
+	Redis = require(__dirname + '/lib/redis/redis.js'),
+	Mongo = require(__dirname + '/db/db.js'),
+	paths = {
 		styles: {
 			src: 'gulp/res/css/',
-			dest: 'static/css/'
+			dest: 'static/css/',
 		},
 		images: {
 			src: 'gulp/res/img/*',
-			dest: 'static/file/'
+			dest: 'static/file/',
 		},
 		icons: {
 			src: 'gulp/res/icons/*',
-			dest: 'static/file/'
+			dest: 'static/file/',
 		},
 		scripts: {
 			src: 'gulp/res/js',
-			dest: 'static/js/'
+			dest: 'static/js/',
 		},
 		pug: {
 			src: 'views/',
-			dest: 'static/html/'
-		}
+			dest: 'static/html/',
+		},
 	};
 
 // File where the favicon markups are stored
@@ -54,7 +53,7 @@ var FAVICON_DATA_FILE = 'gulp/res/icons/faviconData.json';
 // You should run it at least once to create the icons. Then,
 // you should run it whenever RealFaviconGenerator updates its
 // package (see the check-for-favicon-update task below).
-gulp.task('generate-favicon', function(done) {
+gulp.task('generate-favicon', function (done) {
 	realFavicon.generateFavicon({
 		masterPicture: 'gulp/res/icons/master.png',
 		dest: 'gulp/res/icons',
@@ -68,11 +67,11 @@ gulp.task('generate-favicon', function(done) {
 					ios6AndPriorIcons: false,
 					ios7AndLaterIcons: false,
 					precomposedIcons: false,
-					declareOnlyDefaultIcon: true
-				}
+					declareOnlyDefaultIcon: true,
+				},
 			},
 			desktopBrowser: {
-				design: 'raw'
+				design: 'raw',
 			},
 			windows: {
 				pictureAspect: 'whiteSilhouette',
@@ -84,9 +83,9 @@ gulp.task('generate-favicon', function(done) {
 						small: false,
 						medium: true,
 						big: false,
-						rectangle: false
-					}
-				}
+						rectangle: false,
+					},
+				},
 			},
 			androidChrome: {
 				pictureAspect: 'shadow',
@@ -95,33 +94,37 @@ gulp.task('generate-favicon', function(done) {
 					display: 'standalone',
 					orientation: 'notSet',
 					onConflict: 'override',
-					declared: true
+					declared: true,
 				},
 				assets: {
 					legacyIcon: false,
-					lowResolutionIcons: false
-				}
+					lowResolutionIcons: false,
+				},
 			},
 			safariPinnedTab: {
 				pictureAspect: 'blackAndWhite',
 				threshold: 30,
-				themeColor: '#990000'
-			}
+				themeColor: '#990000',
+			},
 		},
 		settings: {
 			scalingAlgorithm: 'Lanczos',
 			errorOnImageTooSmall: false,
 			readmeFile: false,
 			htmlCodeFile: true,
-			usePathAsIs: false
+			usePathAsIs: false,
 		},
 		versioning: {
 			paramName: 'v',
-			paramValue: commit
+			paramValue: commit,
 		},
-		markupFile: FAVICON_DATA_FILE
-	}, function() {
-		fs.writeFileSync('gulp/res/icons/html_code.html', JSON.parse(fs.readFileSync(FAVICON_DATA_FILE)).favicon.html_code, 'utf8');
+		markupFile: FAVICON_DATA_FILE,
+	}, function () {
+		fs.writeFileSync(
+			'gulp/res/icons/html_code.html',
+			JSON.parse(fs.readFileSync(FAVICON_DATA_FILE)).favicon.html_code,
+			'utf8',
+		);
 		done();
 	});
 });
@@ -130,9 +133,9 @@ gulp.task('generate-favicon', function(done) {
 // released a new Touch icon along with the latest version of iOS).
 // Run this task from time to time. Ideally, make it part of your
 // continuous integration system.
-gulp.task('check-for-favicon-update', function(done) {
+gulp.task('check-for-favicon-update', function (done) {
 	var currentVersion = JSON.parse(fs.readFileSync(FAVICON_DATA_FILE)).version;
-	realFavicon.checkForUpdates(currentVersion, function(err) {
+	realFavicon.checkForUpdates(currentVersion, function (err) {
 		if (err) {
 			throw err;
 		}
@@ -141,38 +144,72 @@ gulp.task('check-for-favicon-update', function(done) {
 });
 
 async function password() {
-	const { Accounts } = require(__dirname+'/db/');
+	const { Accounts } = require(__dirname + '/db/');
 	const randomPassword = randomBytes(20).toString('base64');
 	await Accounts.changePassword('admin', randomPassword);
 	const ROOT = new Permission();
 	ROOT.setAll(Permission.allPermissions);
 	await Accounts.setAccountPermissions('admin', ROOT);
-	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
+	console.log(
+		'=====LOGIN DETAILS=====\nusername: admin\npassword:',
+		randomPassword,
+		'\n=======================',
+	);
 }
 
 async function ips() {
-	const { func: ipSchedule } = require(__dirname+'/schedules/tasks/ips.js');
+	const { func: ipSchedule } = require(__dirname + '/schedules/tasks/ips.js');
 	await ipSchedule();
 }
 
 async function wipe() {
 	const db = Mongo.db;
 
-	const defaultConfig = require(__dirname+'/configs/template.js.example');
+	const defaultConfig = require(__dirname + '/configs/template.js.example');
 	await Mongo.setConfig(defaultConfig);
 
-	const collectionNames = ['accounts', 'bans', 'custompages', 'boards', 'captcha', 'files',
-		'modlog', 'filters', 'news', 'posts', 'poststats', 'ratelimit', 'bypass', 'roles'];
+	const collectionNames = [
+		'accounts',
+		'bans',
+		'custompages',
+		'boards',
+		'captcha',
+		'files',
+		'modlog',
+		'filters',
+		'news',
+		'posts',
+		'poststats',
+		'ratelimit',
+		'bypass',
+		'roles',
+		'nftrules',
+	];
 	for (const name of collectionNames) {
-		//drop collection so gulp reset can be run again. ignores error of dropping non existing collection first time
+    //drop collection so gulp reset can be run again. ignores error of dropping non existing collection first time
 		await db.dropCollection(name).catch(() => {});
 		await db.createCollection(name);
 	}
 
-	const { Boards, Posts, Captchas, Ratelimits, News, CustomPages,
-		Accounts, Files, Stats, Modlogs, Filters, Bans, Bypass, Roles } = require(__dirname+'/db/');
+	const {
+		Boards,
+		Posts,
+		Captchas,
+		Ratelimits,
+		News,
+		CustomPages,
+		NftRules,
+		Accounts,
+		Files,
+		Stats,
+		Modlogs,
+		Filters,
+		Bans,
+		Bypass,
+		Roles,
+	} = require(__dirname + '/db/');
 
-	//wipe db shit
+  //wipe db shit
 	await Promise.all([
 		Redis.deletePattern('*'),
 		Captchas.deleteAll(),
@@ -188,14 +225,15 @@ async function wipe() {
 		Bypass.deleteAll(),
 		News.deleteAll(),
 		Filters.deleteAll(),
+		NftRules.deleteAll(),
 	]);
 
-	//add indexes - should profiled and changed at some point if necessary
-	await Stats.db.createIndex({board:1, hour:1});
-	await Boards.db.createIndex({ips: 1, pph:1, sequence_value:1});
-	await Boards.db.createIndex({tags: 1});
-	await Boards.db.createIndex({uri: 1});
-	await Boards.db.createIndex({lastPostTimestamp:1});
+  //add indexes - should profiled and changed at some point if necessary
+	await Stats.db.createIndex({ board: 1, hour: 1 });
+	await Boards.db.createIndex({ ips: 1, pph: 1, sequence_value: 1 });
+	await Boards.db.createIndex({ tags: 1 });
+	await Boards.db.createIndex({ uri: 1 });
+	await Boards.db.createIndex({ lastPostTimestamp: 1 });
 	await Roles.db.dropIndexes();
 	await Bans.db.dropIndexes();
 	await Captchas.db.dropIndexes();
@@ -208,53 +246,91 @@ async function wipe() {
 	await Modlogs.db.createIndex({ 'board': 1 });
 	await Files.db.createIndex({ 'count': 1 });
 	await Filters.db.createIndex({ 'board': 1 });
-	await Bans.db.createIndex({ 'ip.cloak': 1 , 'board': 1 });
+	await NftRules.db.createIndex({ 'board': 1 });
+	await Bans.db.createIndex({ 'ip.cloak': 1, 'board': 1 });
 	await Bans.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 }); //custom expiry, i.e. it will expire when current date > than this date
 	await Bypass.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 0 });
 	await Captchas.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 300 }); //captchas valid for 5 minutes
-	await Ratelimits.db.createIndex({ 'expireAt': 1 }, { expireAfterSeconds: 60 }); //per minute captcha ratelimit
-	await Posts.db.createIndex({ 'postId': 1,'board': 1,});
-	await Posts.db.createIndex({ 'board': 1,	'thread': 1, 'bumped': -1 });
-	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, { 'partialFilterExpression': { 'reports.0': { '$exists': true } } });
-	await Posts.db.createIndex({ 'globalreports.0': 1 }, { 'partialFilterExpression': {	'globalreports.0': { '$exists': true } } });
+	await Ratelimits.db.createIndex({ 'expireAt': 1 }, {
+		expireAfterSeconds: 60,
+	}); //per minute captcha ratelimit
+	await Posts.db.createIndex({ 'postId': 1, 'board': 1 });
+	await Posts.db.createIndex({ 'board': 1, 'thread': 1, 'bumped': -1 });
+	await Posts.db.createIndex({ 'board': 1, 'reports.0': 1 }, {
+		'partialFilterExpression': { 'reports.0': { '$exists': true } },
+	});
+	await Posts.db.createIndex({ 'globalreports.0': 1 }, {
+		'partialFilterExpression': { 'globalreports.0': { '$exists': true } },
+	});
 
 	const ANON = new Permission();
 	ANON.setAll([
-		Permissions.USE_MARKDOWN_PINKTEXT, Permissions.USE_MARKDOWN_GREENTEXT, Permissions.USE_MARKDOWN_BOLD, 
-		Permissions.USE_MARKDOWN_UNDERLINE, Permissions.USE_MARKDOWN_STRIKETHROUGH, Permissions.USE_MARKDOWN_TITLE, 
-		Permissions.USE_MARKDOWN_ITALIC, Permissions.USE_MARKDOWN_SPOILER, Permissions.USE_MARKDOWN_MONO, 
-		Permissions.USE_MARKDOWN_CODE, Permissions.USE_MARKDOWN_DETECTED, Permissions.USE_MARKDOWN_LINK, 
-		Permissions.USE_MARKDOWN_DICE, Permissions.USE_MARKDOWN_FORTUNE, Permissions.CREATE_BOARD, 
-		Permissions.CREATE_ACCOUNT
+		Permissions.USE_MARKDOWN_PINKTEXT,
+		Permissions.USE_MARKDOWN_GREENTEXT,
+		Permissions.USE_MARKDOWN_BOLD,
+		Permissions.USE_MARKDOWN_UNDERLINE,
+		Permissions.USE_MARKDOWN_STRIKETHROUGH,
+		Permissions.USE_MARKDOWN_TITLE,
+		Permissions.USE_MARKDOWN_ITALIC,
+		Permissions.USE_MARKDOWN_SPOILER,
+		Permissions.USE_MARKDOWN_MONO,
+		Permissions.USE_MARKDOWN_CODE,
+		Permissions.USE_MARKDOWN_DETECTED,
+		Permissions.USE_MARKDOWN_LINK,
+		Permissions.USE_MARKDOWN_DICE,
+		Permissions.USE_MARKDOWN_FORTUNE,
+		Permissions.CREATE_BOARD,
+		Permissions.CREATE_ACCOUNT,
 	]);
 	const BOARD_STAFF_DEFAULTS = new Permission(ANON.base64);
 	BOARD_STAFF_DEFAULTS.setAll([
-		Permissions.MANAGE_BOARD_GENERAL, Permissions.MANAGE_BOARD_BANS, Permissions.MANAGE_BOARD_LOGS,
+		Permissions.MANAGE_BOARD_GENERAL,
+		Permissions.MANAGE_BOARD_BANS,
+		Permissions.MANAGE_BOARD_LOGS,
 	]);
 	const BOARD_STAFF = new Permission(ANON.base64);
 	BOARD_STAFF.setAll([
-		Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF, Permissions.MANAGE_BOARD_CUSTOMISATION,
-		Permissions.MANAGE_BOARD_SETTINGS
+		Permissions.MANAGE_BOARD_OWNER,
+		Permissions.MANAGE_BOARD_STAFF,
+		Permissions.MANAGE_BOARD_CUSTOMISATION,
+		Permissions.MANAGE_BOARD_SETTINGS,
 	]);
 	const BOARD_OWNER_DEFAULTS = new Permission(BOARD_STAFF_DEFAULTS.base64);
 	BOARD_OWNER_DEFAULTS.setAll([
-		Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF, Permissions.MANAGE_BOARD_CUSTOMISATION,
-		Permissions.MANAGE_BOARD_SETTINGS, Permissions.USE_MARKDOWN_IMAGE
+		Permissions.MANAGE_BOARD_OWNER,
+		Permissions.MANAGE_BOARD_STAFF,
+		Permissions.MANAGE_BOARD_CUSTOMISATION,
+		Permissions.MANAGE_BOARD_SETTINGS,
+		Permissions.USE_MARKDOWN_IMAGE,
 	]);
 	const BOARD_OWNER = new Permission(BOARD_STAFF.base64);
 	BOARD_OWNER.setAll([
-		Permissions.MANAGE_BOARD_OWNER, Permissions.MANAGE_BOARD_STAFF, Permissions.MANAGE_BOARD_CUSTOMISATION, 
-		Permissions.MANAGE_BOARD_SETTINGS, Permissions.USE_MARKDOWN_IMAGE
+		Permissions.MANAGE_BOARD_OWNER,
+		Permissions.MANAGE_BOARD_STAFF,
+		Permissions.MANAGE_BOARD_CUSTOMISATION,
+		Permissions.MANAGE_BOARD_SETTINGS,
+		Permissions.USE_MARKDOWN_IMAGE,
 	]);
 	const GLOBAL_STAFF = new Permission(BOARD_OWNER.base64);
 	GLOBAL_STAFF.setAll([
-		Permissions.MANAGE_GLOBAL_GENERAL, Permissions.MANAGE_GLOBAL_BANS, Permissions.MANAGE_GLOBAL_LOGS, Permissions.MANAGE_GLOBAL_NEWS, 
-		Permissions.MANAGE_GLOBAL_BOARDS, Permissions.MANAGE_GLOBAL_SETTINGS, Permissions.MANAGE_BOARD_OWNER, Permissions.BYPASS_FILTERS, 
-		Permissions.BYPASS_BANS, Permissions.BYPASS_SPAMCHECK, Permissions.BYPASS_RATELIMITS, Permissions.USE_MARKDOWN_IMAGE
+		Permissions.MANAGE_GLOBAL_GENERAL,
+		Permissions.MANAGE_GLOBAL_BANS,
+		Permissions.MANAGE_GLOBAL_LOGS,
+		Permissions.MANAGE_GLOBAL_NEWS,
+		Permissions.MANAGE_GLOBAL_BOARDS,
+		Permissions.MANAGE_GLOBAL_SETTINGS,
+		Permissions.MANAGE_BOARD_OWNER,
+		Permissions.BYPASS_FILTERS,
+		Permissions.BYPASS_BANS,
+		Permissions.BYPASS_SPAMCHECK,
+		Permissions.BYPASS_RATELIMITS,
+		Permissions.USE_MARKDOWN_IMAGE,
 	]);
 	const ADMIN = new Permission(GLOBAL_STAFF.base64);
 	ADMIN.setAll([
-		Permissions.MANAGE_GLOBAL_ACCOUNTS, Permissions.MANAGE_GLOBAL_ROLES, Permissions.VIEW_RAW_IP, 
+		Permissions.MANAGE_GLOBAL_ACCOUNTS,
+		Permissions.MANAGE_GLOBAL_ROLES,
+		Permissions.VIEW_RAW_IP,
 	]);
 	const ROOT = new Permission();
 	ROOT.setAll(Permission.allPermissions);
@@ -262,8 +338,14 @@ async function wipe() {
 		{ name: 'ANON', permissions: Binary(ANON.array) },
 		{ name: 'BOARD_STAFF', permissions: Binary(BOARD_STAFF.array) },
 		{ name: 'BOARD_OWNER', permissions: Binary(BOARD_OWNER.array) },
-		{ name: 'BOARD_STAFF_DEFAULTS', permissions: Binary(BOARD_STAFF_DEFAULTS.array) },
-		{ name: 'BOARD_OWNER_DEFAULTS', permissions: Binary(BOARD_OWNER_DEFAULTS.array) },
+		{
+			name: 'BOARD_STAFF_DEFAULTS',
+			permissions: Binary(BOARD_STAFF_DEFAULTS.array),
+		},
+		{
+			name: 'BOARD_OWNER_DEFAULTS',
+			permissions: Binary(BOARD_OWNER_DEFAULTS.array),
+		},
 		{ name: 'GLOBAL_STAFF', permissions: Binary(GLOBAL_STAFF.array) },
 		{ name: 'ADMIN', permissions: Binary(ADMIN.array) },
 		{ name: 'ROOT', permissions: Binary(ROOT.array) },
@@ -271,27 +353,31 @@ async function wipe() {
 
 	const randomPassword = randomBytes(20).toString('base64');
 	await Accounts.insertOne('admin', 'admin', randomPassword, ROOT);
-	console.log('=====LOGIN DETAILS=====\nusername: admin\npassword:', randomPassword, '\n=======================');
+	console.log(
+		'=====LOGIN DETAILS=====\nusername: admin\npassword:',
+		randomPassword,
+		'\n=======================',
+	);
 
 	await db.collection('version').replaceOne({
-		'_id': 'version'
+		'_id': 'version',
 	}, {
 		'_id': 'version',
-		'version': migrateVersion
+		'version': migrateVersion,
 	}, {
-		upsert: true
+		upsert: true,
 	});
 
 	await Promise.all([
-		del([ 'static/file/*' ]),
-		del([ 'static/captcha/*' ]),
-		del([ 'static/html/*' ]),
-		del([ 'static/json/*' ]),
-		del([ 'static/banner/*' ]),
-		del([ 'static/flag/*' ]),
-		del([ 'static/asset/*' ]),
-		del([ 'static/css/*' ]),
-		del([ 'static/js/*' ]),
+		del(['static/file/*']),
+		del(['static/captcha/*']),
+		del(['static/html/*']),
+		del(['static/json/*']),
+		del(['static/banner/*']),
+		del(['static/flag/*']),
+		del(['static/asset/*']),
+		del(['static/css/*']),
+		del(['static/js/*']),
 	]);
 
 	return Promise.all([
@@ -299,16 +385,15 @@ async function wipe() {
 		fs.ensureDir(`${uploadDirectory}/file/thumb`),
 		fs.ensureDir(paths.scripts.dest),
 	]);
-
 }
 
 //update the css file
 async function css() {
 	try {
-		//a little more configurable
-		let bypassHeight
-			, captchaHeight
-			, captchaWidth;
+    //a little more configurable
+		let bypassHeight,
+			captchaHeight,
+			captchaWidth;
 		switch (config.get.captchaOptions.type) {
 			case 'google':
 			case 'hcaptcha':
@@ -324,8 +409,8 @@ async function css() {
 			case 'grid':
 			case 'grid2':
 				bypassHeight = 330;
-				captchaHeight = config.get.captchaOptions.grid.imageSize+30;
-				captchaWidth = config.get.captchaOptions.grid.imageSize+30;
+				captchaHeight = config.get.captchaOptions.grid.imageSize + 30;
+				captchaWidth = config.get.captchaOptions.grid.imageSize + 30;
 				break;
 			case 'text':
 				bypassHeight = 235;
@@ -344,21 +429,25 @@ async function css() {
     --bypass-height: ${bypassHeight}px;
 }`;
 		fs.writeFileSync('gulp/res/css/locals.css', cssLocals);
-		fs.symlinkSync(__dirname+'/node_modules/highlight.js/styles', __dirname+'/gulp/res/css/codethemes', 'dir');
+		fs.symlinkSync(
+			__dirname + '/node_modules/highlight.js/styles',
+			__dirname + '/gulp/res/css/codethemes',
+			'dir',
+		);
 	} catch (e) {
 		if (e.code !== 'EEXIST') {
-			//already exists, ignore error
+      //already exists, ignore error
 			console.log(e);
 		}
 	}
-	//move themes css to output folder
+  //move themes css to output folder
 	await gulp.src([
 		`${paths.styles.src}/themes/*.css`,
 	])
 		.pipe(less())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(`${paths.styles.dest}/themes/`));
-	//replace url( in codethemes to correct basepath of images, and move to output folder
+  //replace url( in codethemes to correct basepath of images, and move to output folder
 	await gulp.src([
 		`${paths.styles.src}/codethemes/*.css`,
 	])
@@ -367,13 +456,13 @@ async function css() {
 		.pipe(cleanCSS())
 		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/`));
 
-	//move assets for code codethemes/assets folder
+  //move assets for code codethemes/assets folder
 	await gulp.src([
 		`${paths.styles.src}/codethemes/*`,
 		`!${paths.styles.src}/codethemes/*.css`,
 	])
 		.pipe(gulp.dest(`${paths.styles.dest}/codethemes/assets/`));
-	//move assets for themes to theme/assets folder
+  //move assets for themes to theme/assets folder
 	await gulp.src([
 		`${paths.styles.src}/themes/assets/*`,
 	])
@@ -427,13 +516,13 @@ async function cache() {
 }
 
 function deletehtml() {
-	return del([ 'static/html/*' ]);
+	return del(['static/html/*']);
 }
 
 async function custompages() {
-	const formatSize = require(__dirname+'/lib/converter/formatsize.js')
-		, i18n = require(__dirname+'/lib/locale/locale.js')
-		, locals = {
+	const formatSize = require(__dirname + '/lib/converter/formatsize.js'),
+		i18n = require(__dirname + '/lib/locale/locale.js'),
+		locals = {
 			Permissions,
 			early404Fraction: config.get.early404Fraction,
 			early404Replies: config.get.early404Replies,
@@ -465,19 +554,19 @@ async function custompages() {
 		`${paths.pug.src}/pages/500.pug`,
 		`${paths.pug.src}/pages/502.pug`,
 		`${paths.pug.src}/pages/503.pug`,
-		`${paths.pug.src}/pages/504.pug`
+		`${paths.pug.src}/pages/504.pug`,
 	])
 		.pipe(gulppug({ locals }))
 		.pipe(gulp.dest(paths.pug.dest));
 }
 
 async function langs() {
-	const i18n = require(__dirname+'/lib/locale/locale.js');
-	await del([ 'static/js/lang/' ]);
+	const i18n = require(__dirname + '/lib/locale/locale.js');
+	await del(['static/js/lang/']);
 	fs.mkdirSync(`${paths.scripts.dest}lang/`, { recursive: true });
-	const feStrings = require(__dirname+'/tools/festrings.json');
+	const feStrings = require(__dirname + '/tools/festrings.json');
 	Object.entries(i18n.getCatalog())
-		.forEach(entry => {
+		.forEach((entry) => {
 			const [lang, dict] = entry;
 			const minimalDict = feStrings.reduce((acc, key) => {
 				acc[key] = dict[key];
@@ -490,12 +579,11 @@ const TRANSLATIONS = ${JSON.stringify(minimalDict)};`;
 }
 
 async function scripts() {
-	const { themes, codeThemes } = require(__dirname+'/lib/misc/themes.js');
+	const { themes, codeThemes } = require(__dirname + '/lib/misc/themes.js');
 	try {
-
-		// compile some locals/variables needed from configs in fe scripts
+    // compile some locals/variables needed from configs in fe scripts
 		const captchaOptions = config.get.captchaOptions;
-		//smaller set of captchaoptions needed for some frontend scripts to build includes
+    //smaller set of captchaoptions needed for some frontend scripts to build includes
 		const reducedCaptchaOptions = {
 			grid: {
 				size: captchaOptions.grid.size,
@@ -508,43 +596,72 @@ const codeThemes = ['${codeThemes.join('\', \'')}'];
 const captchaOptions = ${JSON.stringify(reducedCaptchaOptions)};
 const SERVER_TIMEZONE = '${Intl.DateTimeFormat().resolvedOptions().timeZone}';
 const settings = ${JSON.stringify(config.get.frontendScriptDefault)};
-const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksURL: config.get.reverseImageLinksURL, ethereumLinksURL: config.get.ethereumLinksURL })};
+const extraLocals = ${
+	JSON.stringify({
+		meta: config.get.meta,
+		reverseImageLinksURL: config.get.reverseImageLinksURL,
+		ethereumLinksURL: config.get.ethereumLinksURL,
+	})
+};
 `;
 		fs.writeFileSync('gulp/res/js/locals.js', locals);
 
-//		const pugRuntimeFuncs = pugRuntime(['classes', 'style', 'attr', 'escape']);
-//		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);
-		
-		//compile some pug client side functions
-		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher', 'banmessage']
-			.forEach(templateName => {
+    //		const pugRuntimeFuncs = pugRuntime(['classes', 'style', 'attr', 'escape']);
+    //		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);
+
+    //compile some pug client side functions
+		[
+			'modal',
+			'post',
+			'uploaditem',
+			'pugfilters',
+			'captchaformsection',
+			'watchedthread',
+			'threadwatcher',
+			'banmessage',
+		]
+			.forEach((templateName) => {
 				const compilationOptions = {
 					compileDebug: false,
 					debug: false,
 					name: templateName,
 					inlineRuntimeFunctions: true, //note pugRuntime above, will fix pending issue open on pug github
 				};
-				const compiledClient = pug.compileFileClient(`${paths.pug.src}includes/${templateName}.pug`, compilationOptions);
+				const compiledClient = pug.compileFileClient(
+					`${paths.pug.src}includes/${templateName}.pug`,
+					compilationOptions,
+				);
 				fs.writeFileSync(`gulp/res/js/${templateName}.js`, compiledClient);
 			});
 
-		//symlink web3
-		await fs.symlink(__dirname+'/node_modules/web3/dist/web3.min.js', __dirname+'/gulp/res/js/web3.js', 'file')
-			.catch(e => { console.warn(e); });
-		//symlink socket.io file
-		await fs.symlink(__dirname+'/node_modules/socket.io/client-dist/socket.io.min.js', __dirname+'/gulp/res/js/socket.io.js', 'file')
-			.catch(e => { console.warn(e); });
-
+    //symlink web3
+		await fs.symlink(
+			__dirname + '/node_modules/web3/dist/web3.min.js',
+			__dirname + '/gulp/res/js/web3.js',
+			'file',
+		)
+			.catch((e) => {
+				console.warn(e);
+			});
+    //symlink socket.io file
+		await fs.symlink(
+			__dirname + '/node_modules/socket.io/client-dist/socket.io.min.js',
+			__dirname + '/gulp/res/js/socket.io.js',
+			'file',
+		)
+			.catch((e) => {
+				console.warn(e);
+			});
 	} catch (e) {
 		console.log(e);
 	}
 
 	gulp.src([
-		//put scripts in order for dependencies
+    //put scripts in order for dependencies
 		`${paths.scripts.src}/locals.js`,
 		`${paths.scripts.src}/i18n.js`,
 		`${paths.scripts.src}/localstorage.js`,
-//		`${paths.scripts.src}/pugruntime.js`,
+    //		`${paths.scripts.src}/pugruntime.js`,
 		`${paths.scripts.src}/modal.js`,
 		`${paths.scripts.src}/pugfilters.js`,
 		`${paths.scripts.src}/banmessage.js`,
@@ -568,14 +685,14 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`!${paths.scripts.src}/renderweb3.js`,
 	])
 		.pipe(concat('all.js'))
-		.pipe(uglify({compress:true}))
+		.pipe(uglify({ compress: true }))
 		.pipe(gulp.dest(paths.scripts.dest));
 
 	gulp.src([
 		`${paths.scripts.src}/web3.js`,
 	])
 		.pipe(concat('web3.js'))
-		// .pipe(uglify({compress:true})) //No need, we symlink from web3.min.js
+    // .pipe(uglify({compress:true})) //No need, we symlink from web3.min.js
 		.pipe(gulp.dest(paths.scripts.dest));
 
 	return gulp.src([
@@ -591,37 +708,40 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`${paths.scripts.src}/renderweb3.js`,
 	])
 		.pipe(concat('render.js'))
-		.pipe(uglify({compress:true}))
+		.pipe(uglify({ compress: true }))
 		.pipe(gulp.dest(paths.scripts.dest));
-
 }
 
 async function migrate() {
 	const db = Mongo.db;
 
-	//get current version from db if present (set in 'reset' task in recent versions)
+  //get current version from db if present (set in 'reset' task in recent versions)
 	let currentVersion = await db.collection('version').findOne({
-		'_id': 'version'
-	}).then(res => res ? res.version : '0.0.0'); // 0.0.0 for old versions
+		'_id': 'version',
+	}).then((res) => res ? res.version : '0.0.0'); // 0.0.0 for old versions
 
 	if (semver.lt(currentVersion, migrateVersion)) {
 		console.log(`Current version: ${currentVersion}`);
-		const migrations = require(__dirname+'/migrations/');
+		const migrations = require(__dirname + '/migrations/');
 		const migrationVersions = Object.keys(migrations)
 			.sort(semver.compare)
-			.filter(v => semver.gt(v, currentVersion));
-		console.log(`Migrations needed: ${currentVersion} -> ${migrationVersions.join(' -> ')}`);
+			.filter((v) => semver.gt(v, currentVersion));
+		console.log(
+			`Migrations needed: ${currentVersion} -> ${
+				migrationVersions.join(' -> ')
+			}`,
+		);
 		for (let ver of migrationVersions) {
 			console.log(`=====\nStarting migration to version ${ver}`);
 			try {
 				await migrations[ver](db, Redis);
 				await db.collection('version').replaceOne({
-					'_id': 'version'
+					'_id': 'version',
 				}, {
 					'_id': 'version',
-					'version': ver
+					'version': ver,
 				}, {
-					upsert: true
+					upsert: true,
 				});
 			} catch (e) {
 				console.error(e);
@@ -631,12 +751,14 @@ async function migrate() {
 			console.log(`Finished migrating to version ${ver}`);
 		}
 	} else {
-		console.log(`Migration not required, you are already on the current version (${migrateVersion})`);
+		console.log(
+			`Migration not required, you are already on the current version (${migrateVersion})`,
+		);
 	}
 }
 
 async function init() {
-	const defaultConfig = require(__dirname+'/configs/template.js.example');
+	const defaultConfig = require(__dirname + '/configs/template.js.example');
 	await Mongo.connect();
 	const globalSettings = await Mongo.getConfig();
 	if (!globalSettings) {
@@ -652,7 +774,12 @@ async function closeConnections() {
 	}
 }
 
-const build = gulp.parallel(gulp.series(scripts, langs, css), images, icons, gulp.series(deletehtml, custompages));
+const build = gulp.parallel(
+	gulp.series(scripts, langs, css),
+	images,
+	icons,
+	gulp.series(deletehtml, custompages),
+);
 
 //godhelpme
 module.exports = {
@@ -675,5 +802,5 @@ module.exports = {
 		css,
 		scripts,
 		custompages,
-	}
+	},
 };
