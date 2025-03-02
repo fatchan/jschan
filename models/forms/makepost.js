@@ -34,7 +34,7 @@ const { createHash, randomBytes } = require('crypto')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js')
-	, { hasNftFromCollection } = require(__dirname+'/../../lib/web3/web3.js')
+	, { hasNftFromCollection, checkNftOwnership } = require(__dirname+'/../../lib/web3/web3.js')
 	, FIELDS_TO_REPLACE = ['email', 'subject', 'message'];
 
 module.exports = async (req, res) => {
@@ -117,9 +117,19 @@ module.exports = async (req, res) => {
 	if (res.locals.board.settings.enableWeb3) {
 		const nftRules = await NftRules.findForBoard(req.params.board);
 		if (nftRules && nftRules.length > 0) {
-			const userAddress = '0xd00017473fa90B38321a19a05377d6379854A0cb';
-			const nftData = await hasNftFromCollection(nftRules[0].network, nftRules[0].contractAddress, JSON.parse(nftRules[0].abi), userAddress);
-			console.log(nftData);
+			const userAddress = res.locals.recoveredAddress;
+			const nftChecks = await Promise.all(nftRules.map(async (rule) => {
+				const { network, contractAddress, abi, tokenId } = rule;
+				const parsedAbi = JSON.parse(abi);
+				if (!tokenId) {
+					return await hasNftFromCollection(network, contractAddress, parsedAbi, userAddress);
+				} else {
+					return await checkNftOwnership(network, contractAddress, parsedAbi, userAddress, tokenId);
+				}
+			}));
+			const passedNftRules = nftRules.filter((_, index) => nftChecks[index]);
+			//TODO: if trying to do something they dont
+			console.log('passed nft rules', passedNftRules);
 		}
 	}
 
