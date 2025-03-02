@@ -1,0 +1,17 @@
+extends ../layout.pug
+include ../mixins/managenav.pug
+include ../mixins/boardheader.pug
+
+block head
+	title /#{board._id}/ - #{__('Edit NFT Rule')}
+
+block content
+	+boardheader(__('Edit NFT Rule'))
+	br
+	+managenav('nfts', true)
+	hr(size=1)
+	h4.no-m-p
+		| #{__('Edit NFT Rule')}:
+	.form-wrapper.flex-center.mv-10
+		form.form-post(action=`/forms/board/${board._id}/editnftrule` method='POST')
+			include ../includes/nftruleeditform.pug

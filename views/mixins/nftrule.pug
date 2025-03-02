@@ -4,6 +4,8 @@ mixin nftRule(nftr)
 		td
 			input.left.post-check(type='checkbox', name='checkednftrules' value=nftr._id)
 		td
+			| #{nftr.name}
+		td
 			select(name='network' disabled)
 				option(value='ethereum', selected=nftr.network === 'ethereum') #{__('Ethereum')}
 				option(value='base', selected=nftr.network === 'base') #{__('Base')}
@@ -16,3 +18,5 @@ mixin nftRule(nftr)
 			input(type='text' name='token_id' value=nftr.tokenId readonly placeholder='(Any in collection)')
 		td
 			| todo permissions stuff
+		td
+			a.right.ml-5(href=`./editnftrule/${nftr._id}.html`) [#{__('Edit')}]

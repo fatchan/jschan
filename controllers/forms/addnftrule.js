@@ -8,7 +8,7 @@ const addNftRule = require(__dirname+'/../../models/forms/addnftrule.js')
 module.exports = {
 
 	paramConverter: paramConverter({
-		trimFields: ['network', 'contract_address', 'abi'],
+		trimFields: ['name', 'network', 'contract_address', 'abi'],
 		numberFields: ['token_id'],
 	}),
 
@@ -17,9 +17,10 @@ module.exports = {
 		const { __ } = res.locals;
 
 		const errors = await checkSchema([
+			{ result: lengthBody(req.body.name, 1), expected: false, error: __('Missing name') },
 			{ result: lengthBody(req.body.contract_address, 42, 42), expected: false, error: __('Invalid contract address') },
 			{ result: inArrayBody(req.body.network, ['ethereum', 'arbitrum', 'base']), expected: true, error: __('Invalid network') },
-			{ result: lengthBody(req.body.abi, 0), expected: false, error: __('Invalid ABI') },
+			{ result: lengthBody(req.body.abi, 1), expected: false, error: __('Invalid ABI') },
 			//TODO: permissions validation?
 		]);
 

@@ -6,7 +6,7 @@ const { createHash, randomBytes } = require('crypto')
 	, uploadDirectory = require(__dirname+'/../../lib/file/uploaddirectory.js')
 	, Mongo = require(__dirname+'/../../db/db.js')
 	, Socketio = require(__dirname+'/../../lib/misc/socketio.js')
-	, { Stats, Posts, Boards, Files, Filters } = require(__dirname+'/../../db/')
+	, { Stats, Posts, Boards, Files, Filters, NftRules } = require(__dirname+'/../../db/')
 	, cache = require(__dirname+'/../../lib/redis/redis.js')
 	, nameHandler = require(__dirname+'/../../lib/post/name.js')
 	, getFilterStrings = require(__dirname+'/../../lib/post/getfilterstrings.js')
@@ -34,6 +34,7 @@ const { createHash, randomBytes } = require('crypto')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js')
+	, { hasNftFromCollection } = require(__dirname+'/../../lib/web3/web3.js')
 	, FIELDS_TO_REPLACE = ['email', 'subject', 'message'];
 
 module.exports = async (req, res) => {
@@ -109,6 +110,16 @@ module.exports = async (req, res) => {
 				'message': __('Thread reached reply limit'),
 				'redirect': redirect
 			});
+		}
+	}
+
+	// let { nftReplies, nftThreads, nftFiles, nftLinks }
+	if (res.locals.board.settings.enableWeb3) {
+		const nftRules = await NftRules.findForBoard(req.params.board);
+		if (nftRules && nftRules.length > 0) {
+			const userAddress = '0xd00017473fa90B38321a19a05377d6379854A0cb';
+			const nftData = await hasNftFromCollection(nftRules[0].network, nftRules[0].contractAddress, JSON.parse(nftRules[0].abi), userAddress);
+			console.log(nftData);
 		}
 	}
 

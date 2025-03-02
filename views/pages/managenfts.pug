@@ -26,11 +26,13 @@ block content
 					table
 						tr
 							th
+							th #{__('Name')}
 							th #{__('Network')}
 							th #{__('Contract Address')}
 							th #{__('Contract ABI')}
 							th #{__('Token ID')}
 							th #{__('Permissions')}
+							th
 						each nftr in nftRules
 							+nftRule(nftr)
 				input(type='submit', value=__('Delete'))

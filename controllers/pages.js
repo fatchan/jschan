@@ -19,7 +19,7 @@ const express  = require('express')
 	, { setBoardLanguage, setQueryLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
 	//page models
 	, { manageRecent, manageReports, manageAssets, manageSettings, manageBans, manageFilters, editFilter, editCustomPage, manageMyPermissions,
-		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages, manageStaff, editStaff, editPost, manageNfts } = require(__dirname+'/../models/pages/manage/')
+		manageBoard, manageThread, manageLogs, manageCatalog, manageCustomPages, manageStaff, editStaff, editPost, manageNfts, editNftRule } = require(__dirname+'/../models/pages/manage/')
 	, { globalManageSettings, globalManageReports, globalManageBans, globalManageBoards, globalManageFilters, globalEditFilter, editNews, editAccount, editRole,
 		globalManageRecent, globalManageAccounts, globalManageNews, globalManageLogs, globalManageRoles } = require(__dirname+'/../models/pages/globalmanage/')
 	, { changePassword, blockBypass, home, register, login, create, myPermissions, sessions, setupTwoFactor,
@@ -28,6 +28,7 @@ const express  = require('express')
 	, threadParamConverter = paramConverter({ processThreadIdParam: true })
 	, logParamConverter = paramConverter({ processDateParam: true })
 	, filterParamConverter = paramConverter({ objectIdParams: ['filterid'] })
+	, nftRuleParamConverter = paramConverter({ objectIdParams: ['nftruleid'] })
 	, newsParamConverter = paramConverter({ objectIdParams: ['newsid'] })
 	, roleParamConverter = paramConverter({ objectIdParams: ['roleid'] })
 	, custompageParamConverter = paramConverter({ objectIdParams: ['custompageid'] });
@@ -90,10 +91,12 @@ router.get('/:board/manage/editstaff/:staffusername([a-zA-Z0-9]{1,50}).html', us
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, editStaff);
 router.get('/:board/manage/filters.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, 
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, manageFilters);
-router.get('/:board/manage/nfts.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
-	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, manageNfts);
 router.get('/:board/manage/editfilter/:filterid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, filterParamConverter, editFilter);
+router.get('/:board/manage/nfts.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
+	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, manageNfts);
+router.get('/:board/manage/editnftrule/:nftruleid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
+	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, nftRuleParamConverter, editNftRule);
 
 //global manage pages
 router.get('/globalmanage/reports.(html|json)', useSession, sessionRefresh, isLoggedIn, calcPerms,

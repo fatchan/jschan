@@ -2,12 +2,15 @@ input(type='hidden' name='_csrf' value=csrf)
 .table-container.mv-5.horscroll
 	table
 		tr
+			th #{__('Name')}
 			th #{__('Network')}
 			th #{__('Contract Address')}
 			th #{__('Contract ABI')}
 			th #{__('Token ID')}
 			th #{__('Permissions')}
 		tr
+			td
+				input(required type='text' name='name')
 			td
 				select(name='network')
 					option(value='ethereum') #{__('Ethereum')}

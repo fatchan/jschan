@@ -22,6 +22,7 @@ module.exports = async (req, res) => {
 	// }
 
 	const nftRule = {
+		'name': req.body.name,
 		'board': req.params.board ? req.params.board : null,
 		'network': req.body.network,
 		'contractAddress': req.body.contract_address,

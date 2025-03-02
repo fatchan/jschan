@@ -19,4 +19,5 @@ module.exports = {
 	manageStaff: require(__dirname+'/staff.js'),
 	editStaff: require(__dirname+'/editstaff.js'),
 	manageNfts: require(__dirname+'/nfts.js'),
+	editNftRule: require(__dirname+'/editnftrule.js'),
 };

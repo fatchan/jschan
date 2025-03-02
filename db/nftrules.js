@@ -41,13 +41,13 @@ module.exports = {
 		});
 	},
 
-	updateOne: async (board=null, id, network, contractAddress, abi, tokenId) => {
+	updateOne: async (board=null, id, name, network, contractAddress, abi, tokenId, permissions) => {
 		const updatedNftRule = await db.updateOne({
 			'_id': id,
 			'board': board,
 		}, {
 			'$set': {
-				network, contractAddress, abi, tokenId,
+				name, network, contractAddress, abi, tokenId, permissions
 			}
 		});
 		await cache.del(`nftrules:${board}`);

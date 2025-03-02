@@ -13,25 +13,16 @@ const loginAccount = require(__dirname+'/../../models/forms/login.js')
 module.exports = {
 
 	paramConverter: paramConverter({
-		trimFields: ['twofactor', 'username', 'password', 'twofactor', 'nonce', 'signature', 'address'],
+		trimFields: ['twofactor', 'username', 'password', 'twofactor'],
 	}),
 
 	controller: async (req, res, next) => {
 
 		const { __ } = res.locals;
-		const { enableWeb3 } = config.get;
-		res.locals.isWeb3 = req.body.address && req.body.address.length > 0;
 
 		let errors = [];
 
-		if (res.locals.isWeb3) {
-			errors = await checkSchema([
-				{ result: enableWeb3 === true, expected: true, error: __('Web3 logins disabled') },
-				{ result: web3UtilsIsAddress(req.body.address), expected: true, error: __('Invalid address') },
-				{ result: existsBody(req.body.nonce), expected: true, error: __('Missing nonce') },
-				{ result: existsBody(req.body.signature), expected: true, error: __('Missing signature') },
-			]);
-		} else {
+		if (!res.locals.isWeb3) {
 			errors = await checkSchema([
 				{ result: existsBody(req.body.username), expected: true, error: __('Missing username') },
 				{ result: existsBody(req.body.password), expected: true, error: __('Missing password') },
@@ -51,26 +42,6 @@ module.exports = {
 		}
 
 		try {
-			if (res.locals.isWeb3) {
-				const { address, nonce, signature } = req.body;
-				const nonceRequest = await cache.del(`nonce:${address}:${nonce}`);
-				if (!nonceRequest || nonceRequest !== 1) {
-					return dynamicResponse(req, res, 400, 'message', {
-						'title': __('Bad Request'),
-						'error': __('Login timed out'),
-						'redirect': '/login.html'
-					});
-				}
-				let recoveredAddress = (await web3EthAccountsRecover(`Nonce: ${nonce}`, signature)).toLowerCase();
-				const match = await timingSafeEqual(Buffer.from(recoveredAddress), Buffer.from(address));
-				if (match !== true) {
-					return dynamicResponse(req, res, 400, 'message', {
-						'title': __('Bad Request'),
-						'error': __('Invalid login signature'),
-						'redirect': '/login.html'
-					});
-				}
-			}
 			await loginAccount(req, res, next);
 		} catch (err) {
 			return next(err);

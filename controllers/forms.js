@@ -21,6 +21,7 @@ const express  = require('express')
 	, blockBypass = require(__dirname+'/../lib/middleware/captcha/blockbypass.js')
 	, fileMiddlewares = require(__dirname+'/../lib/middleware/file/filemiddlewares.js')
 	, web3Signature = require(__dirname+'/../lib/middleware/web3/signature.js')
+	, web3CheckNonce = require(__dirname+'/../lib/middleware/web3/checknonce.js')
 	, { setBoardLanguage, setQueryLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
 //controllers
 	, { deleteBoardController, editBansController, appealController, globalActionController, twofactorController,
@@ -134,10 +135,10 @@ router.post('/global/clear', useSession, sessionRefresh, csrf, calcPerms, isLogg
 router.post('/create', geoIp, processIp, useSession, sessionRefresh, isLoggedIn, calcPerms, verifyCaptcha, createBoardController.paramConverter, createBoardController.controller);
 
 //accounts
-router.post('/login', useSession, loginController.paramConverter, loginController.controller);
+router.post('/login', useSession, web3CheckNonce, loginController.paramConverter, loginController.controller);
 router.post('/twofactor', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, twofactorController.paramConverter, twofactorController.controller);
 router.post('/logout', useSession, logoutForm);
-router.post('/register', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, registerController.paramConverter, registerController.controller);
+router.post('/register', geoIp, processIp, useSession, sessionRefresh, calcPerms, verifyCaptcha, web3CheckNonce, registerController.paramConverter, registerController.controller);
 router.post('/changepassword', geoIp, processIp, useSession, sessionRefresh, verifyCaptcha, changePasswordController.paramConverter, changePasswordController.controller);
 router.post('/resign', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, resignController.paramConverter, resignController.controller);
 router.post('/deleteaccount', useSession, sessionRefresh, csrf, calcPerms, isLoggedIn, deleteAccountController.paramConverter, deleteAccountController.controller);

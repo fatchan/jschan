@@ -3,6 +3,7 @@ input(type='hidden' name='nftrule_id' value=nftRule._id)
 .table-container.flex-center.mv-5.horscroll
 	table
 		tr
+			th #{__('Name')}
 			th #{__('Network')}
 			th #{__('Contract Address')}
 			th #{__('Contract ABI')}
@@ -10,16 +11,18 @@ input(type='hidden' name='nftrule_id' value=nftRule._id)
 			th #{__('Permissions')}
 		tr
 			td
+				input(required type='text' name='name' value=nftRule.name)
+			td
 				select(name='network')
 					option(value='ethereum', selected=nftRule.network === 'ethereum') #{__('Ethereum')}
 					option(value='base', selected=nftRule.network === 'base') #{__('Base')}
 					option(value='arbitrum', selected=nftRule.network === 'arbitrum') #{__('Arbitrum')}
 			td.text-center
-				input(type='text' name='contract_address' placeholder='0x...' value=nftRule.contractAddress)
+				input(required type='text' name='contract_address' placeholder='0x...' value=nftRule.contractAddress)
 			td
-				textarea(name='abi' rows='10' placeholder='[...]') #{nftRule.abi}
+				textarea(required name='abi' rows='10' placeholder='[...]') #{nftRule.abi}
 			td
 				input(type='text' name='token_id' value=nftRule.tokenId)
 			td
-				| todo edit button here
+				| todo permissions here
 input(type='submit', value=__('Save'))
