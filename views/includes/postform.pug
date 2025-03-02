@@ -86,8 +86,10 @@ section.form-wrapper.flex-center
 		if enableWeb3 === true && board.settings.enableWeb3 === true
 			section.row.jsonly.web3
 				.label #{__('Web3')}
-				input.dummy-link.web3-sign(type='button' value=__('Sign') disabled=true)
+				input.dummy-link.web3-sign(type='button' value=__('Sign'))
 				textarea.ml-1.no-resize(name='signature', rows='1', autocomplete='off' readonly)
+				input(type='hidden' name='nonce')
+				input(type='hidden' name='address')
 		if ((board.settings.captchaMode === 1 && !isThread) || board.settings.captchaMode === 2) && !modview
 			if captchaOptions.type === 'text'
 				include ./captchasidelabel.pug

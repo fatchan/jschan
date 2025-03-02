@@ -20,7 +20,6 @@ const express  = require('express')
 	, dnsblCheck = require(__dirname+'/../lib/middleware/ip/dnsbl.js')
 	, blockBypass = require(__dirname+'/../lib/middleware/captcha/blockbypass.js')
 	, fileMiddlewares = require(__dirname+'/../lib/middleware/file/filemiddlewares.js')
-	, web3Signature = require(__dirname+'/../lib/middleware/web3/signature.js')
 	, web3CheckNonce = require(__dirname+'/../lib/middleware/web3/checknonce.js')
 	, { setBoardLanguage, setQueryLanguage } = require(__dirname+'/../lib/middleware/locale/locale.js')
 //controllers
@@ -37,9 +36,9 @@ const express  = require('express')
 
 //make new post
 router.post('/board/:board/post', geoIp, processIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, calcPerms, banCheck, fileMiddlewares.posts,
-	makePostController.paramConverter, verifyCaptcha, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, web3Signature, makePostController.controller);
+	makePostController.paramConverter, verifyCaptcha, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, web3CheckNonce, makePostController.controller);
 router.post('/board/:board/modpost', geoIp, processIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, calcPerms, banCheck, isLoggedIn,
-	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), fileMiddlewares.posts, makePostController.paramConverter, csrf, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, web3Signature, makePostController.controller); //mod post has token instead of captcha
+	hasPerms.one(Permissions.MANAGE_BOARD_GENERAL), fileMiddlewares.posts, makePostController.paramConverter, csrf, numFiles, blockBypass.middleware, dnsblCheck, imageHashes, web3CheckNonce, makePostController.controller); //mod post has token instead of captcha
 
 //post actions
 router.post('/board/:board/actions', geoIp, processIp, useSession, sessionRefresh, Boards.exists, setBoardLanguage, calcPerms, banCheck, actionController.paramConverter, verifyCaptcha, actionController.controller); //public, with captcha

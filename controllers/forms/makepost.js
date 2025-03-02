@@ -14,7 +14,7 @@ const makePost = require(__dirname+'/../../models/forms/makepost.js')
 module.exports = {
 
 	paramConverter: paramConverter({
-		trimFields: ['message', 'name', 'subject', 'email', 'postpassword', 'password', 'signature'],
+		trimFields: ['message', 'name', 'subject', 'email', 'postpassword', 'password', 'signature', 'address'],
 		allowedArrays: ['spoiler', 'strip_filename'],
 		processMessageLength: true,
 		numberFields: ['thread'],

@@ -209,23 +209,28 @@ class postFormHandler {
 		const emptyMessage = this.messageBox.value.length === 0;
 		if (this.web3SignButton) {
 			this.form.elements.signature.value = '';
-			this.web3SignButton.disabled = emptyMessage;
+			// this.web3SignButton.disabled = emptyMessage;
 		}
+	}
+
+	async doWeb3Nonce(additionalText) {
+		const accounts = await window.jschanweb3.eth.requestAccounts();
+		const nonceResponse = await fetch(`/nonce/${encodeURIComponent(accounts[0])}.json`)
+			.then(res => res.json());
+		const nonce = nonceResponse && nonceResponse.nonce;
+		if (!nonce) { throw Error('Nonce request failed'); }
+		const signingMesssage = `${additionalText ? additionalText.trim()+'\n' : ''}Nonce: ${nonce}`;
+		const signature = await window.jschanweb3.currentProvider.request({
+			method: 'personal_sign',
+			params: [signingMesssage, accounts[0]],
+		});
+		return { accounts, signature, nonce };
 	}
 
 	async doWeb3Login(e) {
 		e.target.style.pointerEvents = 'none'; //way of disabling dummy button to prevent double click
 		try {
-			const accounts = await window.jschanweb3.eth.requestAccounts();
-			const nonceResponse = await fetch(`/nonce/${encodeURIComponent(accounts[0])}.json`)
-				.then(res => res.json());
-			const nonce = nonceResponse && nonceResponse.nonce;
-			if (!nonce) { throw Error('Nonce request failed'); }
-			const signingMesssage = `Nonce: ${nonce}`;
-			const signature = await window.jschanweb3.currentProvider.request({
-				method: 'personal_sign',
-				params: [signingMesssage, accounts[0]],
-			});
+			const { accounts, signature, nonce } = await this.doWeb3Nonce();
 			this.form.elements.signature.value = signature;
 			this.form.elements.address.value = accounts[0];
 			this.form.elements.nonce.value = nonce;
@@ -238,17 +243,15 @@ class postFormHandler {
 	}
 
 	async doWeb3Sign() {
-		if (!this.messageBox.value || this.messageBox.value.length === 0) {
-			return;
-		}
+		// if (!this.messageBox.value || this.messageBox.value.length === 0) {
+			// return;
+		// }
 		const messageContent = this.messageBox.value;
 		try {
-			const accounts = await window.jschanweb3.eth.requestAccounts();
-			const signature = await window.jschanweb3.currentProvider.request({
-				method: 'personal_sign',
-				params: [messageContent, accounts[0]],
-			});
+			const { accounts, signature, nonce } = await this.doWeb3Nonce(messageContent);
 			this.form.elements.signature.value = signature;
+			this.form.elements.address.value = accounts[0];
+			this.form.elements.nonce.value = nonce;
 		} catch (e) {
 			console.warn(e);
 		}
