@@ -125,17 +125,26 @@ module.exports = async (req, res) => {
 		if (nftRules && nftRules.length > 0) {
 			nftsRequired = true;
 			const userAddress = res.locals.recoveredAddress;
-			nftRules = await Promise.all(nftRules.map(async (rule) => {
-				//check if the user has passed any/all
-				const { network, contractAddress, abi, tokenId } = rule;
-				const parsedAbi = JSON.parse(abi);
-				if (!tokenId) {
-					rule.passed = await hasNftFromCollection(network, contractAddress, parsedAbi, userAddress);
-				} else {
-					rule.passed = await checkNftOwnership(network, contractAddress, parsedAbi, userAddress, tokenId);
-				}
-				return rule;
-			}));
+			try {
+				nftRules = await Promise.all(nftRules.map(async (rule) => {
+					//check if the user has passed any/all
+					const { network, contractAddress, abi, tokenId } = rule;
+					const parsedAbi = JSON.parse(abi);
+					if (!tokenId) {
+						rule.passed = await hasNftFromCollection(network, contractAddress, parsedAbi, userAddress);
+					} else {
+						rule.passed = await checkNftOwnership(network, contractAddress, parsedAbi, userAddress, tokenId);
+					}
+					return rule;
+				}));
+			} catch (e) {
+				console.warn('NFT checks encountered an error (probably bad NFT rule):', e);
+				return dynamicResponse(req, res, 500, 'message', {
+					'title': __('Internal Server Error'),
+					'message': __('NFT checks encountered an error'),
+					'redirect': redirect
+				});
+			}
 			nftRules.filter(x => x.passed)
 				.forEach(rule => {
 					//set the flags (or)
@@ -152,7 +161,7 @@ module.exports = async (req, res) => {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 403, 'message', {
 				'title': __('Forbidden'),
-				'message': __('You dont have the NFT(s) required to create threads on this board:\n%s', nftRules.filter(x => !x.passed && x.permission.thread).map(asNftMissingLabel).join('\n')),
+				'message': __('You dont have the NFT(s) required to create threads on this board:\n%s', nftRules.filter(x => !x.passed && x.permissions.thread).map(asNftMissingLabel).join('\n')),
 				'redirect': redirect
 			});
 		} else if (req.body.thread && !nftReplies) {
