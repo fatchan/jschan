@@ -113,7 +113,8 @@ module.exports = async (req, res) => {
 		}
 	}
 
-	let nftRules,
+	let	nftsRequired = false,
+		nftRules,
 		nftReplies,
 		nftThreads,
 		nftFiles,
@@ -122,6 +123,7 @@ module.exports = async (req, res) => {
 		//get nft rules if web3 enabled
 		nftRules = await NftRules.findForBoard(req.params.board);
 		if (nftRules && nftRules.length > 0) {
+			nftsRequired = true;
 			const userAddress = res.locals.recoveredAddress;
 			nftRules = await Promise.all(nftRules.map(async (rule) => {
 				//check if the user has passed any/all
@@ -145,7 +147,7 @@ module.exports = async (req, res) => {
 		}
 	}
 
-	if (nftRules && !isStaffOrGlobal) {
+	if (nftsRequired && !isStaffOrGlobal) {
 		if (!req.body.thread && !nftThreads) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 403, 'message', {
@@ -212,7 +214,7 @@ module.exports = async (req, res) => {
 	}
 
 	// nft check for link posting
-	if (nftRules && !isStaffOrGlobal && !nftLinks
+	if (nftsRequired && !isStaffOrGlobal && !nftLinks
 		&& req.body.message && req.body.message.length > 0
 		&& linkRegex.test(req.body.message)) {
 		await deleteTempFiles(req).catch(console.error);
@@ -245,7 +247,7 @@ module.exports = async (req, res) => {
 	// if we got a file
 	if (res.locals.numFiles > 0) {
 
-		if (nftRules && !isStaffOrGlobal && !nftFiles) {
+		if (nftsRequired && !isStaffOrGlobal && !nftFiles) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 403, 'message', {
 				'title': __('Forbidden'),
