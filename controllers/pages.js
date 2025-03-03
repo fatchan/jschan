@@ -89,7 +89,7 @@ router.get('/:board/manage/staff.html', useSession, sessionRefresh, isLoggedIn, 
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, manageStaff);
 router.get('/:board/manage/editstaff/:staffusername([a-zA-Z0-9]{1,50}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_STAFF), csrf, editStaff);
-router.get('/:board/manage/filters.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, 
+router.get('/:board/manage/filters.html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, manageFilters);
 router.get('/:board/manage/editfilter/:filterid([a-f0-9]{24}).html', useSession, sessionRefresh, isLoggedIn, Boards.exists, setBoardLanguage, calcPerms,
 	hasPerms.one(Permissions.MANAGE_BOARD_SETTINGS), csrf, filterParamConverter, editFilter);
