@@ -28,7 +28,13 @@ module.exports = async (req, res) => {
 		'contractAddress': req.body.contract_address,
 		'abi': req.body.abi,
 		'tokenId': req.body.token_id ? req.body.token_id : null,
-		'permissions': null,
+		'permissions': {
+			//TODO: a permissions matrix? Seems overkill
+			'thread': req.body.permission_thread != null,
+			'reply': req.body.permission_reply != null,
+			'link': req.body.permission_link != null,
+			'file': req.body.permission_file != null,
+		},
 	};
 
 	await NftRules.insertOne(nftRule);

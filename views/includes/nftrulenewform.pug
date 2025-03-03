@@ -23,5 +23,16 @@ input(type='hidden' name='_csrf' value=csrf)
 			td
 				input(type='text' name='token_id')
 			td
-				| todo permission  boxes here
+				div.wm
+					input.left.post-check(type='checkbox' name='permission_reply' value='1')
+					|  #{__('Post Replies')}
+				div.wm
+					input.left.post-check(type='checkbox' name='permission_thread' value='1')
+					|  #{__('Post Threads')}
+				div.wm
+					input.left.post-check(type='checkbox' name='permission_link' value='1')
+					|  #{__('Post Links')}
+				div.wm
+					input.left.post-check(type='checkbox' name='permission_file' value='1')
+					|  #{__('Post Files')}
 input(type='submit', value=__('Save'))

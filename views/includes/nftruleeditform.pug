@@ -24,5 +24,16 @@ input(type='hidden' name='nftrule_id' value=nftRule._id)
 			td
 				input(type='text' name='token_id' value=nftRule.tokenId)
 			td
-				| todo permissions here
+				div.wm
+					input.left.post-check(type='checkbox' name='permission_reply' value='1' checked=nftRule.permissions.reply)
+					|  #{__('Post Replies')}
+				div.wm
+					input.left.post-check(type='checkbox' name='permission_thread' value='1' checked=nftRule.permissions.thread)
+					|  #{__('Post Threads')}
+				div.wm
+					input.left.post-check(type='checkbox' name='permission_link' value='1' checked=nftRule.permissions.link)
+					|  #{__('Post Links')}
+				div.wm
+					input.left.post-check(type='checkbox' name='permission_file' value='1' checked=nftRule.permissions.file)
+					|  #{__('Post Files')}
 input(type='submit', value=__('Save'))

@@ -209,6 +209,7 @@ pre {
 	visibility: hidden!important;
 }
 .wm {
+	width: -moz-max-content;
 	width: max-content;
 }
 #settings, .dummy-link {

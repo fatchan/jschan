@@ -15,7 +15,12 @@ module.exports = async (req, res) => {
 		req.body.contract_address,
 		req.body.abi,
 		req.body.token_id,
-		null, // req.body.permissions
+		{ //permissions
+			thread: req.body.permission_thread != null,
+			reply: req.body.permission_reply != null,
+			link: req.body.permission_link != null,
+			file: req.body.permission_file != null,
+		}
 	).then(r => r.matchedCount);
 
 	if (updated === 0) {

@@ -17,6 +17,17 @@ mixin nftRule(nftr)
 		td
 			input(type='text' name='token_id' value=nftr.tokenId readonly placeholder='(Any in collection)')
 		td
-			| todo permissions stuff
+			div.wm
+				input.left.post-check(disabled type='checkbox' name='permission_reply' value='1' checked=nftr.permissions.reply)
+				|  #{__('Post Replies')}
+			div.wm
+				input.left.post-check(disabled type='checkbox' name='permission_thread' value='1' checked=nftr.permissions.thread)
+				|  #{__('Post Threads')}
+			div.wm
+				input.left.post-check(disabled type='checkbox' name='permission_link' value='1' checked=nftr.permissions.link)
+				|  #{__('Post Links')}
+			div.wm
+				input.left.post-check(disabled type='checkbox' name='permission_file' value='1' checked=nftr.permissions.file)
+				|  #{__('Post Files')}
 		td
-			a.right.ml-5(href=`./editnftrule/${nftr._id}.html`) [#{__('Edit')}]
+			a.right.ml-5.wm(href=`./editnftrule/${nftr._id}.html`) [#{__('Edit')}]
