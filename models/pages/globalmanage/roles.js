@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
 			permissions: res.locals.permissions,
 			allRoles,
 			roleNameMap: roleManager.roleNameMap,
+			rolePermissionMap: roleManager.rolePermissionMap,
 		});
 	}
 

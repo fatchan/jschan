@@ -51,6 +51,7 @@ module.exports = async (req, res, next) => {
 			accounts,
 			page,
 			maxPage,
+			rolePermissionMap: roleManager.rolePermissionMap,
 			roleNameMap: roleManager.roleNameMap,
 			forceActionTwofactor,
 		});

@@ -283,20 +283,24 @@ async function wipe() {
 		Permissions.CREATE_BOARD,
 		Permissions.CREATE_ACCOUNT,
 	]);
+
 	const BOARD_STAFF_DEFAULTS = new Permission(ANON.base64);
 	BOARD_STAFF_DEFAULTS.setAll([
 		Permissions.MANAGE_BOARD_GENERAL,
 		Permissions.MANAGE_BOARD_BANS,
 		Permissions.MANAGE_BOARD_LOGS,
 	]);
-	const BOARD_STAFF = new Permission(ANON.base64);
+
+	const BOARD_STAFF = new Permission(BOARD_STAFF_DEFAULTS.base64);
 	BOARD_STAFF.setAll([
 		Permissions.MANAGE_BOARD_OWNER,
 		Permissions.MANAGE_BOARD_STAFF,
 		Permissions.MANAGE_BOARD_CUSTOMISATION,
 		Permissions.MANAGE_BOARD_SETTINGS,
+		Permissions.USE_MARKDOWN_IMAGE,
 	]);
-	const BOARD_OWNER_DEFAULTS = new Permission(BOARD_STAFF_DEFAULTS.base64);
+
+	const BOARD_OWNER_DEFAULTS = new Permission(BOARD_STAFF.base64);
 	BOARD_OWNER_DEFAULTS.setAll([
 		Permissions.MANAGE_BOARD_OWNER,
 		Permissions.MANAGE_BOARD_STAFF,
@@ -304,6 +308,7 @@ async function wipe() {
 		Permissions.MANAGE_BOARD_SETTINGS,
 		Permissions.USE_MARKDOWN_IMAGE,
 	]);
+
 	const BOARD_OWNER = new Permission(BOARD_STAFF.base64);
 	BOARD_OWNER.setAll([
 		Permissions.MANAGE_BOARD_OWNER,
@@ -312,6 +317,7 @@ async function wipe() {
 		Permissions.MANAGE_BOARD_SETTINGS,
 		Permissions.USE_MARKDOWN_IMAGE,
 	]);
+
 	const GLOBAL_STAFF = new Permission(BOARD_OWNER.base64);
 	GLOBAL_STAFF.setAll([
 		Permissions.MANAGE_GLOBAL_GENERAL,
@@ -327,12 +333,14 @@ async function wipe() {
 		Permissions.BYPASS_RATELIMITS,
 		Permissions.USE_MARKDOWN_IMAGE,
 	]);
+
 	const ADMIN = new Permission(GLOBAL_STAFF.base64);
 	ADMIN.setAll([
 		Permissions.MANAGE_GLOBAL_ACCOUNTS,
 		Permissions.MANAGE_GLOBAL_ROLES,
 		Permissions.VIEW_RAW_IP,
 	]);
+
 	const ROOT = new Permission();
 	ROOT.setAll(Permission.allPermissions);
 	await Roles.db.insertMany([
