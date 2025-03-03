@@ -12,7 +12,7 @@ const { createHash, randomBytes } = require('crypto')
 	, getFilterStrings = require(__dirname+'/../../lib/post/getfilterstrings.js')
 	, checkFilters = require(__dirname+'/../../lib/post/checkfilters.js')
 	, filterActions = require(__dirname+'/../../lib/post/filteractions.js')
-	, { prepareMarkdown } = require(__dirname+'/../../lib/post/markdown/markdown.js')
+	, { prepareMarkdown, linkRegex } = require(__dirname+'/../../lib/post/markdown/markdown.js')
 	, messageHandler = require(__dirname+'/../../lib/post/message.js')
 	, moveUpload = require(__dirname+'/../../lib/file/moveupload.js')
 	, mimeTypes = require(__dirname+'/../../lib/file/mimetypes.js')
@@ -34,7 +34,7 @@ const { createHash, randomBytes } = require('crypto')
 	, buildQueue = require(__dirname+'/../../lib/build/queue.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, { buildThread } = require(__dirname+'/../../lib/build/tasks.js')
-	, { hasNftFromCollection, checkNftOwnership } = require(__dirname+'/../../lib/web3/web3.js')
+	, { hasNftFromCollection, checkNftOwnership, asNftMissingLabel } = require(__dirname+'/../../lib/web3/web3.js')
 	, FIELDS_TO_REPLACE = ['email', 'subject', 'message'];
 
 module.exports = async (req, res) => {
@@ -119,22 +119,24 @@ module.exports = async (req, res) => {
 		nftFiles,
 		nftLinks;
 	if (res.locals.board.settings.enableWeb3) {
+		//get nft rules if web3 enabled
 		nftRules = await NftRules.findForBoard(req.params.board);
 		if (nftRules && nftRules.length > 0) {
 			const userAddress = res.locals.recoveredAddress;
-			const nftChecks = await Promise.all(nftRules.map(async (rule) => {
+			nftRules = await Promise.all(nftRules.map(async (rule) => {
+				//check if the user has passed any/all
 				const { network, contractAddress, abi, tokenId } = rule;
 				const parsedAbi = JSON.parse(abi);
 				if (!tokenId) {
-					return await hasNftFromCollection(network, contractAddress, parsedAbi, userAddress);
+					rule.passed = await hasNftFromCollection(network, contractAddress, parsedAbi, userAddress);
 				} else {
-					return await checkNftOwnership(network, contractAddress, parsedAbi, userAddress, tokenId);
+					rule.passed = await checkNftOwnership(network, contractAddress, parsedAbi, userAddress, tokenId);
 				}
+				return rule;
 			}));
-			nftRules = nftRules
-				.map((nftRule, index) => ({ ...nftRule, passed: nftChecks[index] })); //SideEffect used later
 			nftRules.filter(x => x.passed)
 				.forEach(rule => {
+					//set the flags (or)
 					nftReplies = nftReplies || rule.permissions.reply;
 					nftThreads = nftThreads || rule.permissions.thread;
 					nftFiles = nftFiles || rule.permissions.file;
@@ -143,14 +145,22 @@ module.exports = async (req, res) => {
 		}
 	}
 
-	if (!isStaffOrGlobal && !req.body.thread && !nftThreads) {
-		// If not a staff and NFT rules dont allow, block thread creation
-		await deleteTempFiles(req).catch(console.error);
-		return dynamicResponse(req, res, 403, 'message', {
-			'title': __('Forbidden'),
-			'message': __('You dont have the NFT(s) required to create threads on this board:\n%s', nftRules.filter(x => !x.passed).map(x => `- ${x.name}${x.tokenId ? ' (Token ID: '+x.tokenId+')' : ''}`).join('\n')),
-			'redirect': redirect
-		});
+	if (nftRules && !isStaffOrGlobal) {
+		if (!req.body.thread && !nftThreads) {
+			await deleteTempFiles(req).catch(console.error);
+			return dynamicResponse(req, res, 403, 'message', {
+				'title': __('Forbidden'),
+				'message': __('You dont have the NFT(s) required to create threads on this board:\n%s', nftRules.filter(x => !x.passed && x.permission.thread).map(asNftMissingLabel).join('\n')),
+				'redirect': redirect
+			});
+		} else if (req.body.thread && !nftReplies) {
+			await deleteTempFiles(req).catch(console.error);
+			return dynamicResponse(req, res, 403, 'message', {
+				'title': __('Forbidden'),
+				'message': __('You dont have the NFT(s) required to make replies on this board:\n%s', nftRules.filter(x => !x.passed && x.permission.reply).map(asNftMissingLabel).join('\n')),
+				'redirect': redirect
+			});
+		}
 	}
 
 	//filters
@@ -201,6 +211,18 @@ module.exports = async (req, res) => {
 		}
 	}
 
+	// nft check for link posting
+	if (nftRules && !isStaffOrGlobal && !nftLinks
+		&& req.body.message && req.body.message.length > 0
+		&& linkRegex.test(req.body.message)) {
+		await deleteTempFiles(req).catch(console.error);
+		return dynamicResponse(req, res, 403, 'message', {
+			'title': __('Forbidden'),
+			'message': __('You dont have the NFT(s) required to post links:\n%s', nftRules.filter(x => !x.passed && x.permission.link).map(asNftMissingLabel).join('\n')),
+			'redirect': redirect
+		});
+	}
+
 	//for r9k messages. usually i wouldnt process these if its not enabled e.g. flags and IDs but in this case I think its necessary
 	let messageHash = null;
 	if (req.body.message && req.body.message.length > 0) {
@@ -222,6 +244,15 @@ module.exports = async (req, res) => {
 	let files = [];
 	// if we got a file
 	if (res.locals.numFiles > 0) {
+
+		if (nftRules && !isStaffOrGlobal && !nftFiles) {
+			await deleteTempFiles(req).catch(console.error);
+			return dynamicResponse(req, res, 403, 'message', {
+				'title': __('Forbidden'),
+				'message': __('You dont have the NFT(s) required to post files:\n%s', nftRules.filter(x => !x.passed && x.permission.file).map(asNftMissingLabel).join('\n')),
+				'redirect': redirect
+			});
+		}
 
 		//unique files check
 		if ((req.body.thread && fileR9KMode === 1) || fileR9KMode === 2) {
