@@ -96,6 +96,10 @@ pre {
 	overflow-wrap: break-word;
 }
 
+.pre {
+	white-space: pre-wrap;
+}
+
 .navbar {
 	background: var(--navbar-color);
 	box-shadow: 0 0 3px 1px var(--darken);

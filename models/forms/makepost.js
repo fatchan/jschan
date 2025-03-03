@@ -113,9 +113,13 @@ module.exports = async (req, res) => {
 		}
 	}
 
-	// let { nftReplies, nftThreads, nftFiles, nftLinks }
+	let nftRules,
+		nftReplies,
+		nftThreads,
+		nftFiles,
+		nftLinks;
 	if (res.locals.board.settings.enableWeb3) {
-		const nftRules = await NftRules.findForBoard(req.params.board);
+		nftRules = await NftRules.findForBoard(req.params.board);
 		if (nftRules && nftRules.length > 0) {
 			const userAddress = res.locals.recoveredAddress;
 			const nftChecks = await Promise.all(nftRules.map(async (rule) => {
@@ -127,10 +131,26 @@ module.exports = async (req, res) => {
 					return await checkNftOwnership(network, contractAddress, parsedAbi, userAddress, tokenId);
 				}
 			}));
-			const passedNftRules = nftRules.filter((_, index) => nftChecks[index]);
-			//TODO: if trying to do something they dont
-			console.log('passed nft rules', passedNftRules);
+			nftRules = nftRules
+				.map((nftRule, index) => ({ ...nftRule, passed: nftChecks[index] })); //SideEffect used later
+			nftRules.filter(x => x.passed)
+				.forEach(rule => {
+					nftReplies = nftReplies || rule.permissions.reply;
+					nftThreads = nftThreads || rule.permissions.thread;
+					nftFiles = nftFiles || rule.permissions.file;
+					nftLinks = nftLinks || rule.permissions.link;
+				});
 		}
+	}
+
+	if (!isStaffOrGlobal && !req.body.thread && !nftThreads) {
+		// If not a staff and NFT rules dont allow, block thread creation
+		await deleteTempFiles(req).catch(console.error);
+		return dynamicResponse(req, res, 403, 'message', {
+			'title': __('Forbidden'),
+			'message': __('You dont have the NFT(s) required to create threads on this board:\n%s', nftRules.filter(x => !x.passed).map(x => `- ${x.name}${x.tokenId ? ' (Token ID: '+x.tokenId+')' : ''}`).join('\n')),
+			'redirect': redirect
+		});
 	}
 
 	//filters
