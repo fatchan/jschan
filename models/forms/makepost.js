@@ -125,26 +125,17 @@ module.exports = async (req, res) => {
 		if (nftRules && nftRules.length > 0) {
 			nftsRequired = true;
 			const userAddress = res.locals.recoveredAddress;
-			try {
-				nftRules = await Promise.all(nftRules.map(async (rule) => {
-					//check if the user has passed any/all
-					const { network, contractAddress, abi, tokenId } = rule;
-					const parsedAbi = JSON.parse(abi);
-					if (!tokenId) {
-						rule.passed = await hasNftFromCollection(network, contractAddress, parsedAbi, userAddress);
-					} else {
-						rule.passed = await checkNftOwnership(network, contractAddress, parsedAbi, userAddress, tokenId);
-					}
-					return rule;
-				}));
-			} catch (e) {
-				console.warn('NFT checks encountered an error (probably bad NFT rule):', e);
-				return dynamicResponse(req, res, 500, 'message', {
-					'title': __('Internal Server Error'),
-					'message': __('NFT checks encountered an error'),
-					'redirect': redirect
-				});
-			}
+			nftRules = await Promise.all(nftRules.map(async (rule) => {
+				//check if the user has passed any/all
+				const { network, contractAddress, abi, tokenId } = rule;
+				const parsedAbi = JSON.parse(abi);
+				if (!tokenId) {
+					rule.passed = await hasNftFromCollection(network, contractAddress, parsedAbi, userAddress);
+				} else {
+					rule.passed = await checkNftOwnership(network, contractAddress, parsedAbi, userAddress, tokenId);
+				}
+				return rule;
+			}));
 			nftRules.filter(x => x.passed)
 				.forEach(rule => {
 					//set the flags (or)
