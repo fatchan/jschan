@@ -4,10 +4,6 @@ const loginAccount = require(__dirname+'/../../models/forms/login.js')
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
 	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js')
-	, config = require(__dirname+'/../../lib/misc/config.js')
-	, { timingSafeEqual } = require('crypto')
-	, cache = require(__dirname+'/../../lib/redis/redis.js')
-	, { recover: web3EthAccountsRecover } = require('web3-eth-accounts')
 	, { isAddress: web3UtilsIsAddress } = require('web3-utils');
 
 module.exports = {

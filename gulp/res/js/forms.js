@@ -206,7 +206,7 @@ class postFormHandler {
 
 	handleMessageChange() {
 		if (!this.messageBox) { return; }
-		const emptyMessage = this.messageBox.value.length === 0;
+		// const emptyMessage = this.messageBox.value.length === 0;
 		if (this.web3SignButton) {
 			this.form.elements.signature.value = '';
 			// this.web3SignButton.disabled = emptyMessage;

@@ -4,11 +4,7 @@ const { Permissions } = require(__dirname+'/../../lib/permission/permissions.js'
 	, dynamicResponse = require(__dirname+'/../../lib/misc/dynamic.js')
 	, registerAccount = require(__dirname+'/../../models/forms/register.js')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, config = require(__dirname+'/../../lib/misc/config.js')
-	, { timingSafeEqual } = require('crypto')
 	, { alphaNumericRegex, checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js')
-	, cache = require(__dirname+'/../../lib/redis/redis.js')
-	, { recover: web3EthAccountsRecover } = require('web3-eth-accounts')
 	, { isAddress: web3UtilsIsAddress } = require('web3-utils');
 
 module.exports = {

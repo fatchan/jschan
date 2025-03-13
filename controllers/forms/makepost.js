@@ -8,8 +8,7 @@ const makePost = require(__dirname+'/../../models/forms/makepost.js')
 	, config = require(__dirname+'/../../lib/misc/config.js')
 	, { Files } = require(__dirname+'/../../db/')
 	, paramConverter = require(__dirname+'/../../lib/middleware/input/paramconverter.js')
-	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js')
-	, { recover: web3EthAccountsRecover } = require('web3-eth-accounts');
+	, { checkSchema, lengthBody, existsBody } = require(__dirname+'/../../lib/input/schema.js');
 
 module.exports = {
 
@@ -24,7 +23,7 @@ module.exports = {
 
 		const { __ } = res.locals;
 
-		const { globalLimits, disableAnonymizerFilePosting, enableWeb3 } = config.get;
+		const { globalLimits, disableAnonymizerFilePosting } = config.get;
 
 		const hasNoMandatoryFile = globalLimits.postFiles.max !== 0 && res.locals.board.settings.maxFiles !== 0 && res.locals.numFiles === 0;
 		const disableBoardAnonymizerFilePosting = res.locals.board.settings.disableAnonymizerFilePosting && !res.locals.permissions.get(Permissions.MANAGE_BOARD_GENERAL);
