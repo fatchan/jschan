@@ -11,11 +11,11 @@ mixin nftRule(nftr)
 				option(value='base', selected=nftr.network === 'base') #{__('Base')}
 				option(value='arbitrum', selected=nftr.network === 'arbitrum') #{__('Arbitrum')}
 		td
-			input(required type='text' name='contract_address' placeholder='0x...' value=nftr.contractAddress readonly)
+			input(required type='text' name='contract_address' placeholder='0x...' value=nftr.contractAddress readonly disabled)
 		td
-			textarea(required name='abi' rows='1' placeholder='[...]' readonly) #{nftr.abi}
+			textarea(required name='abi' rows='1' placeholder='[...]' readonly disabled) #{nftr.abi}
 		td
-			input(type='text' name='token_id' value=nftr.tokenId readonly placeholder='(Any in collection)')
+			input(type='text' name='token_id' value=nftr.tokenId readonly placeholder='(Any in collection)' disabled)
 		td
 			div.wm
 				input.left.post-check(disabled type='checkbox' name='permission_reply' value='1' checked=nftr.permissions.reply)
