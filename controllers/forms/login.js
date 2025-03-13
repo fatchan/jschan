@@ -22,7 +22,7 @@ module.exports = {
 
 		let errors = [];
 
-		if (!res.locals.isWeb3) {
+		if (!res.locals.web3Signed) {
 			errors = await checkSchema([
 				{ result: existsBody(req.body.username), expected: true, error: __('Missing username') },
 				{ result: existsBody(req.body.password), expected: true, error: __('Missing password') },

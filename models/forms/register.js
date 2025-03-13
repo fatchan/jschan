@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
 
 	const { __ } = res.locals;
 	let original, username, password;
-	if (res.locals.isWeb3) {
+	if (res.locals.web3Signed) {
 		original = req.body.address;
 		username = req.body.address.toLowerCase();
 		password = null;
@@ -29,9 +29,9 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	await Accounts.insertOne(original, username, password, roleManager.roles.ANON, res.locals.isWeb3);
+	await Accounts.insertOne(original, username, password, roleManager.roles.ANON, res.locals.web3Signed);
 
-	if (res.locals.isWeb3) {
+	if (res.locals.web3Signed) {
 		req.session.user = username;
 		await Accounts.updateLastActiveDate(username);
 		let goto = req.body.goto;

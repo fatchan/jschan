@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
 
 	const { __ } = res.locals;
 	let username, password;
-	if (res.locals.isWeb3) {
+	if (res.locals.web3Signed) {
 		username = req.body.address.toLowerCase();
 		password = null;
 	} else {

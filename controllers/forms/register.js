@@ -23,7 +23,7 @@ module.exports = {
 
 		let errors = [];
 
-		if (!res.locals.isWeb3) {
+		if (!res.locals.web3Signed) {
 			errors = await checkSchema([
 				{ result: res.locals.permissions.get(Permissions.CREATE_ACCOUNT), blocking: true, expected: true, error: __('No permission') },
 				{ result: existsBody(req.body.username), expected: true, error: __('Missing username') },
