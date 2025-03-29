@@ -286,7 +286,7 @@ if [ "$GEOIP" == "y" ]; then
 	grep -qF "geoip_country" /etc/nginx/nginx.conf
 	if [ $? -eq 1 ]; then
 		sudo sed -i '/http {/a \
-geoip_country /usr/share/GeoIP/geoip.mmdb;' /etc/nginx/nginx.conf
+geoip_country /usr/share/GeoIP/dbip.mmdb;' /etc/nginx/nginx.conf
 	fi
 else
 	echo "Geoip not installed, removing directives..."
