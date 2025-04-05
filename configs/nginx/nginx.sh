@@ -49,10 +49,19 @@ geoip: $GEOIP
 
 #ask to overwrite if already exists
 if [[ -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf ]]; then
-	read -p "/etc/nginx/sites-available/$SITES_AVAILABLE_NAME already exists. Continue and overwrite existing configuration? (y/n)" OVERWRITE
+	read -p "/etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf already exists. Continue and overwrite existing configuration? (y/n)" OVERWRITE
 	[[ "$OVERWRITE" == "n" ]] && echo "Exiting..." && exit;
 	rm /etc/nginx/sites-available/$SITES_AVAILABLE_NAME.conf
 	rm /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME.conf
+fi
+
+if [[ -f /etc/nginx/sites-available/$SITES_AVAILABLE_NAME ]]; then
+	read -p "A configuration for previous versions /etc/nginx/sites-available/$SITES_AVAILABLE_NAME already exists. Back this up to current dir ($pwd) before creating new configuration? (y/n)" MV_OLD_CONFIG
+	[[ "$MV_OLD_CONFIG" == "n" ]] && echo "Exiting..." && exit;
+	cp /etc/nginx/sites-available/$SITES_AVAILABLE_NAME "$(pwd)/"
+	echo "Copied old config /etc/nginx/sites-available/$SITES_AVAILABLE_NAME to $(pwd)/$SITES_AVAILABLE_NAME"
+	rm /etc/nginx/sites-available/$SITES_AVAILABLE_NAME
+	rm /etc/nginx/sites-enabled/$SITES_AVAILABLE_NAME
 fi
 
 echo "Stopping nginx..."
