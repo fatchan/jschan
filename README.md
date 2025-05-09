@@ -13,12 +13,13 @@ Contact the author:
 
 
 ## Live instances (Unofficial)
- - 🇺🇸 [94chan](https://94chan.org)
  - 🇵🇹/🇧🇷 [ptchan](https://ptchan.org)
- - 🇺🇸/🇰🇷 [heolkek](https://heolkek.cafe)
  - 🇺🇸 [zzzchan](https://zzzchan.xyz)
+ - 🇺🇸/🇰🇷 [heolkek](https://heolkek.cafe)
+ - 🇺🇸 [sportschan](https://sportschan.org)
+ - 🇺🇸 [trashchan](https://trashchan.xyz/index.html)
  - 🇧🇷 [27chan](https://27chan.org)
- - 🇺🇸 [jakparty](https://jakparty.soy)
+ - 🇺🇸 [jaksoy.party](https://jaksoy.party)
  - 🇮🇹 [nuichan](https://niuchan.org)
  - And many more...
 
