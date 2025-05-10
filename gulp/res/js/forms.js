@@ -1,4 +1,4 @@
-/* globals __ __n modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem */
+/* globals __ __n modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem isCanvasBlocked */
 async function videoThumbnail(file) {
 	return new Promise((resolve, reject) => {
 		const hiddenVideo = document.createElement('video');
@@ -100,6 +100,7 @@ class postFormHandler {
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = this.form.querySelector('#message');
 		this.recordTegaki = this.form.elements.tegakireplay;
+		this.canvasBlocked = null;
 		this.minimal = this.form.elements.minimal;
 		this.files = [];
 		this.submit = form.querySelector('input[type="submit"]');
@@ -175,6 +176,16 @@ class postFormHandler {
 	}
 
 	doTegaki() {
+		if ((this.canvasBlocked = isCanvasBlocked()) === true
+			&& this.checkedCanvas) {
+			return doModal({
+				'title': 'Canvas Permission Error',
+				'message': 'Your browser has canvas disabled or broken due to anti-fingerprinting measures.',
+			});
+		}
+		if (!this.checkedCanvas && this.canvasBlocked) {
+			return this.checkedCanvas = true;
+		}
 		const saveReplay = this.recordTegaki && this.recordTegaki.checked;
 		Tegaki.open({
 			saveReplay,
