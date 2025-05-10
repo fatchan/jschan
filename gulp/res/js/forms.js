@@ -101,6 +101,7 @@ class postFormHandler {
 		this.messageBox = this.form.querySelector('#message');
 		this.recordTegaki = this.form.elements.tegakireplay;
 		this.canvasBlocked = null;
+		this.canvasCheckInterval = null;
 		this.minimal = this.form.elements.minimal;
 		this.files = [];
 		this.submit = form.querySelector('input[type="submit"]');
@@ -176,15 +177,23 @@ class postFormHandler {
 	}
 
 	doTegaki() {
-		if ((this.canvasBlocked = isCanvasBlocked()) === true
-			&& this.checkedCanvas) {
+		clearInterval(this.canvasCheckInterval);
+		if ((this.canvasBlocked = isCanvasBlocked())
+			&& localStorage.getItem('checkedCanvas') === 'true') {
 			return doModal({
 				'title': 'Canvas Permission Error',
 				'message': 'Your browser has canvas disabled or broken due to anti-fingerprinting measures.',
 			});
 		}
-		if (!this.checkedCanvas && this.canvasBlocked) {
-			return this.checkedCanvas = true;
+		if (localStorage.getItem('checkedCanvas') !== 'true' && this.canvasBlocked) {
+			if (!this.canvasCheckInterval || this.canvasCheckInterval._destroyed == true) {
+				this.canvasCheckInterval = setInterval(() => {
+					if (!isCanvasBlocked()) {
+						this.doTegaki();
+					}
+				}, 250);
+			}
+			return localStorage.setItem('checkedCanvas', 'true');
 		}
 		const saveReplay = this.recordTegaki && this.recordTegaki.checked;
 		Tegaki.open({
