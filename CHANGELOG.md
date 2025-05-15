@@ -1,3 +1,16 @@
+### 1.7.3
+  - Fix an issue with Tegaki for browsers with anti-fingerprinting for canvas in e.g. firefox & forks by attempting to detect this.
+    - If canvas is spoofed, the Tegaki applet won't open and a modal is displayed letting the user know.
+    - Fixes an issue where even choosing "allow", the tegaki drawing have spoofing artifacts and not save properly, wasting users time.
+  - TODO
+
+Some items are included in this tag/release but were already backported to 1.7.0 including:
+  - Migration to update board staff with the proper bit for the USE_MARKDOWN_IMAGE permission (image embeds like github-style markdown)
+  - Migration to fix a permissions issue from earlier 1.7.x installations, and fix the display and logic of _DEFAULT role permissions.
+  - INSTALLATION readme instruction improvements/fixes.
+  - Nginx config generation updated to handle an incompatibility with older versions that created a duplicate config.
+Apologies for the delays on this release, I've been very focused on other projects but will be working on jschan more now and am committed 110%.
+
 ### 1.7.0
   - Important permission logic changes. Technical explanation:
     - If an account is a board owner or board staff, they will only get the permissions that are under the `_MANAGE_BOARD_BITS` if the "Board Owner" or "Board Staff" roles respectively have the permission ticked, AND its ticked in the board staff permissions.
