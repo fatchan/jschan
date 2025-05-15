@@ -1,4 +1,6 @@
-/*! tegaki.js, MIT License */'use strict';var TegakiStrings = {
+/*! tegaki.js, MIT License */
+'use strict';
+var TegakiStrings = {
   // Messages
   badDimensions: __('Invalid dimensions.'),
   promptWidth: __('Canvas width in pixels'),
@@ -1706,7 +1708,7 @@ var TegakiCursor = {
     
     el = $T.el('canvas');
     el.id = 'tegaki-cursor-layer';
-    [ el.width, el.height ] = TegakiCursor.getMaxCanvasSize()
+    [ el.width, el.height ] = TegakiCursor.getMaxCanvasSize();
     
     Tegaki.canvasCnt.appendChild(el);
     
@@ -1749,8 +1751,8 @@ var TegakiCursor = {
   render: function(rawX, rawY) {
     var x, y, i, destImg, destData;
     
-    x = rawX - this.offsetX - this.radius;
-    y = rawY - this.offsetY - this.radius;
+    x = 0 | (rawX - this.offsetX - this.radius);
+    y = 0 | (rawY - this.offsetY - this.radius);
     
     this.clear();
     
@@ -2745,7 +2747,7 @@ var TegakiLayers = {
   }
 };
 var Tegaki = {
-  VERSION: '0.9.2',
+  VERSION: '0.9.4',
   
   startTimeStamp: 0,
   
@@ -4018,6 +4020,10 @@ var Tegaki = {
   onPointerMove: function(e) {
     var events, x, y, tool, ts, p;
     
+    if (Tegaki.cursor) {
+      TegakiCursor.render(e.clientX, e.clientY);
+    }
+    
     if (e.mozInputSource !== undefined) {
       // Firefox thing where mouse events fire for no reason when the pointer is a pen
       if (Tegaki.activePointerIsPen && e.pointerType === 'mouse') {
@@ -4069,14 +4075,14 @@ var Tegaki = {
       x = Tegaki.getPointerPos(e, 0);
       y = Tegaki.getPointerPos(e, 1);
     }
-    
-    if (Tegaki.cursor) {
-      TegakiCursor.render(e.clientX, e.clientY);
-    }
   },
   
   onPointerDown: function(e) {
     var x, y, tool, p;
+    
+    if (Tegaki.cursor) {
+      TegakiCursor.render(e.clientX, e.clientY);
+    }
     
     if (Tegaki.isScrollbarClick(e)) {
       return;
@@ -4135,10 +4141,6 @@ var Tegaki = {
       TegakiHistory.pendingAction.addCanvasState(Tegaki.activeLayer.imageData, 0);
       
       tool.start(x, y);
-    }
-    
-    if (Tegaki.cursor) {
-      TegakiCursor.render(e.clientX, e.clientY);
     }
   },
   
@@ -4428,7 +4430,7 @@ class TegakiEventDrawNoP {
     x = r.readInt16();
     y = r.readInt16();
     
-    return new TegakiEventDraw(timeStamp, x, y);
+    return new TegakiEventDrawNoP(timeStamp, x, y);
   }
   
   dispatch() {

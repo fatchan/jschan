@@ -17,6 +17,6 @@ block content
 				th #{__('Permissions')}
 			for role in allRoles
 				tr
-					td(title=`Raw permissions: ${role.permissions.toString('base64')}`) #{roleNameMap[role.permissions.toString('base64')]}
+					td(title=`Raw permissions: ${role.permissions.toString('base64')}`) #{roleNameMap[role.name]}
 					td: a(href=`/globalmanage/editrole/${role._id}.html`) [#{__('Edit')}]
 
