@@ -1,4 +1,4 @@
-/* globals Dragable threadwatcher watchedthread Minimisable */
+/* globals Dragable threadwatcher watchedthread Minimisable setLocalStorage */
 class ThreadWatcher {
 	init() {
 		//dont bother loading if no footer, must be minimal view

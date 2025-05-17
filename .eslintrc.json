@@ -14,7 +14,7 @@
 		"gulp/res/js/socket.io.js",
 		"gulp/res/js/web3.js",
 		"gulp/res/js/tegaki.js",
-    "gulp/res/js/tegakiwindow.js"
+		"gulp/res/js/tegakiwindow.js"
 	],
     "env": {
         "node": true,
