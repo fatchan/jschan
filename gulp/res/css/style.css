@@ -224,7 +224,7 @@ pre {
 	vertical-align: bottom;
 	margin-right: 5px;
 }
-#postform-dragHandle, #threadwatcher-dragHandle {
+#postform-dragHandle, #threadwatcher-dragHandle, #tegakiwindow-dragHandle {
 	flex-grow: 1;
 	background: var(--darken);
 	height: 1.75em;
@@ -949,6 +949,10 @@ input:invalid, textarea:invalid {
 	resize: none;
 }
 
+.resize {
+	resize: both;
+}
+
 .container {
 	padding: 10px;
 }
@@ -1260,7 +1264,7 @@ input[type="file"] {
 	background: var(--input-background);
 }
 
-#postform, #threadwatcher {
+#postform, #threadwatcher, #tegakiwindow {
 	display: none;
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
@@ -1274,13 +1278,18 @@ input[type="file"] {
 	overflow-y: auto;
 }
 
+#tegakiwindow {
+	display: unset;
+	overflow-y: hidden;
+}
+
 #threadwatcher {
 	display: none;
 	white-space: nowrap;
 	flex-direction: column;
 }
 
-#threadwatcher.minimised .watched-thread {
+#threadwatcher.minimised .watched-thread, #tegakiwindow.minimised #tegaki {
 	display: none;
 }
 

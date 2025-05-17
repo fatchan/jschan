@@ -2,6 +2,8 @@
   - Fix an issue with Tegaki for browsers with anti-fingerprinting for canvas in e.g. firefox & forks by attempting to detect this.
     - If canvas is spoofed, the Tegaki applet won't open and a modal is displayed letting the user know.
     - Fixes an issue where even choosing "allow", the tegaki drawing have spoofing artifacts and not save properly, wasting users time.
+  - Tegaki is now in a dragable, resizable, minimisable window instead of taking over the whole page.
+    - To achieve this, some refactors of the Dragable class, and the addition of a Minimisable class were made, making adding and maintaining "windows" easier.
   - Updated Tegaki.js.
   - Updated dependencies.
   - Updated unofficial tool repo links.

@@ -555,7 +555,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 //		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);
 		
 		//compile some pug client side functions
-		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher', 'banmessage']
+		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher', 'banmessage', 'tegakiwindow']
 			.forEach(templateName => {
 				const compilationOptions = {
 					compileDebug: false,
@@ -593,11 +593,13 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`${paths.scripts.src}/captcha.js`,
 		`${paths.scripts.src}/iscanvasblocked.js`,
 		`${paths.scripts.src}/tegaki.js`,
+		`${paths.scripts.src}/tegakiwindow.js`,
 		`${paths.scripts.src}/forms.js`,
 		`${paths.scripts.src}/*.js`,
 		`!${paths.scripts.src}/saveoverboard.js`,
 		`!${paths.scripts.src}/hidefileinput.js`,
 		`!${paths.scripts.src}/dragable.js`,
+		`!${paths.scripts.src}/minimise.js`,
 		`!${paths.scripts.src}/watchlist.js`,
 		`!${paths.scripts.src}/filters.js`,
 		`!${paths.scripts.src}/hideimages.js`,
@@ -622,6 +624,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`${paths.scripts.src}/saveoverboard.js`,
 		`${paths.scripts.src}/hidefileinput.js`,
 		`${paths.scripts.src}/dragable.js`,
+		`${paths.scripts.src}/minimise.js`,
 		`${paths.scripts.src}/hideimages.js`,
 		`${paths.scripts.src}/yous.js`,
 		`${paths.scripts.src}/filters.js`,

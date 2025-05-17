@@ -1,4 +1,4 @@
-/* globals __ __n modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem isCanvasBlocked */
+/* globals __ __n modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem isCanvasBlocked tegakiwindow Dragable Minimisable */
 async function videoThumbnail(file) {
 	return new Promise((resolve, reject) => {
 		const hiddenVideo = document.createElement('video');
@@ -105,6 +105,7 @@ class postFormHandler {
 		this.minimal = this.form.elements.minimal;
 		this.files = [];
 		this.submit = form.querySelector('input[type="submit"]');
+		this.tegakiwindow = null; //todo: refactor threadwatcher and tegaki window, add "minimise" class?
 		if (this.submit) {
 			this.originalSubmitText = this.submit.value;
 		}
@@ -196,9 +197,21 @@ class postFormHandler {
 			return localStorage.setItem('checkedCanvas', 'true');
 		}
 		const saveReplay = this.recordTegaki && this.recordTegaki.checked;
+		console.log('tegakiwindow', this.tegakiwindow);
+		if (!this.tegakiwindow) { //todo: make a "tegaki" class wrapper
+			const footer = document.querySelector('.footer');
+			const tegakiwindowHtml = tegakiwindow({ minimised: false });
+			footer.insertAdjacentHTML('afterend', tegakiwindowHtml);
+			this.tegakiwindow = document.getElementById('tegakiwindow');
+			new Dragable('#tegakiwindow-dragHandle', '#tegakiwindow', () => Tegaki.canvas && Tegaki.updatePosOffset());
+			new Minimisable('#tegakiwindow', '.close', null /*'tegaki-minimise'*/).init();
+		}
 		Tegaki.open({
+			target: this.tegakiwindow,
 			saveReplay,
-			onCancel: () => {},
+			onCancel: () => {
+				this.tegakiwindow = this.tegakiwindow.remove();
+			},
 			onDone: () => {
 				const now = Date.now();
 				let replayBlob;
@@ -216,6 +229,7 @@ class postFormHandler {
 				//reset tegaki state
 				Tegaki.resetLayers();
 				Tegaki.destroy();
+				this.tegakiwindow = this.tegakiwindow.remove();
 			},
 			width: tegakiWidth,
 			height: tegakiHeight,

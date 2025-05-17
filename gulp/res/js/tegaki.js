@@ -2821,9 +2821,15 @@ var Tegaki = {
   replayMode: false,
   
   saveReplay: false,
-  
+
+  target: document.body,
+
   open: function(opts = {}) {
     var self = Tegaki;
+
+    if (opts.target) {
+      self.target = opts.target
+    }
     
     if (self.bg) {
       if (self.replayMode !== (opts.replayMode ? true : false)) {
@@ -2858,8 +2864,8 @@ var Tegaki = {
     
     [self.bg, self.canvasCnt, self.layersCnt] = TegakiUI.buildUI();
     
-    document.body.appendChild(self.bg);
-    document.body.classList.add('tegaki-backdrop');
+    self.target.appendChild(self.bg);
+    self.target.classList.add('tegaki-backdrop');
     
     if (!self.replayMode) {
       self.init();
@@ -3155,7 +3161,7 @@ var Tegaki = {
     }
     
     Tegaki.bg.classList.remove('tegaki-hidden');
-    document.body.classList.add('tegaki-backdrop');
+    Tegaki.target.classList.add('tegaki-backdrop');
     Tegaki.setZoom(0);
     Tegaki.updateLayersCntSize();
     Tegaki.updatePosOffset();
@@ -3169,7 +3175,7 @@ var Tegaki = {
     }
     
     Tegaki.bg.classList.add('tegaki-hidden');
-    document.body.classList.remove('tegaki-backdrop');
+    Tegaki.target.classList.remove('tegaki-backdrop');
     Tegaki.unBindGlobalEvents();
   },
   
@@ -3182,7 +3188,7 @@ var Tegaki = {
     
     Tegaki.bg.parentNode.removeChild(Tegaki.bg);
     
-    document.body.classList.remove('tegaki-backdrop');
+    Tegaki.target.classList.remove('tegaki-backdrop');
     
     Tegaki.startTimeStamp = 0;
     
