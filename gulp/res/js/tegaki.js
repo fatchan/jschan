@@ -1750,9 +1750,13 @@ var TegakiCursor = {
   
   render: function(rawX, rawY) {
     var x, y, i, destImg, destData;
-    
-    x = 0 | (rawX - this.offsetX - this.radius);
-    y = 0 | (rawY - this.offsetY - this.radius);
+
+	var { x: canvasLeft, y: canvasTop } = this.getCanvas().getBoundingClientRect();
+	x = 0 | (rawX - canvasLeft - this.radius);
+	y = 0 | (rawY - canvasTop - this.radius);
+
+    // x = 0 | (rawX - this.offsetX - this.radius);
+    // y = 0 | (rawY - this.offsetY - this.radius);
     
     this.clear();
     

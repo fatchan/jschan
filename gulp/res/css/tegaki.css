@@ -363,6 +363,9 @@
   position: absolute;
   mix-blend-mode: difference;
   touch-action: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(calc(-50% - 50px), -50%);
 }
 
 /* generic ui */

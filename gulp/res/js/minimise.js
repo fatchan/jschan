@@ -1,15 +1,16 @@
 /* eslint-disable no-unused-vars */
 class Minimisable {
-	constructor(elementSelector, buttons, storageKey) {
+	constructor(elementSelector, buttons, storageKey, resizeUpdateCb) {
 		this.elementSelector = elementSelector;
 		this.buttons = buttons;
 		this.storageKey = storageKey;
+		this.resizeUpdateCb = resizeUpdateCb; //todo: refactor out code smell
 		this.minimised = this.storageKey ? localStorage.getItem(this.storageKey) === 'true' : false;
 	}
 
-	init() {
+	init () {
 		this.element = document.querySelector(this.elementSelector);
-		this.resizable = this.element.classList.contains('resize');
+		this.resizable = this.element.classList.contains('resize'); //make an arg to minimisable and add in here?
 		this.buttonElements = this.buttons.map(button => {
 			const buttonElement = this.element.querySelector(button.selector);
 			buttonElement.addEventListener('click', () => this.handleButtonClick(button));
@@ -19,7 +20,7 @@ class Minimisable {
 		this.updateButtonTexts();
 	}
 
-	handleButtonClick(button) {
+	handleButtonClick (button) {
 		if (typeof button.cb === 'string' && this[button.cb]) {
 			this[button.cb]();
 		} else if (typeof button.cb === 'function') {
@@ -29,7 +30,7 @@ class Minimisable {
 		}
 	}
 
-	toggleMinimise() {
+	toggleMinimise () {
 		this.minimised = !this.minimised;
 		if (this.minimised && this.resizable && (this.element.style.width || this.element.style.height)) {
 			this.element.style.height = '';
@@ -41,7 +42,7 @@ class Minimisable {
 		this.updateButtonTexts();
 	}
 
-	toggleMaximise() {
+	toggleMaximise () {
 		if (this.element.style.width === '100%' && this.element.style.height === '100%') {
 			this.element.style.width = this.originalWidth;
 			this.element.style.height = this.originalHeight;
@@ -62,21 +63,22 @@ class Minimisable {
 			this.element.style.height = '100%';
 			this.resizable && this.element.classList.toggle('resize', false);
 		}
+		this.resizeUpdateCb && this.resizeUpdateCb();
 		this.minimised = false;
 		this.element.classList.remove('minimised');
 		this.storageKey && localStorage.setItem(this.storageKey, this.minimised);
 		this.updateButtonTexts();
 	}
 
-	maximise() {
+	maximise () {
 		this.toggleMaximise(); // Use toggleMaximise for maximizing
 	}
 
-	updateVisibility() {
+	updateVisibility () {
 		this.element.classList.toggle('minimised', this.minimised);
 	}
 
-	updateButtonTexts() {
+	updateButtonTexts () {
 		this.buttonElements.forEach(button => {
 			button.element.textContent = button.falseText
 				? (this[button.textVar] ? button.trueText : button.falseText)
@@ -84,7 +86,7 @@ class Minimisable {
 		});
 	}
 
-	isMinimised() {
+	isMinimised () {
 		return this.minimised;
 	}
 }
