@@ -20,7 +20,9 @@ class ThreadWatcher {
 		this.clearButton.addEventListener('click', () => this.clear(), false);
 
 		//create a Minimisable instance for the thread watcher with a localStorage key
-		this.minimisable = new Minimisable('#threadwatcher', '.close', 'threadwatcher-minimise');
+		this.minimisable = new Minimisable('#threadwatcher', [
+			{ selector: '#minimise', cb: 'toggleMinimise', textVar: 'minimised', trueText: '[+]', falseText: '[-]' },
+		], 'threadwatcher-minimise');
 
 		//create and insert the watchlist
 		this.createList();

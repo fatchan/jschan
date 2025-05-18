@@ -2,4 +2,4 @@ mixin threadwatcher(minimised)
 	.flex-center#threadwatcher(class=(minimised ? 'minimised' : ''))
 		.row.noselect#threadwatcher-dragHandle
 			span.fw.text-center #{__('Thread Watcher')}
-			span.mr-0.close #{minimised ? '[+]' : '[−]'}
+			span.mr-0.close#minimise #{minimised ? '[+]' : '[−]'}

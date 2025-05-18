@@ -10,7 +10,7 @@ var pug_match_html=/["&<>]/;function tegakiwindow(locals) {var pug_html = "", pu
     (function (__, minimised) {
       pug_mixins["tegakiwindow"] = pug_interp = function(minimised){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["flex-center","resize",(minimised ? 'minimised' : '')], [false,false,true]), false, false)+" id=\"tegakiwindow\"") + "\u003E\u003Cdiv class=\"row noselect\" id=\"tegakiwindow-dragHandle\"\u003E\u003Cspan class=\"fw text-center\"\u003E" + (pug_escape(null == (pug_interp = __('Tegaki')) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003Cspan class=\"mr-0 close\"\u003E" + (pug_escape(null == (pug_interp = minimised ? '[+]' : '[−]') ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["flex-center","resize",(minimised ? 'minimised' : '')], [false,false,true]), false, false)+" id=\"tegakiwindow\"") + "\u003E\u003Cdiv class=\"row noselect\" id=\"tegakiwindow-dragHandle\"\u003E\u003Cspan class=\"fw text-center\"\u003E" + (pug_escape(null == (pug_interp = __('Tegaki')) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003Cspan class=\"mr-0 close\" id=\"minimise\"\u003E" + (pug_escape(null == (pug_interp = minimised ? '[+]' : '[−]') ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003Cspan class=\"mr-0 close\" id=\"maximise\"\u003E[⤢]\u003C\u002Fspan\u003E\u003Cspan class=\"mr-0 close\" id=\"close\"\u003E[×]\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 };
 pug_mixins["tegakiwindow"](minimised);
     }.call(this, "__" in locals_for_with ?

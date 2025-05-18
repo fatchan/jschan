@@ -1,4 +1,4 @@
-/* globals __ __n modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem isCanvasBlocked tegakiwindow Dragable Minimisable */
+/* globals __ __n modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem isCanvasBlocked TegakiWrapper */
 async function videoThumbnail(file) {
 	return new Promise((resolve, reject) => {
 		const hiddenVideo = document.createElement('video');
@@ -85,7 +85,7 @@ function removeModal() {
 }
 
 let recaptchaResponse = null;
-function recaptchaCallback(response) { // eslint-disable-line
+function recaptchaCallback (response) { // eslint-disable-line
 	recaptchaResponse = response;
 }
 
@@ -105,7 +105,6 @@ class postFormHandler {
 		this.minimal = this.form.elements.minimal;
 		this.files = [];
 		this.submit = form.querySelector('input[type="submit"]');
-		this.tegakiwindow = null; //todo: refactor threadwatcher and tegaki window, add "minimise" class?
 		if (this.submit) {
 			this.originalSubmitText = this.submit.value;
 		}
@@ -197,20 +196,12 @@ class postFormHandler {
 			return localStorage.setItem('checkedCanvas', 'true');
 		}
 		const saveReplay = this.recordTegaki && this.recordTegaki.checked;
-		console.log('tegakiwindow', this.tegakiwindow);
-		if (!this.tegakiwindow) { //todo: make a "tegaki" class wrapper
-			const footer = document.querySelector('.footer');
-			const tegakiwindowHtml = tegakiwindow({ minimised: false });
-			footer.insertAdjacentHTML('afterend', tegakiwindowHtml);
-			this.tegakiwindow = document.getElementById('tegakiwindow');
-			new Dragable('#tegakiwindow-dragHandle', '#tegakiwindow', () => Tegaki.canvas && Tegaki.updatePosOffset());
-			new Minimisable('#tegakiwindow', '.close', null /*'tegaki-minimise'*/).init();
-		}
+		TegakiWrapper.init();
 		Tegaki.open({
-			target: this.tegakiwindow,
+			target: TegakiWrapper.element,
 			saveReplay,
 			onCancel: () => {
-				this.tegakiwindow = this.tegakiwindow.remove();
+				TegakiWrapper.remove();
 			},
 			onDone: () => {
 				const now = Date.now();
@@ -228,8 +219,7 @@ class postFormHandler {
 				this.updateFilesText();
 				//reset tegaki state
 				Tegaki.resetLayers();
-				Tegaki.destroy();
-				this.tegakiwindow = this.tegakiwindow.remove();
+				TegakiWrapper.remove();
 			},
 			width: tegakiWidth,
 			height: tegakiHeight,
@@ -626,7 +616,7 @@ class postFormHandler {
 			this.fileUploadList.style.display = 'none';
 			this.fileLabelText.nodeValue = __n('Select/Drop/Paste files', this.multipleFiles ? 2 : 1);
 		} else {
-			this.fileLabelText.nodeValue =  __n('%s files selected', this.files.length);
+			this.fileLabelText.nodeValue = __n('%s files selected', this.files.length);
 		}
 		this.fileInput.value = null;
 	}

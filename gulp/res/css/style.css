@@ -1281,6 +1281,8 @@ input[type="file"] {
 #tegakiwindow {
 	display: unset;
 	overflow-y: hidden;
+	max-width: unset;
+	max-height: unset;
 }
 
 #threadwatcher {

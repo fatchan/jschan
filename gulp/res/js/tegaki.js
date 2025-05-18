@@ -3544,6 +3544,7 @@ var Tegaki = {
   onCloseViewerClick: function() {
     Tegaki.replayViewer.destroy();
     Tegaki.destroy();
+    Tegaki.onCancelCb();
   },
   
   onToolSizeChange: function() {

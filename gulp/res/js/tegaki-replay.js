@@ -1,7 +1,15 @@
-/* globals Tegaki */
+/* globals Tegaki TegakiWrapper */
 function showTegakiReplay(e) {
 	e.preventDefault(); //prevent nojs download fallback
+	TegakiWrapper.init();
 	Tegaki.open({
+		onCancel: () => {
+			TegakiWrapper.remove();
+		},
+		onDone: () => {
+			TegakiWrapper.remove();
+		},
+		target: TegakiWrapper.element,
 		replayMode: true,
 		replayURL: e.target.href,
 	});
@@ -15,7 +23,7 @@ function addReplayListeners(elem) {
 	const replayLinks = Array.from(elem.getElementsByClassName('replay-tegaki'));
 	replayLinks.forEach(replayLink => {
 		replayLink.addEventListener('click', showTegakiReplay, false);
-	});	
+	});
 }
 
 window.addEventListener('DOMContentLoaded', () => {

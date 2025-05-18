@@ -1,47 +1,90 @@
 /* eslint-disable no-unused-vars */
 class Minimisable {
-	constructor(elementSelector, toggleButtonSelector, storageKey) {
+	constructor(elementSelector, buttons, storageKey) {
 		this.elementSelector = elementSelector;
-		this.toggleButtonSelector = toggleButtonSelector;
+		this.buttons = buttons;
 		this.storageKey = storageKey;
 		this.minimised = this.storageKey ? localStorage.getItem(this.storageKey) === 'true' : false;
 	}
 
-	//because maybe we want to read the state before it has to attach to any existing element
 	init() {
 		this.element = document.querySelector(this.elementSelector);
 		this.resizable = this.element.classList.contains('resize');
-		this.toggleButton = this.element.querySelector(this.toggleButtonSelector);
+		this.buttonElements = this.buttons.map(button => {
+			const buttonElement = this.element.querySelector(button.selector);
+			buttonElement.addEventListener('click', () => this.handleButtonClick(button));
+			return { ...button, element: buttonElement };
+		});
 		this.updateVisibility();
-		this.updateButtonText();
-		this.toggleButton.addEventListener('click', () => this.toggleMinimise());
+		this.updateButtonTexts();
+	}
+
+	handleButtonClick(button) {
+		if (typeof button.cb === 'string' && this[button.cb]) {
+			this[button.cb]();
+		} else if (typeof button.cb === 'function') {
+			button.cb();
+		} else {
+			this.toggleMinimise();
+		}
 	}
 
 	toggleMinimise() {
 		this.minimised = !this.minimised;
-		//todo: make more generalised for other elements inside a minimisable
-		if (this.minimised
-			&& this.resizable
-			&& (this.element.style.width || this.element.style.height)) {
-			//for resisable minimisable elements
+		if (this.minimised && this.resizable && (this.element.style.width || this.element.style.height)) {
 			this.element.style.height = '';
 			this.element.style.width = '';
 		}
-		this.element.classList.toggle('resize', !this.minimised);
+		this.resizable && this.element.classList.toggle('resize', !this.minimised);
 		this.storageKey && localStorage.setItem(this.storageKey, this.minimised);
 		this.updateVisibility();
-		this.updateButtonText();
+		this.updateButtonTexts();
+	}
+
+	toggleMaximise() {
+		if (this.element.style.width === '100%' && this.element.style.height === '100%') {
+			this.element.style.width = this.originalWidth;
+			this.element.style.height = this.originalHeight;
+			this.element.style.top = this.originalTop;
+			this.element.style.left = this.originalLeft;
+			this.resizable && this.element.classList.toggle('resize', true);
+		} else {
+			this.originalWidth = this.element.style.width;
+			this.originalHeight = this.element.style.height;
+			this.originalTop = this.element.style.top;
+			this.originalLeft = this.element.style.left;
+			//todo: maximised class w/important?
+			this.element.style.maxWidth = '';
+			this.element.style.maxHeight = '';
+			this.element.style.top = '0';
+			this.element.style.left = '0';
+			this.element.style.width = '100%';
+			this.element.style.height = '100%';
+			this.resizable && this.element.classList.toggle('resize', false);
+		}
+		this.minimised = false;
+		this.element.classList.remove('minimised');
+		this.storageKey && localStorage.setItem(this.storageKey, this.minimised);
+		this.updateButtonTexts();
+	}
+
+	maximise() {
+		this.toggleMaximise(); // Use toggleMaximise for maximizing
 	}
 
 	updateVisibility() {
 		this.element.classList.toggle('minimised', this.minimised);
 	}
 
-	updateButtonText() {
-		this.toggleButton.textContent = this.minimised ? '[+]' : '[−]';
+	updateButtonTexts() {
+		this.buttonElements.forEach(button => {
+			button.element.textContent = button.falseText
+				? (this[button.textVar] ? button.trueText : button.falseText)
+				: button.trueText;
+		});
 	}
 
-	isMinimised() { //should i use a get (proper getter) yet?
+	isMinimised() {
 		return this.minimised;
 	}
 }

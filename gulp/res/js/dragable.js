@@ -21,12 +21,12 @@ class Dragable {
 		this.target.style.right = 'unset';
 		this.target.addEventListener('opened', e => this.updateMaxSizes(e));
 		this.handle.addEventListener('mousedown', e => this.startDrag(e));
-		this.handle.addEventListener('touchstart', e => this.startDrag(e), {passive: true});
+		this.handle.addEventListener('touchstart', e => this.startDrag(e), { passive: true });
 		document.addEventListener('mouseup', e => this.stopDrag(e));
 		document.addEventListener('touchend', e => this.stopDrag(e));
 		window.addEventListener('resize', e => this.updateMaxSizes(e));
 		//when resize: all css is used
-		['mousedown', 'mousemove', 'mouseup', 'touchstart']
+		['mousedown', 'mousemove', 'mouseup', 'touchstart', 'click']
 			.forEach(event => this.target.addEventListener(event, () => this.updateCallback && this.updateCallback()));
 		window.addEventListener('orientationchange', e => this.updateMaxSizes(e));
 		this.updateCallback && this.updateCallback();
@@ -34,12 +34,12 @@ class Dragable {
 
 	//get a position in bounds
 	inBounds(pos, offset, size, limit) {
-		if (pos-offset <= 0) {
+		if (pos - offset <= 0) {
 			return 0;
-		} else if (pos-offset+size > limit) {
-			return limit-size;
+		} else if (pos - offset + size > limit) {
+			return limit - size;
 		} else {
-			return pos-offset;
+			return pos - offset;
 		}
 	}
 
