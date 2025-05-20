@@ -201,7 +201,7 @@ module.exports = async (req, res) => {
 	}
 	if (rebuildTasks.has('other')) {
 		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/logs/`));
-		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/custompage/`));
+		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/page/`));
 		buildQueue.push({
 			'task': 'buildModLogList',
 			'options': {

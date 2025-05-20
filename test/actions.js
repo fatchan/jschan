@@ -375,7 +375,7 @@ __underline__
 (((detected)))
 ##2d9+3
 https://example.com
-[Board Rules](https://your.imageboard/a/custompage/rules.html)(staff only)
+[Board Rules](https://your.imageboard/a/page/rules.html)(staff only)
 ![embed](https://your.imageboard/image.png)
 >>123
 >>>/test/
