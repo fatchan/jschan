@@ -249,7 +249,7 @@ bad words`,
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
 			username: 'test',
-			template: 'fx/v4B//gAA=',
+			template: 'Px8v4B//wAA=',
 		});
 		const response = await fetch('http://localhost/forms/global/editaccount', {
 			headers: {
@@ -260,6 +260,7 @@ bad words`,
 			body: params,
 			redirect: 'manual',
 		});
+		console.log((await response.text()))
 		expect(response.ok).toBe(true);
 	});
 
@@ -267,7 +268,7 @@ bad words`,
 		const params = new URLSearchParams({
 			_csrf: csrfToken,
 			username: 'test2',
-			template: 'fx/v4B//gAA=',
+			template: 'Px8v4B//wAA=',
 		});
 		const response = await fetch('http://localhost/forms/global/editaccount', {
 			headers: {
@@ -278,6 +279,7 @@ bad words`,
 			body: params,
 			redirect: 'manual',
 		});
+		console.log((await response.text()))
 		expect(response.ok).toBe(true);
 	});
 
