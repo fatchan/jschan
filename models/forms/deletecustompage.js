@@ -20,8 +20,8 @@ module.exports = async (req, res) => {
 
 	await Promise.all(req.body.checkedcustompages.map(page => {
 		return Promise.all([
-			remove(`${uploadDirectory}/html/${req.params.board}/custompage/${page}.html`),
-			remove(`${uploadDirectory}/json/${req.params.board}/custompage/${page}.json`),
+			remove(`${uploadDirectory}/html/${req.params.board}/page/${page}.html`),
+			remove(`${uploadDirectory}/json/${req.params.board}/page/${page}.json`),
 		]);
 	}));
 
