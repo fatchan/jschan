@@ -441,7 +441,7 @@ async function css() {
 
 //spoiler/deleted image, default banner, spoiler/sticky/sage/cycle icons
 function images() {
-	return gulp.src(paths.images.src)
+	return gulp.src(paths.images.src, {encoding: false})
 		.pipe(gulp.dest(paths.images.dest));
 }
 
