@@ -102,7 +102,7 @@ sudo systemctl restart redis-server
 
 For easy installation, use [node version manager](https://github.com/nvm-sh/nvm#installing-and-updating) "nvm":
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
@@ -210,26 +210,27 @@ npm install
 
 4. Replace `gulp/res/icons/master.png` with your desired favicon image.
 
-5. Run the setup script. This will install `pm2` (nodejs process manager) and `gulp` (task system) and runs some gulp tasks.
+5. Run the setup npm run-script (runs some gulp tasks).
 ```bash
 npm run-script setup
 ```
 
 6. Run gulp reset to initialize the database and folder structure, and create the admin account. **Default admin account with random password will be printed to the command line.** NOTE: dont run gulp reset again unless you want to completely irreversibly wipe everything.
 ```bash
-gulp reset
+npx gulp reset
 ```
 
-7. Make pm2 a system service and load on system startup. **NOTE: This will also output some additional commands you need to run to complete the process. Read the command output carefully.**
+7. Install pm2 completions for your terminal, and install a system service and load on system startup. **NOTE: This will also output some additional commands you need to run to complete the process. Read the command output carefully.**
 ```
-pm2 startup
+npx pm2 completion install
+npx pm2 startup
 ```
 
 8. Start all the backend processes.
 ```bash
 npm run-script start
-gulp
-pm2 save
+npx gulp
+npx pm2 save
 ```
 
 Some commands you may need to use in future/find helpful:
@@ -261,7 +262,7 @@ To enable the proxy, tick "Use Socks Proxy" in global management settings and se
 
 1. Stop the running backend:
 ```bash
-pm2 stop ecosystem.config.js
+npx pm2 stop ecosystem.config.js
 ```
 
 2. (Optional) Update node.js to the latest LTS node version, latest npm, and reinstall global packages. NOTE: Only works if you installed node.js "nvm" as per the recommendation in the installation instructions.
@@ -291,17 +292,17 @@ If you have a non-standard nginx config, update your nginx config yourself.
 
 6. Run the gulp migrate task. This will run "migrations" such as updating the database schema or file structure:
 ```bash
-gulp migrate && gulp
+npx gulp migrate && npx gulp
 ```
 
 7. Start the backend:
 ```bash
-pm2 restart ecosystem.config.js --env production
+npx pm2 restart ecosystem.config.js --env production
 ```
 
 At this point, your installation is updated. If something is broken, check and read the logs, they will help figure out what went wrong:
 ```bash
-pm2 logs
+npx pm2 logs
 ```
 
 ## Help! Something didn't work!!!1!!1
@@ -393,7 +394,7 @@ To add additional custom pages which will be at the root of your site, add a .pu
 
 Pug template language reference: https://pugjs.org/api/getting-started.html
 
-To build all custompages, run `gulp custompages`.
+To build all custompages, run `npx gulp custompages`.
 
 **Custom CSS & themes**
 
@@ -401,7 +402,7 @@ All css files in gulp/res/css/ will get combined and minified into the main styl
 
 Theme files in gulp/res/css/themes/ can also be edited, if desired. You can also create new themes copying their general format of including variables inside `:root{}`.
 
-To build all css files, run `gulp css`. For some situations, such as adding or removing themes, you should run `gulp` and `pm2 restart all` because scripts and templates containing the theme selector dropdowns and server-side checks for valid theme names will need to be updated.
+To build all css files, run `npx gulp css`. For some situations, such as adding or removing themes, you should run `npx gulp` and `pm2 restart all` because scripts and templates containing the theme selector dropdowns and server-side checks for valid theme names will need to be updated.
 
 #### Handy nginx stuff
 
@@ -419,7 +420,7 @@ Basically:
 ```bash
 docker-compose up -d mongodb redis
 
-#on the first run, or to "gulp reset" later:
+#on the first run, or to "npx gulp reset" later:
 docker-compose up jschan-reset
 
 docker-compose up -d jschan

@@ -70,7 +70,7 @@
     "test:integration-verbose": "jest --verbose --detectOpenHandles --testPathPattern=./test/",
     "test:integration": "jest --testPathPattern=./test/",
     "test:all": "jest --verbose",
-    "setup": "npm i --location=global pm2 gulp && gulp generate-favicon && gulp default",
+    "setup": "npx gulp generate-favicon && npx gulp default",
     "start": "pm2 start ecosystem.config.js --env production",
     "start-dev": "pm2 start ecosystem.config.js --env development"
   },
