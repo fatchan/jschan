@@ -26,6 +26,5 @@ class TegakiWrapper {
 			Tegaki.destroy();
 		} catch (e) { console.warn(e); }
 		this.element && (this.element = this.element.remove());
-		console.log('elem after remove', this.element);
 	}
 }
