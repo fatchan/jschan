@@ -1580,6 +1580,23 @@ row.wrap.sb .col {
 	scroll-margin-top: 100px;
 }
 
+#hover-popup {
+	position: fixed;
+	top: 40px;
+	right: 0;
+	max-width: 100%;
+	height: auto;
+	pointer-events: none;
+	display: none;
+	background-color: transparent;
+	border: 1px solid var(--box-border-color);
+	z-index: 1000;
+}
+
+#hover-popup * {
+	max-width: 100%;
+}
+
 #tab-1:target .tab-1,
 #tab-2:target .tab-2,
 #tab-3:target .tab-3,
