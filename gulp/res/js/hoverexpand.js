@@ -1,6 +1,6 @@
-let hoverExpandEnabled = localStorage.getItem('hoverExpand') === 'true';
-//could use a "not attachment" queryselector?
-const mediaElements = document.querySelectorAll('div.post-file-src[data-type="image"], div.post-file-src[data-type="video"], div.post-file-src[data-type="audio"]');
+let hoverExpandEnabled = localStorage.getItem('hoverexpandsmedia') === 'true';
+const hoverMediaSelector = 'div.post-file-src[data-type="image"], div.post-file-src[data-type="video"], div.post-file-src[data-type="audio"]';
+const mediaElements = document.querySelectorAll(hoverMediaSelector);
 let hoverPopup = null;
 
 const createHoverPopup = () => { //no need for a fucking pug compiled template for 1 dev
@@ -51,7 +51,7 @@ const handleMouseOver = (event) => {
 
 const toggleHoverExpand = () => {
 	hoverExpandEnabled = !hoverExpandEnabled;
-	localStorage.setItem('hoverExpand', hoverExpandEnabled);
+	localStorage.setItem('hoverexpandsmedia', hoverExpandEnabled);
 	console.log('hover expand setting:', hoverExpandEnabled);
 };
 
@@ -73,7 +73,7 @@ window.addEventListener('settingsReady', function() {
 });
 
 window.addEventListener('addPost', function(e) {
-	const newMediaElements = e.detail.post.querySelectorAll('.post-file-src[data-type="image"], .post-file-src[data-type="video"], .post-file-src[data-type="audio"]');
+	const newMediaElements = e.detail.post.querySelectorAll(hoverMediaSelector);
 	attachHoverListeners(newMediaElements);
 });
 

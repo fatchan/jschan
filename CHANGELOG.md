@@ -1,5 +1,5 @@
 ### 1.7.3
-  - Add "Hover expands media" option in frontend.
+  - Add "Hover expands media" option in frontend and global settings frontend script defaults.
   - Fix an issue with Tegaki for browsers with anti-fingerprinting for canvas in e.g. firefox & forks by attempting to detect this.
     - If canvas is spoofed, the Tegaki applet won't open and a modal is displayed letting the user know.
     - Fixes an issue where even choosing "allow", the tegaki drawing have spoofing artifacts and not save properly, wasting users time.

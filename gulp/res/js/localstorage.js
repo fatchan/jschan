@@ -55,6 +55,7 @@ const localStorageDefaults = {
 	'disableboardcss': false,
 	'tegakiwidth-setting': settings.tegakiWidth,
 	'tegakiheight-setting': settings.tegakiHeight,
+	'hoverexpandsmedia': settings.hoverExpandsMedia,
 	'filters1': '[]',
 	'yous': '[]',
 	'watchlist': '[]',
