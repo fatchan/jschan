@@ -43,7 +43,9 @@ const hideHoverPopup = () => {
 const handleMouseOver = (event) => {
 	if (!hoverExpandEnabled) { return; }
 	const thumbElement = event.currentTarget.querySelector('.file-thumb');
-	if (thumbElement && thumbElement.style.display === 'none') { return; }
+	if (thumbElement //if its already expanded, or is spoilered, don't allow hover
+		&& (thumbElement.style.display === 'none'
+			|| thumbElement.classList.contains('spoilerimg'))) { return; }
 	const mediaType = event.currentTarget.dataset.type;
 	const mediaLink = event.currentTarget.querySelector('a').href;
 	updateHoverPopup(mediaType, mediaLink, thumbElement);

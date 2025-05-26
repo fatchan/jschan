@@ -7,6 +7,7 @@
     - To achieve this, some refactors of the Dragable class, and the addition of a Minimisable class were made, making adding and maintaining "windows" easier.
   - "/custompage/" URLs are now "/page/". To prevent immediately breaking links, custompage name will continue to work (redirect in nginx) but is deprecated and will be removed in a later version.
   - Updated Tegaki.js.
+  - Regular file sha256 hashes are now added to filter strings so they can be blocked just like file names or fuzzy hashes.
   - Updated dependencies.
   - Updated unofficial tool repo links.
   - TODO
