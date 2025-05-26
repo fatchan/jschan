@@ -18,12 +18,12 @@ const updateHoverPopup = (mediaType, src, thumbElement) => {
 		mediaElement.volume = localStorage.getItem('volume')/100; //todo: necessary to change?
 		mediaElement.play();
 		if (mediaType === 'audio' && thumbElement) {
-            mediaElement.style.backgroundImage = `url("${encodeURI(thumbElement.src)}")`
-            mediaElement.style.backgroundRepeat = 'no-repeat'
-            mediaElement.style.backgroundPosition = 'top'
-            mediaElement.style.backgroundSize = 'contain'
-            mediaElement.style.minWidth = `${thumbElement.width}px`
-            mediaElement.style.paddingTop = `${thumbElement.height}px`
+			mediaElement.style.backgroundImage = `url("${encodeURI(thumbElement.src)}")`;
+			mediaElement.style.backgroundRepeat = 'no-repeat';
+			mediaElement.style.backgroundPosition = 'top';
+			mediaElement.style.backgroundSize = 'contain';
+			mediaElement.style.minWidth = `${thumbElement.width}px`;
+			mediaElement.style.paddingTop = `${thumbElement.height}px`;
 		}
 	}
 

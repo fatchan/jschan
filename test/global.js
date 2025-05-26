@@ -260,7 +260,6 @@ bad words`,
 			body: params,
 			redirect: 'manual',
 		});
-		console.log((await response.text()))
 		expect(response.ok).toBe(true);
 	});
 
@@ -279,7 +278,6 @@ bad words`,
 			body: params,
 			redirect: 'manual',
 		});
-		console.log((await response.text()))
 		expect(response.ok).toBe(true);
 	});
 
