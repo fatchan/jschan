@@ -1582,14 +1582,14 @@ row.wrap.sb .col {
 
 #hover-popup {
 	position: fixed;
-	top: 40px;
-	right: 0;
+	/* top: 40px; */
+	/* right: 0; */
 	max-width: 100%;
 	height: auto;
 	pointer-events: none;
 	display: none;
-	background-color: transparent;
-	border: 1px solid var(--box-border-color);
+	background-color: var(--background-rest);
+	/* border: 1px solid var(--box-border-color); */
 	z-index: 1000;
 }
 

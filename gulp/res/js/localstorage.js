@@ -56,6 +56,7 @@ const localStorageDefaults = {
 	'tegakiwidth-setting': settings.tegakiWidth,
 	'tegakiheight-setting': settings.tegakiHeight,
 	'hoverexpandsmedia': settings.hoverExpandsMedia,
+	'hoverexpandsfollowcursor': settings.hoverExpandsFollowCursor,
 	'filters1': '[]',
 	'yous': '[]',
 	'watchlist': '[]',

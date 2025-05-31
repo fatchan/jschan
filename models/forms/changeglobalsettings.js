@@ -168,6 +168,7 @@ module.exports = async (req, res) => {
 			hidePostStubs: booleanSetting(req.body.frontend_script_default_hide_post_stubs, oldSettings.frontendScriptDefault.hidePostStubs),
 			smoothScrolling: booleanSetting(req.body.frontend_script_default_smooth_scrolling, oldSettings.frontendScriptDefault.smoothScrolling),
 			hoverExpandsMedia: booleanSetting(req.body.frontend_script_default_hover_expands_media, oldSettings.frontendScriptDefault.hoverExpandsMedia),
+			hoverExpandsFollowCursor: booleanSetting(req.body.frontend_script_default_hover_expands_follow_cursor, oldSettings.frontendScriptDefault.hoverExpandsFollowCursor),
 			threadWatcher: booleanSetting(req.body.frontend_script_default_thread_watcher, oldSettings.frontendScriptDefault.threadWatcher),
 			defaultVolume: numberSetting(req.body.frontend_script_default_volume, oldSettings.frontendScriptDefault.defaultVolume),
 			loop: booleanSetting(req.body.frontend_script_default_loop, oldSettings.frontendScriptDefault.loop),
