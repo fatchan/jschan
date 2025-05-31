@@ -41,6 +41,12 @@ const updateHoverPopup = (mediaType, src, thumbElement) => {
 };
 
 const positionHoverPopup = (mouseX, mouseY) => {
+	if (!hoverExpandFollowEnabled) {
+		hoverPopup.style.right = '0px';
+		hoverPopup.style.top = '0px';
+		return;
+	}
+
 	const popupWidth = hoverPopup.offsetWidth;
 	const popupHeight = hoverPopup.offsetHeight;
 
@@ -89,7 +95,7 @@ const handleMouseOver = async (event) => {
 };
 
 const handleMouseMove = (event) => {
-	if (hoverPopup.style.display === 'block') {
+	if (hoverExpandFollowEnabled && hoverPopup.style.display === 'block') {
 		positionHoverPopup(event.x, event.y);
 	}
 };
@@ -114,7 +120,6 @@ const attachHoverListeners = (elements) => {
 	});
 };
 
-// Attach the mouse move event listener to the document
 document.addEventListener('mousemove', handleMouseMove);
 
 window.addEventListener('settingsReady', function() {
