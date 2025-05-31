@@ -77,6 +77,7 @@ const hideHoverPopup = () => {
 		}
 		hoverPopup.style.left = '';
 		hoverPopup.style.top = '';
+		hoverPopup.style.right = '';
 		hoverPopup.style.display = 'none';
 	}
 };
