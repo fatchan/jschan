@@ -20,13 +20,13 @@ module.exports = async (req, res) => {
 
 	// check all mime types before we try saving anything
 	for (let i = 0; i < res.locals.numFiles; i++) {
-		if (!mimeTypes.allowed(req.files.file[i].mimetype, {
+		if (!(await mimeTypes.allowed(req.files.file[i], {
 			image: true,
 			animatedImage: true, //gif flags? i guess lol
 			video: false,
 			audio: false,
 			other: false
-		})) {
+		}))) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': __('Bad request'),
