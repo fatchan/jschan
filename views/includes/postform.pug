@@ -13,20 +13,22 @@ section.form-wrapper.flex-center
 				span.fw.text-center #{isThread ? __('New Reply') : __('New Thread')}
 				a.mr-0.close(href='#!') [×]
 		if board.settings.forceAnon && !modview
-			section.row(style=(`${isThread ? '' : 'display:none'}`))
-				.label Sage
-				label.postform-style.ph-5
-					input(type='checkbox', name='email', value='sage')
+			if isThread
+				section.row
+					.label Sage
+					label.postform-style.ph-5
+						input(type='checkbox', name='email', value='sage')
 			include ./subjectfield.pug
 		else
 			section.row
 				.label #{__('Name')}
 				input(type='text', name='name', placeholder=board.settings.defaultName maxlength=globalLimits.fieldLength.name)
 			if board.settings.sageOnlyEmail && !modview
-				section.row(style=(`${isThread ? '' : 'display:none'}`))
-					.label #{__('Sage')}
-					label.postform-style.ph-5
-						input(type='checkbox', name='email', value='sage')
+				if isThread
+					section.row
+						.label #{__('Sage')}
+						label.postform-style.ph-5
+							input(type='checkbox', name='email', value='sage')
 			else
 				section.row
 					.label #{__('Email')}
