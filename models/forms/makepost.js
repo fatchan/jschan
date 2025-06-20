@@ -207,7 +207,7 @@ module.exports = async (req, res) => {
 
 		//basic mime type check
 		for (let i = 0; i < res.locals.numFiles; i++) {
-			if (!mimeTypes.allowed(req.files.file[i].mimetype, allowedFileTypes)) {
+			if (!(await mimeTypes.allowed(req.files.file[i], allowedFileTypes))) {
 				await deleteTempFiles(req).catch(console.error);
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': __('Bad request'),
@@ -294,7 +294,7 @@ module.exports = async (req, res) => {
 							processedFile.geometryString = `${imageDimensions.width}x${imageDimensions.height}`;
 							const lteThumbSize = (processedFile.geometry.height <= thumbSize
 								&& processedFile.geometry.width <= thumbSize);
-							processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
+							processedFile.hasThumb = !(await mimeTypes.allowed(file, {image: true})
 								&& subtype !== 'png'
 								&& lteThumbSize);
 							await saveFull();
