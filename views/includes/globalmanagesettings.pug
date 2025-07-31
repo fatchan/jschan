@@ -862,6 +862,9 @@ ul.tabs.group
 				.label #{__('OP Thread Age Delete Protection')}
 				input(type='text' name='board_defaults_delete_protection_age' placeholder=__('e.g. 1w') value=settings.boardDefaults.deleteProtectionAge)
 			.row
+				.label #{__('Auto Bumplock Time')}
+				input(type='text' name='board_defaults_auto_bumplock_time' placeholder=__('e.g. 1w') value=settings.boardDefaults.autoBumplockTime)
+			.row
 				.label #{__('Disable anonymizer file posting')}
 				label.postform-style.ph-5
 					input(type='checkbox', name='board_defaults_disable_anonymizer_file_posting', value='true' checked=settings.boardDefaults.disableAnonymizerFilePosting)

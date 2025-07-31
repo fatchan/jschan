@@ -145,6 +145,7 @@ module.exports = () => describe('Test post modactions', () => {
 			message_r9k_mode: '0',
 			delete_protection_count: '0',
 			delete_protection_age: '0',
+			auto_bumplock_time: '0',
 			lock_mode: '0',
 			captcha_mode: '2',
 			pph_trigger: '50',

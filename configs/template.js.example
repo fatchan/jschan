@@ -411,6 +411,7 @@ module.exports = {
 		threadLimit: 200,
 		replyLimit: 1000,
 		bumpLimit: 500,
+		autoBumplockTime: 0, // ms, 0 = disabled
 		maxFiles: 5,
 		forceReplyMessage: false,
 		forceReplyFile: false,

@@ -1,4 +1,5 @@
 ### 1.7.3
+  - Add "Auto Bumplock Time" board option to (if enabled) automatically bumplock and prevent new replied to old threads after a specified amount of time.
   - Add "Hover expands media" option in frontend and global settings frontend script defaults.
     - Has a sub option to follow the cursor.
   - Fix an issue with Tegaki for browsers with anti-fingerprinting for canvas in e.g. firefox & forks by attempting to detect this.

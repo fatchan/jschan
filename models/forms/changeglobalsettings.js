@@ -327,6 +327,7 @@ module.exports = async (req, res) => {
 			maxThreadMessageLength: numberSetting(req.body.board_defaults_max_thread_message_length, oldSettings.boardDefaults.maxThreadMessageLength),
 			maxReplyMessageLength: numberSetting(req.body.board_defaults_max_reply_message_length, oldSettings.boardDefaults.maxReplyMessageLength),
 			disableAnonymizerFilePosting: booleanSetting(req.body.board_defaults_disable_anonymizer_file_posting, oldSettings.boardDefaults.disableAnonymizerFilePosting),
+			autoBumplockTime: numberSetting(req.body.board_defaults_auto_bumplock_time, oldSettings.boardDefaults.autoBumplockTime),
 			deleteProtectionAge: numberSetting(req.body.board_defaults_delete_protection_age, oldSettings.boardDefaults.deleteProtectionAge),
 			deleteProtectionCount: numberSetting(req.body.board_defaults_delete_protection_count, oldSettings.boardDefaults.deleteProtectionCount),
 			customCSS: null,

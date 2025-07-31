@@ -15,7 +15,7 @@ const changeBoardSettings = require(__dirname+'/../../models/forms/changeboardse
 module.exports = {
 
 	paramConverter: paramConverter({
-		timeFields: ['delete_protection_age'],
+		timeFields: ['delete_protection_age', 'auto_bumplock_time'],
 		trimFields: ['twofactor', 'tags', 'announcement', 'description', 'name', 'custom_css', 'language'],
 		allowedArrays: ['countries'],
 		numberFields: ['lock_reset', 'captcha_reset', 'lock_mode', 'message_r9k_mode', 'file_r9k_mode', 'captcha_mode', 'tph_trigger', 'pph_trigger', 'pph_trigger_action',
@@ -88,6 +88,7 @@ module.exports = {
 			{ result: numberBody(req.body.pph_trigger_action, 0, 4), expected: true, error: __('Invalid pph trigger action') },
 			{ result: numberBody(req.body.lock_reset, 0, 2), expected: true, error: __('Invalid trigger reset lock') },
 			{ result: numberBody(req.body.captcha_reset, 0, 2), expected: true, error: __('Invalid trigger reset captcha') },
+			{ result: numberBody(req.body.auto_bumplock_time, 0), expected: true, error: __('Invalid auto bumplock time') },
 			{ result: numberBody(req.body.delete_protection_age, 0), expected: true, error: __('Invalid OP thread age delete protection') },
 			{ result: numberBody(req.body.delete_protection_count, 0), expected: true, error: __('Invalid OP thread reply count delete protection') },
 			{ result: inArrayBody(req.body.language, i18n.getLocales()), expected: true, error: __('Invalid language') },
