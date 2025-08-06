@@ -1,5 +1,5 @@
 ### 1.7.3
-  - Add "Auto Bumplock Time" board option to (if enabled) automatically bumplock and prevent new replied to old threads after a specified amount of time.
+  - Add "Auto Bumplock Time" board option to (if enabled) automatically bumplock old threads after a specified amount of time.
   - Add "Hover expands media" option in frontend and global settings frontend script defaults.
     - Has a sub option to follow the cursor.
   - Fix an issue with Tegaki for browsers with anti-fingerprinting for canvas in e.g. firefox & forks by attempting to detect this.
@@ -12,7 +12,6 @@
   - Regular file sha256 hashes are now added to filter strings so they can be blocked just like file names or fuzzy hashes.
   - Updated dependencies.
   - Updated unofficial tool repo links.
-  - TODO
 
 Some items are included in this tag/release but were already backported to 1.7.0 including:
   - Migration to update board staff with the proper bit for the USE_MARKDOWN_IMAGE permission (image embeds like github-style markdown).

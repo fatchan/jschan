@@ -110,38 +110,17 @@ module.exports = async (req, res) => {
 				'redirect': redirect
 			});
 		}
-		console.log(Date.now())
-		console.log(thread.date)
-		console.log(thread.date.getTime())
-		console.log(res.locals.board.settings.autoBumplockTime)
 		if (res.locals.board.settings.autoBumplockTime > 0
-			&& Date.now() > thread.date.getTime() + res.locals.board.settings.autoBumplockTime) { //auto bumplock time limit
-			await deleteTempFiles(req).catch(console.error);
-			//TODO: await setting the thread to bumplocked
-			//refresh the pages that the thread is on
-			buildQueue.push({
-				'task': 'buildBoard',
-				'options': {
-					'board': res.locals.board,
-					'page': (await Posts.getThreadPage(req.params.board, req.body.thread))
+			&& Date.now() > thread.date.getTime() + res.locals.board.settings.autoBumplockTime) { //auto bumplock after x time
+			//bumplock the thread
+			await Posts.db.updateOne({
+				_id: thread._id,
+			}, {
+				'$set': {
+					bumplocked: Mongo.NumberInt(1),
 				}
 			});
-			buildQueue.push({
-				'task': 'buildCatalog',
-				'options': {
-					'board': res.locals.board,
-				}
-			});
-			//redirect at this point is to thread, so we'll at least build that first
-			await buildThread({
-				'threadId': req.body.thread,
-				'board': res.locals.board
-			});
-			return dynamicResponse(req, res, 400, 'message', {
-				'title': __('Bad request'),
-				'message': __('Thread reached auto bumplock time limit'),
-				'redirect': redirect
-			});
+			thread.bumplocked = 1;
 		}
 	}
 
