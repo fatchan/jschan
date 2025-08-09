@@ -4,7 +4,7 @@ mixin boardheader(pagename)
 			img.board-banner(src=`/randombanner?board=${board._id}` loading='lazy')
 			br
 		if pagename
-			h1.board-title #{pagename}(#[a.no-decoration(href=`/${board._id}/index.html`) /#{board._id}/])
+			h1.board-title #{pagename} (#[a.no-decoration(href=`/${board._id}/index.html`) /#{board._id}/])
 		else
 			a.no-decoration(href=`/${board._id}/index.html`)
 				h1.board-title /#{board._id}/ - #{board.settings.name}
