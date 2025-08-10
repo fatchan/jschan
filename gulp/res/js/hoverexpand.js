@@ -15,9 +15,12 @@ const updateHoverPopup = (mediaType, src, thumbElement) => {
 		const mediaElement = document.createElement(mediaType === 'image' ? 'img' : mediaType);
 		const customOnLoad = () => {
 			hideHoverPopup();
-			hoverPopup.appendChild(mediaElement);
-			hoverPopup.style.display = 'block';
-			mediaElement.play && mediaElement.play();
+			// make sure the user didn't move their mouse off while loading
+			if (thumbElement.matches(':hover')) {
+				hoverPopup.appendChild(mediaElement);
+				hoverPopup.style.display = 'block';
+				mediaElement.play && mediaElement.play();
+			}
 			res();
 		};
 		mediaElement.onload = customOnLoad;
