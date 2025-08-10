@@ -16,7 +16,7 @@ const updateHoverPopup = (mediaType, src, thumbElement) => {
 		const customOnLoad = () => {
 			hideHoverPopup();
 			// make sure the user didn't move their mouse off while loading
-			if (thumbElement.matches(':hover')) {
+			if (thumbElement && thumbElement.matches(':hover')) {
 				hoverPopup.appendChild(mediaElement);
 				hoverPopup.style.display = 'block';
 				mediaElement.play && mediaElement.play();
