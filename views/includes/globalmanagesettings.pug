@@ -585,6 +585,14 @@ ul.tabs.group
 				label.postform-style.ph-5
 					input(type='checkbox', name='frontend_script_default_height_unlimit', value='true' checked=settings.frontendScriptDefault.heightUnlimit)
 			.row
+				.label #{__('Hover Expands Media')}
+				label.postform-style.ph-5
+					input(type='checkbox', name='frontend_script_default_hover_expands_media', value='true' checked=settings.frontendScriptDefault.hoverExpandsMedia)
+			.row
+				.label #{__('Hover Expands Follow Cursor')}
+				label.postform-style.ph-5
+					input(type='checkbox', name='frontend_script_default_hover_expands_follow_cursor', value='true' checked=settings.frontendScriptDefault.hoverExpandsFollowCursor)
+			.row
 				.label #{__('Recursive Post Hiding')}
 				label.postform-style.ph-5
 					input(type='checkbox', name='frontend_script_default_hide_recursive', value='true' checked=settings.frontendScriptDefault.hideRecursive)
@@ -853,6 +861,9 @@ ul.tabs.group
 			.row
 				.label #{__('OP Thread Age Delete Protection')}
 				input(type='text' name='board_defaults_delete_protection_age' placeholder=__('e.g. 1w') value=settings.boardDefaults.deleteProtectionAge)
+			.row
+				.label #{__('Auto Bumplock Time')}
+				input(type='text' name='board_defaults_auto_bumplock_time' placeholder=__('e.g. 1w') value=settings.boardDefaults.autoBumplockTime)
 			.row
 				.label #{__('Disable anonymizer file posting')}
 				label.postform-style.ph-5

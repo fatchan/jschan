@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
 		});
 	}
 
-	await remove(`${uploadDirectory}/html/${req.params.board}/custompage/${oldPage.page}.html`);
+	await remove(`${uploadDirectory}/html/${req.params.board}/page/${oldPage.page}.html`);
 
 	const newPage = {
 		'_id': oldPage._id,

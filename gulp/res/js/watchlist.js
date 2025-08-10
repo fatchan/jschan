@@ -1,6 +1,5 @@
-/* globals setLocalStorage Dragable threadwatcher watchedthread */
+/* globals Dragable threadwatcher watchedthread Minimisable setLocalStorage */
 class ThreadWatcher {
-
 	init() {
 		//dont bother loading if no footer, must be minimal view
 		this.footer = document.getElementById('bottom');
@@ -10,7 +9,6 @@ class ThreadWatcher {
 
 		//read the watchlist map and minimised state from localstorage
 		this.watchListMap = new Map(JSON.parse(localStorage.getItem('watchlist')));
-		this.minimised = localStorage.getItem('threadwatcher-minimise') === 'true';
 		this.threadMatch = window.location.pathname.match(/^\/(\w+)(?:\/manage)?\/thread\/(\d+)\.html$/);
 
 		//call the updatehandler when storage changes in another context
@@ -21,12 +19,16 @@ class ThreadWatcher {
 		this.clearButton = document.getElementById('watchlist-clear');
 		this.clearButton.addEventListener('click', () => this.clear(), false);
 
-		//create and insert the watchlist
-		this.createList({minimised: this.minimised});
+		//create a Minimisable instance for the thread watcher with a localStorage key
+		this.minimisable = new Minimisable('#threadwatcher', [
+			{ selector: '#minimise', cb: 'toggleMinimise', textVar: 'minimised', trueText: '[+]', falseText: '[-]' },
+		], 'threadwatcher-minimise');
 
-		//add events for toggling minimised
-		this.minimiseButton = this.threadWatcher.firstChild.querySelector('.close');
-		this.minimiseButton.addEventListener('click', () => this.toggleMinimise());
+		//create and insert the watchlist
+		this.createList();
+
+		//attach minimisable now that the elem is created
+		this.minimisable.init();
 
 		//check if we are in a thread, and setup events for when the tab is focused/unfocused
 		this.isFocused = document.hasFocus();
@@ -41,7 +43,6 @@ class ThreadWatcher {
 
 		//start refreshing on an interval
 		this.refreshInterval = setInterval(() => this.refresh(), 60 * 1000);
-
 	}
 
 	//refresh all the threads in the watchlist map
@@ -176,23 +177,17 @@ class ThreadWatcher {
 		this.setVisibility();
 	}
 
-	toggleMinimise() {
-		this.minimised = !this.minimised;
-		this.minimiseButton.textContent = this.minimised ? '[+]' : '[−]';
-		this.threadWatcher.classList.toggle('minimised');
-		setLocalStorage('threadwatcher-minimise', this.minimised);
-	}
-
 	//toggles watcher visibility
 	setVisibility() {
 		if (this.threadWatcher) {
+			// this.minimisable.toggleMinimise();
 			this.threadWatcher.style.display = (this.watchListMap.size === 0 ? 'none' : null);
 		}
 	}
 
 	//create the actual thread watcher box and draghandle and insert it into the page
 	createList() {
-		const threadWatcherHtml = threadwatcher({ minimised: this.minimised });
+		const threadWatcherHtml = threadwatcher({ minimised: this.minimisable.isMinimised() });
 		this.footer.insertAdjacentHTML('afterend', threadWatcherHtml);
 		this.threadWatcher = document.getElementById('threadwatcher');
 		if (this.watchListMap.size === 0) {
@@ -252,7 +247,7 @@ class ThreadWatcher {
 	//delete the actual row from the watcher
 	deleteRow(board, postId) {
 		const row = this.threadWatcher.querySelector(`[data-id="${board}-${postId}"]`);
-		row.remove();
+		row && row.remove();
 	}
 
 	//update a row in the watcher for new unread count
@@ -267,13 +262,10 @@ class ThreadWatcher {
 		//subject *can* change rarely, if the op was edited
 		row.children[1].textContent = `/${board}/ - ${data.subject}`;
 	}
-
 }
 
 const threadWatcher = new ThreadWatcher();
 
 window.addEventListener('settingsReady', () => {
-
 	threadWatcher.init();
-
 });

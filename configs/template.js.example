@@ -355,6 +355,8 @@ module.exports = {
 		alwaysShowSpoilers: false , //always reveal spoiler text
 		hidePostStubs: false, //hide hidden posts completely, dont even show it minimized
 		smoothScrolling: true, //smooth scrolling. annoying for chrome users on long threads
+		hoverExpandsMedia: false, //hover over video/image/audio thumbs to show full file in a fixed popup
+		hoverExpandsFollowCursor: true, //when hover is on, follow the mouse rather than putting in top-right corner
 		threadWatcher: true, //make threadwatcher visible
 		defaultVolume: 100, //default video/audio volume
 		loop: true, //looping video/audio
@@ -409,6 +411,7 @@ module.exports = {
 		threadLimit: 200,
 		replyLimit: 1000,
 		bumpLimit: 500,
+		autoBumplockTime: 0, // ms, 0 = disabled
 		maxFiles: 5,
 		forceReplyMessage: false,
 		forceReplyFile: false,

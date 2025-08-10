@@ -177,7 +177,7 @@ testing 123`
 			redirect: 'manual',
 		});
 		expect(response.ok).toBe(true);
-		const response2 = await fetch('http://localhost/test/custompage/test.html');
+		const response2 = await fetch('http://localhost/test/page/test.html');
 		expect(response2.ok).toBe(true);
 	});
 
@@ -205,9 +205,9 @@ testing 123`
 			redirect: 'manual',
 		});
 		expect(response.ok).toBe(true);
-		const response2 = await fetch('http://localhost/test/custompage/test.html');
+		const response2 = await fetch('http://localhost/test/page/test.html');
 		expect(response2.status).toBe(404);
-		const response3 = await fetch('http://localhost/test/custompage/test2.html');
+		const response3 = await fetch('http://localhost/test/page/test2.html');
 		expect(response3.status).toBe(200);
 	});
 
@@ -226,7 +226,7 @@ testing 123`
 			redirect: 'manual',
 		});
 		expect(response.ok).toBe(true);
-		const response2 = await fetch('http://localhost/test/custompage/test2.html');
+		const response2 = await fetch('http://localhost/test/page/test2.html');
 		expect(response2.status).toBe(404);
 	});
 

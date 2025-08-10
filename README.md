@@ -61,9 +61,9 @@ Official:
  - [jschan-antispam group](https://gitgud.io/jschan-antispam/) - Multiple projects that are compatible with jschan and implement more sophisticated antispam capabilities.
 
 Unofficial: **Not guaranteed to work or be safe, use at your own risk.**
- - [globalafk](https://git.ptchan.org/globalafk/) - "A simple python script that sends ugly notifications when something happens on a jschan imageboard that you moderate."
- - [reporter](https://git.ptchan.org/reporter/) - news bot that fetches news from a provider and posts a snippet of it on a configurable board of a configurable jschan imageboard
- - [yacam](https://git.ptchan.org/yacam/) - a bot that tries to detect (dumb) spam on jschan imageboards and does something about it
+ - [globalafk](https://github.com/loynet/automod) - "A simple python script that sends ugly notifications when something happens on a jschan imageboard that you moderate."
+ - [reporter](https://github.com/loynet/reporter) - news bot that fetches news from a provider and posts a snippet of it on a configurable board of a configurable jschan imageboard
+ - [yacam](https://github.com/loynet/yacam) - a bot that tries to detect (dumb) spam on jschan imageboards and does something about it
 
 ## For generous people
 

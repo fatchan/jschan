@@ -15,7 +15,7 @@ const changeGlobalSettings = require(__dirname+'/../../models/forms/changeglobal
 module.exports = {
 
 	paramConverter: paramConverter({
-		timeFields: ['hot_threads_max_age', 'inactive_account_time', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age'],
+		timeFields: ['hot_threads_max_age', 'inactive_account_time', 'default_ban_duration', 'block_bypass_expire_after_time', 'dnsbl_cache_time', 'board_defaults_delete_protection_age', 'board_defaults_auto_bumplock_time'],
 		trimFields: ['twofactor', 'captcha_options_grid_question', 'captcha_options_grid_trues', 'captcha_options_grid_falses', 'captcha_options_font', 'allowed_hosts', 'dnsbl_blacklists', 'other_mime_types',
 			'highlight_options_language_subset', 'global_limits_custom_css_filters', 'board_defaults_filters', 'filters', 'archive_links', 'ethereum_links', 'reverse_links', 'language', 'board_defaults_language'],
 		numberFields: ['inactive_account_action', 'abandoned_board_action', 'auth_level', 'captcha_options_text_wave', 'captcha_options_text_paint', 'captcha_options_text_noise',
@@ -228,6 +228,7 @@ module.exports = {
 			{ result: numberBody(req.body.frontend_script_default_volume, 0, 100), expected: true, error: __('Default volume must be a number from 0-100') },
 			{ result: numberBody(req.body.frontend_script_default_tegaki_width), expected: true, error: __('Tegaki width must be a number') },
 			{ result: numberBody(req.body.frontend_script_default_tegaki_height), expected: true, error: __('Tegaki height must be a number') },
+			{ result: numberBody(req.body.board_defaults_auto_bumplock_time, 0), expected: true, error: __('Invalid board defaults auto bumplock time') },
 			{ result: numberBody(req.body.board_defaults_delete_protection_age, 0), expected: true, error: __('Invalid board defaults OP thread age delete protection') },
 			{ result: numberBody(req.body.board_defaults_delete_protection_count, 0), expected: true, error: __('Invalid board defaults OP thread reply count delete protection') },
 			{ result: lengthBody(req.body.webring_following, 0, 10000), expected: false, error: __('Webring following list must not exceed 10000 characters') },

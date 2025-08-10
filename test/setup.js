@@ -276,6 +276,7 @@ module.exports = () => describe('login and create test board', () => {
 			board_defaults_max_reply_message_length: '20000',
 			board_defaults_delete_protection_count: '0',
 			board_defaults_delete_protection_age: '0',
+			board_defaults_auto_bumplock_time: '0',
 			board_defaults_allowed_file_types_video: 'true',
 			board_defaults_allowed_file_types_image: 'true',
 			board_defaults_allowed_file_types_animated_image: 'true',

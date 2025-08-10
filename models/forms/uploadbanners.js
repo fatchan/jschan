@@ -18,14 +18,14 @@ module.exports = async (req, res) => {
 	const redirect = `/${req.params.board}/manage/assets.html`;
 
 	for (let i = 0; i < res.locals.numFiles; i++) {
-		if (!mimeTypes.allowed(req.files.file[i].mimetype, {
+		if (!(await mimeTypes.allowed(req.files.file[i], {
 				//banners can be static image or animated (gif, apng, etc)
 			image: true,
 			animatedImage: true,
 			video: false,
 			audio: false,
 			other: false
-		})) {
+		}))) {
 			await deleteTempFiles(req).catch(console.error);
 			return dynamicResponse(req, res, 400, 'message', {
 				'title': __('Bad request'),

@@ -145,6 +145,7 @@ module.exports = () => describe('Test post modactions', () => {
 			message_r9k_mode: '0',
 			delete_protection_count: '0',
 			delete_protection_age: '0',
+			auto_bumplock_time: '0',
 			lock_mode: '0',
 			captcha_mode: '2',
 			pph_trigger: '50',
@@ -375,7 +376,7 @@ __underline__
 (((detected)))
 ##2d9+3
 https://example.com
-[Board Rules](https://your.imageboard/a/custompage/rules.html)(staff only)
+[Board Rules](https://your.imageboard/a/page/rules.html)(staff only)
 ![embed](https://your.imageboard/image.png)
 >>123
 >>>/test/

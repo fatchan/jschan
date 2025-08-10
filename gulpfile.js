@@ -54,7 +54,7 @@ var FAVICON_DATA_FILE = 'gulp/res/icons/faviconData.json';
 // You should run it at least once to create the icons. Then,
 // you should run it whenever RealFaviconGenerator updates its
 // package (see the check-for-favicon-update task below).
-gulp.task('generate-favicon', function(done) {
+gulp.task('generate-favicon', function (done) {
 	realFavicon.generateFavicon({
 		masterPicture: 'gulp/res/icons/master.png',
 		dest: 'gulp/res/icons',
@@ -120,7 +120,7 @@ gulp.task('generate-favicon', function(done) {
 			paramValue: commit
 		},
 		markupFile: FAVICON_DATA_FILE
-	}, function() {
+	}, function () {
 		fs.writeFileSync('gulp/res/icons/html_code.html', JSON.parse(fs.readFileSync(FAVICON_DATA_FILE)).favicon.html_code, 'utf8');
 		done();
 	});
@@ -130,9 +130,9 @@ gulp.task('generate-favicon', function(done) {
 // released a new Touch icon along with the latest version of iOS).
 // Run this task from time to time. Ideally, make it part of your
 // continuous integration system.
-gulp.task('check-for-favicon-update', function(done) {
+gulp.task('check-for-favicon-update', function (done) {
 	var currentVersion = JSON.parse(fs.readFileSync(FAVICON_DATA_FILE)).version;
-	realFavicon.checkForUpdates(currentVersion, function(err) {
+	realFavicon.checkForUpdates(currentVersion, function (err) {
 		if (err) {
 			throw err;
 		}
@@ -555,7 +555,7 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 //		fs.writeFileSync('gulp/res/js/pugruntime.js', pugRuntimeFuncs);
 		
 		//compile some pug client side functions
-		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher', 'banmessage']
+		['modal', 'post', 'uploaditem', 'pugfilters', 'captchaformsection', 'watchedthread', 'threadwatcher', 'banmessage', 'tegakiwindow']
 			.forEach(templateName => {
 				const compilationOptions = {
 					compileDebug: false,
@@ -591,18 +591,23 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`${paths.scripts.src}/settings.js`,
 		`${paths.scripts.src}/live.js`,
 		`${paths.scripts.src}/captcha.js`,
+		`${paths.scripts.src}/iscanvasblocked.js`,
 		`${paths.scripts.src}/tegaki.js`,
+		`${paths.scripts.src}/tegakiwindow.js`,
 		`${paths.scripts.src}/forms.js`,
 		`${paths.scripts.src}/*.js`,
 		`!${paths.scripts.src}/saveoverboard.js`,
 		`!${paths.scripts.src}/hidefileinput.js`,
 		`!${paths.scripts.src}/dragable.js`,
+		`!${paths.scripts.src}/minimise.js`,
+		`!${paths.scripts.src}/tegakiwrapper.js`,
 		`!${paths.scripts.src}/watchlist.js`,
 		`!${paths.scripts.src}/filters.js`,
 		`!${paths.scripts.src}/hideimages.js`,
 		`!${paths.scripts.src}/yous.js`,
 		`!${paths.scripts.src}/catalog.js`,
 		`!${paths.scripts.src}/time.js`,
+		`!${paths.scripts.src}/hoverexpand.js`,
 		`!${paths.scripts.src}/timezone.js`,
 		`!${paths.scripts.src}/renderweb3.js`,
 	])
@@ -621,12 +626,15 @@ const extraLocals = ${JSON.stringify({ meta: config.get.meta, reverseImageLinksU
 		`${paths.scripts.src}/saveoverboard.js`,
 		`${paths.scripts.src}/hidefileinput.js`,
 		`${paths.scripts.src}/dragable.js`,
+		`${paths.scripts.src}/minimise.js`,
+		`${paths.scripts.src}/tegakiwrapper.js`,
 		`${paths.scripts.src}/hideimages.js`,
 		`${paths.scripts.src}/yous.js`,
 		`${paths.scripts.src}/filters.js`,
 		`${paths.scripts.src}/watchlist.js`,
 		`${paths.scripts.src}/catalog.js`,
 		`${paths.scripts.src}/time.js`,
+		`${paths.scripts.src}/hoverexpand.js`,
 		`${paths.scripts.src}/renderweb3.js`,
 	])
 		.pipe(concat('render.js'))

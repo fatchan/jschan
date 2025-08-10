@@ -106,6 +106,7 @@ module.exports = async (req, res) => {
 		'lockMode': numberSetting(req.body.lock_mode, oldSettings.lockMode),
 		'messageR9KMode': numberSetting(req.body.message_r9k_mode, oldSettings.messageR9KMode),
 		'fileR9KMode': numberSetting(req.body.file_r9k_mode, oldSettings.fileR9KMode),
+		'autoBumplockTime': numberSetting(req.body.auto_bumplock_time, oldSettings.autoBumplockTime),
 		'deleteProtectionAge': numberSetting(req.body.delete_protection_age, oldSettings.deleteProtectionAge),
 		'deleteProtectionCount': numberSetting(req.body.delete_protection_count, oldSettings.deleteProtectionCount),
 		'blockedCountries': req.body.countries || [],
@@ -201,7 +202,7 @@ module.exports = async (req, res) => {
 	}
 	if (rebuildTasks.has('other')) {
 		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/logs/`));
-		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/custompage/`));
+		promises.push(remove(`${uploadDirectory}/html/${req.params.board}/page/`));
 		buildQueue.push({
 			'task': 'buildModLogList',
 			'options': {

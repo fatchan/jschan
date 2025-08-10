@@ -1,0 +1,8 @@
+mixin tegakiwindow(minimised)
+	.flex-center.resize#tegakiwindow(class=(minimised ? 'minimised' : ''))
+		.row.noselect#tegakiwindow-dragHandle
+			span.fw.text-center #{__('Tegaki')}
+			span.mr-0.close#minimise #{minimised ? '[+]' : '[−]'}
+			span.mr-0.close#maximise [⤢]
+			span.mr-0.close#close [×]
+

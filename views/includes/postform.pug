@@ -9,24 +9,26 @@ section.form-wrapper.flex-center
 			input(type='hidden' name='_csrf' value=csrf)
 		input(type='hidden' name='thread' value=isThread ? thread.postId : null)
 		section.row.jsonly
-			.noselect#postform-dragHandle #{isThread ? __('New Reply') : __('New Thread')}
+			.noselect#postform-dragHandle
+				span.fw.text-center #{isThread ? __('New Reply') : __('New Thread')}
+				a.mr-0.close(href='#!') [×]
 		if board.settings.forceAnon && !modview
-			section.row
-				.label Sage
-				label.postform-style.ph-5
-					input(type='checkbox', name='email', value='sage')
-				a.close.postform-style(href='#!') ×
-			include ./subjectfield.pug
-		else
-			section.row
-				.label #{__('Name')}
-				input.mr-1(type='text', name='name', placeholder=board.settings.defaultName maxlength=globalLimits.fieldLength.name)
-				a.close.postform-style(href='#!') ×
-			if board.settings.sageOnlyEmail && !modview
+			if isThread
 				section.row
 					.label #{__('Sage')}
 					label.postform-style.ph-5
 						input(type='checkbox', name='email', value='sage')
+			include ./subjectfield.pug
+		else
+			section.row
+				.label #{__('Name')}
+				input(type='text', name='name', placeholder=board.settings.defaultName maxlength=globalLimits.fieldLength.name)
+			if board.settings.sageOnlyEmail && !modview
+				if isThread
+					section.row
+						.label #{__('Sage')}
+						label.postform-style.ph-5
+							input(type='checkbox', name='email', value='sage')
 			else
 				section.row
 					.label #{__('Email')}

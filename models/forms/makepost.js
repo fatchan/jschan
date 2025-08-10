@@ -110,6 +110,18 @@ module.exports = async (req, res) => {
 				'redirect': redirect
 			});
 		}
+		if (res.locals.board.settings.autoBumplockTime > 0
+			&& Date.now() > thread.date.getTime() + res.locals.board.settings.autoBumplockTime) { //auto bumplock after x time
+			//bumplock the thread
+			await Posts.db.updateOne({
+				_id: thread._id,
+			}, {
+				'$set': {
+					bumplocked: Mongo.NumberInt(1),
+				}
+			});
+			thread.bumplocked = 1;
+		}
 	}
 
 	//filters
@@ -207,7 +219,7 @@ module.exports = async (req, res) => {
 
 		//basic mime type check
 		for (let i = 0; i < res.locals.numFiles; i++) {
-			if (!mimeTypes.allowed(req.files.file[i].mimetype, allowedFileTypes)) {
+			if (!(await mimeTypes.allowed(req.files.file[i], allowedFileTypes))) {
 				await deleteTempFiles(req).catch(console.error);
 				return dynamicResponse(req, res, 400, 'message', {
 					'title': __('Bad request'),
@@ -294,7 +306,7 @@ module.exports = async (req, res) => {
 							processedFile.geometryString = `${imageDimensions.width}x${imageDimensions.height}`;
 							const lteThumbSize = (processedFile.geometry.height <= thumbSize
 								&& processedFile.geometry.width <= thumbSize);
-							processedFile.hasThumb = !(mimeTypes.allowed(file.mimetype, {image: true})
+							processedFile.hasThumb = !(await mimeTypes.allowed(file, {image: true})
 								&& subtype !== 'png'
 								&& lteThumbSize);
 							await saveFull();
@@ -709,7 +721,7 @@ module.exports = async (req, res) => {
 		}
 	}
 
-	//always rebuild catalog for post counts and ordering
+	//always rebuild catalog for post counts, ordering, sticky/bumplock/etc
 	buildQueue.push({
 		'task': 'buildCatalog',
 		'options': {

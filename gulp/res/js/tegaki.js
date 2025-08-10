@@ -1,4 +1,6 @@
-/*! tegaki.js, MIT License */'use strict';var TegakiStrings = {
+/*! tegaki.js, MIT License */
+'use strict';
+var TegakiStrings = {
   // Messages
   badDimensions: __('Invalid dimensions.'),
   promptWidth: __('Canvas width in pixels'),
@@ -1706,7 +1708,7 @@ var TegakiCursor = {
     
     el = $T.el('canvas');
     el.id = 'tegaki-cursor-layer';
-    [ el.width, el.height ] = TegakiCursor.getMaxCanvasSize()
+    [ el.width, el.height ] = TegakiCursor.getMaxCanvasSize();
     
     Tegaki.canvasCnt.appendChild(el);
     
@@ -1748,9 +1750,13 @@ var TegakiCursor = {
   
   render: function(rawX, rawY) {
     var x, y, i, destImg, destData;
-    
-    x = rawX - this.offsetX - this.radius;
-    y = rawY - this.offsetY - this.radius;
+
+	var { x: canvasLeft, y: canvasTop } = this.getCanvas().getBoundingClientRect();
+	x = 0 | (rawX - canvasLeft - this.radius);
+	y = 0 | (rawY - canvasTop - this.radius);
+
+    // x = 0 | (rawX - this.offsetX - this.radius);
+    // y = 0 | (rawY - this.offsetY - this.radius);
     
     this.clear();
     
@@ -2745,7 +2751,7 @@ var TegakiLayers = {
   }
 };
 var Tegaki = {
-  VERSION: '0.9.2',
+  VERSION: '0.9.4',
   
   startTimeStamp: 0,
   
@@ -2819,9 +2825,15 @@ var Tegaki = {
   replayMode: false,
   
   saveReplay: false,
-  
+
+  target: document.body,
+
   open: function(opts = {}) {
     var self = Tegaki;
+
+    if (opts.target) {
+      self.target = opts.target
+    }
     
     if (self.bg) {
       if (self.replayMode !== (opts.replayMode ? true : false)) {
@@ -2856,8 +2868,8 @@ var Tegaki = {
     
     [self.bg, self.canvasCnt, self.layersCnt] = TegakiUI.buildUI();
     
-    document.body.appendChild(self.bg);
-    document.body.classList.add('tegaki-backdrop');
+    self.target.appendChild(self.bg);
+    self.target.classList.add('tegaki-backdrop');
     
     if (!self.replayMode) {
       self.init();
@@ -3153,7 +3165,7 @@ var Tegaki = {
     }
     
     Tegaki.bg.classList.remove('tegaki-hidden');
-    document.body.classList.add('tegaki-backdrop');
+    Tegaki.target.classList.add('tegaki-backdrop');
     Tegaki.setZoom(0);
     Tegaki.updateLayersCntSize();
     Tegaki.updatePosOffset();
@@ -3167,7 +3179,7 @@ var Tegaki = {
     }
     
     Tegaki.bg.classList.add('tegaki-hidden');
-    document.body.classList.remove('tegaki-backdrop');
+    Tegaki.target.classList.remove('tegaki-backdrop');
     Tegaki.unBindGlobalEvents();
   },
   
@@ -3180,7 +3192,7 @@ var Tegaki = {
     
     Tegaki.bg.parentNode.removeChild(Tegaki.bg);
     
-    document.body.classList.remove('tegaki-backdrop');
+    Tegaki.target.classList.remove('tegaki-backdrop');
     
     Tegaki.startTimeStamp = 0;
     
@@ -3536,6 +3548,7 @@ var Tegaki = {
   onCloseViewerClick: function() {
     Tegaki.replayViewer.destroy();
     Tegaki.destroy();
+    Tegaki.onCancelCb();
   },
   
   onToolSizeChange: function() {
@@ -4018,6 +4031,10 @@ var Tegaki = {
   onPointerMove: function(e) {
     var events, x, y, tool, ts, p;
     
+    if (Tegaki.cursor) {
+      TegakiCursor.render(e.clientX, e.clientY);
+    }
+    
     if (e.mozInputSource !== undefined) {
       // Firefox thing where mouse events fire for no reason when the pointer is a pen
       if (Tegaki.activePointerIsPen && e.pointerType === 'mouse') {
@@ -4069,14 +4086,14 @@ var Tegaki = {
       x = Tegaki.getPointerPos(e, 0);
       y = Tegaki.getPointerPos(e, 1);
     }
-    
-    if (Tegaki.cursor) {
-      TegakiCursor.render(e.clientX, e.clientY);
-    }
   },
   
   onPointerDown: function(e) {
     var x, y, tool, p;
+    
+    if (Tegaki.cursor) {
+      TegakiCursor.render(e.clientX, e.clientY);
+    }
     
     if (Tegaki.isScrollbarClick(e)) {
       return;
@@ -4135,10 +4152,6 @@ var Tegaki = {
       TegakiHistory.pendingAction.addCanvasState(Tegaki.activeLayer.imageData, 0);
       
       tool.start(x, y);
-    }
-    
-    if (Tegaki.cursor) {
-      TegakiCursor.render(e.clientX, e.clientY);
     }
   },
   
@@ -4428,7 +4441,7 @@ class TegakiEventDrawNoP {
     x = r.readInt16();
     y = r.readInt16();
     
-    return new TegakiEventDraw(timeStamp, x, y);
+    return new TegakiEventDrawNoP(timeStamp, x, y);
   }
   
   dispatch() {

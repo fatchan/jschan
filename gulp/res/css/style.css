@@ -224,7 +224,7 @@ pre {
 	vertical-align: bottom;
 	margin-right: 5px;
 }
-#postform-dragHandle, #threadwatcher-dragHandle {
+#postform-dragHandle, #threadwatcher-dragHandle, #tegakiwindow-dragHandle {
 	flex-grow: 1;
 	background: var(--darken);
 	height: 1.75em;
@@ -949,6 +949,10 @@ input:invalid, textarea:invalid {
 	resize: none;
 }
 
+.resize {
+	resize: both;
+}
+
 .container {
 	padding: 10px;
 }
@@ -1260,7 +1264,7 @@ input[type="file"] {
 	background: var(--input-background);
 }
 
-#postform, #threadwatcher {
+#postform, #threadwatcher, #tegakiwindow {
 	display: none;
 	max-width: calc(100% - 10px);
 	max-height: calc(100% - 50px);
@@ -1274,13 +1278,20 @@ input[type="file"] {
 	overflow-y: auto;
 }
 
+#tegakiwindow {
+	display: unset;
+	overflow-y: hidden;
+	max-width: unset;
+	max-height: unset;
+}
+
 #threadwatcher {
 	display: none;
 	white-space: nowrap;
 	flex-direction: column;
 }
 
-#threadwatcher.minimised .watched-thread {
+#threadwatcher.minimised .watched-thread, #tegakiwindow.minimised #tegaki {
 	display: none;
 }
 
@@ -1567,6 +1578,23 @@ row.wrap.sb .col {
 
 .sm {
 	scroll-margin-top: 100px;
+}
+
+#hover-popup {
+	position: fixed;
+	/* top: 40px; */
+	/* right: 0; */
+	max-width: 100%;
+	height: auto;
+	pointer-events: none;
+	display: none;
+	background-color: var(--background-rest);
+	/* border: 1px solid var(--box-border-color); */
+	z-index: 1000;
+}
+
+#hover-popup * {
+	max-width: 100%;
 }
 
 #tab-1:target .tab-1,

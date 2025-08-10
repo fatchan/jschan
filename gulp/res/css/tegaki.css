@@ -62,9 +62,10 @@
 }
 
 #tegaki {
-  position: fixed;
+  position: relative;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
+  height: calc(100% - 24px);
   top: 0;
   left: 0;
   background-color: var(--post-color);
@@ -112,6 +113,7 @@
   grid-area: 2 / 3 / 4 / 4;
   padding: 6px;
   overflow: hidden auto;
+  z-index: 1000; /* works when over canvas */
 }
 
 #tegaki-status-cnt {
@@ -361,6 +363,9 @@
   position: absolute;
   mix-blend-mode: difference;
   touch-action: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(calc(-50% - 50px), -50%);
 }
 
 /* generic ui */

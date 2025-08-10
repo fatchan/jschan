@@ -1,4 +1,4 @@
-/* globals __ __n modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem */
+/* globals __ __n modal Tegaki grecaptcha hcaptcha captchaController appendLocalStorageArray socket isThread setLocalStorage forceUpdate captchaController uploaditem isCanvasBlocked TegakiWrapper */
 async function videoThumbnail(file) {
 	return new Promise((resolve, reject) => {
 		const hiddenVideo = document.createElement('video');
@@ -85,7 +85,7 @@ function removeModal() {
 }
 
 let recaptchaResponse = null;
-function recaptchaCallback(response) { // eslint-disable-line
+function recaptchaCallback (response) { // eslint-disable-line
 	recaptchaResponse = response;
 }
 
@@ -100,6 +100,8 @@ class postFormHandler {
 		this.enctype = this.form.getAttribute('enctype');
 		this.messageBox = this.form.querySelector('#message');
 		this.recordTegaki = this.form.elements.tegakireplay;
+		this.canvasBlocked = null;
+		this.canvasCheckInterval = null;
 		this.minimal = this.form.elements.minimal;
 		this.files = [];
 		this.submit = form.querySelector('input[type="submit"]');
@@ -175,10 +177,32 @@ class postFormHandler {
 	}
 
 	doTegaki() {
+		clearInterval(this.canvasCheckInterval);
+		if ((this.canvasBlocked = isCanvasBlocked())
+			&& localStorage.getItem('checkedCanvas') === 'true') {
+			return doModal({
+				'title': 'Canvas Permission Error',
+				'message': 'Your browser has canvas disabled or broken due to anti-fingerprinting measures.',
+			});
+		}
+		if (localStorage.getItem('checkedCanvas') !== 'true' && this.canvasBlocked) {
+			if (!this.canvasCheckInterval || this.canvasCheckInterval._destroyed == true) {
+				this.canvasCheckInterval = setInterval(() => {
+					if (!isCanvasBlocked()) {
+						this.doTegaki();
+					}
+				}, 250);
+			}
+			return localStorage.setItem('checkedCanvas', 'true');
+		}
 		const saveReplay = this.recordTegaki && this.recordTegaki.checked;
+		TegakiWrapper.init();
 		Tegaki.open({
+			target: TegakiWrapper.element,
 			saveReplay,
-			onCancel: () => {},
+			onCancel: () => {
+				TegakiWrapper.remove();
+			},
 			onDone: () => {
 				const now = Date.now();
 				let replayBlob;
@@ -195,7 +219,7 @@ class postFormHandler {
 				this.updateFilesText();
 				//reset tegaki state
 				Tegaki.resetLayers();
-				Tegaki.destroy();
+				TegakiWrapper.remove();
 			},
 			width: tegakiWidth,
 			height: tegakiHeight,
@@ -592,7 +616,7 @@ class postFormHandler {
 			this.fileUploadList.style.display = 'none';
 			this.fileLabelText.nodeValue = __n('Select/Drop/Paste files', this.multipleFiles ? 2 : 1);
 		} else {
-			this.fileLabelText.nodeValue =  __n('%s files selected', this.files.length);
+			this.fileLabelText.nodeValue = __n('%s files selected', this.files.length);
 		}
 		this.fileInput.value = null;
 	}
