@@ -63,7 +63,7 @@ const positionHoverPopup = (mouseX, mouseY) => {
 	}
 
     //bound to top/bottom
-	if (top < 0) {
+	if (top < 10) {
 		top = 10; // Prevent going off the top of the screen
 	} else if (top + popupHeight > window.innerHeight) {
 		top = window.innerHeight - popupHeight; // Prevent going off the bottom of the screen
