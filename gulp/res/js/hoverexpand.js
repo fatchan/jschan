@@ -99,7 +99,7 @@ const handleMouseOver = async (event) => {
 };
 
 const handleMouseMove = (event) => {
-	if (hoverExpandFollowEnabled && hoverPopup.style.display === 'block') {
+	if (hoverExpandFollowEnabled && hoverPopup && hoverPopup.style.display === 'block') {
 		positionHoverPopup(event.x, event.y);
 	}
 };
