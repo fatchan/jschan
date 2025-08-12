@@ -15,9 +15,12 @@ const updateHoverPopup = (mediaType, src, thumbElement) => {
 		const mediaElement = document.createElement(mediaType === 'image' ? 'img' : mediaType);
 		const customOnLoad = () => {
 			hideHoverPopup();
-			hoverPopup.appendChild(mediaElement);
-			hoverPopup.style.display = 'block';
-			mediaElement.play && mediaElement.play();
+			// make sure the user didn't move their mouse off while loading
+			if (thumbElement && thumbElement.matches(':hover')) {
+				hoverPopup.appendChild(mediaElement);
+				hoverPopup.style.display = 'block';
+				mediaElement.play && mediaElement.play();
+			}
 			res();
 		};
 		mediaElement.onload = customOnLoad;
@@ -60,7 +63,7 @@ const positionHoverPopup = (mouseX, mouseY) => {
 	}
 
     //bound to top/bottom
-	if (top < 0) {
+	if (top < 10) {
 		top = 10; // Prevent going off the top of the screen
 	} else if (top + popupHeight > window.innerHeight) {
 		top = window.innerHeight - popupHeight; // Prevent going off the bottom of the screen
@@ -83,7 +86,7 @@ const hideHoverPopup = () => {
 };
 
 const handleMouseOver = async (event) => {
-	if (!hoverExpandEnabled) { return; }
+	if (!hoverExpandEnabled || event.pointerType !== 'mouse') { return; }
 	const thumbElement = event.currentTarget.querySelector('.file-thumb');
 	if (thumbElement //if its already expanded, or is spoilered, don't allow hover
         && (thumbElement.style.display === 'none'
@@ -96,7 +99,7 @@ const handleMouseOver = async (event) => {
 };
 
 const handleMouseMove = (event) => {
-	if (hoverExpandFollowEnabled && hoverPopup.style.display === 'block') {
+	if (hoverExpandFollowEnabled && hoverPopup && hoverPopup.style.display === 'block') {
 		positionHoverPopup(event.x, event.y);
 	}
 };
@@ -115,7 +118,7 @@ const toggleHoverExpandFollow = () => {
 
 const attachHoverListeners = (elements) => {
 	elements.forEach(media => {
-		media.addEventListener('mouseover', handleMouseOver);
+		media.addEventListener('pointerenter', handleMouseOver);
 		media.addEventListener('mouseout', hideHoverPopup);
 		media.addEventListener('click', hideHoverPopup);
 	});
