@@ -1,7 +1,15 @@
 form.form-post(action=`/forms/appeal`, enctype='application/x-www-form-urlencoded', method='POST' data-captcha-preload='true')
-	include ./bantable.pug
-		for ban in bans
-			+ban(ban, true)
+	if bans.length === 1
+		.table-container.mv-10.text-center.horscroll.vtable
+			include ./bantable.pug
+				for ban in bans
+					+ban(ban, true)
+	
+	else
+		.table-container.mv-10.text-center.horscroll
+			include ./bantable.pug
+				for ban in bans
+					+ban(ban, true)
 	- const allowAppeal = bans.filter(ban => ban.allowAppeal === true && !ban.appeal).length > 0;
 	if allowAppeal === true
 		h4.no-m-p #{__('Appeal')}:

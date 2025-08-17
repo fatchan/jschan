@@ -2,9 +2,10 @@ if bans.length === 0
 	p #{__('No bans.')}
 else
 	input(type='hidden' name='_csrf' value=csrf)
-	include ../includes/bantable.pug
-		for ban in bans
-			+ban(ban)
+	.table-container.mv-10.text-center.horscroll
+		include ../includes/bantable.pug
+			for ban in bans
+				+ban(ban)
 	.action-wrapper.mv-10
 		.row
 			.label #{__('Unban')}

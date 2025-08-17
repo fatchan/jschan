@@ -1859,6 +1859,27 @@ row.wrap.sb .col {
 		width: 100%;
 	}
 
+	.vtable > table, .vtable > table td, .vtable > table th {
+		display: block;
+		text-align: left;
+	}
+	.vtable > table tr {
+		display: inline-block;
+	}
+	.vtable > table th, .vtable > table td {
+		min-height: 18px;
+		margin: 0;
+	}
+	.vtable > table td {
+		margin-left: 0px;
+	}
+	.vtable > table thead {
+		display: none;
+	}
+	.vtable > table .right {
+		float: unset;
+	}
+
 }
 
 .flag, .customflag, .customflag::before {
