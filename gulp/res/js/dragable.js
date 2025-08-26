@@ -19,6 +19,12 @@ class Dragable {
 			this.target.style.left = savedLeft;
 		}
 		this.target.style.right = 'unset';
+		this.sizeObserver = new ResizeObserver(() => {
+			//make sure windows that resize after init (like tegaki) stay onscreen
+			this.moveOnScreen();
+			this.updateCallback && this.updateCallback();
+		});
+		this.sizeObserver.observe(this.target);
 		this.target.addEventListener('opened', e => this.updateMaxSizes(e));
 		this.handle.addEventListener('mousedown', e => this.startDrag(e));
 		this.handle.addEventListener('touchstart', e => this.startDrag(e), { passive: true });
@@ -43,20 +49,26 @@ class Dragable {
 		}
 	}
 
+	moveOnScreen() {
+		const rect = this.target.getBoundingClientRect();
+		const { clientWidth, clientHeight } = document.documentElement;
+		//move as close to old location as we can while staying onscreen
+		if (rect.right > clientWidth) {
+			let left = this.inBounds(rect.left, 0, rect.width, clientWidth);
+			left = left < 0 ? 0 : left;
+			this.target.style.left = `${left}px`;
+		}
+		if (rect.bottom > clientHeight) {
+			let top = this.inBounds(rect.top, 0, rect.height, clientHeight);
+			top = top < 0 ? 0 : top;
+			this.target.style.top = `${top}px`;
+		}
+	}
+
 	updateMaxSizes() {
-		let rect = this.target.getBoundingClientRect();
-		if (rect.width === 0) {
-			return;
-		}
-		//reset to top left if resized or rotated and and edge goes off the screen
-		if (rect.right > document.documentElement.clientWidth) {
-			this.target.style.left = 0;
-		}
-		if (rect.bottom > document.documentElement.clientHeight) {
-			this.target.style.top = 0;
-		}
+		this.moveOnScreen();
 		//set max widths, get rect again since it might have changed
-		rect = this.target.getBoundingClientRect();
+		const rect = this.target.getBoundingClientRect();
 		this.target.style.maxHeight = `${document.documentElement.clientHeight - rect.top}px`;
 		this.target.style.maxWidth = `${document.documentElement.clientWidth - rect.left}px`;
 		this.updateCallback && this.updateCallback();
