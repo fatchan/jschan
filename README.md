@@ -5,6 +5,7 @@ Anonymous imageboard software that doesn't suck.
 Repo Mirror(s):
  - https://gitgud.io/fatchan/jschan
  - https://git.basedflare.com/fatchan/jschan
+ - https://github.com/fatchan/jschan (for the cattle)
 
 Contact the author:
  - [Session](https://getsession.org/): `051b2ff270769d20764fa1b8e6bc3240b0a3c28ffb3242e7cce60db479b23ef427`
