@@ -2,14 +2,14 @@ version: "3.5"
 services:
 
   redis:
-    command: redis-server --requirepass changeme
+    command: redis-server --requirepass Mangoloco@2030
     image: redis:alpine
 
   mongodb:
     image: mongo:latest
     environment:
       - MONGO_INITDB_ROOT_USERNAME=jschan
-      - MONGO_INITDB_ROOT_PASSWORD=changeme
+      - MONGO_INITDB_ROOT_PASSWORD=Mangoloco@2030
 
   nginx:
     build:
@@ -34,16 +34,12 @@ services:
       - JSCHAN_IP=0.0.0.0
       - NO_CAPTCHA=1
       - MONGO_USERNAME=jschan
-      - MONGO_PASSWORD=changeme
-      - REDIS_PASSWORD=changeme
-      - COOKIE_SECRET=changeme
-      - TRIPCODE_SECRET=changeme
-      - IP_HASH_SECRET=changeme
-      - POST_PASSWORD_SECRET=changeme
-      - GOOGLE_SITEKEY=changeme
-      - GOOGLE_SECRETKEY=changeme
-      - HCAPTCHA_SITEKEY=10000000-ffff-ffff-ffff-000000000001
-      - HCAPTCHA_SECRETKEY=0x0000000000000000000000000000000000000000
+      - MONGO_PASSWORD=Mangoloco@2030
+      - REDIS_PASSWORD=Mangoloco@2030
+      - COOKIE_SECRET=9D9F5D251BB8AADAE88685545B8FE
+      - TRIPCODE_SECRET=7f3c9a1d2e6b4f8a9c0d3e7f1a2b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b
+      - IP_HASH_SECRET=1a9e8b7c6d5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9
+      - POST_PASSWORD_SECRET=9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8
     volumes:
       - ./docker/static:/opt/static/
     depends_on:
@@ -57,8 +53,8 @@ services:
       network: default
     environment:
       - MONGO_USERNAME=jschan
-      - MONGO_PASSWORD=changeme
-      - REDIS_PASSWORD=changeme
+      - MONGO_PASSWORD=Mangoloco@2030
+      - REDIS_PASSWORD=Mangoloco@2030
     volumes:
       - ./docker/static:/opt/static/
     depends_on:
@@ -67,4 +63,5 @@ services:
 
 networks:
   default:
-    name: jschan_default
+    external: true
+    name: baldurs_gate
